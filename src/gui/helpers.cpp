@@ -56,6 +56,7 @@
 #include "gui/state/logging.h"
 
 namespace {
+#ifdef _WIN32
 std::vector<std::wstring> SplitOnNulls(std::vector<wchar_t> nullDelimitedList) {
   std::vector<std::wstring> elements;
 
@@ -73,7 +74,6 @@ std::vector<std::wstring> SplitOnNulls(std::vector<wchar_t> nullDelimitedList) {
   return elements;
 }
 
-#ifdef _WIN32
 std::vector<std::string> GetPreferredUILanguages(
     std::function<bool(DWORD, PULONG, PZZWSTR, PULONG)> win32Function,
     bool isSystem) {
@@ -146,22 +146,6 @@ const char* getDriveTypeText(UINT driveType) {
 }
 
 namespace loot {
-void OpenInDefaultApplication(const std::filesystem::path& file) {
-#ifdef _WIN32
-  HINSTANCE ret =
-      ShellExecute(0, NULL, file.wstring().c_str(), NULL, NULL, SW_SHOWNORMAL);
-  if (reinterpret_cast<uintptr_t>(ret) <= 32)
-    throw std::system_error(GetLastError(),
-                            std::system_category(),
-                            "Failed to open file in its default application.");
-#else
-  if (system(("/usr/bin/xdg-open " + file.u8string()).c_str()) != 0)
-    throw std::system_error(errno,
-                            std::system_category(),
-                            "Failed to open file in its default application.");
-#endif
-}
-
 #ifdef _WIN32
 std::wstring ToWinWide(const std::string& str) {
   size_t len = MultiByteToWideChar(
@@ -476,77 +460,34 @@ std::filesystem::path getLocalAppDataPath() {
 #ifdef _WIN32
   PWSTR path;
 
-  if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK)
+  if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK) {
     throw std::system_error(GetLastError(),
                             std::system_category(),
                             "Failed to get %LOCALAPPDATA% path.");
+  }
 
   std::filesystem::path localAppDataPath(path);
   CoTaskMemFree(path);
 
   return localAppDataPath;
 #else
-  // Use XDG_CONFIG_HOME environmental variable if it's available.
-  const char* xdgConfigHome = getenv("XDG_CONFIG_HOME");
+  // Use XDG_DATA_HOME environmental variable if it's available.
+  const auto xdgConfigHome = getenv("XDG_DATA_HOME");
 
-  if (xdgConfigHome != nullptr)
+  if (xdgConfigHome != nullptr) {
     return std::filesystem::u8path(xdgConfigHome);
+  }
 
   // Otherwise, use the HOME env. var. if it's available.
-  xdgConfigHome = getenv("HOME");
+  const auto home = getenv("HOME");
 
-  if (xdgConfigHome != nullptr)
-    return std::filesystem::u8path(xdgConfigHome) / ".config";
-
-  // If somehow both are missing, use the executable's directory.
-  return getExecutableDirectory();
-#endif
-}
-
-void CopyToClipboard(const std::string& text) {
-#ifdef _WIN32
-  if (!OpenClipboard(NULL)) {
-    throw std::system_error(GetLastError(),
-                            std::system_category(),
-                            "Failed to open the Windows clipboard.");
+  if (home == nullptr) {
+    // The POSIX spec requires the HOME environment variable to be set, don't
+    // try to work around it being missing.
+    throw std::runtime_error("The HOME environment variable has no value");
   }
 
-  if (!EmptyClipboard()) {
-    throw std::system_error(GetLastError(),
-                            std::system_category(),
-                            "Failed to empty the Windows clipboard.");
-  }
-
-  // The clipboard takes a Unicode (ie. UTF-16) string that it then owns and
-  // must not be destroyed by LOOT. Convert the string, then copy it into a
-  // new block of memory for the clipboard.
-  std::wstring wtext = ToWinWide(text);
-  size_t wcstrLength = wtext.length() + 1;
-  wchar_t* wcstr = new wchar_t[wcstrLength];
-  wcscpy_s(wcstr, wcstrLength, wtext.c_str());
-
-  if (SetClipboardData(CF_UNICODETEXT, wcstr) == NULL) {
-    throw std::system_error(
-        GetLastError(),
-        std::system_category(),
-        "Failed to copy metadata to the Windows clipboard.");
-  }
-
-  if (!CloseClipboard()) {
-    throw std::system_error(GetLastError(),
-                            std::system_category(),
-                            "Failed to close the Windows clipboard.");
-  }
-#else
-  std::string copyCommand = "echo '" + text + "' | xclip -selection clipboard";
-  int returnCode = system(copyCommand.c_str());
-
-  if (returnCode != 0) {
-    throw std::system_error(
-        returnCode,
-        std::system_category(),
-        "Failed to run clipboard copy command: " + copyCommand);
-  }
+  return std::filesystem::u8path(home) / ".local" / "share";
 #endif
 }
 

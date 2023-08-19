@@ -170,7 +170,7 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogSiblingGame) {
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
-  } else if (GetParam() == GameId::enderal || GetParam() == GameId::fo4) {
+  } else if (GetParam() == GameId::enderal) {
     expectedSource = InstallSource::unknown;
   }
 
@@ -311,7 +311,7 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogRegistryGame) {
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
-  } else if (GetParam() == GameId::enderal || GetParam() == GameId::fo4) {
+  } else if (GetParam() == GameId::enderal) {
     expectedSource = InstallSource::unknown;
   }
 
@@ -403,7 +403,7 @@ TEST_P(DetectGameInstallTest, shouldDetectAGogInstall) {
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
-  } else if (GetParam() == GameId::enderal || GetParam() == GameId::fo4) {
+  } else if (GetParam() == GameId::enderal) {
     expectedSource = InstallSource::unknown;
   }
 

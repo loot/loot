@@ -23,8 +23,6 @@ A few items in the menus are not self-explanatory:
 - "Refresh Content" re-scans the installed plugins' headers and regenerates the content LOOT displays. This can be useful if you have made changes to your installed plugins while LOOT was open. Refreshing content will also discard any CRCs that were previously calculated, as they may have changed.
 - The "Search Cards..." option allows you to search all the visible text displayed on plugin cards, so the results may be affected by any filters you have active. Searching can optionally be done using case-insensitive Perl-like regular expressions instead of case-insensitive text comparison.
 
-Users running LOOT natively on Linux must have ``xclip`` installed in order to use the clipboard copy features.
-
 The Toolbar
 ===========
 

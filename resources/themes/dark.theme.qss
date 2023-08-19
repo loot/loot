@@ -98,6 +98,15 @@ QLabel#tags-remove {
     color: #F44336;
 }
 
+/* These are necessary to reliably update painted (not "editor") widget styling.
+*/
+loot--GeneralInfoCard QLabel,
+loot--MessagesWidget,
+loot--PluginCard QLabel,
+loot--PluginCard > QGroupBox::title {
+    color: #E0E0E0;
+}
+
 QLabel[messageType="warn"],
 QLabel[messageType="error"],
 QToolTip:active,

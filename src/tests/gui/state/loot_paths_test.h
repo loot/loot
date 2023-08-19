@@ -32,23 +32,30 @@ along with LOOT.  If not, see
 namespace loot {
 namespace test {
 TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
+#ifdef _WIN32
   LootPaths paths("app", "");
 
   EXPECT_EQ(std::filesystem::u8path("app") / "docs", paths.getReadmePath());
-}
+#else
+  LootPaths paths("prefix/app", "");
 
-TEST(LootPaths, getResourcesPathShouldUseLootAppPath) {
-  LootPaths paths("app", "");
-
-  EXPECT_EQ(std::filesystem::u8path("app") / "resources",
-            paths.getResourcesPath());
+  EXPECT_EQ(std::filesystem::u8path("prefix") / "share" / "doc" / "loot",
+            paths.getReadmePath());
+#endif
 }
 
 TEST(LootPaths, getL10nPathShouldUseLootAppPath) {
+#ifdef _WIN32
   LootPaths paths("app", "");
 
   EXPECT_EQ(std::filesystem::u8path("app") / "resources" / "l10n",
             paths.getL10nPath());
+#else
+  LootPaths paths("prefix/app", "");
+
+  EXPECT_EQ(std::filesystem::u8path("prefix") / "share" / "locale",
+            paths.getL10nPath());
+#endif
 }
 
 TEST(LootPaths, getSettingsPathShouldUseLootDataPath) {
@@ -74,23 +81,27 @@ TEST(LootPaths,
      constructorShouldSetAppPathToExecutableDirectoryIfGivenPathIsEmpty) {
   LootPaths paths("", "");
 
+#ifdef _WIN32
   EXPECT_EQ(std::filesystem::current_path(),
             paths.getReadmePath().parent_path());
+#else
+  EXPECT_EQ(std::filesystem::current_path().parent_path(),
+            paths.getL10nPath().parent_path().parent_path());
+#endif
 }
 
 TEST(
     LootPaths,
-    initialiseShouldSetTheDataPathToTheLocalAppDataPathSlashLootIfGivenAnEmptyString) {
+    constructorShouldSetTheDataPathToTheLocalAppDataPathSlashLootIfGivenAnEmptyString) {
   LootPaths paths("app", "");
 
   // Can't actually know what the path should be, but we can check
   // its properties.
   EXPECT_EQ("LOOT", paths.getLootDataPath().filename());
   EXPECT_FALSE(paths.getLootDataPath().parent_path().empty());
-  EXPECT_TRUE(std::filesystem::exists(paths.getLootDataPath().parent_path()));
 }
 
-TEST(LootPaths, initialiseShouldSetTheDataPathToGivenStringIfNonEmpty) {
+TEST(LootPaths, constructorShouldSetTheDataPathToGivenStringIfNonEmpty) {
   LootPaths paths("", "foo");
 
   EXPECT_EQ("foo", paths.getLootDataPath());

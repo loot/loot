@@ -225,15 +225,18 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
   // Now that settings have been loaded, set the locale again to handle
   // translations.
   if (settings_.getLanguage() != MessageContent::DEFAULT_LANGUAGE) {
+    const auto l10nPath = LootPaths::getL10nPath().u8string();
     const auto logger = getLogger();
     if (logger) {
       logger->debug("Initialising language settings.");
       logger->debug("Selected language: {}", settings_.getLanguage());
+      logger->debug("Loading language messages from subdirectories in {}",
+                    l10nPath);
     }
 
     // Boost.Locale initialisation: Generate and imbue locales.
     boost::locale::generator gen;
-    gen.add_messages_path(LootPaths::getL10nPath().u8string());
+    gen.add_messages_path(l10nPath);
     gen.add_messages_domain("loot");
     std::locale::global(gen(settings_.getLanguage() + ".UTF-8"));
   }
@@ -261,6 +264,7 @@ void LootState::checkSettingsFile() {
 }
 
 void LootState::findXboxGamingRootPaths() {
+#ifdef _WIN32
   try {
     for (const auto& driveRootPath : GetDriveRootPaths()) {
       const auto xboxGamingRootPath = FindXboxGamingRootPath(driveRootPath);
@@ -274,6 +278,18 @@ void LootState::findXboxGamingRootPaths() {
       logger->error("Failed to find Xbox gaming root paths: {}", e.what());
     }
   }
+#else
+  // Games cannot be installed from the Microsoft Store on non-Windows
+  // platoforms. While the logic above would be able to detect Xbox Gaming root
+  // paths on mounted Windows drives, game install detection would not work
+  // correctly as it would be unable to find/choose the appropriate local app
+  // data directory to use for each game, as there's no way of knowing which
+  // Windows user is intended. As such, it's better to just avoid MS Store game
+  // detection entirely. There is still legacy install detection logic, but that
+  // will do nothing as it relies on Registry interactions that similarly find
+  // no matches.
+  xboxGamingRootPaths_.clear();
+#endif
 }
 
 void LootState::createPreludeDirectory() {

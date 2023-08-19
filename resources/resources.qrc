@@ -1,6 +1,7 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
   <qresource prefix="/">
+    <file>icons/loot.svg</file>
     <file>icons/crown.svg</file>
     <file>icons/droplet.svg</file>
     <file>icons/material-icons/account_circle_black_48dp.svg</file>
@@ -31,6 +32,7 @@
   </qresource>
   <qresource prefix="/">
     <file>themes/default.theme.qss</file>
+    <file>themes/default-dark.theme.qss</file>
     <file>themes/dark.theme.qss</file>
   </qresource>
 </RCC>

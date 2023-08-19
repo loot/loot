@@ -34,8 +34,6 @@
 #include "gui/sourced_message.h"
 
 namespace loot {
-void OpenInDefaultApplication(const std::filesystem::path& file);
-
 #ifdef _WIN32
 std::wstring ToWinWide(const std::string& str);
 
@@ -58,8 +56,6 @@ int CompareFilenames(const std::string& lhs, const std::string& rhs);
 std::filesystem::path getExecutableDirectory();
 
 std::filesystem::path getLocalAppDataPath();
-
-void CopyToClipboard(const std::string& text);
 
 std::string crcToString(uint32_t crc);
 }

@@ -75,6 +75,11 @@ std::vector<std::string> GetGogGameIds(const GameId gameId) {
       return {"1454315831"};
     case GameId::fonv:
       return {"1454587428"};
+    case GameId::fo4:
+      return {// Game
+              "1998527297",
+              // High res texture pack
+              "1408237434"};
     default:
       return {};
   }

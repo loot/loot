@@ -129,6 +129,7 @@ void GroupsEditorDialog::setupUi() {
   completer->setCompletionMode(QCompleter::PopupCompletion);
   completer->setCaseSensitivity(Qt::CaseInsensitive);
 
+  pluginComboBox->setObjectName("pluginComboBox");
   pluginComboBox->setVisible(false);
   pluginComboBox->setEditable(true);
   pluginComboBox->setInsertPolicy(QComboBox::NoInsert);
@@ -197,13 +198,6 @@ void GroupsEditorDialog::setupUi() {
   translateUi();
 
   QMetaObject::connectSlotsByName(this);
-
-  // For some reason QComboBox::editTextChanged doesn't fire, to bind to the
-  // internal QLineEdit instead.
-  connect(pluginComboBox->lineEdit(),
-          &QLineEdit::textChanged,
-          this,
-          &GroupsEditorDialog::on_pluginComboBox_editTextChanged);
 }
 
 void GroupsEditorDialog::translateUi() {
@@ -304,8 +298,6 @@ void GroupsEditorDialog::refreshPluginLists() {
       pluginComboBox->addItem(QString::fromStdString(plugin.name));
     }
   }
-
-  const auto groupHasPlugins = groupPluginsList->count() != 0;
 
   if (groupPluginsList->count() == 0) {
     auto text = translate("No plugins are in this group.");

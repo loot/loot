@@ -96,7 +96,9 @@ jobs:
             g++-10 \
             build-essential \
             libgl1-mesa-dev \
-            gettext
+            gettext \
+            flatpak \
+            flatpak-builder
 
       - name: Download & build Boost
         run: |
@@ -181,6 +183,46 @@ jobs:
 
       - name: Sign archive
         run: gpg --output "build/${{ steps.build-archive.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-archive.outputs.filename }}"
+        if: github.event_name == 'push'
+
+      - name: Set up Flatpak
+        run: |
+          flatpak --user remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          flatpak --user install -y flathub org.kde.Platform//6.5 org.kde.Sdk//6.5
+
+      - name: Build Flatpak package
+        id: build-flatpak
+        run: |
+          PACKAGE_FILENAME=loot_${{ steps.get-loot-version.outputs.version }}.flatpak
+
+          cd build
+          ln -s ${{ steps.build-archive.outputs.filename }} loot.tar.xz
+
+          flatpak-builder --repo=flatpak-repo flatpak ../resources/linux/io.github.loot.loot.yml
+          flatpak build-bundle flatpak-repo $PACKAGE_FILENAME io.github.loot.loot
+
+          echo "filename=$PACKAGE_FILENAME" >> $GITHUB_OUTPUT
+
+      - name: Sign Flatpak package
+        run: gpg --output "build/${{ steps.build-flatpak.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-flatpak.outputs.filename }}"
+        if: github.event_name == 'push'
+
+      - name: Upload archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.build-archive.outputs.filename }}
+          path: |
+            build/${{ steps.build-archive.outputs.filename }}
+            build/${{ steps.build-archive.outputs.filename }}.sig
+        if: github.event_name == 'push'
+
+      - name: Upload Flatpak package
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.build-flatpak.outputs.filename }}
+          path: |
+            build/${{ steps.build-flatpak.outputs.filename }}
+            build/${{ steps.build-flatpak.outputs.filename }}.sig
         if: github.event_name == 'push'
 
   windows:

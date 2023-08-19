@@ -13,7 +13,7 @@ LOOT's initialisation can be customised using command line parameters:
   Set the install path of the game identified by ``--game``. This replaces any existing value stored in LOOT's settings.
 
 ``--loot-data-path=<path>``:
-  Set the path to use for LOOT's application data storage. If this is an empty string or not specified, defaults to ``%LOCALAPPDATA%\LOOT`` on Windows and (in order of decreasing preference) ``$XDG_CONFIG_HOME/LOOT``, ``$HOME/.config/LOOT`` or the current path on Linux.
+  Set the path to use for LOOT's application data storage. If this is an empty string or not specified, defaults to ``%LOCALAPPDATA%\LOOT`` on Windows and (in order of decreasing preference) ``$XDG_DATA_HOME/LOOT`` or ``$HOME/.local/share/LOOT`` on Linux.
 
 ``--auto-sort``:
   Once LOOT has initialised, automatically sort the load order, apply the sorted
@@ -106,7 +106,7 @@ When LOOT starts, it first loads its configured game settings. If the ``--game``
 - the parent directory of the current working directory (e.g. if LOOT is at ``Skyrim Special Edition\LOOT\LOOT.exe`` next to ``Skyrim Special Edition\SkyrimSE.exe``)
 - the game's Registry keys
 - the install location used by the Epic Games Store
-- the install locations used by newer versions of the Microsoft Store and Xbox apps, checking each drive in the order they're listed by Windows. (On Linux each mount point is checked in the order they're listed in ``/proc/self/mounts``.)
+- the install locations used by newer versions of the Microsoft Store and Xbox apps, checking each drive in the order they're listed by Windows. (This is skipped on Linux.)
 - the install locations used by older versions of the Microsoft Store and Xbox apps, checked using the packages' registry keys.
 
 The detected games are merged with the configured game settings, primarily by comparing the detected and configured game install paths. Any detected games that did not have matching configuration get new settings entries added for them. If multiple copies of a single game are detected, each instance is named differently in LOOT's settings to help differentiate between them.

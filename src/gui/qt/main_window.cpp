@@ -30,12 +30,14 @@
 #include <QtCore/QTimer>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QDesktopServices>
+#include <QtGui/QStyleHints>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QScrollBar>
 #include <QtWidgets/QTextEdit>
+#include <boost/algorithm/string.hpp>
 
 #include "gui/backup.h"
 #include "gui/qt/helpers.h"
@@ -50,12 +52,8 @@
 #include "gui/query/types/change_game_query.h"
 #include "gui/query/types/clear_all_metadata_query.h"
 #include "gui/query/types/clear_plugin_metadata_query.h"
-#include "gui/query/types/copy_load_order_query.h"
-#include "gui/query/types/copy_metadata_query.h"
 #include "gui/query/types/get_conflicting_plugins_query.h"
 #include "gui/query/types/get_game_data_query.h"
-#include "gui/query/types/open_log_location_query.h"
-#include "gui/query/types/open_readme_query.h"
 #include "gui/query/types/sort_plugins_query.h"
 #include "gui/version.h"
 
@@ -247,7 +245,7 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
 void MainWindow::initialise() {
   try {
-    themes = findThemes(state.getResourcesPath());
+    themes = findThemes(state.getThemesPath());
 
     if (state.getSettings().getLastVersion() != gui::Version::string()) {
       showFirstRunDialog();
@@ -305,11 +303,33 @@ void MainWindow::initialise() {
 
 void MainWindow::applyTheme() {
   // Apply theme.
-  auto styleSheet = loot::loadStyleSheet(state.getResourcesPath(),
+  bool loadingDefault = state.getSettings().getTheme() == "default";
+
+  auto styleSheet = loot::loadStyleSheet(state.getThemesPath(),
                                          state.getSettings().getTheme());
   if (!styleSheet.has_value()) {
     // Fall back to the default theme.
-    styleSheet = loot::loadStyleSheet(state.getResourcesPath(), "default");
+    styleSheet = loot::loadStyleSheet(state.getThemesPath(), "default");
+    loadingDefault = true;
+  }
+
+  const auto logger = getLogger();
+  if (logger) {
+    logger->debug("Current style name is {}",
+                  qApp->style()->name().toStdString());
+  }
+
+  // Don't load default-dark when Qt is using the windowsvista style,
+  // as that ignores the system color scheme.
+  if (loadingDefault && qApp->style()->name() != "windowsvista" &&
+      QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark) {
+    // Load the default-dark theme instead as it gives better results.
+    if (logger) {
+      logger->debug(
+          "Loading default-dark theme instead of the default theme as a dark "
+          "colour scheme has been detected");
+    }
+    styleSheet = loot::loadStyleSheet(state.getThemesPath(), "default-dark");
   }
 
   if (styleSheet.has_value()) {
@@ -320,9 +340,7 @@ void MainWindow::applyTheme() {
 }
 
 void MainWindow::setupUi() {
-#ifdef _WIN32
-  setWindowIcon(QIcon(":/icon.ico"));
-#endif
+  setWindowIcon(QIcon(":/icons/loot.svg"));
 
   auto lastWindowPosition = state.getSettings().getMainWindowPosition();
   if (lastWindowPosition.has_value()) {
@@ -624,11 +642,10 @@ void MainWindow::setupViews() {
 
   // Plugin selection handling needs to be set up after the model has been
   // set, as before then there is no selection model.
-  const auto selectionModel = sidebarPluginsView->selectionModel();
-  connect(selectionModel,
+  connect(sidebarPluginsView->selectionModel(),
           &QItemSelectionModel::selectionChanged,
           this,
-          &MainWindow::on_sidebarPluginsSelectionModel_selectionChanged);
+          &MainWindow::handleSidebarPluginsSelectionChanged);
 
   // Scrolling the cards jumps around too much by default, because the step
   // size is related to the height of list items, which can be quite a lot
@@ -870,12 +887,19 @@ void MainWindow::updateCounts(
 }
 
 void MainWindow::updateGeneralInformation() {
-  auto masterlistInfo = getFileRevisionSummary(
-      state.GetCurrentGame().MasterlistPath(), FileType::Masterlist);
-  auto preludeInfo = getFileRevisionSummary(state.getPreludePath(),
-                                            FileType::MasterlistPrelude);
-
+  const auto preludeInfo = getFileRevisionSummary(state.getPreludePath(),
+                                                  FileType::MasterlistPrelude);
   auto initMessages = state.getInitMessages();
+
+  if (!state.HasCurrentGame()) {
+    pluginItemModel->setGeneralInformation(
+        false, FileRevisionSummary(), preludeInfo, initMessages);
+    return;
+  }
+
+  const auto masterlistInfo = getFileRevisionSummary(
+      state.GetCurrentGame().MasterlistPath(), FileType::Masterlist);
+
   const auto gameMessages =
       state.GetCurrentGame().GetMessages(state.getSettings().getLanguage());
   initMessages.insert(
@@ -1534,10 +1558,10 @@ void MainWindow::on_actionSearch_triggered() { searchDialog->show(); }
 
 void MainWindow::on_actionCopyLoadOrder_triggered() {
   try {
-    CopyLoadOrderQuery query(state.GetCurrentGame(),
-                             state.GetCurrentGame().GetLoadOrder());
+    const auto text = GetLoadOrderAsTextTable(
+        state.GetCurrentGame(), state.GetCurrentGame().GetLoadOrder());
 
-    query.executeLogic();
+    CopyToClipboard(text);
 
     showNotification(
         translate("The load order has been copied to the clipboard."));
@@ -1726,21 +1750,27 @@ void MainWindow::on_actionEditMetadata_triggered() {
 
 void MainWindow::on_actionCopyMetadata_triggered() {
   try {
-    auto selectedPluginName = getSelectedPlugin().name;
+    const auto selectedPluginName = getSelectedPlugin().name;
 
-    CopyMetadataQuery query(state.GetCurrentGame(),
-                            state.getSettings().getLanguage(),
-                            selectedPluginName);
+    const auto text =
+        GetMetadataAsBBCodeYaml(state.GetCurrentGame(), selectedPluginName);
 
-    query.executeLogic();
+    CopyToClipboard(text);
 
-    auto text = fmt::format(
+    const auto logger = getLogger();
+    if (logger) {
+      logger->debug("Exported userlist metadata text for \"{}\": {}",
+                    selectedPluginName,
+                    text);
+    }
+
+    const auto message = fmt::format(
         boost::locale::translate(
             "The metadata for \"{0}\" has been copied to the clipboard.")
             .str(),
         selectedPluginName);
 
-    showNotification(QString::fromStdString(text));
+    showNotification(QString::fromStdString(message));
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1840,9 +1870,24 @@ void MainWindow::on_actionClearMetadata_triggered() {
 
 void MainWindow::on_actionViewDocs_triggered() {
   try {
-    OpenReadmeQuery query(state.getReadmePath(), "index.html");
+    const auto logger = getLogger();
+    if (logger) {
+      logger->trace("Opening LOOT's readme.");
+    }
 
-    query.executeLogic();
+    const auto readmePath = state.getReadmePath();
+    const auto canonicalPath =
+        std::filesystem::canonical(readmePath / "index.html");
+    const auto canonicalReadmePath = std::filesystem::canonical(readmePath);
+
+    if (!boost::starts_with(canonicalPath.u8string(),
+                            canonicalReadmePath.u8string())) {
+      throw std::runtime_error(
+          "Attempted to open readme file outside of recognised readme "
+          "directory.");
+    }
+
+    OpenInDefaultApplication(canonicalPath);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1850,9 +1895,12 @@ void MainWindow::on_actionViewDocs_triggered() {
 
 void MainWindow::on_actionOpenLOOTDataFolder_triggered() {
   try {
-    OpenLogLocationQuery query(state.getLogPath());
+    const auto logger = getLogger();
+    if (logger) {
+      logger->trace("Opening LOOT's local appdata folder.");
+    }
 
-    query.executeLogic();
+    OpenInDefaultApplication(state.getLogPath().parent_path());
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2055,7 +2103,7 @@ void MainWindow::on_sidebarPluginsView_customContextMenuRequested(
   menuPlugin->exec(globalPos);
 }
 
-void MainWindow::on_sidebarPluginsSelectionModel_selectionChanged(
+void MainWindow::handleSidebarPluginsSelectionChanged(
     const QItemSelection& selected,
     const QItemSelection& deselected) {
   if (selected.isEmpty() && deselected.isEmpty()) {
@@ -2480,8 +2528,9 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
             updateResult.first);
       }
 
-      if (updateResult.first ==
-          state.GetCurrentGame().GetSettings().FolderName()) {
+      if (state.HasCurrentGame() &&
+          updateResult.first ==
+              state.GetCurrentGame().GetSettings().FolderName()) {
         wasCurrentGameMasterlistUpdated = true;
       }
     }

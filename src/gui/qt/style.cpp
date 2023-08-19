@@ -49,19 +49,18 @@ std::optional<QString> loadStyleSheet(const QString& resourcePath) {
   return ts.readAll();
 }
 
-std::optional<QString> loadStyleSheet(
-    const std::filesystem::path& resourcesPath,
-    const std::string& themeName) {
+std::optional<QString> loadStyleSheet(const std::filesystem::path& themesPath,
+                                      const std::string& themeName) {
   // First try loading the theme from the filesystem, then try loading from
   // built-in resources, then fall back to the default theme (which itself
   // will load from filesystem then built-in resources).
 
-  auto logger = getLogger();
+  const auto logger = getLogger();
   if (logger) {
     logger->debug("Loading style sheet for the \"{}\" theme...", themeName);
   }
 
-  auto filesystemPath = (resourcesPath / "themes" / (themeName + QSS_SUFFIX));
+  const auto filesystemPath = (themesPath / (themeName + QSS_SUFFIX));
   auto styleSheet =
       loadStyleSheet(QString::fromStdString(filesystemPath.u8string()));
   if (styleSheet.has_value()) {
@@ -75,7 +74,7 @@ std::optional<QString> loadStyleSheet(
         themeName);
   }
 
-  auto builtInPath =
+  const auto builtInPath =
       QString(":/themes/%1.theme.qss").arg(QString::fromStdString(themeName));
   styleSheet = loadStyleSheet(builtInPath);
   if (styleSheet.has_value()) {
@@ -92,16 +91,16 @@ std::optional<QString> loadStyleSheet(
   return std::nullopt;
 }
 
-std::vector<std::string> findThemes(
-    const std::filesystem::path& resourcesPath) {
+std::vector<std::string> findThemes(const std::filesystem::path& themesPath) {
+  // The default-dark theme is not listed here as it's a variation on the
+  // default theme.
   std::set<std::string> themes({"default", "dark"});
 
-  auto themesPath = resourcesPath / "themes";
   if (!std::filesystem::exists(themesPath)) {
     return {themes.begin(), themes.end()};
   }
 
-  auto logger = getLogger();
+  const auto logger = getLogger();
   for (std::filesystem::directory_iterator it(themesPath);
        it != std::filesystem::directory_iterator();
        ++it) {
@@ -109,7 +108,7 @@ std::vector<std::string> findThemes(
       continue;
     }
 
-    auto filename = it->path().filename().u8string();
+    const auto filename = it->path().filename().u8string();
     if (!boost::iends_with(filename, QSS_SUFFIX)) {
       continue;
     }
@@ -118,7 +117,8 @@ std::vector<std::string> findThemes(
       logger->debug("Found theme QSS file: {}", filename);
     }
 
-    auto themeName = filename.substr(0, filename.size() - QSS_SUFFIX_LENGTH);
+    const auto themeName =
+        filename.substr(0, filename.size() - QSS_SUFFIX_LENGTH);
     if (themes.count(themeName) == 0) {
       themes.insert(themeName);
     }

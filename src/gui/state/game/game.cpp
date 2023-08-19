@@ -66,6 +66,11 @@ using std::filesystem::u8path;
 namespace fs = std::filesystem;
 
 namespace {
+struct Counters {
+  size_t activeNormal = 0;
+  size_t activeLightPlugins = 0;
+};
+
 std::filesystem::path GetLOOTGamePath(const std::filesystem::path& lootDataPath,
                                       const std::string& folderName) {
   return lootDataPath / "games" / std::filesystem::u8path(folderName);
@@ -126,6 +131,62 @@ void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
 
     fs::create_directories(lootGamePath);
   }
+}
+
+std::string GetLoadOrderAsTextTable(const gui::Game& game,
+                                    const std::vector<std::string>& plugins) {
+  Counters counters;
+  std::stringstream stream;
+
+  for (const auto& pluginName : plugins) {
+    const auto plugin = game.GetPlugin(pluginName);
+    if (!plugin) {
+      continue;
+    }
+
+    const auto isActive = game.IsPluginActive(pluginName);
+
+    if (isActive && plugin->IsLightPlugin()) {
+      stream << "254 FE " << std::setw(3) << std::hex
+             << counters.activeLightPlugins << std::dec << " ";
+      counters.activeLightPlugins += 1;
+    } else if (isActive) {
+      stream << std::setw(3) << counters.activeNormal << " " << std::hex
+             << std::setw(2) << counters.activeNormal << std::dec << "     ";
+      counters.activeNormal += 1;
+    } else {
+      stream << "           ";
+    }
+
+    stream << pluginName << "\r\n";
+  }
+
+  return stream.str();
+}
+
+std::string GetMetadataAsBBCodeYaml(const gui::Game& game,
+                                    const std::string& pluginName) {
+  auto logger = getLogger();
+  if (logger) {
+    logger->debug("Copying metadata for plugin {}", pluginName);
+  }
+
+  // Get metadata from masterlist and userlist.
+  PluginMetadata metadata(pluginName);
+
+  auto masterlistMetadata = game.GetMasterlistMetadata(pluginName);
+  auto userMetadata = game.GetUserMetadata(pluginName);
+
+  if (userMetadata.has_value()) {
+    if (masterlistMetadata.has_value()) {
+      userMetadata.value().MergeMetadata(masterlistMetadata.value());
+    }
+    metadata = userMetadata.value();
+  } else if (masterlistMetadata.has_value()) {
+    metadata = masterlistMetadata.value();
+  }
+
+  return "[spoiler][code]\n" + metadata.AsYaml() + "\n[/code][/spoiler]";
 }
 
 namespace gui {
