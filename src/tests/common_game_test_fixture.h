@@ -52,19 +52,6 @@ static const std::array<GameType, 9> ALL_GAME_TYPES = {GameType::tes3,
                                                        GameType::fo4,
                                                        GameType::fo4vr};
 
-static const std::array<GameId, 12> ALL_GAME_IDS = {GameId::tes3,
-                                                    GameId::tes4,
-                                                    GameId::nehrim,
-                                                    GameId::tes5,
-                                                    GameId::enderal,
-                                                    GameId::tes5se,
-                                                    GameId::enderalse,
-                                                    GameId::tes5vr,
-                                                    GameId::fo3,
-                                                    GameId::fonv,
-                                                    GameId::fo4,
-                                                    GameId::fo4vr};
-
 class CommonGameTestFixture : public ::testing::Test {
 protected:
   CommonGameTestFixture(const GameId gameId) :

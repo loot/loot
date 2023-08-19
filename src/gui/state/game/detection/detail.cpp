@@ -174,9 +174,7 @@ std::vector<GameInstall> FindGameInstalls(
       registry, gameId, xboxGamingRootPaths, preferredUILanguages);
   installs.insert(installs.end(), msInstalls.begin(), msInstalls.end());
 
-  // The generic installs may duplicate Steam or GOG installs, so
-  // deduplicate the found installs.
-  return DeduplicateGameInstalls(installs);
+  return installs;
 }
 
 void IncrementGameSourceCount(
@@ -276,28 +274,28 @@ std::vector<GameInstall> FindGameInstalls(
     const RegistryInterface& registry,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
-  const std::vector<GameId> gameIds = {GameId::tes3,
-                                       GameId::tes4,
-                                       GameId::nehrim,
-                                       GameId::tes5,
-                                       GameId::enderal,
-                                       GameId::tes5se,
-                                       GameId::enderalse,
-                                       GameId::tes5vr,
-                                       GameId::fo3,
-                                       GameId::fonv,
-                                       GameId::fo4,
-                                       GameId::fo4vr};
-
   std::vector<GameInstall> installs;
 
-  for (const auto& gameId : gameIds) {
+  const auto steamInstallPath = steam::GetSteamInstallPath(registry);
+  if (steamInstallPath.has_value()) {
+    const auto manifestPaths =
+        steam::GetSteamAppManifestPaths(steamInstallPath.value());
+    for (const auto& manifestPath : manifestPaths) {
+      const auto install = steam::FindGameInstall(manifestPath);
+      if (install.has_value()) {
+        installs.push_back(install.value());
+      }
+    }
+  }
+
+  for (const auto& gameId : ALL_GAME_IDS) {
     const auto gameInstalls = ::FindGameInstalls(
         registry, gameId, xboxGamingRootPaths, preferredUILanguages);
     installs.insert(installs.end(), gameInstalls.begin(), gameInstalls.end());
   }
 
-  return installs;
+  // The installs may duplicate Steam or GOG installs, so deduplicate them.
+  return DeduplicateGameInstalls(installs);
 }
 
 std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>

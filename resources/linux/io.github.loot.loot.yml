@@ -40,3 +40,4 @@ finish-args:
   - --share=network
   - --device=dri
   - --filesystem=host
+  - --filesystem=xdg-data/Steam

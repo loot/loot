@@ -28,6 +28,7 @@
 
 #include <loot/enum/game_type.h>
 
+#include <array>
 #include <filesystem>
 #include <optional>
 #include <vector>
@@ -35,6 +36,19 @@
 #include "gui/state/game/detection/game_install.h"
 
 namespace loot {
+static const std::array<GameId, 12> ALL_GAME_IDS = {GameId::tes3,
+                                                    GameId::tes4,
+                                                    GameId::nehrim,
+                                                    GameId::tes5,
+                                                    GameId::enderal,
+                                                    GameId::tes5se,
+                                                    GameId::enderalse,
+                                                    GameId::tes5vr,
+                                                    GameId::fo3,
+                                                    GameId::fonv,
+                                                    GameId::fo4,
+                                                    GameId::fo4vr};
+
 struct LocalisedGameInstallPath {
   std::filesystem::path installPath;
   std::string language;
