@@ -37,37 +37,13 @@
 #include "gui/state/game/detection/steam.h"
 #include "gui/state/logging.h"
 
-namespace loot {
-std::string GetDefaultLootFolderName(const GameId gameId) {
-  switch (gameId) {
-    case GameId::tes3:
-      return "Morrowind";
-    case GameId::tes4:
-      return "Oblivion";
-    case GameId::nehrim:
-      return "Nehrim";
-    case GameId::tes5:
-      return "Skyrim";
-    case GameId::enderal:
-      return "Enderal";
-    case GameId::tes5se:
-      return "Skyrim Special Edition";
-    case GameId::enderalse:
-      return "Enderal Special Edition";
-    case GameId::tes5vr:
-      return "Skyrim VR";
-    case GameId::fo3:
-      return "Fallout3";
-    case GameId::fonv:
-      return "FalloutNV";
-    case GameId::fo4:
-      return "Fallout4";
-    case GameId::fo4vr:
-      return "Fallout4VR";
-    default:
-      throw std::logic_error("Unrecognised game ID");
-  }
-}
+namespace {
+using loot::GameId;
+using loot::GameInstall;
+using loot::GetGameName;
+using loot::getLogger;
+using loot::GetSourceDescription;
+using loot::InstallSource;
 
 std::string GetDefaultMasterlistRepositoryName(const GameId gameId) {
   switch (gameId) {
@@ -95,47 +71,6 @@ std::string GetDefaultMasterlistRepositoryName(const GameId gameId) {
       return "fallout4vr";
     default:
       throw std::logic_error("Unrecognised game type");
-  }
-}
-
-std::string GetDefaultMasterlistUrl(const std::string& repositoryName) {
-  return std::string("https://raw.githubusercontent.com/loot/") +
-         repositoryName + "/" + DEFAULT_MASTERLIST_BRANCH + "/masterlist.yaml";
-}
-
-std::string GetDefaultMasterlistUrl(const GameId gameId) {
-  const auto repoName = GetDefaultMasterlistRepositoryName(gameId);
-
-  return GetDefaultMasterlistUrl(repoName);
-}
-
-std::string GetSourceDescription(const InstallSource source) {
-  switch (source) {
-    case InstallSource::steam:
-      return "Steam";
-    case InstallSource::gog:
-      return "GOG";
-    case InstallSource::epic:
-      return "the Epic Games Store";
-    case InstallSource::microsoft:
-      return "the Microsoft Store";
-    default:
-      return "an unknown source";
-  }
-}
-
-std::string GetNameSourceSuffix(const InstallSource source) {
-  switch (source) {
-    case InstallSource::steam:
-      return " (Steam)";
-    case InstallSource::gog:
-      return " (GOG)";
-    case InstallSource::epic:
-      return " (EGS)";
-    case InstallSource::microsoft:
-      return " (MS Store)";
-    default:
-      return "";
   }
 }
 
@@ -184,7 +119,7 @@ std::vector<GameInstall> DeduplicateGameInstalls(
         uniqueGameInstalls.begin(),
         uniqueGameInstalls.end(),
         [&](const GameInstall& other) {
-          return loot::equivalent(gameInstall.installPath, other.installPath);
+          return ::equivalent(gameInstall.installPath, other.installPath);
         });
 
     if (duplicate == uniqueGameInstalls.end()) {
@@ -207,7 +142,7 @@ std::vector<GameInstall> DeduplicateGameInstalls(
 
 // Search for installed copies of the given game, and return all those found.
 std::vector<GameInstall> FindGameInstalls(
-    const RegistryInterface& registry,
+    const loot::RegistryInterface& registry,
     const GameId gameId,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
@@ -218,29 +153,123 @@ std::vector<GameInstall> FindGameInstalls(
 
   std::vector<GameInstall> installs;
 
-  const auto steamInstalls = steam::FindGameInstalls(registry, gameId);
+  const auto steamInstalls = loot::steam::FindGameInstalls(registry, gameId);
   installs.insert(installs.end(), steamInstalls.begin(), steamInstalls.end());
 
-  const auto gogInstalls = gog::FindGameInstalls(registry, gameId);
+  const auto gogInstalls = loot::gog::FindGameInstalls(registry, gameId);
   installs.insert(installs.end(), gogInstalls.begin(), gogInstalls.end());
 
-  const auto genericInstalls = generic::FindGameInstalls(registry, gameId);
+  const auto genericInstalls =
+      loot::generic::FindGameInstalls(registry, gameId);
   installs.insert(
       installs.end(), genericInstalls.begin(), genericInstalls.end());
 
   const auto epicInstall =
-      epic::FindGameInstalls(registry, gameId, preferredUILanguages);
+      loot::epic::FindGameInstalls(registry, gameId, preferredUILanguages);
   if (epicInstall.has_value()) {
     installs.push_back(epicInstall.value());
   }
 
-  const auto msInstalls = microsoft::FindGameInstalls(
+  const auto msInstalls = loot::microsoft::FindGameInstalls(
       registry, gameId, xboxGamingRootPaths, preferredUILanguages);
   installs.insert(installs.end(), msInstalls.begin(), msInstalls.end());
 
   // The generic installs may duplicate Steam or GOG installs, so
   // deduplicate the found installs.
   return DeduplicateGameInstalls(installs);
+}
+
+void IncrementGameSourceCount(
+    std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>&
+        gameSourceCounts,
+    const GameInstall& install) {
+  const auto gameIt = gameSourceCounts.find(install.gameId);
+  if (gameIt == gameSourceCounts.end()) {
+    gameSourceCounts.emplace(
+        install.gameId,
+        std::unordered_map<InstallSource, size_t>{{install.source, 1}});
+  } else {
+    const auto sourceIt = gameIt->second.find(install.source);
+    if (sourceIt == gameIt->second.end()) {
+      gameIt->second.emplace(install.source, 1);
+    } else {
+      sourceIt->second += 1;
+    }
+  }
+}
+}
+
+namespace loot {
+std::string GetDefaultLootFolderName(const GameId gameId) {
+  switch (gameId) {
+    case GameId::tes3:
+      return "Morrowind";
+    case GameId::tes4:
+      return "Oblivion";
+    case GameId::nehrim:
+      return "Nehrim";
+    case GameId::tes5:
+      return "Skyrim";
+    case GameId::enderal:
+      return "Enderal";
+    case GameId::tes5se:
+      return "Skyrim Special Edition";
+    case GameId::enderalse:
+      return "Enderal Special Edition";
+    case GameId::tes5vr:
+      return "Skyrim VR";
+    case GameId::fo3:
+      return "Fallout3";
+    case GameId::fonv:
+      return "FalloutNV";
+    case GameId::fo4:
+      return "Fallout4";
+    case GameId::fo4vr:
+      return "Fallout4VR";
+    default:
+      throw std::logic_error("Unrecognised game ID");
+  }
+}
+
+std::string GetDefaultMasterlistUrl(const std::string& repositoryName) {
+  return std::string("https://raw.githubusercontent.com/loot/") +
+         repositoryName + "/" + DEFAULT_MASTERLIST_BRANCH + "/masterlist.yaml";
+}
+
+std::string GetDefaultMasterlistUrl(const GameId gameId) {
+  const auto repoName = GetDefaultMasterlistRepositoryName(gameId);
+
+  return GetDefaultMasterlistUrl(repoName);
+}
+
+std::string GetSourceDescription(const InstallSource source) {
+  switch (source) {
+    case InstallSource::steam:
+      return "Steam";
+    case InstallSource::gog:
+      return "GOG";
+    case InstallSource::epic:
+      return "the Epic Games Store";
+    case InstallSource::microsoft:
+      return "the Microsoft Store";
+    default:
+      return "an unknown source";
+  }
+}
+
+std::string GetNameSourceSuffix(const InstallSource source) {
+  switch (source) {
+    case InstallSource::steam:
+      return " (Steam)";
+    case InstallSource::gog:
+      return " (GOG)";
+    case InstallSource::epic:
+      return " (EGS)";
+    case InstallSource::microsoft:
+      return " (MS Store)";
+    default:
+      return "";
+  }
 }
 
 std::vector<GameInstall> FindGameInstalls(
@@ -263,31 +292,12 @@ std::vector<GameInstall> FindGameInstalls(
   std::vector<GameInstall> installs;
 
   for (const auto& gameId : gameIds) {
-    const auto gameInstalls = FindGameInstalls(
+    const auto gameInstalls = ::FindGameInstalls(
         registry, gameId, xboxGamingRootPaths, preferredUILanguages);
     installs.insert(installs.end(), gameInstalls.begin(), gameInstalls.end());
   }
 
   return installs;
-}
-
-void IncrementGameSourceCount(
-    std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>&
-        gameSourceCounts,
-    const GameInstall& install) {
-  const auto gameIt = gameSourceCounts.find(install.gameId);
-  if (gameIt == gameSourceCounts.end()) {
-    gameSourceCounts.emplace(
-        install.gameId,
-        std::unordered_map<InstallSource, size_t>{{install.source, 1}});
-  } else {
-    const auto sourceIt = gameIt->second.find(install.source);
-    if (sourceIt == gameIt->second.end()) {
-      gameIt->second.emplace(install.source, 1);
-    } else {
-      sourceIt->second += 1;
-    }
-  }
 }
 
 std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>
@@ -387,7 +397,7 @@ void UpdateSettingsPaths(GameSettings& settings, const GameInstall& install) {
 
 bool ArePathsEquivalent(const GameSettings& settings,
                         const GameInstall& install) {
-  return loot::equivalent(install.installPath, settings.GamePath());
+  return ::equivalent(install.installPath, settings.GamePath());
 }
 
 // Returns the installs that matched no settings.
