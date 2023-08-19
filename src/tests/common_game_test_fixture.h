@@ -251,6 +251,8 @@ protected:
         return GameType::fo4;
       case GameId::fo4vr:
         return GameType::fo4vr;
+      case GameId::starfield:
+        return GameType::starfield;
       default:
         throw std::logic_error("Unrecognised game ID");
     }
@@ -312,8 +314,13 @@ private:
         return "Fallout3.esm";
       case GameId::fonv:
         return "FalloutNV.esm";
-      default:
+      case GameId::fo4:
+      case GameId::fo4vr:
         return "Fallout4.esm";
+      case GameId::starfield:
+        return "Starfield.esm";
+      default:
+        throw std::logic_error("Unrecognised game ID");
     }
   }
 

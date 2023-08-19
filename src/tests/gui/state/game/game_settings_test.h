@@ -41,7 +41,8 @@ TEST_P(SupportsLightPluginsTest,
        shouldReturnTrueForOnlySkyrimSEAndVRAndFallout4AndVR) {
   const auto result = SupportsLightPlugins(GetParam());
   if (GetParam() == GameType::tes5se || GetParam() == GameType::tes5vr ||
-      GetParam() == GameType::fo4 || GetParam() == GameType::fo4vr) {
+      GetParam() == GameType::fo4 || GetParam() == GameType::fo4vr ||
+      GetParam() == GameType::starfield) {
     EXPECT_TRUE(result);
   } else {
     EXPECT_FALSE(result);

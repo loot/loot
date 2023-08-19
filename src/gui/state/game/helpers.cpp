@@ -582,6 +582,12 @@ static constexpr std::array<const char*, 8> FO4VR_OFFICIAL_PLUGINS = {
     "fallout4.esm",
     "fallout4_vr.esm"};
 
+static constexpr std::array<const char*, 4> STARFIELD_OFFICIAL_PLUGINS = {
+    "starfield.esm",
+    "blueprintships-starfield.esm",
+    "constellation.esm",
+    "oldmars.esm"};
+
 bool IsOfficialPlugin(const GameId gameId, const std::string& pluginName) {
   const auto lowercased = boost::locale::to_lower(pluginName);
 
@@ -634,6 +640,10 @@ bool IsOfficialPlugin(const GameId gameId, const std::string& pluginName) {
       return std::find(FO4VR_OFFICIAL_PLUGINS.begin(),
                        FO4VR_OFFICIAL_PLUGINS.end(),
                        lowercased) != FO4VR_OFFICIAL_PLUGINS.end();
+    case GameId::starfield:
+      return std::find(STARFIELD_OFFICIAL_PLUGINS.begin(),
+                       STARFIELD_OFFICIAL_PLUGINS.end(),
+                       lowercased) != STARFIELD_OFFICIAL_PLUGINS.end();
     default:
       throw std::logic_error("Unrecognised game type");
   }

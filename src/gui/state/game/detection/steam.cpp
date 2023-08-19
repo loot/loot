@@ -73,6 +73,8 @@ std::vector<std::string> GetSteamGameIds(const GameId gameId) {
       return {"377160"};
     case GameId::fo4vr:
       return {"611660"};
+    case GameId::starfield:
+      return {"1716740"};
     default:
       throw std::logic_error("Unsupported Steam game");
   }
@@ -103,6 +105,8 @@ std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
       return "Fallout4";
     case GameId::fo4vr:
       return "Fallout4VR";
+    case GameId::starfield:
+      return "Starfield";
     default:
       throw std::logic_error("Unrecognised game ID");
   }

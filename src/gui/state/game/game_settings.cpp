@@ -44,6 +44,7 @@ static constexpr float SKYRIM_FO3_MINIMUM_HEADER_VERSION = 0.94f;
 static constexpr float SKYRIM_SE_MINIMUM_HEADER_VERSION = 1.7f;
 static constexpr float FONV_MINIMUM_HEADER_VERSION = 1.32f;
 static constexpr float FO4_MINIMUM_HEADER_VERSION = 0.95f;
+static constexpr float STARFIELD_MINIMUM_HEADER_VERSION = 0.96f;
 
 GameType GetGameType(const GameId gameId) {
   switch (gameId) {
@@ -68,6 +69,8 @@ GameType GetGameType(const GameId gameId) {
       return GameType::fo4;
     case GameId::fo4vr:
       return GameType::fo4vr;
+    case GameId::starfield:
+      return GameType::starfield;
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -94,6 +97,8 @@ float GetMinimumHeaderVersion(const GameId gameId) {
     case GameId::fo4:
     case GameId::fo4vr:
       return FO4_MINIMUM_HEADER_VERSION;
+    case GameId::starfield:
+      return STARFIELD_MINIMUM_HEADER_VERSION;
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -116,6 +121,7 @@ std::string GetPluginsFolderName(GameId gameId) {
     case GameId::fonv:
     case GameId::fo4:
     case GameId::fo4vr:
+    case GameId::starfield:
       return "Data";
     default:
       throw std::logic_error("Unrecognised game ID");
@@ -148,6 +154,8 @@ std::string ToString(const GameId gameId) {
       return "Fallout4";
     case GameId::fo4vr:
       return "Fallout4VR";
+    case GameId::starfield:
+      return "Starfield";
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -155,7 +163,8 @@ std::string ToString(const GameId gameId) {
 
 bool SupportsLightPlugins(const GameType gameType) {
   return gameType == GameType::tes5se || gameType == GameType::tes5vr ||
-         gameType == GameType::fo4 || gameType == GameType::fo4vr;
+         gameType == GameType::fo4 || gameType == GameType::fo4vr ||
+         gameType == GameType::starfield;
 }
 
 bool ShouldAllowRedating(const GameType gameType) {

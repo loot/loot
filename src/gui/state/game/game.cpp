@@ -68,6 +68,8 @@ using std::filesystem::u8path;
 namespace fs = std::filesystem;
 
 namespace {
+using loot::GameType;
+
 struct Counters {
   size_t activeNormal = 0;
   size_t activeLightPlugins = 0;
@@ -128,6 +130,27 @@ void CopyMasterlistFromDefaultGameFolder(
       }
       fs::copy(defaultMetadataPath, metadataPath);
     }
+  }
+}
+
+std::optional<std::filesystem::path> GetCCCFilename(const GameType gameType) {
+  switch (gameType) {
+    case GameType::tes3:
+    case GameType::tes4:
+    case GameType::tes5:
+    case GameType::tes5vr:
+    case GameType::fo3:
+    case GameType::fonv:
+    case GameType::fo4vr:
+      return std::nullopt;
+    case GameType::tes5se:
+      return "Skyrim.ccc";
+    case GameType::fo4:
+      return "Fallout4.ccc";
+    case GameType::starfield:
+      return "Starfield.ccc";
+    default:
+      throw std::logic_error("Unrecognised game type");
   }
 }
 }
@@ -649,14 +672,13 @@ void Game::RedatePlugins() {
 void Game::LoadCreationClubPluginNames() {
   creationClubPlugins_.clear();
 
-  if (settings_.Type() != GameType::tes5se &&
-      settings_.Type() != GameType::fo4) {
+  const auto cccFilename = GetCCCFilename(settings_.Type());
+
+  if (!cccFilename.has_value()) {
     return;
   }
 
-  const auto cccFilename =
-      settings_.Type() == GameType::tes5se ? "Skyrim.ccc" : "Fallout4.ccc";
-  const auto cccFilePath = settings_.GamePath() / cccFilename;
+  const auto cccFilePath = settings_.GamePath() / cccFilename.value();
 
   if (!fs::exists(cccFilePath)) {
     return;

@@ -41,7 +41,8 @@ enum struct GameId : uint8_t {
   fo3,
   fonv,
   fo4,
-  fo4vr
+  fo4vr,
+  starfield
 };
 
 enum struct InstallSource : uint8_t { steam, gog, epic, microsoft, unknown };

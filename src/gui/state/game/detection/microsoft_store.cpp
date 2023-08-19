@@ -61,6 +61,7 @@ std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
               {basePath / "Fallout New Vegas Spanish", "es"}};
     case GameId::tes5se:
     case GameId::fo4:
+    case GameId::starfield:
       // There's only one path, it could be for any language that
       // the game supports, so just use en (the choice doesn't
       // matter).
@@ -78,6 +79,7 @@ bool IsOnMicrosoftStore(const GameId gameId) {
     case GameId::fo3:
     case GameId::fonv:
     case GameId::fo4:
+    case GameId::starfield:
       return true;
     case GameId::nehrim:
     case GameId::enderal:
@@ -112,6 +114,8 @@ std::filesystem::path GetGameContentPath(
              "Content";
     case GameId::fo4:
       return xboxGamingRootPath / "Fallout 4 (PC)" / "Content";
+    case GameId::starfield:
+      return xboxGamingRootPath / "Starfield" / "Content";
     default:
       throw std::logic_error("Unsupported Microsoft Store game");
   }

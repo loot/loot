@@ -61,7 +61,7 @@ protected:
     std::filesystem::current_path(initialCurrentPath);
   }
 
-  std::string GetSubKey() const {
+  std::optional<std::string> GetSubKey() const {
     switch (GetParam()) {
       case GameId::tes3:
         return "Software\\Bethesda Softworks\\Morrowind";
@@ -88,6 +88,8 @@ protected:
         return "Software\\Bethesda Softworks\\Fallout4";
       case GameId::fo4vr:
         return "Software\\Bethesda Softworks\\Fallout 4 VR";
+      case GameId::starfield:
+        return std::nullopt;
       default:
         throw std::logic_error("Unrecognised game ID");
     }
@@ -98,6 +100,8 @@ protected:
       touch(dataPath.parent_path() / "steam_autocloud.vdf");
     } else if (GetParam() == GameId::nehrim) {
       touch(dataPath.parent_path() / "steam_api.dll");
+    } else if (GetParam() == GameId::starfield) {
+      touch(dataPath.parent_path() / "steam_api64.dll");
     } else {
       touch(dataPath.parent_path() / "installscript.vdf");
     }
@@ -171,7 +175,7 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogSiblingGame) {
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
-  } else if (GetParam() == GameId::enderal) {
+  } else if (GetParam() == GameId::enderal || GetParam() == GameId::starfield) {
     expectedSource = InstallSource::unknown;
   }
 
@@ -215,7 +219,8 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyEpicSiblingGame) {
 }
 
 TEST_P(Generic_FindGameInstallsTest, shouldIdentifyMsStoreSiblingGame) {
-  if (GetParam() == GameId::tes5se || GetParam() == GameId::fo4) {
+  if (GetParam() == GameId::tes5se || GetParam() == GameId::fo4 ||
+      GetParam() == GameId::starfield) {
     touch(dataPath.parent_path() / "appxmanifest.xml");
   } else {
     touch(dataPath.parent_path().parent_path() / "appxmanifest.xml");
@@ -256,7 +261,10 @@ TEST_P(Generic_FindGameInstallsTest, shouldFindGameUsingGenericRegistryValue) {
   RestoreCurrentPath();
 
   TestRegistry registry;
-  registry.SetStringValue(GetSubKey(), dataPath.parent_path().u8string());
+  const auto subKey = GetSubKey();
+  if (subKey.has_value()) {
+    registry.SetStringValue(subKey.value(), dataPath.parent_path().u8string());
+  }
 
   const auto gameInstalls =
       loot::generic::FindGameInstalls(registry, GetParam());
@@ -267,11 +275,15 @@ TEST_P(Generic_FindGameInstallsTest, shouldFindGameUsingGenericRegistryValue) {
     expectedSource = InstallSource::steam;
   }
 
-  ASSERT_EQ(1, gameInstalls.size());
-  EXPECT_EQ(GetParam(), gameInstalls[0].gameId);
-  EXPECT_EQ(expectedSource, gameInstalls[0].source);
-  EXPECT_EQ(dataPath.parent_path(), gameInstalls[0].installPath);
-  EXPECT_EQ("", gameInstalls[0].localPath);
+  if (GetParam() == GameId::starfield) {
+    ASSERT_TRUE(gameInstalls.empty());
+  } else {
+    ASSERT_EQ(1, gameInstalls.size());
+    EXPECT_EQ(GetParam(), gameInstalls[0].gameId);
+    EXPECT_EQ(expectedSource, gameInstalls[0].source);
+    EXPECT_EQ(dataPath.parent_path(), gameInstalls[0].installPath);
+    EXPECT_EQ("", gameInstalls[0].localPath);
+  }
 }
 
 TEST_P(Generic_FindGameInstallsTest,
@@ -279,7 +291,10 @@ TEST_P(Generic_FindGameInstallsTest,
   RestoreCurrentPath();
 
   TestRegistry registry;
-  registry.SetStringValue(GetSubKey(), "invalid");
+  const auto subKey = GetSubKey();
+  if (subKey.has_value()) {
+    registry.SetStringValue(subKey.value(), "invalid");
+  }
 
   const auto gameInstalls =
       loot::generic::FindGameInstalls(registry, GetParam());
@@ -292,16 +307,23 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifySteamRegistryGame) {
   CreateSteamFile();
 
   TestRegistry registry;
-  registry.SetStringValue(GetSubKey(), dataPath.parent_path().u8string());
+  const auto subKey = GetSubKey();
+  if (subKey.has_value()) {
+    registry.SetStringValue(subKey.value(), dataPath.parent_path().u8string());
+  }
 
   const auto gameInstalls =
       loot::generic::FindGameInstalls(registry, GetParam());
 
-  ASSERT_EQ(1, gameInstalls.size());
-  EXPECT_EQ(GetParam(), gameInstalls[0].gameId);
-  EXPECT_EQ(InstallSource::steam, gameInstalls[0].source);
-  EXPECT_EQ(dataPath.parent_path(), gameInstalls[0].installPath);
-  EXPECT_EQ("", gameInstalls[0].localPath);
+  if (GetParam() == GameId::starfield) {
+    ASSERT_TRUE(gameInstalls.empty());
+  } else {
+    ASSERT_EQ(1, gameInstalls.size());
+    EXPECT_EQ(GetParam(), gameInstalls[0].gameId);
+    EXPECT_EQ(InstallSource::steam, gameInstalls[0].source);
+    EXPECT_EQ(dataPath.parent_path(), gameInstalls[0].installPath);
+    EXPECT_EQ("", gameInstalls[0].localPath);
+  }
 }
 
 TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogRegistryGame) {
@@ -313,7 +335,10 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogRegistryGame) {
   }
 
   TestRegistry registry;
-  registry.SetStringValue(GetSubKey(), dataPath.parent_path().u8string());
+  const auto subKey = GetSubKey();
+  if (subKey.has_value()) {
+    registry.SetStringValue(subKey.value(), dataPath.parent_path().u8string());
+  }
 
   const auto gameInstalls =
       loot::generic::FindGameInstalls(registry, GetParam());
@@ -326,11 +351,15 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogRegistryGame) {
     expectedSource = InstallSource::unknown;
   }
 
-  ASSERT_EQ(1, gameInstalls.size());
-  EXPECT_EQ(GetParam(), gameInstalls[0].gameId);
-  EXPECT_EQ(expectedSource, gameInstalls[0].source);
-  EXPECT_EQ(dataPath.parent_path(), gameInstalls[0].installPath);
-  EXPECT_EQ("", gameInstalls[0].localPath);
+  if (GetParam() == GameId::starfield) {
+    ASSERT_TRUE(gameInstalls.empty());
+  } else {
+    ASSERT_EQ(1, gameInstalls.size());
+    EXPECT_EQ(GetParam(), gameInstalls[0].gameId);
+    EXPECT_EQ(expectedSource, gameInstalls[0].source);
+    EXPECT_EQ(dataPath.parent_path(), gameInstalls[0].installPath);
+    EXPECT_EQ("", gameInstalls[0].localPath);
+  }
 }
 
 class DetectGameInstallTest : public CommonGameTestFixture,
@@ -389,8 +418,10 @@ TEST_P(DetectGameInstallTest, shouldDetectASteamInstall) {
     touch(dataPath.parent_path() / "steam_autocloud.vdf");
   } else if (GetParam() == GameId::nehrim) {
     touch(dataPath.parent_path() / "steam_api.dll");
-  } else {
+  } else if (GetParam() != GameId::starfield) {
     touch(dataPath.parent_path() / "installscript.vdf");
+  } else {
+    touch(dataPath.parent_path() / "steam_api64.dll");
   }
 
   const auto install = generic::DetectGameInstall(GetSettings());
@@ -414,7 +445,7 @@ TEST_P(DetectGameInstallTest, shouldDetectAGogInstall) {
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
-  } else if (GetParam() == GameId::enderal) {
+  } else if (GetParam() == GameId::enderal || GetParam() == GameId::starfield) {
     expectedSource = InstallSource::unknown;
   }
 
@@ -453,7 +484,8 @@ TEST_P(DetectGameInstallTest, shouldDetectAnEpicInstall) {
 }
 
 TEST_P(DetectGameInstallTest, shouldDetectAMicrosoftInstall) {
-  if (GetParam() == GameId::tes5se || GetParam() == GameId::fo4) {
+  if (GetParam() == GameId::tes5se || GetParam() == GameId::fo4 ||
+      GetParam() == GameId::starfield) {
     touch(dataPath.parent_path() / "appxmanifest.xml");
   } else {
     touch(dataPath.parent_path().parent_path() / "appxmanifest.xml");
