@@ -88,11 +88,7 @@ std::vector<std::string> GetGogGameIds(const GameId gameId) {
 std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
-      // Morrowind doesn't actually have a local data path, but libloadorder
-      // requires one to be provided when not running on Windows even though it
-      // is then not used.
-      // TODO: Replace this with nullopt after updating to the next libloot release.
-      return "Morrowind";
+      return std::nullopt;
     case GameId::tes4:
     case GameId::nehrim:
       return "Oblivion";

@@ -37,6 +37,11 @@ Fixed
   theme, some of the text in LOOT's main window cards would be difficult to read
   due to having very low contrast. LOOT's default theme now adapts its colours
   if it detects that the system colour scheme is dark.
+- When reading the list of active plugins for Oblivion, LOOT would look for a
+  file named ``plugins.txt``, which caused inaccurate results on case-sensitive
+  filesystems, as Oblivion writes the file as ``Plugins.txt``. Via libloot.
+- Condition evaluation would only recognise plugin files as plugins if they had
+  lowercase file extensions. Via libloot.
 
 Changed
 -------
@@ -48,6 +53,8 @@ Changed
   between settings for the total conversions and for the original games.
 - The error messages displayed when LOOT cannot detect any game installs have
   been improved.
+- LOOT will no longer encounter an error when the game's local app data path
+  does not exist. Via libloot.
 - Theme files are now loaded from the ``themes`` folder in LOOT's data folder
   instead of the ``themes`` folder in LOOT's install folder.
 - When running on Linux, the user's home directory path is now replaced with
@@ -55,12 +62,14 @@ Changed
 - When running on Linux, LOOT now uses ``$XDG_DATA_HOME/LOOT`` instead of
   ``$XDG_CONFIG_HOME/LOOT`` to store its data, and falls back to using
   ``$HOME/.local/share/LOOT`` instead of ``$HOME/.config/LOOT``.
+- LOOT now supports `v0.21 <https://loot-api.readthedocs.io/en/0.21.0/metadata/changelog.html#id1>`_ of its metadata syntax. Via libloot.
 - Updated Bulgarian translation.
 - Updated Finnish translation.
 - Updated French translation.
 - Updated German translation.
 - Updated Italian translation.
 - Updated Ukrainian translation.
+- Updated libloot to 0.21.0.
 - Updated Qt to 6.5.2.
 - Updated to ICU 71.1 on Linux.
 

@@ -51,7 +51,7 @@ std::string EscapeMarkdownASCIIPunctuation(const std::string& text);
 std::string DescribeCycle(const std::vector<Vertex>& cycle);
 
 std::vector<SourcedMessage> CheckForRemovedPlugins(
-    const std::vector<std::string>& pluginPathsBefore,
+    const std::vector<std::filesystem::path>& pluginPathsBefore,
     const std::vector<std::string>& pluginNamesAfter);
 
 std::vector<Tag> ReadBashTagsFile(std::istream& in);

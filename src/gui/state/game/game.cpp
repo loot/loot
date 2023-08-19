@@ -737,9 +737,9 @@ std::vector<std::string> Game::SortPlugins() {
     // state that has been changed by sorting.
     ClearMessages();
 
-    std::vector<std::string> pluginPaths;
+    std::vector<std::filesystem::path> pluginPaths;
     for (const auto& pluginName : gameHandle_->GetLoadOrder()) {
-      pluginPaths.push_back(ResolveGameFilePath(pluginName).u8string());
+      pluginPaths.push_back(ResolveGameFilePath(pluginName));
     }
 
     sortedPlugins = gameHandle_->SortPlugins(pluginPaths);
@@ -1119,13 +1119,13 @@ std::filesystem::path Game::GetLOOTGamePath() const {
   return ::GetLOOTGamePath(lootDataPath_, settings_.FolderName());
 }
 
-std::vector<std::string> Game::GetInstalledPluginPaths() const {
+std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
   const auto logger = getLogger();
 
   // Checking to see if a plugin is valid is relatively slow, almost entirely
   // due to blocking on opening the file, so instead just add all the files
   // found to a buffer and then check if they're valid plugins in parallel.
-  std::vector<std::string> maybePlugins;
+  std::vector<std::filesystem::path> maybePlugins;
   std::set<Filename> foundPlugins;
 
   // Scan external data paths first, as the game checks them before the main
@@ -1145,7 +1145,7 @@ std::vector<std::string> Game::GetInstalledPluginPaths() const {
       if (fs::is_regular_file(it->status())) {
         const auto filename = Filename(it->path().filename().u8string());
         if (foundPlugins.count(filename) == 0) {
-          maybePlugins.push_back(it->path().u8string());
+          maybePlugins.push_back(it->path());
           foundPlugins.insert(filename);
         }
       }
@@ -1165,7 +1165,7 @@ std::vector<std::string> Game::GetInstalledPluginPaths() const {
     if (fs::is_regular_file(it->status())) {
       const auto filename = Filename(it->path().filename().u8string());
       if (foundPlugins.count(filename) == 0) {
-        maybePlugins.push_back(std::string(filename));
+        maybePlugins.push_back(it->path());
         foundPlugins.insert(filename);
       }
     }
@@ -1175,11 +1175,11 @@ std::vector<std::string> Game::GetInstalledPluginPaths() const {
       std::remove_if(std::execution::par_unseq,
                      maybePlugins.begin(),
                      maybePlugins.end(),
-                     [&](const std::string& path) {
+                     [&](const std::filesystem::path& path) {
                        try {
                          const auto isValid = gameHandle_->IsValidPlugin(path);
                          if (isValid && logger) {
-                           logger->debug("Found plugin: {}", path);
+                           logger->debug("Found plugin: {}", path.u8string());
                          }
                          return !isValid;
                        } catch (...) {

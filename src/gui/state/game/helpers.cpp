@@ -136,25 +136,22 @@ std::string DescribeCycle(const std::vector<Vertex>& cycle) {
 }
 
 std::vector<SourcedMessage> CheckForRemovedPlugins(
-    const std::vector<std::string>& pluginPathsBefore,
+    const std::vector<std::filesystem::path>& pluginPathsBefore,
     const std::vector<std::string>& pluginNamesAfter) {
   // Plugin name case won't change, so can compare strings
   // without normalising case.
   std::set<std::string> pluginsSet(pluginNamesAfter.cbegin(),
                                    pluginNamesAfter.cend());
 
-  static constexpr size_t GHOST_EXTENSION_LENGTH =
-      std::char_traits<char>::length(GHOST_EXTENSION);
-
   std::vector<SourcedMessage> messages;
   for (const auto& pluginPath : pluginPathsBefore) {
-    const auto unghostedPluginPath =
-        boost::iends_with(pluginPath, GHOST_EXTENSION)
-            ? pluginPath.substr(0, pluginPath.length() - GHOST_EXTENSION_LENGTH)
-            : pluginPath;
+    auto unghostedPluginPath = pluginPath;
+    if (boost::iequals(unghostedPluginPath.extension().u8string(),
+                       GHOST_EXTENSION)) {
+      unghostedPluginPath.replace_extension();
+    }
 
-    const auto unghostedPluginName =
-        std::filesystem::u8path(unghostedPluginPath).filename().u8string();
+    const auto unghostedPluginName = unghostedPluginPath.filename().u8string();
 
     if (pluginsSet.count(unghostedPluginName) == 0) {
       messages.push_back(CreatePlainTextSourcedMessage(
@@ -164,7 +161,7 @@ std::vector<SourcedMessage> CheckForRemovedPlugins(
               boost::locale::translate("LOOT has detected that \"{0}\" is "
                                        "invalid and is now ignoring it.")
                   .str(),
-              pluginPath)));
+              pluginPath.u8string())));
     }
   }
 

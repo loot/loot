@@ -126,11 +126,17 @@ TEST_P(GameTest, initShouldThrowIfGamePathWasNotGiven) {
 }
 
 #ifndef _WIN32
-TEST_P(GameTest, initShouldThrowOnLinuxWasLocalPathIsNotGiven) {
+TEST_P(GameTest,
+       initShouldNotThrowOnLinuxIfLocalPathWasNotGivenAndGameIsMorrowind) {
   auto settings =
       GameSettings(GetParam(), "folder").SetGamePath(dataPath.parent_path());
   Game game(settings, lootDataPath, "");
-  EXPECT_THROW(game.Init(), std::system_error);
+
+  if (GetParam() == GameId::tes3) {
+    EXPECT_NO_THROW(game.Init());
+  } else {
+    EXPECT_THROW(game.Init(), std::system_error);
+  }
 }
 #else
 TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathWasNotGiven) {

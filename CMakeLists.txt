@@ -71,11 +71,11 @@ set(GTEST_LIBRARIES "${BINARY_DIR}/lib/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRAR
 
 if(NOT DEFINED LIBLOOT_URL)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.4/libloot-0.19.4-win64.7z")
-        set(LIBLOOT_HASH "SHA256=c88ab4c83de18d15e67fac0b7b88135bcb6e811ae7a442b20a2740e7e5e641dd")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.21.0/libloot-0.21.0-win64.7z")
+        set(LIBLOOT_HASH "SHA256=7a1ed5a5b9ecec748f2dde43d73786f25b844874e116d86ddb603ede5933b5db")
     else()
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.4/libloot-0.19.4-Linux.tar.xz")
-        set(LIBLOOT_HASH "SHA256=d3035b2bc2222b6c4daf61681bc16d991386b323a1361672885604c60ee199d3")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.21.0/libloot-0.21.0-Linux.tar.xz")
+        set(LIBLOOT_HASH "SHA256=2ce58a64380ef436ea5d01fa647ee6cfeb23f76b2468162bf099f4de07e31ea3")
     endif()
 endif()
 

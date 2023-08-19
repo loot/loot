@@ -147,7 +147,7 @@ public:
 
 private:
   std::filesystem::path GetLOOTGamePath() const;
-  std::vector<std::string> GetInstalledPluginPaths() const;
+  std::vector<std::filesystem::path> GetInstalledPluginPaths() const;
   void AppendMessages(std::vector<SourcedMessage> messages);
   std::filesystem::path ResolveGameFilePath(
       const std::string& pluginName) const;
