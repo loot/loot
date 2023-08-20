@@ -453,6 +453,14 @@ void MainWindow::setupUi() {
           &MainWindow::linkColorChanged,
           this,
           &MainWindow::handleLinkColorChanged);
+
+#ifndef _WIN32
+  // Only run this on Linux, because it intentionally has no effect on Windows.
+  connect(QGuiApplication::styleHints(),
+          &QStyleHints::colorSchemeChanged,
+          this,
+          &MainWindow::handleColorSchemeChanged);
+#endif
 }
 
 void MainWindow::setupMenuBar() {
@@ -2697,5 +2705,24 @@ void MainWindow::handleLinkColorChanged() {
     cardDelegate->refreshMessages();
     pluginCardsView->reset();
   }
+}
+
+void MainWindow::handleColorSchemeChanged(Qt::ColorScheme colorScheme) {
+  const auto logger = getLogger();
+  if (logger) {
+    std::string description;
+    if (colorScheme == Qt::ColorScheme::Unknown) {
+      description = "unknown";
+    } else if (colorScheme == Qt::ColorScheme::Light) {
+      description = "light";
+    } else if (colorScheme == Qt::ColorScheme::Dark) {
+      description = "dark";
+    } else {
+      description = std::to_string(static_cast<int>(colorScheme));
+    }
+    logger->info("The system color scheme is now {}", description);
+  }
+
+  applyTheme();
 }
 }

@@ -317,6 +317,7 @@ private slots:
   void handleIconColorChanged();
   void handleSidebarTextColorChanged();
   void handleLinkColorChanged();
+  void handleColorSchemeChanged(Qt::ColorScheme colorScheme);
 };
 }
 
