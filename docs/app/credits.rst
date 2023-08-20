@@ -31,7 +31,7 @@ In addition, the following are credited with application-related support:
 
 * Testing: Too many to list, thank you all!
 
-LOOT uses the `Boost`_, `spdlog`_ and `toml++`_ libraries and the `OGDF`_ and `Qt`_ frameworks.
+LOOT uses the `Boost`_, `spdlog`_, `toml++`_ and `ValveFileVDF`_ libraries and the `OGDF`_ and `Qt`_ frameworks.
 
 .. _GitHub: https://github.com/loot/
 .. _here: https://loot.github.io/credits/
@@ -39,5 +39,6 @@ LOOT uses the `Boost`_, `spdlog`_ and `toml++`_ libraries and the `OGDF`_ and `Q
 .. _Boost: https://www.boost.org/
 .. _spdlog: https://github.com/gabime/spdlog
 .. _toml++: https://github.com/marzer/tomlplusplus
+.. _ValveFileVDF: https://github.com/TinyTinni/ValveFileVDF
 .. _OGDF: https://ogdf.uos.de/
 .. _Qt: https://www.qt.io/

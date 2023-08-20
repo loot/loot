@@ -49,7 +49,7 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.77 REQUIRED COMPONENTS locale)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    find_package(ICU 66 REQUIRED COMPONENTS uc i18n)
+    find_package(ICU 71.1 EXACT REQUIRED COMPONENTS data uc i18n)
     find_package(TBB REQUIRED)
 endif()
 
@@ -167,6 +167,16 @@ ExternalProject_Add(spdlog
     INSTALL_COMMAND "")
 ExternalProject_Get_Property(spdlog SOURCE_DIR)
 set(SPDLOG_INCLUDE_DIRS "${SOURCE_DIR}/include")
+
+ExternalProject_Add(ValveFileVDF
+    PREFIX "external"
+    URL "https://github.com/TinyTinni/ValveFileVDF/archive/3ed733cac6d0306e39d228d4a00311adfcc682f6.tar.gz"
+    URL_HASH "SHA256=3f93af9dda6a5eebd53398e572b77eb9ca488e7d422543dd571bee08e31db481"
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND "")
+ExternalProject_Get_Property(ValveFileVDF SOURCE_DIR)
+set(VALVE_FILE_VDF_INCLUDE_DIRS "${SOURCE_DIR}")
 
 if(OGDF_FOUND)
     # Set the value to the found target instead of a list of libraries, it
@@ -470,14 +480,14 @@ endif()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_ALL_SOURCES})
-add_dependencies(LOOT libloot minizip-ng spdlog OGDF)
+add_dependencies(LOOT libloot minizip-ng spdlog ValveFileVDF OGDF)
 target_link_libraries(LOOT PRIVATE
     Qt::Widgets Qt::Network Boost::locale ${MINIZIP_NG_LIBRARIES} ${OGDF_LIBRARIES})
 
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
-    libloot minizip-ng spdlog GTest testing-plugins)
+    libloot minizip-ng spdlog ValveFileVDF GTest testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
     Qt::Widgets Qt::Network Qt::Test Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
 
@@ -493,6 +503,7 @@ target_include_directories(LOOT SYSTEM PRIVATE
     ${LIBLOOT_INCLUDE_DIRS}
     ${MINIZIP_NG_INCLUDE_DIRS}
     ${SPDLOG_INCLUDE_DIRS}
+    ${VALVE_FILE_VDF_INCLUDE_DIRS}
     "${tomlplusplus_SOURCE_DIR}/include"
     ${OGDF_INCLUDE_DIRS})
 
@@ -504,6 +515,7 @@ target_include_directories(loot_gui_tests SYSTEM PRIVATE
     ${LIBLOOT_INCLUDE_DIRS}
     ${MINIZIP_NG_INCLUDE_DIRS}
     ${SPDLOG_INCLUDE_DIRS}
+    ${VALVE_FILE_VDF_INCLUDE_DIRS}
     "${tomlplusplus_SOURCE_DIR}/include")
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -523,7 +535,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         target_link_libraries(Qt6::Widgets INTERFACE bz2)
     endif()
 else()
-    set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::uc TBB::tbb)
+    set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::data ICU::uc TBB::tbb)
 
     target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})
     target_link_libraries(loot_gui_tests PRIVATE ${LOOT_LIBS})

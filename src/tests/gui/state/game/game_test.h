@@ -743,9 +743,17 @@ TEST_P(GameTest,
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
-  EXPECT_EQ(1, game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size());
+  const auto messages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+
+#ifdef _WIN32
+  EXPECT_EQ(1, messages.size());
   EXPECT_EQ("You have not sorted your load order this session\\.",
             game.GetMessages(MessageContent::DEFAULT_LANGUAGE)[0].text);
+#else
+  EXPECT_EQ(3, messages.size());
+  EXPECT_EQ("You have not sorted your load order this session\\.",
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE)[0].text);
+#endif
 }
 
 TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsAtExternalPaths) {
@@ -982,7 +990,14 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
 TEST_P(GameTest, aMessageShouldBeCachedByDefault) {
   Game game = CreateInitialisedGame();
 
-  ASSERT_EQ(1, game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size());
+  const auto messageCount =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size();
+
+#ifdef _WIN32
+  ASSERT_EQ(1, messageCount);
+#else
+  ASSERT_EQ(3, messageCount);
+#endif
 }
 
 TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
@@ -1024,7 +1039,13 @@ TEST_P(GameTest,
   Game game = CreateInitialisedGame();
   game.IncrementLoadOrderSortCount();
 
-  EXPECT_TRUE(game.GetMessages(MessageContent::DEFAULT_LANGUAGE).empty());
+  const auto messages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+
+#ifdef _WIN32
+  EXPECT_TRUE(messages.empty());
+#else
+  EXPECT_EQ(2, messages.size());
+#endif
 }
 
 TEST_P(GameTest,
@@ -1058,7 +1079,13 @@ TEST_P(
   game.IncrementLoadOrderSortCount();
   game.DecrementLoadOrderSortCount();
 
-  EXPECT_TRUE(game.GetMessages(MessageContent::DEFAULT_LANGUAGE).empty());
+  const auto messages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+
+#ifdef _WIN32
+  EXPECT_TRUE(messages.empty());
+#else
+  EXPECT_EQ(2, messages.size());
+#endif
 }
 
 TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
@@ -1073,9 +1100,15 @@ TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
 
   const auto gameMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
 
+#ifdef _WIN32
   ASSERT_EQ(3, gameMessages.size());
   EXPECT_EQ(messages[0], gameMessages[0]);
   EXPECT_EQ(messages[1], gameMessages[1]);
+#else
+  ASSERT_EQ(5, gameMessages.size());
+  EXPECT_EQ(messages[0], gameMessages[0]);
+  EXPECT_EQ(messages[1], gameMessages[1]);
+#endif
 }
 
 TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {

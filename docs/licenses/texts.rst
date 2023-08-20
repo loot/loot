@@ -51,3 +51,11 @@ LOOT Documentation
 
 .. include:: MIT License (toml++).txt
   :literal:
+
+`ValveFileVDF`_
+===============
+
+.. _ValveFileVDF: https://github.com/TinyTinni/ValveFileVDF
+
+.. include:: MIT License (ValveFileVDF).txt
+  :literal:

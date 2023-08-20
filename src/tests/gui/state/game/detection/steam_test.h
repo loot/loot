@@ -30,6 +30,435 @@ along with LOOT.  If not, see
 #include "tests/gui/state/game/detection/test_registry.h"
 
 namespace loot::test {
+#ifdef _WIN32
+TEST(GetSteamInstallPath, shouldReturnNulloptWhenTheRegistryEntryDoesNotExist) {
+  const auto path = loot::steam::GetSteamInstallPath(TestRegistry());
+
+  EXPECT_FALSE(path.has_value());
+}
+
+TEST(GetSteamInstallPath, shouldReturnTheStoredPathWhenTheRegistryEntryExists) {
+  TestRegistry registry;
+  const auto expectedPath = "C:\\Program Files (x86)\\Steam";
+  registry.SetStringValue("Software\\Valve\\Steam", expectedPath);
+
+  const auto path = loot::steam::GetSteamInstallPath(registry);
+
+  ASSERT_TRUE(path.has_value());
+  EXPECT_EQ(expectedPath, path.value().u8string());
+}
+#else
+TEST(GetSteamInstallPath, shouldReturnTheSteamFolderInUserLocalShare) {
+  const auto path = loot::steam::GetSteamInstallPath(TestRegistry());
+
+  ASSERT_TRUE(path.has_value());
+  EXPECT_EQ(std::string(getenv("HOME")) + "/.local/share/Steam",
+            path.value().u8string());
+}
+#endif
+
+class FilesystemTest : public ::testing::Test {
+public:
+  FilesystemTest() : rootPath_(getTempPath()) {}
+
+protected:
+  void SetUp() override { std::filesystem::create_directories(rootPath_); }
+
+  void TearDown() override { std::filesystem::remove_all(rootPath_); }
+
+  const std::filesystem::path rootPath_;
+};
+
+class GetSteamAppManifestPathsTest : public FilesystemTest {
+public:
+  GetSteamAppManifestPathsTest() :
+      filePath_(rootPath_ / "config" / "libraryfolders.vdf") {}
+
+protected:
+  void SetUp() override {
+    FilesystemTest::SetUp();
+
+    std::filesystem::create_directories(filePath_.parent_path());
+  }
+
+  const std::filesystem::path filePath_;
+};
+
+TEST_F(GetSteamAppManifestPathsTest,
+       shouldReturnAnEmptyVectorIfTheLibraryFoldersVdfFileDoesNotExist) {
+  const auto paths = loot::steam::GetSteamAppManifestPaths(rootPath_);
+
+  EXPECT_TRUE(paths.empty());
+}
+
+TEST_F(GetSteamAppManifestPathsTest,
+       shouldReturnAnEmptyVectorIfTheRootNodeHasTheWrongName) {
+  std::ofstream out(filePath_);
+  out << R"test(
+"wrong name"
+{
+	"0"
+	{
+		"path"		"C:\\Program Files (x86)\\Steam"
+		"label"		""
+		"contentid"		"1137098260226172853"
+		"totalsize"		"0"
+		"update_clean_bytes_tally"		"3302272801"
+		"time_last_update_corruption"		"0"
+		"apps"
+		{
+			"228980"		"181169252"
+		}
+	}
+	"1"
+	{
+		"path"		"D:\\Games\\Steam"
+		"label"		""
+		"contentid"		"7286921146364631392"
+		"totalsize"		"252496048128"
+		"update_clean_bytes_tally"		"66203891438"
+		"time_last_update_corruption"		"1637608828"
+		"apps"
+		{
+			"203770"		"2554786621"
+			"221640"		"22708311"
+			"226840"		"4035469646"
+			"489830"		"15345519558"
+			"508440"		"4782028087"
+			"736260"		"111159842"
+			"763890"		"2204294236"
+			"1985690"		"1902985401"
+		}
+	}
+}
+)test";
+  out.close();
+
+  const auto paths = loot::steam::GetSteamAppManifestPaths(rootPath_);
+
+  EXPECT_TRUE(paths.empty());
+}
+
+TEST_F(GetSteamAppManifestPathsTest, shouldSkipFoldersWithNoPathKey) {
+  std::ofstream out(filePath_);
+  out << R"test(
+"libraryfolders"
+{
+	"0"
+	{
+		"label"		""
+		"contentid"		"1137098260226172853"
+		"totalsize"		"0"
+		"update_clean_bytes_tally"		"3302272801"
+		"time_last_update_corruption"		"0"
+		"apps"
+		{
+			"228980"		"181169252"
+			"22330"		"181169252"
+		}
+	}
+	"1"
+	{
+		"path"		"D:\\Games\\Steam"
+		"label"		""
+		"contentid"		"7286921146364631392"
+		"totalsize"		"252496048128"
+		"update_clean_bytes_tally"		"66203891438"
+		"time_last_update_corruption"		"1637608828"
+		"apps"
+		{
+			"203770"		"2554786621"
+			"221640"		"22708311"
+			"226840"		"4035469646"
+			"489830"		"15345519558"
+			"508440"		"4782028087"
+			"736260"		"111159842"
+			"763890"		"2204294236"
+			"1985690"		"1902985401"
+		}
+	}
+}
+)test";
+  out.close();
+
+  const auto paths = loot::steam::GetSteamAppManifestPaths(rootPath_);
+
+  ASSERT_EQ(1, paths.size());
+  EXPECT_EQ(std::filesystem::u8path("D:\\Games\\Steam") / "steamapps" /
+                "appmanifest_489830.acf",
+            paths[0]);
+}
+
+TEST_F(GetSteamAppManifestPathsTest, shouldSkipFoldersWithNoAppsKey) {
+  std::ofstream out(filePath_);
+  out << R"test(
+"libraryfolders"
+{
+	"0"
+	{
+		"path"		"C:\\Program Files (x86)\\Steam"
+		"label"		""
+		"contentid"		"1137098260226172853"
+		"totalsize"		"0"
+		"update_clean_bytes_tally"		"3302272801"
+		"time_last_update_corruption"		"0"
+	}
+	"1"
+	{
+		"path"		"D:\\Games\\Steam"
+		"label"		""
+		"contentid"		"7286921146364631392"
+		"totalsize"		"252496048128"
+		"update_clean_bytes_tally"		"66203891438"
+		"time_last_update_corruption"		"1637608828"
+		"apps"
+		{
+			"203770"		"2554786621"
+			"221640"		"22708311"
+			"226840"		"4035469646"
+			"489830"		"15345519558"
+			"508440"		"4782028087"
+			"736260"		"111159842"
+			"763890"		"2204294236"
+			"1985690"		"1902985401"
+		}
+	}
+}
+)test";
+  out.close();
+
+  const auto paths = loot::steam::GetSteamAppManifestPaths(rootPath_);
+
+  ASSERT_EQ(1, paths.size());
+  EXPECT_EQ(std::filesystem::u8path("D:\\Games\\Steam") / "steamapps" /
+                "appmanifest_489830.acf",
+            paths[0]);
+}
+
+TEST_F(
+    GetSteamAppManifestPathsTest,
+    shouldReturnAppManifestPathsConstructedFromTheLibraryPathsAndAppIdsInTheVdf) {
+  std::ofstream out(filePath_);
+  out << R"test(
+"libraryfolders"
+{
+	"0"
+	{
+		"path"		"C:\\Program Files (x86)\\Steam"
+		"label"		""
+		"contentid"		"1137098260226172853"
+		"totalsize"		"0"
+		"update_clean_bytes_tally"		"3302272801"
+		"time_last_update_corruption"		"0"
+		"apps"
+		{
+			"228980"		"181169252"
+			"22330"		"181169252"
+		}
+	}
+	"1"
+	{
+		"path"		"D:\\Games\\Steam"
+		"label"		""
+		"contentid"		"7286921146364631392"
+		"totalsize"		"252496048128"
+		"update_clean_bytes_tally"		"66203891438"
+		"time_last_update_corruption"		"1637608828"
+		"apps"
+		{
+			"203770"		"2554786621"
+			"221640"		"22708311"
+			"226840"		"4035469646"
+			"489830"		"15345519558"
+			"508440"		"4782028087"
+			"736260"		"111159842"
+			"763890"		"2204294236"
+			"1985690"		"1902985401"
+		}
+	}
+}
+)test";
+  out.close();
+
+  const auto paths = loot::steam::GetSteamAppManifestPaths(rootPath_);
+
+  ASSERT_EQ(2, paths.size());
+  EXPECT_EQ(std::filesystem::u8path("C:\\Program Files (x86)\\Steam") /
+                "steamapps" / "appmanifest_22330.acf",
+            paths[0].u8string());
+  EXPECT_EQ(std::filesystem::u8path("D:\\Games\\Steam") / "steamapps" /
+                "appmanifest_489830.acf",
+            paths[1]);
+}
+
+class Steam_FindGameInstallTest : public FilesystemTest {
+public:
+  Steam_FindGameInstallTest() :
+      filePath_(rootPath_ / "appmanifest.acf"),
+      dataPath_(rootPath_ / "common" / "Skyrim Special Edition" / "Data") {}
+
+protected:
+  void SetUp() override {
+    FilesystemTest::SetUp();
+
+    std::filesystem::create_directories(dataPath_);
+    touch(dataPath_ / "Skyrim.esm");
+    touch(dataPath_.parent_path() / "SkyrimSE.exe");
+  }
+
+  const std::filesystem::path dataPath_;
+  const std::filesystem::path filePath_;
+};
+
+TEST_F(Steam_FindGameInstallTest, shouldReturnNulloptIfTheAcfFileDoesNotExist) {
+  const auto install = loot::steam::FindGameInstall(filePath_);
+
+  EXPECT_FALSE(install.has_value());
+}
+
+TEST_F(Steam_FindGameInstallTest,
+       shouldReturnNulloptIfTheAcfFileDoesNotContainAnAppId) {
+  std::ofstream out(filePath_);
+  out << R"test(
+"AppState"
+{
+	"Universe"		"1"
+	"LauncherPath"		"C:\\Program Files (x86)\\Steam\\steam.exe"
+	"name"		"The Elder Scrolls V: Skyrim Special Edition"
+	"StateFlags"		"4"
+	"installdir"		"Skyrim Special Edition"
+}
+)test";
+  out.close();
+
+  const auto install = loot::steam::FindGameInstall(filePath_);
+
+  EXPECT_FALSE(install.has_value());
+}
+
+TEST_F(Steam_FindGameInstallTest, shouldReturnNulloptIfTheAppIdIsEmpty) {
+  std::ofstream out(filePath_);
+  out << R"test(
+"AppState"
+{
+	"appid"		""
+	"Universe"		"1"
+	"LauncherPath"		"C:\\Program Files (x86)\\Steam\\steam.exe"
+	"name"		"The Elder Scrolls V: Skyrim Special Edition"
+	"StateFlags"		"4"
+	"installdir"		"Skyrim Special Edition"
+}
+)test";
+  out.close();
+
+  const auto install = loot::steam::FindGameInstall(filePath_);
+
+  EXPECT_FALSE(install.has_value());
+}
+
+TEST_F(Steam_FindGameInstallTest,
+       shouldReturnNulloptIfTheAcfFileDoesNotContainAnInstallDir) {
+  std::ofstream out(filePath_);
+  out << R"test(
+"AppState"
+{
+	"appid"		"489830"
+	"Universe"		"1"
+	"LauncherPath"		"C:\\Program Files (x86)\\Steam\\steam.exe"
+	"name"		"The Elder Scrolls V: Skyrim Special Edition"
+	"StateFlags"		"4"
+}
+)test";
+  out.close();
+
+  const auto install = loot::steam::FindGameInstall(filePath_);
+
+  EXPECT_FALSE(install.has_value());
+}
+
+TEST_F(Steam_FindGameInstallTest, shouldReturnNulloptIfTheInstallDirIsEmpty) {
+  std::ofstream out(filePath_);
+  out << R"test(
+"AppState"
+{
+	"appid"		"489830"
+	"installdir"		""
+}
+)test";
+  out.close();
+
+  const auto install = loot::steam::FindGameInstall(filePath_);
+
+  EXPECT_FALSE(install.has_value());
+}
+
+TEST_F(Steam_FindGameInstallTest,
+       shouldReturnNulloptIfTheAppIdIsNotOfASupportedGame) {
+  std::ofstream out(filePath_);
+  out << R"test(
+"AppState"
+{
+	"appid"		"736260"
+	"Universe"		"1"
+	"LauncherPath"		"C:\\Program Files (x86)\\Steam\\steam.exe"
+	"name"		"Baba Is You"
+	"StateFlags"		"4"
+	"installdir"		"Baba Is You"
+}
+)test";
+  out.close();
+
+  const auto install = loot::steam::FindGameInstall(filePath_);
+
+  EXPECT_FALSE(install.has_value());
+}
+
+TEST_F(Steam_FindGameInstallTest,
+       shouldReturnNulloptIfTheInstallDirIsNotAValidGameInstall) {
+  std::ofstream out(filePath_);
+  out << R"test(
+"AppState"
+{
+	"appid"		"489830"
+	"installdir"		"invalid"
+}
+)test";
+  out.close();
+
+  const auto install = loot::steam::FindGameInstall(filePath_);
+
+  EXPECT_FALSE(install.has_value());
+}
+
+TEST_F(Steam_FindGameInstallTest,
+       shouldReturnTheInstallDetailsIfTheAcfDescribesAValidSupportedGame) {
+  std::ofstream out(filePath_);
+  out << R"test(
+"AppState"
+{
+	"appid"		"489830"
+	"installdir"		"Skyrim Special Edition"
+}
+)test";
+  out.close();
+
+  const auto install = loot::steam::FindGameInstall(filePath_);
+
+  ASSERT_TRUE(install.has_value());
+  EXPECT_EQ(GameId::tes5se, install.value().gameId);
+  EXPECT_EQ(InstallSource::steam, install.value().source);
+  EXPECT_EQ(dataPath_.parent_path(), install.value().installPath);
+
+#ifdef _WIN32
+  EXPECT_TRUE(install.value().localPath.empty());
+#else
+  const auto localPath = filePath_.parent_path() / "compatdata" / "489830" /
+                         "pfx" / "drive_c" / "users" / "steamuser" / "AppData" /
+                         "Local" / "Skyrim Special Edition";
+  EXPECT_EQ(localPath, install.value().localPath);
+#endif
+}
+
 class Steam_FindGameInstallsTest
     : public CommonGameTestFixture,
       public ::testing::WithParamInterface<GameId> {
