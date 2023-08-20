@@ -106,6 +106,14 @@ jobs:
           python install_boost.py --directory ~ --boost-version 1.81.0 -a 64 -t gcc-10 locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
+      - name: Get ICU
+        id: get-icu
+        run: |
+          wget https://github.com/unicode-org/icu/releases/download/release-71-1/icu4c-71_1-Ubuntu20.04-x64.tgz
+          tar -xf icu4c-71_1-Ubuntu20.04-x64.tgz
+
+          echo "root=${{ github.workspace }}/icu/usr/local" >> $GITHUB_OUTPUT
+
       - name: Download Qt
         id: qt-metadata
         run: |
@@ -132,12 +140,13 @@ jobs:
           mkdir build
           cd build
           export CXX="g++-10" CC="gcc-10"
-          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
+          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}" -DICU_ROOT="${{ steps.get-icu.outputs.root }}"
           make all
 
       - name: Run C++ tests
         run: |
           cd build
+          export LD_LIBRARY_PATH="${{ steps.get-icu.outputs.root }}/lib"
           ./loot_gui_tests
 
       - name: Install packages for building docs

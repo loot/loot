@@ -49,7 +49,7 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.77 REQUIRED COMPONENTS locale)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    find_package(ICU 66 REQUIRED COMPONENTS uc i18n)
+    find_package(ICU 71.1 EXACT REQUIRED COMPONENTS data uc i18n)
     find_package(TBB REQUIRED)
 endif()
 
@@ -535,7 +535,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         target_link_libraries(Qt6::Widgets INTERFACE bz2)
     endif()
 else()
-    set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::uc TBB::tbb)
+    set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::data ICU::uc TBB::tbb)
 
     target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})
     target_link_libraries(loot_gui_tests PRIVATE ${LOOT_LIBS})
