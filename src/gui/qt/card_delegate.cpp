@@ -364,7 +364,9 @@ void CardDelegate::paint(QPainter* painter,
 
   widget->setFixedSize(sizeHint);
 
+  widget->setHidden(false);
   widget->render(painter, QPoint(), QRegion(), QWidget::DrawChildren);
+  widget->setHidden(true);
 
   painter->restore();
 }
