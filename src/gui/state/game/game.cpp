@@ -929,7 +929,7 @@ std::vector<SourcedMessage> Game::GetMessages(
         MessageSource::caseSensitivePathCheck,
         fmt::format(
             boost::locale::translate(
-                "{} is installed in a case-sensitive location. This may "
+                "{0} is installed in a case-sensitive location. This may "
                 "cause issues as the game, mods and LOOT may assume that "
                 "filesystem paths are not case-sensitive, which is the default "
                 "on Windows.")
@@ -958,7 +958,7 @@ std::vector<SourcedMessage> Game::GetMessages(
           MessageSource::caseSensitivePathCheck,
           fmt::format(
               boost::locale::translate(
-                  "{}'s local application data is stored in a case-sensitive "
+                  "{0}'s local application data is stored in a case-sensitive "
                   "location. This may cause issues as the game, mods and LOOT "
                   "may assume that filesystem paths are not case-sensitive, "
                   "which is the default on Windows.")
