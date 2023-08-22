@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.20.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-08-20 14:22+0100\n"
+"POT-Creation-Date: 2023-08-22 17:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1189,16 +1189,16 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:932
 msgid ""
-"{} is installed in a case-sensitive location. This may cause issues as the "
+"{0} is installed in a case-sensitive location. This may cause issues as the "
 "game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
 "which is the default on Windows."
 msgstr ""
 
 #: src/gui/state/game/game.cpp:961
 msgid ""
-"{}'s local application data is stored in a case-sensitive location. This may "
-"cause issues as the game, mods and LOOT may assume that filesystem paths are "
-"not case-sensitive, which is the default on Windows."
+"{0}'s local application data is stored in a case-sensitive location. This "
+"may cause issues as the game, mods and LOOT may assume that filesystem paths "
+"are not case-sensitive, which is the default on Windows."
 msgstr ""
 
 #: src/gui/state/game/game.cpp:1030
