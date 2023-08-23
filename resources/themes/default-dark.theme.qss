@@ -34,10 +34,12 @@ loot--PluginCard[isSearchResult="true"][isCurrentSearchResult="true"] {
 
 QLabel[messageType="warn"] {
 	background-color: #FFE082;
+    color: #000000;
 }
 
 QLabel[messageType="error"] {
 	background-color: #FF8A80;
+    color: #000000;
 }
 
 QLabel#plugin-crc,
@@ -63,18 +65,4 @@ QLabel#tags-add {
 
 QLabel#tags-remove {
     color: #F44336;
-}
-
-/* These are necessary to reliably update painted (not "editor") widget styling.
-*/
-loot--GeneralInfoCard QLabel,
-loot--MessagesWidget,
-loot--PluginCard QLabel,
-loot--PluginCard > QGroupBox::title {
-    color: palette(text);
-}
-
-QLabel[messageType="warn"],
-QLabel[messageType="error"] {
-    color: #000000;
 }
