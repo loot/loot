@@ -54,7 +54,8 @@ New load after metadata can be added by double-clicking on one group node and
 dragging a line from it to any other group nodes.
 
 Clicking on a group will cause any installed plugins in that group to be listed
-in the sidebar.
+in the sidebar. Right-clicking the list will display a context menu that
+contains an action to copy the listed plugin names to the clipboard.
 
 Right-clicking a load after metadata line will remove that load after metadata,
 and right-clicking a group will remove it. Masterlist metadata cannot be

@@ -13,7 +13,7 @@ LOOT's initialisation can be customised using command line parameters:
   Set the install path of the game identified by ``--game``. This replaces any existing value stored in LOOT's settings.
 
 ``--loot-data-path=<path>``:
-  Set the path to use for LOOT's application data storage. If this is an empty string or not specified, defaults to ``%LOCALAPPDATA%\LOOT`` on Windows and (in order of decreasing preference) ``$XDG_DATA_HOME/LOOT`` or ``$HOME/.local/share/LOOT`` on Linux.
+  Set the path to use for LOOT's application data storage. If this is an empty string or not specified, LOOT defaults to ``%LOCALAPPDATA%\LOOT`` on Windows and (in order of decreasing preference) ``$XDG_DATA_HOME/LOOT`` or ``$HOME/.local/share/LOOT`` on Linux. Note that when running LOOT as a Flatpak application on Linux, Flatpak internally overrides ``$XDG_DATA_HOME`` to be ``$HOME/.var/app/io.github.loot.loot/data``.
 
 ``--auto-sort``:
   Once LOOT has initialised, automatically sort the load order, apply the sorted
@@ -32,6 +32,25 @@ Microsoft Store Compatibility
 =============================
 
 LOOT can work with copies of the supported games bought through the Microsoft Store, but there are some complications.
+
+All installs
+------------
+
+LOOT cannot automatically detect Microsoft Store game installs when running on Linux.
+
+For both old and new installs, the following games have each of their localisations installed in separate subdirectories:
+
+* Morrowind
+* Oblivion
+* Fallout 3
+* Fallout: New Vegas
+
+LOOT will check the localisations in the order of Windows' preferred UI languages, stopping at the first subdirectory it finds a copy of the game in.
+
+Newer installs
+--------------
+
+Newer versions of the Microsoft Store and Xbox apps install games inside ``<drive letter>:\XboxGames`` by default. LOOT can detect default and non-default install locations.
 
 Older installs
 --------------
@@ -76,38 +95,28 @@ Older versions of the Microsoft Store and Xbox apps install games inside ``Windo
 
 Users with games installed like this are recommended to update their Microsoft Store and Xbox apps and reinstall the games to avoid these issues, which also affect other modding utilities.
 
-Newer installs
---------------
-
-Newer versions of the Microsoft Store and Xbox apps install games inside ``<drive letter>:\XboxGames`` by default. LOOT can detect default and non-default install locations.
-
-All installs
-------------
-
-For both old and new installs, the following games have each of their localisations installed in separate subdirectories:
-
-* Morrowind
-* Oblivion
-* Fallout 3
-* Fallout: New Vegas
-
-LOOT will check the localisations in the order of Windows' preferred UI languages, stopping at the first subdirectory it finds a copy of the game in.
-
 Epic Games Store Compatibility
 ==============================
 
 LOOT supports games bought through the Epic Games Store, but Fallout 3's localisations are installed in separate subdirectories. This is the same as when the game is installed through the Microsoft Store, so LOOT will pick one localisation as described for the Microsoft Store above.
+
+LOOT cannot automatically detect Epic Games Store game installs when running on Linux.
 
 Install Location Detection
 ==========================
 
 When LOOT starts, it first loads its configured game settings. If the ``--game`` and ``--game-path`` command line parameters are given it overrides the configured path for the given game using the given path. It then searches for supported games using all of the following sources:
 
+- the install location given in Steam's configuration files
+- the game's Steam Registry key(s)
+- the game's GOG Registry key(s)
 - the parent directory of the current working directory (e.g. if LOOT is at ``Skyrim Special Edition\LOOT\LOOT.exe`` next to ``Skyrim Special Edition\SkyrimSE.exe``)
-- the game's Registry keys
-- the install location used by the Epic Games Store
-- the install locations used by newer versions of the Microsoft Store and Xbox apps, checking each drive in the order they're listed by Windows. (This is skipped on Linux.)
-- the install locations used by older versions of the Microsoft Store and Xbox apps, checked using the packages' registry keys.
+- the game's non-store-specific Registry key
+- the install location given in the Epic Games Launcher's manifest files
+- the install locations used by newer versions of the Microsoft Store and Xbox apps, checking each drive in the order they're listed by Windows
+- the install locations used by older versions of the Microsoft Store and Xbox apps, checked using the packages' Registry keys.
+
+On Linux, only the Steam configuration files and parent directory sources are used, as the others all rely on functionality that is only available on Windows.
 
 The detected games are merged with the configured game settings, primarily by comparing the detected and configured game install paths. Any detected games that did not have matching configuration get new settings entries added for them. If multiple copies of a single game are detected, each instance is named differently in LOOT's settings to help differentiate between them.
 

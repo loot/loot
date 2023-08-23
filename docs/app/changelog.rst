@@ -4,6 +4,72 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.21.0 - Unreleased
+===================
+
+Added
+-----
+
+- Support for the GOG distribution of Fallout 4.
+- LOOT can now find Steam game installs by reading Steam configuration files.
+- A "Hide official plugins' cleaning messages" filter.
+- An "Update All Masterlists" action is now available in the File menu. It
+  updates the masterlists for all configured games.
+- A "Copy Plugin Names" action is now available in a right-click context menu
+  for the Groups Editor's group plugins list. The action copies the listed
+  plugin names to the clipboard.
+- LOOT will now display warning messages if the current game is installed to, or
+  stores its local application data in, a case-sensitive filesystem path.
+
+Fixed
+-----
+
+- If LOOT v0.20.0 encountered errors during startup, it would fail to display
+  the error messages correctly, instead displaying blank error messages.
+- The styling of the general information and plugin cards would not update in
+  response to application state changes (e.g. if inactive windows are styled to
+  have grey text, the text would stay black whether or not the LOOT window was
+  active).
+- When running on Linux with some system configurations and a dark system
+  theme, some of the text in LOOT's main window cards would be difficult to read
+  due to having very low contrast. LOOT's default theme now adapts its colours
+  if it detects that the system colour scheme is dark.
+
+Changed
+-------
+
+- LOOT now differentiates Nehrim from Oblivion, Enderal from Skyrim and Enderal
+  Special Edition from Skyrim Special Edition in its settings. When updating
+  from a previous version of LOOT, existing settings will be migrated: if a
+  configured game is not installed, heuristics will be used to differentiate
+  between settings for the total conversions and for the original games.
+- The error messages displayed when LOOT cannot detect any game installs have
+  been improved.
+- Theme files are now loaded from the ``themes`` folder in LOOT's data folder
+  instead of the ``themes`` folder in LOOT's install folder.
+- When running on Linux, the user's home directory path is now replaced with
+  ``$HOME`` instead of ``%USERPROFILE%`` in log messages.
+- When running on Linux, LOOT now uses ``$XDG_DATA_HOME/LOOT`` instead of
+  ``$XDG_CONFIG_HOME/LOOT`` to store its data, and falls back to using
+  ``$HOME/.local/share/LOOT`` instead of ``$HOME/.config/LOOT``.
+- Updated Bulgarian translation.
+- Updated Finnish translation.
+- Updated French translation.
+- Updated German translation.
+- Updated Italian translation.
+- Updated Ukrainian translation.
+- Updated Qt to 6.5.2.
+- Updated to ICU 71.1 on Linux.
+
+Removed
+-------
+
+- Copy to clipboard functionality on Linux no longer requires ``xclip`` to be
+  installed.
+- When running on Linux, LOOT no longer scans mount points for Microsoft Store
+  game installs, as it wouldn't be able to correctly generate configuration for
+  any games that it found.
+
 0.20.0 - 2023-06-10
 ===================
 

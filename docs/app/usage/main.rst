@@ -92,6 +92,8 @@ Hide Sources
   Hides all plugin sources.
 Hide notes
   Hides all plugin messages that have the Note: prefix, or the equivalent text for the language selected in LOOT's settings.
+Hide official plugins' cleaning messages
+  Hides all plugin cleaning messages for the current game's official plugins.
 Hide all plugin messages
   Hides all plugin messages.
 Hide inactive plugins
