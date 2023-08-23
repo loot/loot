@@ -371,6 +371,53 @@ TEST_F(LootSettingsTest,
 }
 
 TEST_F(LootSettingsTest,
+       loadingShouldMapOblivionTypeToNehrimIfNameContainsNehrim) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"\"" << endl
+      << "name = \"Game is nehriM - At Fate's Edge\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].Id());
+}
+
+TEST_F(LootSettingsTest,
+       loadingShouldMapOblivionTypeToNehrimIfFolderContainsNehrim) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Game is nehriM - At Fate's Edge\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].Id());
+}
+
+TEST_F(LootSettingsTest,
+       loadingShouldMapOblivionTypeToNehrimIfIsBaseGameInstanceIsFalse) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"\"" << endl
+      << "isBaseGameInstance = false" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].Id());
+}
+
+TEST_F(LootSettingsTest,
        loadingShouldMapSkyrimTypeToEnderalIfInstallPathIsAnEnderalInstall) {
   using std::endl;
 
@@ -406,7 +453,75 @@ TEST_F(LootSettingsTest,
 }
 
 TEST_F(LootSettingsTest,
-       loadingShouldMapSkyrimSETypeToEnderalIfInstallPathIsAnEnderalInstall) {
+       loadingShouldMapSkyrimTypeToEnderalIfLocalFolderIsEnderal) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "type = \"Skyrim\"" << endl
+      << "folder = \"\"" << endl
+      << "local_folder = \"enderal\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].Id());
+}
+
+TEST_F(LootSettingsTest,
+       loadingShouldMapSkyrimTypeToEnderalIfLastComponentOfLocalPathIsEnderal) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "type = \"Skyrim\"" << endl
+      << "folder = \"\"" << endl
+#ifdef _WIN32
+      << "local_path = \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\enderal\""
+#else
+      << "local_path = \"/C:/Users/user/AppData/Local/enderal\""
+#endif
+      << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].Id());
+}
+
+TEST_F(LootSettingsTest,
+       loadingShouldMapSkyrimTypeToEnderalIfFolderContainsEnderal) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "type = \"Skyrim\"" << endl
+      << "folder = \"Game is Enderal - At Fate's Edge\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].Id());
+}
+
+TEST_F(LootSettingsTest,
+       loadingShouldMapSkyrimTypeToEnderalIfIsBaseGameInstanceIsFalse) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "type = \"Skyrim\"" << endl
+      << "folder = \"\"" << endl
+      << "isBaseGameInstance = false" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].Id());
+}
+
+TEST_F(LootSettingsTest,
+       loadingShouldMapSkyrimSETypeToEnderalSEIfInstallPathIsAnEnderalInstall) {
   using std::endl;
 
   touch(dataPath.parent_path() / "Enderal Launcher.exe");
@@ -430,7 +545,7 @@ TEST_F(LootSettingsTest,
 }
 
 TEST_F(LootSettingsTest,
-       loadingShouldMapSkyrimSETypeToEnderalIfNameContainsEnderal) {
+       loadingShouldMapSkyrimSETypeToEnderalSEIfNameContainsEnderal) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -448,6 +563,77 @@ TEST_F(LootSettingsTest,
   ASSERT_EQ(2, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].Id());
   EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[1].Id());
+}
+
+TEST_F(LootSettingsTest,
+       loadingShouldMapSkyrimTypeToEnderalSEIfLocalFolderIsEnderal) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "type = \"SkyrimSE\"" << endl
+      << "folder = \"\"" << endl
+      << "local_folder = \"Enderal Special Edition\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].Id());
+}
+
+TEST_F(
+    LootSettingsTest,
+    loadingShouldMapSkyrimTypeToEnderalSEIfLastComponentOfLocalPathIsEnderalSpecialEdition) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "type = \"SkyrimSE\"" << endl
+      << "folder = \"\"" << endl
+#ifdef _WIN32
+      << "local_path = \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Enderal "
+         "Special "
+         "Edition\""
+#else
+      << "local_path = \"/C:/Users/user/AppData/Local/Enderal Special Edition\""
+#endif
+      << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].Id());
+}
+
+TEST_F(LootSettingsTest,
+       loadingShouldMapSkyrimTypeToEnderalSEIfFolderContainsEnderal) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "type = \"SkyrimSE\"" << endl
+      << "folder = \"Game is Enderal - At Fate's Edge\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].Id());
+}
+
+TEST_F(LootSettingsTest,
+       loadingShouldMapSkyrimTypeToEnderalSEIfIsBaseGameInstanceIsFalse) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "type = \"SkyrimSE\"" << endl
+      << "folder = \"\"" << endl
+      << "isBaseGameInstance = false" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].Id());
 }
 
 TEST_F(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {

@@ -41,6 +41,93 @@
 using std::lock_guard;
 using std::recursive_mutex;
 
+namespace {
+using loot::GameId;
+
+std::optional<std::string> GetLocalFolder(const toml::table& table) {
+  const auto localPath = table["local_path"].value<std::string>();
+  const auto localFolder = table["local_folder"].value<std::string>();
+
+  if (localFolder.has_value()) {
+    return localFolder;
+  }
+
+  if (localPath.has_value()) {
+    return std::filesystem::u8path(*localPath).filename().u8string();
+  }
+
+  return std::nullopt;
+}
+
+bool IsNehrim(const toml::table& table) {
+  const auto installPath = table["path"].value<std::string>();
+
+  if (installPath.has_value() && !installPath.value().empty()) {
+    const auto path = std::filesystem::u8path(installPath.value());
+    if (std::filesystem::exists(path)) {
+      return std::filesystem::exists(path / "NehrimLauncher.exe");
+    }
+  }
+
+  // Fall back to using heuristics based on the existing settings.
+  // Return true if any of these heuristics return a positive match.
+  const auto gameName = table["name"].value<std::string>();
+  const auto masterFilename = table["master"].value<std::string>();
+  const auto isBaseGameInstance = table["isBaseGameInstance"].value<bool>();
+  const auto folder = table["folder"].value<std::string>();
+
+  return
+      // Nehrim uses a different main master file from Oblivion.
+      (masterFilename.has_value() &&
+       masterFilename.value() ==
+           loot::GetMasterFilename(loot::GameId::nehrim)) ||
+      // Game name probably includes "nehrim".
+      (gameName.has_value() && boost::icontains(gameName.value(), "nehrim")) ||
+      // LOOT folder name probably includes "nehrim".
+      (folder.has_value() && boost::icontains(folder.value(), "nehrim")) ||
+      // Between 0.18.1 and 0.19.0 inclusive, LOOT had an isBaseGameInstance
+      // game setting that was false for Nehrim, Enderal and Enderal SE.
+      (isBaseGameInstance.has_value() && !isBaseGameInstance.value());
+}
+
+bool IsEnderal(const toml::table& table,
+               const std::string& expectedLocalFolder) {
+  const auto installPath = table["path"].value<std::string>();
+
+  if (installPath.has_value() && !installPath.value().empty()) {
+    const auto path = std::filesystem::u8path(installPath.value());
+    if (std::filesystem::exists(path)) {
+      return std::filesystem::exists(path / "Enderal Launcher.exe");
+    }
+  }
+
+  // Fall back to using heuristics based on the existing settings.
+  // Return true if any of these heuristics return a positive match.
+  const auto gameName = table["name"].value<std::string>();
+  const auto isBaseGameInstance = table["isBaseGameInstance"].value<bool>();
+  const auto localFolder = GetLocalFolder(table);
+  const auto folder = table["folder"].value<std::string>();
+
+  return
+      // Enderal and Enderal SE use different local folders than their base
+      // games.
+      (localFolder.has_value() && localFolder.value() == expectedLocalFolder) ||
+      // Game name probably includes "enderal".
+      (gameName.has_value() && boost::icontains(gameName.value(), "enderal")) ||
+      // LOOT folder name probably includes "enderal".
+      (folder.has_value() && boost::icontains(folder.value(), "enderal")) ||
+      // Between 0.18.1 and 0.19.0 inclusive, LOOT had an isBaseGameInstance
+      // game setting that was false for Nehrim, Enderal and Enderal SE.
+      (isBaseGameInstance.has_value() && !isBaseGameInstance.value());
+}
+
+bool IsEnderal(const toml::table& table) { return IsEnderal(table, "enderal"); }
+
+bool IsEnderalSE(const toml::table& table) {
+  return IsEnderal(table, "Enderal Special Edition");
+}
+}
+
 namespace loot {
 static const std::set<std::string> oldDefaultBranches(
     {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14", "v0.15", "v0.17"});
@@ -427,70 +514,32 @@ GameId mapGameId(const std::string& gameId) {
   }
 }
 
-bool IsNehrim(const std::optional<std::string>& masterFilename,
-              const std::optional<std::string>& installPath) {
-  if (installPath.has_value() && !installPath.value().empty()) {
-    const auto path = std::filesystem::u8path(installPath.value());
-    return std::filesystem::exists(path / "NehrimLauncher.exe");
-  }
-
-  // If the install path is not present or empty, use the master
-  // filename as a heuristic that will work for LOOT's default
-  // settings for Nehrim, and hopefully for any custom settings.
-  return masterFilename.has_value() &&
-         masterFilename.value() == GetMasterFilename(GameId::nehrim);
-}
-
-bool IsEnderal(const std::optional<std::string>& gameName,
-               const std::optional<std::string>& installPath) {
-  if (installPath.has_value() && !installPath.value().empty()) {
-    const auto path = std::filesystem::u8path(installPath.value());
-    return std::filesystem::exists(path / "Enderal Launcher.exe");
-  }
-
-  // If the install path is not present or empty, use the game name as a
-  // heuristic that will work for LOOT's default settings for Enderal and
-  // hopefully any custom settings.
-  return gameName.has_value() && boost::icontains(gameName.value(), "enderal");
-}
-
-bool IsEnderalSE(const std::optional<std::string>& gameName,
-                 const std::optional<std::string>& installPath) {
-  // Enderal SE can be checked the same way as the non-SE version.
-  return IsEnderal(gameName, installPath);
-}
-
 GameId getGameId(const toml::table& table) {
-  auto gameId = table["gameId"].value<std::string>();
+  const auto gameId = table["gameId"].value<std::string>();
 
   if (gameId) {
     return mapGameId(*gameId);
   }
 
-  auto type = table["type"].value<std::string>();
+  const auto type = table["type"].value<std::string>();
   if (!type) {
     throw std::runtime_error(
         "'gameId' and 'type' keys both missing from game settings table");
   }
 
   const auto gameType = *type;
-  const auto gameName = table["name"].value<std::string>();
-  const auto masterFilename = table["master"].value<std::string>();
-  const auto installPath = table["path"].value<std::string>();
 
   if (gameType == "Morrowind") {
     return GameId::tes3;
   } else if (gameType == "Oblivion") {
     // The Oblivion game type is shared between Oblivon and Nehrim.
-    return IsNehrim(masterFilename, installPath) ? GameId::nehrim
-                                                 : GameId::tes4;
+    return IsNehrim(table) ? GameId::nehrim : GameId::tes4;
   } else if (gameType == "Skyrim") {
     // The Skyrim game type is shared between Skyrim and Enderal.
-    return IsEnderal(gameName, installPath) ? GameId::enderal : GameId::tes5;
+    return IsEnderal(table) ? GameId::enderal : GameId::tes5;
   } else if (gameType == "SkyrimSE" || gameType == "Skyrim Special Edition") {
     // The Skyrim SE game type is shared between Skyrim SE and Enderal SE.
-    return IsEnderal(gameName, installPath) ? GameId::enderalse
-                                            : GameId::tes5se;
+    return IsEnderalSE(table) ? GameId::enderalse : GameId::tes5se;
   } else if (gameType == "Skyrim VR") {
     return GameId::tes5vr;
   } else if (gameType == "Fallout3") {
