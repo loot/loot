@@ -116,10 +116,17 @@ When LOOT starts, it first loads its configured game settings. If the ``--game``
 - the install locations used by newer versions of the Microsoft Store and Xbox apps, checking each drive in the order they're listed by Windows
 - the install locations used by older versions of the Microsoft Store and Xbox apps, checked using the packages' Registry keys.
 
-On Linux, only the Steam configuration files and parent directory sources are used, as the others all rely on functionality that is only available on Windows.
-
 The detected games are merged with the configured game settings, primarily by comparing the detected and configured game install paths. Any detected games that did not have matching configuration get new settings entries added for them. If multiple copies of a single game are detected, each instance is named differently in LOOT's settings to help differentiate between them.
 
 For example, if you've got Skyrim installed through Steam and the Microsoft Store, LOOT will find both installs, and may name one "TES V: Skyrim (Steam)" and the other "TES V: Skyrim (MS Store)".
 
 If LOOT's automatic game detection doesn't work correctly for you, you'll need to manually provide the correct install path in LOOT's settings and then relaunch LOOT.
+
+Game Detection on Linux
+-----------------------
+
+On Linux, only the Steam configuration files and parent directory sources are used, as the others all rely on functionality that is only available on Windows.
+
+If running LOOT as a Flatpak application, it only has permission to access the default Steam library paths and ``/run/media`` by default. If you have installed games elsewhere, you will need to grant it access to the relevant paths. This can be done using an application such as `Flatseal`_ or on the command line using ``flatpak --user override --filesystem=<path> io.github.loot.loot``.
+
+.. _Flatseal: https://flathub.org/apps/com.github.tchx84.Flatseal

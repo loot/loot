@@ -39,8 +39,9 @@ finish-args:
   - --socket=pulseaudio
   - --share=network
   - --device=dri
-  - --filesystem=host
   # Steam package data.
   - --filesystem=xdg-data/Steam
   # Steam Flatpak data.
   - --filesystem=~/.var/app/com.valvesoftware.Steam/.local/share/Steam
+  # Steam Deck SD card mount point parent path.
+  - --filesystem=/run/media
