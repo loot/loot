@@ -35,7 +35,7 @@ namespace loot::steam {
 // Finds Steam's install path using the Registry on Windows and using
 // XDG_DATA_HOME or HOME/.local/share on Linux. The path returned may
 // not exist.
-std::optional<std::filesystem::path> GetSteamInstallPath(
+std::vector<std::filesystem::path> GetSteamInstallPaths(
     const RegistryInterface& registry);
 
 // Given the path to a Steam install, get the Steam app manifest paths

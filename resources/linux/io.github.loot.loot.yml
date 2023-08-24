@@ -40,4 +40,7 @@ finish-args:
   - --share=network
   - --device=dri
   - --filesystem=host
+  # Steam package data.
   - --filesystem=xdg-data/Steam
+  # Steam Flatpak data.
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/.local/share/Steam

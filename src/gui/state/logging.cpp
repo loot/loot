@@ -31,6 +31,8 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <optional>
 
+#include "gui/helpers.h"
+
 #ifdef _WIN32
 #ifndef UNICODE
 #define UNICODE
@@ -105,44 +107,14 @@ private:
   }
 };
 
-std::optional<std::filesystem::path> getUserProfilePath() {
-#ifdef _WIN32
-  PWSTR path;
-
-  if (SHGetKnownFolderPath(FOLDERID_Profile, 0, NULL, &path) != S_OK)
-    throw std::system_error(GetLastError(),
-                            std::system_category(),
-                            "Failed to get %USERPROFILE% path.");
-
-  std::filesystem::path localAppDataPath(path);
-  CoTaskMemFree(path);
-
-  return localAppDataPath;
-#else
-  // Use the HOME env. var. if it's available.
-  const auto home = getenv("HOME");
-
-  if (home != nullptr) {
-    return std::filesystem::u8path(home);
-  }
-
-  // If $HOME is somehow missing, return a nullopt.
-  return std::nullopt;
-#endif
-}
-
 std::vector<std::pair<std::string, std::string>> getStringsToCensor() {
   const auto userProfilePath = getUserProfilePath();
 
-  if (userProfilePath.has_value()) {
 #ifdef _WIN32
-    return {{userProfilePath.value().u8string(), "%USERPROFILE%"}};
+  return {{userProfilePath.u8string(), "%USERPROFILE%"}};
 #else
-    return {{userProfilePath.value().u8string(), "$HOME"}};
+  return {{userProfilePath.u8string(), "$HOME"}};
 #endif
-  }
-
-  return {};
 }
 
 std::shared_ptr<spdlog::logger> getLogger() {

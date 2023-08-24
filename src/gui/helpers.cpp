@@ -456,6 +456,32 @@ std::filesystem::path getExecutableDirectory() {
 #endif
 }
 
+std::filesystem::path getUserProfilePath() {
+#ifdef _WIN32
+  PWSTR path;
+
+  if (SHGetKnownFolderPath(FOLDERID_Profile, 0, NULL, &path) != S_OK)
+    throw std::system_error(GetLastError(),
+                            std::system_category(),
+                            "Failed to get %USERPROFILE% path.");
+
+  std::filesystem::path localAppDataPath(path);
+  CoTaskMemFree(path);
+
+  return localAppDataPath;
+#else
+  const auto home = getenv("HOME");
+
+  if (home == nullptr) {
+    // The POSIX spec requires the HOME environment variable to be set, don't
+    // try to work around it being missing.
+    throw std::runtime_error("The HOME environment variable has no value");
+  }
+
+  return std::filesystem::u8path(home);
+#endif
+}
+
 std::filesystem::path getLocalAppDataPath() {
 #ifdef _WIN32
   PWSTR path;
@@ -472,22 +498,13 @@ std::filesystem::path getLocalAppDataPath() {
   return localAppDataPath;
 #else
   // Use XDG_DATA_HOME environmental variable if it's available.
-  const auto xdgConfigHome = getenv("XDG_DATA_HOME");
+  const auto xdgDataHome = getenv("XDG_DATA_HOME");
 
-  if (xdgConfigHome != nullptr) {
-    return std::filesystem::u8path(xdgConfigHome);
+  if (xdgDataHome != nullptr) {
+    return std::filesystem::u8path(xdgDataHome);
   }
 
-  // Otherwise, use the HOME env. var. if it's available.
-  const auto home = getenv("HOME");
-
-  if (home == nullptr) {
-    // The POSIX spec requires the HOME environment variable to be set, don't
-    // try to work around it being missing.
-    throw std::runtime_error("The HOME environment variable has no value");
-  }
-
-  return std::filesystem::u8path(home) / ".local" / "share";
+  return getUserProfilePath() / ".local" / "share";
 #endif
 }
 

@@ -55,6 +55,8 @@ int CompareFilenames(const std::string& lhs, const std::string& rhs);
 
 std::filesystem::path getExecutableDirectory();
 
+std::filesystem::path getUserProfilePath();
+
 std::filesystem::path getLocalAppDataPath();
 
 std::string crcToString(uint32_t crc);

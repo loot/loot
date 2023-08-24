@@ -313,19 +313,21 @@ std::optional<SteamAppManifest> ParseAppManifest(std::istream& stream) {
 }
 
 namespace loot::steam {
-std::optional<std::filesystem::path> GetSteamInstallPath(
+std::vector<std::filesystem::path> GetSteamInstallPaths(
     const RegistryInterface& registry) {
 #ifdef _WIN32
   const auto pathString = registry.GetStringValue(RegistryValue{
       "HKEY_LOCAL_MACHINE", "Software\\Valve\\Steam", "InstallPath"});
 
   if (pathString.has_value()) {
-    return std::filesystem::u8path(pathString.value());
+    return {std::filesystem::u8path(pathString.value())};
   }
 
-  return std::nullopt;
+  return {};
 #else
-  return getLocalAppDataPath() / "Steam";
+  return {getLocalAppDataPath() / "Steam",
+          getUserProfilePath() / ".var" / "app" / "com.valvesoftware.Steam" /
+              ".local" / "share" / "Steam"};
 #endif
 }
 

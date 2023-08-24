@@ -276,10 +276,9 @@ std::vector<GameInstall> FindGameInstalls(
     const std::vector<std::string>& preferredUILanguages) {
   std::vector<GameInstall> installs;
 
-  const auto steamInstallPath = steam::GetSteamInstallPath(registry);
-  if (steamInstallPath.has_value()) {
+  for (const auto& steamInstallPath : steam::GetSteamInstallPaths(registry)) {
     const auto manifestPaths =
-        steam::GetSteamAppManifestPaths(steamInstallPath.value());
+        steam::GetSteamAppManifestPaths(steamInstallPath);
     for (const auto& manifestPath : manifestPaths) {
       const auto install = steam::FindGameInstall(manifestPath);
       if (install.has_value()) {

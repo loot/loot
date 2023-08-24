@@ -31,29 +31,34 @@ along with LOOT.  If not, see
 
 namespace loot::test {
 #ifdef _WIN32
-TEST(GetSteamInstallPath, shouldReturnNulloptWhenTheRegistryEntryDoesNotExist) {
-  const auto path = loot::steam::GetSteamInstallPath(TestRegistry());
+TEST(GetSteamInstallPaths,
+     shouldReturnNulloptWhenTheRegistryEntryDoesNotExist) {
+  const auto paths = loot::steam::GetSteamInstallPaths(TestRegistry());
 
-  EXPECT_FALSE(path.has_value());
+  EXPECT_TRUE(paths.empty());
 }
 
-TEST(GetSteamInstallPath, shouldReturnTheStoredPathWhenTheRegistryEntryExists) {
+TEST(GetSteamInstallPaths,
+     shouldReturnTheStoredPathWhenTheRegistryEntryExists) {
   TestRegistry registry;
   const auto expectedPath = "C:\\Program Files (x86)\\Steam";
   registry.SetStringValue("Software\\Valve\\Steam", expectedPath);
 
-  const auto path = loot::steam::GetSteamInstallPath(registry);
+  const auto paths = loot::steam::GetSteamInstallPaths(registry);
 
-  ASSERT_TRUE(path.has_value());
-  EXPECT_EQ(expectedPath, path.value().u8string());
+  ASSERT_EQ(1, paths.size());
+  EXPECT_EQ(expectedPath, paths[0].u8string());
 }
 #else
-TEST(GetSteamInstallPath, shouldReturnTheSteamFolderInUserLocalShare) {
-  const auto path = loot::steam::GetSteamInstallPath(TestRegistry());
+TEST(GetSteamInstallPaths, shouldReturnTheSteamFolderInUserLocalShare) {
+  const auto paths = loot::steam::GetSteamInstallPaths(TestRegistry());
 
-  ASSERT_TRUE(path.has_value());
-  EXPECT_EQ(std::string(getenv("HOME")) + "/.local/share/Steam",
-            path.value().u8string());
+  const auto home = std::string(getenv("HOME"));
+
+  ASSERT_EQ(2, paths.size());
+  EXPECT_EQ(home + "/.local/share/Steam", paths[0].u8string());
+  EXPECT_EQ(home + "/.var/app/com.valvesoftware.Steam/.local/share/Steam",
+            paths[1].u8string());
 }
 #endif
 
