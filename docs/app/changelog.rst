@@ -69,6 +69,8 @@ Removed
 - When running on Linux, LOOT no longer scans mount points for Microsoft Store
   game installs, as it wouldn't be able to correctly generate configuration for
   any games that it found.
+- When running on Linux LOOT will no longer detect a game installed beside the
+  LOOT install path, as LOOT cannot then find the game's local data path.
 
 0.20.0 - 2023-06-10
 ===================

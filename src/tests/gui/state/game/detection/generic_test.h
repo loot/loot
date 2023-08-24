@@ -122,6 +122,7 @@ TEST_P(Generic_FindGameInstallsTest, shouldNotFindInvalidSiblingGame) {
   EXPECT_TRUE(gameInstalls.empty());
 }
 
+#ifdef _WIN32
 TEST_P(Generic_FindGameInstallsTest, shouldFindGameInParentOfCurrentDirectory) {
   const auto gameId = GetParam();
   const auto gameInstalls =
@@ -240,6 +241,16 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyMsStoreSiblingGame) {
             gameInstalls[0].installPath);
   EXPECT_EQ("", gameInstalls[0].localPath);
 }
+#else
+TEST_P(Generic_FindGameInstallsTest,
+       shouldNotFindGameInParentOfCurrentDirectory) {
+  const auto gameId = GetParam();
+  const auto gameInstalls =
+      loot::generic::FindGameInstalls(TestRegistry(), gameId);
+
+  EXPECT_TRUE(gameInstalls.empty());
+}
+#endif
 
 TEST_P(Generic_FindGameInstallsTest, shouldFindGameUsingGenericRegistryValue) {
   RestoreCurrentPath();

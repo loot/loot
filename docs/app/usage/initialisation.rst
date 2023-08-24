@@ -125,7 +125,7 @@ If LOOT's automatic game detection doesn't work correctly for you, you'll need t
 Game Detection on Linux
 -----------------------
 
-On Linux, only the Steam configuration files and parent directory sources are used, as the others all rely on functionality that is only available on Windows.
+On Linux, LOOT can only automatically detect games that were installed through Steam.
 
 If running LOOT as a Flatpak application, it only has permission to access the default Steam library paths and ``/run/media`` by default. If you have installed games elsewhere, you will need to grant it access to the relevant paths. This can be done using an application such as `Flatseal`_ or on the command line using ``flatpak --user override --filesystem=<path> io.github.loot.loot``.
 

@@ -237,10 +237,14 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
                                           const GameId gameId) {
   std::vector<GameInstall> installs;
 
+#ifdef _WIN32
+  // Only run on Windows because it assumes the current user's %LOCALAPPDATA%
+  // path is used.
   const auto sibling = FindSiblingGameInstall(gameId);
   if (sibling.has_value()) {
     installs.push_back(sibling.value());
   }
+#endif
 
   const auto registryInstall = FindGameInstallInRegistry(registry, gameId);
   if (registryInstall.has_value()) {

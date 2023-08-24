@@ -76,6 +76,7 @@ private:
   std::filesystem::path initialCurrentPath;
 };
 
+#ifdef _WIN32
 TEST_F(UpdateInstalledGamesSettingsTest,
        shouldReturnSettingsForGameInParentOfCurrentDirectory) {
   std::vector<GameSettings> gamesSettings;
@@ -87,5 +88,6 @@ TEST_F(UpdateInstalledGamesSettingsTest,
             gamesSettings[0].GamePath());
   EXPECT_EQ("", gamesSettings[0].GameLocalPath());
 }
+#endif
 }
 #endif
