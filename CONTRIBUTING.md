@@ -114,6 +114,7 @@ following step before the step that runs `cmake`:
 
 ```yaml
 - name: Download libloot snapshot build artifact
+  shell: bash
   run: |
     curl -sSfL \
       -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
@@ -121,16 +122,16 @@ following step before the step that runs `cmake`:
       -o 'libloot.zip' \
       https://api.github.com/repos/loot/libloot/actions/artifacts/39467110/zip
     unzip libloot.zip
-    echo "LIBLOOT_URL=$PWD/$(ls -1 libloot-*)" >> $GITHUB_ENV
+    echo "LIBLOOT_URL=${{ github.workspace }}/$(ls -1 libloot-*.tar.xz)" >> $GITHUB_ENV
 ```
 
-Replace `39467110` with the relevant artifact's ID. You can get an artifact's ID from the last
+Replace `39467110` with the relevant artifact's ID, and replace `/$(ls -1 libloot-*.tar.xz)` with `\\$(ls -1 libloot-*.7z)` for the Windows build. You can get an artifact's ID from the last
 path component in its download URL on the libloot build's GitHub Actions page in your browser: for
 example, the page at `https://github.com/loot/libloot/actions/runs/542851787` lists
 `libloot-0.16.1-9-ge97208c_linux-github-actions-Linux.tar.xz` as an artifact, and its download URL
 is `https://github.com/loot/libloot/suites/1982340583/artifacts/39467110`.
 
-Also append ` -DLIBLOOT_URL="$LIBLOOT_URL"` to the arguments passed to `cmake`.
+Also append ` -DLIBLOOT_URL="${{ env.LIBLOOT_URL }}"` to the arguments passed to `cmake`.
 
 ## Code Style
 
