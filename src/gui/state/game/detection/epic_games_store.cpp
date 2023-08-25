@@ -267,6 +267,37 @@ std::filesystem::path GetAppDataPath(const GameId gameId) {
 }
 
 namespace loot::epic {
+std::optional<std::string> GetEgsAppName(const GameId gameId) {
+  return ::GetEgsAppName(gameId);
+}
+
+std::string GetAppDataFolderName(const GameId gameId) {
+  switch (gameId) {
+    case GameId::tes5se:
+      return "Skyrim Special Edition";
+    case GameId::fo3:
+      return "Fallout3";
+    case GameId::fonv:
+      return "FalloutNV";
+    default:
+      throw std::logic_error("Unsupported Epic Games Store game");
+  }
+}
+
+std::optional<std::filesystem::path> FindGameInstallPath(
+    const GameId gameId,
+    const std::filesystem::path& rootInstallPath,
+    const std::vector<std::string>& preferredUILanguages) {
+  // Fallout 3 has several localised copies of the game in
+  // subdirectories of its installLocation, so get the best match for the
+  // user's current language.
+  const auto pathsToCheck =
+      GetGameLocalisationDirectories(gameId, rootInstallPath);
+
+  return GetLocalisedGameInstallPath(
+      gameId, preferredUILanguages, pathsToCheck);
+}
+
 std::optional<GameInstall> FindGameInstalls(
     const RegistryInterface& registry,
     const GameId gameId,
@@ -275,14 +306,8 @@ std::optional<GameInstall> FindGameInstalls(
     const auto installPath = GetEgsGameInstallPath(registry, gameId);
 
     if (installPath.has_value()) {
-      // Fallout 3 has several localised copies of the game in
-      // subdirectories of its installLocation, so get the best match for the
-      // user's current language.
-      const auto pathsToCheck =
-          GetGameLocalisationDirectories(gameId, installPath.value());
-
-      const auto localisedInstallPath = GetLocalisedGameInstallPath(
-          gameId, preferredUILanguages, pathsToCheck);
+      const auto localisedInstallPath = FindGameInstallPath(
+          gameId, installPath.value(), preferredUILanguages);
 
       if (localisedInstallPath.has_value()) {
         return GameInstall{gameId,

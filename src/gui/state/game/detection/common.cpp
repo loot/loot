@@ -161,7 +161,8 @@ void SortPathsByPreferredLanguage(
     // like IETF BCP 47 language codes, so only compare the first two
     // bytes.
     for (size_t i = 0; i < uiPreferredLanguages.size(); i += 1) {
-      if (uiPreferredLanguages[i].substr(0, 2) == language) {
+      if (uiPreferredLanguages[i].size() > 1 &&
+          uiPreferredLanguages[i].substr(0, 2) == language) {
         return i;
       }
     }

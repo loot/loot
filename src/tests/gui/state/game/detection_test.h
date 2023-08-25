@@ -80,7 +80,7 @@ private:
 TEST_F(UpdateInstalledGamesSettingsTest,
        shouldReturnSettingsForGameInParentOfCurrentDirectory) {
   std::vector<GameSettings> gamesSettings;
-  UpdateInstalledGamesSettings(gamesSettings, TestRegistry(), {}, {});
+  UpdateInstalledGamesSettings(gamesSettings, TestRegistry(), {}, {}, {});
 
   ASSERT_EQ(1, gamesSettings.size());
   EXPECT_EQ(GameId::tes3, gamesSettings[0].Id());

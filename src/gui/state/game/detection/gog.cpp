@@ -85,6 +85,32 @@ std::vector<std::string> GetGogGameIds(const GameId gameId) {
   }
 }
 
+std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
+  switch (gameId) {
+    case GameId::tes3:
+      // Morrowind doesn't actually have a local data path, but libloadorder
+      // requires one to be provided when not running on Windows even though it
+      // is then not used.
+      // TODO: Replace this with nullopt after updating to the next libloot release.
+      return "Morrowind";
+    case GameId::tes4:
+    case GameId::nehrim:
+      return "Oblivion";
+    case GameId::tes5se:
+      return "Skyrim Special Edition GOG";
+    case GameId::enderalse:
+      return "Enderal Special Edition GOG";
+    case GameId::fo3:
+      return "Fallout3";
+    case GameId::fonv:
+      return "FalloutNV";
+    case GameId::fo4:
+      return "Fallout4";
+    default:
+      throw std::logic_error("Unsupported GOG game");
+  }
+}
+
 std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
                                           const GameId gameId) {
   const auto installPaths = FindGameInstallPathsInRegistry(

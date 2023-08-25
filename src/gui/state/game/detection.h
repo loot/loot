@@ -48,6 +48,7 @@ bool IsInstalled(const GameSettings& settings);
 void UpdateInstalledGamesSettings(
     std::vector<GameSettings>& gamesSettings,
     const RegistryInterface& registry,
+    const std::vector<std::filesystem::path>& heroicConfigPaths,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages);
 }

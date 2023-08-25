@@ -36,8 +36,6 @@ LOOT can work with copies of the supported games bought through the Microsoft St
 All installs
 ------------
 
-LOOT cannot automatically detect Microsoft Store game installs when running on Linux.
-
 For both old and new installs, the following games have each of their localisations installed in separate subdirectories:
 
 * Morrowind
@@ -100,14 +98,13 @@ Epic Games Store Compatibility
 
 LOOT supports games bought through the Epic Games Store, but Fallout 3's localisations are installed in separate subdirectories. This is the same as when the game is installed through the Microsoft Store, so LOOT will pick one localisation as described for the Microsoft Store above.
 
-LOOT cannot automatically detect Epic Games Store game installs when running on Linux.
-
 Install Location Detection
 ==========================
 
 When LOOT starts, it first loads its configured game settings. If the ``--game`` and ``--game-path`` command line parameters are given it overrides the configured path for the given game using the given path. It then searches for supported games using all of the following sources:
 
 - the install location given in Steam's configuration files
+- the install location(s) given in the `Heroic Games Launcher`_'s configuration files
 - the game's Steam Registry key(s)
 - the game's GOG Registry key(s)
 - the parent directory of the current working directory (e.g. if LOOT is at ``Skyrim Special Edition\LOOT\LOOT.exe`` next to ``Skyrim Special Edition\SkyrimSE.exe``)
@@ -125,8 +122,18 @@ If LOOT's automatic game detection doesn't work correctly for you, you'll need t
 Game Detection on Linux
 -----------------------
 
-On Linux, LOOT can only automatically detect games that were installed through Steam.
+On Linux, LOOT can only automatically detect games that were installed through Steam or through the Heroic Games Launcher.
 
-If running LOOT as a Flatpak application, it only has permission to access the default Steam library paths and ``/run/media`` by default. If you have installed games elsewhere, you will need to grant it access to the relevant paths. This can be done using an application such as `Flatseal`_ or on the command line using ``flatpak --user override --filesystem=<path> io.github.loot.loot``.
+If running LOOT as a Flatpak application, it only has permission to access the following paths by default:
 
+- ``$XDG_DATA_HOME/Steam``
+- ``~/.var/app/com.valvesoftware.Steam/.local/share/Steam``
+- ``/run/media``
+- ``$XDG_CONFIG_HOME/heroic``
+- ``~/.var/app/com.heroicgameslauncher.hgl/config/heroic``
+- ``~/Games/Heroic``
+
+Those paths grant access to the default Steam and Heroic Games Launcher directories. If you have installed games elsewhere, you will need to grant LOOT access to the relevant paths. This can be done using an application such as `Flatseal`_ or on the command line using ``flatpak --user override --filesystem=<path> io.github.loot.loot``.
+
+.. _Heroic Games Launcher: https://heroicgameslauncher.com/
 .. _Flatseal: https://flathub.org/apps/com.github.tchx84.Flatseal

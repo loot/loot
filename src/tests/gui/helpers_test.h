@@ -33,6 +33,10 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
+TEST(GetPreferredUILanguages, shouldReturnAtLeastOneLanguage) {
+  EXPECT_FALSE(GetPreferredUILanguages().empty());
+}
+
 class FindXboxGamingRootPathTest : public CommonGameTestFixture {
 protected:
   FindXboxGamingRootPathTest() : CommonGameTestFixture(GameId::tes3) {}

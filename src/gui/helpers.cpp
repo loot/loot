@@ -183,9 +183,9 @@ std::string FromWinWide(const std::wstring& wstr) {
 #endif
 
 std::vector<std::string> GetPreferredUILanguages() {
-#ifdef _WIN32
   const auto logger = loot::getLogger();
 
+#ifdef _WIN32
   const auto systemPreferredLanguages =
       ::GetPreferredUILanguages(GetSystemPreferredUILanguages, true);
   if (logger) {
@@ -211,14 +211,56 @@ std::vector<std::string> GetPreferredUILanguages() {
     }
   }
 
-  if (logger) {
-    logger->debug("Merged preferred UI languages are: {}",
-                  boost::join(preferredLanguages, ", "));
-  }
-
   return preferredLanguages;
 #else
-  return {};
+  std::vector<std::string> languages;
+
+  try {
+    const auto language =
+        std::use_facet<boost::locale::info>(std::locale("")).language();
+
+    if (logger) {
+      logger->debug("Preferred UI language is \"{}\"", language);
+    }
+
+    languages = {language};
+  } catch (const std::exception& e) {
+    if (logger) {
+      logger->error("Failed to get preferred UI language from locale: {}",
+                    e.what());
+    }
+  }
+
+  try {
+    if (languages.empty()) {
+      const auto language = getenv("LANGUAGE");
+      const auto lcAll = getenv("LC_ALL");
+      const auto lcMessages = getenv("LC_MESSAGES");
+      const auto lang = getenv("LANG");
+
+      if (language != nullptr) {
+        boost::split(languages, language, boost::is_any_of(":"));
+      } else if (lcAll != nullptr) {
+        languages = {lcAll};
+      } else if (lcMessages != nullptr) {
+        languages = {lcMessages};
+      } else if (lang != nullptr) {
+        languages = {lang};
+      }
+    }
+  } catch (const std::exception& e) {
+    if (logger) {
+      logger->error("Failed to get preferred UI language from environment: {}",
+                    e.what());
+    }
+  }
+
+  if (logger) {
+    logger->debug("Preferred UI languages are: {}",
+                  boost::join(languages, ", "));
+  }
+
+  return languages;
 #endif
 }
 

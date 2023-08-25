@@ -47,6 +47,7 @@
 #include "tests/gui/state/game/detection/epic_games_store_test.h"
 #include "tests/gui/state/game/detection/generic_test.h"
 #include "tests/gui/state/game/detection/gog_test.h"
+#include "tests/gui/state/game/detection/heroic_test.h"
 #include "tests/gui/state/game/detection/microsoft_store_test.h"
 #include "tests/gui/state/game/detection/steam_test.h"
 #include "tests/gui/state/game/detection_test.h"

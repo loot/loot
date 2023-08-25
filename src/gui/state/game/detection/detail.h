@@ -52,6 +52,7 @@ std::string GetNameSourceSuffix(const InstallSource source);
 
 std::vector<GameInstall> FindGameInstalls(
     const RegistryInterface& registry,
+    const std::vector<std::filesystem::path>& heroicConfigPaths,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages);
 

@@ -153,11 +153,12 @@ private:
 };
 
 TEST_F(FindGameInstallsTest, shouldReturnAnEmptyVectorIfNoGamesAreInstalled) {
-  EXPECT_TRUE(FindGameInstalls(TestRegistry(), {}, {}).empty());
+  EXPECT_TRUE(FindGameInstalls(TestRegistry(), {}, {}, {}).empty());
 }
 
 TEST_F(FindGameInstallsTest, shouldFindInstallsFromAllSupportedSources) {
-  const auto installs = FindGameInstalls(registry, {xboxGamingRootPath}, {});
+  const auto installs =
+      FindGameInstalls(registry, {}, {xboxGamingRootPath}, {});
 
   ASSERT_EQ(5, installs.size());
 
@@ -193,7 +194,8 @@ TEST_F(FindGameInstallsTest, shouldDeduplicateFoundInstalls) {
       "Software\\Bethesda Softworks\\Skyrim Special Edition",
       steamInstallPath.u8string());
 
-  const auto installs = FindGameInstalls(registry, {xboxGamingRootPath}, {});
+  const auto installs =
+      FindGameInstalls(registry, {}, {xboxGamingRootPath}, {});
 
   ASSERT_EQ(4, installs.size());
 

@@ -78,12 +78,13 @@ std::vector<std::string> GetSteamGameIds(const GameId gameId) {
   }
 }
 
-std::string GetAppDataFolderName(const GameId gameId) {
+std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
       // Morrowind doesn't actually have a local data path, but libloadorder
-      // requires one to be provided when not running on Linux even though it
+      // requires one to be provided when not running on Windows even though it
       // is then not used.
+      // TODO: Replace this with nullopt after updating to the next libloot release.
       return "Morrowind";
     case GameId::tes4:
     case GameId::nehrim:
@@ -418,11 +419,13 @@ std::optional<GameInstall> FindGameInstall(
       steamAppManifestPath.parent_path() / "common" / manifest.installDir;
 
 #ifndef _WIN32
-  // A local path must be specified when running on Linux.
-  install.localPath = steamAppManifestPath.parent_path() / "compatdata" /
-                      manifest.appId / "pfx" / "drive_c" / "users" /
-                      "steamuser" / "AppData" / "Local" /
-                      GetAppDataFolderName(install.gameId);
+  const auto folderName = GetAppDataFolderName(install.gameId);
+  if (folderName.has_value()) {
+    // If the game has a local path, it must be specified when running on Linux.
+    install.localPath = steamAppManifestPath.parent_path() / "compatdata" /
+                        manifest.appId / "pfx" / "drive_c" / "users" /
+                        "steamuser" / "AppData" / "Local" / folderName.value();
+  }
 #endif
 
   return install;

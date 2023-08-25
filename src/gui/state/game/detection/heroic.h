@@ -23,21 +23,38 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_STATE_GAME_DETECTION_GOG
-#define LOOT_GUI_STATE_GAME_DETECTION_GOG
+#ifndef LOOT_GUI_STATE_GAME_DETECTION_HEROIC
+#define LOOT_GUI_STATE_GAME_DETECTION_HEROIC
 
+#include <filesystem>
+#include <string>
 #include <vector>
 
 #include "gui/state/game/detection/game_install.h"
-#include "gui/state/game/detection/registry.h"
 
-namespace loot::gog {
-std::vector<std::string> GetGogGameIds(const GameId gameId);
+namespace loot::heroic {
+struct HeroicGame {
+  GameId gameId;
+  std::string appName;
+  std::filesystem::path installPath;
+};
 
-std::optional<std::string> GetAppDataFolderName(const GameId gameId);
+std::vector<std::filesystem::path> GetHeroicGamesLauncherConfigPaths();
 
-std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
-                                          const GameId gameId);
+std::vector<HeroicGame> GetInstalledGogGames(
+    const std::filesystem::path& heroicConfigPath);
+
+std::vector<HeroicGame> GetInstalledEgsGames(
+    const std::filesystem::path& heroicConfigPath);
+
+std::filesystem::path GetGameLocalPath(
+    const std::filesystem::path& heroicConfigPath,
+    const std::string& appName,
+    const std::string& gameFolderName);
+
+std::vector<GameInstall> FindGameInstalls(
+    const std::filesystem::path& heroicConfigPath,
+    const std::vector<std::string>& preferredUILanguages);
 }
 
 #endif

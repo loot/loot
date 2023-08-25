@@ -45,6 +45,7 @@
 
 #include "gui/helpers.h"
 #include "gui/state/game/detection.h"
+#include "gui/state/game/detection/heroic.h"
 #include "gui/state/game/detection/registry.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
@@ -132,6 +133,9 @@ void LootState::init(const std::string& cmdLineGame,
   findXboxGamingRootPaths();
 
   preferredUILanguages_ = GetPreferredUILanguages();
+  if (preferredUILanguages_.empty() && settings_.getLanguage().size() > 1) {
+    preferredUILanguages_ = {settings_.getLanguage()};
+  }
 
   // Check if the prelude directory exists and create it if not.
   createPreludeDirectory();
@@ -391,9 +395,12 @@ void LootState::setInitialGame(const std::string& cliGameValue) {
 
 std::vector<GameSettings> LootState::FindInstalledGames(
     const std::vector<GameSettings>& gamesSettings) const {
+  const auto heroicConfigPaths = heroic::GetHeroicGamesLauncherConfigPaths();
+
   auto gamesSettingsToUpdate = gamesSettings;
   UpdateInstalledGamesSettings(gamesSettingsToUpdate,
                                Registry(),
+                               heroicConfigPaths,
                                xboxGamingRootPaths_,
                                preferredUILanguages_);
 

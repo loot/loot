@@ -12,6 +12,7 @@ Added
 
 - Support for the GOG distribution of Fallout 4.
 - LOOT can now find Steam game installs by reading Steam configuration files.
+- LOOT can now find GOG and Epic Games Store games installed using the `Heroic Games Launcher`_.
 - A "Hide official plugins' cleaning messages" filter.
 - An "Update All Masterlists" action is now available in the File menu. It
   updates the masterlists for all configured games.
@@ -20,6 +21,8 @@ Added
   plugin names to the clipboard.
 - LOOT will now display warning messages if the current game is installed to, or
   stores its local application data in, a case-sensitive filesystem path.
+
+.. _Heroic Games Launcher: https://heroicgameslauncher.com/
 
 Fixed
 -----

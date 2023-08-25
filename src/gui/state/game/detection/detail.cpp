@@ -33,6 +33,7 @@
 #include "gui/state/game/detection/epic_games_store.h"
 #include "gui/state/game/detection/generic.h"
 #include "gui/state/game/detection/gog.h"
+#include "gui/state/game/detection/heroic.h"
 #include "gui/state/game/detection/microsoft_store.h"
 #include "gui/state/game/detection/steam.h"
 #include "gui/state/logging.h"
@@ -272,6 +273,7 @@ std::string GetNameSourceSuffix(const InstallSource source) {
 
 std::vector<GameInstall> FindGameInstalls(
     const RegistryInterface& registry,
+    const std::vector<std::filesystem::path>& heroicConfigPaths,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
   std::vector<GameInstall> installs;
@@ -285,6 +287,13 @@ std::vector<GameInstall> FindGameInstalls(
         installs.push_back(install.value());
       }
     }
+  }
+
+  for (const auto& heroicConfigPath : heroicConfigPaths) {
+    const auto heroicGameInstalls =
+        heroic::FindGameInstalls(heroicConfigPath, preferredUILanguages);
+    installs.insert(
+        installs.end(), heroicGameInstalls.begin(), heroicGameInstalls.end());
   }
 
   for (const auto& gameId : ALL_GAME_IDS) {
