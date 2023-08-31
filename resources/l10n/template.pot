@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.20.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-08-25 18:56+0100\n"
+"POT-Creation-Date: 2023-08-31 19:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1187,21 +1187,25 @@ msgid ""
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:932
+#. translators: The placeholder is for the current game's name.
+#.
+#: src/gui/state/game/game.cpp:934
 msgid ""
 "{0} is installed in a case-sensitive location. This may cause issues as the "
 "game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
 "which is the default on Windows."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:961
+#. translators: The placeholder is for the current game's
+#. name.
+#: src/gui/state/game/game.cpp:965
 msgid ""
 "{0}'s local application data is stored in a case-sensitive location. This "
 "may cause issues as the game, mods and LOOT may assume that filesystem paths "
 "are not case-sensitive, which is the default on Windows."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1030
+#: src/gui/state/game/game.cpp:1034
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
