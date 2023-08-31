@@ -74,9 +74,9 @@ protected:
   const std::filesystem::path rootPath_;
 };
 
-class GetSteamAppManifestPathsTest : public FilesystemTest {
+class GetSteamLibraryPathsTest : public FilesystemTest {
 public:
-  GetSteamAppManifestPathsTest() :
+  GetSteamLibraryPathsTest() :
       filePath_(rootPath_ / "config" / "libraryfolders.vdf") {}
 
 protected:
@@ -89,14 +89,14 @@ protected:
   const std::filesystem::path filePath_;
 };
 
-TEST_F(GetSteamAppManifestPathsTest,
+TEST_F(GetSteamLibraryPathsTest,
        shouldReturnAnEmptyVectorIfTheLibraryFoldersVdfFileDoesNotExist) {
-  const auto paths = loot::steam::GetSteamAppManifestPaths(rootPath_);
+  const auto paths = loot::steam::GetSteamLibraryPaths(rootPath_);
 
   EXPECT_TRUE(paths.empty());
 }
 
-TEST_F(GetSteamAppManifestPathsTest,
+TEST_F(GetSteamLibraryPathsTest,
        shouldReturnAnEmptyVectorIfTheRootNodeHasTheWrongName) {
   std::ofstream out(filePath_);
   out << R"test(
@@ -139,12 +139,12 @@ TEST_F(GetSteamAppManifestPathsTest,
 )test";
   out.close();
 
-  const auto paths = loot::steam::GetSteamAppManifestPaths(rootPath_);
+  const auto paths = loot::steam::GetSteamLibraryPaths(rootPath_);
 
   EXPECT_TRUE(paths.empty());
 }
 
-TEST_F(GetSteamAppManifestPathsTest, shouldSkipFoldersWithNoPathKey) {
+TEST_F(GetSteamLibraryPathsTest, shouldSkipFoldersWithNoPathKey) {
   std::ofstream out(filePath_);
   out << R"test(
 "libraryfolders"
@@ -186,63 +186,13 @@ TEST_F(GetSteamAppManifestPathsTest, shouldSkipFoldersWithNoPathKey) {
 )test";
   out.close();
 
-  const auto paths = loot::steam::GetSteamAppManifestPaths(rootPath_);
+  const auto paths = loot::steam::GetSteamLibraryPaths(rootPath_);
 
   ASSERT_EQ(1, paths.size());
-  EXPECT_EQ(std::filesystem::u8path("D:\\Games\\Steam") / "steamapps" /
-                "appmanifest_489830.acf",
-            paths[0]);
+  EXPECT_EQ(std::filesystem::u8path("D:\\Games\\Steam"), paths[0]);
 }
 
-TEST_F(GetSteamAppManifestPathsTest, shouldSkipFoldersWithNoAppsKey) {
-  std::ofstream out(filePath_);
-  out << R"test(
-"libraryfolders"
-{
-	"0"
-	{
-		"path"		"C:\\Program Files (x86)\\Steam"
-		"label"		""
-		"contentid"		"1137098260226172853"
-		"totalsize"		"0"
-		"update_clean_bytes_tally"		"3302272801"
-		"time_last_update_corruption"		"0"
-	}
-	"1"
-	{
-		"path"		"D:\\Games\\Steam"
-		"label"		""
-		"contentid"		"7286921146364631392"
-		"totalsize"		"252496048128"
-		"update_clean_bytes_tally"		"66203891438"
-		"time_last_update_corruption"		"1637608828"
-		"apps"
-		{
-			"203770"		"2554786621"
-			"221640"		"22708311"
-			"226840"		"4035469646"
-			"489830"		"15345519558"
-			"508440"		"4782028087"
-			"736260"		"111159842"
-			"763890"		"2204294236"
-			"1985690"		"1902985401"
-		}
-	}
-}
-)test";
-  out.close();
-
-  const auto paths = loot::steam::GetSteamAppManifestPaths(rootPath_);
-
-  ASSERT_EQ(1, paths.size());
-  EXPECT_EQ(std::filesystem::u8path("D:\\Games\\Steam") / "steamapps" /
-                "appmanifest_489830.acf",
-            paths[0]);
-}
-
-TEST_F(
-    GetSteamAppManifestPathsTest,
-    shouldReturnAppManifestPathsConstructedFromTheLibraryPathsAndAppIdsInTheVdf) {
+TEST_F(GetSteamLibraryPathsTest, shouldReturnAllLibraryPathsInTheVdf) {
   std::ofstream out(filePath_);
   out << R"test(
 "libraryfolders"
@@ -285,15 +235,22 @@ TEST_F(
 )test";
   out.close();
 
-  const auto paths = loot::steam::GetSteamAppManifestPaths(rootPath_);
+  const auto paths = loot::steam::GetSteamLibraryPaths(rootPath_);
 
   ASSERT_EQ(2, paths.size());
-  EXPECT_EQ(std::filesystem::u8path("C:\\Program Files (x86)\\Steam") /
-                "steamapps" / "appmanifest_22330.acf",
+  EXPECT_EQ(std::filesystem::u8path("C:\\Program Files (x86)\\Steam"),
             paths[0].u8string());
-  EXPECT_EQ(std::filesystem::u8path("D:\\Games\\Steam") / "steamapps" /
-                "appmanifest_489830.acf",
-            paths[1]);
+  EXPECT_EQ(std::filesystem::u8path("D:\\Games\\Steam"), paths[1]);
+}
+
+TEST(GetSteamAppManifestPaths, shouldReturnAPathForEachSupportedAppId) {
+  const std::filesystem::path libraryPath = "test";
+  const auto paths =
+      loot::steam::GetSteamAppManifestPaths(libraryPath, GameId::tes4);
+
+  ASSERT_EQ(2, paths.size());
+  EXPECT_EQ(libraryPath / "steamapps" / "appmanifest_22330.acf", paths[0]);
+  EXPECT_EQ(libraryPath / "steamapps" / "appmanifest_900883.acf", paths[1]);
 }
 
 class Steam_FindGameInstallTest : public FilesystemTest {

@@ -84,7 +84,8 @@ std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
       // Morrowind doesn't actually have a local data path, but libloadorder
       // requires one to be provided when not running on Windows even though it
       // is then not used.
-      // TODO: Replace this with nullopt after updating to the next libloot release.
+      // TODO: Replace this with nullopt after updating to the next libloot
+      // release.
       return "Morrowind";
     case GameId::tes4:
     case GameId::nehrim:
@@ -207,44 +208,7 @@ std::vector<std::filesystem::path> ParseLibraryFoldersVdf(
         continue;
       }
 
-      const auto appsIt = library->childs.find("apps");
-      if (appsIt == library->childs.end()) {
-        if (logger) {
-          logger->error(
-              "Steam library folders VDF file has an object with no apps key, "
-              "skipping it");
-        }
-        continue;
-      }
-
-      const auto apps = appsIt->second;
-      if (apps == nullptr) {
-        if (logger) {
-          logger->error(
-              "Steam library folders VDF file has a key named {} with no "
-              "value, "
-              "skipping it",
-              appsIt->first);
-        }
-        continue;
-      }
-
-      for (const auto& [appId, size] : apps->attribs) {
-        const auto isSupportedGame = STEAM_GAME_ID_MAP.count(appId) == 1;
-        if (!isSupportedGame) {
-          if (logger) {
-            logger->trace("Skipping app ID {} as it is not a supported game",
-                          appId);
-          }
-          continue;
-        }
-
-        const auto manifestPath =
-            std::filesystem::u8path(pathIt->second) / "steamapps" /
-            std::filesystem::u8path("appmanifest_" + appId + ".acf");
-
-        appManifestPaths.push_back(manifestPath);
-      }
+      appManifestPaths.push_back(std::filesystem::u8path(pathIt->second));
     }
 
     // The parser exposes elements as unordered maps, so to ensure a consistent
@@ -305,8 +269,7 @@ std::optional<SteamAppManifest> ParseAppManifest(std::istream& stream) {
     return manifest;
   } catch (const std::exception& e) {
     if (logger) {
-      logger->error("Failed to parse Steam libraryfolders.vdf file: {}",
-                    e.what());
+      logger->error("Failed to parse Steam app manifest file: {}", e.what());
     }
     return std::nullopt;
   }
@@ -332,7 +295,7 @@ std::vector<std::filesystem::path> GetSteamInstallPaths(
 #endif
 }
 
-std::vector<std::filesystem::path> GetSteamAppManifestPaths(
+std::vector<std::filesystem::path> GetSteamLibraryPaths(
     const std::filesystem::path& steamInstallPath) {
   const auto vdfPath = steamInstallPath / "config" / "libraryfolders.vdf";
   const auto logger = getLogger();
@@ -352,10 +315,31 @@ std::vector<std::filesystem::path> GetSteamAppManifestPaths(
   return ParseLibraryFoldersVdf(stream);
 }
 
+std::vector<std::filesystem::path> GetSteamAppManifestPaths(
+    const std::filesystem::path& steamLibraryPath,
+    const GameId gameId) {
+  std::vector<std::filesystem::path> paths;
+
+  for (const auto& appId : GetSteamGameIds(gameId)) {
+    const auto steamAppManifestPath =
+        steamLibraryPath / "steamapps" /
+        std::filesystem::u8path("appmanifest_" + appId + ".acf");
+
+    paths.push_back(steamAppManifestPath);
+  }
+
+  return paths;
+}
+
 // Parses steamapps/appmanifest_*.acf files.
 std::optional<GameInstall> FindGameInstall(
     const std::filesystem::path& steamAppManifestPath) {
   const auto logger = getLogger();
+
+  if (!std::filesystem::exists(steamAppManifestPath)) {
+    // Avoid logging unnecessary warnings.
+    return std::nullopt;
+  }
 
   std::ifstream stream(steamAppManifestPath);
   if (!stream.is_open()) {
