@@ -226,7 +226,7 @@ std::vector<std::string> GetPreferredUILanguages() {
     languages = {language};
   } catch (const std::exception& e) {
     if (logger) {
-      logger->error("Failed to get preferred UI language from locale: {}",
+      logger->debug("Failed to get preferred UI language from locale: {}",
                     e.what());
     }
   }
