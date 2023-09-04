@@ -544,6 +544,21 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
             "will cause irreversible damage to your game saves.")));
   }
 
+  if (plugin.IsOverridePlugin() && !plugin.IsValidAsOverridePlugin()) {
+    if (logger) {
+      logger->error(
+          "\"{}\" is an override plugin but adds new records. Using this "
+          "plugin may cause irreversible damage to your game saves.",
+          plugin.GetName());
+    }
+    messages.push_back(CreatePlainTextSourcedMessage(
+        MessageType::error,
+        MessageSource::invalidOverridePlugin,
+        boost::locale::translate(
+            "This plugin is an override plugin but adds new records. Using "
+            "this plugin may cause irreversible damage to your game saves.")));
+  }
+
   if (plugin.GetHeaderVersion().has_value() &&
       plugin.GetHeaderVersion().value() < settings_.MinimumHeaderVersion()) {
     if (logger) {
