@@ -237,7 +237,7 @@ std::string GetLoadOrderAsTextTable(const gui::Game& game,
       stream << "254 FE " << std::setw(3) << std::hex
              << counters.activeLightPlugins << std::dec << " ";
       counters.activeLightPlugins += 1;
-    } else if (isActive) {
+    } else if (isActive && !plugin->IsOverridePlugin()) {
       stream << std::setw(3) << counters.activeNormal << " " << std::hex
              << std::setw(2) << counters.activeNormal << std::dec << "     ";
       counters.activeNormal += 1;
@@ -777,8 +777,9 @@ std::optional<short> Game::GetActiveLoadOrderIndex(
   // given plugin is encountered. If the plugin isn't active or in the load
   // order, return nullopt.
 
-  if (!IsPluginActive(plugin.GetName()))
+  if (!IsPluginActive(plugin.GetName()) || plugin.IsOverridePlugin()) {
     return std::nullopt;
+  }
 
   short numberOfActivePlugins = 0;
   for (const std::string& otherPluginName : loadOrder) {
@@ -787,7 +788,8 @@ std::optional<short> Game::GetActiveLoadOrderIndex(
     }
 
     auto otherPlugin = GetPlugin(otherPluginName);
-    if (otherPlugin && plugin.IsLightPlugin() == otherPlugin->IsLightPlugin() &&
+    if (otherPlugin && !otherPlugin->IsOverridePlugin() &&
+        plugin.IsLightPlugin() == otherPlugin->IsLightPlugin() &&
         IsPluginActive(otherPluginName)) {
       ++numberOfActivePlugins;
     }

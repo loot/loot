@@ -57,6 +57,7 @@ struct PluginItem {
   bool isEmpty{false};
   bool isMaster{false};
   bool isLightPlugin{false};
+  bool isOverridePlugin{false};
   bool loadsArchive{false};
   bool hasUserMetadata{false};
   bool isCreationClubPlugin{false};
