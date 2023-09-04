@@ -1201,8 +1201,10 @@ std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
 
   // Scan external data paths first, as the game checks them before the main
   // data path.
-  for (const auto& dataPath : GetExternalDataPaths(
-           settings_.Id(), isMicrosoftStoreInstall_, settings_.DataPath())) {
+  for (const auto& dataPath : GetExternalDataPaths(settings_.Id(),
+                                                   isMicrosoftStoreInstall_,
+                                                   settings_.DataPath(),
+                                                   settings_.GameLocalPath())) {
     if (!std::filesystem::exists(dataPath)) {
       continue;
     }
@@ -1274,8 +1276,11 @@ bool Game::IsCreationClubPlugin(const PluginInterface& plugin) const {
 
 std::filesystem::path Game::ResolveGameFilePath(
     const std::string& filePath) const {
-  const auto externalDataPaths = GetExternalDataPaths(
-      settings_.Id(), isMicrosoftStoreInstall_, settings_.DataPath());
+  const auto externalDataPaths =
+      GetExternalDataPaths(settings_.Id(),
+                           isMicrosoftStoreInstall_,
+                           settings_.DataPath(),
+                           settings_.GameLocalPath());
 
   return loot::ResolveGameFilePath(
       externalDataPaths, settings_.DataPath(), filePath);

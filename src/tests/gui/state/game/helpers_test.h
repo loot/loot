@@ -211,14 +211,18 @@ TEST_F(
 TEST(GetExternalDataPaths,
      shouldReturnAnEmptyVectorIfTheGameIsNotAMicrosoftStoreInstall) {
   const auto dataPath = std::filesystem::u8path("data");
-  const auto paths = GetExternalDataPaths(GameId::fo4, false, dataPath);
+  const auto localPath = std::filesystem::u8path("local");
+  const auto paths =
+      GetExternalDataPaths(GameId::fo4, false, dataPath, localPath);
 
   EXPECT_TRUE(paths.empty());
 }
 
 TEST(GetExternalDataPaths, shouldReturnAnEmptyVectorIfTheGameIsNotFallout4) {
   const auto dataPath = std::filesystem::u8path("data");
-  const auto paths = GetExternalDataPaths(GameId::tes5se, true, dataPath);
+  const auto localPath = std::filesystem::u8path("local");
+  const auto paths =
+      GetExternalDataPaths(GameId::tes5se, true, dataPath, localPath);
 
   EXPECT_TRUE(paths.empty());
 }
@@ -226,7 +230,9 @@ TEST(GetExternalDataPaths, shouldReturnAnEmptyVectorIfTheGameIsNotFallout4) {
 TEST(GetExternalDataPaths,
      shouldReturnDlcPluginPathsIfTheGameIsAMicrosoftStoreInstallOfFallout4) {
   const auto dataPath = std::filesystem::u8path("data");
-  const auto paths = GetExternalDataPaths(GameId::fo4, true, dataPath);
+  const auto localPath = std::filesystem::u8path("local");
+  const auto paths =
+      GetExternalDataPaths(GameId::fo4, true, dataPath, localPath);
 
   EXPECT_EQ(std::vector<std::filesystem::path>(
                 {dataPath / "../../../Fallout 4- Automatron (PC)/Content/Data",

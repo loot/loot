@@ -35,6 +35,16 @@
 
 #include "gui/state/logging.h"
 
+#ifdef _WIN32
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+#include "shlobj.h"
+#endif
+
 namespace {
 constexpr const char* MS_FO4_AUTOMATRON_DATA_PATH =
     "../../../Fallout 4- Automatron (PC)/Content/Data";
@@ -50,6 +60,26 @@ constexpr const char* MS_FO4_VAULT_TEC_DATA_PATH =
     "../../../Fallout 4- Vault-Tec Workshop (PC)/Content/Data";
 constexpr const char* MS_FO4_WASTELAND_DATA_PATH =
     "../../../Fallout 4- Wasteland Workshop (PC)/Content/Data";
+
+std::filesystem::path GetUserDocumentsPath(
+    const std::filesystem::path& gameLocalPath) {
+#ifdef _WIN32
+  PWSTR path;
+
+  if (SHGetKnownFolderPath(FOLDERID_Documents, 0, NULL, &path) != S_OK)
+    throw std::system_error(GetLastError(),
+                            std::system_category(),
+                            "Failed to get user Documents path.");
+
+  std::filesystem::path documentsPath(path);
+  CoTaskMemFree(path);
+
+  return documentsPath;
+#else
+  // Get the documents path relative to the game's local path.
+  return gameLocalPath.parent_path().parent_path().parent_path() / "Documents";
+#endif
+}
 }
 
 namespace loot {
@@ -292,7 +322,8 @@ std::filesystem::path ResolveGameFilePath(
 std::vector<std::filesystem::path> GetExternalDataPaths(
     const GameId gameId,
     const bool isMicrosoftStoreInstall,
-    const std::filesystem::path& dataPath) {
+    const std::filesystem::path& dataPath,
+    const std::filesystem::path& gameLocalPath) {
   if (gameId == GameId::fo4 && isMicrosoftStoreInstall) {
     return {dataPath / MS_FO4_AUTOMATRON_DATA_PATH,
             dataPath / MS_FO4_NUKA_WORLD_DATA_PATH,
@@ -301,6 +332,11 @@ std::vector<std::filesystem::path> GetExternalDataPaths(
             dataPath / MS_FO4_VAULT_TEC_DATA_PATH,
             dataPath / MS_FO4_FAR_HARBOR_DATA_PATH,
             dataPath / MS_FO4_CONTRAPTIONS_DATA_PATH};
+  }
+
+  if (gameId == GameId::starfield) {
+    return {GetUserDocumentsPath(gameLocalPath) / "My Games" / "Starfield" /
+            "Data"};
   }
 
   return {};
