@@ -181,7 +181,7 @@ jobs:
           FILENAME="loot_${VERSION}-Linux.tar.xz"
           export PATH="${{ steps.qt-metadata.outputs.root }}/bin:$PATH"
 
-          python scripts/archive.py . "${{ steps.get-loot-version.outputs.ref }}" "${{ steps.qt-metadata.outputs.root }}"
+          python scripts/archive.py . "${{ steps.get-loot-version.outputs.ref }}"
           mv "build/loot_${{ steps.get-loot-version.outputs.version }}.tar.xz" "build/$FILENAME"
 
           echo "filename=$FILENAME" >> $GITHUB_OUTPUT
