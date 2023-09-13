@@ -21,6 +21,10 @@ Added
   plugin names to the clipboard.
 - LOOT will now display warning messages if the current game is installed to, or
   stores its local application data in, a case-sensitive filesystem path.
+- A LOOT release is now available for Linux as a binary archive. This is
+  intended as a step towards making LOOT releases available as a Flatpak
+  application on Flathub, and is not recommended for general use as the archive
+  does not include most of LOOT's runtime dependencies.
 
 .. _Heroic Games Launcher: https://heroicgameslauncher.com/
 
