@@ -69,6 +69,7 @@ Changed
   ``$XDG_CONFIG_HOME/LOOT`` to store its data, and falls back to using
   ``$HOME/.local/share/LOOT`` instead of ``$HOME/.config/LOOT``.
 - LOOT now supports `v0.21 <https://loot-api.readthedocs.io/en/0.21.0/metadata/changelog.html#id1>`_ of its metadata syntax. Via libloot.
+- The Light Plugin icon has been replaced.
 - Updated Bulgarian translation.
 - Updated Finnish translation.
 - Updated French translation.
