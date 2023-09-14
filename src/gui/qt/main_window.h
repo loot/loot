@@ -109,6 +109,7 @@ private:
   QAction *actionUpdateMasterlist{new QAction(this)};
   QAction *actionSearch{new QAction(this)};
   QAction *actionViewDocs{new QAction(this)};
+  QAction *actionOpenFAQs{new QAction(this)};
   QAction *actionOpenLOOTDataFolder{new QAction(this)};
   QAction *actionJoinDiscordServer{new QAction(this)};
   QAction *actionAbout{new QAction(this)};
@@ -259,6 +260,7 @@ private slots:
   void on_actionCopyMetadata_triggered();
   void on_actionClearMetadata_triggered();
   void on_actionViewDocs_triggered();
+  void on_actionOpenFAQs_triggered();
   void on_actionOpenLOOTDataFolder_triggered();
   void on_actionJoinDiscordServer_triggered();
   void on_actionAbout_triggered();

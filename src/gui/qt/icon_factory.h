@@ -63,6 +63,7 @@ public:
   static QIcon getFixIcon();
   static QIcon getDeleteIcon();
   static QIcon getViewDocsIcon();
+  static QIcon getOpenFAQsIcon();
   static QIcon getOpenLOOTDataFolderIcon();
   static QIcon getJoinDiscordServerIcon();
   static QIcon getAboutIcon();

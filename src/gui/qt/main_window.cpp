@@ -476,6 +476,8 @@ void MainWindow::setupMenuBar() {
   actionViewDocs->setObjectName("actionViewDocs");
   actionViewDocs->setShortcut(QKeySequence::HelpContents);
 
+  actionOpenFAQs->setObjectName("actionOpenFAQs");
+
   actionOpenLOOTDataFolder->setObjectName("actionOpenLOOTDataFolder");
 
   actionJoinDiscordServer->setObjectName("actionJoinDiscordServer");
@@ -549,6 +551,7 @@ void MainWindow::setupMenuBar() {
   menuPlugin->addSeparator();
   menuPlugin->addAction(actionClearMetadata);
   menuHelp->addAction(actionViewDocs);
+  menuHelp->addAction(actionOpenFAQs);
   menuHelp->addAction(actionJoinDiscordServer);
   menuHelp->addSeparator();
   menuHelp->addAction(actionAbout);
@@ -731,6 +734,8 @@ void MainWindow::translateUi() {
   /* translators: This string is an action in the Help menu. */
   actionViewDocs->setText(translate("&View Documentation"));
   /* translators: This string is an action in the Help menu. */
+  actionOpenFAQs->setText(translate("&Open FAQs"));
+  /* translators: This string is an action in the Help menu. */
   actionJoinDiscordServer->setText(translate("&Join Discord Server"));
   /* translators: This string is an action in the Help menu. */
   actionAbout->setText(translate("&About"));
@@ -750,6 +755,7 @@ void MainWindow::setIcons() {
   actionBackupData->setIcon(IconFactory::getArchiveIcon());
   actionQuit->setIcon(IconFactory::getQuitIcon());
   actionViewDocs->setIcon(IconFactory::getViewDocsIcon());
+  actionOpenFAQs->setIcon(IconFactory::getOpenFAQsIcon());
   actionOpenLOOTDataFolder->setIcon(IconFactory::getOpenLOOTDataFolderIcon());
   actionJoinDiscordServer->setIcon(IconFactory::getJoinDiscordServerIcon());
   actionAbout->setIcon(IconFactory::getAboutIcon());
@@ -1896,6 +1902,19 @@ void MainWindow::on_actionViewDocs_triggered() {
     }
 
     OpenInDefaultApplication(canonicalPath);
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_actionOpenFAQs_triggered() {
+  try {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->trace("Opening LOOT's FAQs.");
+    }
+
+    QDesktopServices::openUrl(QUrl("https://loot.github.io/docs/help/LOOT-FAQs"));
   } catch (const std::exception& e) {
     handleException(e);
   }

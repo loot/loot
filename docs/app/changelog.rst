@@ -16,6 +16,8 @@ Added
 - A "Hide official plugins' cleaning messages" filter.
 - An "Update All Masterlists" action is now available in the File menu. It
   updates the masterlists for all configured games.
+- An "Open FAQs" action is now available in the Help menu. It opens the LOOT
+  FAQs webpage in the user's default browser.
 - A "Copy Plugin Names" action is now available in a right-click context menu
   for the Groups Editor's group plugins list. The action copies the listed
   plugin names to the clipboard.
