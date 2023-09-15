@@ -47,14 +47,6 @@ HKEY GetRegistryRootKey(const std::string& rootKey) {
     throw std::invalid_argument("Invalid registry key given.");
 }
 #endif
-
-bool IsNehrimSteamRegistryValue(const loot::RegistryValue& value) {
-  return value.rootKey == "HKEY_LOCAL_MACHINE" &&
-         value.subKey ==
-             "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam "
-             "App 1014940" &&
-         value.valueName == "InstallLocation";
-}
 }
 
 namespace loot {
@@ -195,19 +187,9 @@ std::optional<std::filesystem::path> ReadPathFromRegistry(
   try {
     const auto installedPath = registry.GetStringValue(value);
 
-    if (!installedPath.has_value()) {
-      return std::nullopt;
+    if (installedPath.has_value()) {
+      return std::filesystem::u8path(installedPath.value());
     }
-
-    const auto gamePath = std::filesystem::u8path(installedPath.value());
-
-    // Hack for Nehrim installed through Steam, as its Steam install
-    // puts all the game files inside a NehrimFiles subdirectory.
-    if (IsNehrimSteamRegistryValue(value)) {
-      return gamePath / "NehrimFiles";
-    }
-
-    return gamePath;
   } catch (const std::exception& e) {
     const auto logger = getLogger();
     if (logger) {
@@ -232,8 +214,7 @@ std::vector<std::filesystem::path> FindGameInstallPathsInRegistry(
   for (const auto& registryValue : registryValues) {
     const auto path = ReadPathFromRegistry(registry, registryValue);
 
-    if (path.has_value() &&
-        IsValidGamePath(gameId, GetMasterFilename(gameId), path.value())) {
+    if (path.has_value()) {
       installPaths.push_back(path.value());
     }
   }

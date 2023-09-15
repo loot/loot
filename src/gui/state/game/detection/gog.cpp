@@ -25,6 +25,8 @@
 
 #include "gui/state/game/detection/gog.h"
 
+#include "gui/state/game/detection/common.h"
+
 namespace {
 std::vector<loot::RegistryValue> GetRegistryValues(const loot::GameId gameId) {
   const auto gogGameIds = loot::gog::GetGogGameIds(gameId);
@@ -114,8 +116,10 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
 
   std::vector<GameInstall> installs;
   for (const auto& installPath : installPaths) {
-    installs.push_back(GameInstall{
-        gameId, InstallSource::gog, installPath, std::filesystem::path()});
+    if (IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
+      installs.push_back(GameInstall{
+          gameId, InstallSource::gog, installPath, std::filesystem::path()});
+    }
   }
 
   return installs;

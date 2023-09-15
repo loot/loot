@@ -269,6 +269,18 @@ std::optional<SteamAppManifest> ParseAppManifest(std::istream& stream) {
     return std::nullopt;
   }
 }
+
+std::filesystem::path FixNehrimInstallPath(
+    const GameId gameId,
+    const std::filesystem::path& installPath) {
+  // The Steam install of Nehrim puts all the game files inside a NehrimFiles
+  // subdirectory.
+  if (gameId == GameId::nehrim) {
+    return installPath / "NehrimFiles";
+  }
+
+  return installPath;
+}
 }
 
 namespace loot::steam {
@@ -384,8 +396,10 @@ std::optional<GameInstall> FindGameInstall(
   }
 
   const auto gameId = it->second;
-  const auto installPath =
+  auto installPath =
       steamAppManifestPath.parent_path() / "common" / manifest.installDir;
+
+  installPath = FixNehrimInstallPath(gameId, installPath);
 
   if (!IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
     return std::nullopt;
@@ -393,9 +407,8 @@ std::optional<GameInstall> FindGameInstall(
 
   GameInstall install;
   install.source = InstallSource::steam;
-  install.gameId = it->second;
-  install.installPath =
-      steamAppManifestPath.parent_path() / "common" / manifest.installDir;
+  install.gameId = gameId;
+  install.installPath = installPath;
 
 #ifndef _WIN32
   const auto folderName = GetAppDataFolderName(install.gameId);
@@ -412,13 +425,17 @@ std::optional<GameInstall> FindGameInstall(
 
 std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
                                           const GameId gameId) {
-  const auto installPaths = FindGameInstallPathsInRegistry(
+  auto installPaths = FindGameInstallPathsInRegistry(
       registry, gameId, GetRegistryValues(gameId));
 
   std::vector<GameInstall> installs;
-  for (const auto& installPath : installPaths) {
-    installs.push_back(GameInstall{
-        gameId, InstallSource::steam, installPath, std::filesystem::path()});
+  for (auto& installPath : installPaths) {
+    installPath = FixNehrimInstallPath(gameId, installPath);
+
+    if (IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
+      installs.push_back(GameInstall{
+          gameId, InstallSource::steam, installPath, std::filesystem::path()});
+    }
   }
 
   return installs;
