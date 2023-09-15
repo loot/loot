@@ -404,6 +404,12 @@ std::vector<GameSettings> LootState::FindInstalledGames(
                                xboxGamingRootPaths_,
                                preferredUILanguages_);
 
+  std::sort(gamesSettingsToUpdate.begin(),
+            gamesSettingsToUpdate.end(),
+            [](const GameSettings& lhs, const GameSettings& rhs) {
+              return lhs.Name() < rhs.Name();
+            });
+
   return gamesSettingsToUpdate;
 }
 
