@@ -50,21 +50,47 @@ public:
        the game data, so also load the metadata lists. */
     bool isFirstLoad = game_.GetPlugins().empty();
 
+    std::exception_ptr exceptionPointer;
     std::vector<std::thread> threads;
 
-    threads.push_back(
-        std::thread([&]() { game_.LoadAllInstalledPlugins(true); }));
+    threads.push_back(std::thread([&]() {
+      try {
+        game_.LoadAllInstalledPlugins(true);
+      } catch (...) {
+        if (exceptionPointer == nullptr) {
+          exceptionPointer = std::current_exception();
+        }
+      }
+    }));
 
     if (isFirstLoad) {
-      threads.push_back(std::thread([&]() { game_.LoadMetadata(); }));
+      threads.push_back(std::thread([&]() {
+        try {
+          game_.LoadMetadata();
+        } catch (...) {
+          if (exceptionPointer == nullptr) {
+            exceptionPointer = std::current_exception();
+          }
+        }
+      }));
     }
 
-    threads.push_back(
-        std::thread([&]() { game_.LoadCreationClubPluginNames(); }));
+    threads.push_back(std::thread([&]() {
+      try {
+        game_.LoadCreationClubPluginNames();
+      } catch (...) {
+        if (exceptionPointer == nullptr) {
+          exceptionPointer = std::current_exception();
+        }
+      }
+    }));
 
     for (auto& thread : threads) {
       if (thread.joinable()) {
         thread.join();
+        if (exceptionPointer != nullptr) {
+          std::rethrow_exception(exceptionPointer);
+        }
       }
     }
 
