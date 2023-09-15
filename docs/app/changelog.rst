@@ -35,6 +35,8 @@ Fixed
 
 - If LOOT v0.20.0 encountered errors during startup, it would fail to display
   the error messages correctly, instead displaying blank error messages.
+- Since v0.19.0, LOOT could crash if an error was encountered while loading data
+  for the current game.
 - The styling of the general information and plugin cards would not update in
   response to application state changes (e.g. if inactive windows are styled to
   have grey text, the text would stay black whether or not the LOOT window was
@@ -59,6 +61,7 @@ Changed
   between settings for the total conversions and for the original games.
 - The error messages displayed when LOOT cannot detect any game installs have
   been improved.
+- LOOT now sorts games it detects by name.
 - LOOT will no longer encounter an error when the game's local app data path
   does not exist. Via libloot.
 - Theme files are now loaded from the ``themes`` folder in LOOT's data folder
@@ -69,6 +72,7 @@ Changed
   ``$XDG_CONFIG_HOME/LOOT`` to store its data, and falls back to using
   ``$HOME/.local/share/LOOT`` instead of ``$HOME/.config/LOOT``.
 - LOOT now supports `v0.21 <https://loot-api.readthedocs.io/en/0.21.0/metadata/changelog.html#id1>`_ of its metadata syntax. Via libloot.
+- The default masterlist branch is now ``v0.21``.
 - The Light Plugin icon has been replaced.
 - Updated Bulgarian translation.
 - Updated Finnish translation.
