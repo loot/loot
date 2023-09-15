@@ -8,7 +8,7 @@
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
 
-#define MasterlistBranch "v0.18"
+#define MasterlistBranch "v0.21"
 
 #if FileExists(AddBackslash(CompilerPath) + 'Languages\Korean.isl')
 #define KoreanExists

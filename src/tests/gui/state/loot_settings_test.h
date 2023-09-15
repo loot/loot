@@ -100,7 +100,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_FALSE(settings_.getFilters().hideOfficialPluginsCleaningMessages);
   EXPECT_FALSE(settings_.getFilters().hideInactivePlugins);
   EXPECT_FALSE(settings_.getFilters().hideMessagelessPlugins);
-  EXPECT_EQ("https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml",
+  EXPECT_EQ("https://raw.githubusercontent.com/loot/prelude/v0.21/prelude.yaml",
             settings_.getPreludeSource());
   EXPECT_TRUE(settings_.getGameSettings().empty());
 
@@ -742,7 +742,7 @@ TEST_F(
   settings_.load(settingsFile_);
 
   const auto expectedSource =
-      "https://raw.githubusercontent.com/loot/oblivion/v0.18/masterlist.yaml";
+      "https://raw.githubusercontent.com/loot/oblivion/v0.21/masterlist.yaml";
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
@@ -762,7 +762,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   const auto expectedSource =
-      "https://raw.githubusercontent.com/loot/skyrimse/v0.18/masterlist.yaml";
+      "https://raw.githubusercontent.com/loot/skyrimse/v0.21/masterlist.yaml";
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
@@ -878,7 +878,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/oblivion-foo/v0.18/"
+      "https://raw.githubusercontent.com/loot/oblivion-foo/v0.21/"
       "masterlist.yaml";
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
@@ -1160,7 +1160,7 @@ TEST_F(
   settings_.load(settingsFile_);
 
   const auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
+      "https://raw.githubusercontent.com/loot/prelude/v0.21/prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
@@ -1255,7 +1255,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.18/"
+      "https://raw.githubusercontent.com/loot/prelude/v0.21/"
       "prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
@@ -1292,7 +1292,7 @@ TEST_F(
   settings_.load(settingsFile_);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
+      "https://raw.githubusercontent.com/loot/prelude/v0.21/prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
@@ -1311,7 +1311,7 @@ TEST_F(
   settings_.load(settingsFile_);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
+      "https://raw.githubusercontent.com/loot/prelude/v0.21/prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
@@ -1344,7 +1344,7 @@ TEST_F(
   settings_.load(settingsFile_);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
+      "https://raw.githubusercontent.com/loot/prelude/v0.21/prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 

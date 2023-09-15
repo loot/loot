@@ -117,7 +117,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Fallout3.esm", settings_.Master());
       EXPECT_EQ(0.94f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/fallout3/v0.18/"
+          "https://raw.githubusercontent.com/loot/fallout3/v0.21/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -126,7 +126,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("FalloutNV.esm", settings_.Master());
       EXPECT_EQ(1.32f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/falloutnv/v0.18/"
+          "https://raw.githubusercontent.com/loot/falloutnv/v0.21/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -135,7 +135,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Fallout4.esm", settings_.Master());
       EXPECT_EQ(0.95f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/fallout4/v0.18/"
+          "https://raw.githubusercontent.com/loot/fallout4/v0.21/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -145,7 +145,7 @@ TEST_P(GameSettingsTest,
       // TODO: Get the real value off someone who owns Fallout 4 VR.
       EXPECT_EQ(0.95f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/fallout4vr/v0.18/"
+          "https://raw.githubusercontent.com/loot/fallout4vr/v0.21/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -154,7 +154,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Morrowind.esm", settings_.Master());
       EXPECT_EQ(1.2f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/morrowind/v0.18/"
+          "https://raw.githubusercontent.com/loot/morrowind/v0.21/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -163,7 +163,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Oblivion.esm", settings_.Master());
       EXPECT_EQ(0.8f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/oblivion/v0.18/"
+          "https://raw.githubusercontent.com/loot/oblivion/v0.21/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -172,7 +172,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Skyrim.esm", settings_.Master());
       EXPECT_EQ(0.94f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/skyrim/v0.18/masterlist.yaml",
+          "https://raw.githubusercontent.com/loot/skyrim/v0.21/masterlist.yaml",
           settings_.MasterlistSource());
       break;
     case GameId::tes5se:
@@ -180,7 +180,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Skyrim.esm", settings_.Master());
       EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/skyrimse/v0.18/"
+          "https://raw.githubusercontent.com/loot/skyrimse/v0.21/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -190,7 +190,7 @@ TEST_P(GameSettingsTest,
       // TODO: Get the real value off someone who owns Skyrim VR.
       EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/skyrimvr/v0.18/"
+          "https://raw.githubusercontent.com/loot/skyrimvr/v0.21/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;

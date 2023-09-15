@@ -38,7 +38,7 @@
 #include "gui/state/game/game_settings.h"
 
 namespace loot {
-static constexpr const char* DEFAULT_MASTERLIST_BRANCH = "v0.18";
+static constexpr const char* DEFAULT_MASTERLIST_BRANCH = "v0.21";
 
 std::string GetDefaultLootFolderName(const GameId gameId);
 

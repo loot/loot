@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$masterlistBranch = "v0.18"
+$masterlistBranch = "v0.21"
 
 function DownloadLanguageFile($languageFile, $innoPath) {
   $url = 'https://raw.githubusercontent.com/jrsoftware/issrc/is-6_0_5/Files/Languages/Unofficial/' + $languageFile

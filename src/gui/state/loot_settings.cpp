@@ -129,8 +129,15 @@ bool IsEnderalSE(const toml::table& table) {
 }
 
 namespace loot {
-static const std::set<std::string> oldDefaultBranches(
-    {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14", "v0.15", "v0.17"});
+static const std::set<std::string> oldDefaultBranches({"master",
+                                                       "v0.7",
+                                                       "v0.8",
+                                                       "v0.10",
+                                                       "v0.13",
+                                                       "v0.14",
+                                                       "v0.15",
+                                                       "v0.17",
+                                                       "v0.18"});
 
 static const std::regex GITHUB_REPO_URL_REGEX =
     std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",
