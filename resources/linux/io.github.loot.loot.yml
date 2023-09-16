@@ -24,21 +24,27 @@ modules:
         sha256: bb8cddd0277605d3ee7f4e19b138c983f298d69fcbb585385b59ef7239d5ef83
 
 finish-args:
-  - --socket=x11
+  - --device=dri
   - --share=ipc
+  - --share=network
+  - --socket=x11
   - --socket=wayland
   - --socket=pulseaudio
-  - --share=network
-  - --device=dri
   # Steam package data.
-  - --filesystem=xdg-data/Steam
+  - --filesystem=xdg-data/Steam:ro
+  # Steam package default library paths.
+  - --filesystem=xdg-data/Steam/steamapps/common
+  - --filesystem=xdg-data/Steam/steamapps/compatdata
   # Steam Flatpak data.
-  - --filesystem=~/.var/app/com.valvesoftware.Steam/.local/share/Steam
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/.local/share/Steam:ro
+  # Steam Flatpak default library paths.
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/compatdata
   # Steam Deck SD card mount point parent path.
   - --filesystem=/run/media
   # Heroic Games Launcher package config.
-  - --filesystem=xdg-config/heroic
+  - --filesystem=xdg-config/heroic:ro
   # Heroic Games Launcher Flatpak config.
-  - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic
+  - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic:ro
   # Heroic Games Launcher default games install path.
   - --filesystem=~/Games/Heroic
