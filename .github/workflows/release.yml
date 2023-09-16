@@ -30,15 +30,21 @@ jobs:
           release_name: LOOT v${{ steps.get-git-tag.outputs.name }}
           draft: true
           body: |
+            The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).
+
+            ## Windows
+
             LOOT requires a 64-bit version of Windows 10 (1809) or later and the [MSVC 2019 x64 redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe).
 
             The `.exe` installer will automatically download and install the redistributable if you don't already have it installed.
 
-            [7-Zip](https://www.7-zip.org/) is required to extract the `.7z` archive.
+            [7-Zip](https://www.7-zip.org/) is required to extract the `.7z` archive on Windows 10.
+
+            ## Linux
+
+            LOOT requires a 64-bit version of Linux.
 
             The `.tar.xz` archive is not recommended for general use as it does not include most of LOOT's runtime dependencies.
-
-            The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).
 
   linux:
     runs-on: ubuntu-20.04
