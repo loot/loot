@@ -34,6 +34,13 @@
     <binary>LOOT</binary>
   </provides>
 
+  <screenshots>
+    <screenshot type="default">
+      <image type="source" width="1079" height="800">https://raw.githubusercontent.com/loot/loot/0.21.0/docs/images/main.png</image>
+      <caption>The LOOT main window</caption>
+    </screenshot>
+  </screenshots>
+
   <releases>
     <release version="0.21.0" date="2023-09-17"/>
   </releases>
