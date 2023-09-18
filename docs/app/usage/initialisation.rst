@@ -91,7 +91,7 @@ Older versions of the Microsoft Store and Xbox apps install games inside ``Windo
 
   LOOT will be unable to apply sorted load orders for Morrowind, Oblivion, Fallout 3 and Fallout New Vegas unless it is run as an administrator.
 
-Users with games installed like this are recommended to update their Microsoft Store and Xbox apps and reinstall the games to avoid these issues, which also affect other modding utilities.
+If you have games installed like this, you should update your Microsoft Store and Xbox apps and reinstall the games to avoid these issues, which also affect other modding utilities.
 
 Epic Games Store Compatibility
 ==============================
