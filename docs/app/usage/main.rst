@@ -2,7 +2,7 @@
 The Main Interface
 ******************
 
-.. image:: ../../images/main.png
+.. image:: ../../images/main.windows.png
 
 The Menu Bar
 ============

@@ -4,7 +4,7 @@
 Editing Plugin Groups
 *********************
 
-.. image:: ../../images/groups_editor.png
+.. image:: ../../images/groups_editor.windows.png
 
 What Are Plugin Groups?
 =======================
