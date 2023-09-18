@@ -3,26 +3,6 @@ runtime: org.kde.Platform
 runtime-version: '6.5'
 sdk: org.kde.Sdk
 command: LOOT
-modules:
-  - name: application
-    buildsystem: simple
-    build-commands:
-      - install -D bin/LOOT /app/bin/LOOT
-      - install -D lib/libloot.so /app/lib/libloot.so
-      - cp -r share /app
-    sources:
-      - type: archive
-        path: ../../build/loot.tar.xz
-  - name: libtbb
-    buildsystem: simple
-    build-commands:
-      - install -D lib/intel64/gcc4.8/libtbb.so.2 /app/lib/
-      - install -D LICENSE /app/share/doc/libtbb2/copyright
-    sources:
-      - type: archive
-        url: https://github.com/oneapi-src/oneTBB/releases/download/v2020.3/tbb-2020.3-lin.tgz
-        sha256: bb8cddd0277605d3ee7f4e19b138c983f298d69fcbb585385b59ef7239d5ef83
-
 finish-args:
   - --device=dri
   - --share=ipc
@@ -48,3 +28,22 @@ finish-args:
   - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic:ro
   # Heroic Games Launcher default games install path.
   - --filesystem=~/Games/Heroic
+modules:
+  - name: application
+    buildsystem: simple
+    build-commands:
+      - install -D bin/LOOT /app/bin/LOOT
+      - install -D lib/libloot.so /app/lib/libloot.so
+      - cp -r share /app
+    sources:
+      - type: archive
+        path: ../../build/loot.tar.xz
+  - name: libtbb
+    buildsystem: simple
+    build-commands:
+      - install -D lib/intel64/gcc4.8/libtbb.so.2 /app/lib/
+      - install -D LICENSE /app/share/doc/libtbb2/copyright
+    sources:
+      - type: archive
+        url: https://github.com/oneapi-src/oneTBB/releases/download/v2020.3/tbb-2020.3-lin.tgz
+        sha256: bb8cddd0277605d3ee7f4e19b138c983f298d69fcbb585385b59ef7239d5ef83
