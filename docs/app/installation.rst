@@ -25,4 +25,20 @@ Linux
 
 **LOOT requires a 64-bit version of Linux.**
 
-LOOT can be installed from a release archive, but this is not recommended as the archive does not include most of LOOT's runtime dependencies.
+LOOT can be installed as a `Flatpak`_ application or from a release archive. The Flatpak approach is recommended over using a release archive as the latter does not include any third-party dependencies, which must be installed separately.
+
+You may be able to install and uninstall the LOOT Flatpak application through your Linux distribution's package manager.
+
+If your Linux distribution's package manager does not support Flatpak, first `install Flatpak`_ if it is not already installed, and then install LOOT from `Flathub`_.
+
+The Flatpak application can be uninstalled using the command line::
+
+    flatpak uninstall io.github.loot.loot
+
+Or, if you want to also remove the data that LOOT stores in ``~/.var/app/io.github.loot.loot``::
+
+    flatpak uninstall --delete-data io.github.loot.loot
+
+.. _Flatpak: https://flatpak.org/
+.. _install Flatpak: https://flatpak.org/setup/
+.. _Flathub: https://flathub.org/en-GB/apps/io.github.loot.loot

@@ -15,7 +15,7 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 
 ## Downloads
 
-Releases are hosted on [GitHub](https://github.com/loot/loot/releases).
+Releases are hosted on [GitHub](https://github.com/loot/loot/releases). Linux users should install LOOT from [Flathub](https://flathub.org/apps/io.github.loot.loot).
 
 Snapshot builds are available as artifacts from [GitHub Actions runs](https://github.com/loot/loot/actions), though they are only kept for 90 days and can only be downloaded when logged into a GitHub account. To mitigate these restrictions, snapshot build artifacts include a GPG signature that can be verified using the public key hosted [here](https://loot.github.io/.well-known/openpgpkey/hu/mj86by43a9hz8y8rbddtx54n3bwuuucg), which means it's possible to re-upload the artifacts elsewhere and still prove their authenticity.
 
