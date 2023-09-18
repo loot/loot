@@ -5,13 +5,26 @@
 
 ## Introduction
 
-LOOT is a plugin load order optimisation tool for TES III: Morrowind, TES IV: Oblivion, TES V: Skyrim, TES V: Skyrim Special Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR. It is designed to assist mod users in avoiding detrimental conflicts, by automatically calculating a load order that satisfies all plugin dependencies and maximises each plugin's impact on the user's game.
+LOOT is a plugin load order optimiser for:
 
-LOOT also provides some load order error checking, including checks for requirements, incompatibilities and cyclic dependencies. In addition, it provides a large number of plugin-specific usage notes, bug warnings and Bash Tag suggestions.
+* The Elder Scrolls III: Morrowind
+* The Elder Scrolls IV: Oblivion
+* The Elder Scrolls V: Skyrim
+* The Elder Scrolls V: Skyrim Special Edition (and Anniversary Edition)
+* The Elder Scrolls V: Skyrim VR
+* Fallout 3
+* Fallout: New Vegas
+* Fallout 4
+* Fallout 4 VR
+* Nehrim: At Fate's Edge
+* Enderal: Forgotten Stories
+* Enderal: Forgotten Stories (Special Edition)
 
-Although LOOT is able to calculate the correct load order positions for the vast majority of mods without any user input, some plugins are designed to load at certain positions in a load order, and LOOT may be unable to determine this from the plugins themselves. As such, LOOT provides a mechanism for supplying additional plugin metadata so that it may sort them correctly.
+LOOT can automatically calculate a load order that satisfies all plugin dependencies and maximises each plugin's impact on your game. It can also detect many issues, and provides a large number of plugin-specific usage notes, warnings and Bash Tag suggestions for Wrye Bash.
 
-LOOT is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See [Introduction To Load Orders](https://loot.github.io/docs/help/Introduction-To-Load-Orders) for an overview.
+While LOOT can correctly handle the vast majority of plugins without help, some plugins need additional metadata to be sorted correctly. LOOT has a masterlist of metadata for each supported game, and you can add more to customise LOOT's behaviour.
+
+LOOT helps make using mods easier, and you should still possess a working knowledge of mod load ordering. See [Introduction To Load Orders](https://loot.github.io/docs/help/Introduction-To-Load-Orders) for an overview.
 
 ## Downloads
 
