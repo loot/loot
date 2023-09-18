@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2023 Oliver Hamlet -->
 <component type="desktop-application">
   <id>io.github.loot.loot</id>
   <url type="homepage">https://loot.github.io</url>
+  <url type="bugtracker">https://github.com/loot/loot/issues</url>
+  <url type="faq">https://loot.github.io/docs/help/LOOT-FAQs</url>
+  <url type="help">https://loot.readthedocs.io/en/stable/</url>
+  <url type="translate">https://github.com/loot/loot/blob/master/CONTRIBUTING.md#translating-loot</url>
+  <url type="vcs-browser">https://github.com/loot/loot</url>
+  <url type="contribute">https://github.com/loot/loot/blob/master/CONTRIBUTING.md</url>
 
   <name>LOOT</name>
-  <summary>A load order optimisation tool for the Elder Scrolls (Morrowind and later) and Fallout (3 and later) games.</summary>
+  <summary>Modding utility for some Elder Scrolls and Fallout games</summary>
 
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
@@ -42,6 +49,11 @@
   </screenshots>
 
   <releases>
-    <release version="0.21.0" date="2023-09-17"/>
+    <release version="0.21.0" date="2023-09-17">
+      <description>
+        <p>This is the first release to be made available on Linux.</p>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.21.0/app/changelog.html#id1</url>
+    </release>
   </releases>
 </component>
