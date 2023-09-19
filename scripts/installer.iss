@@ -220,64 +220,72 @@ Root: HKLM; Subkey: "Software\LOOT"; ValueType: string; ValueName: "Installed Pa
 [UninstallDelete]
 Type: files; Name: "{localappdata}\{#MyAppName}\LOOTDebugLog.txt";
 
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Morrowind\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Oblivion\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Nehrim\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Skyrim\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Enderal\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Enderal Special Edition\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Skyrim VR\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Fallout3\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\FalloutNV\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Fallout4\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Fallout4VR\masterlist.yaml";
-
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Morrowind\masterlist.yaml.metadata.toml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Oblivion\masterlist.yaml.metadata.toml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Nehrim\masterlist.yaml.metadata.toml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Skyrim\masterlist.yaml.metadata.toml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Enderal\masterlist.yaml.metadata.toml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition\masterlist.yaml.metadata.toml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Enderal Special Edition\masterlist.yaml.metadata.toml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Skyrim VR\masterlist.yaml.metadata.toml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Fallout3\masterlist.yaml.metadata.toml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\FalloutNV\masterlist.yaml.metadata.toml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Fallout4\masterlist.yaml.metadata.toml";
-Type: files; Name: "{localappdata}\{#MyAppName}\games\Fallout4VR\masterlist.yaml.metadata.toml";
-
-; Although LOOT no longer uses Git repositories, they may be migrated from
-; previous versions of LOOT.
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Morrowind\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Oblivion\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Nehrim\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Skyrim\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Enderal\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Enderal Special Edition\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Skyrim VR\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Fallout3\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\FalloutNV\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Fallout4\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Fallout4VR\.git";
-
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\prelude";
 
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Morrowind";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Oblivion";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Nehrim";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Skyrim";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Enderal";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Enderal Special Edition";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Skyrim VR";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Fallout3";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\FalloutNV";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Fallout4";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Fallout4VR";
+Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games";
 
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}";
 
+Type: dirifempty; Name: "{app}\docs\.doctrees\app\usage";
+Type: dirifempty; Name: "{app}\docs\.doctrees\app";
+Type: dirifempty; Name: "{app}\docs\.doctrees\licenses";
+Type: dirifempty; Name: "{app}\docs\.doctrees";
+Type: dirifempty; Name: "{app}\docs\_images";
+Type: dirifempty; Name: "{app}\docs\_sources\app\usage";
+Type: dirifempty; Name: "{app}\docs\_sources\app";
+Type: dirifempty; Name: "{app}\docs\_sources\licenses";
+Type: dirifempty; Name: "{app}\docs\_sources";
+Type: dirifempty; Name: "{app}\docs\_static\css\fonts";
+Type: dirifempty; Name: "{app}\docs\_static\css";
+Type: dirifempty; Name: "{app}\docs\_static\js";
+Type: dirifempty; Name: "{app}\docs\_static";
+Type: dirifempty; Name: "{app}\docs\app\usage";
+Type: dirifempty; Name: "{app}\docs\app";
+Type: dirifempty; Name: "{app}\docs\licenses";
+Type: dirifempty; Name: "{app}\docs";
+Type: dirifempty; Name: "{app}\iconengines";
+Type: dirifempty; Name: "{app}\imageformats";
+Type: dirifempty; Name: "{app}\networkinformation";
+Type: dirifempty; Name: "{app}\platforms";
+Type: dirifempty; Name: "{app}\resources\l10n\bg\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\bg";
+Type: dirifempty; Name: "{app}\resources\l10n\cs\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\cs";
+Type: dirifempty; Name: "{app}\resources\l10n\da\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\da";
+Type: dirifempty; Name: "{app}\resources\l10n\de\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\de";
+Type: dirifempty; Name: "{app}\resources\l10n\es\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\es";
+Type: dirifempty; Name: "{app}\resources\l10n\fi\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\fi";
+Type: dirifempty; Name: "{app}\resources\l10n\fr\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\fr";
+Type: dirifempty; Name: "{app}\resources\l10n\it\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\it";
+Type: dirifempty; Name: "{app}\resources\l10n\ja\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\ja";
+Type: dirifempty; Name: "{app}\resources\l10n\ko\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\ko";
+Type: dirifempty; Name: "{app}\resources\l10n\pl\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\pl";
+Type: dirifempty; Name: "{app}\resources\l10n\pt_BR\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\pt_BR";
+Type: dirifempty; Name: "{app}\resources\l10n\pt_PT\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\pt_PT";
+Type: dirifempty; Name: "{app}\resources\l10n\ru\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\ru";
+Type: dirifempty; Name: "{app}\resources\l10n\sv\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\sv";
+Type: dirifempty; Name: "{app}\resources\l10n\uk_UA\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\uk_UA";
+Type: dirifempty; Name: "{app}\resources\l10n\zh_CN\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\zh_CN";
+Type: dirifempty; Name: "{app}\resources\l10n";
+Type: dirifempty; Name: "{app}\resources";
+Type: dirifempty; Name: "{app}\styles";
+Type: dirifempty; Name: "{app}\tls";
+Type: dirifempty; Name: "{app}\translations";
 Type: dirifempty; Name: "{app}";
 
 [CustomMessages]
@@ -481,62 +489,51 @@ end;
 
 // Query user whether their data files should be deleted on uninstall.
 procedure CurUninstallStepChanged (CurUninstallStep: TUninstallStep);
+var
+  FindRec: TFindRec;
+  GamePath: String;
+  DeleteUserFiles: Boolean;
 begin
   // Don't remove user data if the uninstall is silent.
   if UninstallSilent then
     exit;
   if CurUninstallStep = usUninstall then begin
-    if MsgBox(CustomMessage('DeleteUserFiles'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES
-    then begin
+    DeleteUserFiles := MsgBox(CustomMessage('DeleteUserFiles'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES;
+
+    if DeleteUserFiles then begin
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\settings.toml'));
+      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\backups\LOOT-backup-*.zip'), False, True, False);
+      RemoveDir(ExpandConstant('{localappdata}\{#MyAppName}\backups'));
+    end;
 
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Morrowind\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Morrowind\group_node_positions.bin'));
-      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\games\Morrowind\loadorder.bak.*'), False, True, False);
+    if FindFirst(ExpandConstant('{localappdata}\{#MyAppName}\games\*'), FindRec) then begin
+      try
+        repeat begin
+          if not SameStr(FindRec.Name, '.') and not SameStr(FindRec.Name, '..') and (FindRec.Attributes and FILE_ATTRIBUTE_DIRECTORY <> 0) then begin
+            GamePath := ExpandConstant('{localappdata}\{#MyAppName}\games\') + FindRec.Name;
+            Log(Format('Deleting files from %s', [GamePath]));
 
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Oblivion\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Oblivion\group_node_positions.bin'));
-      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\games\Oblivion\loadorder.bak.*'), False, True, False);
+            DeleteFile(GamePath + '\masterlist.yaml');
+            DeleteFile(GamePath + '\masterlist.yaml.metadata.toml');
 
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Nehrim\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Nehrim\group_node_positions.bin'));
-      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\games\Nehrim\loadorder.bak.*'), False, True, False);
+            // Although LOOT no longer uses Git repositories, they may be
+            // migrated from previous versions of LOOT.
+            DelTree(GamePath + '\.git', True, True, True);
 
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim\group_node_positions.bin'));
-      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim\loadorder.bak.*'), False, True, False);
+            if DeleteUserFiles then begin
+              DeleteFile(GamePath + '\userlist.yaml');
+              DeleteFile(GamePath + '\group_node_positions.bin');
+              DelTree(GamePath + '\loadorder.bak.*', False, True, False);
+            end;
 
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Enderal\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Enderal\group_node_positions.bin'));
-      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\games\Enderal\loadorder.bak.*'), False, True, False);
-
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim Special Edition\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim Special Edition\group_node_positions.bin'));
-      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim Special Edition\loadorder.bak.*'), False, True, False);
-
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Enderal Special Edition\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Enderal Special Edition\group_node_positions.bin'));
-      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\games\Enderal Special Edition\loadorder.bak.*'), False, True, False);
-
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim VR\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim VR\group_node_positions.bin'));
-      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim VR\loadorder.bak.*'), False, True, False);
-
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout3\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout3\group_node_positions.bin'));
-      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout3\loadorder.bak.*'), False, True, False);
-
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\FalloutNV\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\FalloutNV\group_node_positions.bin'));
-      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\games\FalloutNV\loadorder.bak.*'), False, True, False);
-
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout4\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout4\group_node_positions.bin'));
-      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout4\loadorder.bak.*'), False, True, False);
-
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout4VR\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout4VR\group_node_positions.bin'));
-      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout4VR\loadorder.bak.*'), False, True, False);
+            // Try to delete the folder now in case it's empty.
+            RemoveDir(GamePath);
+          end;
+        end
+        until not FindNext(FindRec);
+      finally
+        FindClose(FindRec);
+      end;
     end;
   end;
 end;
