@@ -53,6 +53,7 @@
 
 #include "gui/helpers.h"
 #include "gui/state/game/detection/common.h"
+#include "gui/state/game/detection/detail.h"
 #include "gui/state/game/detection/generic.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
@@ -90,6 +91,45 @@ bool IsPathCaseSensitive(const std::filesystem::path& path) {
   std::error_code errorCode;
   return !std::filesystem::equivalent(lowercased, uppercased, errorCode);
 }
+
+void CopyMasterlistFromDefaultGameFolder(
+    const std::filesystem::path& masterlistPath,
+    const std::filesystem::path& gamesPath,
+    const loot::GameId gameId) {
+  const auto defaultLootGamePath =
+      gamesPath / loot::GetDefaultLootFolderName(gameId);
+  const auto defaultMasterlistPath =
+      defaultLootGamePath / loot::MASTERLIST_FILENAME;
+
+  if (fs::exists(defaultMasterlistPath)) {
+    const auto logger = loot::getLogger();
+    if (logger) {
+      logger->debug("Copying masterlist from {} to {}",
+                    defaultMasterlistPath.u8string(),
+                    masterlistPath.u8string());
+    }
+    fs::copy(defaultMasterlistPath, masterlistPath);
+
+    static constexpr const char* METADATA_FILENAME =
+        "masterlist.yaml.metadata.toml";
+
+    // Also remove any existing masterlist.yaml.metadata.toml as it will now
+    // be incorrect.
+    const auto defaultMetadataPath = defaultLootGamePath / METADATA_FILENAME;
+    const auto metadataPath = masterlistPath.parent_path() / METADATA_FILENAME;
+    fs::remove(metadataPath);
+
+    // If the source directory has a metadata file, also copy it across.
+    if (fs::exists(defaultMetadataPath)) {
+      if (logger) {
+        logger->debug("Copying masterlist metadata from {} to {}",
+                      defaultMetadataPath.u8string(),
+                      metadataPath.u8string());
+      }
+      fs::copy(defaultMetadataPath, metadataPath);
+    }
+  }
+}
 }
 
 namespace loot {
@@ -100,15 +140,15 @@ std::filesystem::path GetMasterlistPath(
          MASTERLIST_FILENAME;
 }
 
-void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
+void InitLootGameFolder(const std::filesystem::path& lootDataPath,
                         const GameSettings& settings) {
-  if (lootDataPath_.empty()) {
+  if (lootDataPath.empty()) {
     throw std::runtime_error("LOOT data path cannot be empty");
   }
 
   // Make sure that the LOOT game path exists.
   const auto lootGamePath =
-      GetLOOTGamePath(lootDataPath_, settings.FolderName());
+      GetLOOTGamePath(lootDataPath, settings.FolderName());
   if (!fs::is_directory(lootGamePath)) {
     if (fs::exists(lootGamePath)) {
       throw FileAccessError(
@@ -116,14 +156,14 @@ void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
           "a directory");
     }
 
-    std::vector<fs::path> legacyGamePaths{lootDataPath_ /
+    std::vector<fs::path> legacyGamePaths{lootDataPath /
                                           u8path(settings.FolderName())};
 
     if (settings.Id() == GameId::tes5se) {
       // LOOT v0.10.0 used SkyrimSE as its folder name for Skyrim SE, so
       // migrate from that if it's present.
       legacyGamePaths.insert(legacyGamePaths.begin(),
-                             lootDataPath_ / "SkyrimSE");
+                             lootDataPath / "SkyrimSE");
     }
 
     const auto logger = getLogger();
@@ -145,6 +185,15 @@ void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
     }
 
     fs::create_directories(lootGamePath);
+  }
+
+  const auto masterlistPath = GetMasterlistPath(lootDataPath, settings);
+  if (!fs::exists(masterlistPath)) {
+    // The masterlist does not exist, LOOT may already have a copy of it
+    // in the default game folder for this game's ID, so try copying it from
+    // there.
+    CopyMasterlistFromDefaultGameFolder(
+        masterlistPath, lootGamePath.parent_path(), settings.Id());
   }
 }
 
