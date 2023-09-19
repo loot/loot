@@ -42,7 +42,7 @@ jobs:
 
             ## Linux
 
-            LOOT requires a 64-bit version of Linux.
+            LOOT requires a 64-bit version of Linux, and can be installed from [Flathub](https://flathub.org/apps/io.github.loot.loot).
 
             The `.tar.xz` archive is not recommended for general use as it does not include most of LOOT's runtime dependencies.
 
