@@ -164,14 +164,26 @@ Source: "build\masterlists\Oblivion\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Oblivion"; Flags: ignoreversion
 Source: "build\masterlists\Oblivion\masterlist.yaml.metadata.toml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Oblivion"; Flags: ignoreversion
+Source: "build\masterlists\Nehrim\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Nehrim"; Flags: ignoreversion
+Source: "build\masterlists\Nehrim\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Nehrim"; Flags: ignoreversion
 Source: "build\masterlists\Skyrim\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Skyrim"; Flags: ignoreversion
 Source: "build\masterlists\Skyrim\masterlist.yaml.metadata.toml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Skyrim"; Flags: ignoreversion
+Source: "build\masterlists\Enderal\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Enderal"; Flags: ignoreversion
+Source: "build\masterlists\Enderal\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Enderal"; Flags: ignoreversion
 Source: "build\masterlists\Skyrim Special Edition\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition"; Flags: ignoreversion
 Source: "build\masterlists\Skyrim Special Edition\masterlist.yaml.metadata.toml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition"; Flags: ignoreversion
+Source: "build\masterlists\Enderal Special Edition\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Enderal Special Edition"; Flags: ignoreversion
+Source: "build\masterlists\Enderal Special Edition\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Enderal Special Edition"; Flags: ignoreversion
 Source: "build\masterlists\Skyrim VR\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Skyrim VR"; Flags: ignoreversion
 Source: "build\masterlists\Skyrim VR\masterlist.yaml.metadata.toml"; \
@@ -552,8 +564,11 @@ begin
     DownloadPage.Add('https://raw.githubusercontent.com/loot/prelude/{#MasterlistBranch}/prelude.yaml', 'prelude\prelude.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/morrowind/{#MasterlistBranch}/masterlist.yaml', 'games\Morrowind\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/oblivion/{#MasterlistBranch}/masterlist.yaml', 'games\Oblivion\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/oblivion/{#MasterlistBranch}/masterlist.yaml', 'games\Nehrim\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrim/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/enderal/{#MasterlistBranch}/masterlist.yaml', 'games\Enderal\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimse/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim Special Edition\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/enderal/{#MasterlistBranch}/masterlist.yaml', 'games\Enderal Special Edition\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimvr/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim VR\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout3/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout3\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/falloutnv/{#MasterlistBranch}/masterlist.yaml', 'games\FalloutNV\masterlist.yaml', '');
@@ -590,8 +605,11 @@ begin
       InstallMetadataFile('prelude\prelude.yaml');
       InstallMetadataFile('games\Morrowind\masterlist.yaml');
       InstallMetadataFile('games\Oblivion\masterlist.yaml');
+      InstallMetadataFile('games\Nehrim\masterlist.yaml');
       InstallMetadataFile('games\Skyrim\masterlist.yaml');
+      InstallMetadataFile('games\Enderal\masterlist.yaml');
       InstallMetadataFile('games\Skyrim Special Edition\masterlist.yaml');
+      InstallMetadataFile('games\Enderal Special Edition\masterlist.yaml');
       InstallMetadataFile('games\Skyrim VR\masterlist.yaml');
       InstallMetadataFile('games\Fallout3\masterlist.yaml');
       InstallMetadataFile('games\FalloutNV\masterlist.yaml');
