@@ -27,6 +27,7 @@
 
 #include "gui/helpers.h"
 #include "gui/state/game/detection/common.h"
+#include "gui/state/logging.h"
 
 namespace {
 using loot::GameId;
@@ -343,18 +344,37 @@ std::vector<GameInstall> FindGameInstalls(
     const std::vector<std::string>& preferredUILanguages) {
   std::vector<GameInstall> installs;
 
-  auto install = ms::modern::FindMicrosoftStoreGameInstall(
-      gameId, xboxGamingRootPaths, preferredUILanguages);
+  try {
+    auto install = ms::modern::FindMicrosoftStoreGameInstall(
+        gameId, xboxGamingRootPaths, preferredUILanguages);
 
-  if (install.has_value()) {
-    installs.push_back(install.value());
+    if (install.has_value()) {
+      installs.push_back(install.value());
+    }
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error("Error while finding MS Store install of game {}: {}",
+                    GetGameName(gameId),
+                    e.what());
+    }
   }
 
-  const auto legacyInstall = ms::legacy::FindMicrosoftStoreGameInstall(
-      registry, gameId, preferredUILanguages);
+  try {
+    const auto legacyInstall = ms::legacy::FindMicrosoftStoreGameInstall(
+        registry, gameId, preferredUILanguages);
 
-  if (legacyInstall.has_value()) {
-    installs.push_back(legacyInstall.value());
+    if (legacyInstall.has_value()) {
+      installs.push_back(legacyInstall.value());
+    }
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "Error while finding MS Store legacy install of game {}: {}",
+          GetGameName(gameId),
+          e.what());
+    }
   }
 
   return installs;

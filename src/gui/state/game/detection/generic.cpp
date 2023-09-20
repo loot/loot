@@ -31,6 +31,7 @@
 #include "gui/state/game/detection/game_install.h"
 #include "gui/state/game/detection/gog.h"
 #include "gui/state/game/detection/registry.h"
+#include "gui/state/logging.h"
 
 namespace {
 using loot::GameId;
@@ -238,17 +239,36 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
   std::vector<GameInstall> installs;
 
 #ifdef _WIN32
-  // Only run on Windows because it assumes the current user's %LOCALAPPDATA%
-  // path is used.
-  const auto sibling = FindSiblingGameInstall(gameId);
-  if (sibling.has_value()) {
-    installs.push_back(sibling.value());
+  try {
+    // Only run on Windows because it assumes the current user's %LOCALAPPDATA%
+    // path is used.
+    const auto sibling = FindSiblingGameInstall(gameId);
+    if (sibling.has_value()) {
+      installs.push_back(sibling.value());
+    }
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error("Error while checking for a sibling install of game {}: {}",
+                    GetGameName(gameId),
+                    e.what());
+    }
   }
 #endif
 
-  const auto registryInstall = FindGameInstallInRegistry(registry, gameId);
-  if (registryInstall.has_value()) {
-    installs.push_back(registryInstall.value());
+  try {
+    const auto registryInstall = FindGameInstallInRegistry(registry, gameId);
+    if (registryInstall.has_value()) {
+      installs.push_back(registryInstall.value());
+    }
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "Error while trying to find {} using a generic Registry key: {}",
+          GetGameName(gameId),
+          e.what());
+    }
   }
 
   return installs;
@@ -257,36 +277,47 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
 // Check if the given game settings resolve to an installed game, and
 // detect its ID and install source.
 std::optional<GameInstall> DetectGameInstall(const GameSettings& settings) {
-  if (!IsValidGamePath(settings.Id(), settings.Master(), settings.GamePath())) {
+  try {
+    if (!IsValidGamePath(
+            settings.Id(), settings.Master(), settings.GamePath())) {
+      return std::nullopt;
+    }
+
+    const auto gameId = settings.Id();
+    const auto installPath = settings.GamePath();
+
+    if (IsSteamInstall(gameId, installPath)) {
+      return GameInstall{
+          gameId, InstallSource::steam, installPath, settings.GameLocalPath()};
+    }
+
+    if (IsGogInstall(gameId, installPath)) {
+      return GameInstall{
+          gameId, InstallSource::gog, installPath, settings.GameLocalPath()};
+    }
+
+    if (IsEpicInstall(gameId, installPath)) {
+      return GameInstall{
+          gameId, InstallSource::epic, installPath, settings.GameLocalPath()};
+    }
+
+    if (::IsMicrosoftInstall(gameId, installPath)) {
+      return GameInstall{gameId,
+                         InstallSource::microsoft,
+                         installPath,
+                         settings.GameLocalPath()};
+    }
+
+    return GameInstall{
+        gameId, InstallSource::unknown, installPath, settings.GameLocalPath()};
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    logger->error(
+        "Error while detecting install for game with folder name {}: {}",
+        settings.FolderName(),
+        e.what());
+
     return std::nullopt;
   }
-
-  const auto gameId = settings.Id();
-  const auto installPath = settings.GamePath();
-
-  if (IsSteamInstall(gameId, installPath)) {
-    return GameInstall{
-        gameId, InstallSource::steam, installPath, settings.GameLocalPath()};
-  }
-
-  if (IsGogInstall(gameId, installPath)) {
-    return GameInstall{
-        gameId, InstallSource::gog, installPath, settings.GameLocalPath()};
-  }
-
-  if (IsEpicInstall(gameId, installPath)) {
-    return GameInstall{
-        gameId, InstallSource::epic, installPath, settings.GameLocalPath()};
-  }
-
-  if (::IsMicrosoftInstall(gameId, installPath)) {
-    return GameInstall{gameId,
-                       InstallSource::microsoft,
-                       installPath,
-                       settings.GameLocalPath()};
-  }
-
-  return GameInstall{
-      gameId, InstallSource::unknown, installPath, settings.GameLocalPath()};
 }
 }

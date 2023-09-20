@@ -26,6 +26,7 @@
 #include "gui/state/game/detection/gog.h"
 
 #include "gui/state/game/detection/common.h"
+#include "gui/state/logging.h"
 
 namespace {
 std::vector<loot::RegistryValue> GetRegistryValues(const loot::GameId gameId) {
@@ -111,14 +112,26 @@ std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
 
 std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
                                           const GameId gameId) {
-  const auto installPaths = FindGameInstallPathsInRegistry(
-      registry, gameId, GetRegistryValues(gameId));
-
   std::vector<GameInstall> installs;
-  for (const auto& installPath : installPaths) {
-    if (IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
-      installs.push_back(GameInstall{
-          gameId, InstallSource::gog, installPath, std::filesystem::path()});
+
+  try {
+    const auto installPaths = FindGameInstallPathsInRegistry(
+        registry, gameId, GetRegistryValues(gameId));
+
+    for (const auto& installPath : installPaths) {
+      if (IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
+        installs.push_back(GameInstall{
+            gameId, InstallSource::gog, installPath, std::filesystem::path()});
+      }
+    }
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "Error while detecting game installs for game {} using GOG Registry "
+          "keys: {}",
+          GetGameName(gameId),
+          e.what());
     }
   }
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.21.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-09-19 19:12+0100\n"
+"POT-Creation-Date: 2023-09-20 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -398,7 +398,7 @@ msgid "F&ilters"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1048 src/gui/qt/main_window.cpp:1481
-#: src/gui/qt/main_window.cpp:2088
+#: src/gui/qt/main_window.cpp:2089
 msgid "Updating and parsing masterlist..."
 msgstr ""
 
@@ -434,7 +434,7 @@ msgid ""
 "is a sorted load order that has not been applied or discarded."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1152 src/gui/qt/main_window.cpp:1970
+#: src/gui/qt/main_window.cpp:1152 src/gui/qt/main_window.cpp:1971
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -577,58 +577,58 @@ msgstr ""
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1957
+#: src/gui/qt/main_window.cpp:1958
 msgid "Version {0} (build {1})"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1963
+#: src/gui/qt/main_window.cpp:1964
 msgid ""
 "Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
 "Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
 "Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1980
+#: src/gui/qt/main_window.cpp:1981
 msgid "About LOOT"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2290
+#: src/gui/qt/main_window.cpp:2291
 msgid "Identifying conflicting plugins..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2435
+#: src/gui/qt/main_window.cpp:2436
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2490
+#: src/gui/qt/main_window.cpp:2491
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2510
+#: src/gui/qt/main_window.cpp:2511
 msgid "Masterlist updated to revision {0}."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2568
+#: src/gui/qt/main_window.cpp:2570
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2588
+#: src/gui/qt/main_window.cpp:2591
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2594
+#: src/gui/qt/main_window.cpp:2597
 msgid "LOOT"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2647
+#: src/gui/qt/main_window.cpp:2653
 msgid "A [new release]({0}) of LOOT is available."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2664
+#: src/gui/qt/main_window.cpp:2670
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."

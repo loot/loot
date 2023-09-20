@@ -286,40 +286,61 @@ std::filesystem::path FixNehrimInstallPath(
 namespace loot::steam {
 std::vector<std::filesystem::path> GetSteamInstallPaths(
     const RegistryInterface& registry) {
+  try {
 #ifdef _WIN32
-  const auto pathString = registry.GetStringValue(RegistryValue{
-      "HKEY_LOCAL_MACHINE", "Software\\Valve\\Steam", "InstallPath"});
+    const auto pathString = registry.GetStringValue(RegistryValue{
+        "HKEY_LOCAL_MACHINE", "Software\\Valve\\Steam", "InstallPath"});
 
-  if (pathString.has_value()) {
-    return {std::filesystem::u8path(pathString.value())};
+    if (pathString.has_value()) {
+      return {std::filesystem::u8path(pathString.value())};
+    }
+#else
+    return {getLocalAppDataPath() / "Steam",
+            getUserProfilePath() / ".var" / "app" / "com.valvesoftware.Steam" /
+                ".local" / "share" / "Steam"};
+#endif
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error("Error while getting Steam install paths: {}", e.what());
+    }
   }
 
   return {};
-#else
-  return {getLocalAppDataPath() / "Steam",
-          getUserProfilePath() / ".var" / "app" / "com.valvesoftware.Steam" /
-              ".local" / "share" / "Steam"};
-#endif
 }
 
 std::vector<std::filesystem::path> GetSteamLibraryPaths(
     const std::filesystem::path& steamInstallPath) {
-  const auto vdfPath = steamInstallPath / "config" / "libraryfolders.vdf";
   const auto logger = getLogger();
-  if (logger) {
-    logger->trace("Reading libraryfolders.vdf file at {}", vdfPath.u8string());
-  }
 
-  std::ifstream stream(vdfPath);
-  if (!stream.is_open()) {
+  try {
+    const auto vdfPath = steamInstallPath / "config" / "libraryfolders.vdf";
     if (logger) {
-      logger->warn("The file at {} could not be opened for reading",
-                   vdfPath.u8string());
+      logger->trace("Reading libraryfolders.vdf file at {}",
+                    vdfPath.u8string());
     }
+
+    std::ifstream stream(vdfPath);
+    if (!stream.is_open()) {
+      if (logger) {
+        logger->warn("The file at {} could not be opened for reading",
+                     vdfPath.u8string());
+      }
+      return {};
+    }
+
+    return ParseLibraryFoldersVdf(stream);
+  } catch (const std::exception& e) {
+    if (logger) {
+      logger->error(
+          "Error while getting Steam library paths from Steam install path {}: "
+          "{}",
+          steamInstallPath.u8string(),
+          e.what());
+    }
+
     return {};
   }
-
-  return ParseLibraryFoldersVdf(stream);
 }
 
 std::vector<std::filesystem::path> GetSteamAppManifestPaths(
@@ -327,12 +348,24 @@ std::vector<std::filesystem::path> GetSteamAppManifestPaths(
     const GameId gameId) {
   std::vector<std::filesystem::path> paths;
 
-  for (const auto& appId : GetSteamGameIds(gameId)) {
-    const auto steamAppManifestPath =
-        steamLibraryPath / "steamapps" /
-        std::filesystem::u8path("appmanifest_" + appId + ".acf");
+  try {
+    for (const auto& appId : GetSteamGameIds(gameId)) {
+      const auto steamAppManifestPath =
+          steamLibraryPath / "steamapps" /
+          std::filesystem::u8path("appmanifest_" + appId + ".acf");
 
-    paths.push_back(steamAppManifestPath);
+      paths.push_back(steamAppManifestPath);
+    }
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "Failed to get Steam app manifest paths for game {} and library "
+          "path {}: {}",
+          GetGameName(gameId),
+          steamLibraryPath.u8string(),
+          e.what());
+    }
   }
 
   return paths;
@@ -343,98 +376,127 @@ std::optional<GameInstall> FindGameInstall(
     const std::filesystem::path& steamAppManifestPath) {
   const auto logger = getLogger();
 
-  if (!std::filesystem::exists(steamAppManifestPath)) {
-    // Avoid logging unnecessary warnings.
-    return std::nullopt;
-  }
-
-  std::ifstream stream(steamAppManifestPath);
-  if (!stream.is_open()) {
-    if (logger) {
-      logger->warn(
-          "The Steam app manifest at {} could not be opened for reading",
-          steamAppManifestPath.u8string());
+  try {
+    if (!std::filesystem::exists(steamAppManifestPath)) {
+      // Avoid logging unnecessary warnings.
+      return std::nullopt;
     }
-    return std::nullopt;
-  }
 
-  const auto result = ParseAppManifest(stream);
-
-  if (!result.has_value()) {
-    if (logger) {
-      logger->error("Failed to read data from the Steam app manifest at {}",
-                    steamAppManifestPath.u8string());
+    std::ifstream stream(steamAppManifestPath);
+    if (!stream.is_open()) {
+      if (logger) {
+        logger->warn(
+            "The Steam app manifest at {} could not be opened for reading",
+            steamAppManifestPath.u8string());
+      }
+      return std::nullopt;
     }
-    return std::nullopt;
-  }
 
-  const auto manifest = result.value();
+    const auto result = ParseAppManifest(stream);
 
-  if (manifest.appId.empty()) {
-    if (logger) {
-      logger->error("The Steam app manifest at {} has an empty appid",
-                    steamAppManifestPath.u8string());
+    if (!result.has_value()) {
+      if (logger) {
+        logger->error("Failed to read data from the Steam app manifest at {}",
+                      steamAppManifestPath.u8string());
+      }
+      return std::nullopt;
     }
-    return std::nullopt;
-  }
 
-  if (manifest.installDir.empty()) {
-    if (logger) {
-      logger->error("The Steam app manifest at {} has an empty installdir",
-                    steamAppManifestPath.u8string());
+    const auto manifest = result.value();
+
+    if (manifest.appId.empty()) {
+      if (logger) {
+        logger->error("The Steam app manifest at {} has an empty appid",
+                      steamAppManifestPath.u8string());
+      }
+      return std::nullopt;
     }
-    return std::nullopt;
-  }
 
-  const auto it = STEAM_GAME_ID_MAP.find(manifest.appId);
-  if (it == STEAM_GAME_ID_MAP.end()) {
-    if (logger) {
-      logger->debug("The Steam app manifest at {} is not for a supported game",
-                    steamAppManifestPath.u8string());
+    if (manifest.installDir.empty()) {
+      if (logger) {
+        logger->error("The Steam app manifest at {} has an empty installdir",
+                      steamAppManifestPath.u8string());
+      }
+      return std::nullopt;
     }
-    return std::nullopt;
-  }
 
-  const auto gameId = it->second;
-  auto installPath =
-      steamAppManifestPath.parent_path() / "common" / manifest.installDir;
+    const auto it = STEAM_GAME_ID_MAP.find(manifest.appId);
+    if (it == STEAM_GAME_ID_MAP.end()) {
+      if (logger) {
+        logger->debug(
+            "The Steam app manifest at {} is not for a supported game",
+            steamAppManifestPath.u8string());
+      }
+      return std::nullopt;
+    }
 
-  installPath = FixNehrimInstallPath(gameId, installPath);
+    const auto gameId = it->second;
+    auto installPath =
+        steamAppManifestPath.parent_path() / "common" / manifest.installDir;
 
-  if (!IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
-    return std::nullopt;
-  }
+    installPath = FixNehrimInstallPath(gameId, installPath);
 
-  GameInstall install;
-  install.source = InstallSource::steam;
-  install.gameId = gameId;
-  install.installPath = installPath;
+    if (!IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
+      return std::nullopt;
+    }
+
+    GameInstall install;
+    install.source = InstallSource::steam;
+    install.gameId = gameId;
+    install.installPath = installPath;
 
 #ifndef _WIN32
-  const auto folderName = GetAppDataFolderName(install.gameId);
-  if (folderName.has_value()) {
-    // If the game has a local path, it must be specified when running on Linux.
-    install.localPath = steamAppManifestPath.parent_path() / "compatdata" /
-                        manifest.appId / "pfx" / "drive_c" / "users" /
-                        "steamuser" / "AppData" / "Local" / folderName.value();
-  }
+    const auto folderName = GetAppDataFolderName(install.gameId);
+    if (folderName.has_value()) {
+      // If the game has a local path, it must be specified when running on
+      // Linux.
+      install.localPath = steamAppManifestPath.parent_path() / "compatdata" /
+                          manifest.appId / "pfx" / "drive_c" / "users" /
+                          "steamuser" / "AppData" / "Local" /
+                          folderName.value();
+    }
 #endif
 
-  return install;
+    return install;
+  } catch (const std::exception& e) {
+    if (logger) {
+      logger->error(
+          "Error while trying to find game install from Steam app manifest at "
+          "{}: {}",
+          steamAppManifestPath.u8string(),
+          e.what());
+    }
+
+    return std::nullopt;
+  }
 }
 
 std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
                                           const GameId gameId) {
-  auto installPaths = FindGameInstallPathsInRegistry(
-      registry, gameId, GetRegistryValues(gameId));
-
   std::vector<GameInstall> installs;
-  for (auto& installPath : installPaths) {
-    installPath = FixNehrimInstallPath(gameId, installPath);
 
-    if (IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
-      installs.push_back(GameInstall{
-          gameId, InstallSource::steam, installPath, std::filesystem::path()});
+  try {
+    auto installPaths = FindGameInstallPathsInRegistry(
+        registry, gameId, GetRegistryValues(gameId));
+
+    for (auto& installPath : installPaths) {
+      installPath = FixNehrimInstallPath(gameId, installPath);
+
+      if (IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
+        installs.push_back(GameInstall{gameId,
+                                       InstallSource::steam,
+                                       installPath,
+                                       std::filesystem::path()});
+      }
+    }
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "Error while trying to find game installs for game {} using Steam "
+          "Registry keys: {}",
+          GetGameName(gameId),
+          e.what());
     }
   }
 
