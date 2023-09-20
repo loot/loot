@@ -2517,82 +2517,87 @@ void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
 }
 
 void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
-  // The results are in an unknown order due to parallel task execution.
-  bool wasPreludeUpdated{false};
-  for (const auto& result : results) {
-    if (std::holds_alternative<bool>(result)) {
-      wasPreludeUpdated = std::get<bool>(result);
-      break;
-    }
-  }
-
-  const auto logger = getLogger();
-  const auto gamesSettings = state.getSettings().getGameSettings();
-
-  std::vector<std::string> updatedGameNames;
-  bool wasCurrentGameMasterlistUpdated{false};
-  for (const auto& result : results) {
-    if (!std::holds_alternative<MasterlistUpdateResult>(result)) {
-      continue;
-    }
-
-    const auto updateResult = std::get<MasterlistUpdateResult>(result);
-
-    if (wasPreludeUpdated || updateResult.second) {
-      const auto it =
-          std::find_if(gamesSettings.begin(),
-                       gamesSettings.end(),
-                       [&](const GameSettings& settings) {
-                         return settings.FolderName() == updateResult.first;
-                       });
-
-      if (it != gamesSettings.end()) {
-        updatedGameNames.push_back(it->Name());
-      } else if (logger) {
-        logger->error(
-            "Unrecognised game folder name {} encountered while "
-            "updating all masterlists",
-            updateResult.first);
-      }
-
-      if (state.HasCurrentGame() &&
-          updateResult.first ==
-              state.GetCurrentGame().GetSettings().FolderName()) {
-        wasCurrentGameMasterlistUpdated = true;
+  try {
+    // The results are in an unknown order due to parallel task execution.
+    bool wasPreludeUpdated{false};
+    for (const auto& result : results) {
+      if (std::holds_alternative<bool>(result)) {
+        wasPreludeUpdated = std::get<bool>(result);
+        break;
       }
     }
+
+    const auto logger = getLogger();
+    const auto gamesSettings = state.getSettings().getGameSettings();
+
+    std::vector<std::string> updatedGameNames;
+    bool wasCurrentGameMasterlistUpdated{false};
+    for (const auto& result : results) {
+      if (!std::holds_alternative<MasterlistUpdateResult>(result)) {
+        continue;
+      }
+
+      const auto updateResult = std::get<MasterlistUpdateResult>(result);
+
+      if (wasPreludeUpdated || updateResult.second) {
+        const auto it =
+            std::find_if(gamesSettings.begin(),
+                         gamesSettings.end(),
+                         [&](const GameSettings& settings) {
+                           return settings.FolderName() == updateResult.first;
+                         });
+
+        if (it != gamesSettings.end()) {
+          updatedGameNames.push_back(it->Name());
+        } else if (logger) {
+          logger->error(
+              "Unrecognised game folder name {} encountered while "
+              "updating all masterlists",
+              updateResult.first);
+        }
+
+        if (state.HasCurrentGame() &&
+            updateResult.first ==
+                state.GetCurrentGame().GetSettings().FolderName()) {
+          wasCurrentGameMasterlistUpdated = true;
+        }
+      }
+    }
+
+    if (updatedGameNames.empty()) {
+      progressDialog->reset();
+      showNotification(translate("No masterlist updates were necessary."));
+
+      // Update general info as the timestamp may have changed and if
+      // metadata was previously missing it can now be displayed.
+      updateGeneralInformation();
+      return;
+    }
+
+    if (wasCurrentGameMasterlistUpdated) {
+      // Need to reload the current game data.
+      state.GetCurrentGame().LoadMetadata();
+
+      const auto pluginItems =
+          GetPluginItems(state.GetCurrentGame().GetLoadOrder(),
+                         state.GetCurrentGame(),
+                         state.getSettings().getLanguage());
+
+      handleGameDataLoaded(pluginItems);
+    }
+
+    auto message =
+        translate("Masterlists updated for the following games:\n\n");
+    for (const auto& gameName : updatedGameNames) {
+      message += QString::fromStdString(gameName + "\n");
+    }
+
+    auto messageBox = QMessageBox(
+        QMessageBox::NoIcon, translate("LOOT"), message, QMessageBox::Ok, this);
+    messageBox.exec();
+  } catch (const std::exception& e) {
+    handleException(e);
   }
-
-  if (updatedGameNames.empty()) {
-    progressDialog->reset();
-    showNotification(translate("No masterlist updates were necessary."));
-
-    // Update general info as the timestamp may have changed and if
-    // metadata was previously missing it can now be displayed.
-    updateGeneralInformation();
-    return;
-  }
-
-  if (wasCurrentGameMasterlistUpdated) {
-    // Need to reload the current game data.
-    state.GetCurrentGame().LoadMetadata();
-
-    const auto pluginItems =
-        GetPluginItems(state.GetCurrentGame().GetLoadOrder(),
-                       state.GetCurrentGame(),
-                       state.getSettings().getLanguage());
-
-    handleGameDataLoaded(pluginItems);
-  }
-
-  auto message = translate("Masterlists updated for the following games:\n\n");
-  for (const auto& gameName : updatedGameNames) {
-    message += QString::fromStdString(gameName + "\n");
-  }
-
-  auto messageBox = QMessageBox(
-      QMessageBox::NoIcon, translate("LOOT"), message, QMessageBox::Ok, this);
-  messageBox.exec();
 }
 
 void MainWindow::handleConflictsChecked(QueryResult result) {
