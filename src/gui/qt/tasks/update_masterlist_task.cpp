@@ -101,8 +101,9 @@ void UpdatePreludeTask::onReplyFinished() {
 }
 
 UpdateMasterlistTask::UpdateMasterlistTask(const gui::Game &game) :
-    masterlistSource(game.GetSettings().MasterlistSource()),
-    masterlistPath(game.MasterlistPath()) {}
+    UpdateMasterlistTask(game.GetSettings().FolderName(),
+                         game.GetSettings().MasterlistSource(),
+                         game.MasterlistPath()) {}
 
 UpdateMasterlistTask::UpdateMasterlistTask(
     const std::string &gameFolderName,

@@ -1310,7 +1310,7 @@ void MainWindow::executeBackgroundTasks(
   connect(executor,
           &TaskExecutor::finished,
           this,
-          &MainWindow::handleWorkerThreadFinished);
+          &MainWindow::handleTaskExecutorFinished);
 
   executor->start();
 }
@@ -1914,7 +1914,8 @@ void MainWindow::on_actionOpenFAQs_triggered() {
       logger->trace("Opening LOOT's FAQs.");
     }
 
-    QDesktopServices::openUrl(QUrl("https://loot.github.io/docs/help/LOOT-FAQs"));
+    QDesktopServices::openUrl(
+        QUrl("https://loot.github.io/docs/help/LOOT-FAQs"));
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2686,7 +2687,7 @@ void MainWindow::handleUpdateCheckError(const std::string&) {
   }
 }
 
-void MainWindow::handleWorkerThreadFinished() { progressDialog->reset(); }
+void MainWindow::handleTaskExecutorFinished() { progressDialog->reset(); }
 
 void MainWindow::handleIconColorChanged() {
   IconFactory::setColours(
