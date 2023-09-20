@@ -110,7 +110,7 @@ public:
   ParallelTaskExecutor &operator=(ParallelTaskExecutor &&) = delete;
 
 private:
-  std::mutex mutex;
+  std::recursive_mutex mutex;
   std::vector<Task *> tasks;
   std::vector<QueryResult> taskResults;
   std::vector<QThread *> workerThreads;
