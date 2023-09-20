@@ -118,6 +118,10 @@ void SequentialTaskExecutor::onWorkerThreadFinished() {
 ParallelTaskExecutor::ParallelTaskExecutor(QObject *parent,
                                            std::vector<Task *> tasks) :
     TaskExecutor(parent), tasks(tasks) {
+  if (tasks.empty()) {
+    throw std::invalid_argument("Tasks must not be empty");
+  }
+
   // Create a worker thread for each task.
   for (auto task : tasks) {
     const auto workerThread = new QThread(this);
@@ -172,8 +176,10 @@ void ParallelTaskExecutor::onWorkerThreadFinished() {
 
   std::lock_guard guard(mutex);
 
-  tasks.clear();
+  if (!tasks.empty()) {
+    tasks.clear();
 
-  emit finished(taskResults);
+    emit finished(taskResults);
+  }
 }
 }
