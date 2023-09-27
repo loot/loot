@@ -54,6 +54,8 @@ namespace {
 using loot::GameId;
 using loot::getLogger;
 
+inline constexpr const char* FALLOUTNV_APPDATA_FOLDER_NAME = "FalloutNV_Epic";
+
 struct EgsManifestData {
   std::string appName;
   std::string installLocation;
@@ -254,12 +256,12 @@ std::filesystem::path GetAppDataPath(const GameId gameId) {
   switch (gameId) {
     case GameId::tes5se:
     case GameId::fo3:
-      // Fallout 3 and Skyrim write to the same paths as their Steam
-      // distributions, so just provide an empty path so that the
-      // default gets used.
-      return {};
+      // libloadorder (through libloot) supports detecting the correct path
+      // for Skyrim SE and Fallout 3. Provide an empty path so that detection
+      // is used.
+      return std::filesystem::path();
     case GameId::fonv:
-      return loot::getLocalAppDataPath() / "FalloutNV_Epic";
+      return loot::getLocalAppDataPath() / FALLOUTNV_APPDATA_FOLDER_NAME;
     default:
       throw std::logic_error("Unsupported Epic Games Store game");
   }
@@ -274,11 +276,11 @@ std::optional<std::string> GetEgsAppName(const GameId gameId) {
 std::string GetAppDataFolderName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes5se:
-      return "Skyrim Special Edition";
+      return "Skyrim Special Edition EPIC";
     case GameId::fo3:
       return "Fallout3";
     case GameId::fonv:
-      return "FalloutNV";
+      return FALLOUTNV_APPDATA_FOLDER_NAME;
     default:
       throw std::logic_error("Unsupported Epic Games Store game");
   }
