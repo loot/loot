@@ -31,26 +31,7 @@
 
 namespace {
 using loot::GameId;
-
-std::string GetMicrosoftStoreGameLocalFolder(GameId gameId) {
-  switch (gameId) {
-    case GameId::tes3:
-      // Morrowind doesn't use the local path.
-      return std::string();
-    case GameId::tes4:
-      return "Oblivion";
-    case GameId::tes5se:
-      return "Skyrim Special Edition MS";
-    case GameId::fo3:
-      return "Fallout3";
-    case GameId::fonv:
-      return "FalloutNV";
-    case GameId::fo4:
-      return "Fallout4 MS";
-    default:
-      throw std::logic_error("Unsupported Microsoft Store game");
-  }
-}
+using loot::GameInstall;
 
 std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
     GameId gameId,
@@ -88,10 +69,10 @@ std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
       throw std::logic_error("Unsupported Microsoft Store game");
   }
 };
-}
 
-namespace loot::ms::modern {
 std::filesystem::path GetMicrosoftStoreGameLocalPath(GameId gameId) {
+  using loot::getLocalAppDataPath;
+
   switch (gameId) {
     case GameId::tes3:
     case GameId::tes4:
@@ -102,10 +83,9 @@ std::filesystem::path GetMicrosoftStoreGameLocalPath(GameId gameId) {
       // versions. Return an emtpy path so that the default gets used.
       return std::filesystem::path();
     case GameId::tes5se:
+      return getLocalAppDataPath() / "Skyrim Special Edition MS";
     case GameId::fo4:
-      // Skyrim SE and Fallout 4 use a different path from their
-      // non-Microsoft-Store versions, so explicitly return it.
-      return getLocalAppDataPath() / GetMicrosoftStoreGameLocalFolder(gameId);
+      return getLocalAppDataPath() / "Fallout4 MS";
     default:
       throw std::logic_error("Unsupported Microsoft Store game");
   }
@@ -184,151 +164,10 @@ std::optional<GameInstall> FindMicrosoftStoreGameInstall(
     if (validPath.has_value()) {
       GameInstall install;
       install.gameId = gameId;
-      install.source = InstallSource::microsoft;
+      install.source = loot::InstallSource::microsoft;
       install.installPath = validPath.value();
       install.localPath = GetMicrosoftStoreGameLocalPath(gameId);
       return install;
-    }
-  }
-
-  return std::nullopt;
-}
-}
-
-namespace loot::ms::legacy {
-using std::filesystem::u8path;
-
-std::optional<std::string> GetMicrosoftStoreAppName(GameId gameId) {
-  switch (gameId) {
-    case GameId::tes3:
-      return "BethesdaSoftworks.TESMorrowind-PC";
-    case GameId::tes4:
-      return "BethesdaSoftworks.TESOblivion-PC";
-    case GameId::tes5se:
-      return "BethesdaSoftworks.SkyrimSE-PC";
-    case GameId::fo3:
-      return "BethesdaSoftworks.Fallout3";
-    case GameId::fonv:
-      return "BethesdaSoftworks.FalloutNewVegas";
-    case GameId::fo4:
-      return "BethesdaSoftworks.Fallout4-PC";
-    case GameId::nehrim:
-    case GameId::enderal:
-    case GameId::enderalse:
-    case GameId::tes5:
-    case GameId::tes5vr:
-    case GameId::fo4vr:
-      return std::nullopt;
-    default:
-      throw std::logic_error("Unrecognised game type");
-  }
-}
-
-std::optional<std::string> GetMicrosoftStorePackageName(const GameId gameId) {
-  const auto appName = GetMicrosoftStoreAppName(gameId);
-  if (appName.has_value()) {
-    static constexpr auto PUBLISHER_ID = "3275kfvn8vcwc";
-    return appName.value() + "_" + PUBLISHER_ID;
-  }
-
-  return std::nullopt;
-}
-
-std::filesystem::path GetMicrosoftStoreGameLocalPath(const GameId gameId) {
-  switch (gameId) {
-    case GameId::tes3:
-      // Morrowind doesn't use the local path, return a blank path.
-      return std::filesystem::path();
-    case GameId::tes4: {
-      // I observed Oblivion using the usual local path if it exists.
-      const auto localAppDataPath = getLocalAppDataPath();
-      const auto gameLocalFolder =
-          u8path(GetMicrosoftStoreGameLocalFolder(gameId));
-      const auto usualLocalPath = localAppDataPath / gameLocalFolder;
-
-      if (std::filesystem::is_directory(usualLocalPath)) {
-        return usualLocalPath;
-      }
-
-      return localAppDataPath / "Packages" /
-             u8path(GetMicrosoftStorePackageName(gameId).value()) /
-             "LocalCache" / "Local" / gameLocalFolder;
-    }
-    case GameId::tes5se:
-    case GameId::fo3:
-      // FIXME: This case has not been verified.
-    case GameId::fonv:
-      // FIXME: This case has not been verified.
-    case GameId::fo4:
-      return getLocalAppDataPath() / "Packages" /
-             u8path(GetMicrosoftStorePackageName(gameId).value()) /
-             "LocalCache" / "Local" /
-             u8path(GetMicrosoftStoreGameLocalFolder(gameId));
-    default:
-      throw std::logic_error("Unsupported Microsoft Store game");
-  }
-}
-
-std::optional<GameInstall> FindMicrosoftStoreGameInstall(
-    const RegistryInterface& registry,
-    const GameId gameId,
-    const std::vector<std::string>& preferredUILanguages) {
-  // Search for the Microsoft Store version of the game.
-  // This follows the process detailed here:
-  // <https://github.com/wrye-bash/wrye-bash/wiki/%5Bdev%5D-Microsoft-Store-Games#finding-a-Game>
-
-  const auto packageName = GetMicrosoftStorePackageName(gameId);
-  if (!packageName.has_value()) {
-    // There is no Microsoft Store version of the game.
-    return std::nullopt;
-  }
-
-  static constexpr auto PACKAGE_KEY_PREFIX =
-      R"(Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\Repository\Families\)";
-  static constexpr auto FULL_NAME_KEY_PREFIX =
-      R"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModel\StateRepository\Cache\Package\Index\PackageFullName\)";
-  static constexpr auto INDEX_KEY_PREFIX =
-      R"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModel\StateRepository\Cache\Package\Data\)";
-
-  const auto packageKey = PACKAGE_KEY_PREFIX + packageName.value();
-  const auto packageSubKeys =
-      registry.GetSubKeys("HKEY_CLASSES_ROOT", packageKey);
-
-  for (const auto& fullName : packageSubKeys) {
-    const auto fullNameKey = FULL_NAME_KEY_PREFIX + fullName;
-    const auto fullNameSubKeys =
-        registry.GetSubKeys("HKEY_LOCAL_MACHINE", fullNameKey);
-
-    for (const auto& index : fullNameSubKeys) {
-      const auto indexKey = INDEX_KEY_PREFIX + index;
-      const auto mutableLocation = registry.GetStringValue(
-          {"HKEY_LOCAL_MACHINE", indexKey, "MutableLocation"});
-
-      if (!mutableLocation.has_value()) {
-        continue;
-      }
-
-      const auto locationPath = u8path(mutableLocation.value());
-
-      // Oblivion and Morrowind have several localised copies of the game in
-      // subdirectories of their mutableLocation. We can't really tell which
-      // one the player wants, so go through each of them in order in case
-      // the user has deleted the directories they don't want (it's a lot of
-      // wasted space otherwise).
-      const auto pathsToCheck =
-          GetGameLocalisationDirectories(gameId, locationPath);
-
-      const auto validPath = GetLocalisedGameInstallPath(
-          gameId, preferredUILanguages, pathsToCheck);
-
-      if (validPath.has_value()) {
-        GameInstall install;
-        install.gameId = gameId;
-        install.source = InstallSource::microsoft;
-        install.installPath = validPath.value();
-        install.localPath = GetMicrosoftStoreGameLocalPath(gameId);
-        return install;
-      }
     }
   }
 
@@ -345,7 +184,7 @@ std::vector<GameInstall> FindGameInstalls(
   std::vector<GameInstall> installs;
 
   try {
-    auto install = ms::modern::FindMicrosoftStoreGameInstall(
+    auto install = FindMicrosoftStoreGameInstall(
         gameId, xboxGamingRootPaths, preferredUILanguages);
 
     if (install.has_value()) {
@@ -357,23 +196,6 @@ std::vector<GameInstall> FindGameInstalls(
       logger->error("Error while finding MS Store install of game {}: {}",
                     GetGameName(gameId),
                     e.what());
-    }
-  }
-
-  try {
-    const auto legacyInstall = ms::legacy::FindMicrosoftStoreGameInstall(
-        registry, gameId, preferredUILanguages);
-
-    if (legacyInstall.has_value()) {
-      installs.push_back(legacyInstall.value());
-    }
-  } catch (const std::exception& e) {
-    const auto logger = getLogger();
-    if (logger) {
-      logger->error(
-          "Error while finding MS Store legacy install of game {}: {}",
-          GetGameName(gameId),
-          e.what());
     }
   }
 

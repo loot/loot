@@ -31,12 +31,7 @@ If LOOT detects that it is the first time you have run that version of LOOT, it 
 Microsoft Store Compatibility
 =============================
 
-LOOT can work with copies of the supported games bought through the Microsoft Store, but there are some complications.
-
-All installs
-------------
-
-For both old and new installs, the following games have each of their localisations installed in separate subdirectories:
+LOOT supports games bought from the Microsoft Store or obtained through a Game Pass subscription, but the following games have each of their localisations installed in separate subdirectories:
 
 * Morrowind
 * Oblivion
@@ -45,58 +40,13 @@ For both old and new installs, the following games have each of their localisati
 
 LOOT will check the localisations in the order of Windows' preferred UI languages, stopping at the first subdirectory it finds a copy of the game in.
 
-Newer installs
---------------
-
-Newer versions of the Microsoft Store and Xbox apps install games inside ``<drive letter>:\XboxGames`` by default. LOOT can detect default and non-default install locations.
-
-Older installs
---------------
-
-Older versions of the Microsoft Store and Xbox apps install games inside ``WindowsApps`` and ``ModifiableWindowsApps`` folders (their exact location can vary). Games installed like this:
-
-* may have an unreadable install directory between turning your computer on and running the game's launcher.
-
-  If LOOT can't find your game, try running the game's launcher first.
-* may use one of two locations to store its load order data, based on criteria that vary between games and which are not well understood. The two locations for each game are:
-
-  .. list-table::
-    :header-rows: 1
-
-    * - Game
-      - Location 1
-      - Location 2
-    * - Morrowind
-      - N/A
-      - N/A
-    * - Oblivion
-      - ``%LOCALAPPDATA%\Oblivion``
-      - ``%LOCALAPPDATA%\Packages\BethesdaSoftworks.TESOblivion-PC_3275kfvn8vcwc\LocalCache\Local\Oblivion``
-    * - Skyrim Special Edition
-      - ``%LOCALAPPDATA%\Skyrim Special Edition MS``
-      - ``%LOCALAPPDATA%\Packages\BethesdaSoftworks.SkyrimSE-PC_3275kfvn8vcwc\LocalCache\Local\Skyrim Special Edition MS``
-    * - Fallout 3
-      - ``%LOCALAPPDATA%\Fallout3``
-      - ``%LOCALAPPDATA%\Packages\BethesdaSoftworks.Fallout3_3275kfvn8vcwc\LocalCache\Local\Fallout3``
-    * - Fallout: New Vegas
-      - ``%LOCALAPPDATA%\FalloutNV``
-      - ``%LOCALAPPDATA%\Packages\BethesdaSoftworks.FalloutNewVegas\LocalCache\Local\FalloutNV``
-    * - Fallout 4
-      - ``%LOCALAPPDATA%\Fallout4 MS``
-      - ``%LOCALAPPDATA%\Packages\BethesdaSoftworks.Fallout4-PC_3275kfvn8vcwc\LocalCache\Local\Fallout4 MS``
-
-  LOOT may not select the correct location by default, in which case you'll have to manually configure the correct location as the game's local AppData path in LOOT's settings and then restart LOOT.
-
-* require administrator privileges to write to the game's install directory.
-
-  LOOT will be unable to apply sorted load orders for Morrowind, Oblivion, Fallout 3 and Fallout New Vegas unless it is run as an administrator.
-
-If you have games installed like this, you should update your Microsoft Store and Xbox apps and reinstall the games to avoid these issues, which also affect other modding utilities.
+.. note::
+    LOOT does not support detecting game installs from before February 2022 (installed using Xbox app versions earlier than 2202.1001.7.0). Such installs have limitations that cause issues for LOOT and other modding utilities.
 
 Epic Games Store Compatibility
 ==============================
 
-LOOT supports games bought through the Epic Games Store, but Fallout 3's localisations are installed in separate subdirectories. This is the same as when the game is installed through the Microsoft Store, so LOOT will pick one localisation as described for the Microsoft Store above.
+LOOT supports games bought from the Epic Games Store, but Fallout 3 and Fallout: New Vegas are installed in the same way as they are installed by the Xbox app, so LOOT will pick one localisation as described for the Microsoft Store above.
 
 Install Location Detection
 ==========================
@@ -110,8 +60,7 @@ When LOOT starts, it first loads its configured game settings. If the ``--game``
 - the parent directory of the current working directory (e.g. if LOOT is at ``Skyrim Special Edition\LOOT\LOOT.exe`` next to ``Skyrim Special Edition\SkyrimSE.exe``)
 - the game's non-store-specific Registry key
 - the install location given in the Epic Games Launcher's manifest files
-- the install locations used by newer versions of the Microsoft Store and Xbox apps, checking each drive in the order they're listed by Windows
-- the install locations used by older versions of the Microsoft Store and Xbox apps, checked using the packages' Registry keys.
+- the install locations used by the Xbox app, checking each drive in the order they're listed by Windows
 
 The detected games are merged with the configured game settings, primarily by comparing the detected and configured game install paths. Any detected games that did not have matching configuration get new settings entries added for them. If multiple copies of a single game are detected, each instance is named differently in LOOT's settings to help differentiate between them.
 
