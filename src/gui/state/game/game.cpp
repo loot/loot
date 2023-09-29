@@ -1131,9 +1131,10 @@ void Game::LoadMetadata() {
                 "documentation, which is accessible through LOOT's main "
                 "menu.\n\nYou can also seek support on LOOT's forum thread, "
                 "which is linked to on [LOOT's "
-                "website](https://loot.github.io/).")
+                "website]({1}).")
                 .str(),
-            EscapeMarkdownASCIIPunctuation(e.what()))});
+            EscapeMarkdownASCIIPunctuation(e.what()),
+            "https://loot.github.io/")});
   }
 }
 
