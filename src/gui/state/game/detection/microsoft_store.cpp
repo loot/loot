@@ -177,7 +177,6 @@ std::optional<GameInstall> FindMicrosoftStoreGameInstall(
 
 namespace loot::microsoft {
 std::vector<GameInstall> FindGameInstalls(
-    const RegistryInterface& registry,
     const GameId gameId,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {

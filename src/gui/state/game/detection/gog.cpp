@@ -115,8 +115,8 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
   std::vector<GameInstall> installs;
 
   try {
-    const auto installPaths = FindGameInstallPathsInRegistry(
-        registry, gameId, GetRegistryValues(gameId));
+    const auto installPaths =
+        FindGameInstallPathsInRegistry(registry, GetRegistryValues(gameId));
 
     for (const auto& installPath : installPaths) {
       if (IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {

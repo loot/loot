@@ -172,7 +172,7 @@ std::vector<GameInstall> FindGameInstalls(
   }
 
   const auto msInstalls = loot::microsoft::FindGameInstalls(
-      registry, gameId, xboxGamingRootPaths, preferredUILanguages);
+      gameId, xboxGamingRootPaths, preferredUILanguages);
   installs.insert(installs.end(), msInstalls.begin(), msInstalls.end());
 
   return installs;

@@ -476,8 +476,8 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
   std::vector<GameInstall> installs;
 
   try {
-    auto installPaths = FindGameInstallPathsInRegistry(
-        registry, gameId, GetRegistryValues(gameId));
+    auto installPaths =
+        FindGameInstallPathsInRegistry(registry, GetRegistryValues(gameId));
 
     for (auto& installPath : installPaths) {
       installPath = FixNehrimInstallPath(gameId, installPath);
