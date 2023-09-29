@@ -54,8 +54,6 @@ namespace {
 using loot::GameId;
 using loot::getLogger;
 
-inline constexpr const char* FALLOUTNV_APPDATA_FOLDER_NAME = "FalloutNV_Epic";
-
 struct EgsManifestData {
   std::string appName;
   std::string installLocation;
@@ -251,21 +249,6 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
 
   return std::nullopt;
 }
-
-std::filesystem::path GetAppDataPath(const GameId gameId) {
-  switch (gameId) {
-    case GameId::tes5se:
-    case GameId::fo3:
-      // libloadorder (through libloot) supports detecting the correct path
-      // for Skyrim SE and Fallout 3. Provide an empty path so that detection
-      // is used.
-      return std::filesystem::path();
-    case GameId::fonv:
-      return loot::getLocalAppDataPath() / FALLOUTNV_APPDATA_FOLDER_NAME;
-    default:
-      throw std::logic_error("Unsupported Epic Games Store game");
-  }
-}
 }
 
 namespace loot::epic {
@@ -280,7 +263,7 @@ std::string GetAppDataFolderName(const GameId gameId) {
     case GameId::fo3:
       return "Fallout3";
     case GameId::fonv:
-      return FALLOUTNV_APPDATA_FOLDER_NAME;
+      return "FalloutNV_Epic";
     default:
       throw std::logic_error("Unsupported Epic Games Store game");
   }
@@ -312,10 +295,13 @@ std::optional<GameInstall> FindGameInstalls(
           gameId, installPath.value(), preferredUILanguages);
 
       if (localisedInstallPath.has_value()) {
+        // Pass a default empty path for the local path because libloot /
+        // libloadorder knows how to detect the appropriate path for EGS
+        // games.
         return GameInstall{gameId,
                            InstallSource::epic,
                            localisedInstallPath.value(),
-                           GetAppDataPath(gameId)};
+                           std::filesystem::path()};
       }
     }
   } catch (const std::exception& e) {

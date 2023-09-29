@@ -125,20 +125,11 @@ TEST_P(Microsoft_FindGameInstallsTest, shouldFindNewMSGamePathIfPresent) {
   const auto gameInstalls =
       loot::microsoft::FindGameInstalls(gameId, {xboxGamingRootPath}, {});
 
-  std::filesystem::path expectedLocalPath;
-  if (GetParam() == GameId::tes5se) {
-    expectedLocalPath = getLocalAppDataPath() / "Skyrim Special Edition MS";
-  } else if (GetParam() == GameId::fo4) {
-    expectedLocalPath = getLocalAppDataPath() / "Fallout4 MS";
-  } else {
-    expectedLocalPath = "";
-  }
-
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
   EXPECT_EQ(InstallSource::microsoft, gameInstalls[0].source);
   EXPECT_EQ(gamePath, gameInstalls[0].installPath);
-  EXPECT_EQ(expectedLocalPath, gameInstalls[0].localPath);
+  EXPECT_EQ("", gameInstalls[0].localPath);
 }
 
 TEST_P(Microsoft_FindGameInstallsTest,

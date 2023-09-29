@@ -70,27 +70,6 @@ std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
   }
 };
 
-std::filesystem::path GetMicrosoftStoreGameLocalPath(GameId gameId) {
-  using loot::getLocalAppDataPath;
-
-  switch (gameId) {
-    case GameId::tes3:
-    case GameId::tes4:
-    case GameId::fo3:
-    case GameId::fonv:
-      // Morrowind doesn't use the local path, and Oblivion, Fallout 3 and
-      // Fallout New Vegas use the same path as their non-Microsoft-Store
-      // versions. Return an emtpy path so that the default gets used.
-      return std::filesystem::path();
-    case GameId::tes5se:
-      return getLocalAppDataPath() / "Skyrim Special Edition MS";
-    case GameId::fo4:
-      return getLocalAppDataPath() / "Fallout4 MS";
-    default:
-      throw std::logic_error("Unsupported Microsoft Store game");
-  }
-}
-
 bool IsOnMicrosoftStore(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
@@ -162,12 +141,13 @@ std::optional<GameInstall> FindMicrosoftStoreGameInstall(
         GetLocalisedGameInstallPath(gameId, preferredUILanguages, pathsToCheck);
 
     if (validPath.has_value()) {
-      GameInstall install;
-      install.gameId = gameId;
-      install.source = loot::InstallSource::microsoft;
-      install.installPath = validPath.value();
-      install.localPath = GetMicrosoftStoreGameLocalPath(gameId);
-      return install;
+      // Pass a default empty path for the local path because libloot /
+      // libloadorder knows how to detect the appropriate path for
+      // modern MS Store game installs.
+      return GameInstall{gameId,
+                         loot::InstallSource::microsoft,
+                         validPath.value(),
+                         std::filesystem::path()};
     }
   }
 

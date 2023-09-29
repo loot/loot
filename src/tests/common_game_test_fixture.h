@@ -200,7 +200,7 @@ protected:
           actual.push_back(line);
       }
     } else {
-      actual = readFileLines(localPath / pluginsTxtName());
+      actual = readFileLines(localPath / "Plugins.txt");
       for (auto& line : actual) {
         if (line[0] == '*')
           line = line.substr(1);
@@ -349,7 +349,7 @@ private:
         }
       }
     } else {
-      std::ofstream out(localPath / pluginsTxtName());
+      std::ofstream out(localPath / "Plugins.txt");
       for (const auto& plugin : loadOrder) {
         if (getGameType() == GameType::fo4 ||
             getGameType() == GameType::tes5se) {
@@ -410,10 +410,6 @@ private:
       default:
         throw std::logic_error("Unexpected game type");
     }
-  }
-
-  std::string pluginsTxtName() const {
-    return getGameType() == GameType::tes4 ? "Plugins.txt" : "plugins.txt";
   }
 };
 }
