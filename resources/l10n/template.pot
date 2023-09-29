@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.21.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-09-29 23:31+0100\n"
+"POT-Creation-Date: 2023-09-29 23:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -618,10 +618,6 @@ msgstr ""
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
-msgstr ""
-
-#: src/gui/qt/main_window.cpp:2598
-msgid "LOOT"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:2654

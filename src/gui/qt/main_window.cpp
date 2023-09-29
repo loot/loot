@@ -2595,7 +2595,7 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
     }
 
     auto messageBox = QMessageBox(
-        QMessageBox::NoIcon, translate("LOOT"), message, QMessageBox::Ok, this);
+        QMessageBox::NoIcon, "LOOT", message, QMessageBox::Ok, this);
     messageBox.exec();
   } catch (const std::exception& e) {
     handleException(e);
