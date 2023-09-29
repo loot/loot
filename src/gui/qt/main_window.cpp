@@ -1961,9 +1961,10 @@ void MainWindow::on_actionAbout_triggered() {
 
     auto paragraph2 =
         boost::locale::translate(
-            "Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, "
-            "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim "
-            "VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR.")
+            "Load order optimisation for Starfield, Morrowind, Oblivion, "
+            "Nehrim, Skyrim, Enderal, Skyrim Special Edition, Enderal Special "
+            "Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and "
+            "Fallout 4 VR.")
             .str();
 
     auto paragraph3 = fmt::format(
