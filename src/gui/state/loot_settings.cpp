@@ -455,7 +455,8 @@ std::string migrateMasterlistSource(const std::string& source) {
                                                                    "falloutnv",
                                                                    "fallout4",
                                                                    "fallout4vr",
-                                                                   "enderal"};
+                                                                   "enderal",
+                                                                   "starfield"};
 
   for (const auto& repo : officialMasterlistRepos) {
     for (const auto& branch : oldDefaultBranches) {
