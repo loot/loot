@@ -47,6 +47,7 @@ Name
 Base Game
   Every game LOOT runs for must use the plugin file format and load order system of one of the following games:
 
+  - Starfield
   - TES III: Morrowind
   - TES IV: Oblivion
   - TES V: Skyrim

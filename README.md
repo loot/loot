@@ -7,6 +7,7 @@
 
 LOOT is a plugin load order optimiser for:
 
+* Starfield
 * The Elder Scrolls III: Morrowind
 * The Elder Scrolls IV: Oblivion
 * The Elder Scrolls V: Skyrim

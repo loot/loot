@@ -3,7 +3,7 @@ Version=1.0
 Type=Application
 
 Name=LOOT
-Comment=A load order optimisation tool for the Elder Scrolls (Morrowind and later) and Fallout (3 and later) games.
+Comment=Modding utility for Starfield and some Elder Scrolls and Fallout games
 Categories=Game;Qt;
 
 Icon=io.github.loot.loot
