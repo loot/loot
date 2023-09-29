@@ -204,6 +204,10 @@ Source: "build\masterlists\Fallout4VR\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Fallout4VR"; Flags: ignoreversion
 Source: "build\masterlists\Fallout4VR\masterlist.yaml.metadata.toml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Fallout4VR"; Flags: ignoreversion
+Source: "build\masterlists\Starfield\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Starfield"; Flags: ignoreversion
+Source: "build\masterlists\Starfield\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Starfield"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -571,6 +575,7 @@ begin
     DownloadPage.Add('https://raw.githubusercontent.com/loot/falloutnv/{#MasterlistBranch}/masterlist.yaml', 'games\FalloutNV\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout4\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4vr/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout4VR\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/starfield/{#MasterlistBranch}/masterlist.yaml', 'games\Starfield\masterlist.yaml', '');
   end;
 
   if Assigned(DownloadPage) and (CurPageID = wpSelectTasks) then begin
@@ -612,6 +617,7 @@ begin
       InstallMetadataFile('games\FalloutNV\masterlist.yaml');
       InstallMetadataFile('games\Fallout4\masterlist.yaml');
       InstallMetadataFile('games\Fallout4VR\masterlist.yaml');
+      InstallMetadataFile('games\Starfield\masterlist.yaml');
     end
   end
 end;
