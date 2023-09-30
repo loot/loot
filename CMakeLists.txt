@@ -118,8 +118,8 @@ set(ZLIB_LIBRARY
 
 ExternalProject_Add(minizip-ng
     PREFIX "external"
-    URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/3.0.8.tar.gz"
-    URL_HASH "SHA256=27cc2f62cd02d79b71b346fc6ace02728385f8ba9c6b5f124062b0790a04629a"
+    URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz"
+    URL_HASH "SHA256=63e47a2b4dbac0da501f43f4da74f118dfb3ef0dee0ffbbe89428271002260f8"
     CMAKE_ARGS
         -DMZ_ZLIB=ON
         -DMZ_BZIP2=OFF
