@@ -4,6 +4,97 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.22.0 - Unreleased
+===================
+
+Added
+-----
+
+- Support for Starfield.
+- LOOT will now display a warning if it detects that a Starfield plugin has the
+  override flag set and also adds new records.
+
+Fixed
+-----
+
+- LOOT could crash during startup if game detection encountered an error.
+- LOOT could crash if updating all masterlists encountered an error, and an
+  error could be encountered depending on how fast each masterlist was updated.
+- Detection of Epic Games Store games installed using Heroic Games Launcher
+  on Linux would cause LOOT to use the wrong local app data paths for Skyrim
+  Special Edition and Fallout: New Vegas.
+- High CPU usage when idle, which was accidentally introduced in LOOT v0.21.0.
+- The installer now includes copies of masterlists for Nehrim, Enderal and
+  Enderal Special Edition.
+- The uninstaller did not remove non-default LOOT game folders or empty folders
+  in LOOT's install path.
+- Only lowercase plugin file extensions were recognised as plugin file
+  extensions when evaluating conditions. Via libloot.
+- Fallout: New Vegas plugins with corresponding ``.nam`` files are now
+  identified as being active. Via libloot.
+- Plugins activated using the ``sTestFile1`` through ``sTestFile10`` ini file
+  properties are now recognised as being active for all games other than
+  Morrowind, which does not support those properties. The properties are used by
+  default in Fallout 3, Fallout: New Vegas and Skyrim Special Edition. Via
+  libloot.
+- Fallout 4's ``Fallout4.ccc`` and ``plugins.txt`` and Fallout 4 VR's
+  ``plugins.txt`` are now ignored when the game has plugins activated using
+  the ``sTestFile1`` through ``sTestFile10`` ini file properties. Setting the
+  load order still writes ``plugins.txt`` but now also sets the load order using
+  plugin file timestamps. Via libloot.
+- When deciding where to look for Oblivion's ``plugins.txt``, the
+  ``bUseMyGamesDirectory`` ini property is now correctly expected in the
+  ``[General]`` section of ``Oblivion.ini``, instead of anywhere in the file.
+  Via libloot.
+- When reading the load order, LOOT now orders plugins correctly when their
+  order depends on their timestamps and two plugins have the same timestamp.
+  LOOT used to sort them in ascending filename order: it now uses descending
+  order for all games other than Starfield. Via libloot.
+- When reading the load order for games that can have plugins with no defined
+  load order position, LOOT now adds such plugins to the load order in ascending
+  timestamp order rather than ascending filename order, matching the behaviour
+  of all supported games, xEdit and Wrye Bash. Via libloot.
+- LOOT no longer warns that Morrowind, Oblivion, Fallout 3 and Fallout New Vegas
+  load orders are ambiguous if they have two plugins with the same timestamp.
+  Via libloot.
+- LOOT no longer requires that implicitly active plugins are listed in
+  ``plugins.txt`` for a Skyrim SE, Skyrim VR, Fallout 4 or Fallout 4 VR load
+  order to be unambiguous.
+- Outdated screenshots in the documentation.
+
+Changed
+-------
+
+- It is now possible to edit a game's name in LOOT's settings.
+- LOOT now checks if the load order is ambiguous after setting it (e.g. by
+  applying a sorted load order or by trying to fix an ambiguous load order), and
+  displays a warning dialog if it is ambiguous.
+- LOOT will now copy the masterlist from the default LOOT folder for a game if
+  it exists when initialising a different LOOT folder for the same game, so that
+  the masterlist doesn't need to be re-downloaded to initialise LOOT for
+  multiple installs of the same game.
+- Updated metainfo XML to match Flathub listing.
+- Updated installation page of the documentation to reflect that LOOT is
+  available for Linux on Flathub.
+- Updated the Brazilian Portuguese translation.
+- Updated the Bulgarian translation.
+- Updated the Finnish translation.
+- Updated the German translation.
+- Updated the Japanese translation.
+- Updated the Ukrainian translation.
+- Updated Boost to 1.83.0.
+- Updated libloot to v0.22.1.
+- Updated minizip-ng to v4.0.1.
+- Updated OGDF to v2023.09.
+- Updated Qt to v6.5.3.
+- Updated toml++ to v3.3.0.
+- Updated zlib to v1.3.
+
+Removed
+-------
+
+- Support for detecting Microsoft Store game installs from before February 2022.
+
 0.21.0 - 2023-09-17
 ===================
 
