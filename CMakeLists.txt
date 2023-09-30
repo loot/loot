@@ -105,8 +105,8 @@ endif()
 
 ExternalProject_Add(zlib
     PREFIX "external"
-    URL "https://github.com/madler/zlib/archive/refs/tags/v1.2.13.tar.gz"
-    URL_HASH "SHA256=1525952a0a567581792613a9723333d7f8cc20b87a81f920fb8bc7e3f2251428"
+    URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.tar.gz"
+    URL_HASH "SHA256=b5b06d60ce49c8ba700e0ba517fa07de80b5d4628a037f4be8ad16955be7a7c0"
     CMAKE_ARGS
         -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
     INSTALL_COMMAND ""
