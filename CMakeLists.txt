@@ -46,7 +46,7 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost 1.77 REQUIRED COMPONENTS locale)
+find_package(Boost REQUIRED COMPONENTS locale)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(ICU 71.1 REQUIRED COMPONENTS data uc i18n)
