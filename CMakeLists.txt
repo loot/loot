@@ -59,8 +59,8 @@ find_package(OGDF CONFIG)
 
 ExternalProject_Add(GTest
     PREFIX "external"
-    URL "https://github.com/google/googletest/archive/release-1.12.1.tar.gz"
-    URL_HASH "SHA256=81964fe578e9bd7c94dfdb09c8e4d6e6759e19967e397dbea48d1c10e45d0df2"
+    URL "https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz"
+    URL_HASH "SHA256=8ad598c73ad796e0d8280b082cebd82a630d73e73cd3c70057938a6501bba5d7"
     CMAKE_ARGS
         -Dgtest_force_shared_crt=ON
         -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
