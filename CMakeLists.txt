@@ -53,7 +53,7 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(TBB REQUIRED)
 endif()
 
-find_package(Qt6 6.2 COMPONENTS Widgets Network Test REQUIRED)
+find_package(Qt6 6.5 COMPONENTS Widgets Network Test REQUIRED)
 
 find_package(OGDF CONFIG)
 
