@@ -70,6 +70,8 @@ std::string GetDefaultMasterlistRepositoryName(const GameId gameId) {
       return "fallout4";
     case GameId::fo4vr:
       return "fallout4vr";
+    case GameId::starfield:
+      return "starfield";
     default:
       throw std::logic_error("Unrecognised game type");
   }
@@ -172,7 +174,7 @@ std::vector<GameInstall> FindGameInstalls(
   }
 
   const auto msInstalls = loot::microsoft::FindGameInstalls(
-      registry, gameId, xboxGamingRootPaths, preferredUILanguages);
+      gameId, xboxGamingRootPaths, preferredUILanguages);
   installs.insert(installs.end(), msInstalls.begin(), msInstalls.end());
 
   return installs;
@@ -225,6 +227,8 @@ std::string GetDefaultLootFolderName(const GameId gameId) {
       return "Fallout4";
     case GameId::fo4vr:
       return "Fallout4VR";
+    case GameId::starfield:
+      return "Starfield";
     default:
       throw std::logic_error("Unrecognised game ID");
   }

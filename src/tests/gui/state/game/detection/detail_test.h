@@ -185,8 +185,7 @@ TEST_F(FindGameInstallsTest, shouldFindInstallsFromAllSupportedSources) {
   EXPECT_EQ(GameId::tes5se, installs[4].gameId);
   EXPECT_EQ(InstallSource::microsoft, installs[4].source);
   EXPECT_EQ(msInstallPath, installs[4].installPath);
-  EXPECT_EQ(getLocalAppDataPath() / "Skyrim Special Edition MS",
-            installs[4].localPath);
+  EXPECT_EQ("", installs[4].localPath);
 }
 
 TEST_F(FindGameInstallsTest, shouldDeduplicateFoundInstalls) {
@@ -217,8 +216,7 @@ TEST_F(FindGameInstallsTest, shouldDeduplicateFoundInstalls) {
   EXPECT_EQ(GameId::tes5se, installs[3].gameId);
   EXPECT_EQ(InstallSource::microsoft, installs[3].source);
   EXPECT_EQ(msInstallPath, installs[3].installPath);
-  EXPECT_EQ(getLocalAppDataPath() / "Skyrim Special Edition MS",
-            installs[3].localPath);
+  EXPECT_EQ("", installs[3].localPath);
 }
 
 TEST(CountGameInstalls, shouldCountConfiguredAndNewInstallsByGameAndSource) {

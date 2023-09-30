@@ -122,23 +122,14 @@ TEST_P(Microsoft_FindGameInstallsTest, shouldFindNewMSGamePathIfPresent) {
                         std::filesystem::copy_options::recursive);
 
   const auto gameId = GetParam();
-  const auto gameInstalls = loot::microsoft::FindGameInstalls(
-      TestRegistry(), gameId, {xboxGamingRootPath}, {});
-
-  std::filesystem::path expectedLocalPath;
-  if (GetParam() == GameId::tes5se) {
-    expectedLocalPath = getLocalAppDataPath() / "Skyrim Special Edition MS";
-  } else if (GetParam() == GameId::fo4) {
-    expectedLocalPath = getLocalAppDataPath() / "Fallout4 MS";
-  } else {
-    expectedLocalPath = "";
-  }
+  const auto gameInstalls =
+      loot::microsoft::FindGameInstalls(gameId, {xboxGamingRootPath}, {});
 
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
   EXPECT_EQ(InstallSource::microsoft, gameInstalls[0].source);
   EXPECT_EQ(gamePath, gameInstalls[0].installPath);
-  EXPECT_EQ(expectedLocalPath, gameInstalls[0].localPath);
+  EXPECT_EQ("", gameInstalls[0].localPath);
 }
 
 TEST_P(Microsoft_FindGameInstallsTest,
@@ -153,8 +144,8 @@ TEST_P(Microsoft_FindGameInstallsTest,
       xboxGamingRootPath, {"Oblivion GOTY Spanish", "Oblivion GOTY Italian"});
 
   const auto gameId = GetParam();
-  const auto gameInstalls = loot::microsoft::FindGameInstalls(
-      TestRegistry(), gameId, {xboxGamingRootPath}, {});
+  const auto gameInstalls =
+      loot::microsoft::FindGameInstalls(gameId, {xboxGamingRootPath}, {});
 
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
@@ -176,7 +167,7 @@ TEST_P(Microsoft_FindGameInstallsTest,
 
   const auto gameId = GetParam();
   const auto gameInstalls = loot::microsoft::FindGameInstalls(
-      TestRegistry(), gameId, {xboxGamingRootPath}, {"es", "it"});
+      gameId, {xboxGamingRootPath}, {"es", "it"});
 
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
@@ -197,104 +188,14 @@ TEST_P(Microsoft_FindGameInstallsTest,
       xboxGamingRootPath, {"Oblivion GOTY English", "Oblivion GOTY Spanish"});
 
   const auto gameId = GetParam();
-  const auto gameInstalls = loot::microsoft::FindGameInstalls(
-      TestRegistry(), gameId, {xboxGamingRootPath}, {"es"});
+  const auto gameInstalls =
+      loot::microsoft::FindGameInstalls(gameId, {xboxGamingRootPath}, {"es"});
 
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
   EXPECT_EQ(InstallSource::microsoft, gameInstalls[0].source);
   EXPECT_EQ(gamesPaths[1], gameInstalls[0].installPath);
   EXPECT_EQ("", gameInstalls[0].localPath);
-}
-
-TEST_P(Microsoft_FindGameInstallsTest, shouldFindOldStoreInstall) {
-  const auto rootPath = dataPath.parent_path().parent_path();
-  const auto localisedPath = GetGamePath(rootPath);
-  std::filesystem::create_directories(localisedPath.parent_path());
-  std::filesystem::copy(dataPath.parent_path(),
-                        localisedPath,
-                        std::filesystem::copy_options::recursive);
-  const auto gamePath = localisedPath.stem() == "Content"
-                            ? localisedPath
-                            : localisedPath.parent_path();
-
-  TestRegistry registry;
-  registry.SetSubKeys(
-      R"(Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\Repository\Families\)" +
-          GetPackageName(),
-      {"fullName"});
-  registry.SetSubKeys(
-      R"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModel\StateRepository\Cache\Package\Index\PackageFullName\fullName)",
-      {"index"});
-  registry.SetStringValue(
-      R"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModel\StateRepository\Cache\Package\Data\index)",
-      gamePath.u8string());
-
-  const auto gameId = GetParam();
-  const auto gameInstalls =
-      loot::microsoft::FindGameInstalls(registry, gameId, {}, {});
-
-  std::filesystem::path expectedLocalPath;
-  if (GetParam() == GameId::tes4) {
-    // Unfortunately if the Oblivion directory exists it will be used,
-    // so the test's expected path changes depending on the system it's
-    // run on.
-    expectedLocalPath = getLocalAppDataPath() / "Oblivion";
-    if (!std::filesystem::exists(expectedLocalPath)) {
-      expectedLocalPath = getLocalAppDataPath() / "Packages" /
-                          "BethesdaSoftworks.TESOblivion-PC_3275kfvn8vcwc" /
-                          "LocalCache" / "Local" / "Oblivion";
-    }
-  } else if (GetParam() == GameId::tes5se) {
-    expectedLocalPath = getLocalAppDataPath() / "Packages" /
-                        "BethesdaSoftworks.SkyrimSE-PC_3275kfvn8vcwc" /
-                        "LocalCache" / "Local" / "Skyrim Special Edition MS";
-  } else if (GetParam() == GameId::fo3) {
-    expectedLocalPath = getLocalAppDataPath() / "Packages" /
-                        "BethesdaSoftworks.Fallout3_3275kfvn8vcwc" /
-                        "LocalCache" / "Local" / "Fallout3";
-  } else if (GetParam() == GameId::fonv) {
-    expectedLocalPath = getLocalAppDataPath() / "Packages" /
-                        "BethesdaSoftworks.FalloutNewVegas_3275kfvn8vcwc" /
-                        "LocalCache" / "Local" / "FalloutNV";
-  } else if (GetParam() == GameId::fo4) {
-    expectedLocalPath = getLocalAppDataPath() / "Packages" /
-                        "BethesdaSoftworks.Fallout4-PC_3275kfvn8vcwc" /
-                        "LocalCache" / "Local" / "Fallout4 MS";
-  }
-
-  ASSERT_EQ(1, gameInstalls.size());
-  EXPECT_EQ(gameId, gameInstalls[0].gameId);
-  EXPECT_EQ(InstallSource::microsoft, gameInstalls[0].source);
-  EXPECT_EQ(localisedPath, gameInstalls[0].installPath);
-  EXPECT_EQ(expectedLocalPath, gameInstalls[0].localPath);
-}
-
-TEST_P(Microsoft_FindGameInstallsTest,
-       shouldNotFindAnOldStoreInstallThatIsInvalid) {
-  const auto rootPath = dataPath.parent_path().parent_path();
-  const auto localisedPath = GetGamePath(rootPath);
-  std::filesystem::create_directories(localisedPath.parent_path());
-  std::filesystem::copy(dataPath.parent_path(),
-                        localisedPath,
-                        std::filesystem::copy_options::recursive);
-
-  TestRegistry registry;
-  registry.SetSubKeys(
-      R"(Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\Repository\Families\)" +
-          GetPackageName(),
-      {"fullName"});
-  registry.SetSubKeys(
-      R"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModel\StateRepository\Cache\Package\Index\PackageFullName\fullName)",
-      {"index"});
-  registry.SetStringValue(
-      R"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModel\StateRepository\Cache\Package\Data\index)",
-      "invalid");
-
-  const auto gameInstalls =
-      loot::microsoft::FindGameInstalls(registry, GetParam(), {}, {});
-
-  EXPECT_TRUE(gameInstalls.empty());
 }
 }
 #endif

@@ -78,6 +78,7 @@ const std::map<std::string, GameId> GameTab::GAME_IDS_BY_STRING({
     {ToString(GameId::fonv), GameId::fonv},
     {ToString(GameId::fo4), GameId::fo4},
     {ToString(GameId::fo4vr), GameId::fo4vr},
+    {ToString(GameId::starfield), GameId::starfield},
 });
 
 GameTab::GameTab(const GameSettings& settings,

@@ -453,6 +453,8 @@ protected:
         return "377160";
       case GameId::fo4vr:
         return "611660";
+      case GameId::starfield:
+        return "1716740";
       default:
         throw std::logic_error("Unsupported Steam game");
     }

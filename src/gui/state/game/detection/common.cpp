@@ -56,6 +56,8 @@ std::string GetExecutableName(GameId gameId) {
       return "Fallout4.exe";
     case GameId::fo4vr:
       return "Fallout4VR.exe";
+    case GameId::starfield:
+      return "Starfield.exe";
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -82,6 +84,8 @@ std::string GetMasterFilename(const GameId gameId) {
     case GameId::fo4:
     case GameId::fo4vr:
       return "Fallout4.esm";
+    case GameId::starfield:
+      return "Starfield.esm";
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -113,6 +117,8 @@ std::string GetGameName(const GameId gameId) {
       return "Fallout 4";
     case GameId::fo4vr:
       return "Fallout 4 VR";
+    case GameId::starfield:
+      return "Starfield";
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -135,6 +141,7 @@ bool ExecutableExists(const GameId& gameType,
     case GameId::nehrim:
     case GameId::fo3:
     case GameId::fonv:
+    case GameId::starfield:
       // Don't bother checking for the games that don't share their master
       // plugin name.
       return true;

@@ -39,7 +39,7 @@ GeneralInformationCounters::GeneralInformationCounters(
     if (plugin.isActive && plugin.isLightPlugin) {
       activeLight += 1;
     }
-    if (plugin.isActive && !plugin.isLightPlugin) {
+    if (plugin.isActive && !plugin.isLightPlugin && !plugin.isOverridePlugin) {
       activeRegular += 1;
     }
     if (plugin.isDirty) {

@@ -200,7 +200,7 @@ protected:
           actual.push_back(line);
       }
     } else {
-      actual = readFileLines(localPath / pluginsTxtName());
+      actual = readFileLines(localPath / "Plugins.txt");
       for (auto& line : actual) {
         if (line[0] == '*')
           line = line.substr(1);
@@ -251,6 +251,8 @@ protected:
         return GameType::fo4;
       case GameId::fo4vr:
         return GameType::fo4vr;
+      case GameId::starfield:
+        return GameType::starfield;
       default:
         throw std::logic_error("Unrecognised game ID");
     }
@@ -312,8 +314,13 @@ private:
         return "Fallout3.esm";
       case GameId::fonv:
         return "FalloutNV.esm";
-      default:
+      case GameId::fo4:
+      case GameId::fo4vr:
         return "Fallout4.esm";
+      case GameId::starfield:
+        return "Starfield.esm";
+      default:
+        throw std::logic_error("Unrecognised game ID");
     }
   }
 
@@ -349,7 +356,7 @@ private:
         }
       }
     } else {
-      std::ofstream out(localPath / pluginsTxtName());
+      std::ofstream out(localPath / "Plugins.txt");
       for (const auto& plugin : loadOrder) {
         if (getGameType() == GameType::fo4 ||
             getGameType() == GameType::tes5se) {
@@ -410,10 +417,6 @@ private:
       default:
         throw std::logic_error("Unexpected game type");
     }
-  }
-
-  std::string pluginsTxtName() const {
-    return getGameType() == GameType::tes4 ? "Plugins.txt" : "plugins.txt";
   }
 };
 }

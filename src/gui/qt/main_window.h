@@ -314,7 +314,7 @@ private slots:
   void handleProgressUpdate(const QString &message);
   void handleUpdateCheckFinished(QueryResult result);
   void handleUpdateCheckError(const std::string &);
-  void handleWorkerThreadFinished();
+  void handleTaskExecutorFinished();
 
   void handleIconColorChanged();
   void handleSidebarTextColorChanged();

@@ -65,13 +65,17 @@ Write-Output 'Downloading masterlists'
 DownloadMetadataFile 'prelude' 'prelude' 'prelude'
 DownloadMasterlist 'morrowind' 'Morrowind'
 DownloadMasterlist 'oblivion' 'Oblivion'
+DownloadMasterlist 'oblivion' 'Nehrim'
 DownloadMasterlist 'skyrim' 'Skyrim'
+DownloadMasterlist 'enderal' 'Enderal'
 DownloadMasterlist 'skyrimse' 'Skyrim Special Edition'
+DownloadMasterlist 'enderal' 'Enderal Special Edition'
 DownloadMasterlist 'skyrimvr' 'Skyrim VR'
 DownloadMasterlist 'fallout3' 'Fallout3'
 DownloadMasterlist 'falloutnv' 'FalloutNV'
 DownloadMasterlist 'fallout4' 'Fallout4'
 DownloadMasterlist 'fallout4vr' 'Fallout4VR'
+DownloadMasterlist 'starfield' 'Starfield'
 
 Write-Output "Building installer for LOOT"
 iscc scripts\installer.iss

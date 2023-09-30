@@ -2,12 +2,12 @@
 Editing Settings
 ****************
 
-.. image:: ../../images/settings.png
-
 LOOT's settings may be accessed through the File menu.
 
 General Settings
 ================
+
+.. image:: ../../images/settings_general.windows.png
 
 .. _default-game:
 
@@ -37,6 +37,8 @@ Masterlist prelude source
 Game Settings
 =============
 
+.. image:: ../../images/settings_game.windows.png
+
 LOOT's game-specific settings can be customised by selecting a game in the sidebar. New game profiles can be added, making it easy to use LOOT across multiple copies of a game, including total conversion mods. Game profiles can also be deleted, though the active game cannot have its profile deleted, and LOOT will recreate default profiles for any games it detects when it is next run.
 
 Name
@@ -45,6 +47,7 @@ Name
 Base Game
   Every game LOOT runs for must use the plugin file format and load order system of one of the following games:
 
+  - Starfield
   - TES III: Morrowind
   - TES IV: Oblivion
   - TES V: Skyrim

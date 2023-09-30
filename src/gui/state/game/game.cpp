@@ -53,6 +53,7 @@
 
 #include "gui/helpers.h"
 #include "gui/state/game/detection/common.h"
+#include "gui/state/game/detection/detail.h"
 #include "gui/state/game/detection/generic.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
@@ -67,6 +68,8 @@ using std::filesystem::u8path;
 namespace fs = std::filesystem;
 
 namespace {
+using loot::GameType;
+
 struct Counters {
   size_t activeNormal = 0;
   size_t activeLightPlugins = 0;
@@ -90,6 +93,66 @@ bool IsPathCaseSensitive(const std::filesystem::path& path) {
   std::error_code errorCode;
   return !std::filesystem::equivalent(lowercased, uppercased, errorCode);
 }
+
+void CopyMasterlistFromDefaultGameFolder(
+    const std::filesystem::path& masterlistPath,
+    const std::filesystem::path& gamesPath,
+    const loot::GameId gameId) {
+  const auto defaultLootGamePath =
+      gamesPath / loot::GetDefaultLootFolderName(gameId);
+  const auto defaultMasterlistPath =
+      defaultLootGamePath / loot::MASTERLIST_FILENAME;
+
+  if (fs::exists(defaultMasterlistPath)) {
+    const auto logger = loot::getLogger();
+    if (logger) {
+      logger->debug("Copying masterlist from {} to {}",
+                    defaultMasterlistPath.u8string(),
+                    masterlistPath.u8string());
+    }
+    fs::copy(defaultMasterlistPath, masterlistPath);
+
+    static constexpr const char* METADATA_FILENAME =
+        "masterlist.yaml.metadata.toml";
+
+    // Also remove any existing masterlist.yaml.metadata.toml as it will now
+    // be incorrect.
+    const auto defaultMetadataPath = defaultLootGamePath / METADATA_FILENAME;
+    const auto metadataPath = masterlistPath.parent_path() / METADATA_FILENAME;
+    fs::remove(metadataPath);
+
+    // If the source directory has a metadata file, also copy it across.
+    if (fs::exists(defaultMetadataPath)) {
+      if (logger) {
+        logger->debug("Copying masterlist metadata from {} to {}",
+                      defaultMetadataPath.u8string(),
+                      metadataPath.u8string());
+      }
+      fs::copy(defaultMetadataPath, metadataPath);
+    }
+  }
+}
+
+std::optional<std::filesystem::path> GetCCCFilename(const GameType gameType) {
+  switch (gameType) {
+    case GameType::tes3:
+    case GameType::tes4:
+    case GameType::tes5:
+    case GameType::tes5vr:
+    case GameType::fo3:
+    case GameType::fonv:
+    case GameType::fo4vr:
+      return std::nullopt;
+    case GameType::tes5se:
+      return "Skyrim.ccc";
+    case GameType::fo4:
+      return "Fallout4.ccc";
+    case GameType::starfield:
+      return "Starfield.ccc";
+    default:
+      throw std::logic_error("Unrecognised game type");
+  }
+}
 }
 
 namespace loot {
@@ -100,15 +163,15 @@ std::filesystem::path GetMasterlistPath(
          MASTERLIST_FILENAME;
 }
 
-void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
+void InitLootGameFolder(const std::filesystem::path& lootDataPath,
                         const GameSettings& settings) {
-  if (lootDataPath_.empty()) {
+  if (lootDataPath.empty()) {
     throw std::runtime_error("LOOT data path cannot be empty");
   }
 
   // Make sure that the LOOT game path exists.
   const auto lootGamePath =
-      GetLOOTGamePath(lootDataPath_, settings.FolderName());
+      GetLOOTGamePath(lootDataPath, settings.FolderName());
   if (!fs::is_directory(lootGamePath)) {
     if (fs::exists(lootGamePath)) {
       throw FileAccessError(
@@ -116,14 +179,14 @@ void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
           "a directory");
     }
 
-    std::vector<fs::path> legacyGamePaths{lootDataPath_ /
+    std::vector<fs::path> legacyGamePaths{lootDataPath /
                                           u8path(settings.FolderName())};
 
     if (settings.Id() == GameId::tes5se) {
       // LOOT v0.10.0 used SkyrimSE as its folder name for Skyrim SE, so
       // migrate from that if it's present.
       legacyGamePaths.insert(legacyGamePaths.begin(),
-                             lootDataPath_ / "SkyrimSE");
+                             lootDataPath / "SkyrimSE");
     }
 
     const auto logger = getLogger();
@@ -146,6 +209,15 @@ void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
 
     fs::create_directories(lootGamePath);
   }
+
+  const auto masterlistPath = GetMasterlistPath(lootDataPath, settings);
+  if (!fs::exists(masterlistPath)) {
+    // The masterlist does not exist, LOOT may already have a copy of it
+    // in the default game folder for this game's ID, so try copying it from
+    // there.
+    CopyMasterlistFromDefaultGameFolder(
+        masterlistPath, lootGamePath.parent_path(), settings.Id());
+  }
 }
 
 std::string GetLoadOrderAsTextTable(const gui::Game& game,
@@ -165,7 +237,7 @@ std::string GetLoadOrderAsTextTable(const gui::Game& game,
       stream << "254 FE " << std::setw(3) << std::hex
              << counters.activeLightPlugins << std::dec << " ";
       counters.activeLightPlugins += 1;
-    } else if (isActive) {
+    } else if (isActive && !plugin->IsOverridePlugin()) {
       stream << std::setw(3) << counters.activeNormal << " " << std::hex
              << std::setw(2) << counters.activeNormal << std::dec << "     ";
       counters.activeNormal += 1;
@@ -472,6 +544,21 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
             "will cause irreversible damage to your game saves.")));
   }
 
+  if (plugin.IsOverridePlugin() && !plugin.IsValidAsOverridePlugin()) {
+    if (logger) {
+      logger->error(
+          "\"{}\" is an override plugin but adds new records. Using this "
+          "plugin may cause irreversible damage to your game saves.",
+          plugin.GetName());
+    }
+    messages.push_back(CreatePlainTextSourcedMessage(
+        MessageType::error,
+        MessageSource::invalidOverridePlugin,
+        boost::locale::translate(
+            "This plugin is an override plugin but adds new records. Using "
+            "this plugin may cause irreversible damage to your game saves.")));
+  }
+
   if (plugin.GetHeaderVersion().has_value() &&
       plugin.GetHeaderVersion().value() < settings_.MinimumHeaderVersion()) {
     if (logger) {
@@ -600,14 +687,13 @@ void Game::RedatePlugins() {
 void Game::LoadCreationClubPluginNames() {
   creationClubPlugins_.clear();
 
-  if (settings_.Type() != GameType::tes5se &&
-      settings_.Type() != GameType::fo4) {
+  const auto cccFilename = GetCCCFilename(settings_.Type());
+
+  if (!cccFilename.has_value()) {
     return;
   }
 
-  const auto cccFilename =
-      settings_.Type() == GameType::tes5se ? "Skyrim.ccc" : "Fallout4.ccc";
-  const auto cccFilePath = settings_.GamePath() / cccFilename;
+  const auto cccFilePath = settings_.GamePath() / cccFilename.value();
 
   if (!fs::exists(cccFilePath)) {
     return;
@@ -691,8 +777,9 @@ std::optional<short> Game::GetActiveLoadOrderIndex(
   // given plugin is encountered. If the plugin isn't active or in the load
   // order, return nullopt.
 
-  if (!IsPluginActive(plugin.GetName()))
+  if (!IsPluginActive(plugin.GetName()) || plugin.IsOverridePlugin()) {
     return std::nullopt;
+  }
 
   short numberOfActivePlugins = 0;
   for (const std::string& otherPluginName : loadOrder) {
@@ -701,7 +788,8 @@ std::optional<short> Game::GetActiveLoadOrderIndex(
     }
 
     auto otherPlugin = GetPlugin(otherPluginName);
-    if (otherPlugin && plugin.IsLightPlugin() == otherPlugin->IsLightPlugin() &&
+    if (otherPlugin && !otherPlugin->IsOverridePlugin() &&
+        plugin.IsLightPlugin() == otherPlugin->IsLightPlugin() &&
         IsPluginActive(otherPluginName)) {
       ++numberOfActivePlugins;
     }
@@ -1043,9 +1131,10 @@ void Game::LoadMetadata() {
                 "documentation, which is accessible through LOOT's main "
                 "menu.\n\nYou can also seek support on LOOT's forum thread, "
                 "which is linked to on [LOOT's "
-                "website](https://loot.github.io/).")
+                "website]({1}).")
                 .str(),
-            EscapeMarkdownASCIIPunctuation(e.what()))});
+            EscapeMarkdownASCIIPunctuation(e.what()),
+            "https://loot.github.io/")});
   }
 }
 
@@ -1130,8 +1219,10 @@ std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
 
   // Scan external data paths first, as the game checks them before the main
   // data path.
-  for (const auto& dataPath : GetExternalDataPaths(
-           settings_.Id(), isMicrosoftStoreInstall_, settings_.DataPath())) {
+  for (const auto& dataPath : GetExternalDataPaths(settings_.Id(),
+                                                   isMicrosoftStoreInstall_,
+                                                   settings_.DataPath(),
+                                                   settings_.GameLocalPath())) {
     if (!std::filesystem::exists(dataPath)) {
       continue;
     }
@@ -1203,8 +1294,11 @@ bool Game::IsCreationClubPlugin(const PluginInterface& plugin) const {
 
 std::filesystem::path Game::ResolveGameFilePath(
     const std::string& filePath) const {
-  const auto externalDataPaths = GetExternalDataPaths(
-      settings_.Id(), isMicrosoftStoreInstall_, settings_.DataPath());
+  const auto externalDataPaths =
+      GetExternalDataPaths(settings_.Id(),
+                           isMicrosoftStoreInstall_,
+                           settings_.DataPath(),
+                           settings_.GameLocalPath());
 
   return loot::ResolveGameFilePath(
       externalDataPaths, settings_.DataPath(), filePath);

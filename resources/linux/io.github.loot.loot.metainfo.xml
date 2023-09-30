@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2023 Oliver Hamlet -->
 <component type="desktop-application">
   <id>io.github.loot.loot</id>
   <url type="homepage">https://loot.github.io</url>
+  <url type="bugtracker">https://github.com/loot/loot/issues</url>
+  <url type="faq">https://loot.github.io/docs/help/LOOT-FAQs</url>
+  <url type="help">https://loot.readthedocs.io/en/stable/</url>
+  <url type="translate">https://github.com/loot/loot/blob/master/CONTRIBUTING.md#translating-loot</url>
+  <url type="vcs-browser">https://github.com/loot/loot</url>
+  <url type="contribute">https://github.com/loot/loot/blob/master/CONTRIBUTING.md</url>
 
   <name>LOOT</name>
-  <summary>A load order optimisation tool for the Elder Scrolls (Morrowind and later) and Fallout (3 and later) games.</summary>
+  <summary>Modding utility for Starfield and some Elder Scrolls and Fallout games</summary>
 
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
@@ -12,18 +19,26 @@
   <content_rating type="oars-1.1" />
 
   <description>
-    <p>
-      LOOT is a plugin load order optimisation tool for TES III: Morrowind, TES IV: Oblivion, TES V: Skyrim, TES V: Skyrim Special Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR. It is designed to assist mod users in avoiding detrimental conflicts, by automatically calculating a load order that satisfies all plugin dependencies and maximises each plugin&apos;s impact on the user&apos;s game.
-    </p>
-    <p>
-      LOOT also provides some load order error checking, including checks for requirements, incompatibilities and cyclic dependencies. In addition, it provides a large number of plugin-specific usage notes, bug warnings and Bash Tag suggestions.
-    </p>
-    <p>
-      Although LOOT is able to calculate the correct load order positions for the vast majority of mods without any user input, some plugins are designed to load at certain positions in a load order, and LOOT may be unable to determine this from the plugins themselves. As such, LOOT provides a mechanism for supplying additional plugin metadata so that it may sort them correctly.
-    </p>
-    <p>
-      LOOT is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering.
-    </p>
+    <p>LOOT is a plugin load order optimiser for:</p>
+    <ul>
+      <li>Starfield</li>
+      <li>The Elder Scrolls III: Morrowind</li>
+      <li>The Elder Scrolls IV: Oblivion</li>
+      <li>The Elder Scrolls V: Skyrim</li>
+      <li>The Elder Scrolls V: Skyrim Special Edition (and Anniversary Edition)</li>
+      <li>The Elder Scrolls V: Skyrim VR</li>
+      <li>Fallout 3</li>
+      <li>Fallout: New Vegas</li>
+      <li>Fallout 4</li>
+      <li>Fallout 4 VR</li>
+      <li>Nehrim: At Fate's Edge</li>
+      <li>Enderal: Forgotten Stories</li>
+      <li>Enderal: Forgotten Stories (Special Edition)</li>
+    </ul>
+
+    <p>LOOT can automatically calculate a load order that satisfies all plugin dependencies and maximises each plugin's impact on your game. It can also detect many issues, and provides a large number of plugin-specific usage notes, warnings and Bash Tag suggestions for Wrye Bash.</p>
+
+    <p>While LOOT can correctly handle the vast majority of plugins without help, some plugins need additional metadata to be sorted correctly. LOOT has a masterlist of metadata for each supported game, and you can add more to customise LOOT's behaviour.</p>
   </description>
 
   <launchable type="desktop-id">io.github.loot.loot.desktop</launchable>
@@ -34,7 +49,27 @@
     <binary>LOOT</binary>
   </provides>
 
+  <screenshots>
+    <screenshot type="default">
+      <image type="source" width="1420" height="843">https://raw.githubusercontent.com/loot/loot/5c35be0de7b6a64067144750ea6f3f781958c280/docs/images/main.linux.png</image>
+      <caption>The LOOT main window</caption>
+    </screenshot>
+    <screenshot>
+      <image type="source" width="1420" height="843">https://raw.githubusercontent.com/loot/loot/5c35be0de7b6a64067144750ea6f3f781958c280/docs/images/metadata_editor.linux.png</image>
+      <caption>The LOOT main window with plugin metadata open</caption>
+    </screenshot>
+    <screenshot>
+      <image type="source" width="1620" height="949">https://raw.githubusercontent.com/loot/loot/5c35be0de7b6a64067144750ea6f3f781958c280/docs/images/groups_editor.linux.png</image>
+      <caption>The LOOT groups editor window</caption>
+    </screenshot>
+  </screenshots>
+
   <releases>
-    <release version="0.20.0" date="2023-06-10" />
+    <release version="0.21.0" date="2023-09-17">
+      <description>
+        <p>This is the first release to be made available on Linux.</p>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.21.0/app/changelog.html#id1</url>
+    </release>
   </releases>
 </component>

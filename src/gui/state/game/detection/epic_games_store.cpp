@@ -79,6 +79,7 @@ std::optional<std::string> GetEgsAppName(GameId gameId) {
     case GameId::tes5vr:
     case GameId::fo4:
     case GameId::fo4vr:
+    case GameId::starfield:
       return std::nullopt;
     default:
       throw std::logic_error("Unrecognised game type");
@@ -249,21 +250,6 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
 
   return std::nullopt;
 }
-
-std::filesystem::path GetAppDataPath(const GameId gameId) {
-  switch (gameId) {
-    case GameId::tes5se:
-    case GameId::fo3:
-      // Fallout 3 and Skyrim write to the same paths as their Steam
-      // distributions, so just provide an empty path so that the
-      // default gets used.
-      return {};
-    case GameId::fonv:
-      return loot::getLocalAppDataPath() / "FalloutNV_Epic";
-    default:
-      throw std::logic_error("Unsupported Epic Games Store game");
-  }
-}
 }
 
 namespace loot::epic {
@@ -274,11 +260,11 @@ std::optional<std::string> GetEgsAppName(const GameId gameId) {
 std::string GetAppDataFolderName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes5se:
-      return "Skyrim Special Edition";
+      return "Skyrim Special Edition EPIC";
     case GameId::fo3:
       return "Fallout3";
     case GameId::fonv:
-      return "FalloutNV";
+      return "FalloutNV_Epic";
     default:
       throw std::logic_error("Unsupported Epic Games Store game");
   }
@@ -310,10 +296,13 @@ std::optional<GameInstall> FindGameInstalls(
           gameId, installPath.value(), preferredUILanguages);
 
       if (localisedInstallPath.has_value()) {
+        // Pass a default empty path for the local path because libloot /
+        // libloadorder knows how to detect the appropriate path for EGS
+        // games.
         return GameInstall{gameId,
                            InstallSource::epic,
                            localisedInstallPath.value(),
-                           GetAppDataPath(gameId)};
+                           std::filesystem::path()};
       }
     }
   } catch (const std::exception& e) {

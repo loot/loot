@@ -136,6 +136,7 @@ PluginItem::PluginItem(const PluginInterface& plugin,
     isEmpty(plugin.IsEmpty()),
     isMaster(plugin.IsMaster()),
     isLightPlugin(plugin.IsLightPlugin()),
+    isOverridePlugin(plugin.IsOverridePlugin()),
     loadsArchive(plugin.LoadsArchive()),
     isCreationClubPlugin(game.IsCreationClubPlugin(plugin)) {
   auto userMetadata = game.GetUserMetadata(plugin.GetName());

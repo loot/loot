@@ -66,7 +66,6 @@ std::optional<std::filesystem::path> ReadPathFromRegistry(
 
 std::vector<std::filesystem::path> FindGameInstallPathsInRegistry(
     const RegistryInterface& registry,
-    const GameId gameId,
     const std::vector<RegistryValue>& registryValues);
 }
 

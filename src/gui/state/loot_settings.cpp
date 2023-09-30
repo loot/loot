@@ -143,7 +143,7 @@ static const std::regex GITHUB_REPO_URL_REGEX =
     std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",
                std::regex::ECMAScript | std::regex::icase);
 
-std::string getOldDefaultRepoUrl(GameId gameId) {
+std::optional<std::string> getOldDefaultRepoUrl(GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
       return "https://github.com/loot/morrowind.git";
@@ -167,6 +167,8 @@ std::string getOldDefaultRepoUrl(GameId gameId) {
       return "https://github.com/loot/fallout4.git";
     case GameId::fo4vr:
       return "https://github.com/loot/fallout4vr.git";
+    case GameId::starfield:
+      return std::nullopt;
     default:
       throw std::runtime_error("Unrecognised game ID: " + ToString(gameId));
   }
@@ -298,6 +300,14 @@ std::optional<std::string> migrateMasterlistRepoSettings(
   if (!url) {
     // No url, it would be set to a game-type-dependent default.
     url = getOldDefaultRepoUrl(gameId);
+
+    if (!url.has_value()) {
+      if (logger) {
+        logger->debug("Game has no old default URL, no need for migration.");
+      }
+      return std::nullopt;
+    }
+
     if (logger) {
       logger->warn(
           "Found game branch config property but not repo, "
@@ -445,7 +455,8 @@ std::string migrateMasterlistSource(const std::string& source) {
                                                                    "falloutnv",
                                                                    "fallout4",
                                                                    "fallout4vr",
-                                                                   "enderal"};
+                                                                   "enderal",
+                                                                   "starfield"};
 
   for (const auto& repo : officialMasterlistRepos) {
     for (const auto& branch : oldDefaultBranches) {
@@ -515,6 +526,8 @@ GameId mapGameId(const std::string& gameId) {
     return GameId::fo4;
   } else if (gameId == ToString(GameId::fo4vr)) {
     return GameId::fo4vr;
+  } else if (gameId == ToString(GameId::starfield)) {
+    return GameId::starfield;
   } else {
     throw std::runtime_error(
         "invalid value for 'gameId' key in game settings table");
