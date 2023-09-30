@@ -8,7 +8,7 @@ on:
   pull_request:
 
 env:
-  OGDF_VERSION: dogwood-202202
+  OGDF_VERSION: elderberry-202309
   QT_VERSION: 6.5.2
 
 jobs:

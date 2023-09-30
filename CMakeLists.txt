@@ -192,8 +192,8 @@ else()
 
     ExternalProject_Add(OGDF
         PREFIX "external"
-        URL "https://ogdf.uos.de/wp-content/uploads/2022/02/ogdf.v2022.02.zip"
-        URL_HASH "SHA256=5234b41dd8f52f5dda537794ecb26ccfeb928d8520e0c48e0f84bbc75f4b6c1e"
+        URL "https://ogdf.uos.de/wp-content/uploads/2023/09/ogdf.v2023.09.zip"
+        URL_HASH "SHA256=a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436"
         CMAKE_ARGS
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
         BUILD_COMMAND ${OGDF_BUILD_COMMAND}
