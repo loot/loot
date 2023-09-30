@@ -6,7 +6,7 @@ on:
 
 env:
   OGDF_VERSION: elderberry-202309
-  QT_VERSION: 6.5.2
+  QT_VERSION: 6.5.3
 
 jobs:
   create_release:
