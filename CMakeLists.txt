@@ -153,8 +153,8 @@ ExternalProject_Add(testing-plugins
 
 FetchContent_Declare(
     tomlplusplus
-    URL "https://github.com/marzer/tomlplusplus/archive/v3.2.0.tar.gz"
-    URL_HASH "SHA256=aeba776441df4ac32e4d4db9d835532db3f90fd530a28b74e4751a2915a55565"
+    URL "https://github.com/marzer/tomlplusplus/archive/v3.3.0.tar.gz"
+    URL_HASH "SHA256=fc1a5eb410f3c67e90e5ad1264a1386d020067cfb01b633cc8c0441789aa6cf2"
 )
 FetchContent_MakeAvailable(tomlplusplus)
 
