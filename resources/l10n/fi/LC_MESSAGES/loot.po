@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT v0.20.0\n"
+"Project-Id-Version: LOOT v0.21.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-09-16 10:01+0100\n"
-"PO-Revision-Date: 2023-09-16 13:18+0300\n"
+"POT-Creation-Date: 2023-09-29 23:37+0100\n"
+"PO-Revision-Date: 2023-09-30 13:57+0300\n"
 "Last-Translator: \n"
 "Language-Team: loot-fi@3v.fi\n"
 "Language: fi\n"
@@ -22,11 +22,11 @@ msgstr ""
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
 msgstr "\"{0}\" sisältää ehdon, jota ei voitu tarkastaa. Lisätiedot: {1}"
 
-#: src/gui/plugin_item.cpp:190
+#: src/gui/plugin_item.cpp:191
 msgid "Location"
 msgstr "Sijainti"
 
-#: src/gui/plugin_item.cpp:195
+#: src/gui/plugin_item.cpp:196
 msgid "Location {0}"
 msgstr "Sijainti {0}"
 
@@ -398,7 +398,7 @@ msgid "F&ilters"
 msgstr "&Suodattimet"
 
 #: src/gui/qt/main_window.cpp:1048 src/gui/qt/main_window.cpp:1481
-#: src/gui/qt/main_window.cpp:2088
+#: src/gui/qt/main_window.cpp:2090
 msgid "Updating and parsing masterlist..."
 msgstr "Päivitetään pääluetteloa..."
 
@@ -443,7 +443,7 @@ msgstr ""
 "Jotkin ominaisuudet eivät ole käytettävissä, kun metatietoja ollaan "
 "muokkaamassa tai järjestystä ei ole tallennettu eikä hylätty."
 
-#: src/gui/qt/main_window.cpp:1152 src/gui/qt/main_window.cpp:1970
+#: src/gui/qt/main_window.cpp:1152 src/gui/qt/main_window.cpp:1972
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -606,47 +606,47 @@ msgstr ""
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "Muokatut metatiedot on poistettu lisäosasta {0}."
 
-#: src/gui/qt/main_window.cpp:1957
+#: src/gui/qt/main_window.cpp:1958
 msgid "Version {0} (build {1})"
 msgstr "Versio {0} (koonti {1})"
 
-#: src/gui/qt/main_window.cpp:1963
+#: src/gui/qt/main_window.cpp:1964
 msgid ""
-"Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
-"Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
-"Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
-msgstr ""
-"Järjestyksen optimointi peleihin Morrowind, Oblivion, Nehrim, Skyrim, "
+"Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
-"3, Fallout: New Vegas, Fallout 4 ja Fallout 4 VR."
+"3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+msgstr ""
+"Lisäosien järjestyksen optimointi peleihin Starfield, Morrowind, Oblivion, "
+"Nehrim, Skyrim, Enderal, Skyrim Special Edition, Enderal Special Edition, "
+"Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 ja Fallout 4 VR."
 
-#: src/gui/qt/main_window.cpp:1980
+#: src/gui/qt/main_window.cpp:1982
 msgid "About LOOT"
 msgstr "Tietoja LOOTista"
 
-#: src/gui/qt/main_window.cpp:2290
+#: src/gui/qt/main_window.cpp:2292
 msgid "Identifying conflicting plugins..."
 msgstr "Haetaan ristiriidassa olevia lisäosia..."
 
-#: src/gui/qt/main_window.cpp:2435
+#: src/gui/qt/main_window.cpp:2437
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr "Automaattinen järjestäminen on peruutettu virheilmoituksen takia."
 
-#: src/gui/qt/main_window.cpp:2490
+#: src/gui/qt/main_window.cpp:2492
 msgid "No masterlist update was necessary."
 msgstr "Pääluettelon päivitystä ei tarvittu."
 
-#: src/gui/qt/main_window.cpp:2510
+#: src/gui/qt/main_window.cpp:2512
 msgid "Masterlist updated to revision {0}."
 msgstr "Pääluettelo päivitettiin versioon {0}."
 
-#: src/gui/qt/main_window.cpp:2568
+#: src/gui/qt/main_window.cpp:2571
 msgid "No masterlist updates were necessary."
 msgstr "Pääluetteloiden päivitystä ei tarvittu."
 
-#: src/gui/qt/main_window.cpp:2588
+#: src/gui/qt/main_window.cpp:2592
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -654,15 +654,11 @@ msgstr ""
 "Pääluettelot päivitettiin peleihin:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:2594
-msgid "LOOT"
-msgstr "LOOT"
-
-#: src/gui/qt/main_window.cpp:2647
+#: src/gui/qt/main_window.cpp:2654
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "LOOTista on saatavilla [uusi versio]({0})."
 
-#: src/gui/qt/main_window.cpp:2664
+#: src/gui/qt/main_window.cpp:2671
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -918,7 +914,7 @@ msgid "URL"
 msgstr "URL"
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
-#: src/gui/qt/settings/game_tab.cpp:146
+#: src/gui/qt/settings/game_tab.cpp:147
 #: src/gui/qt/settings/new_game_dialog.cpp:123
 msgid "Name"
 msgstr "Nimi"
@@ -952,37 +948,37 @@ msgstr "Bash-tagi"
 msgid "Browse..."
 msgstr "Selaa..."
 
-#: src/gui/qt/settings/game_tab.cpp:147
+#: src/gui/qt/settings/game_tab.cpp:148
 #: src/gui/qt/settings/new_game_dialog.cpp:124
 msgid "Base Game"
 msgstr "Pohjautuu peliin"
 
-#: src/gui/qt/settings/game_tab.cpp:148
+#: src/gui/qt/settings/game_tab.cpp:149
 #: src/gui/qt/settings/new_game_dialog.cpp:125
 msgid "LOOT Folder"
 msgstr "LOOTin kansio"
 
-#: src/gui/qt/settings/game_tab.cpp:149
+#: src/gui/qt/settings/game_tab.cpp:150
 msgid "Main Master Plugin"
 msgstr "Päälisäosa"
 
-#: src/gui/qt/settings/game_tab.cpp:150
+#: src/gui/qt/settings/game_tab.cpp:151
 msgid "Minimum Header Version"
 msgstr "Otsikkotietojen minimiversio"
 
-#: src/gui/qt/settings/game_tab.cpp:151
+#: src/gui/qt/settings/game_tab.cpp:152
 msgid "Masterlist Source"
 msgstr "Pääluettelon lähde"
 
-#: src/gui/qt/settings/game_tab.cpp:152
+#: src/gui/qt/settings/game_tab.cpp:153
 msgid "Install Path"
 msgstr "Asennuspolku"
 
-#: src/gui/qt/settings/game_tab.cpp:153
+#: src/gui/qt/settings/game_tab.cpp:154
 msgid "Local AppData Path"
 msgstr "Paikallisten tiedostojen sijainti"
 
-#: src/gui/qt/settings/game_tab.cpp:155
+#: src/gui/qt/settings/game_tab.cpp:156
 msgid "Delete game"
 msgstr "Poista peli"
 
@@ -1082,7 +1078,7 @@ msgstr "Luetaan ja prosessoidaan metatietoja..."
 msgid "Sorting load order..."
 msgstr "Järjestetään..."
 
-#: src/gui/state/loot_settings.cpp:657
+#: src/gui/state/loot_settings.cpp:670
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
@@ -1092,7 +1088,7 @@ msgstr ""
 "LOOTDebugLog.txt saattaa sisältää lisätietoja virheestä. Löydät sen "
 "päävalikon kautta."
 
-#: src/gui/state/loot_settings.cpp:680
+#: src/gui/state/loot_settings.cpp:693
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
@@ -1159,23 +1155,23 @@ msgstr ""
 "on asennettu, yritä käynnistää sen käynnistysohjelma ja käynnistä LOOT "
 "uudelleen."
 
-#: src/gui/state/game/game.cpp:315 src/gui/state/game/game.cpp:359
+#: src/gui/state/game/game.cpp:387 src/gui/state/game/game.cpp:431
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
 msgstr "Tämä lisäosa vaatii, että lisäosa {0} on asennettu, mutta se puuttuu."
 
-#: src/gui/state/game/game.cpp:329
+#: src/gui/state/game/game.cpp:401
 msgid "This plugin requires \"{0}\" to be active, but it is inactive."
 msgstr ""
 "Tämä lisäosa vaatii, että lisäosa {0} on käytössä, mutta se on poistettu "
 "käytöstä."
 
-#: src/gui/state/game/game.cpp:401
+#: src/gui/state/game/game.cpp:473
 msgid "This plugin is incompatible with \"{0}\", but both are present."
 msgstr ""
 "Tämä lisäosa ei ole yhteensopiva lisäosan {0} kanssa, mutta molemmat "
 "löydettiin."
 
-#: src/gui/state/game/game.cpp:448
+#: src/gui/state/game/game.cpp:520
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
@@ -1185,7 +1181,7 @@ msgstr ""
 "ongelmia pelissä ja järjestäminen epäonnistuu tämän lisäosan ollessa "
 "asennettu."
 
-#: src/gui/state/game/game.cpp:470
+#: src/gui/state/game/game.cpp:542
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
@@ -1195,9 +1191,18 @@ msgstr ""
 "arvojen ulkopuolella. Tämän lisäosan käyttäminen aiheuttaa lopullista tuhoa "
 "pelin tallennuksille."
 
+#: src/gui/state/game/game.cpp:558
+msgid ""
+"This plugin is an override plugin but adds new records. Using this plugin "
+"may cause irreversible damage to your game saves."
+msgstr ""
+"Tämä on ylikirjoittava lisäosa, mutta se sisältää uusia itsenäisiä "
+"tietueita. Sen käyttäminen voi aiheuttaa lopullista tuhoa pelin "
+"tallennuksille."
+
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/game.cpp:492
+#: src/gui/state/game/game.cpp:579
 msgid ""
 "This plugin has a header version of {0}, which is less than the game's "
 "minimum supported header version of {1}."
@@ -1205,11 +1210,11 @@ msgstr ""
 "Tämän lisäosan otsikkotietojen versio on {0}, joka on vanhempi kuin pelin "
 "vanhin tuettu versio {1}."
 
-#: src/gui/state/game/game.cpp:512
+#: src/gui/state/game/game.cpp:599
 msgid "This plugin belongs to the group \"{0}\", which does not exist."
 msgstr "Tämä lisäosa kuuluu ryhmään {0}, jota ei ole olemassa."
 
-#: src/gui/state/game/game.cpp:538
+#: src/gui/state/game/game.cpp:625
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
 "LOOT for the following Bash Tags: {0}."
@@ -1217,7 +1222,7 @@ msgstr ""
 "Tämä lisäosa sisältää BashTags-tiedoston, joka ohittaa nämä LOOTin tekemät "
 "suositukset: {0}."
 
-#: src/gui/state/game/game.cpp:636 src/gui/state/game/game.cpp:729
+#: src/gui/state/game/game.cpp:722 src/gui/state/game/game.cpp:817
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -1225,30 +1230,30 @@ msgstr ""
 "Nykyisen järjestyksen lukeminen epäonnistui. Näytetyt tiedot eivät "
 "välttämättä vastaa todellisuutta."
 
-#: src/gui/state/game/game.cpp:759
+#: src/gui/state/game/game.cpp:847
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "Vuorovaikutussilmukka löytyi lisäosien väliltä: {0} ja {1}: {2}"
 
-#: src/gui/state/game/game.cpp:773
+#: src/gui/state/game/game.cpp:861
 msgid "The group \"{0}\" does not exist."
 msgstr "Ryhmää {0} ei ole olemassa."
 
-#: src/gui/state/game/game.cpp:811
+#: src/gui/state/game/game.cpp:899
 msgid "You have not sorted your load order this session."
 msgstr "Et ole vielä tällä kerralla järjestänyt lisäosiasi."
 
-#: src/gui/state/game/game.cpp:859
+#: src/gui/state/game/game.cpp:947
 msgid ""
 "You have {0} active normal plugins but the game only supports up to {1}."
 msgstr ""
 "Sinulla on {0} aktiivista tavanomaista lisäosaa, mutta peli tukee enintään "
 "{1}."
 
-#: src/gui/state/game/game.cpp:867
+#: src/gui/state/game/game.cpp:955
 msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr "Sinulla on {0} aktiivista lisäosaa, mutta peli tukee enintään {1}."
 
-#: src/gui/state/game/game.cpp:889
+#: src/gui/state/game/game.cpp:977
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
@@ -1256,12 +1261,12 @@ msgstr ""
 "Älä käynnistä Morrowindia ilman MWSE:tä tai pelisi voi vahingoittua "
 "vakavasti."
 
-#: src/gui/state/game/game.cpp:903
+#: src/gui/state/game/game.cpp:991
 msgid "You have {0} active light plugins but the game only supports up to {1}."
 msgstr ""
 "Sinulla on {0} aktiivista kevytlisäosaa, mutta peli tukee enintään {1}."
 
-#: src/gui/state/game/game.cpp:922
+#: src/gui/state/game/game.cpp:1010
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
@@ -1273,7 +1278,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's name.
 #.
-#: src/gui/state/game/game.cpp:934
+#: src/gui/state/game/game.cpp:1022
 msgid ""
 "{0} is installed in a case-sensitive location. This may cause issues as the "
 "game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
@@ -1285,7 +1290,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's
 #. name.
-#: src/gui/state/game/game.cpp:965
+#: src/gui/state/game/game.cpp:1053
 msgid ""
 "{0}'s local application data is stored in a case-sensitive location. This "
 "may cause issues as the game, mods and LOOT may assume that filesystem paths "
@@ -1296,7 +1301,7 @@ msgstr ""
 "aiheuttaa ongelmia, kun peli, lisäosat tai LOOT eivät tiedä kirjainkoolla "
 "olevan merkitystä."
 
-#: src/gui/state/game/game.cpp:1034
+#: src/gui/state/game/game.cpp:1122
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1311,7 +1316,7 @@ msgid ""
 "which is accessible through LOOT's main menu.\n"
 "\n"
 "You can also seek support on LOOT's forum thread, which is linked to on "
-"[LOOT's website](https://loot.github.io/)."
+"[LOOT's website]({1})."
 msgstr ""
 "Metatietojen lukemisessa tapahtui virhe: {0}\n"
 "\n"
@@ -1324,11 +1329,14 @@ msgstr ""
 "löydät LOOTin päävalikon kautta, tiedostoa muokatessasi.\n"
 "\n"
 "Voit myös kysyä tukea LOOTin keskustelupalstalla, joka löytyy [LOOTin "
-"verkkosivuilta](https://loot.github.io/)."
+"verkkosivuilta]({1})."
 
-#: src/gui/state/game/helpers.cpp:161
+#: src/gui/state/game/helpers.cpp:191
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT on havainnut, että {0} on virheellinen ja jättää sen huomiotta."
+
+#~ msgid "LOOT"
+#~ msgstr "LOOT"
 
 #~ msgid "Is instance of base game"
 #~ msgstr "Ei pohjapelistä erillinen"
