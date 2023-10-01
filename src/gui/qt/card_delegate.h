@@ -100,6 +100,7 @@ public:
 
   void setIcons();
   void refreshMessages();
+  void refreshStyling();
 
   void paint(QPainter* painter,
              const QStyleOptionViewItem& option,

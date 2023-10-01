@@ -333,6 +333,14 @@ void CardDelegate::refreshMessages() {
   pluginCard->refreshMessages();
 }
 
+void CardDelegate::refreshStyling() {
+  generalInfoCard->setVisible(true);
+  generalInfoCard->setVisible(false);
+
+  pluginCard->setVisible(true);
+  pluginCard->setVisible(false);
+}
+
 void CardDelegate::paint(QPainter* painter,
                          const QStyleOptionViewItem& option,
                          const QModelIndex& index) const {
@@ -364,9 +372,7 @@ void CardDelegate::paint(QPainter* painter,
 
   widget->setFixedSize(sizeHint);
 
-  widget->setHidden(false);
   widget->render(painter, QPoint(), QRegion(), QWidget::DrawChildren);
-  widget->setHidden(true);
 
   painter->restore();
 }

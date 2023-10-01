@@ -229,6 +229,15 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
   setupUi();
   refreshGamesDropdown();
+
+  qApp->connect(qApp,
+                &QGuiApplication::applicationStateChanged,
+                this,
+                [this](Qt::ApplicationState state) {
+                  const auto cardDelegate = qobject_cast<CardDelegate*>(
+                      this->pluginCardsView->itemDelegate());
+                  cardDelegate->refreshStyling();
+                });
 }
 
 void MainWindow::initialise() {
@@ -324,6 +333,10 @@ void MainWindow::applyTheme() {
     qApp->setStyleSheet(styleSheet.value());
 
     qApp->style()->polish(qApp);
+
+    const auto cardDelegate =
+        qobject_cast<CardDelegate*>(pluginCardsView->itemDelegate());
+    cardDelegate->refreshStyling();
   }
 }
 
