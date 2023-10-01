@@ -71,6 +71,7 @@ public:
   static const std::map<std::string, GameId> GAME_IDS_BY_STRING;
 signals:
   void gameSettingsDeleted();
+  void gameNameChanged(const QString &name);
 
 private:
   QLabel *nameLabel{new QLabel(this)};
@@ -97,6 +98,7 @@ private:
 
 private slots:
   void on_deleteGameButton_clicked();
+  void on_nameInput_textEdited(const QString &text);
 };
 }
 #endif

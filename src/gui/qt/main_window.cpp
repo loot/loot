@@ -228,19 +228,7 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
   qRegisterMetaType<std::string>("std::string");
 
   setupUi();
-
-  auto installedGames = state.GetInstalledGameFolderNames();
-
-  for (const auto& gameSettings : state.getSettings().getGameSettings()) {
-    auto installedGame = std::find(installedGames.cbegin(),
-                                   installedGames.cend(),
-                                   gameSettings.FolderName());
-
-    if (installedGame != installedGames.cend()) {
-      gameComboBox->addItem(QString::fromStdString(gameSettings.Name()),
-                            QString::fromStdString(gameSettings.FolderName()));
-    }
-  }
+  refreshGamesDropdown();
 }
 
 void MainWindow::initialise() {
@@ -577,6 +565,7 @@ void MainWindow::setupToolBar() {
   addToolBar(Qt::TopToolBarArea, toolBar);
 
   gameComboBox->setObjectName("gameComboBox");
+  gameComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 
   toolBar->addWidget(gameComboBox);
 
@@ -1457,6 +1446,28 @@ void MainWindow::checkForAmbiguousLoadOrder() {
   actionFixAmbiguousLoadOrder->setEnabled(true);
 }
 
+void MainWindow::refreshGamesDropdown() {
+  const auto installedGames = state.GetInstalledGameFolderNames();
+
+  gameComboBox->clear();
+
+  for (const auto& gameSettings : state.getSettings().getGameSettings()) {
+    auto installedGame = std::find(installedGames.cbegin(),
+                                   installedGames.cend(),
+                                   gameSettings.FolderName());
+
+    if (installedGame != installedGames.cend()) {
+      gameComboBox->addItem(QString::fromStdString(gameSettings.Name()),
+                            QString::fromStdString(gameSettings.FolderName()));
+    }
+  }
+
+  if (state.HasCurrentGame()) {
+    gameComboBox->setCurrentText(
+        QString::fromStdString(state.GetCurrentGame().GetSettings().Name()));
+  }
+}
+
 void MainWindow::on_actionSettings_triggered() {
   try {
     auto currentGameFolder =
@@ -2314,6 +2325,9 @@ void MainWindow::on_settingsDialog_accepted() {
     settingsDialog->recordInputValues(state);
 
     state.getSettings().save(state.getSettingsPath());
+
+    // Update the games dropdown in case names have changed.
+    refreshGamesDropdown();
 
     if (state.getSettings().getTheme() != currentTheme) {
       applyTheme();

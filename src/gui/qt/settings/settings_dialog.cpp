@@ -125,6 +125,10 @@ void SettingsDialog::addGameTab(const GameSettings& settings,
           &GameTab::gameSettingsDeleted,
           this,
           &SettingsDialog::onGameSettingsDeleted);
+  connect(gameTab,
+          &GameTab::gameNameChanged,
+          this,
+          &SettingsDialog::onGameNameChanged);
 }
 
 void SettingsDialog::removeTab(int index) {
@@ -194,6 +198,16 @@ void SettingsDialog::onGameSettingsDeleted() {
 
   if (index > -1) {
     removeTab(index);
+  }
+}
+
+void SettingsDialog::onGameNameChanged(const QString& name) {
+  const auto gameTab = qobject_cast<QWidget*>(sender());
+  const auto index = stackedWidget->indexOf(gameTab);
+
+  if (index > -1) {
+    const auto model = listWidget->model();
+    model->setData(model->index(index, 0), name, Qt::DisplayRole);
   }
 }
 }

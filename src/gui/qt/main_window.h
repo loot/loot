@@ -241,6 +241,8 @@ private:
 
   void checkForAmbiguousLoadOrder();
 
+  void refreshGamesDropdown();
+
 private slots:
   void on_actionSettings_triggered();
   void on_actionUpdateMasterlists_triggered();

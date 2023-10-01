@@ -123,6 +123,8 @@ GameSettings GameTab::getGameSettings() const {
 
 void GameTab::setupUi() {
   minimumHeaderVersionSpinBox->setSingleStep(0.01);
+
+  nameInput->setObjectName("nameInput");
   deleteGameButton->setObjectName("deleteGameButton");
 
   auto generalLayout = new QFormLayout(this);
@@ -181,7 +183,6 @@ void GameTab::initialiseInputs(const GameSettings& settings,
       QString::fromStdString(ToString(settings.Id())));
   baseGameComboBox->setCurrentIndex(baseGameIndex);
 
-  nameInput->setEnabled(false);
   baseGameComboBox->setEnabled(false);
   lootFolderInput->setEnabled(false);
 
@@ -189,4 +190,8 @@ void GameTab::initialiseInputs(const GameSettings& settings,
 }
 
 void GameTab::on_deleteGameButton_clicked() { emit gameSettingsDeleted(); }
+
+void GameTab::on_nameInput_textEdited(const QString& text) {
+  emit gameNameChanged(text);
+}
 }
