@@ -34,7 +34,7 @@ jobs:
           sudo apt-get install -y --no-upgrade gettext
 
       - name: Run pre-commit hook script
-        run: ./scripts/git/pre-commit
+        run: ./scripts/git/hooks/pre-commit
 
       - name: Check if any changes were staged
         run: |
