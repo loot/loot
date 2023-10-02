@@ -57,6 +57,31 @@
 #include "gui/query/types/sort_plugins_query.h"
 #include "gui/version.h"
 
+namespace {
+using loot::GameId;
+using loot::LootState;
+using loot::translate;
+
+void showAmbiguousLoadOrderSetWarning(QWidget* parent, const LootState& state) {
+  const auto maybeSTestFile =
+      state.GetCurrentGame().GetSettings().Id() == GameId::fo4 ||
+      state.GetCurrentGame().GetSettings().Id() == GameId::fo4vr ||
+      state.GetCurrentGame().GetSettings().Id() == GameId::starfield;
+
+  const auto message =
+      maybeSTestFile
+          ? translate(
+                "LOOT could not unambiguously set the load order. "
+                "This may be due to the presence of one or more sTestFile "
+                "properties in the game's ini files. Remove all such "
+                "properties and then restart LOOT.")
+          : translate("LOOT could not unambiguously set the load order.");
+
+  QMessageBox::warning(
+      parent, translate("Ambiguous load order detected"), message);
+}
+}
+
 namespace loot {
 std::vector<std::string> GetGroupNames(
     const std::vector<Group>& masterlistGroups,
@@ -1637,22 +1662,7 @@ void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
         translate("The load order displayed by LOOT has been set."));
 
     if (state.GetCurrentGame().IsLoadOrderAmbiguous()) {
-      const auto maybeSTestFile =
-          state.GetCurrentGame().GetSettings().Id() == GameId::fo4 ||
-          state.GetCurrentGame().GetSettings().Id() == GameId::fo4vr ||
-          state.GetCurrentGame().GetSettings().Id() == GameId::starfield;
-      const auto message =
-          maybeSTestFile
-              ? translate(
-                    "LOOT was unable to unambiguously set the load order. "
-                    "This may be due to an sTestFile property in one of the "
-                    "game's ini files being used to activate a plugin. If such "
-                    "properties are defined, remove them then relaunch LOOT.")
-              : translate(
-                    "LOOT was unable to unambiguously set the load order.");
-
-      QMessageBox::warning(
-          this, translate("Ambiguous load order detected"), message);
+      showAmbiguousLoadOrderSetWarning(this, state);
     } else {
       actionFixAmbiguousLoadOrder->setEnabled(false);
     }
@@ -2082,6 +2092,12 @@ void MainWindow::on_actionApplySort_triggered() {
       query.executeLogic();
 
       exitSortingState();
+
+      if (state.GetCurrentGame().IsLoadOrderAmbiguous()) {
+        actionFixAmbiguousLoadOrder->setEnabled(true);
+
+        showAmbiguousLoadOrderSetWarning(this, state);
+      }
     } catch (const std::exception& e) {
       handleQueryException(query, e);
     }
