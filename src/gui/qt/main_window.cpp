@@ -1636,7 +1636,26 @@ void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
     showNotification(
         translate("The load order displayed by LOOT has been set."));
 
-    actionFixAmbiguousLoadOrder->setEnabled(false);
+    if (state.GetCurrentGame().IsLoadOrderAmbiguous()) {
+      const auto maybeSTestFile =
+          state.GetCurrentGame().GetSettings().Id() == GameId::fo4 ||
+          state.GetCurrentGame().GetSettings().Id() == GameId::fo4vr ||
+          state.GetCurrentGame().GetSettings().Id() == GameId::starfield;
+      const auto message =
+          maybeSTestFile
+              ? translate(
+                    "LOOT was unable to unambiguously set the load order. "
+                    "This may be due to an sTestFile property in one of the "
+                    "game's ini files being used to activate a plugin. If such "
+                    "properties are defined, remove them then relaunch LOOT.")
+              : translate(
+                    "LOOT was unable to unambiguously set the load order.");
+
+      QMessageBox::warning(
+          this, translate("Ambiguous load order detected"), message);
+    } else {
+      actionFixAmbiguousLoadOrder->setEnabled(false);
+    }
   } catch (const std::exception& e) {
     handleException(e);
   }
