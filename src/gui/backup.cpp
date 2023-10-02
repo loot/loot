@@ -42,8 +42,7 @@ std::filesystem::path compressDirectory(const std::filesystem::path& dir) {
   auto archivePathString = archivePath.u8string();
   auto rootPathString = dir.u8string();
 
-  void* zipWriter = nullptr;
-  mz_zip_writer_create(&zipWriter);
+  auto zipWriter = mz_zip_writer_create();
 
   mz_zip_writer_set_compress_method(zipWriter, MZ_COMPRESS_METHOD_DEFLATE);
 

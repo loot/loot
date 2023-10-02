@@ -46,21 +46,21 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost 1.77 REQUIRED COMPONENTS locale)
+find_package(Boost REQUIRED COMPONENTS locale)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(ICU 71.1 REQUIRED COMPONENTS data uc i18n)
     find_package(TBB REQUIRED)
 endif()
 
-find_package(Qt6 6.2 COMPONENTS Widgets Network Test REQUIRED)
+find_package(Qt6 6.5 COMPONENTS Widgets Network Test REQUIRED)
 
 find_package(OGDF CONFIG)
 
 ExternalProject_Add(GTest
     PREFIX "external"
-    URL "https://github.com/google/googletest/archive/release-1.12.1.tar.gz"
-    URL_HASH "SHA256=81964fe578e9bd7c94dfdb09c8e4d6e6759e19967e397dbea48d1c10e45d0df2"
+    URL "https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz"
+    URL_HASH "SHA256=8ad598c73ad796e0d8280b082cebd82a630d73e73cd3c70057938a6501bba5d7"
     CMAKE_ARGS
         -Dgtest_force_shared_crt=ON
         -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
@@ -105,8 +105,8 @@ endif()
 
 ExternalProject_Add(zlib
     PREFIX "external"
-    URL "https://github.com/madler/zlib/archive/refs/tags/v1.2.13.tar.gz"
-    URL_HASH "SHA256=1525952a0a567581792613a9723333d7f8cc20b87a81f920fb8bc7e3f2251428"
+    URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.tar.gz"
+    URL_HASH "SHA256=b5b06d60ce49c8ba700e0ba517fa07de80b5d4628a037f4be8ad16955be7a7c0"
     CMAKE_ARGS
         -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
     INSTALL_COMMAND ""
@@ -118,8 +118,8 @@ set(ZLIB_LIBRARY
 
 ExternalProject_Add(minizip-ng
     PREFIX "external"
-    URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/3.0.8.tar.gz"
-    URL_HASH "SHA256=27cc2f62cd02d79b71b346fc6ace02728385f8ba9c6b5f124062b0790a04629a"
+    URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz"
+    URL_HASH "SHA256=63e47a2b4dbac0da501f43f4da74f118dfb3ef0dee0ffbbe89428271002260f8"
     CMAKE_ARGS
         -DMZ_ZLIB=ON
         -DMZ_BZIP2=OFF
@@ -153,15 +153,15 @@ ExternalProject_Add(testing-plugins
 
 FetchContent_Declare(
     tomlplusplus
-    URL "https://github.com/marzer/tomlplusplus/archive/v3.2.0.tar.gz"
-    URL_HASH "SHA256=aeba776441df4ac32e4d4db9d835532db3f90fd530a28b74e4751a2915a55565"
+    URL "https://github.com/marzer/tomlplusplus/archive/v3.3.0.tar.gz"
+    URL_HASH "SHA256=fc1a5eb410f3c67e90e5ad1264a1386d020067cfb01b633cc8c0441789aa6cf2"
 )
 FetchContent_MakeAvailable(tomlplusplus)
 
 ExternalProject_Add(spdlog
     PREFIX "external"
-    URL "https://github.com/gabime/spdlog/archive/v1.11.0.tar.gz"
-    URL_HASH "SHA256=ca5cae8d6cac15dae0ec63b21d6ad3530070650f68076f3a4a862ca293a858bb"
+    URL "https://github.com/gabime/spdlog/archive/v1.12.0.tar.gz"
+    URL_HASH "SHA256=4dccf2d10f410c1e2feaff89966bfc49a1abb29ef6f08246335b110e001e09a9"
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
@@ -192,8 +192,8 @@ else()
 
     ExternalProject_Add(OGDF
         PREFIX "external"
-        URL "https://ogdf.uos.de/wp-content/uploads/2022/02/ogdf.v2022.02.zip"
-        URL_HASH "SHA256=5234b41dd8f52f5dda537794ecb26ccfeb928d8520e0c48e0f84bbc75f4b6c1e"
+        URL "https://ogdf.uos.de/wp-content/uploads/2023/09/ogdf.v2023.09.zip"
+        URL_HASH "SHA256=a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436"
         CMAKE_ARGS
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
         BUILD_COMMAND ${OGDF_BUILD_COMMAND}
@@ -644,21 +644,21 @@ else()
         libicuuc.so.56
         libicuuc.so.56.1
         libQt6Core.so.6
-        libQt6Core.so.6.5.2
+        libQt6Core.so.6.5.3
         libQt6DBus.so.6
-        libQt6DBus.so.6.5.2
+        libQt6DBus.so.6.5.3
         libQt6Gui.so.6
-        libQt6Gui.so.6.5.2
+        libQt6Gui.so.6.5.3
         libQt6Network.so.6
-        libQt6Network.so.6.5.2
+        libQt6Network.so.6.5.3
         libQt6Test.so.6
-        libQt6Test.so.6.5.2
+        libQt6Test.so.6.5.3
         libQt6Widgets.so.6
-        libQt6Widgets.so.6.5.2
+        libQt6Widgets.so.6.5.3
         libQt6XcbQpa.so.6
-        libQt6XcbQpa.so.6.5.2
+        libQt6XcbQpa.so.6.5.3
         libQt6OpenGL.so.6
-        libQt6OpenGL.so.6.5.2)
+        libQt6OpenGL.so.6.5.3)
 
     foreach(TEST_RESOURCE ${LOOT_QT_TEST_RESOURCES})
         add_custom_command(TARGET loot_gui_tests POST_BUILD

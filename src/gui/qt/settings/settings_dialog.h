@@ -69,6 +69,7 @@ private slots:
   void on_addGameButton_clicked();
 
   void onGameSettingsDeleted();
+  void onGameNameChanged(const QString &name);
 };
 }
 
