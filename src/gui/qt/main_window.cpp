@@ -233,10 +233,12 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
   qApp->connect(qApp,
                 &QGuiApplication::applicationStateChanged,
                 this,
-                [this](Qt::ApplicationState state) {
+                [this](Qt::ApplicationState) {
                   const auto cardDelegate = qobject_cast<CardDelegate*>(
                       this->pluginCardsView->itemDelegate());
-                  cardDelegate->refreshStyling();
+                  if (cardDelegate != nullptr) {
+                    cardDelegate->refreshStyling();
+                  }
                 });
 }
 
