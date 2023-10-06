@@ -65,7 +65,7 @@
   </screenshots>
 
   <releases>
-    <release version="0.22.0" date="">
+    <release version="0.22.0" date="2023-10-07">
       <description>
         <ul>
           <li>Added support for Starfield</li>
