@@ -3,7 +3,7 @@ Version=1.0
 Type=Application
 
 Name=LOOT
-Comment=Modding utility for Starfield and most Elder Scrolls and Fallout games
+Comment=Modding utility for Starfield and some Elder Scrolls and Fallout games
 Categories=Game;Qt;
 
 Icon=io.github.loot.loot
