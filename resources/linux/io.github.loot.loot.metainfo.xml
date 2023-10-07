@@ -11,7 +11,7 @@
   <url type="contribute">https://github.com/loot/loot/blob/master/CONTRIBUTING.md</url>
 
   <name>LOOT</name>
-  <summary>Modding utility for Starfield and some Elder Scrolls and Fallout games</summary>
+  <summary>Modding utility for Starfield and most Elder Scrolls and Fallout games</summary>
 
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
