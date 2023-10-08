@@ -76,6 +76,19 @@ protected:
     return game;
   }
 
+  std::optional<std::filesystem::path> GetCCCPath() {
+    switch (GetParam()) {
+      case GameId::tes5se:
+        return dataPath.parent_path() / "Skyrim.ccc";
+      case GameId::fo4:
+        return dataPath.parent_path() / "Fallout4.ccc";
+      case GameId::starfield:
+        return dataPath.parent_path() / "Starfield.ccc";
+      default:
+        return std::nullopt;
+    }
+  }
+
   std::vector<std::string> loadOrderToSet_;
   const std::string loadOrderBackupFile0;
   const std::string loadOrderBackupFile1;
@@ -708,6 +721,56 @@ TEST_P(
     EXPECT_EQ(time + i * interval,
               std::filesystem::last_write_time(pluginPath));
   }
+}
+
+TEST_P(GameTest,
+       loadCreationClubPluginNamesShouldClearCCPluginSetIfCCCFileDoesNotExist) {
+  if (GetParam() != GameId::tes5se && GetParam() != GameId::fo4 &&
+      GetParam() != GameId::starfield) {
+    return;
+  }
+
+  Game game = CreateInitialisedGame();
+
+  const auto pluginName = "ccPlugin.esp";
+
+  const auto cccPath = GetCCCPath().value();
+  std::ofstream out(cccPath);
+  out << pluginName;
+  out.close();
+
+  game.LoadCreationClubPluginNames();
+
+  EXPECT_TRUE(game.IsCreationClubPlugin(pluginName));
+
+  game.LoadCreationClubPluginNames();
+
+  std::filesystem::remove(cccPath);
+
+  game.LoadCreationClubPluginNames();
+
+  EXPECT_FALSE(game.IsCreationClubPlugin(pluginName));
+}
+
+TEST_P(GameTest,
+       loadCreationClubPluginNamesShouldTrimCRLFLineEndingsFromCCCFileLines) {
+  if (GetParam() != GameId::tes5se && GetParam() != GameId::fo4 &&
+      GetParam() != GameId::starfield) {
+    return;
+  }
+
+  Game game = CreateInitialisedGame();
+
+  const auto pluginName = "ccPlugin.esp";
+
+  const auto cccPath = GetCCCPath().value();
+  std::ofstream out(cccPath, std::ios::out | std::ios::binary);
+  out << pluginName << "\r\n";
+  out.close();
+
+  game.LoadCreationClubPluginNames();
+
+  EXPECT_TRUE(game.IsCreationClubPlugin(pluginName));
 }
 
 TEST_P(

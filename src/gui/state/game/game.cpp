@@ -46,6 +46,7 @@
 #include <windows.h>
 #endif
 
+#include <spdlog/fmt/bundled/ranges.h>
 #include <spdlog/fmt/fmt.h>
 
 #include <boost/algorithm/string.hpp>
@@ -685,26 +686,50 @@ void Game::RedatePlugins() {
 }
 
 void Game::LoadCreationClubPluginNames() {
+  const auto logger = getLogger();
+
   creationClubPlugins_.clear();
 
   const auto cccFilename = GetCCCFilename(settings_.Type());
 
   if (!cccFilename.has_value()) {
+    if (logger) {
+      logger->debug(
+          "The current game does not have a CCC file, the Creation Club filter "
+          "will have no effect.");
+    }
     return;
   }
 
   const auto cccFilePath = settings_.GamePath() / cccFilename.value();
 
   if (!fs::exists(cccFilePath)) {
+    if (logger) {
+      logger->debug(
+          "The CCC file at {} does not exist, the Creation Club filter "
+          "will have no effect.",
+          cccFilePath.u8string());
+    }
     return;
   }
 
   std::ifstream in(cccFilePath);
 
+  std::vector<std::string> lines;
   for (std::string line; std::getline(in, line);) {
     if (!line.empty()) {
+      if (line.back() == '\r') {
+        line.pop_back();
+      }
       creationClubPlugins_.insert(Filename(line));
+      lines.push_back(line);
     }
+  }
+
+  if (logger) {
+    logger->debug(
+        "The following plugins will be hidden by the Creation Club filter: {}",
+        lines);
   }
 }
 
@@ -1288,8 +1313,8 @@ void Game::AppendMessages(std::vector<SourcedMessage> messages) {
   }
 }
 
-bool Game::IsCreationClubPlugin(const PluginInterface& plugin) const {
-  return creationClubPlugins_.count(Filename(plugin.GetName())) != 0;
+bool Game::IsCreationClubPlugin(const std::string& name) const {
+  return creationClubPlugins_.count(Filename(name)) != 0;
 }
 
 std::filesystem::path Game::ResolveGameFilePath(
