@@ -63,7 +63,12 @@ protected:
       defaultGameSettings(GameSettings(GetParam(), u8"non\u00C1sciiFolder")
                               .SetMinimumHeaderVersion(0.0f)
                               .SetGamePath(dataPath.parent_path())
-                              .SetGameLocalPath(localPath)) {}
+                              .SetGameLocalPath(localPath)) {
+    // Do some preliminary locale / UTF-8 support setup, as GetMessages()
+    // indirectly calls boost::locale::to_lower().
+    boost::locale::generator gen;
+    std::locale::global(gen("en.UTF-8"));
+  }
 
   Game CreateInitialisedGame() {
     Game game(defaultGameSettings, lootDataPath, "");
