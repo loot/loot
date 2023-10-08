@@ -672,7 +672,6 @@ TEST_P(
   using std::filesystem::u8path;
 
   Game game = CreateInitialisedGame();
-  game.Init();
   game.LoadAllInstalledPlugins(true);
 
   std::vector<std::pair<std::string, bool>> loadOrder = getInitialLoadOrder();
@@ -710,7 +709,6 @@ TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
   Game game = CreateInitialisedGame();
-  ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(true));
   EXPECT_EQ(12, game.GetPlugins().size());
@@ -728,7 +726,6 @@ TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
   Game game = CreateInitialisedGame();
-  ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
   EXPECT_EQ(12, game.GetPlugins().size());
@@ -745,7 +742,6 @@ TEST_P(
 TEST_P(GameTest,
        loadAllInstalledPluginsShouldNotGenerateWarningsForGhostedPlugins) {
   Game game = CreateInitialisedGame();
-  ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
@@ -807,8 +803,7 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
 
 TEST_P(GameTest,
        GetActiveLoadOrderIndexShouldReturnNulloptForAPluginThatIsNotActive) {
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
   game.LoadAllInstalledPlugins(true);
 
   auto index = game.GetActiveLoadOrderIndex(*game.GetPlugin(blankEsp),
@@ -819,8 +814,7 @@ TEST_P(GameTest,
 TEST_P(
     GameTest,
     GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingInactivePlugins) {
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
   game.LoadAllInstalledPlugins(true);
 
   auto index = game.GetActiveLoadOrderIndex(*game.GetPlugin(masterFile),
@@ -839,8 +833,7 @@ TEST_P(
 TEST_P(
     GameTest,
     GetActiveLoadOrderIndexShouldCaseInsensitivelyCompareNonAsciiPluginNamesCorrectly) {
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
   game.LoadAllInstalledPlugins(true);
 
   auto index = game.GetActiveLoadOrderIndex(*game.GetPlugin(nonAsciiEsp),
@@ -850,8 +843,7 @@ TEST_P(
 
 TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
 
   auto lootGamePath =
       lootDataPath / "games" / u8path(game.GetSettings().FolderName());
@@ -875,8 +867,7 @@ TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
 
 TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
   game.LoadAllInstalledPlugins(true);
 
   auto lootGamePath =
@@ -901,8 +892,7 @@ TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
 
 TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
   game.LoadAllInstalledPlugins(true);
 
   auto lootGamePath =
@@ -938,8 +928,7 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
 
 TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
 
   auto lootGamePath =
       lootDataPath / "games" / u8path(game.GetSettings().FolderName());
