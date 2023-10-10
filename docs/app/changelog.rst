@@ -4,6 +4,22 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.22.1 - Unreleased
+===================
+
+Fixed
+-----
+
+- The "Hide Creation Club plugins" filter had no effect on Linux.
+
+Changed
+-------
+
+- The new plugin type and plugin header flag introduced by Starfield that was
+  previously referred to as the "override" plugin type and flag is now
+  referred to as the "overlay" plugin type and flag for consistency with xEdit,
+  Wrye Bash and Mod Organizer 2.
+
 0.22.0 - 2023-10-07
 ===================
 

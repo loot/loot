@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-10-08 16:19+0100\n"
+"POT-Creation-Date: 2023-10-10 22:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1139,8 +1139,8 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:559
 msgid ""
-"This plugin is an override plugin but adds new records. Using this plugin "
-"may cause irreversible damage to your game saves."
+"This plugin is an overlay plugin but adds new records. Using this plugin may "
+"cause irreversible damage to your game saves."
 msgstr ""
 
 #. translators: A header is the part of a file that stores data

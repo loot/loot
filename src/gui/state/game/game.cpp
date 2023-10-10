@@ -548,7 +548,7 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
   if (plugin.IsOverridePlugin() && !plugin.IsValidAsOverridePlugin()) {
     if (logger) {
       logger->error(
-          "\"{}\" is an override plugin but adds new records. Using this "
+          "\"{}\" is an overlay plugin but adds new records. Using this "
           "plugin may cause irreversible damage to your game saves.",
           plugin.GetName());
     }
@@ -556,7 +556,7 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
         MessageType::error,
         MessageSource::invalidOverridePlugin,
         boost::locale::translate(
-            "This plugin is an override plugin but adds new records. Using "
+            "This plugin is an overlay plugin but adds new records. Using "
             "this plugin may cause irreversible damage to your game saves.")));
   }
 
