@@ -49,7 +49,7 @@ public:
   void setMessageCounts(size_t hidden, size_t total);
   void setPluginCounts(size_t hidden, size_t total);
 
-  void resetConflictsAndGroupsFilters();
+  void resetOverlapAndGroupsFilters();
 
   void setFilterStates(const LootSettings::Filters &filters);
   LootSettings::Filters getFilterSettings() const;
@@ -59,12 +59,12 @@ public:
 
 signals:
   void pluginFilterChanged(PluginFiltersState state);
-  void conflictsFilterChanged(std::optional<std::string> targetPluginName);
+  void overlapFilterChanged(std::optional<std::string> targetPluginName);
   void cardContentFilterChanged(CardContentFiltersState state);
 
 private:
-  QLabel *conflictingPluginsFilterLabel{new QLabel(this)};
-  QComboBox *conflictingPluginsFilter{new QComboBox(this)};
+  QLabel *overlapFilterLabel{new QLabel(this)};
+  QComboBox *overlapFilter{new QComboBox(this)};
   QLabel *groupPluginsFilterLabel{new QLabel(this)};
   QComboBox *groupPluginsFilter{new QComboBox(this)};
   QLabel *contentFilterLabel{new QLabel(this)};
@@ -100,7 +100,7 @@ private:
                                const std::vector<std::string> &items);
 
 private slots:
-  void on_conflictingPluginsFilter_activated();
+  void on_overlapFilter_activated();
   void on_groupPluginsFilter_activated();
   void on_contentFilter_textChanged();
   void on_contentFilter_textEdited();

@@ -38,7 +38,7 @@ public:
 
   void setFiltersState(PluginFiltersState&& state);
   void setFiltersState(PluginFiltersState&& state,
-                       std::vector<std::string>&& conflictingPluginNames);
+                       std::vector<std::string>&& overlappingPluginNames);
 
   void setSearchResults(QModelIndexList results);
   void clearSearchResults();
@@ -49,7 +49,7 @@ protected:
 
 private:
   PluginFiltersState filterState;
-  std::vector<std::string> conflictingPluginNames;
+  std::vector<std::string> overlappingPluginNames;
 };
 }
 

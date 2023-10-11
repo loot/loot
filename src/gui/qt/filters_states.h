@@ -52,7 +52,7 @@ struct PluginFiltersState {
   bool hideMessagelessPlugins{false};
   bool hideCreationClubPlugins{false};
   bool showOnlyEmptyPlugins{false};
-  std::optional<std::string> conflictsPluginName;
+  std::optional<std::string> overlapPluginName;
   std::optional<std::string> groupName;
   std::variant<std::monostate, std::string, std::regex> content;
 };

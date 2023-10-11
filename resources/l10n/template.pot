@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-10-10 22:31+0100\n"
+"POT-Creation-Date: 2023-10-11 21:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,7 +67,7 @@ msgid "{0} found {1}."
 msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:244
-msgid "Show only conflicting plugins for"
+msgid "Show only overlapping plugins for"
 msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:245
@@ -433,7 +433,7 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1162
 msgid ""
-"CRCs are only displayed after plugins have been loaded, either by conflict "
+"CRCs are only displayed after plugins have been loaded, either by overlap "
 "filtering, or by sorting."
 msgstr ""
 
@@ -604,7 +604,7 @@ msgid "About LOOT"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:2353
-msgid "Identifying conflicting plugins..."
+msgid "Identifying overlapping plugins..."
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:2501
