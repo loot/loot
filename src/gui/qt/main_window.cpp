@@ -52,8 +52,8 @@
 #include "gui/query/types/change_game_query.h"
 #include "gui/query/types/clear_all_metadata_query.h"
 #include "gui/query/types/clear_plugin_metadata_query.h"
-#include "gui/query/types/get_overlapping_plugins_query.h"
 #include "gui/query/types/get_game_data_query.h"
+#include "gui/query/types/get_overlapping_plugins_query.h"
 #include "gui/query/types/sort_plugins_query.h"
 #include "gui/version.h"
 
@@ -810,7 +810,8 @@ void MainWindow::setIcons() {
 
 void MainWindow::enableGameActions() {
   menuGame->setEnabled(true);
-  actionSort->setEnabled(true);
+  actionSort->setEnabled(state.GetCurrentGame().GetSettings().Id() !=
+                         GameId::starfield);
   actionUpdateMasterlist->setEnabled(true);
   actionSearch->setEnabled(true);
 
@@ -862,7 +863,8 @@ void MainWindow::exitEditingState() {
   actionClearMetadata->setEnabled(true);
   gameComboBox->setEnabled(true);
   actionUpdateMasterlist->setEnabled(true);
-  actionSort->setEnabled(true);
+  actionSort->setEnabled(state.GetCurrentGame().GetSettings().Id() !=
+                         GameId::starfield);
 
   sidebarPluginsView->verticalHeader()->setDefaultSectionSize(
       getSidebarRowHeight(false));
