@@ -23,16 +23,16 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
-#define LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
+#ifndef LOOT_GUI_QUERY_GET_OVERLAPPING_PLUGINS_QUERY
+#define LOOT_GUI_QUERY_GET_OVERLAPPING_PLUGINS_QUERY
 
 #include "gui/query/query.h"
 #include "gui/state/game/game.h"
 
 namespace loot {
-class GetConflictingPluginsQuery : public Query {
+class GetOverlappingPluginsQuery : public Query {
 public:
-  GetConflictingPluginsQuery(gui::Game& game,
+  GetOverlappingPluginsQuery(gui::Game& game,
                              std::string language,
                              std::string pluginName) :
       game_(game), language_(language), pluginName_(pluginName) {}
@@ -40,7 +40,7 @@ public:
   QueryResult executeLogic() override {
     auto logger = getLogger();
     if (logger) {
-      logger->debug("Searching for plugins that conflict with {}", pluginName_);
+      logger->debug("Searching for plugins that overlap with {}", pluginName_);
     }
 
     // Checking for FormID overlap will only work if the plugins have been
@@ -69,9 +69,9 @@ private:
                      bool isActive) {
           const auto pluginItem = PluginItem(
               *otherPlugin, game_, loadOrderIndex, isActive, language_);
-          const auto conflict = plugin->DoRecordsOverlap(*otherPlugin);
+          const auto overlap = plugin->DoRecordsOverlap(*otherPlugin);
 
-          return std::make_pair(pluginItem, conflict);
+          return std::make_pair(pluginItem, overlap);
         };
 
     return MapFromLoadOrderData(game_, game_.GetLoadOrder(), mapper);

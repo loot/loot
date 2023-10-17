@@ -63,12 +63,30 @@ protected:
       defaultGameSettings(GameSettings(GetParam(), u8"non\u00C1sciiFolder")
                               .SetMinimumHeaderVersion(0.0f)
                               .SetGamePath(dataPath.parent_path())
-                              .SetGameLocalPath(localPath)) {}
+                              .SetGameLocalPath(localPath)) {
+    // Do some preliminary locale / UTF-8 support setup, as GetMessages()
+    // indirectly calls boost::locale::to_lower().
+    boost::locale::generator gen;
+    std::locale::global(gen("en.UTF-8"));
+  }
 
   Game CreateInitialisedGame() {
     Game game(defaultGameSettings, lootDataPath, "");
     game.Init();
     return game;
+  }
+
+  std::optional<std::filesystem::path> GetCCCPath() {
+    switch (GetParam()) {
+      case GameId::tes5se:
+        return dataPath.parent_path() / "Skyrim.ccc";
+      case GameId::fo4:
+        return dataPath.parent_path() / "Fallout4.ccc";
+      case GameId::starfield:
+        return dataPath.parent_path() / "Starfield.ccc";
+      default:
+        return std::nullopt;
+    }
   }
 
   std::vector<std::string> loadOrderToSet_;
@@ -672,7 +690,6 @@ TEST_P(
   using std::filesystem::u8path;
 
   Game game = CreateInitialisedGame();
-  game.Init();
   game.LoadAllInstalledPlugins(true);
 
   std::vector<std::pair<std::string, bool>> loadOrder = getInitialLoadOrder();
@@ -706,11 +723,60 @@ TEST_P(
   }
 }
 
+TEST_P(GameTest,
+       loadCreationClubPluginNamesShouldClearCCPluginSetIfCCCFileDoesNotExist) {
+  if (GetParam() != GameId::tes5se && GetParam() != GameId::fo4 &&
+      GetParam() != GameId::starfield) {
+    return;
+  }
+
+  Game game = CreateInitialisedGame();
+
+  const auto pluginName = "ccPlugin.esp";
+
+  const auto cccPath = GetCCCPath().value();
+  std::ofstream out(cccPath);
+  out << pluginName;
+  out.close();
+
+  game.LoadCreationClubPluginNames();
+
+  EXPECT_TRUE(game.IsCreationClubPlugin(pluginName));
+
+  game.LoadCreationClubPluginNames();
+
+  std::filesystem::remove(cccPath);
+
+  game.LoadCreationClubPluginNames();
+
+  EXPECT_FALSE(game.IsCreationClubPlugin(pluginName));
+}
+
+TEST_P(GameTest,
+       loadCreationClubPluginNamesShouldTrimCRLFLineEndingsFromCCCFileLines) {
+  if (GetParam() != GameId::tes5se && GetParam() != GameId::fo4 &&
+      GetParam() != GameId::starfield) {
+    return;
+  }
+
+  Game game = CreateInitialisedGame();
+
+  const auto pluginName = "ccPlugin.esp";
+
+  const auto cccPath = GetCCCPath().value();
+  std::ofstream out(cccPath, std::ios::out | std::ios::binary);
+  out << pluginName << "\r\n";
+  out.close();
+
+  game.LoadCreationClubPluginNames();
+
+  EXPECT_TRUE(game.IsCreationClubPlugin(pluginName));
+}
+
 TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
   Game game = CreateInitialisedGame();
-  ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(true));
   EXPECT_EQ(12, game.GetPlugins().size());
@@ -728,7 +794,6 @@ TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
   Game game = CreateInitialisedGame();
-  ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
   EXPECT_EQ(12, game.GetPlugins().size());
@@ -745,7 +810,6 @@ TEST_P(
 TEST_P(GameTest,
        loadAllInstalledPluginsShouldNotGenerateWarningsForGhostedPlugins) {
   Game game = CreateInitialisedGame();
-  ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
@@ -807,8 +871,7 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
 
 TEST_P(GameTest,
        GetActiveLoadOrderIndexShouldReturnNulloptForAPluginThatIsNotActive) {
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
   game.LoadAllInstalledPlugins(true);
 
   auto index = game.GetActiveLoadOrderIndex(*game.GetPlugin(blankEsp),
@@ -819,8 +882,7 @@ TEST_P(GameTest,
 TEST_P(
     GameTest,
     GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingInactivePlugins) {
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
   game.LoadAllInstalledPlugins(true);
 
   auto index = game.GetActiveLoadOrderIndex(*game.GetPlugin(masterFile),
@@ -839,8 +901,7 @@ TEST_P(
 TEST_P(
     GameTest,
     GetActiveLoadOrderIndexShouldCaseInsensitivelyCompareNonAsciiPluginNamesCorrectly) {
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
   game.LoadAllInstalledPlugins(true);
 
   auto index = game.GetActiveLoadOrderIndex(*game.GetPlugin(nonAsciiEsp),
@@ -850,8 +911,7 @@ TEST_P(
 
 TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
 
   auto lootGamePath =
       lootDataPath / "games" / u8path(game.GetSettings().FolderName());
@@ -875,8 +935,7 @@ TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
 
 TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
   game.LoadAllInstalledPlugins(true);
 
   auto lootGamePath =
@@ -901,8 +960,7 @@ TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
 
 TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
   game.LoadAllInstalledPlugins(true);
 
   auto lootGamePath =
@@ -938,8 +996,7 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
 
 TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
-  game.Init();
+  Game game = CreateInitialisedGame();
 
   auto lootGamePath =
       lootDataPath / "games" / u8path(game.GetSettings().FolderName());

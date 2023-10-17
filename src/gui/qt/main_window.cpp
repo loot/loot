@@ -52,10 +52,35 @@
 #include "gui/query/types/change_game_query.h"
 #include "gui/query/types/clear_all_metadata_query.h"
 #include "gui/query/types/clear_plugin_metadata_query.h"
-#include "gui/query/types/get_conflicting_plugins_query.h"
 #include "gui/query/types/get_game_data_query.h"
+#include "gui/query/types/get_overlapping_plugins_query.h"
 #include "gui/query/types/sort_plugins_query.h"
 #include "gui/version.h"
+
+namespace {
+using loot::GameId;
+using loot::LootState;
+using loot::translate;
+
+void showAmbiguousLoadOrderSetWarning(QWidget* parent, const LootState& state) {
+  const auto maybeSTestFile =
+      state.GetCurrentGame().GetSettings().Id() == GameId::fo4 ||
+      state.GetCurrentGame().GetSettings().Id() == GameId::fo4vr ||
+      state.GetCurrentGame().GetSettings().Id() == GameId::starfield;
+
+  const auto message =
+      maybeSTestFile
+          ? translate(
+                "LOOT could not unambiguously set the load order. "
+                "This may be due to the presence of one or more sTestFile "
+                "properties in the game's ini files. Remove all such "
+                "properties and then restart LOOT.")
+          : translate("LOOT could not unambiguously set the load order.");
+
+  QMessageBox::warning(
+      parent, translate("Ambiguous load order detected"), message);
+}
+}
 
 namespace loot {
 std::vector<std::string> GetGroupNames(
@@ -233,10 +258,12 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
   qApp->connect(qApp,
                 &QGuiApplication::applicationStateChanged,
                 this,
-                [this](Qt::ApplicationState state) {
+                [this](Qt::ApplicationState) {
                   const auto cardDelegate = qobject_cast<CardDelegate*>(
                       this->pluginCardsView->itemDelegate());
-                  cardDelegate->refreshStyling();
+                  if (cardDelegate != nullptr) {
+                    cardDelegate->refreshStyling();
+                  }
                 });
 }
 
@@ -783,7 +810,8 @@ void MainWindow::setIcons() {
 
 void MainWindow::enableGameActions() {
   menuGame->setEnabled(true);
-  actionSort->setEnabled(true);
+  actionSort->setEnabled(state.GetCurrentGame().GetSettings().Id() !=
+                         GameId::starfield);
   actionUpdateMasterlist->setEnabled(true);
   actionSearch->setEnabled(true);
 
@@ -835,7 +863,8 @@ void MainWindow::exitEditingState() {
   actionClearMetadata->setEnabled(true);
   gameComboBox->setEnabled(true);
   actionUpdateMasterlist->setEnabled(true);
-  actionSort->setEnabled(true);
+  actionSort->setEnabled(state.GetCurrentGame().GetSettings().Id() !=
+                         GameId::starfield);
 
   sidebarPluginsView->verticalHeader()->setDefaultSectionSize(
       getSidebarRowHeight(false));
@@ -1000,9 +1029,9 @@ void MainWindow::setFiltersState(PluginFiltersState&& filtersState) {
 
 void MainWindow::setFiltersState(
     PluginFiltersState&& filtersState,
-    std::vector<std::string>&& conflictingPluginNames) {
+    std::vector<std::string>&& overlappingPluginNames) {
   proxyModel->setFiltersState(std::move(filtersState),
-                              std::move(conflictingPluginNames));
+                              std::move(overlappingPluginNames));
 
   updateCounts(pluginItemModel->getGeneralMessages(),
                pluginItemModel->getPluginItems());
@@ -1133,7 +1162,7 @@ void MainWindow::showFirstRunDialog() {
   auto listItem1 =
       boost::locale::translate(
           "CRCs are only displayed after plugins have been loaded, either by "
-          "conflict filtering, or by sorting.")
+          "overlap filtering, or by sorting.")
           .str();
 
   auto listItem2 =
@@ -1369,7 +1398,7 @@ bool MainWindow::handlePluginsSorted(std::vector<QueryResult> results) {
     handleMasterlistUpdated(results);
   }
 
-  filtersWidget->resetConflictsAndGroupsFilters();
+  filtersWidget->resetOverlapAndGroupsFilters();
 
   auto sortedPlugins = std::get<PluginItems>(results.back());
 
@@ -1634,7 +1663,11 @@ void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
     showNotification(
         translate("The load order displayed by LOOT has been set."));
 
-    actionFixAmbiguousLoadOrder->setEnabled(false);
+    if (state.GetCurrentGame().IsLoadOrderAmbiguous()) {
+      showAmbiguousLoadOrderSetWarning(this, state);
+    } else {
+      actionFixAmbiguousLoadOrder->setEnabled(false);
+    }
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2061,6 +2094,12 @@ void MainWindow::on_actionApplySort_triggered() {
       query.executeLogic();
 
       exitSortingState();
+
+      if (state.GetCurrentGame().IsLoadOrderAmbiguous()) {
+        actionFixAmbiguousLoadOrder->setEnabled(true);
+
+        showAmbiguousLoadOrderSetWarning(this, state);
+      }
     } catch (const std::exception& e) {
       handleQueryException(query, e);
     }
@@ -2301,7 +2340,7 @@ void MainWindow::on_filtersWidget_pluginFilterChanged(
   setFiltersState(std::move(filtersState));
 }
 
-void MainWindow::on_filtersWidget_conflictsFilterChanged(
+void MainWindow::on_filtersWidget_overlapFilterChanged(
     std::optional<std::string> targetPluginName) {
   try {
     if (!targetPluginName.has_value()) {
@@ -2313,15 +2352,15 @@ void MainWindow::on_filtersWidget_conflictsFilterChanged(
       return;
     }
 
-    handleProgressUpdate(translate("Identifying conflicting plugins..."));
+    handleProgressUpdate(translate("Identifying overlapping plugins..."));
 
-    std::unique_ptr<Query> query = std::make_unique<GetConflictingPluginsQuery>(
+    std::unique_ptr<Query> query = std::make_unique<GetOverlappingPluginsQuery>(
         state.GetCurrentGame(),
         state.getSettings().getLanguage(),
         targetPluginName.value());
 
     executeBackgroundQuery(
-        std::move(query), &MainWindow::handleConflictsChecked, nullptr);
+        std::move(query), &MainWindow::handleOverlapFilterChecked, nullptr);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2424,7 +2463,7 @@ void MainWindow::on_searchDialog_currentResultChanged(size_t resultIndex) {
 void MainWindow::handleGameChanged(QueryResult result) {
   try {
     filtersWidget->setGameId(state.GetCurrentGame().GetSettings().Id());
-    filtersWidget->resetConflictsAndGroupsFilters();
+    filtersWidget->resetOverlapAndGroupsFilters();
     disablePluginActions();
 
     handleGameDataLoaded(result);
@@ -2629,21 +2668,21 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
   }
 }
 
-void MainWindow::handleConflictsChecked(QueryResult result) {
+void MainWindow::handleOverlapFilterChecked(QueryResult result) {
   try {
     progressDialog->reset();
 
     // The result is not an array of PluginItem objects.
     // Instead it's an array of objects, with each having a metadata property
-    // that is a PluginItem object, and a conflicts property that is
+    // that is a PluginItem object, and an overlap property that is
     // a boolean.
     std::vector<PluginItem> gameDataLoadedResult;
-    std::vector<std::string> conflictingPluginNames;
+    std::vector<std::string> overlappingPluginNames;
 
     for (const auto& pluginPair :
-         std::get<GetConflictingPluginsResult>(result)) {
+         std::get<GetOverlappingPluginsResult>(result)) {
       if (pluginPair.second) {
-        conflictingPluginNames.push_back(pluginPair.first.name);
+        overlappingPluginNames.push_back(pluginPair.first.name);
       }
 
       gameDataLoadedResult.push_back(pluginPair.first);
@@ -2652,7 +2691,7 @@ void MainWindow::handleConflictsChecked(QueryResult result) {
     handleGameDataLoaded(gameDataLoadedResult);
 
     setFiltersState(filtersWidget->getPluginFiltersState(),
-                    std::move(conflictingPluginNames));
+                    std::move(overlappingPluginNames));
 
     // Load order state was refreshed when plugins were loaded, so check for
     // ambiguity.

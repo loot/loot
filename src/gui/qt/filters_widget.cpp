@@ -39,7 +39,7 @@ FiltersWidget::FiltersWidget(QWidget* parent) : QFrame(parent) { setupUi(); }
 void FiltersWidget::setGameId(const GameId newGameId) { gameId = newGameId; }
 
 void FiltersWidget::setPlugins(const std::vector<std::string>& pluginNames) {
-  setComboBoxItems(conflictingPluginsFilter, pluginNames);
+  setComboBoxItems(overlapFilter, pluginNames);
 }
 
 void FiltersWidget::setGroups(const std::vector<std::string>& groupNames) {
@@ -56,8 +56,8 @@ void FiltersWidget::setPluginCounts(size_t hidden, size_t total) {
                                    QString::number(total));
 }
 
-void FiltersWidget::resetConflictsAndGroupsFilters() {
-  conflictingPluginsFilter->setCurrentIndex(0);
+void FiltersWidget::resetOverlapAndGroupsFilters() {
+  overlapFilter->setCurrentIndex(0);
   groupPluginsFilter->setCurrentIndex(0);
 
   emit pluginFilterChanged(getPluginFiltersState());
@@ -159,7 +159,7 @@ void FiltersWidget::setupUi() {
   static constexpr int SPACER_WIDTH = 20;
   static constexpr int SPACER_HEIGHT = 40;
 
-  conflictingPluginsFilter->setObjectName("conflictingPluginsFilter");
+  overlapFilter->setObjectName("overlapFilter");
   groupPluginsFilter->setObjectName("groupPluginsFilter");
   contentFilter->setObjectName("contentFilter");
   contentRegexCheckbox->setObjectName("contentRegexCheckbox");
@@ -202,8 +202,8 @@ void FiltersWidget::setupUi() {
   verticalLayout->setContentsMargins(
       leftMargin, topMargin, rightMargin, bottomMargin);
 
-  verticalLayout->addWidget(conflictingPluginsFilterLabel);
-  verticalLayout->addWidget(conflictingPluginsFilter);
+  verticalLayout->addWidget(overlapFilterLabel);
+  verticalLayout->addWidget(overlapFilter);
   verticalLayout->addWidget(groupPluginsFilterLabel);
   verticalLayout->addWidget(groupPluginsFilter);
   verticalLayout->addWidget(contentFilterLabel);
@@ -240,8 +240,8 @@ void FiltersWidget::setupUi() {
 }
 
 void FiltersWidget::translateUi() {
-  conflictingPluginsFilterLabel->setText(
-      translate("Show only conflicting plugins for"));
+  overlapFilterLabel->setText(
+      translate("Show only overlapping plugins for"));
   groupPluginsFilterLabel->setText(translate("Show only plugins in group"));
   contentFilterLabel->setText(
       translate("Show only plugins with cards that contain"));
@@ -263,11 +263,11 @@ void FiltersWidget::translateUi() {
   hiddenPluginsLabel->setText(translate("Hidden plugins:"));
   hiddenMessagesLabel->setText(translate("Hidden messages:"));
 
-  auto conflictingPluginsItemText = translate("No plugin selected");
-  if (conflictingPluginsFilter->count() == 0) {
-    conflictingPluginsFilter->addItem(conflictingPluginsItemText);
+  const auto overlapItemText = translate("No plugin selected");
+  if (overlapFilter->count() == 0) {
+    overlapFilter->addItem(overlapItemText);
   } else {
-    conflictingPluginsFilter->setItemText(0, conflictingPluginsItemText);
+    overlapFilter->setItemText(0, overlapItemText);
   }
 
   auto groupsItemText = translate("No group selected");
@@ -343,9 +343,9 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
   filters.hideCreationClubPlugins = creationClubPluginsFilter->isChecked();
   filters.showOnlyEmptyPlugins = showOnlyEmptyPluginsFilter->isChecked();
 
-  if (conflictingPluginsFilter->currentIndex() > 0) {
-    filters.conflictsPluginName =
-        conflictingPluginsFilter->currentText().toStdString();
+  if (overlapFilter->currentIndex() > 0) {
+    filters.overlapPluginName =
+        overlapFilter->currentText().toStdString();
   }
 
   if (groupPluginsFilter->currentIndex() > 0) {
@@ -374,15 +374,15 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
   return filters;
 }
 
-void FiltersWidget::on_conflictingPluginsFilter_activated() {
+void FiltersWidget::on_overlapFilter_activated() {
   // Don't emit pluginFilterChanged even though this is a plugin filter,
-  // because conflict filtering is slow and requires a progress dialog,
+  // because overlap filtering is slow and requires a progress dialog,
   // and we don't want that to happen for the other plugin filters.
-  if (conflictingPluginsFilter->currentIndex() == 0) {
-    emit conflictsFilterChanged(std::nullopt);
+  if (overlapFilter->currentIndex() == 0) {
+    emit overlapFilterChanged(std::nullopt);
   } else {
-    emit conflictsFilterChanged(
-        conflictingPluginsFilter->currentText().toStdString());
+    emit overlapFilterChanged(
+        overlapFilter->currentText().toStdString());
   }
 }
 

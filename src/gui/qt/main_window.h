@@ -203,7 +203,7 @@ private:
   void updateSidebarColumnWidths();
   void setFiltersState(PluginFiltersState &&state);
   void setFiltersState(PluginFiltersState &&state,
-                       std::vector<std::string> &&conflictingPluginNames);
+                       std::vector<std::string> &&overlappingPluginNames);
   void refreshSearch();
   void refreshPluginRawData(const std::string &pluginName);
 
@@ -293,7 +293,7 @@ private slots:
   void on_pluginEditorWidget_rejected();
 
   void on_filtersWidget_pluginFilterChanged(PluginFiltersState state);
-  void on_filtersWidget_conflictsFilterChanged(
+  void on_filtersWidget_overlapFilterChanged(
       std::optional<std::string> targetPluginName);
   void on_filtersWidget_cardContentFilterChanged(CardContentFiltersState state);
 
@@ -312,7 +312,7 @@ private slots:
   void handlePluginsAutoSorted(std::vector<QueryResult> results);
   void handleMasterlistUpdated(std::vector<QueryResult> results);
   void handleMasterlistsUpdated(std::vector<QueryResult> results);
-  void handleConflictsChecked(QueryResult result);
+  void handleOverlapFilterChecked(QueryResult result);
   void handleProgressUpdate(const QString &message);
   void handleUpdateCheckFinished(QueryResult result);
   void handleUpdateCheckError(const std::string &);

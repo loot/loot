@@ -61,7 +61,7 @@ The plugin card's header holds the following information, some of which is only 
 - The "Active Plugin" icon.
 - The plugin name.
 - The plugin's version number, extracted from its description field.
-- The plugin's :abbr:`CRC (Cyclic Redundancy Checksum)`, which can be used to uniquely identify it. CRCs are only displayed after they have been calculated during conflict filtering or sorting, except the the CRC of the game's main master plugin, which is never displayed.
+- The plugin's :abbr:`CRC (Cyclic Redundancy Checksum)`, which can be used to uniquely identify it. CRCs are only displayed after they have been calculated during overlap filtering or sorting, except the the CRC of the game's main master plugin, which is never displayed.
 - The "Master Plugin" icon.
 - The "Light Plugin" icon.
 - The "Empty Plugin" icon.
@@ -107,8 +107,8 @@ Show only warnings and errors
 
 The filter toggles have their states saved on quitting LOOT, and they are restored when LOOT is next launched. There are also three other filters in the sidebar tab:
 
-Show only conflicting plugins for
-  This filters the plugin cards displayed so that only plugins which conflict with this plugin will be visible. If this plugin loads an archive, other plugins that load archives which may contain conflicting resources are also displayed. Sorting with the conflict filter active will first deactivate it.
+Show only overlapping plugins for
+  This filters the plugin cards displayed so that only plugins which modify the same game data records with this plugin will be visible. If this plugin loads an archive, other plugins that load archives which contain resources with the same file paths are also displayed. Sorting with the overlap filter active will first deactivate it.
 
 Show only plugins in group
   This filters the plugin cards displayed so that only plugins in the selected group will be visible.

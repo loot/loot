@@ -55,9 +55,9 @@ void PluginItemFilterModel::setFiltersState(PluginFiltersState&& state) {
 
 void PluginItemFilterModel::setFiltersState(
     PluginFiltersState&& state,
-    std::vector<std::string>&& newConflictingPluginNames) {
+    std::vector<std::string>&& newOverlappingPluginNames) {
   filterState = std::move(state);
-  this->conflictingPluginNames = std::move(newConflictingPluginNames);
+  this->overlappingPluginNames = std::move(newOverlappingPluginNames);
 
   invalidateFilter();
 }
@@ -128,13 +128,13 @@ bool PluginItemFilterModel::filterAcceptsRow(
     return false;
   }
 
-  if (filterState.conflictsPluginName.has_value()) {
-    const auto hasConflict =
-        std::any_of(conflictingPluginNames.begin(),
-                    conflictingPluginNames.end(),
+  if (filterState.overlapPluginName.has_value()) {
+    const auto hasOverlap =
+        std::any_of(overlappingPluginNames.begin(),
+                    overlappingPluginNames.end(),
                     [&](const auto& name) { return name == item.name; });
 
-    if (!hasConflict) {
+    if (!hasOverlap) {
       return false;
     }
   }

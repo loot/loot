@@ -71,11 +71,11 @@ set(GTEST_LIBRARIES "${BINARY_DIR}/lib/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRAR
 
 if(NOT DEFINED LIBLOOT_URL)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.0/libloot-0.22.0-win64.7z")
-        set(LIBLOOT_HASH "SHA256=d98159c6c60041687ad739c75033dae12ca2c37300d6eff27211a32cc12f925e")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.1/libloot-0.22.1-win64.7z")
+        set(LIBLOOT_HASH "SHA256=7575c369602b96088fdcdf2971372868e270ec8f755ee8f2e996382d4c62fc42")
     else()
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.0/libloot-0.22.0-Linux.tar.xz")
-        set(LIBLOOT_HASH "SHA256=5eafdaaa43cdf7973c620ab315e2e84654b8584eac7a4c1b57736674e54bcb56")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.1/libloot-0.22.1-Linux.tar.xz")
+        set(LIBLOOT_HASH "SHA256=ad1c36bf3d314a9b6493d5a64ecf4969e719a66a9c3a0a9ea3fbd5d127243d9a")
     endif()
 endif()
 
@@ -336,7 +336,7 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/change_game_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/clear_all_metadata_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/clear_plugin_metadata_query.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/query/types/get_conflicting_plugins_query.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/query/types/get_overlapping_plugins_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/get_game_data_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/sort_plugins_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/common.h"

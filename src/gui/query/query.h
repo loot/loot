@@ -42,7 +42,7 @@ typedef std::vector<std::pair<std::string, std::optional<short>>>
     CancelSortResult;
 typedef std::pair<std::string, bool> MasterlistUpdateResult;
 typedef std::vector<PluginItem> PluginItems;
-typedef std::vector<std::pair<PluginItem, bool>> GetConflictingPluginsResult;
+typedef std::vector<std::pair<PluginItem, bool>> GetOverlappingPluginsResult;
 
 typedef std::variant<std::monostate,
                      bool,
@@ -50,7 +50,7 @@ typedef std::variant<std::monostate,
                      MasterlistUpdateResult,
                      PluginItems,
                      PluginItem,
-                     GetConflictingPluginsResult>
+                     GetOverlappingPluginsResult>
     QueryResult;
 
 class Query {

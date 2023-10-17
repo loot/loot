@@ -154,3 +154,23 @@ The [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) 
 
 * Constant, enumerator and variable names should use `camelCase` or `underscore_separators`, but they should be consistent within the same scope.
 * Function names should use `PascalCase` or `camelCase`, but they should be consistent within the same scope.
+
+## Git pre-commit hook
+
+A pre-commit hook is used to ensure that the translation template file is kept up to date. The easiest way to install it is to configure Git to use the hook's directory as Git's hooks directory:
+
+```sh
+git config core.hooksPath scripts/git/hooks
+```
+
+or you can reinitialise the repository whenever the pre-commit hook is updated:
+
+```sh
+git init --template scripts/git
+```
+
+or just copy the file:
+
+```sh
+cp scripts/git/hooks/pre-commit .git/hooks/
+```

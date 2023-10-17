@@ -65,6 +65,17 @@
   </screenshots>
 
   <releases>
+    <release version="0.22.0" date="2023-10-07">
+      <description>
+        <ul>
+          <li>Added support for Starfield</li>
+          <li>Fixed potential crashes during game detection and when updating all masterlists</li>
+          <li>Fixed detection Epic Games Store games installed using Heroic Games Launcher causing LOOT to use the wrong local app data paths for Skyrim Special Edition and Fallout: New Vegas.</li>
+          <li>Other fixes and improvements</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.22.0/app/changelog.html#id1</url>
+    </release>
     <release version="0.21.0" date="2023-09-17">
       <description>
         <p>This is the first release to be made available on Linux.</p>

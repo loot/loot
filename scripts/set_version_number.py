@@ -51,7 +51,7 @@ if __name__ == "__main__":
     version = arguments.version[0]
 
     update_pre_commit_hook_script(
-        os.path.join('scripts', 'git', 'pre-commit'),
+        os.path.join('scripts', 'git', 'hooks', 'pre-commit'),
         version
     )
     update_installer_script(

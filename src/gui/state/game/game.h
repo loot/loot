@@ -94,7 +94,7 @@ public:
   void RedatePlugins();  // Change timestamps to match load order (Skyrim only).
 
   void LoadCreationClubPluginNames();
-  bool IsCreationClubPlugin(const PluginInterface& plugin) const;
+  bool IsCreationClubPlugin(const std::string& name) const;
 
   void LoadAllInstalledPlugins(
       bool headersOnly);  // Loads all installed plugins.
