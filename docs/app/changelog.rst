@@ -15,6 +15,9 @@ Fixed
 Changed
 -------
 
+- Sorting has been disabled for Starfield. Due to the way that Starfield plugins
+  make changes to existing data, LOOT cannot reliable detect when two plugins
+  change the same record, so sorting may not function as intended.
 - The new plugin type and plugin header flag introduced by Starfield that was
   previously referred to as the "override" plugin type and flag is now
   referred to as the "overlay" plugin type and flag for consistency with xEdit,
