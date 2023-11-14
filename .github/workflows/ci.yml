@@ -209,7 +209,7 @@ jobs:
           ln -s ${{ steps.build-archive.outputs.filename }} loot.tar.xz
 
           flatpak-builder --repo=flatpak-repo flatpak ../resources/linux/io.github.loot.loot.yml
-          flatpak build-bundle flatpak-repo $PACKAGE_FILENAME io.github.loot.loot
+          flatpak build-bundle flatpak-repo $PACKAGE_FILENAME io.github.loot.loot --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
           echo "filename=$PACKAGE_FILENAME" >> $GITHUB_OUTPUT
 
