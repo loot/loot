@@ -65,6 +65,18 @@
   </screenshots>
 
   <releases>
+    <release version="0.22.1" date="2023-11-05">
+      <description>
+        <ul>
+          <li>Fixed the "Hide Creation Club plugins" filter having no effect.</li>
+          <li>Disabled sorting for Starfield. Due to the way that Starfield plugins make changes to existing data, LOOT cannot reliable detect when two plugins change the same record, so sorting may not function as intended.</li>
+          <li>The new plugin type and plugin header flag introduced by Starfield that was
+ previously referred to as the "override" plugin type and flag is now referred to as the "overlay" plugin type and flag for consistency with xEdit, Wrye Bash and Mod Organizer 2.</li>
+          <li>The "Show only conflicting plugins for" filter has been renamed to "Show only overlapping plugins for" for clarity and consistency with other LOOT functionality.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.22.1/app/changelog.html#id1</url>
+    </release>
     <release version="0.22.0" date="2023-10-07">
       <description>
         <ul>

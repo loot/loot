@@ -41,11 +41,9 @@ loot_<last tag>-<revisions since tag>-g<short revision ID>_<branch>-<platform>.<
 
 The Linux archives use a standard directory layout (e.g. `bin/`, `lib/`, `share/`). The ICU, Intel TBB, Qt and system library dependencies are not included.
 
-Snapshot builds are also provided as single-file Flatpak bundles. They depend on the KDE runtime, which must be installed beforehand. For example:
+Snapshot builds are also provided as single-file Flatpak bundles, which can be installed like so:
 
 ```
-flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak --user install flathub org.kde.Platform//6.5
 flatpak --user install ~/Downloads/loot.flatpak
 ```
 

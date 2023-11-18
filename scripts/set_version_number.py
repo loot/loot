@@ -18,23 +18,23 @@ def replace_in_file(path, regex, replacement):
             outfile.write(line)
 
 def update_pre_commit_hook_script(path, version):
-    replace_in_file(path, '--package-version=[\d.]+', '--package-version={}'.format(version))
+    replace_in_file(path, '--package-version=[\\d.]+', '--package-version={}'.format(version))
 
 def update_installer_script(path, version):
-    replace_in_file(path, '#define MyAppVersion "[\d.]+"', '#define MyAppVersion "{}"'.format(version))
+    replace_in_file(path, '#define MyAppVersion "[\\d.]+"', '#define MyAppVersion "{}"'.format(version))
 
 def update_cpp_file(path, version):
     version_parts = version.split('.')
 
-    replace_in_file(path, 'Version::major = \d+;', 'Version::major = {};'.format(version_parts[0]))
-    replace_in_file(path, 'Version::minor = \d+;', 'Version::minor = {};'.format(version_parts[1]))
-    replace_in_file(path, 'Version::patch = \d+;', 'Version::patch = {};'.format(version_parts[2]))
+    replace_in_file(path, 'Version::major = \\d+;', 'Version::major = {};'.format(version_parts[0]))
+    replace_in_file(path, 'Version::minor = \\d+;', 'Version::minor = {};'.format(version_parts[1]))
+    replace_in_file(path, 'Version::patch = \\d+;', 'Version::patch = {};'.format(version_parts[2]))
 
 def update_resource_file(path, version):
     comma_separated_version = version.replace('.', ', ')
 
-    replace_in_file(path, 'VERSION \d+, \d+, \d+', 'VERSION {}'.format(comma_separated_version))
-    replace_in_file(path, 'Version", "\d+\.\d+\.\d+"', 'Version", "{}"'.format(version))
+    replace_in_file(path, 'VERSION \\d+, \\d+, \\d+', 'VERSION {}'.format(comma_separated_version))
+    replace_in_file(path, 'Version", "\\d+\\.\\d+\\.\\d+"', 'Version", "{}"'.format(version))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Set the LOOT version number')

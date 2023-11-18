@@ -29,4 +29,4 @@ ln -s $ARCHIVE_FILENAME loot.tar.xz
 flatpak-builder --repo=flatpak-repo --force-clean --disable-cache --install --user flatpak ../resources/linux/io.github.loot.loot.yml
 
 echo "Creating flatpak bundle..."
-flatpak build-bundle flatpak-repo $PACKAGE_FILENAME io.github.loot.loot
+flatpak build-bundle flatpak-repo $PACKAGE_FILENAME io.github.loot.loot --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
