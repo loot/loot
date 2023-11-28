@@ -4,6 +4,21 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.22.2 - Unreleased
+===================
+
+Fixed
+-----
+
+- LOOT could error when reading the load order if it encountered a game ini file
+  containing single or double quote or backslash characters, as it attempted to
+  treat them as special characters. Via libloot.
+
+Changed
+-------
+
+- Updated libloot to v0.22.2.
+
 0.22.1 - 2023-11-05
 ===================
 
