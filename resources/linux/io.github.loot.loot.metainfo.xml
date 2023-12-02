@@ -65,6 +65,14 @@
   </screenshots>
 
   <releases>
+    <release version="0.22.2" date="2023-12-01">
+      <description>
+        <ul>
+          <li>Fixed errors encountered while parsing game ini files that contain single quote, double quote or backslash characters</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.22.2/app/changelog.html#id1</url>
+    </release>
     <release version="0.22.1" date="2023-11-05">
       <description>
         <ul>
