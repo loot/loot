@@ -65,6 +65,15 @@
   </screenshots>
 
   <releases>
+    <release version="0.22.3" date="2023-12-06">
+      <description>
+        <ul>
+          <li>Fixed error messages displayed for plugins introduced by Skyrim Special Edition v1.6.1130.0.</li>
+          <li>Fixed error messages not displayed for some types of invalid Fallout 4 plugins.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.22.3/app/changelog.html#id1</url>
+    </release>
     <release version="0.22.2" date="2023-12-01">
       <description>
         <ul>
