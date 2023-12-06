@@ -4,6 +4,26 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.22.3 - Unreleased
+===================
+
+Fixed
+-----
+
+- LOOT no longer displays an error for Skyrim Special Edition light plugins that
+  have a header version of 1.71 or greater and which contain records with object
+  IDs less than ``0x800``. Such plugins were introduced with Skyrim Special
+  Edition v1.6.1130.0. Via libloot.
+- LOOT will now display an error for Fallout 4 light plugins that have a header
+  version less than 1.0 and which contain records with object IDs less than
+  ``0x800``. Via libloot.
+
+Changed
+-------
+
+- Updated libloot to v0.22.3.
+
+
 0.22.2 - 2023-12-01
 ===================
 
