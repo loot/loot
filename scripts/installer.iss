@@ -48,6 +48,7 @@ DisableProgramGroupPage=yes
 WizardStyle=modern
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
+PrivilegesRequired=lowest
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl,resources\l10n\en\LC_MESSAGES\installer.islu"
@@ -220,10 +221,6 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 Filename: "{tmp}\vc_redist.2019.x64.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: "{cm:InstallingMSVCRedist}"
 
-[Registry]
-; Store install path for backwards-compatibility with old NSIS install script behaviour.
-Root: HKLM; Subkey: "Software\LOOT"; ValueType: string; ValueName: "Installed Path"; ValueData: "{app}"; Flags: deletekey uninsdeletekey
-
 [UninstallDelete]
 Type: files; Name: "{localappdata}\{#MyAppName}\LOOTDebugLog.txt";
 
@@ -342,16 +339,20 @@ begin
   // backwards-compatible key because the filename of the  uninstaller created
   // by Inno Setup can vary.
   RegKey := ExpandConstant('Software\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1');
-  if RegQueryStringValue(HKLM, RegKey, 'UninstallString', RegValue) then begin
-      Exec(RemoveQuotes(RegValue), '/VERYSILENT', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-  // Now try using the backwards-compatible Registry key, and run the NSIS
-  // uninstaller, which has a fixed filename.
+  if RegQueryStringValue(HKCU, RegKey, 'UninstallString', RegValue) then begin
+    Log('Got uninstall string from HKCU registry entry');
+    Exec(RemoveQuotes(RegValue), '/VERYSILENT', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
   end
-  else begin
-    if RegQueryStringValue(HKLM, 'Software\LOOT', 'Installed Path', RegValue) then begin
-      Exec(RegValue + '\Uninstall.exe', '/S', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-    end;
-  end;
+  else if RegQueryStringValue(HKLM, RegKey, 'UninstallString', RegValue) then begin
+    Log('Got uninstall string from HKLM registry entry');
+    Exec(RemoveQuotes(RegValue), '/VERYSILENT', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  end
+  else if RegQueryStringValue(HKLM, 'Software\LOOT', 'Installed Path', RegValue) then begin
+    Log('Got uninstall string from the legacy NSIS installer HKLM registry entry');
+    Exec(RegValue + '\Uninstall.exe', '/S', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  end
+  else
+    Log('Did not find an uninstaller for any previously-installed version of LOOT.');
 end;
 
 function VCRedistNeedsInstall(VersionMajor, VersionMinor, VersionBld: Cardinal): Boolean;
