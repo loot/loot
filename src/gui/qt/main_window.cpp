@@ -269,7 +269,9 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
 void MainWindow::initialise() {
   try {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     themes = findThemes(state.getThemesPath());
+#endif
 
     if (state.getSettings().getLastVersion() != gui::Version::string()) {
       showFirstRunDialog();
@@ -326,6 +328,7 @@ void MainWindow::initialise() {
 }
 
 void MainWindow::applyTheme() {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   // Apply theme.
   bool loadingDefault = state.getSettings().getTheme() == "default";
 
@@ -365,6 +368,7 @@ void MainWindow::applyTheme() {
         qobject_cast<CardDelegate*>(pluginCardsView->itemDelegate());
     cardDelegate->refreshStyling();
   }
+#endif
 }
 
 void MainWindow::setupUi() {
@@ -482,7 +486,7 @@ void MainWindow::setupUi() {
           this,
           &MainWindow::handleLinkColorChanged);
 
-#ifndef _WIN32
+#if !defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   // Only run this on Linux, because it intentionally has no effect on Windows.
   connect(QGuiApplication::styleHints(),
           &QStyleHints::colorSchemeChanged,
@@ -2799,6 +2803,7 @@ void MainWindow::handleLinkColorChanged() {
   }
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
 void MainWindow::handleColorSchemeChanged(Qt::ColorScheme colorScheme) {
   const auto logger = getLogger();
   if (logger) {
@@ -2817,4 +2822,5 @@ void MainWindow::handleColorSchemeChanged(Qt::ColorScheme colorScheme) {
 
   applyTheme();
 }
+#endif
 }
