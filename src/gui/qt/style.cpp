@@ -92,9 +92,6 @@ std::optional<QString> loadStyleSheet(const std::filesystem::path& themesPath,
 }
 
 std::vector<std::string> findThemes(const std::filesystem::path& themesPath) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-  return {};
-#else
   // The default-dark theme is not listed here as it's a variation on the
   // default theme.
   std::set<std::string> themes({"default", "dark"});
@@ -128,6 +125,5 @@ std::vector<std::string> findThemes(const std::filesystem::path& themesPath) {
   }
 
   return {themes.begin(), themes.end()};
-#endif
 }
 }

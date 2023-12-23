@@ -67,7 +67,6 @@ void GeneralTab::initialiseInputs(const LootSettings& settings,
       QVariant(QString::fromStdString(settings.getLanguage())));
   languageComboBox->setCurrentIndex(languageIndex);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   while (themeComboBox->count() > 0) {
     themeComboBox->removeItem(0);
   }
@@ -80,7 +79,6 @@ void GeneralTab::initialiseInputs(const LootSettings& settings,
   auto themeIndex = themeComboBox->findData(
       QVariant(QString::fromStdString(settings.getTheme())));
   themeComboBox->setCurrentIndex(themeIndex);
-#endif
 
   updateMasterlistCheckbox->setChecked(
       settings.isMasterlistUpdateBeforeSortEnabled());
@@ -97,9 +95,7 @@ void GeneralTab::recordInputValues(LootSettings& settings) {
   auto defaultGame =
       defaultGameComboBox->currentData().toString().toStdString();
   auto language = languageComboBox->currentData().toString().toStdString();
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   auto theme = themeComboBox->currentData().toString().toStdString();
-#endif
   const auto enableMasterlistUpdateBeforeSort =
       updateMasterlistCheckbox->isChecked();
   const auto checkForUpdates = checkUpdatesCheckbox->isChecked();
@@ -110,9 +106,7 @@ void GeneralTab::recordInputValues(LootSettings& settings) {
 
   settings.setDefaultGame(defaultGame);
   settings.setLanguage(language);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   settings.setTheme(theme);
-#endif
   settings.enableMasterlistUpdateBeforeSort(enableMasterlistUpdateBeforeSort);
   settings.enableLootUpdateCheck(checkForUpdates);
   settings.enableDebugLogging(enableDebugLogging);
@@ -141,9 +135,7 @@ void GeneralTab::setupUi() {
 
   generalLayout->addRow(defaultGameLabel, defaultGameComboBox);
   generalLayout->addRow(languageLabel, languageComboBox);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   generalLayout->addRow(themeLabel, themeComboBox);
-#endif
   generalLayout->addRow(updateMasterlistLabel, updateMasterlistCheckbox);
   generalLayout->addRow(checkUpdatesLabel, checkUpdatesCheckbox);
   generalLayout->addRow(loggingLabel, loggingCheckbox);
@@ -159,9 +151,7 @@ void GeneralTab::setupUi() {
 void GeneralTab::translateUi() {
   defaultGameLabel->setText(translate("Default Game"));
   languageLabel->setText(translate("Language"));
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   themeLabel->setText(translate("Theme"));
-#endif
   updateMasterlistLabel->setText(translate("Update masterlist before sorting"));
   checkUpdatesLabel->setText(translate("Check for LOOT updates on startup"));
   loggingLabel->setText(translate("Enable debug logging"));

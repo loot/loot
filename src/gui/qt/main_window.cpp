@@ -269,9 +269,7 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
 void MainWindow::initialise() {
   try {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     themes = findThemes(state.getThemesPath());
-#endif
 
     if (state.getSettings().getLastVersion() != gui::Version::string()) {
       showFirstRunDialog();
@@ -328,7 +326,6 @@ void MainWindow::initialise() {
 }
 
 void MainWindow::applyTheme() {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   // Apply theme.
   bool loadingDefault = state.getSettings().getTheme() == "default";
 
@@ -346,6 +343,7 @@ void MainWindow::applyTheme() {
                   qApp->style()->name().toStdString());
   }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   // Don't load default-dark when Qt is using the windowsvista style,
   // as that ignores the system color scheme.
   if (loadingDefault && qApp->style()->name() != "windowsvista" &&
@@ -358,6 +356,7 @@ void MainWindow::applyTheme() {
     }
     styleSheet = loot::loadStyleSheet(state.getThemesPath(), "default-dark");
   }
+#endif
 
   if (styleSheet.has_value()) {
     qApp->setStyleSheet(styleSheet.value());
@@ -368,7 +367,6 @@ void MainWindow::applyTheme() {
         qobject_cast<CardDelegate*>(pluginCardsView->itemDelegate());
     cardDelegate->refreshStyling();
   }
-#endif
 }
 
 void MainWindow::setupUi() {

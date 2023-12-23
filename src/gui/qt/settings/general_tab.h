@@ -49,9 +49,7 @@ public:
 private:
   QLabel *defaultGameLabel{new QLabel(this)};
   QLabel *languageLabel{new QLabel(this)};
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   QLabel *themeLabel{new QLabel(this)};
-#endif
   QLabel *updateMasterlistLabel{new QLabel(this)};
   QLabel *checkUpdatesLabel{new QLabel(this)};
   QLabel *loggingLabel{new QLabel(this)};
@@ -59,9 +57,7 @@ private:
   QLabel *preludeSourceLabel{new QLabel(this)};
   QComboBox *defaultGameComboBox{new QComboBox(this)};
   QComboBox *languageComboBox{new QComboBox(this)};
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   QComboBox *themeComboBox{new QComboBox(this)};
-#endif
   QCheckBox *updateMasterlistCheckbox{new QCheckBox(this)};
   QCheckBox *checkUpdatesCheckbox{new QCheckBox(this)};
   QCheckBox *loggingCheckbox{new QCheckBox(this)};
