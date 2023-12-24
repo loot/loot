@@ -343,6 +343,7 @@ void MainWindow::applyTheme() {
                   qApp->style()->name().toStdString());
   }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   // Don't load default-dark when Qt is using the windowsvista style,
   // as that ignores the system color scheme.
   if (loadingDefault && qApp->style()->name() != "windowsvista" &&
@@ -355,6 +356,7 @@ void MainWindow::applyTheme() {
     }
     styleSheet = loot::loadStyleSheet(state.getThemesPath(), "default-dark");
   }
+#endif
 
   if (styleSheet.has_value()) {
     qApp->setStyleSheet(styleSheet.value());
@@ -482,7 +484,7 @@ void MainWindow::setupUi() {
           this,
           &MainWindow::handleLinkColorChanged);
 
-#ifndef _WIN32
+#if !defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   // Only run this on Linux, because it intentionally has no effect on Windows.
   connect(QGuiApplication::styleHints(),
           &QStyleHints::colorSchemeChanged,
@@ -2799,6 +2801,7 @@ void MainWindow::handleLinkColorChanged() {
   }
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
 void MainWindow::handleColorSchemeChanged(Qt::ColorScheme colorScheme) {
   const auto logger = getLogger();
   if (logger) {
@@ -2817,4 +2820,5 @@ void MainWindow::handleColorSchemeChanged(Qt::ColorScheme colorScheme) {
 
   applyTheme();
 }
+#endif
 }
