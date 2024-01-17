@@ -184,7 +184,7 @@ void Node::setPosition(qreal x, qreal y) { setPosition(QPointF(x, y)); }
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
   switch (change) {
     case ItemPositionHasChanged: {
-      for (Edge *edge : qAsConst(edgeList)) {
+      for (Edge *edge : edgeList) {
         edge->adjust();
       }
       break;
@@ -242,10 +242,9 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
     // Inform the user why the event was ignored.
     if (!isUserMetadata_) {
-      QMessageBox::critical(
-          graphicsWidget,
-          "LOOT",
-          translate("Only user groups can be removed!"));
+      QMessageBox::critical(graphicsWidget,
+                            "LOOT",
+                            translate("Only user groups can be removed!"));
     } else if (containsInstalledPlugins) {
       QMessageBox::critical(
           graphicsWidget,

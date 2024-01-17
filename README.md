@@ -99,7 +99,7 @@ pip install -r docs/requirements.txt
 sphinx-build -b html docs build/docs/html
 ```
 
-Alternatively, you can use Docker to avoid changing your development environment, by running `docker run -it --rm -v ${PWD}/docs:/docs/docs -v ${PWD}/build:/docs/build sphinxdoc/sphinx:4.2.0 bash` to obtain a shell that you can use to run the two commands above.
+Alternatively, you can use Docker to avoid changing your development environment, by running `docker run -it --rm -v ${PWD}/docs:/docs/docs -v ${PWD}/build:/docs/build sphinxdoc/sphinx:7.1.2 bash` to obtain a shell that you can use to run the two commands above.
 
 ## Packaging Releases
 
