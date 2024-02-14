@@ -281,7 +281,7 @@ msgstr "&Применить отсортированный порядок заг
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:711
 msgid "&Discard Sorted Load Order"
-msgstr "&Отменить отсортированный порядок загрузки"
+msgstr "Отменить отсортированный порядок &загрузки"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -297,12 +297,12 @@ msgstr "&Настройки..."
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:720
 msgid "&Update All Masterlists"
-msgstr "&Обновить все мастерлисты"
+msgstr "Обновить &все мастерлисты"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:722
 msgid "&Backup LOOT Data"
-msgstr "&Резервное копирование данных LOOT"
+msgstr "Резервное &копирование данных LOOT"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:724
@@ -312,127 +312,127 @@ msgstr "&Открыть папку с данными LOOT"
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:726
 msgid "&Quit"
-msgstr ""
+msgstr "&Выход"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:730
 msgid "&Game"
-msgstr ""
+msgstr "&Игра"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:732
 msgid "&Edit Groups..."
-msgstr ""
+msgstr "&Редактировать группы..."
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:734
 msgid "Searc&h Cards..."
-msgstr ""
+msgstr "&Поиск карточек..."
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:736
 msgid "Copy &Load Order"
-msgstr ""
+msgstr "Копировать порядок &загрузки"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:738
 msgid "&Copy Content"
-msgstr ""
+msgstr "&Копировать содержимое"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:740
 msgid "&Refresh Content"
-msgstr ""
+msgstr "&Обновить содержимое"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:742
 msgid "Redate &Plugins..."
-msgstr ""
+msgstr "Изменить &даты плагинов..."
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:744
 msgid "&Fix Ambiguous Load Order"
-msgstr ""
+msgstr "Исправить &неоднозначный порядок загрузки"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:746
 msgid "Clear All &User Metadata..."
-msgstr ""
+msgstr "Очистить все &метаданные пользователя..."
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:750
 msgid "&Plugin"
-msgstr ""
+msgstr "&Плагин"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:752
 msgid "Copy &Plugin Name"
-msgstr ""
+msgstr "&Копировать название плагина"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:754
 msgid "Copy &Card Content"
-msgstr ""
+msgstr "Копировать &содержимое карточки"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:756
 msgid "Copy &Metadata"
-msgstr ""
+msgstr "Копировать &метаданные"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:758
 msgid "&Edit Metadata..."
-msgstr ""
+msgstr "&Редактировать метаданные…"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:760
 msgid "Clear &User Metadata..."
-msgstr ""
+msgstr "&Очистить метаданные пользователя..."
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:764
 msgid "&Help"
-msgstr ""
+msgstr "&Помощь"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:766
 msgid "&View Documentation"
-msgstr ""
+msgstr "Посмотреть &документацию"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:768
 msgid "&Open FAQs"
-msgstr ""
+msgstr "Открыть &ЧАВО"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:770
 msgid "&Join Discord Server"
-msgstr ""
+msgstr "&Присоединиться к серверу Discord"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:772
 msgid "&About"
-msgstr ""
+msgstr "&О программе"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:777
 msgid "P&lugins"
-msgstr ""
+msgstr "П&лагины"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:780
 msgid "F&ilters"
-msgstr ""
+msgstr "Ф&ильтры"
 
 #: src/gui/qt/main_window.cpp:1081 src/gui/qt/main_window.cpp:1536
 #: src/gui/qt/main_window.cpp:2155
 msgid "Updating and parsing masterlist..."
-msgstr ""
+msgstr "Обновление и обработка мастерлиста..."
 
 #: src/gui/qt/main_window.cpp:1146
 #, c++-format
@@ -440,21 +440,25 @@ msgid ""
 "This appears to be the first time you have run LOOT v{0}. Your current LOOT "
 "data has been backed up to: {1}"
 msgstr ""
+"Похоже, вы впервые запускаете LOOT версии {0}. Резервная копия ваших текущих данных LOOT "
+"сохранена в: {1}."
 
 #: src/gui/qt/main_window.cpp:1154
 #, c++-format
 msgid "This appears to be the first time you have run LOOT v{0}."
-msgstr ""
+msgstr "Похоже, вы впервые запускаете LOOT версии {0}."
 
 #: src/gui/qt/main_window.cpp:1161
 msgid "Here are some tips to help you get started with the interface."
-msgstr ""
+msgstr "Вот несколько советов, которые помогут вам начать работу с интерфейсом."
 
 #: src/gui/qt/main_window.cpp:1166
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by overlap "
 "filtering, or by sorting."
 msgstr ""
+"CRC отображаются только после загрузки плагинов либо путём фильтрации пересекающихся "
+"плагинов, либо путём сортировки."
 
 #: src/gui/qt/main_window.cpp:1172
 msgid ""
