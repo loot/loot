@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2024-01-15 20:10+0000\n"
-"PO-Revision-Date: 2024-02-14 22:14+0300\n"
+"PO-Revision-Date: 2024-02-14 22:29+0300\n"
 "Last-Translator: xsSplater\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -322,7 +322,7 @@ msgstr "&Редактировать группы..."
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:734
 msgid "Searc&h Cards..."
-msgstr "&Поиск карточек..."
+msgstr "&Поиск по карточкам..."
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:736
@@ -734,11 +734,11 @@ msgstr "Название плагина"
 
 #: src/gui/qt/search_dialog.cpp:109
 msgid "Search Cards"
-msgstr "Поиск карточек"
+msgstr "Поиск по карточкам"
 
 #: src/gui/qt/search_dialog.cpp:111
 msgid "Search cards"
-msgstr "Поиск карточек"
+msgstr "Искать в карточках"
 
 #: src/gui/qt/search_dialog.cpp:115
 msgid "If checked, interprets the search text as a Perl-like regular expression."
