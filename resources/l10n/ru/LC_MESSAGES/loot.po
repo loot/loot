@@ -467,8 +467,8 @@ msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator "
 "and main developer) using {0}."
 msgstr ""
-"LOOT бесплатен, но если вы хотите выразить свою признательность некоторой суммой денег, вы можете отправить донат WrinklyNinja"
-", создателю и основному разработчику LOOT, с помощью {0}."
+"LOOT бесплатен, но если вы хотите выразить свою признательность некоторой суммой денег, вы можете отправить донат "
+"WrinklyNinja, создателю и основному разработчику LOOT, с помощью {0}."
 
 #: src/gui/qt/main_window.cpp:1200
 msgid "First-Time Tips"
@@ -726,7 +726,7 @@ msgstr "Позиция"
 
 #: src/gui/qt/plugin_item_model.cpp:179
 msgid "Index"
-msgstr "Позиция"
+msgstr "Индекс"
 
 #: src/gui/qt/plugin_item_model.cpp:181
 msgid "Plugin Name"
@@ -760,7 +760,7 @@ msgstr "Редактор групп"
 #. context menu. It is currently the only entry.
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:208
 msgid "&Copy Plugin Names"
-msgstr "&Копировать название плагина"
+msgstr "&Копировать названия плагинов"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:210
 msgid "Add plugin to group"
@@ -842,7 +842,7 @@ msgstr "Очистить информацию о плагине"
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
 msgid "Locations"
-msgstr "Местоположение"
+msgstr "Местонахождение"
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:247
 msgid "This tab contains user metadata."
