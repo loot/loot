@@ -265,7 +265,7 @@ msgstr "&Сортировать плагины"
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:707
 msgid "Update &Masterlist"
-msgstr "Обновить &Мастерлист"
+msgstr "&Обновить Мастерлист"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:709
