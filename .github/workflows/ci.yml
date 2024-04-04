@@ -335,6 +335,16 @@ jobs:
       - name: Build docs
         run: sphinx-build -b html docs build\docs\html
 
+      - name: Install Gettext
+        run: |
+          $filename='gettext-tools-windows-0.22.5.zip'
+
+          curl -sSfLO "https://github.com/vslavik/gettext-tools-windows/releases/download/v0.22.5/$filename"
+
+          7z x -y -ogettext ".\$filename"
+
+          echo "$PWD/gettext/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
       - name: Build translation message object files
         run: python scripts/po_to_mo.py
 
