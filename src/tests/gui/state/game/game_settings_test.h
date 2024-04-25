@@ -72,7 +72,7 @@ protected:
   GameSettings settings_;
 };
 
-// Pass an empty first argument, as it's a prefix for the test instantation,
+// Pass an empty first argument, as it's a prefix for the test instantiation,
 // but we only have the one so no prefix is necessary.
 // Just test with one game because if it works for one it will work for them
 // all.
