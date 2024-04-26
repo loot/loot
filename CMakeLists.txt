@@ -97,51 +97,79 @@ else()
 endif()
 set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-    set(ZLIB_LIB_NAME "zlibstatic$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}zlibstatic$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
+find_package(ZLIB)
+if(ZLIB_FOUND)
+    set(MZ_ZLIB ON)
+    set(MZ_BZIP2 OFF)
+    set(MZ_LZMA OFF)
+    set(MZ_ZSTD OFF)
+    set(MZ_FETCH_LIBS OFF)
+    set(MZ_PKCRYPT OFF)
+    set(MZ_WZAES OFF)
+    set(MZ_OPENSSL OFF)
+    set(MZ_LIBBSD OFF)
+    set(MZ_SIGNING OFF)
+    set(MZ_COMPRESS_ONLY ON)
+    FetchContent_Declare(
+        MINIZIP
+        URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz"
+        URL_HASH "SHA256=63e47a2b4dbac0da501f43f4da74f118dfb3ef0dee0ffbbe89428271002260f8"
+        FIND_PACKAGE_ARGS)
+
+    FetchContent_MakeAvailable(MINIZIP)
 else()
-    set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}z${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    # zlib and minizip-ng don't really work with FetchContent if zlib isn't already installed, as
+    # minizip-ng errors if find_package(ZLIB) fails, and FetchContent(ZLIB) doesn't support
+    # build-in-source so minizip-ng include won't find zconf.h.
+
+    ExternalProject_Add(zlib
+        URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.tar.gz"
+        URL_HASH "SHA256=b5b06d60ce49c8ba700e0ba517fa07de80b5d4628a037f4be8ad16955be7a7c0"
+        CMAKE_ARGS
+            -DZLIB_BUILD_EXAMPLES=OFF
+            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+        INSTALL_COMMAND ""
+        BUILD_IN_SOURCE TRUE)
+    ExternalProject_Get_Property(zlib SOURCE_DIR BINARY_DIR)
+
+    # minizip-ng can't find zlib if they're both being built for the first time, so explicitly
+    # provide the library path.
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+        set(ZLIB_LIB_NAME "zlibstatic$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}zlibstatic$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    else()
+        set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}z${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    endif()
+    set(ZLIB_LIBRARY
+        "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${ZLIB_LIB_NAME}")
+
+    ExternalProject_Add(minizip-ng
+        URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz"
+        URL_HASH "SHA256=63e47a2b4dbac0da501f43f4da74f118dfb3ef0dee0ffbbe89428271002260f8"
+        CMAKE_ARGS
+            -DMZ_ZLIB=ON
+            -DMZ_BZIP2=OFF
+            -DMZ_LZMA=OFF
+            -DMZ_ZSTD=OFF
+            -DMZ_FETCH_LIBS=OFF
+            -DMZ_PKCRYPT=OFF
+            -DMZ_WZAES=OFF
+            -DMZ_OPENSSL=OFF
+            -DMZ_LIBBSD=OFF
+            -DMZ_SIGNING=OFF
+            -DMZ_COMPRESS_ONLY=ON
+            -DZLIB_ROOT=${SOURCE_DIR}
+            -DZLIB_LIBRARY=${ZLIB_LIBRARY}
+            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+        INSTALL_COMMAND ""
+        DEPENDS zlib)
+    ExternalProject_Get_Property(minizip-ng SOURCE_DIR BINARY_DIR)
+    set(MINIZIP_NG_INCLUDE_DIRS "${SOURCE_DIR}")
+    set(MINIZIP_NG_LIBRARIES
+        "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/libminizip${CMAKE_STATIC_LIBRARY_SUFFIX}"
+        ${ZLIB_LIBRARY})
 endif()
-
-ExternalProject_Add(zlib
-    URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.tar.gz"
-    URL_HASH "SHA256=b5b06d60ce49c8ba700e0ba517fa07de80b5d4628a037f4be8ad16955be7a7c0"
-    CMAKE_ARGS
-        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
-    INSTALL_COMMAND ""
-    BUILD_IN_SOURCE TRUE)
-ExternalProject_Get_Property(zlib SOURCE_DIR BINARY_DIR)
-set(ZLIB_ROOT ${SOURCE_DIR})
-set(ZLIB_LIBRARY
-    "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${ZLIB_LIB_NAME}")
-
-ExternalProject_Add(minizip-ng
-    URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz"
-    URL_HASH "SHA256=63e47a2b4dbac0da501f43f4da74f118dfb3ef0dee0ffbbe89428271002260f8"
-    CMAKE_ARGS
-        -DMZ_ZLIB=ON
-        -DMZ_BZIP2=OFF
-        -DMZ_LZMA=OFF
-        -DMZ_ZSTD=OFF
-        -DMZ_FETCH_LIBS=OFF
-        -DMZ_PKCRYPT=OFF
-        -DMZ_WZAES=OFF
-        -DMZ_OPENSSL=OFF
-        -DMZ_LIBBSD=OFF
-        -DMZ_SIGNING=OFF
-        -DMZ_COMPRESS_ONLY=ON
-        -DZLIB_ROOT=${ZLIB_ROOT}
-        -DZLIB_LIBRARY=${ZLIB_LIBRARY}
-        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
-    INSTALL_COMMAND ""
-    DEPENDS zlib)
-ExternalProject_Get_Property(minizip-ng SOURCE_DIR BINARY_DIR)
-set(MINIZIP_NG_INCLUDE_DIRS "${SOURCE_DIR}")
-set(MINIZIP_NG_LIBRARIES
-    "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/libminizip${CMAKE_STATIC_LIBRARY_SUFFIX}"
-    ${ZLIB_LIBRARY})
 
 ExternalProject_Add(testing-plugins
     URL "https://github.com/Ortham/testing-plugins/archive/1.4.1.tar.gz"
@@ -481,20 +509,28 @@ endif()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_ALL_SOURCES})
-add_dependencies(LOOT libloot minizip-ng spdlog ValveFileVDF OGDF)
+add_dependencies(LOOT libloot spdlog ValveFileVDF OGDF)
 target_link_libraries(LOOT PRIVATE
-    Qt::Widgets Qt::Network Boost::locale ${MINIZIP_NG_LIBRARIES} ${OGDF_LIBRARIES})
+    Qt::Widgets Qt::Network Boost::locale ${OGDF_LIBRARIES})
 
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
-    libloot minizip-ng spdlog ValveFileVDF testing-plugins)
+    libloot spdlog ValveFileVDF testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
-    Qt::Widgets Qt::Network Qt::Test Boost::locale GTest::gtest_main ${MINIZIP_NG_LIBRARIES})
+    Qt::Widgets Qt::Network Qt::Test Boost::locale GTest::gtest_main)
 
 ##############################
 # Set Target-Specific Flags
 ##############################
+
+if(ZLIB_FOUND)
+    target_link_libraries(LOOT PRIVATE MINIZIP::minizip)
+else()
+    add_dependencies(LOOT minizip-ng)
+    target_link_libraries(LOOT PRIVATE ${MINIZIP_NG_LIBRARIES})
+    target_include_directories(LOOT SYSTEM PRIVATE ${MINIZIP_NG_INCLUDE_DIRS})
+endif()
 
 # Include source and library directories.
 target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
@@ -502,7 +538,6 @@ target_include_directories(LOOT SYSTEM PRIVATE
     Boost::headers
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
-    ${MINIZIP_NG_INCLUDE_DIRS}
     ${SPDLOG_INCLUDE_DIRS}
     ${VALVE_FILE_VDF_INCLUDE_DIRS}
     "${tomlplusplus_SOURCE_DIR}/include"
@@ -513,7 +548,6 @@ target_include_directories(loot_gui_tests SYSTEM PRIVATE
     Boost::headers
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
-    ${MINIZIP_NG_INCLUDE_DIRS}
     ${SPDLOG_INCLUDE_DIRS}
     ${VALVE_FILE_VDF_INCLUDE_DIRS}
     "${tomlplusplus_SOURCE_DIR}/include")
