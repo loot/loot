@@ -115,9 +115,7 @@ jobs:
             g++-12 \
             build-essential \
             libgl1-mesa-dev \
-            gettext \
-            flatpak \
-            flatpak-builder
+            gettext
 
       - name: Download & build Boost
         run: |
@@ -232,28 +230,6 @@ jobs:
         run: gpg --output "build/${{ steps.build-archive.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-archive.outputs.filename }}"
         if: github.event_name == 'push'
 
-      - name: Set up Flatpak
-        run: |
-          flatpak --user remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-          flatpak --user install -y flathub org.kde.Platform//6.7 org.kde.Sdk//6.7
-
-      - name: Build Flatpak package
-        id: build-flatpak
-        run: |
-          PACKAGE_FILENAME=loot_${{ steps.get-loot-version.outputs.version }}.flatpak
-
-          cd build
-          ln -s ${{ steps.build-archive.outputs.filename }} loot.tar.xz
-
-          flatpak-builder --repo=flatpak-repo flatpak ../resources/linux/io.github.loot.loot.yml
-          flatpak build-bundle flatpak-repo $PACKAGE_FILENAME io.github.loot.loot --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
-
-          echo "filename=$PACKAGE_FILENAME" >> $GITHUB_OUTPUT
-
-      - name: Sign Flatpak package
-        run: gpg --output "build/${{ steps.build-flatpak.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-flatpak.outputs.filename }}"
-        if: github.event_name == 'push'
-
       - name: Upload archive
         uses: actions/upload-artifact@v4
         with:
@@ -261,6 +237,68 @@ jobs:
           path: |
             build/${{ steps.build-archive.outputs.filename }}
             build/${{ steps.build-archive.outputs.filename }}.sig
+        if: github.event_name == 'push'
+
+  flatpak:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: pip cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+
+      - name: flatpak-builder cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/build/.flatpak-builder
+          key: ${{ runner.os }}-flatpak-builder-${{ hashFiles('resources/linux/io.github.loot.loot.yml') }}
+
+      - name: Get descriptive LOOT version
+        id: get-loot-version
+        shell: bash
+        run: |
+          GIT_DESCRIBE=$(git describe --tags --long --abbrev=7)
+          GIT_REF=${{ github.ref }}
+          GIT_REF_SUFFIX=${GIT_REF#refs/*/}
+          LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF_SUFFIX}
+          LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
+          echo "version=$LOOT_SAFE_DESC_REF" >> $GITHUB_OUTPUT
+
+      - name: Install Flatpak build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-upgrade \
+            flatpak \
+            flatpak-builder
+
+      - name: Generate Flatpak dependency manifests
+        run: ./scripts/generate_manifests.sh
+
+      - name: Build Flatpak package
+        id: build-flatpak
+        run: |
+          PACKAGE_FILENAME=loot_${{ steps.get-loot-version.outputs.version }}.flatpak
+
+          ./scripts/build_flatpak.sh "$PACKAGE_FILENAME"
+
+          echo "filename=$PACKAGE_FILENAME" >> $GITHUB_OUTPUT
+
+      - name: Import GPG key
+        run: echo -n "${{ secrets.GPG_SIGNING_KEY }}" | gpg --import
+        if: github.event_name == 'push'
+
+      - name: Sign Flatpak package
+        run: gpg --output "build/${{ steps.build-flatpak.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-flatpak.outputs.filename }}"
         if: github.event_name == 'push'
 
       - name: Upload Flatpak package
