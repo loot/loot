@@ -510,7 +510,7 @@ add_executable(LOOT ${LOOT_ALL_SOURCES})
 add_dependencies(LOOT libloot ValveFileVDF OGDF)
 target_link_libraries(LOOT PRIVATE
     Qt::Widgets Qt::Network
-    Boost::locale
+    Boost::headers Boost::locale
     ${OGDF_LIBRARIES}
     spdlog::spdlog_header_only
     tomlplusplus::tomlplusplus)
@@ -521,7 +521,7 @@ add_dependencies(loot_gui_tests
     libloot ValveFileVDF testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
     Qt::Widgets Qt::Network Qt::Test
-    Boost::locale
+    Boost::headers Boost::locale
     GTest::gtest_main
     spdlog::spdlog_header_only
     tomlplusplus::tomlplusplus)
@@ -541,7 +541,6 @@ endif()
 # Include source and library directories.
 target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(LOOT SYSTEM PRIVATE
-    Boost::headers
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
     ${VALVE_FILE_VDF_INCLUDE_DIRS}
@@ -549,7 +548,6 @@ target_include_directories(LOOT SYSTEM PRIVATE
 
 target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(loot_gui_tests SYSTEM PRIVATE
-    Boost::headers
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
     ${VALVE_FILE_VDF_INCLUDE_DIRS})
