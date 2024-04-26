@@ -171,12 +171,10 @@ else()
         ${ZLIB_LIBRARY})
 endif()
 
-ExternalProject_Add(testing-plugins
+FetchContent_Declare(
+    testing-plugins
     URL "https://github.com/Ortham/testing-plugins/archive/1.4.1.tar.gz"
-    URL_HASH "SHA256=57f82495a737013c1b828d43fbe87edcb57768f85c6416e8d17f273d692691cf"
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND "")
+    URL_HASH "SHA256=57f82495a737013c1b828d43fbe87edcb57768f85c6416e8d17f273d692691cf")
 
 FetchContent_Declare(
     tomlplusplus
@@ -190,7 +188,7 @@ FetchContent_Declare(
     URL_HASH "SHA256=4dccf2d10f410c1e2feaff89966bfc49a1abb29ef6f08246335b110e001e09a9"
     FIND_PACKAGE_ARGS)
 
-FetchContent_MakeAvailable(GTest spdlog tomlplusplus)
+FetchContent_MakeAvailable(GTest spdlog testing-plugins tomlplusplus)
 
 ExternalProject_Add(ValveFileVDF
     URL "https://github.com/TinyTinni/ValveFileVDF/archive/3ed733cac6d0306e39d228d4a00311adfcc682f6.tar.gz"
@@ -518,7 +516,7 @@ target_link_libraries(LOOT PRIVATE
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
-    libloot ValveFileVDF testing-plugins)
+    libloot ValveFileVDF)
 target_link_libraries(loot_gui_tests PRIVATE
     Qt::Widgets Qt::Network Qt::Test
     Boost::headers Boost::locale
@@ -709,8 +707,7 @@ add_custom_command(TARGET loot_gui_tests POST_BUILD
         "$<TARGET_FILE_DIR:loot_gui_tests>/${LIBLOOT_SHARED_LIBRARY_FILENAME}")
 
 # Copy testing plugins
-ExternalProject_Get_Property(testing-plugins SOURCE_DIR)
 add_custom_command(TARGET loot_gui_tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${SOURCE_DIR}
+        ${testing-plugins_SOURCE_DIR}
         $<TARGET_FILE_DIR:loot_gui_tests>)
