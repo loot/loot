@@ -183,16 +183,14 @@ FetchContent_Declare(
     URL "https://github.com/marzer/tomlplusplus/archive/v3.3.0.tar.gz"
     URL_HASH "SHA256=fc1a5eb410f3c67e90e5ad1264a1386d020067cfb01b633cc8c0441789aa6cf2"
     FIND_PACKAGE_ARGS)
-FetchContent_MakeAvailable(GTest tomlplusplus)
 
-ExternalProject_Add(spdlog
+FetchContent_Declare(
+    spdlog
     URL "https://github.com/gabime/spdlog/archive/v1.12.0.tar.gz"
     URL_HASH "SHA256=4dccf2d10f410c1e2feaff89966bfc49a1abb29ef6f08246335b110e001e09a9"
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND "")
-ExternalProject_Get_Property(spdlog SOURCE_DIR)
-set(SPDLOG_INCLUDE_DIRS "${SOURCE_DIR}/include")
+    FIND_PACKAGE_ARGS)
+
+FetchContent_MakeAvailable(GTest spdlog tomlplusplus)
 
 ExternalProject_Add(ValveFileVDF
     URL "https://github.com/TinyTinni/ValveFileVDF/archive/3ed733cac6d0306e39d228d4a00311adfcc682f6.tar.gz"
@@ -509,21 +507,23 @@ endif()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_ALL_SOURCES})
-add_dependencies(LOOT libloot spdlog ValveFileVDF OGDF)
+add_dependencies(LOOT libloot ValveFileVDF OGDF)
 target_link_libraries(LOOT PRIVATE
     Qt::Widgets Qt::Network
     Boost::locale
     ${OGDF_LIBRARIES}
+    spdlog::spdlog_header_only
     tomlplusplus::tomlplusplus)
 
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
-    libloot spdlog ValveFileVDF testing-plugins)
+    libloot ValveFileVDF testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
     Qt::Widgets Qt::Network Qt::Test
     Boost::locale
     GTest::gtest_main
+    spdlog::spdlog_header_only
     tomlplusplus::tomlplusplus)
 
 ##############################
@@ -544,7 +544,6 @@ target_include_directories(LOOT SYSTEM PRIVATE
     Boost::headers
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
-    ${SPDLOG_INCLUDE_DIRS}
     ${VALVE_FILE_VDF_INCLUDE_DIRS}
     ${OGDF_INCLUDE_DIRS})
 
@@ -553,7 +552,6 @@ target_include_directories(loot_gui_tests SYSTEM PRIVATE
     Boost::headers
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
-    ${SPDLOG_INCLUDE_DIRS}
     ${VALVE_FILE_VDF_INCLUDE_DIRS})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
