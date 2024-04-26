@@ -175,7 +175,7 @@ QSize calculateSize(const QWidget* card,
    * calculate how much it should be possible to horizontally scroll the
    * viewport by (which it does using the largest width it's given).
    *
-   * The largest minumum width is needed because text wrapping means that the
+   * The largest minimum width is needed because text wrapping means that the
    * card's height depends on its width, and all cards must have the same
    * width, so when the viewport is narrow enough that scroll bars appear, all
    * cards must continue to have the same width even out-of-view, which means

@@ -59,7 +59,7 @@ std::map<Node *, QPointF> calculateGraphLayout(
 
     // The height and width are transposed because the layout algorithm
     // arranges layers vertically, and the result is then rotated to get a
-    // horizonal layout.
+    // horizontal layout.
     graphAttributes.width(graphNode) = boundingRect.height();
     graphAttributes.height(graphNode) = boundingRect.width();
 
