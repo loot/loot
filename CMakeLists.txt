@@ -64,16 +64,13 @@ if(NOT DEFINED EP_PREFIX)
     set_directory_properties(PROPERTIES "EP_PREFIX" "external")
 endif()
 
-ExternalProject_Add(GTest
+set(BUILD_GMOCK OFF)
+set(gtest_force_shared_crt ON)
+FetchContent_Declare(
+    GTest
     URL "https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz"
     URL_HASH "SHA256=8ad598c73ad796e0d8280b082cebd82a630d73e73cd3c70057938a6501bba5d7"
-    CMAKE_ARGS
-        -Dgtest_force_shared_crt=ON
-        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
-    INSTALL_COMMAND "")
-ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
-set(GTEST_INCLUDE_DIRS "${SOURCE_DIR}/googletest/include")
-set(GTEST_LIBRARIES "${BINARY_DIR}/lib/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    FIND_PACKAGE_ARGS)
 
 if(NOT DEFINED LIBLOOT_URL)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -158,7 +155,7 @@ FetchContent_Declare(
     URL "https://github.com/marzer/tomlplusplus/archive/v3.3.0.tar.gz"
     URL_HASH "SHA256=fc1a5eb410f3c67e90e5ad1264a1386d020067cfb01b633cc8c0441789aa6cf2"
 )
-FetchContent_MakeAvailable(tomlplusplus)
+FetchContent_MakeAvailable(GTest tomlplusplus)
 
 ExternalProject_Add(spdlog
     URL "https://github.com/gabime/spdlog/archive/v1.12.0.tar.gz"
@@ -491,9 +488,9 @@ target_link_libraries(LOOT PRIVATE
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
-    libloot minizip-ng spdlog ValveFileVDF GTest testing-plugins)
+    libloot minizip-ng spdlog ValveFileVDF testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
-    Qt::Widgets Qt::Network Qt::Test Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
+    Qt::Widgets Qt::Network Qt::Test Boost::locale GTest::gtest_main ${MINIZIP_NG_LIBRARIES})
 
 ##############################
 # Set Target-Specific Flags
@@ -514,7 +511,6 @@ target_include_directories(LOOT SYSTEM PRIVATE
 target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(loot_gui_tests SYSTEM PRIVATE
     Boost::headers
-    ${GTEST_INCLUDE_DIRS}
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
     ${MINIZIP_NG_INCLUDE_DIRS}
