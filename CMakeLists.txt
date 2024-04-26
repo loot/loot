@@ -182,7 +182,7 @@ FetchContent_Declare(
     tomlplusplus
     URL "https://github.com/marzer/tomlplusplus/archive/v3.3.0.tar.gz"
     URL_HASH "SHA256=fc1a5eb410f3c67e90e5ad1264a1386d020067cfb01b633cc8c0441789aa6cf2"
-)
+    FIND_PACKAGE_ARGS)
 FetchContent_MakeAvailable(GTest tomlplusplus)
 
 ExternalProject_Add(spdlog
@@ -511,14 +511,20 @@ endif()
 add_executable(LOOT ${LOOT_ALL_SOURCES})
 add_dependencies(LOOT libloot spdlog ValveFileVDF OGDF)
 target_link_libraries(LOOT PRIVATE
-    Qt::Widgets Qt::Network Boost::locale ${OGDF_LIBRARIES})
+    Qt::Widgets Qt::Network
+    Boost::locale
+    ${OGDF_LIBRARIES}
+    tomlplusplus::tomlplusplus)
 
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
     libloot spdlog ValveFileVDF testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
-    Qt::Widgets Qt::Network Qt::Test Boost::locale GTest::gtest_main)
+    Qt::Widgets Qt::Network Qt::Test
+    Boost::locale
+    GTest::gtest_main
+    tomlplusplus::tomlplusplus)
 
 ##############################
 # Set Target-Specific Flags
@@ -540,7 +546,6 @@ target_include_directories(LOOT SYSTEM PRIVATE
     ${LIBLOOT_INCLUDE_DIRS}
     ${SPDLOG_INCLUDE_DIRS}
     ${VALVE_FILE_VDF_INCLUDE_DIRS}
-    "${tomlplusplus_SOURCE_DIR}/include"
     ${OGDF_INCLUDE_DIRS})
 
 target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
@@ -549,8 +554,7 @@ target_include_directories(loot_gui_tests SYSTEM PRIVATE
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
     ${SPDLOG_INCLUDE_DIRS}
-    ${VALVE_FILE_VDF_INCLUDE_DIRS}
-    "${tomlplusplus_SOURCE_DIR}/include")
+    ${VALVE_FILE_VDF_INCLUDE_DIRS})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(LOOT PRIVATE UNICODE _UNICODE NOMINMAX)
