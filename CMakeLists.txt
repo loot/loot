@@ -9,7 +9,7 @@ project(LOOT)
 include(ExternalProject)
 include(FetchContent)
 
-option(RUN_CLANG_TIDY "Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator." OFF)
+option(LOOT_RUN_CLANG_TIDY "Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator." OFF)
 option(LOOT_BUILD_TESTS "Whether or not to build LOOT's tests." ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -479,7 +479,7 @@ endif()
 # Configure clang-tidy
 ##############################
 
-if(RUN_CLANG_TIDY)
+if(LOOT_RUN_CLANG_TIDY)
     set(CLANG_TIDY_COMMON_CHECKS
         "cppcoreguidelines-avoid-c-arrays"
         "cppcoreguidelines-c-copy-assignment-signature"

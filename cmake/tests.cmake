@@ -186,7 +186,7 @@ endif()
 # Configure clang-tidy
 ##############################
 
-if(RUN_CLANG_TIDY)
+if(LOOT_RUN_CLANG_TIDY)
     # Skip some checks for tests because they're not worth the noise (e.g. GTest
     # happens to use goto, lots of tests use magic numbers as expected values).
     set(CLANG_TIDY_TEST_CHECKS

@@ -89,7 +89,7 @@ Parameter | Values | Default |Description
 ----------|--------|---------|-----------
 `LIBLOOT_URL` | A URL | A GitHub release archive URL | The URL to get the libloot release archive from. By default, this is the URL of a libloot release archive hosted on GitHub. Specifying this is useful if you want to link to a libloot that was built and packaged locally.
 `LOOT_BUILD_TESTS` | `ON`, `OFF` | `ON` | Whether or not to build LOOT's tests.
-`RUN_CLANG_TIDY` | `ON`, `OFF` | `OFF` | Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator.
+`LOOT_RUN_CLANG_TIDY` | `ON`, `OFF` | `OFF` | Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator.
 `MINIZIP_NG_URL` | A URL | A release archive URL | The URL to get a source archive from.
 `OGDF_URL` | A URL | A release archive URL | The URL to get a source archive from.
 `VALVE_FILE_VDF_URL` | A URL | A GitHub commit archive URL | The URL to get a source archive from.
