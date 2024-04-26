@@ -60,8 +60,11 @@ find_package(Qt6 6.4 COMPONENTS Widgets Network Test REQUIRED)
 
 find_package(OGDF CONFIG)
 
+if(NOT DEFINED EP_PREFIX)
+    set_directory_properties(PROPERTIES "EP_PREFIX" "external")
+endif()
+
 ExternalProject_Add(GTest
-    PREFIX "external"
     URL "https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz"
     URL_HASH "SHA256=8ad598c73ad796e0d8280b082cebd82a630d73e73cd3c70057938a6501bba5d7"
     CMAKE_ARGS
@@ -83,7 +86,6 @@ if(NOT DEFINED LIBLOOT_URL)
 endif()
 
 ExternalProject_Add(libloot
-    PREFIX "external"
     URL ${LIBLOOT_URL}
     URL_HASH ${LIBLOOT_HASH}
     CONFIGURE_COMMAND ""
@@ -107,7 +109,6 @@ else()
 endif()
 
 ExternalProject_Add(zlib
-    PREFIX "external"
     URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.tar.gz"
     URL_HASH "SHA256=b5b06d60ce49c8ba700e0ba517fa07de80b5d4628a037f4be8ad16955be7a7c0"
     CMAKE_ARGS
@@ -120,7 +121,6 @@ set(ZLIB_LIBRARY
     "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${ZLIB_LIB_NAME}")
 
 ExternalProject_Add(minizip-ng
-    PREFIX "external"
     URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz"
     URL_HASH "SHA256=63e47a2b4dbac0da501f43f4da74f118dfb3ef0dee0ffbbe89428271002260f8"
     CMAKE_ARGS
@@ -147,7 +147,6 @@ set(MINIZIP_NG_LIBRARIES
     ${ZLIB_LIBRARY})
 
 ExternalProject_Add(testing-plugins
-    PREFIX "external"
     URL "https://github.com/Ortham/testing-plugins/archive/1.4.1.tar.gz"
     URL_HASH "SHA256=57f82495a737013c1b828d43fbe87edcb57768f85c6416e8d17f273d692691cf"
     CONFIGURE_COMMAND ""
@@ -162,7 +161,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(tomlplusplus)
 
 ExternalProject_Add(spdlog
-    PREFIX "external"
     URL "https://github.com/gabime/spdlog/archive/v1.12.0.tar.gz"
     URL_HASH "SHA256=4dccf2d10f410c1e2feaff89966bfc49a1abb29ef6f08246335b110e001e09a9"
     CONFIGURE_COMMAND ""
@@ -172,7 +170,6 @@ ExternalProject_Get_Property(spdlog SOURCE_DIR)
 set(SPDLOG_INCLUDE_DIRS "${SOURCE_DIR}/include")
 
 ExternalProject_Add(ValveFileVDF
-    PREFIX "external"
     URL "https://github.com/TinyTinni/ValveFileVDF/archive/3ed733cac6d0306e39d228d4a00311adfcc682f6.tar.gz"
     URL_HASH "SHA256=3f93af9dda6a5eebd53398e572b77eb9ca488e7d422543dd571bee08e31db481"
     CONFIGURE_COMMAND ""
@@ -194,7 +191,6 @@ else()
     endif()
 
     ExternalProject_Add(OGDF
-        PREFIX "external"
         URL "https://ogdf.uos.de/wp-content/uploads/2023/09/ogdf.v2023.09.zip"
         URL_HASH "SHA256=a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436"
         CMAKE_ARGS
