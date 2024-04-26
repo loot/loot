@@ -122,8 +122,12 @@ else()
     # minizip-ng errors if find_package(ZLIB) fails, and FetchContent(ZLIB) doesn't support
     # build-in-source so minizip-ng include won't find zconf.h.
 
+    if(NOT DEFINED ZLIB_URL)
+        set(ZLIB_URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.tar.gz")
+    endif()
+
     ExternalProject_Add(zlib
-        URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.tar.gz"
+        URL ${ZLIB_URL}
         URL_HASH "SHA256=b5b06d60ce49c8ba700e0ba517fa07de80b5d4628a037f4be8ad16955be7a7c0"
         CMAKE_ARGS
             -DZLIB_BUILD_EXAMPLES=OFF
@@ -144,8 +148,12 @@ else()
     set(ZLIB_LIBRARY
         "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${ZLIB_LIB_NAME}")
 
+    if(NOT DEFINED MINIZIP_NG_URL)
+        set(MINIZIP_NG_URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz")
+    endif()
+
     ExternalProject_Add(minizip-ng
-        URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz"
+        URL ${MINIZIP_NG_URL}
         URL_HASH "SHA256=63e47a2b4dbac0da501f43f4da74f118dfb3ef0dee0ffbbe89428271002260f8"
         CMAKE_ARGS
             -DMZ_ZLIB=ON
@@ -190,8 +198,14 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(GTest spdlog testing-plugins tomlplusplus)
 
+if(NOT DEFINED VALVE_FILE_VDF_URL)
+    set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/3ed733cac6d0306e39d228d4a00311adfcc682f6.tar.gz")
+endif()
+
+# Use ExternalProject for ValveFileVDF because it's not properly set up to be
+# used with FetchContent.
 ExternalProject_Add(ValveFileVDF
-    URL "https://github.com/TinyTinni/ValveFileVDF/archive/3ed733cac6d0306e39d228d4a00311adfcc682f6.tar.gz"
+    URL ${VALVE_FILE_VDF_URL}
     URL_HASH "SHA256=3f93af9dda6a5eebd53398e572b77eb9ca488e7d422543dd571bee08e31db481"
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
@@ -211,8 +225,14 @@ else()
         set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF)
     endif()
 
+    if(NOT DEFINED OGDF_URL)
+        set(OGDF_URL "https://ogdf.uos.de/wp-content/uploads/2023/09/ogdf.v2023.09.zip")
+    endif()
+
+    # Use ExternalProject for OGDF as otherwise there's no way to stop it from
+    # creating and building loads of unnecessary targets.
     ExternalProject_Add(OGDF
-        URL "https://ogdf.uos.de/wp-content/uploads/2023/09/ogdf.v2023.09.zip"
+        URL ${OGDF_URL}
         URL_HASH "SHA256=a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436"
         CMAKE_ARGS
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
