@@ -10,6 +10,7 @@ include(ExternalProject)
 include(FetchContent)
 
 option(RUN_CLANG_TIDY "Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator." OFF)
+option(LOOT_BUILD_TESTS "Whether or not to build LOOT's tests." ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
@@ -56,21 +57,13 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(TBB REQUIRED)
 endif()
 
-find_package(Qt6 6.4 COMPONENTS Widgets Network Test REQUIRED)
+find_package(Qt6 6.4 COMPONENTS Widgets Network REQUIRED)
 
 find_package(OGDF CONFIG)
 
 if(NOT DEFINED EP_PREFIX)
     set_directory_properties(PROPERTIES "EP_PREFIX" "external")
 endif()
-
-set(BUILD_GMOCK OFF)
-set(gtest_force_shared_crt ON)
-FetchContent_Declare(
-    GTest
-    URL "https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz"
-    URL_HASH "SHA256=8ad598c73ad796e0d8280b082cebd82a630d73e73cd3c70057938a6501bba5d7"
-    FIND_PACKAGE_ARGS)
 
 if(NOT DEFINED LIBLOOT_URL)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -180,11 +173,6 @@ else()
 endif()
 
 FetchContent_Declare(
-    testing-plugins
-    URL "https://github.com/Ortham/testing-plugins/archive/1.4.1.tar.gz"
-    URL_HASH "SHA256=57f82495a737013c1b828d43fbe87edcb57768f85c6416e8d17f273d692691cf")
-
-FetchContent_Declare(
     tomlplusplus
     URL "https://github.com/marzer/tomlplusplus/archive/v3.3.0.tar.gz"
     URL_HASH "SHA256=fc1a5eb410f3c67e90e5ad1264a1386d020067cfb01b633cc8c0441789aa6cf2"
@@ -196,7 +184,7 @@ FetchContent_Declare(
     URL_HASH "SHA256=4dccf2d10f410c1e2feaff89966bfc49a1abb29ef6f08246335b110e001e09a9"
     FIND_PACKAGE_ARGS)
 
-FetchContent_MakeAvailable(GTest spdlog testing-plugins tomlplusplus)
+FetchContent_MakeAvailable(spdlog tomlplusplus)
 
 if(NOT DEFINED VALVE_FILE_VDF_URL)
     set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/3ed733cac6d0306e39d228d4a00311adfcc682f6.tar.gz")
@@ -403,113 +391,19 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
     "${CMAKE_SOURCE_DIR}/src/gui/version.h")
 
-set(LOOT_SRC_TESTS_GUI_CPP_FILES
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/main.cpp"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.cpp")
-
-set(LOOT_SRC_TESTS_GUI_H_FILES
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/common_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/detail_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/epic_games_store_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/generic_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/gog_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/heroic_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/microsoft_store_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/steam_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/test_registry.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_settings_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/games_manager_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/group_node_positions_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/helpers_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/unapplied_change_counter_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/helpers_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/tasks_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/backup_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/helpers_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/sourced_message_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/test_helpers.h")
-
 source_group(TREE "${CMAKE_SOURCE_DIR}/src/gui"
     PREFIX "Header Files"
     FILES ${LOOT_SRC_GUI_H_FILES})
 
-source_group(TREE "${CMAKE_SOURCE_DIR}/src/tests/gui"
-    PREFIX "Header Files"
-    FILES ${LOOT_SRC_TESTS_GUI_H_FILES})
-
 source_group(TREE "${CMAKE_SOURCE_DIR}/src/gui"
     PREFIX "Source Files"
     FILES ${LOOT_SRC_GUI_CPP_FILES})
-
-source_group(TREE "${CMAKE_SOURCE_DIR}/src/tests/gui"
-    PREFIX "Source Files"
-    FILES ${LOOT_SRC_TESTS_GUI_CPP_FILES})
 
 set(LOOT_ALL_SOURCES
     ${LOOT_SRC_GUI_CPP_FILES}
     ${LOOT_SRC_GUI_H_FILES}
     "${CMAKE_BINARY_DIR}/generated/version.cpp"
     "${CMAKE_SOURCE_DIR}/resources/resources.qrc")
-
-set(LOOT_GUI_TESTS_ALL_SOURCES
-    ${LOOT_SRC_TESTS_GUI_CPP_FILES}
-    ${LOOT_SRC_TESTS_GUI_H_FILES}
-    "${CMAKE_BINARY_DIR}/generated/version.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/backup.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/plugin_item.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/sourced_message.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/qt/helpers.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/common.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/detail.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/epic_games_store.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/generic.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/gog.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/heroic.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/microsoft_store.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/registry.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/steam.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/group_node_positions.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/logging.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/backup.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/plugin_item.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/sourced_message.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/qt/helpers.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/common.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/detail.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/epic_games_store.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/game_install.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/generic.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/gog.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/heroic.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/microsoft_store.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/registry.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/steam.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/games_manager.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/group_node_positions.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/unapplied_change_counter.h")
 
 ##############################
 # System-Specific Settings
@@ -533,17 +427,6 @@ target_link_libraries(LOOT PRIVATE
     spdlog::spdlog_header_only
     tomlplusplus::tomlplusplus)
 
-# Build application tests.
-add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
-add_dependencies(loot_gui_tests
-    libloot ValveFileVDF)
-target_link_libraries(loot_gui_tests PRIVATE
-    Qt::Widgets Qt::Network Qt::Test
-    Boost::headers Boost::locale
-    GTest::gtest_main
-    spdlog::spdlog_header_only
-    tomlplusplus::tomlplusplus)
-
 ##############################
 # Set Target-Specific Flags
 ##############################
@@ -564,41 +447,24 @@ target_include_directories(LOOT SYSTEM PRIVATE
     ${VALVE_FILE_VDF_INCLUDE_DIRS}
     ${OGDF_INCLUDE_DIRS})
 
-target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
-target_include_directories(loot_gui_tests SYSTEM PRIVATE
-    ${ICU_INCLUDE_DIRS}
-    ${LIBLOOT_INCLUDE_DIRS}
-    ${VALVE_FILE_VDF_INCLUDE_DIRS})
-
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(LOOT PRIVATE UNICODE _UNICODE NOMINMAX)
-    target_compile_definitions(loot_gui_tests PRIVATE
-        UNICODE _UNICODE NOMINMAX BOOST_UUID_FORCE_AUTO_LINK)
 
     target_link_libraries(LOOT PRIVATE ${LIBLOOT_STATIC_LIBRARY})
-    target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_STATIC_LIBRARY})
 
     if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
         target_compile_definitions(LOOT PRIVATE LOOT_STATIC)
-        target_compile_definitions(loot_gui_tests PRIVATE LOOT_STATIC)
 
         target_link_libraries(LOOT PRIVATE tbb_static bz2)
-        target_link_libraries(loot_gui_tests PRIVATE tbb_static bz2)
         target_link_libraries(Qt6::Widgets INTERFACE bz2)
     endif()
 else()
     set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::data ICU::uc TBB::tbb)
 
     target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})
-    target_link_libraries(loot_gui_tests PRIVATE ${LOOT_LIBS})
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    set_target_properties(LOOT loot_gui_tests
-        PROPERTIES
-            INSTALL_RPATH "${CMAKE_INSTALL_RPATH};."
-            BUILD_WITH_INSTALL_RPATH ON)
-
     target_compile_options(LOOT PRIVATE "-Wall" "-Wextra")
 endif()
 
@@ -607,10 +473,6 @@ if(MSVC)
 
     # Turn off permissive mode to be more standards-compliant and avoid compiler errors.
     target_compile_options(LOOT PRIVATE "/permissive-" "/W4")
-
-    # Set /bigobj to allow building Debug tests
-    target_compile_options(loot_gui_tests PRIVATE
-        "/permissive-" "/W4" "/bigobj")
 endif()
 
 ##############################
@@ -646,23 +508,12 @@ if(RUN_CLANG_TIDY)
         "cppcoreguidelines-non-private-member-variables-in-classes"
         "cppcoreguidelines-special-member-functions")
 
-    # Skip some checks for tests because they're not worth the noise (e.g. GTest
-    # happens to use goto, lots of tests use magic numbers as expected values).
-    set(CLANG_TIDY_TEST_CHECKS
-        ${CLANG_TIDY_COMMON_CHECKS})
-
     list(JOIN CLANG_TIDY_APP_CHECKS "," CLANG_TIDY_APP_CHECKS_JOINED)
-    list(JOIN CLANG_TIDY_TEST_CHECKS "," CLANG_TIDY_TEST_CHECKS_JOINED)
 
     set(CLANG_TIDY_APP
         clang-tidy "-header-filter=.*" "-checks=${CLANG_TIDY_APP_CHECKS_JOINED}")
-    set(CLANG_TIDY_TEST
-        clang-tidy "-header-filter=.*" "-checks=${CLANG_TIDY_TEST_CHECKS_JOINED}")
 
     set_target_properties(LOOT PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_APP}")
-
-    set_target_properties(loot_gui_tests PROPERTIES
-        CXX_CLANG_TIDY "${CLANG_TIDY_TEST}")
 endif()
 
 ##############################
@@ -677,42 +528,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         add_custom_command(TARGET LOOT POST_BUILD
             COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
             COMMENT "Running windeployqt...")
-
-        add_custom_command(TARGET loot_gui_tests POST_BUILD
-            COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:loot_gui_tests>
-            COMMENT "Running windeployqt...")
     endif()
-else()
-    set(LOOT_QT_TEST_RESOURCES
-        libicudata.so.56
-        libicudata.so.56.1
-        libicui18n.so.56
-        libicui18n.so.56.1
-        libicuuc.so.56
-        libicuuc.so.56.1
-        libQt6Core.so.6
-        libQt6Core.so.6.5.3
-        libQt6DBus.so.6
-        libQt6DBus.so.6.5.3
-        libQt6Gui.so.6
-        libQt6Gui.so.6.5.3
-        libQt6Network.so.6
-        libQt6Network.so.6.5.3
-        libQt6Test.so.6
-        libQt6Test.so.6.5.3
-        libQt6Widgets.so.6
-        libQt6Widgets.so.6.5.3
-        libQt6XcbQpa.so.6
-        libQt6XcbQpa.so.6.5.3
-        libQt6OpenGL.so.6
-        libQt6OpenGL.so.6.5.3)
-
-    foreach(TEST_RESOURCE ${LOOT_QT_TEST_RESOURCES})
-        add_custom_command(TARGET loot_gui_tests POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${QT_DIR}/lib/${TEST_RESOURCE}"
-                $<TARGET_FILE_DIR:loot_gui_tests>/${TEST_RESOURCE})
-    endforeach()
 endif()
 
 # Copy the API binary to the build directory.
@@ -721,13 +537,7 @@ add_custom_command(TARGET LOOT POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         ${LIBLOOT_SHARED_LIBRARY}
         "$<TARGET_FILE_DIR:LOOT>/${LIBLOOT_SHARED_LIBRARY_FILENAME}")
-add_custom_command(TARGET loot_gui_tests POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${LIBLOOT_SHARED_LIBRARY}
-        "$<TARGET_FILE_DIR:loot_gui_tests>/${LIBLOOT_SHARED_LIBRARY_FILENAME}")
 
-# Copy testing plugins
-add_custom_command(TARGET loot_gui_tests POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${testing-plugins_SOURCE_DIR}
-        $<TARGET_FILE_DIR:loot_gui_tests>)
+if(LOOT_BUILD_TESTS)
+    include("cmake/tests.cmake")
+endif()
