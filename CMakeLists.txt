@@ -65,30 +65,36 @@ if(NOT DEFINED EP_PREFIX)
     set_directory_properties(PROPERTIES "EP_PREFIX" "external")
 endif()
 
-if(NOT DEFINED LIBLOOT_URL)
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.3/libloot-0.22.3-win64.7z")
-        set(LIBLOOT_HASH "SHA256=6ee26d25250fb255ead5781e092b6122877cc2526119d6fe1f9ea4f4ff9a094a")
-    else()
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.3/libloot-0.22.3-Linux.tar.xz")
-        set(LIBLOOT_HASH "SHA256=0b01797b1c52828d9c3af552e6aa63adcdea00aa2808f30b126256ff6f046794")
-    endif()
-endif()
-
-ExternalProject_Add(libloot
-    URL ${LIBLOOT_URL}
-    URL_HASH ${LIBLOOT_HASH}
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND "")
-ExternalProject_Get_Property(libloot SOURCE_DIR)
-set(LIBLOOT_INCLUDE_DIRS "${SOURCE_DIR}/include")
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-    set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot.dll${CMAKE_STATIC_LIBRARY_SUFFIX}")
+find_package(libloot CONFIG)
+if(libloot_FOUND)
+    get_target_property(LIBLOOT_INCLUDE_DIRS libloot::loot INTERFACE_INCLUDE_DIRECTORIES)
+    get_target_property(LIBLOOT_SHARED_LIBRARY libloot::loot IMPORTED_LOCATION_RELEASE)
 else()
-    set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    if(NOT DEFINED LIBLOOT_URL)
+        if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.3/libloot-0.22.3-win64.7z")
+            set(LIBLOOT_HASH "SHA256=6ee26d25250fb255ead5781e092b6122877cc2526119d6fe1f9ea4f4ff9a094a")
+        else()
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.3/libloot-0.22.3-Linux.tar.xz")
+            set(LIBLOOT_HASH "SHA256=0b01797b1c52828d9c3af552e6aa63adcdea00aa2808f30b126256ff6f046794")
+        endif()
+    endif()
+
+    ExternalProject_Add(libloot
+        URL ${LIBLOOT_URL}
+        URL_HASH ${LIBLOOT_HASH}
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND "")
+    ExternalProject_Get_Property(libloot SOURCE_DIR)
+    set(LIBLOOT_INCLUDE_DIRS "${SOURCE_DIR}/include")
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+        set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot.dll${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    else()
+        set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    endif()
+    set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
 endif()
-set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 find_package(ZLIB)
 if(ZLIB_FOUND)
@@ -419,7 +425,7 @@ endif()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_ALL_SOURCES})
-add_dependencies(LOOT libloot ValveFileVDF OGDF)
+add_dependencies(LOOT ValveFileVDF OGDF)
 target_link_libraries(LOOT PRIVATE
     Qt::Widgets Qt::Network
     Boost::headers Boost::locale
@@ -430,6 +436,20 @@ target_link_libraries(LOOT PRIVATE
 ##############################
 # Set Target-Specific Flags
 ##############################
+
+if(libloot_FOUND)
+    target_link_libraries(LOOT PRIVATE libloot::loot)
+else()
+    add_dependencies(LOOT libloot)
+
+    target_include_directories(LOOT SYSTEM PRIVATE ${LIBLOOT_INCLUDE_DIRS})
+
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        target_link_libraries(LOOT PRIVATE ${LIBLOOT_STATIC_LIBRARY})
+    else()
+        target_link_libraries(LOOT PRIVATE ${LIBLOOT_SHARED_LIBRARY})
+    endif()
+endif()
 
 if(ZLIB_FOUND)
     target_link_libraries(LOOT PRIVATE MINIZIP::minizip)
@@ -443,14 +463,11 @@ endif()
 target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(LOOT SYSTEM PRIVATE
     ${ICU_INCLUDE_DIRS}
-    ${LIBLOOT_INCLUDE_DIRS}
     ${VALVE_FILE_VDF_INCLUDE_DIRS}
     ${OGDF_INCLUDE_DIRS})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(LOOT PRIVATE UNICODE _UNICODE NOMINMAX)
-
-    target_link_libraries(LOOT PRIVATE ${LIBLOOT_STATIC_LIBRARY})
 
     if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
         target_compile_definitions(LOOT PRIVATE LOOT_STATIC)
@@ -459,7 +476,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         target_link_libraries(Qt6::Widgets INTERFACE bz2)
     endif()
 else()
-    set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::data ICU::uc TBB::tbb)
+    set(LOOT_LIBS ICU::data ICU::uc TBB::tbb)
 
     target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})
 endif()

@@ -124,8 +124,7 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
 
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
-add_dependencies(loot_gui_tests
-    libloot ValveFileVDF)
+add_dependencies(loot_gui_tests ValveFileVDF)
 target_link_libraries(loot_gui_tests PRIVATE
     Qt::Widgets Qt::Network Qt::Test
     Boost::headers Boost::locale
@@ -136,6 +135,20 @@ target_link_libraries(loot_gui_tests PRIVATE
 ##############################
 # Set Target-Specific Flags
 ##############################
+
+if(libloot_FOUND)
+    target_link_libraries(loot_gui_tests PRIVATE libloot::loot)
+else()
+    add_dependencies(loot_gui_tests libloot)
+
+    target_include_directories(loot_gui_tests SYSTEM PRIVATE ${LIBLOOT_INCLUDE_DIRS})
+
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_STATIC_LIBRARY})
+    else()
+        target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_SHARED_LIBRARY})
+    endif()
+endif()
 
 if(ZLIB_FOUND)
     target_link_libraries(loot_gui_tests PRIVATE MINIZIP::minizip)
@@ -148,14 +161,11 @@ endif()
 target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(loot_gui_tests SYSTEM PRIVATE
     ${ICU_INCLUDE_DIRS}
-    ${LIBLOOT_INCLUDE_DIRS}
     ${VALVE_FILE_VDF_INCLUDE_DIRS})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(loot_gui_tests PRIVATE
         UNICODE _UNICODE NOMINMAX BOOST_UUID_FORCE_AUTO_LINK)
-
-    target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_STATIC_LIBRARY})
 
     if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
         target_compile_definitions(loot_gui_tests PRIVATE LOOT_STATIC)
@@ -163,7 +173,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         target_link_libraries(loot_gui_tests PRIVATE tbb_static bz2)
     endif()
 else()
-    set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::data ICU::uc TBB::tbb)
+    set(LOOT_LIBS ICU::data ICU::uc TBB::tbb)
 
     target_link_libraries(loot_gui_tests PRIVATE ${LOOT_LIBS})
 endif()
