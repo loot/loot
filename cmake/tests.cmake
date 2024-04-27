@@ -160,7 +160,6 @@ endif()
 
 target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(loot_gui_tests SYSTEM PRIVATE
-    ${ICU_INCLUDE_DIRS}
     ${VALVE_FILE_VDF_INCLUDE_DIRS})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -173,9 +172,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         target_link_libraries(loot_gui_tests PRIVATE tbb_static bz2)
     endif()
 else()
-    set(LOOT_LIBS ICU::data ICU::uc TBB::tbb)
-
-    target_link_libraries(loot_gui_tests PRIVATE ${LOOT_LIBS})
+    target_link_libraries(loot_gui_tests PRIVATE ${ICU_TARGETS})
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)

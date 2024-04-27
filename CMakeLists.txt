@@ -462,7 +462,6 @@ endif()
 # Include source and library directories.
 target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(LOOT SYSTEM PRIVATE
-    ${ICU_INCLUDE_DIRS}
     ${VALVE_FILE_VDF_INCLUDE_DIRS}
     ${OGDF_INCLUDE_DIRS})
 
@@ -476,9 +475,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         target_link_libraries(Qt6::Widgets INTERFACE bz2)
     endif()
 else()
-    set(LOOT_LIBS ICU::data ICU::uc TBB::tbb)
+    set(ICU_TARGETS ICU::data ICU::uc TBB::tbb)
 
-    target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})
+    target_link_libraries(LOOT PRIVATE X11 ${ICU_TARGETS})
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
