@@ -59,8 +59,6 @@ endif()
 
 find_package(Qt6 6.4 COMPONENTS Widgets Network REQUIRED)
 
-find_package(OGDF CONFIG)
-
 if(NOT DEFINED EP_PREFIX)
     set_directory_properties(PROPERTIES "EP_PREFIX" "external")
 endif()
@@ -207,12 +205,8 @@ ExternalProject_Add(ValveFileVDF
 ExternalProject_Get_Property(ValveFileVDF SOURCE_DIR)
 set(VALVE_FILE_VDF_INCLUDE_DIRS "${SOURCE_DIR}")
 
-if(OGDF_FOUND)
-    # Set the value to the found target instead of a list of libraries, it
-    # still works. No need to set OGDF_INCLUDE_DIRS, that's already done when
-    # find_package is run.
-    set(OGDF_LIBRARIES OGDF)
-else()
+find_package(OGDF CONFIG)
+if(NOT OGDF_FOUND)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF --config Release)
     else()
@@ -425,11 +419,10 @@ endif()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_ALL_SOURCES})
-add_dependencies(LOOT ValveFileVDF OGDF)
+add_dependencies(LOOT ValveFileVDF)
 target_link_libraries(LOOT PRIVATE
     Qt::Widgets Qt::Network
     Boost::headers Boost::locale
-    ${OGDF_LIBRARIES}
     spdlog::spdlog_header_only
     tomlplusplus::tomlplusplus)
 
@@ -459,11 +452,18 @@ else()
     target_include_directories(LOOT SYSTEM PRIVATE ${MINIZIP_NG_INCLUDE_DIRS})
 endif()
 
+if(OGDF_FOUND)
+    target_link_libraries(LOOT PRIVATE OGDF)
+else()
+    add_dependencies(LOOT OGDF)
+    target_link_libraries(LOOT PRIVATE ${OGDF_LIBRARIES})
+    target_include_directories(LOOT SYSTEM PRIVATE ${OGDF_INCLUDE_DIRS})
+endif()
+
 # Include source and library directories.
 target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(LOOT SYSTEM PRIVATE
-    ${VALVE_FILE_VDF_INCLUDE_DIRS}
-    ${OGDF_INCLUDE_DIRS})
+    ${VALVE_FILE_VDF_INCLUDE_DIRS})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(LOOT PRIVATE UNICODE _UNICODE NOMINMAX)
