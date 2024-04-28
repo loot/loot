@@ -70,6 +70,8 @@ std::optional<std::string> GetEgsAppName(GameId gameId) {
       return "adeae8bbfc94427db57c7dfecce3f1d4";
     case GameId::fonv:
       return "5daeb974a22a435988892319b3a4f476";
+    case GameId::fo4:
+      return "61d52ce4d09d41e48800c22784d13ae8";
     case GameId::tes3:
     case GameId::tes4:
     case GameId::nehrim:
@@ -77,7 +79,6 @@ std::optional<std::string> GetEgsAppName(GameId gameId) {
     case GameId::enderal:
     case GameId::enderalse:
     case GameId::tes5vr:
-    case GameId::fo4:
     case GameId::fo4vr:
     case GameId::starfield:
       return std::nullopt;
@@ -91,6 +92,7 @@ std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
     const std::filesystem::path& basePath) {
   switch (gameId) {
     case GameId::tes5se:
+    case GameId::fo4:
       // There's only one path, it could be for any language that
       // the game supports, so just use en (the choice doesn't
       // matter).
@@ -265,6 +267,8 @@ std::string GetAppDataFolderName(const GameId gameId) {
       return "Fallout3";
     case GameId::fonv:
       return "FalloutNV_Epic";
+    case GameId::fo4:
+      return "Fallout4 EPIC";
     default:
       throw std::logic_error("Unsupported Epic Games Store game");
   }
