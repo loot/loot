@@ -80,9 +80,6 @@ jobs:
       - name: Set libloot install path
         run: echo "LIBLOOT_INSTALL_PATH=${{ github.workspace }}/libloot-${{ env.LIBLOOT_VERSION }}-install" >> $GITHUB_ENV
 
-      - name: Set OGDF install path
-        run: echo "OGDF_INSTALL_PATH=${{ github.workspace }}/ogdf-${{ env.OGDF_VERSION }}-install" >> $GITHUB_ENV
-
       - name: Boost cache
         id: boost-cache
         uses: actions/cache@v4
@@ -100,13 +97,6 @@ jobs:
           # Key includes ICU major version because libloot links against it as a shared library.
           key: ${{ runner.os }}-libloot-${{ env.LIBLOOT_VERSION }}-icu-${{ env.ICU_MAJOR_VERSION }}
 
-      - name: OGDF cache
-        id: ogdf-cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.OGDF_INSTALL_PATH }}
-          key: ${{ runner.os }}-ogdf-${{ env.OGDF_VERSION }}
-
       - name: Install C++ dependencies
         run: |
           sudo apt-get update
@@ -114,8 +104,7 @@ jobs:
             libtbb-dev \
             g++-12 \
             build-essential \
-            libgl1-mesa-dev \
-            gettext
+            libgl1-mesa-dev
 
       - name: Download & build Boost
         run: |
@@ -158,86 +147,18 @@ jobs:
           echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LIBLOOT_INSTALL_PATH/lib" >> "$GITHUB_ENV"
         if: steps.libloot-cache.outputs.cache-hit != 'true'
 
-      - name: Download and build OGDF
-        run: |
-          curl -sSfLO https://github.com/ogdf/ogdf/archive/refs/tags/${OGDF_VERSION}.zip
-          unzip ${OGDF_VERSION}.zip -d .
-
-          mkdir ogdf-${OGDF_VERSION}/build
-          cd ogdf-${OGDF_VERSION}/build
-
-          export CXX="g++-12" CC="gcc-12"
-          cmake .. -DCMAKE_INSTALL_PREFIX="${OGDF_INSTALL_PATH}"
-          cmake --build .
-          cmake --install .
-        if: steps.ogdf-cache.outputs.cache-hit != 'true'
-
       - name: Run CMake
         run: |
           mkdir build
           cd build
           export CXX="g++-12" CC="gcc-12"
-          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}" -DICU_ROOT="${{ steps.get-icu.outputs.root }}" -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }}"
-          make all
+          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DICU_ROOT="${{ steps.get-icu.outputs.root }}" -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }}"
+          make loot_gui_tests
 
       - name: Run C++ tests
         run: |
           cd build
           ./loot_gui_tests
-
-      - name: Install packages for building docs
-        run: |
-          python -m pip install -r docs/requirements.txt
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-      - name: Build docs
-        run: sphinx-build -b html docs build/docs/html
-
-      - name: Build translation message object files
-        run: python scripts/po_to_mo.py
-
-      - name: Get descriptive LOOT version
-        id: get-loot-version
-        shell: bash
-        run: |
-          GIT_DESCRIBE=$(git describe --tags --long --abbrev=7)
-          GIT_REF=${{ github.ref }}
-          GIT_REF_SUFFIX=${GIT_REF#refs/*/}
-          LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF_SUFFIX}
-          LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
-          SAFE_GIT_REF_SUFFIX=${GIT_REF_SUFFIX//[\/<>\"|]/_}
-          echo "version=$LOOT_SAFE_DESC_REF" >> $GITHUB_OUTPUT
-          echo "ref=$SAFE_GIT_REF_SUFFIX" >> $GITHUB_OUTPUT
-
-      - name: Build archive
-        id: build-archive
-        shell: bash
-        run: |
-          VERSION="${{ steps.get-loot-version.outputs.version }}"
-          FILENAME="loot_${VERSION}-Linux.tar.xz"
-          export PATH="${{ steps.qt-metadata.outputs.root }}/bin:$PATH"
-
-          python scripts/archive.py . "${{ steps.get-loot-version.outputs.ref }}"
-          mv "build/loot_${{ steps.get-loot-version.outputs.version }}.tar.xz" "build/$FILENAME"
-
-          echo "filename=$FILENAME" >> $GITHUB_OUTPUT
-
-      - name: Import GPG key
-        run: echo -n "${{ secrets.GPG_SIGNING_KEY }}" | gpg --import
-        if: github.event_name == 'push'
-
-      - name: Sign archive
-        run: gpg --output "build/${{ steps.build-archive.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-archive.outputs.filename }}"
-        if: github.event_name == 'push'
-
-      - name: Upload archive
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.build-archive.outputs.filename }}
-          path: |
-            build/${{ steps.build-archive.outputs.filename }}
-            build/${{ steps.build-archive.outputs.filename }}.sig
-        if: github.event_name == 'push'
 
   flatpak:
     runs-on: ubuntu-22.04
