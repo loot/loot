@@ -125,11 +125,12 @@ else()
 
     if(NOT DEFINED ZLIB_URL)
         set(ZLIB_URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.1.tar.gz")
+        set(ZLIB_HASH "SHA256=17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c")
     endif()
 
     ExternalProject_Add(zlib
         URL ${ZLIB_URL}
-        URL_HASH "SHA256=17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c"
+        URL_HASH ${ZLIB_HASH}
         CMAKE_ARGS
             -DZLIB_BUILD_EXAMPLES=OFF
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
@@ -151,11 +152,12 @@ else()
 
     if(NOT DEFINED MINIZIP_NG_URL)
         set(MINIZIP_NG_URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.5.tar.gz")
+        set(MINIZIP_NG_HASH "SHA256=9bb636474b8a4269280d32aca7de4501f5c24cc642c9b4225b4ed7b327f4ee73")
     endif()
 
     ExternalProject_Add(minizip-ng
         URL ${MINIZIP_NG_URL}
-        URL_HASH "SHA256=9bb636474b8a4269280d32aca7de4501f5c24cc642c9b4225b4ed7b327f4ee73"
+        URL_HASH ${MINIZIP_NG_HASH}
         CMAKE_ARGS
             -DMZ_ZLIB=ON
             -DMZ_BZIP2=OFF
@@ -196,13 +198,14 @@ FetchContent_MakeAvailable(spdlog tomlplusplus)
 
 if(NOT DEFINED VALVE_FILE_VDF_URL)
     set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/c8adfc29e62cc980b595e965bedfb239087647ff.tar.gz")
+    set(VALVE_FILE_VDF_HASH "SHA256=48a078ff1e360d9c2217c9bd2eb766928a0234b73bb2bd458d04c64644669550")
 endif()
 
 # Use ExternalProject for ValveFileVDF because it's not properly set up to be
 # used with FetchContent.
 ExternalProject_Add(ValveFileVDF
     URL ${VALVE_FILE_VDF_URL}
-    URL_HASH "SHA256=48a078ff1e360d9c2217c9bd2eb766928a0234b73bb2bd458d04c64644669550"
+    URL_HASH ${VALVE_FILE_VDF_HASH}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
@@ -219,13 +222,14 @@ if(NOT OGDF_FOUND)
 
     if(NOT DEFINED OGDF_URL)
         set(OGDF_URL "https://ogdf.uos.de/wp-content/uploads/2023/09/ogdf.v2023.09.zip")
+        set(OGDF_HASH "SHA256=a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436")
     endif()
 
     # Use ExternalProject for OGDF as otherwise there's no way to stop it from
     # creating and building loads of unnecessary targets.
     ExternalProject_Add(OGDF
         URL ${OGDF_URL}
-        URL_HASH "SHA256=a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436"
+        URL_HASH ${OGDF_HASH}
         CMAKE_ARGS
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
         BUILD_COMMAND ${OGDF_BUILD_COMMAND}
