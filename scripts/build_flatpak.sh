@@ -10,7 +10,7 @@ then
     BRANCH_NAME="$(git rev-parse --abbrev-ref HEAD)"
     DESCRIPTION="$(git describe --tags --long --abbrev=7)"
     PACKAGE_FILENAME="loot_${DESCRIPTION}_${BRANCH_NAME}.flatpak"
-    PACKAGE_FILENAME="${PACKAGE_FILENAME//[\/<>\"|]/_}"
+    PACKAGE_FILENAME="$(echo $PACKAGE_FILENAME | sed 's/[\/<>\"|]/_/g')"
 fi
 
 cd build
