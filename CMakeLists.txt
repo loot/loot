@@ -150,12 +150,12 @@ else()
         "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${ZLIB_LIB_NAME}")
 
     if(NOT DEFINED MINIZIP_NG_URL)
-        set(MINIZIP_NG_URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz")
+        set(MINIZIP_NG_URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.5.tar.gz")
     endif()
 
     ExternalProject_Add(minizip-ng
         URL ${MINIZIP_NG_URL}
-        URL_HASH "SHA256=63e47a2b4dbac0da501f43f4da74f118dfb3ef0dee0ffbbe89428271002260f8"
+        URL_HASH "SHA256=9bb636474b8a4269280d32aca7de4501f5c24cc642c9b4225b4ed7b327f4ee73"
         CMAKE_ARGS
             -DMZ_ZLIB=ON
             -DMZ_BZIP2=OFF
