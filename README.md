@@ -50,7 +50,7 @@ flatpak --user install ~/Downloads/loot.flatpak
 You may also want to install the Adwaita theme:
 
 ```
-flatpak install flathub org.kde.KStyle.Adwaita//6.5
+flatpak install flathub org.kde.KStyle.Adwaita//6.7
 ```
 
 ## Building LOOT
@@ -97,7 +97,7 @@ Parameter | Values | Default |Description
 
 The URL parameters can be used to supply a local path if the archive has already been downloaded (e.g. for offline builds).
 
-You may also need to set `BOOST_ROOT` if CMake cannot find Boost, and `Qt6_ROOT` (e.g. to `C:/Qt/6.5.3/msvc2019_64`) if CMake cannot find Qt.
+You may also need to set `BOOST_ROOT` if CMake cannot find Boost, and `Qt6_ROOT` (e.g. to `C:/Qt/6.7.0/msvc2019_64`) if CMake cannot find Qt.
 
 ## Building The Documentation
 
