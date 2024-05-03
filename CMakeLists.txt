@@ -113,8 +113,8 @@ if(ZLIB_FOUND)
     set(MZ_COMPRESS_ONLY ON)
     FetchContent_Declare(
         MINIZIP
-        URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz"
-        URL_HASH "SHA256=63e47a2b4dbac0da501f43f4da74f118dfb3ef0dee0ffbbe89428271002260f8"
+        URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.5.tar.gz"
+        URL_HASH "SHA256=9bb636474b8a4269280d32aca7de4501f5c24cc642c9b4225b4ed7b327f4ee73"
         FIND_PACKAGE_ARGS)
 
     FetchContent_MakeAvailable(MINIZIP)
