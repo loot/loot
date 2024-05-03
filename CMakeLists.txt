@@ -188,8 +188,8 @@ FetchContent_Declare(
 
 FetchContent_Declare(
     spdlog
-    URL "https://github.com/gabime/spdlog/archive/v1.12.0.tar.gz"
-    URL_HASH "SHA256=4dccf2d10f410c1e2feaff89966bfc49a1abb29ef6f08246335b110e001e09a9"
+    URL "https://github.com/gabime/spdlog/archive/v1.14.1.tar.gz"
+    URL_HASH "SHA256=1586508029a7d0670dfcb2d97575dcdc242d3868a259742b69f100801ab4e16b"
     FIND_PACKAGE_ARGS)
 
 FetchContent_MakeAvailable(spdlog tomlplusplus)
