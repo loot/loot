@@ -124,12 +124,12 @@ else()
     # build-in-source so minizip-ng include won't find zconf.h.
 
     if(NOT DEFINED ZLIB_URL)
-        set(ZLIB_URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.tar.gz")
+        set(ZLIB_URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.1.tar.gz")
     endif()
 
     ExternalProject_Add(zlib
         URL ${ZLIB_URL}
-        URL_HASH "SHA256=b5b06d60ce49c8ba700e0ba517fa07de80b5d4628a037f4be8ad16955be7a7c0"
+        URL_HASH "SHA256=17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c"
         CMAKE_ARGS
             -DZLIB_BUILD_EXAMPLES=OFF
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
