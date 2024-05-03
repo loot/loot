@@ -182,8 +182,8 @@ endif()
 
 FetchContent_Declare(
     tomlplusplus
-    URL "https://github.com/marzer/tomlplusplus/archive/v3.3.0.tar.gz"
-    URL_HASH "SHA256=fc1a5eb410f3c67e90e5ad1264a1386d020067cfb01b633cc8c0441789aa6cf2"
+    URL "https://github.com/marzer/tomlplusplus/archive/v3.4.0.tar.gz"
+    URL_HASH "SHA256=8517f65938a4faae9ccf8ebb36631a38c1cadfb5efa85d9a72e15b9e97d25155"
     FIND_PACKAGE_ARGS)
 
 FetchContent_Declare(
