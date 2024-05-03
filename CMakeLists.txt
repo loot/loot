@@ -195,14 +195,14 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(spdlog tomlplusplus)
 
 if(NOT DEFINED VALVE_FILE_VDF_URL)
-    set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/3ed733cac6d0306e39d228d4a00311adfcc682f6.tar.gz")
+    set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/c8adfc29e62cc980b595e965bedfb239087647ff.tar.gz")
 endif()
 
 # Use ExternalProject for ValveFileVDF because it's not properly set up to be
 # used with FetchContent.
 ExternalProject_Add(ValveFileVDF
     URL ${VALVE_FILE_VDF_URL}
-    URL_HASH "SHA256=3f93af9dda6a5eebd53398e572b77eb9ca488e7d422543dd571bee08e31db481"
+    URL_HASH "SHA256=48a078ff1e360d9c2217c9bd2eb766928a0234b73bb2bd458d04c64644669550"
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
