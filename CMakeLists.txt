@@ -549,6 +549,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
             COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
             COMMENT "Running windeployqt...")
     endif()
+
+    set(DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME "loot.dll")
+else()
+    set(DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME "libloot.so")
 endif()
 
 # Copy the API binary to the build directory.
@@ -556,7 +560,7 @@ get_filename_component(LIBLOOT_SHARED_LIBRARY_FILENAME ${LIBLOOT_SHARED_LIBRARY}
 add_custom_command(TARGET LOOT POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         ${LIBLOOT_SHARED_LIBRARY}
-        "$<TARGET_FILE_DIR:LOOT>/${LIBLOOT_SHARED_LIBRARY_FILENAME}")
+        "$<TARGET_FILE_DIR:LOOT>/${DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME}")
 
 if(LOOT_BUILD_TESTS)
     include("cmake/tests.cmake")
