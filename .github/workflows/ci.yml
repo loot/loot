@@ -158,6 +158,9 @@ jobs:
       - name: Run C++ tests
         run: |
           cd build
+
+          export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$LIBLOOT_INSTALL_PATH/lib"
+
           ./loot_gui_tests
 
   flatpak:
