@@ -106,6 +106,7 @@ GraphView::GraphView(QWidget *parent) :
   setTransformationAnchor(AnchorUnderMouse);
   scale(INITIAL_SCALING_FACTOR, INITIAL_SCALING_FACTOR);
   setMinimumSize(MIN_VIEW_SIZE, MIN_VIEW_SIZE);
+  setBackgroundBrush(QBrush(backgroundColor));
 }
 
 void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
