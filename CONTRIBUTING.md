@@ -109,8 +109,7 @@ unreleased libloot changes. To do this, download a snapshot build artifact from 
 need to be logged into GitHub to do so) and unzip it to get a 7-zip or XZ-compressed tar file, then
 pass `-DLIBLOOT_URL=<path to that file>` when running `cmake`.
 
-To download and extract a snapshot build artifact during the GitHub Actions CI workflow, add the
-following step before the step that runs `cmake`:
+To download and extract a snapshot build artifact during the GitHub Actions CI workflow, change the value of the `LIBLOOT_VERSION` environment variable to be the relevant commit hash. That only affects Linux builds, which build libloot from source. Windows builds use a prebuilt binary archive, so add a step to download the appropriate archive, before the step that runs `cmake`:
 
 ```yaml
 - name: Download libloot snapshot build artifact
@@ -122,10 +121,10 @@ following step before the step that runs `cmake`:
       -o 'libloot.zip' \
       https://api.github.com/repos/loot/libloot/actions/artifacts/39467110/zip
     unzip libloot.zip
-    echo "LIBLOOT_URL=${{ github.workspace }}/$(ls -1 libloot-*.tar.xz)" >> $GITHUB_ENV
+    echo "LIBLOOT_URL=${{ github.workspace }}/$(ls -1 libloot-*.7z)" >> $GITHUB_ENV
 ```
 
-Replace `39467110` with the relevant artifact's ID, and replace `/$(ls -1 libloot-*.tar.xz)` with `\\$(ls -1 libloot-*.7z)` for the Windows build. You can get an artifact's ID from the last
+Replace `39467110` with the relevant artifact's ID. You can get an artifact's ID from the last
 path component in its download URL on the libloot build's GitHub Actions page in your browser: for
 example, the page at `https://github.com/loot/libloot/actions/runs/542851787` lists
 `libloot-0.16.1-9-ge97208c_linux-github-actions-Linux.tar.xz` as an artifact, and its download URL
