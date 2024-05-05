@@ -4,7 +4,10 @@ Editing Plugin Metadata
 
 .. image:: ../../images/metadata_editor.windows.png
 
-LOOT uses metadata to supply plugins with messages and Bash Tag suggestions, and to help it sort plugins that it can't otherwise sort correctly. You can add to your installed plugins' metadata through the metadata editor panel, and plugins with user metadata are indicated with a "Has User Metadata" icon.
+LOOT uses metadata to supply plugins with messages and Bash Tag suggestions, and to help it sort plugins that it can't otherwise sort correctly. You can add to your installed plugins' metadata through the metadata editor panel, and plugins with user metadata are indicated with a "Has User Metadata" |has_user_metadata_icon| icon.
+
+.. |has_user_metadata_icon| image:: ../../../resources/icons/material-icons/account_circle_black_48dp.svg
+  :scale: 45%
 
 The editor panel is accessed by selecting a plugin in the sidebar and then clicking the "Edit Metadata" item in the Plugin menu. Only one plugin's metadata can be edited at a time. While the editor panel is open, the plugin sidebar also displays any non-default plugin groups, to aid setting new group memberships. The editor can be resized by grabbing the top of the editor's header and dragging it up or down.
 

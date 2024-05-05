@@ -54,20 +54,35 @@ Before a sorted load order is applied, LOOT saves a backup of the current load o
 Plugin Cards & Sidebar Items
 ============================
 
-Each plugin is displayed on its own "card", which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's Plugins section. The sidebar item contains the plugin's listed position, name and an icon for plugins that have user metadata. It also displays the plugin's in-game load order index if the plugin is active, while light plugins have their light plugin index displayed. Clicking on a plugin's sidebar item will select it, so that the Plugin menu options operate on it. Double-clicking a plugin's sidebar item will jump to its card.
+Each plugin is displayed on its own "card", which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's Plugins section. The sidebar item contains the plugin's listed position, name and an |has_user_metadata_icon| icon for plugins that have user metadata. It also displays the plugin's in-game load order index if the plugin is active, while light plugins have their light plugin index displayed. Clicking on a plugin's sidebar item will select it, so that the Plugin menu options operate on it. Double-clicking a plugin's sidebar item will jump to its card.
 
 The plugin card's header holds the following information, some of which is only displayed if applicable:
 
-- The "Active Plugin" icon.
 - The plugin name.
 - The plugin's version number, extracted from its description field.
 - The plugin's :abbr:`CRC (Cyclic Redundancy Checksum)`, which can be used to uniquely identify it. CRCs are only displayed after they have been calculated during overlap filtering or sorting, except the the CRC of the game's main master plugin, which is never displayed.
-- The "Master Plugin" icon.
-- The "Light Plugin" icon.
-- The "Empty Plugin" icon.
-- The "Loads Archive" icon.
-- The "Verified clean" icon.
-- The "Has User Metadata" icon.
+- The "Active Plugin" |active_plugin_icon| icon.
+- The "Master Plugin" |master_plugin_icon| icon.
+- The "Light Plugin" |light_plugin_icon| icon.
+- The "Empty Plugin" |empty_plugin_icon| icon.
+- The "Loads Archive" |loads_archive_icon| icon.
+- The "Verified clean" |verified_clean_icon| icon.
+- The "Has User Metadata" |has_user_metadata_icon| icon.
+
+.. |active_plugin_icon| image:: ../../../resources/icons/material-icons/check_black_48dp.svg
+  :scale: 45%
+.. |master_plugin_icon| image:: ../../../resources/icons/crown.svg
+  :scale: 45%
+.. |light_plugin_icon| image:: ../../../resources/icons/material-icons/light_mode_black_48dp.svg
+  :scale: 45%
+.. |empty_plugin_icon| image:: ../../../resources/icons/material-icons/visibility_off_black_48dp.svg
+  :scale: 45%
+.. |loads_archive_icon| image:: ../../../resources/icons/material-icons/attachment_black_48dp.svg
+  :scale: 45%
+.. |verified_clean_icon| image:: ../../../resources/icons/droplet.svg
+  :scale: 45%
+.. |has_user_metadata_icon| image:: ../../../resources/icons/material-icons/account_circle_black_48dp.svg
+  :scale: 45%
 
 Messages, Bash Tag suggestions and plugin sources are displayed below the plugin card's header.
 
