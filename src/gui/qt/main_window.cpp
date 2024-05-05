@@ -947,8 +947,9 @@ void MainWindow::updateGeneralInformation() {
   const auto masterlistInfo = getFileRevisionSummary(
       state.GetCurrentGame().MasterlistPath(), FileType::Masterlist);
 
-  const auto gameMessages =
-      state.GetCurrentGame().GetMessages(state.getSettings().getLanguage());
+  const auto gameMessages = state.GetCurrentGame().GetMessages(
+      state.getSettings().getLanguage(),
+      state.getSettings().isWarnOnCaseSensitiveGamePathsEnabled());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
@@ -961,8 +962,9 @@ void MainWindow::updateGeneralInformation() {
 
 void MainWindow::updateGeneralMessages() {
   auto initMessages = state.getInitMessages();
-  auto gameMessages =
-      state.GetCurrentGame().GetMessages(state.getSettings().getLanguage());
+  auto gameMessages = state.GetCurrentGame().GetMessages(
+      state.getSettings().getLanguage(),
+      state.getSettings().isWarnOnCaseSensitiveGamePathsEnabled());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 

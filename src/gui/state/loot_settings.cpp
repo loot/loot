@@ -777,6 +777,9 @@ void LootSettings::load(const std::filesystem::path& file) {
       settings["enableLootUpdateCheck"].value_or(enableLootUpdateCheck_);
   useNoSortingChangesDialog_ = settings["useNoSortingChangesDialog"].value_or(
       useNoSortingChangesDialog_);
+  warnOnCaseSensitiveGamePaths_ =
+      settings["warnOnCaseSensitiveGamePaths"].value_or(
+          warnOnCaseSensitiveGamePaths_);
   game_ = settings["game"].value_or(game_);
   language_ = settings["language"].value_or(language_);
   theme_ = settings["theme"].value_or(theme_);
@@ -885,6 +888,7 @@ void LootSettings::save(const std::filesystem::path& file) {
       {"updateMasterlist", updateMasterlistBeforeSort_},
       {"enableLootUpdateCheck", enableLootUpdateCheck_},
       {"useNoSortingChangesDialog", useNoSortingChangesDialog_},
+      {"warnOnCaseSensitiveGamePaths", warnOnCaseSensitiveGamePaths_},
       {"game", game_},
       {"language", language_},
       {"theme", theme_},
@@ -985,6 +989,12 @@ bool LootSettings::isNoSortingChangesDialogEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return useNoSortingChangesDialog_;
+}
+
+bool LootSettings::isWarnOnCaseSensitiveGamePathsEnabled() const {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  return warnOnCaseSensitiveGamePaths_;
 }
 
 std::string LootSettings::getGame() const {
@@ -1108,6 +1118,12 @@ void LootSettings::enableNoSortingChangesDialog(bool enable) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   useNoSortingChangesDialog_ = enable;
+}
+
+void LootSettings::enableWarnOnCaseSensitiveGamePaths(bool enable) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  warnOnCaseSensitiveGamePaths_ = enable;
 }
 
 void LootSettings::storeLastGame(const std::string& lastGame) {

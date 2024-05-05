@@ -86,6 +86,8 @@ void GeneralTab::initialiseInputs(const LootSettings& settings,
   loggingCheckbox->setChecked(settings.isDebugLoggingEnabled());
   useNoSortingChangesDialogCheckbox->setChecked(
       settings.isNoSortingChangesDialogEnabled());
+  warnOnCaseSensitiveGamePathsCheckbox->setChecked(
+      settings.isWarnOnCaseSensitiveGamePathsEnabled());
 
   preludeSourceInput->setText(
       QString::fromStdString(settings.getPreludeSource()));
@@ -102,6 +104,8 @@ void GeneralTab::recordInputValues(LootSettings& settings) {
   const auto enableDebugLogging = loggingCheckbox->isChecked();
   const auto enableNoSortingChangesDialog =
       useNoSortingChangesDialogCheckbox->isChecked();
+  const auto enableWarnOnCaseSensitiveGamePaths =
+      warnOnCaseSensitiveGamePathsCheckbox->isChecked();
   auto preludeSource = preludeSourceInput->text().toStdString();
 
   settings.setDefaultGame(defaultGame);
@@ -111,6 +115,8 @@ void GeneralTab::recordInputValues(LootSettings& settings) {
   settings.enableLootUpdateCheck(checkForUpdates);
   settings.enableDebugLogging(enableDebugLogging);
   settings.enableNoSortingChangesDialog(enableNoSortingChangesDialog);
+  settings.enableWarnOnCaseSensitiveGamePaths(
+      enableWarnOnCaseSensitiveGamePaths);
   settings.setPreludeSource(preludeSource);
 }
 
@@ -141,6 +147,8 @@ void GeneralTab::setupUi() {
   generalLayout->addRow(loggingLabel, loggingCheckbox);
   generalLayout->addRow(useNoSortingChangesDialogLabel,
                         useNoSortingChangesDialogCheckbox);
+  generalLayout->addRow(warnOnCaseSensitiveGamePathsLabel,
+                        warnOnCaseSensitiveGamePathsCheckbox);
   generalLayout->addRow(preludeSourceLabel, preludeSourceInput);
   generalLayout->addItem(spacer);
   generalLayout->addRow(descriptionLabel);
@@ -158,6 +166,8 @@ void GeneralTab::translateUi() {
   preludeSourceLabel->setText(translate("Masterlist prelude source"));
   useNoSortingChangesDialogLabel->setText(
       translate("Display dialog when sorting makes no changes"));
+  warnOnCaseSensitiveGamePathsLabel->setText(
+      translate("Warn if the game's paths are in a case-sensitive filesystem"));
 
   loggingLabel->setToolTip(
       translate("The output is logged to the LOOTDebugLog.txt file."));

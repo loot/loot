@@ -905,7 +905,8 @@ void Game::DecrementLoadOrderSortCount() {
 }
 
 std::vector<SourcedMessage> Game::GetMessages(
-    const std::string& language) const {
+    const std::string& language,
+    bool warnOnCaseSensitivePaths) const {
   std::vector<SourcedMessage> output(
       ToSourcedMessages(gameHandle_->GetDatabase().GetGeneralMessages(true),
                         MessageSource::messageMetadata,
@@ -1037,7 +1038,8 @@ std::vector<SourcedMessage> Game::GetMessages(
             "light plugins to avoid potential issues."));
   }
 
-  if (IsPathCaseSensitive(GetSettings().DataPath())) {
+  if (warnOnCaseSensitivePaths &&
+      IsPathCaseSensitive(GetSettings().DataPath())) {
     addWarning(
         MessageSource::caseSensitivePathCheck,
         fmt::format(
@@ -1068,7 +1070,7 @@ std::vector<SourcedMessage> Game::GetMessages(
       std::filesystem::create_directories(gameLocalPath);
     }
 
-    if (IsPathCaseSensitive(gameLocalPath)) {
+    if (warnOnCaseSensitivePaths && IsPathCaseSensitive(gameLocalPath)) {
       addWarning(
           MessageSource::caseSensitivePathCheck,
           fmt::format(

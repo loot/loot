@@ -813,17 +813,12 @@ TEST_P(GameTest,
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
-  const auto messages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+  const auto messages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
-#ifdef _WIN32
   EXPECT_EQ(1, messages.size());
   EXPECT_EQ("You have not sorted your load order this session\\.",
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE)[0].text);
-#else
-  EXPECT_EQ(3, messages.size());
-  EXPECT_EQ("You have not sorted your load order this session\\.",
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE)[0].text);
-#endif
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false)[0].text);
 }
 
 TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsAtExternalPaths) {
@@ -1054,13 +1049,9 @@ TEST_P(GameTest, aMessageShouldBeCachedByDefault) {
   Game game = CreateInitialisedGame();
 
   const auto messageCount =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size();
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false).size();
 
-#ifdef _WIN32
   ASSERT_EQ(1, messageCount);
-#else
-  ASSERT_EQ(3, messageCount);
-#endif
 }
 
 TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
@@ -1102,54 +1093,76 @@ TEST_P(GameTest,
   Game game = CreateInitialisedGame();
   game.IncrementLoadOrderSortCount();
 
-  const auto messages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+  const auto messages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
-#ifdef _WIN32
   EXPECT_TRUE(messages.empty());
-#else
-  EXPECT_EQ(2, messages.size());
-#endif
 }
 
 TEST_P(GameTest,
        decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedMessage) {
   Game game = CreateInitialisedGame();
-  auto expectedMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+  auto expectedMessages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
   game.IncrementLoadOrderSortCount();
   game.DecrementLoadOrderSortCount();
 
   EXPECT_EQ(expectedMessages,
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE));
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false));
 }
 
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountThatIsAlreadyZeroShouldShowTheDefaultCachedMessage) {
   Game game = CreateInitialisedGame();
-  auto expectedMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+  auto expectedMessages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
   game.DecrementLoadOrderSortCount();
 
   EXPECT_EQ(expectedMessages,
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE));
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false));
 }
 
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
   Game game = CreateInitialisedGame();
-  auto expectedMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
   game.IncrementLoadOrderSortCount();
   game.IncrementLoadOrderSortCount();
   game.DecrementLoadOrderSortCount();
 
-  const auto messages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+  const auto messages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
-#ifdef _WIN32
   EXPECT_TRUE(messages.empty());
-#else
-  EXPECT_EQ(2, messages.size());
-#endif
 }
+
+#ifndef _WIN32
+TEST_P(GameTest, getMessagesShouldIncludeCaseSensitivityWarningIfParameterIsTrue) {
+  Game game = CreateInitialisedGame();
+  const auto messages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, true);
+
+  EXPECT_EQ(3, messages.size());
+  EXPECT_EQ("You have not sorted your load order this session\\.",
+            messages[0].text);
+  EXPECT_TRUE(boost::contains(
+      messages[1].text, "is installed in a case\\-sensitive location\\."));
+  EXPECT_TRUE(boost::contains(
+      messages[2].text, "local application data is stored in a case\\-sensitive location\\."));
+}
+
+TEST_P(GameTest,
+       getMessagesShouldIncludeCaseSensitivityWarningIfParameterIsFalse) {
+  Game game = CreateInitialisedGame();
+  const auto messages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
+
+  EXPECT_EQ(1, messages.size());
+  EXPECT_EQ("You have not sorted your load order this session\\.",
+            messages[0].text);
+}
+#endif
 
 TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
   Game game = CreateInitialisedGame();
@@ -1161,17 +1174,12 @@ TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
     game.AppendMessage(message);
   }
 
-  const auto gameMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+  const auto gameMessages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
-#ifdef _WIN32
   ASSERT_EQ(3, gameMessages.size());
   EXPECT_EQ(messages[0], gameMessages[0]);
   EXPECT_EQ(messages[1], gameMessages[1]);
-#else
-  ASSERT_EQ(5, gameMessages.size());
-  EXPECT_EQ(messages[0], gameMessages[0]);
-  EXPECT_EQ(messages[1], gameMessages[1]);
-#endif
 }
 
 TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
@@ -1185,12 +1193,12 @@ TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
   }
 
   const auto previousSize =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size();
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false).size();
 
   game.ClearMessages();
 
   EXPECT_EQ(previousSize - messages.size(),
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size());
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false).size());
 }
 }
 }

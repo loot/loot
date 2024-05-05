@@ -120,7 +120,8 @@ public:
   void IncrementLoadOrderSortCount();
   void DecrementLoadOrderSortCount();
 
-  std::vector<SourcedMessage> GetMessages(const std::string& language) const;
+  std::vector<SourcedMessage> GetMessages(const std::string& language,
+                                          bool warnOnCaseSensitivePaths) const;
   void AppendMessage(const SourcedMessage& message);
   void ClearMessages();
 
