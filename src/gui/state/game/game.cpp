@@ -584,6 +584,19 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
             settings_.MinimumHeaderVersion())));
   }
 
+  for (const auto& masterName : plugin.GetMasters()) {
+    if (Filename(plugin.GetName()) == Filename(masterName)) {
+      if (logger) {
+        logger->error("\"{}\" has itself as a master.", plugin.GetName());
+      }
+      messages.push_back(CreatePlainTextSourcedMessage(
+          MessageType::error,
+          MessageSource::selfMaster,
+          boost::locale::translate("This plugin has itself as a master.")));
+      break;
+    }
+  }
+
   if (metadata.GetGroup().has_value()) {
     auto groupName = metadata.GetGroup().value();
     auto groups = gameHandle_->GetDatabase().GetGroups();

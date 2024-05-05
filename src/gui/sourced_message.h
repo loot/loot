@@ -51,7 +51,8 @@ enum struct MessageSource : unsigned int {
   unsortedLoadOrderCheck,
   activePluginsCountCheck,
   removedPluginsCheck,
-  caseSensitivePathCheck
+  caseSensitivePathCheck,
+  selfMaster
 };
 
 struct SourcedMessage {
