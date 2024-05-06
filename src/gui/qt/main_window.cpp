@@ -954,7 +954,7 @@ void MainWindow::updateGeneralInformation() {
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
   pluginItemModel->setGeneralInformation(
-      SupportsLightPlugins(state.GetCurrentGame().GetSettings().Type()),
+      state.GetCurrentGame().SupportsLightPlugins(),
       masterlistInfo,
       preludeInfo,
       initMessages);
@@ -997,7 +997,7 @@ void MainWindow::updateSidebarColumnWidths() {
   // that uses the wider width.
   const auto gameSupportsLightPlugins =
       state.HasCurrentGame()
-          ? SupportsLightPlugins(state.GetCurrentGame().GetSettings().Type())
+          ? state.GetCurrentGame().SupportsLightPlugins()
           : false;
   const auto indexSectionWidth =
       calculateSidebarIndexSectionWidth(gameSupportsLightPlugins);

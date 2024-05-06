@@ -100,6 +100,7 @@ public:
       bool headersOnly);  // Loads all installed plugins.
   bool ArePluginsFullyLoaded()
       const;  // Checks if the game's plugins have already been loaded.
+  bool SupportsLightPlugins() const;
 
   std::filesystem::path MasterlistPath() const;
   std::filesystem::path UserlistPath() const;
@@ -162,6 +163,7 @@ private:
   unsigned short loadOrderSortCount_{0};
   bool pluginsFullyLoaded_{false};
   bool isMicrosoftStoreInstall_{false};
+  bool supportsLightPlugins_{false};
 
   // Use Filename to benefit from libloot's case-insensitive comparisons.
   std::set<Filename> creationClubPlugins_;

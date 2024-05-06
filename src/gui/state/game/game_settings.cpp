@@ -161,12 +161,6 @@ std::string ToString(const GameId gameId) {
   }
 }
 
-bool SupportsLightPlugins(const GameType gameType) {
-  return gameType == GameType::tes5se || gameType == GameType::tes5vr ||
-         gameType == GameType::fo4 || gameType == GameType::fo4vr ||
-         gameType == GameType::starfield;
-}
-
 bool ShouldAllowRedating(const GameType gameType) {
   return gameType == GameType::tes5 || gameType == GameType::tes5se;
 }

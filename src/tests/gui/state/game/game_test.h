@@ -110,7 +110,9 @@ INSTANTIATE_TEST_SUITE_P(,
                                            GameId::fo3,
                                            GameId::fonv,
                                            GameId::fo4,
-                                           GameId::tes5se));
+                                           GameId::fo4vr,
+                                           GameId::tes5se,
+                                           GameId::tes5vr));
 
 TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   using std::filesystem::u8path;
@@ -865,6 +867,29 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
 }
 
 TEST_P(GameTest,
+       supportsLightPluginsShouldReturnTrueForSkyrimVRIfSKSEPluginIsInstalled) {
+  Game game = CreateInitialisedGame();
+  const auto gameType = game.GetSettings().Type();
+
+  if (gameType == GameType::tes5se || gameType == GameType::fo4 ||
+      gameType == GameType::starfield) {
+    EXPECT_TRUE(game.SupportsLightPlugins());
+  } else {
+    EXPECT_FALSE(game.SupportsLightPlugins());
+  }
+
+  loot::test::touch(dataPath / "SKSE" / "Plugins" / "skyrimvresl.dll");
+  game.LoadAllInstalledPlugins(true);
+
+  if (gameType == GameType::tes5se || gameType == GameType::tes5vr ||
+      gameType == GameType::fo4 || gameType == GameType::starfield) {
+    EXPECT_TRUE(game.SupportsLightPlugins());
+  } else {
+    EXPECT_FALSE(game.SupportsLightPlugins());
+  }
+}
+
+TEST_P(GameTest,
        GetActiveLoadOrderIndexShouldReturnNulloptForAPluginThatIsNotActive) {
   Game game = CreateInitialisedGame();
   game.LoadAllInstalledPlugins(true);
@@ -1138,7 +1163,8 @@ TEST_P(
 }
 
 #ifndef _WIN32
-TEST_P(GameTest, getMessagesShouldIncludeCaseSensitivityWarningIfParameterIsTrue) {
+TEST_P(GameTest,
+       getMessagesShouldIncludeCaseSensitivityWarningIfParameterIsTrue) {
   Game game = CreateInitialisedGame();
   const auto messages =
       game.GetMessages(MessageContent::DEFAULT_LANGUAGE, true);
@@ -1149,7 +1175,8 @@ TEST_P(GameTest, getMessagesShouldIncludeCaseSensitivityWarningIfParameterIsTrue
   EXPECT_TRUE(boost::contains(
       messages[1].text, "is installed in a case\\-sensitive location\\."));
   EXPECT_TRUE(boost::contains(
-      messages[2].text, "local application data is stored in a case\\-sensitive location\\."));
+      messages[2].text,
+      "local application data is stored in a case\\-sensitive location\\."));
 }
 
 TEST_P(GameTest,

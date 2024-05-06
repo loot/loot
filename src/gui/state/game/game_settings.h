@@ -42,8 +42,6 @@ std::string GetPluginsFolderName(GameId gameId);
 
 std::string ToString(const GameId gameId);
 
-bool SupportsLightPlugins(const GameType gameType);
-
 bool ShouldAllowRedating(const GameType gameType);
 
 class GameSettings {

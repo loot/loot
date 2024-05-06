@@ -277,6 +277,22 @@ std::string GetMetadataAsBBCodeYaml(const gui::Game& game,
   return "[spoiler][code]\n" + metadata.AsYaml() + "\n[/code][/spoiler]";
 }
 
+bool SupportsLightPlugins(const gui::Game& game) {
+  const auto gameType = game.GetSettings().Type();
+  if (gameType == GameType::tes5vr) {
+    // Light plugins are not supported unless an SKSEVR plugin is used.
+    // This assumes that the plugin's dependencies are also installed and that
+    // the game is launched with SKSEVR. The dependencies are intentionally
+    // not checked to allow them to change over time without breaking this
+    // check.
+    return std::filesystem::exists(game.GetSettings().DataPath() / "SKSE" /
+                                   "Plugins" / "skyrimvresl.dll");
+  }
+
+  return gameType == GameType::tes5se || gameType == GameType::fo4 ||
+         gameType == GameType::starfield;
+}
+
 namespace gui {
 std::string GetDisplayName(const File& file) {
   if (file.GetDisplayName().empty()) {
@@ -336,6 +352,7 @@ void Game::Init() {
   messages_.clear();
   loadOrderSortCount_ = 0;
   pluginsFullyLoaded_ = false;
+  supportsLightPlugins_ = loot::SupportsLightPlugins(*this);
 
   gameHandle_ = CreateGameHandle(
       settings_.Type(), settings_.GamePath(), settings_.GameLocalPath());
@@ -775,9 +792,13 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
       CheckForRemovedPlugins(installedPluginPaths, loadedPluginNames));
 
   pluginsFullyLoaded_ = !headersOnly;
+
+  supportsLightPlugins_ = loot::SupportsLightPlugins(*this);
 }
 
 bool Game::ArePluginsFullyLoaded() const { return pluginsFullyLoaded_; }
+
+bool Game::SupportsLightPlugins() const { return supportsLightPlugins_; }
 
 fs::path Game::MasterlistPath() const {
   return GetMasterlistPath(lootDataPath_, settings_);
