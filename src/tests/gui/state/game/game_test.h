@@ -688,6 +688,118 @@ TEST_P(GameTest, checkInstallValidityShouldResolveExternalPluginPaths) {
 
 TEST_P(
     GameTest,
+    checkInstallValidityShouldWarnIfLightPluginIsPresentAndGameDoesNotSupportLightPlugins) {
+  if (GetParam() != GameId::tes5se && GetParam() != GameId::tes5vr &&
+      GetParam() != GameId::fo4 && GetParam() != GameId::fo4vr &&
+      GetParam() != GameId::starfield) {
+    return;
+  }
+
+  std::string blankEsl = "Blank.esl";
+  std::filesystem::copy(dataPath / blankEsm, dataPath / blankEsl);
+
+  // Light-flag esm
+  std::fstream out(
+      dataPath / blankEsm,
+      std::ios_base::in | std::ios_base::out | std::ios_base::binary);
+  out.seekp(0x09, std::ios_base::beg);
+  out.put('\x02');
+  out.close();
+  // Light-flag esp
+  out.open(dataPath / blankEsp,
+           std::ios_base::in | std::ios_base::out | std::ios_base::binary);
+  out.seekp(0x09, std::ios_base::beg);
+  out.put('\x02');
+  out.close();
+
+  Game game = CreateInitialisedGame();
+  game.LoadAllInstalledPlugins(true);
+
+  const auto eslMessages = game.CheckInstallValidity(
+      *game.GetPlugin(blankEsl), PluginMetadata(blankEsl), "en");
+  const auto esmMessages = game.CheckInstallValidity(
+      *game.GetPlugin(blankEsm), PluginMetadata(blankEsm), "en");
+  const auto espMessages = game.CheckInstallValidity(
+      *game.GetPlugin(blankEsp), PluginMetadata(blankEsp), "en");
+
+  if (GetParam() == GameId::tes5vr) {
+    ASSERT_EQ(1, eslMessages.size());
+    EXPECT_EQ(
+        std::vector<SourcedMessage>({
+            SourcedMessage{
+                MessageType::error,
+                MessageSource::lightPluginNotSupported,
+                "\"Blank\\.esl\" is a light master, but [Skyrim VR ESL "
+                "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                "mods/106712/) seems to be missing. Please ensure you have "
+                "correctly installed [Skyrim VR ESL "
+                "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                "mods/106712/) and all its requirements."},
+        }),
+        eslMessages);
+    EXPECT_EQ(
+        std::vector<SourcedMessage>({
+            SourcedMessage{
+                MessageType::error,
+                MessageSource::lightPluginNotSupported,
+                "\"Blank\\.esm\" is a light master, but [Skyrim VR ESL "
+                "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                "mods/106712/) seems to be missing. Please ensure you have "
+                "correctly installed [Skyrim VR ESL "
+                "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                "mods/106712/) and all its requirements."},
+        }),
+        esmMessages);
+    EXPECT_EQ(
+        std::vector<SourcedMessage>({
+            SourcedMessage{
+                MessageType::error,
+                MessageSource::lightPluginNotSupported,
+                "\"Blank\\.esp\" is a light plugin, but [Skyrim VR ESL "
+                "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                "mods/106712/) seems to be missing. Please ensure you have "
+                "correctly installed [Skyrim VR ESL "
+                "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                "mods/106712/) and all its requirements."},
+        }),
+        espMessages);
+  } else if (GetParam() == GameId::fo4vr) {
+    EXPECT_EQ(
+        std::vector<SourcedMessage>({
+            SourcedMessage{
+                MessageType::error,
+                MessageSource::lightPluginNotSupported,
+                "\\\"Blank\\.esl\\\" is a \\.esl plugin\\, but the game does "
+                "not support such plugins\\, and will not load it\\."},
+        }),
+        eslMessages);
+    EXPECT_EQ(std::vector<SourcedMessage>({
+                  SourcedMessage{
+                      MessageType::warn,
+                      MessageSource::lightPluginNotSupported,
+                      "\\\"Blank\\.esm\\\" is flagged as a light master\\, but "
+                      "the game does not support such plugins\\, and will load "
+                      "it as a normal master\\."},
+              }),
+              esmMessages);
+    EXPECT_EQ(std::vector<SourcedMessage>({
+                  SourcedMessage{
+                      MessageType::warn,
+                      MessageSource::lightPluginNotSupported,
+                      "\\\"Blank\\.esp\\\" is flagged as a light plugin\\, but "
+                      "the game does not support such plugins\\, and will load "
+                      "it as a normal plugin\\."},
+              }),
+              espMessages);
+  } else {
+    EXPECT_TRUE(eslMessages.empty());
+    EXPECT_TRUE(esmMessages.empty());
+    EXPECT_TRUE(espMessages.empty());
+  }
+}
+
+TEST_P(
+    GameTest,
     redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
   using std::filesystem::u8path;
 

@@ -52,7 +52,8 @@ enum struct MessageSource : unsigned int {
   activePluginsCountCheck,
   removedPluginsCheck,
   caseSensitivePathCheck,
-  selfMaster
+  selfMaster,
+  lightPluginNotSupported
 };
 
 struct SourcedMessage {
