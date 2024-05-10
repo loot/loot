@@ -53,6 +53,10 @@ std::map<Node *, QPointF> calculateGraphLayout(
   std::map<Node *, ogdf::node> graphNodes;
   std::map<ogdf::node, Node *> sceneNodes;
   for (const auto node : nodes) {
+    if (node == nullptr) {
+      throw std::invalid_argument("nodes vector contains a null pointer");
+    }
+
     const auto graphNode = graph.newNode();
     const auto boundingRect =
         node->boundingRect().marginsRemoved(Node::MARGINS);
