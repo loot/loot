@@ -580,23 +580,26 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
     }
     const auto pluginType = boost::iends_with(plugin.GetName(), ".esp")
                                 ? boost::locale::translate("plugin")
-                                /** translators: master as in a plugin that is
+                                /* translators: master as in a plugin that is
                                    loaded as if its master flag is set. */
                                 : boost::locale::translate("master");
     if (settings_.Type() == GameType::tes5vr) {
       messages.push_back(SourcedMessage{
           MessageType::error,
           MessageSource::lightPluginNotSupported,
-          fmt::format(boost::locale::translate(
-                          "\"{0}\" is a light {1}, but {2} seems to be "
-                          "missing. Please ensure you have correctly installed "
-                          "{2} and all its requirements.")
-                          .str(),
-                      EscapeMarkdownASCIIPunctuation(plugin.GetName()),
-                      pluginType.str(),
-                      "[Skyrim VR ESL "
-                      "Support](https://www.nexusmods.com/skyrimspecialedition/"
-                      "mods/106712/)")});
+          fmt::format(
+              /* translators: {1} in this message can be "master" or "plugin"
+                 and {2} is the name of a requirement. */
+              boost::locale::translate(
+                  "\"{0}\" is a light {1}, but {2} seems to be "
+                  "missing. Please ensure you have correctly installed "
+                  "{2} and all its requirements.")
+                  .str(),
+              EscapeMarkdownASCIIPunctuation(plugin.GetName()),
+              pluginType.str(),
+              "[Skyrim VR ESL "
+              "Support](https://www.nexusmods.com/skyrimspecialedition/"
+              "mods/106712/)")});
     } else if (boost::iends_with(plugin.GetName(), ".esl")) {
       messages.push_back(CreatePlainTextSourcedMessage(
           MessageType::error,
@@ -610,13 +613,16 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
       messages.push_back(CreatePlainTextSourcedMessage(
           MessageType::warn,
           MessageSource::lightPluginNotSupported,
-          fmt::format(boost::locale::translate(
-                          "\"{0}\" is flagged as a light {1}, but the game "
-                          "does not support such plugins, and will load it as "
-                          "a normal {1}.")
-                          .str(),
-                      plugin.GetName(),
-                      pluginType.str())));
+          fmt::format(
+              /* translators: {1} in this message can be "master" or "plugin".
+               */
+              boost::locale::translate(
+                  "\"{0}\" is flagged as a light {1}, but the game "
+                  "does not support such plugins, and will load it as "
+                  "a normal {1}.")
+                  .str(),
+              plugin.GetName(),
+              pluginType.str())));
     }
   }
 
