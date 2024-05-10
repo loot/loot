@@ -293,6 +293,12 @@ bool SupportsLightPlugins(const gui::Game& game) {
          gameType == GameType::starfield;
 }
 
+// This overload does not support checking based on the installed game.
+bool SupportsLightPlugins(const GameType gameType) {
+  return gameType == GameType::tes5se || gameType == GameType::fo4 ||
+         gameType == GameType::starfield;
+}
+
 namespace gui {
 std::string GetDisplayName(const File& file) {
   if (file.GetDisplayName().empty()) {
@@ -309,7 +315,8 @@ Game::Game(const GameSettings& gameSettings,
     lootDataPath_(lootDataPath),
     preludePath_(preludePath),
     isMicrosoftStoreInstall_(
-        generic::IsMicrosoftInstall(settings_.Id(), settings_.GamePath())) {}
+        generic::IsMicrosoftInstall(settings_.Id(), settings_.GamePath())),
+    supportsLightPlugins_(loot::SupportsLightPlugins(settings_.Type())) {}
 
 Game::Game(Game&& game) {
   settings_ = std::move(game.settings_);
@@ -320,6 +327,7 @@ Game::Game(Game&& game) {
   loadOrderSortCount_ = std::move(game.loadOrderSortCount_);
   pluginsFullyLoaded_ = std::move(game.pluginsFullyLoaded_);
   isMicrosoftStoreInstall_ = std::move(game.isMicrosoftStoreInstall_);
+  supportsLightPlugins_ = std::move(game.supportsLightPlugins_);
 }
 
 Game& Game::operator=(Game&& game) {
@@ -332,6 +340,7 @@ Game& Game::operator=(Game&& game) {
     loadOrderSortCount_ = std::move(game.loadOrderSortCount_);
     pluginsFullyLoaded_ = std::move(game.pluginsFullyLoaded_);
     isMicrosoftStoreInstall_ = std::move(game.isMicrosoftStoreInstall_);
+    supportsLightPlugins_ = std::move(game.supportsLightPlugins_);
   }
 
   return *this;
