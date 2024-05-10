@@ -947,13 +947,14 @@ void MainWindow::updateGeneralInformation() {
   const auto masterlistInfo = getFileRevisionSummary(
       state.GetCurrentGame().MasterlistPath(), FileType::Masterlist);
 
-  const auto gameMessages =
-      state.GetCurrentGame().GetMessages(state.getSettings().getLanguage());
+  const auto gameMessages = state.GetCurrentGame().GetMessages(
+      state.getSettings().getLanguage(),
+      state.getSettings().isWarnOnCaseSensitiveGamePathsEnabled());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
   pluginItemModel->setGeneralInformation(
-      SupportsLightPlugins(state.GetCurrentGame().GetSettings().Type()),
+      state.GetCurrentGame().SupportsLightPlugins(),
       masterlistInfo,
       preludeInfo,
       initMessages);
@@ -961,8 +962,9 @@ void MainWindow::updateGeneralInformation() {
 
 void MainWindow::updateGeneralMessages() {
   auto initMessages = state.getInitMessages();
-  auto gameMessages =
-      state.GetCurrentGame().GetMessages(state.getSettings().getLanguage());
+  auto gameMessages = state.GetCurrentGame().GetMessages(
+      state.getSettings().getLanguage(),
+      state.getSettings().isWarnOnCaseSensitiveGamePathsEnabled());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
@@ -995,7 +997,7 @@ void MainWindow::updateSidebarColumnWidths() {
   // that uses the wider width.
   const auto gameSupportsLightPlugins =
       state.HasCurrentGame()
-          ? SupportsLightPlugins(state.GetCurrentGame().GetSettings().Type())
+          ? state.GetCurrentGame().SupportsLightPlugins()
           : false;
   const auto indexSectionWidth =
       calculateSidebarIndexSectionWidth(gameSupportsLightPlugins);
@@ -1396,6 +1398,10 @@ void MainWindow::handleGameDataLoaded(QueryResult result) {
 }
 
 bool MainWindow::handlePluginsSorted(std::vector<QueryResult> results) {
+  if (results.empty()) {
+    return false;
+  }
+
   if (results.size() > 1) {
     handleMasterlistUpdated(results);
   }
@@ -2535,6 +2541,10 @@ void MainWindow::handlePluginsManualSorted(std::vector<QueryResult> results) {
 
 void MainWindow::handlePluginsAutoSorted(std::vector<QueryResult> results) {
   try {
+    if (results.empty()) {
+      return;
+    }
+
     handlePluginsSorted(results);
 
     if (actionApplySort->isVisible()) {
@@ -2551,6 +2561,10 @@ void MainWindow::handlePluginsAutoSorted(std::vector<QueryResult> results) {
 
 void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
   try {
+    if (results.empty()) {
+      return;
+    }
+
     const auto wasPreludeUpdated = std::get<bool>(results.at(0));
     const auto wasMasterlistUpdated =
         std::get<MasterlistUpdateResult>(results.at(1)).second;
@@ -2588,6 +2602,11 @@ void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
 
 void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
   try {
+    if (results.empty()) {
+      progressDialog->reset();
+      return;
+    }
+
     // The results are in an unknown order due to parallel task execution.
     bool wasPreludeUpdated{false};
     for (const auto& result : results) {

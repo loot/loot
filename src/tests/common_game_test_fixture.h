@@ -359,7 +359,9 @@ private:
       std::ofstream out(localPath / "Plugins.txt");
       for (const auto& plugin : loadOrder) {
         if (getGameType() == GameType::fo4 ||
-            getGameType() == GameType::tes5se) {
+            getGameType() == GameType::fo4vr ||
+            getGameType() == GameType::tes5se ||
+            getGameType() == GameType::tes5vr) {
           if (plugin.second)
             out << '*';
         } else if (!plugin.second)

@@ -13,7 +13,7 @@ LOOT's initialisation can be customised using command line parameters:
   Set the install path of the game identified by ``--game``. This replaces any existing value stored in LOOT's settings.
 
 ``--loot-data-path=<path>``:
-  Set the path to use for LOOT's application data storage. If this is an empty string or not specified, LOOT defaults to ``%LOCALAPPDATA%\LOOT`` on Windows and (in order of decreasing preference) ``$XDG_DATA_HOME/LOOT`` or ``$HOME/.local/share/LOOT`` on Linux. Note that when running LOOT as a Flatpak application on Linux, Flatpak internally overrides ``$XDG_DATA_HOME`` to be ``$HOME/.var/app/io.github.loot.loot/data``.
+  Set the path to use for LOOT's application data storage. If this is an empty string or not specified, LOOT defaults to ``%LOCALAPPDATA%\LOOT`` on Windows and (in order of decreasing preference) ``$XDG_DATA_HOME/LOOT`` or ``$HOME/.local/share/LOOT`` on Linux. Note that Flatpak internally overrides ``$XDG_DATA_HOME`` to be ``$HOME/.var/app/io.github.loot.loot/data``.
 
 ``--auto-sort``:
   Once LOOT has initialised, automatically sort the load order, apply the sorted

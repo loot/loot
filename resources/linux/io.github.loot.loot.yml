@@ -1,6 +1,6 @@
 app-id: io.github.loot.loot
 runtime: org.kde.Platform
-runtime-version: '6.5'
+runtime-version: '6.7'
 sdk: org.kde.Sdk
 command: LOOT
 finish-args:
@@ -28,22 +28,189 @@ finish-args:
   - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic:ro
   # Heroic Games Launcher default games install path.
   - --filesystem=~/Games/Heroic
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
 modules:
-  - name: application
+  - name: Boost
     buildsystem: simple
     build-commands:
-      - install -D bin/LOOT /app/bin/LOOT
-      - install -D lib/libloot.so /app/lib/libloot.so
-      - cp -r share /app
+      - ./bootstrap.sh --prefix=/app
+      - ./b2 link=static runtime-link=shared variant=release cxxflags="-std=c++17 -fPIC" --with-locale install
     sources:
       - type: archive
-        path: ../../build/loot.tar.xz
+        url: https://boostorg.jfrog.io/artifactory/main/release/1.85.0/source/boost_1_85_0.tar.bz2
+        sha256: 7009fe1faa1697476bdc7027703a2badb84e849b7b0baad5086b087b971f8617
+
   - name: libtbb
-    buildsystem: simple
-    build-commands:
-      - install -D lib/intel64/gcc4.8/libtbb.so.2 /app/lib/
-      - install -D LICENSE /app/share/doc/libtbb2/copyright
+    buildsystem: cmake
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DTBB_TEST=OFF
     sources:
       - type: archive
-        url: https://github.com/oneapi-src/oneTBB/releases/download/v2020.3/tbb-2020.3-lin.tgz
-        sha256: bb8cddd0277605d3ee7f4e19b138c983f298d69fcbb585385b59ef7239d5ef83
+        url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.12.0.tar.gz
+        sha256: c7bb7aa69c254d91b8f0041a71c5bcc3936acb64408a1719aec0b2b7639dd84f
+
+  - name: minizip-ng
+    buildsystem: cmake
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DMZ_ZLIB=ON
+      - -DMZ_BZIP2=OFF
+      - -DMZ_LZMA=OFF
+      - -DMZ_ZSTD=OFF
+      - -DMZ_FETCH_LIBS=OFF
+      - -DMZ_PKCRYPT=OFF
+      - -DMZ_WZAES=OFF
+      - -DMZ_OPENSSL=OFF
+      - -DMZ_LIBBSD=OFF
+      - -DMZ_SIGNING=OFF
+      - -DMZ_COMPRESS_ONLY=ON
+    sources:
+      - type: archive
+        url: https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.5.tar.gz
+        sha256: 9bb636474b8a4269280d32aca7de4501f5c24cc642c9b4225b4ed7b327f4ee73
+
+  - name: tomlplusplus
+    buildsystem: cmake
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+    sources:
+      - type: archive
+        url: https://github.com/marzer/tomlplusplus/archive/v3.4.0.tar.gz
+        sha256: 8517f65938a4faae9ccf8ebb36631a38c1cadfb5efa85d9a72e15b9e97d25155
+
+  - name: spdlog
+    buildsystem: cmake
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DSPDLOG_BUILD_EXAMPLE=OFF
+    sources:
+      - type: archive
+        url: https://github.com/gabime/spdlog/archive/v1.14.1.tar.gz
+        sha256: 1586508029a7d0670dfcb2d97575dcdc242d3868a259742b69f100801ab4e16b
+
+  - name: OGDF
+    buildsystem: cmake
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+    sources:
+      - type: archive
+        url: https://ogdf.uos.de/wp-content/uploads/2023/09/ogdf.v2023.09.zip
+        sha256: a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436
+
+  - name: yaml-cpp
+    buildsystem: cmake
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DYAML_BUILD_SHARED_LIBS=OFF
+      - -DYAML_CPP_BUILD_CONTRIB=OFF
+      - -DYAML_CPP_BUILD_TOOLS=OFF
+      - -DYAML_CPP_BUILD_TESTS=OFF
+    sources:
+      - type: archive
+        url: https://github.com/loot/yaml-cpp/archive/0.8.0+merge-key-support.2.tar.gz
+        sha256: e91779044cd4025ec10ed31986031031ef22ebce90a64cc8f85e7c7e95a1abc6
+
+  - name: cbindgen
+    buildsystem: simple
+    builddir: true
+    build-options:
+      append-path: /usr/lib/sdk/rust-stable/bin
+      env:
+        CARGO_HOME: /run/build/cbindgen/cargo
+    build-commands:
+      - cargo build --release --offline
+      - install -D /run/build/cbindgen/target/release/cbindgen /app/bin/cbindgen
+    sources:
+      - type: archive
+        url: https://github.com/mozilla/cbindgen/archive/0.26.0.tar.gz
+        sha256: b45e1a64875b615702a86ac3084ef69ae32926241cd2b687a30c12474be15105
+      # Generated using scripts/generate_manifests.sh
+      - ../../build/flatpak-manifests/cbindgen.json
+
+  - name: libloot
+    buildsystem: cmake
+    builddir: true
+    build-options:
+      append-path: /usr/lib/sdk/rust-stable/bin
+      env:
+        CARGO_HOME: /run/build/libloot/cargo
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DLIBLOOT_BUILD_TESTS=OFF
+      - -DLIBLOOT_INSTALL_DOCS=OFF
+      - -DESPLUGIN_URL=/run/build/libloot/5.0.1.tar.gz
+      - -DLIBLOADORDER_URL=/run/build/libloot/16.0.0.tar.gz
+      - -DLOOT_CONDITION_INTERPRETER_URL=/run/build/libloot/4.0.0.tar.gz
+    sources:
+      - type: archive
+        url: https://github.com/loot/libloot/archive/0.22.4.tar.gz
+        sha256: f09c2b73cd0b03e1235f7eac1fc8089aafbeeead8d4f42add2e3753cac4f0bb7
+      - type: file
+        url: https://github.com/Ortham/esplugin/archive/5.0.1.tar.gz
+        sha256: 4feb855e1f90046357497b5f0fdebe3e126f84d8dc9bc468e153bcbcb1aa9171
+      - type: file
+        url: https://github.com/Ortham/libloadorder/archive/16.0.0.tar.gz
+        sha256: 920d1f1f52b204ef70d726d50c6c7d03ce206b5f28f642aceeb7bad578d0635c
+      - type: file
+        url: https://github.com/loot/loot-condition-interpreter/archive/4.0.0.tar.gz
+        sha256: 8ed76a1393bd4a909a39d560444ac9186b795a56929d8b07ff77e4aef1e54adc
+      # Generated using scripts/generate_manifests.sh
+      - ../../build/flatpak-manifests/esplugin.json
+      - ../../build/flatpak-manifests/libloadorder.json
+      - ../../build/flatpak-manifests/loot-condition-interpreter.json
+
+  - name: LOOT
+    buildsystem: cmake
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DLOOT_BUILD_TESTS=OFF
+      - -DVALVE_FILE_VDF_URL=/run/build/LOOT/c8adfc29e62cc980b595e965bedfb239087647ff.tar.gz
+    build-commands:
+      - install -D LOOT /app/bin/LOOT
+      - install -D ../resources/linux/io.github.loot.loot.metainfo.xml /app/share/metainfo/io.github.loot.loot.metainfo.xml
+      - install -D ../resources/linux/io.github.loot.loot.desktop /app/share/applications/io.github.loot.loot.desktop
+      - install -D ../resources/icons/loot.svg /app/share/icons/hicolor/scalable/apps/io.github.loot.loot.svg
+      - |
+        cd ..
+        python scripts/po_to_mo.py
+      - |
+        for dir in ../resources/l10n/*/
+        do
+          dir="${dir%*/}"
+          dir="${dir##*/}"
+          install -D "../resources/l10n/$dir/LC_MESSAGES/loot.mo" "/app/share/locale/$dir/LC_MESSAGES/loot.mo"
+        done
+      - sphinx-build -b html ../docs /app/share/doc/loot
+    no-make-install: true
+    modules:
+      # Generated using scripts/generate_manifests.sh
+      - ../../build/flatpak-manifests/docs.json
+    sources:
+      - type: dir
+        path: ../..
+        skip:
+          - .github
+          - build
+      - type: file
+        url: https://github.com/TinyTinni/ValveFileVDF/archive/c8adfc29e62cc980b595e965bedfb239087647ff.tar.gz
+        sha256: 48a078ff1e360d9c2217c9bd2eb766928a0234b73bb2bd458d04c64644669550
+cleanup:
+  - /bin/cbindgen
+  - /include
+  - /lib/cmake
+  - /lib/*.a
+  - /lib/pkgconfig
+  - /lib/python3.10
+  - /lib/x86_64-linux-gnu
+  - /share/doc/libogdf
+  - /share/doc/TBB
+  - /share/tomlplusplus

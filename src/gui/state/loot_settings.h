@@ -78,6 +78,7 @@ public:
   bool isMasterlistUpdateBeforeSortEnabled() const;
   bool isLootUpdateCheckEnabled() const;
   bool isNoSortingChangesDialogEnabled() const;
+  bool isWarnOnCaseSensitiveGamePathsEnabled() const;
   std::string getGame() const;
   std::string getLastGame() const;
   std::string getLastVersion() const;
@@ -99,6 +100,7 @@ public:
   void enableMasterlistUpdateBeforeSort(bool enable);
   void enableLootUpdateCheck(bool enable);
   void enableNoSortingChangesDialog(bool enable);
+  void enableWarnOnCaseSensitiveGamePaths(bool enable);
 
   void storeLastGame(const std::string& lastGame);
   void storeMainWindowPosition(const WindowPosition& position);
@@ -113,6 +115,7 @@ private:
   bool updateMasterlistBeforeSort_{true};
   bool enableLootUpdateCheck_{true};
   bool useNoSortingChangesDialog_{true};
+  bool warnOnCaseSensitiveGamePaths_{true};
   std::string game_{"auto"};
   std::string lastGame_{"auto"};
   std::string lastVersion_;

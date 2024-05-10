@@ -100,6 +100,7 @@ public:
       bool headersOnly);  // Loads all installed plugins.
   bool ArePluginsFullyLoaded()
       const;  // Checks if the game's plugins have already been loaded.
+  bool SupportsLightPlugins() const;
 
   std::filesystem::path MasterlistPath() const;
   std::filesystem::path UserlistPath() const;
@@ -120,7 +121,8 @@ public:
   void IncrementLoadOrderSortCount();
   void DecrementLoadOrderSortCount();
 
-  std::vector<SourcedMessage> GetMessages(const std::string& language) const;
+  std::vector<SourcedMessage> GetMessages(const std::string& language,
+                                          bool warnOnCaseSensitivePaths) const;
   void AppendMessage(const SourcedMessage& message);
   void ClearMessages();
 
@@ -161,6 +163,7 @@ private:
   unsigned short loadOrderSortCount_{0};
   bool pluginsFullyLoaded_{false};
   bool isMicrosoftStoreInstall_{false};
+  bool supportsLightPlugins_{false};
 
   // Use Filename to benefit from libloot's case-insensitive comparisons.
   std::set<Filename> creationClubPlugins_;

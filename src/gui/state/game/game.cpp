@@ -277,6 +277,22 @@ std::string GetMetadataAsBBCodeYaml(const gui::Game& game,
   return "[spoiler][code]\n" + metadata.AsYaml() + "\n[/code][/spoiler]";
 }
 
+bool SupportsLightPlugins(const gui::Game& game) {
+  const auto gameType = game.GetSettings().Type();
+  if (gameType == GameType::tes5vr) {
+    // Light plugins are not supported unless an SKSEVR plugin is used.
+    // This assumes that the plugin's dependencies are also installed and that
+    // the game is launched with SKSEVR. The dependencies are intentionally
+    // not checked to allow them to change over time without breaking this
+    // check.
+    return std::filesystem::exists(game.GetSettings().DataPath() / "SKSE" /
+                                   "Plugins" / "skyrimvresl.dll");
+  }
+
+  return gameType == GameType::tes5se || gameType == GameType::fo4 ||
+         gameType == GameType::starfield;
+}
+
 namespace gui {
 std::string GetDisplayName(const File& file) {
   if (file.GetDisplayName().empty()) {
@@ -336,6 +352,7 @@ void Game::Init() {
   messages_.clear();
   loadOrderSortCount_ = 0;
   pluginsFullyLoaded_ = false;
+  supportsLightPlugins_ = loot::SupportsLightPlugins(*this);
 
   gameHandle_ = CreateGameHandle(
       settings_.Type(), settings_.GamePath(), settings_.GameLocalPath());
@@ -545,6 +562,55 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
             "will cause irreversible damage to your game saves.")));
   }
 
+  if (!supportsLightPlugins_ && plugin.IsLightPlugin()) {
+    if (logger) {
+      logger->error(
+          "\"{}\" is a light plugin but the game does not support light "
+          "plugins.",
+          plugin.GetName());
+    }
+    const auto pluginType = boost::iends_with(plugin.GetName(), ".esp")
+                                ? boost::locale::translate("plugin")
+                                /** translators: master as in a plugin that is
+                                   loaded as if its master flag is set. */
+                                : boost::locale::translate("master");
+    if (settings_.Type() == GameType::tes5vr) {
+      messages.push_back(SourcedMessage{
+          MessageType::error,
+          MessageSource::lightPluginNotSupported,
+          fmt::format(boost::locale::translate(
+                          "\"{0}\" is a light {1}, but {2} seems to be "
+                          "missing. Please ensure you have correctly installed "
+                          "{2} and all its requirements.")
+                          .str(),
+                      EscapeMarkdownASCIIPunctuation(plugin.GetName()),
+                      pluginType.str(),
+                      "[Skyrim VR ESL "
+                      "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                      "mods/106712/)")});
+    } else if (boost::iends_with(plugin.GetName(), ".esl")) {
+      messages.push_back(CreatePlainTextSourcedMessage(
+          MessageType::error,
+          MessageSource::lightPluginNotSupported,
+          fmt::format(boost::locale::translate("\"{0}\" is a .esl plugin, but "
+                                               "the game does not support such "
+                                               "plugins, and will not load it.")
+                          .str(),
+                      plugin.GetName())));
+    } else {
+      messages.push_back(CreatePlainTextSourcedMessage(
+          MessageType::warn,
+          MessageSource::lightPluginNotSupported,
+          fmt::format(boost::locale::translate(
+                          "\"{0}\" is flagged as a light {1}, but the game "
+                          "does not support such plugins, and will load it as "
+                          "a normal {1}.")
+                          .str(),
+                      plugin.GetName(),
+                      pluginType.str())));
+    }
+  }
+
   if (plugin.IsOverridePlugin() && !plugin.IsValidAsOverridePlugin()) {
     if (logger) {
       logger->error(
@@ -582,6 +648,19 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
                 .str(),
             plugin.GetHeaderVersion().value(),
             settings_.MinimumHeaderVersion())));
+  }
+
+  for (const auto& masterName : plugin.GetMasters()) {
+    if (Filename(plugin.GetName()) == Filename(masterName)) {
+      if (logger) {
+        logger->error("\"{}\" has itself as a master.", plugin.GetName());
+      }
+      messages.push_back(CreatePlainTextSourcedMessage(
+          MessageType::error,
+          MessageSource::selfMaster,
+          boost::locale::translate("This plugin has itself as a master.")));
+      break;
+    }
   }
 
   if (metadata.GetGroup().has_value()) {
@@ -762,9 +841,13 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
       CheckForRemovedPlugins(installedPluginPaths, loadedPluginNames));
 
   pluginsFullyLoaded_ = !headersOnly;
+
+  supportsLightPlugins_ = loot::SupportsLightPlugins(*this);
 }
 
 bool Game::ArePluginsFullyLoaded() const { return pluginsFullyLoaded_; }
+
+bool Game::SupportsLightPlugins() const { return supportsLightPlugins_; }
 
 fs::path Game::MasterlistPath() const {
   return GetMasterlistPath(lootDataPath_, settings_);
@@ -905,7 +988,8 @@ void Game::DecrementLoadOrderSortCount() {
 }
 
 std::vector<SourcedMessage> Game::GetMessages(
-    const std::string& language) const {
+    const std::string& language,
+    bool warnOnCaseSensitivePaths) const {
   std::vector<SourcedMessage> output(
       ToSourcedMessages(gameHandle_->GetDatabase().GetGeneralMessages(true),
                         MessageSource::messageMetadata,
@@ -1037,7 +1121,8 @@ std::vector<SourcedMessage> Game::GetMessages(
             "light plugins to avoid potential issues."));
   }
 
-  if (IsPathCaseSensitive(GetSettings().DataPath())) {
+  if (warnOnCaseSensitivePaths &&
+      IsPathCaseSensitive(GetSettings().DataPath())) {
     addWarning(
         MessageSource::caseSensitivePathCheck,
         fmt::format(
@@ -1068,7 +1153,7 @@ std::vector<SourcedMessage> Game::GetMessages(
       std::filesystem::create_directories(gameLocalPath);
     }
 
-    if (IsPathCaseSensitive(gameLocalPath)) {
+    if (warnOnCaseSensitivePaths && IsPathCaseSensitive(gameLocalPath)) {
       addWarning(
           MessageSource::caseSensitivePathCheck,
           fmt::format(

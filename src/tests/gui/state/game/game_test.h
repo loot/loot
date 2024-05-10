@@ -110,7 +110,9 @@ INSTANTIATE_TEST_SUITE_P(,
                                            GameId::fo3,
                                            GameId::fonv,
                                            GameId::fo4,
-                                           GameId::tes5se));
+                                           GameId::fo4vr,
+                                           GameId::tes5se,
+                                           GameId::tes5vr));
 
 TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   using std::filesystem::u8path;
@@ -686,6 +688,118 @@ TEST_P(GameTest, checkInstallValidityShouldResolveExternalPluginPaths) {
 
 TEST_P(
     GameTest,
+    checkInstallValidityShouldWarnIfLightPluginIsPresentAndGameDoesNotSupportLightPlugins) {
+  if (GetParam() != GameId::tes5se && GetParam() != GameId::tes5vr &&
+      GetParam() != GameId::fo4 && GetParam() != GameId::fo4vr &&
+      GetParam() != GameId::starfield) {
+    return;
+  }
+
+  std::string blankEsl = "Blank.esl";
+  std::filesystem::copy(dataPath / blankEsm, dataPath / blankEsl);
+
+  // Light-flag esm
+  std::fstream out(
+      dataPath / blankEsm,
+      std::ios_base::in | std::ios_base::out | std::ios_base::binary);
+  out.seekp(0x09, std::ios_base::beg);
+  out.put('\x02');
+  out.close();
+  // Light-flag esp
+  out.open(dataPath / blankEsp,
+           std::ios_base::in | std::ios_base::out | std::ios_base::binary);
+  out.seekp(0x09, std::ios_base::beg);
+  out.put('\x02');
+  out.close();
+
+  Game game = CreateInitialisedGame();
+  game.LoadAllInstalledPlugins(true);
+
+  const auto eslMessages = game.CheckInstallValidity(
+      *game.GetPlugin(blankEsl), PluginMetadata(blankEsl), "en");
+  const auto esmMessages = game.CheckInstallValidity(
+      *game.GetPlugin(blankEsm), PluginMetadata(blankEsm), "en");
+  const auto espMessages = game.CheckInstallValidity(
+      *game.GetPlugin(blankEsp), PluginMetadata(blankEsp), "en");
+
+  if (GetParam() == GameId::tes5vr) {
+    ASSERT_EQ(1, eslMessages.size());
+    EXPECT_EQ(
+        std::vector<SourcedMessage>({
+            SourcedMessage{
+                MessageType::error,
+                MessageSource::lightPluginNotSupported,
+                "\"Blank\\.esl\" is a light master, but [Skyrim VR ESL "
+                "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                "mods/106712/) seems to be missing. Please ensure you have "
+                "correctly installed [Skyrim VR ESL "
+                "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                "mods/106712/) and all its requirements."},
+        }),
+        eslMessages);
+    EXPECT_EQ(
+        std::vector<SourcedMessage>({
+            SourcedMessage{
+                MessageType::error,
+                MessageSource::lightPluginNotSupported,
+                "\"Blank\\.esm\" is a light master, but [Skyrim VR ESL "
+                "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                "mods/106712/) seems to be missing. Please ensure you have "
+                "correctly installed [Skyrim VR ESL "
+                "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                "mods/106712/) and all its requirements."},
+        }),
+        esmMessages);
+    EXPECT_EQ(
+        std::vector<SourcedMessage>({
+            SourcedMessage{
+                MessageType::error,
+                MessageSource::lightPluginNotSupported,
+                "\"Blank\\.esp\" is a light plugin, but [Skyrim VR ESL "
+                "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                "mods/106712/) seems to be missing. Please ensure you have "
+                "correctly installed [Skyrim VR ESL "
+                "Support](https://www.nexusmods.com/skyrimspecialedition/"
+                "mods/106712/) and all its requirements."},
+        }),
+        espMessages);
+  } else if (GetParam() == GameId::fo4vr) {
+    EXPECT_EQ(
+        std::vector<SourcedMessage>({
+            SourcedMessage{
+                MessageType::error,
+                MessageSource::lightPluginNotSupported,
+                "\\\"Blank\\.esl\\\" is a \\.esl plugin\\, but the game does "
+                "not support such plugins\\, and will not load it\\."},
+        }),
+        eslMessages);
+    EXPECT_EQ(std::vector<SourcedMessage>({
+                  SourcedMessage{
+                      MessageType::warn,
+                      MessageSource::lightPluginNotSupported,
+                      "\\\"Blank\\.esm\\\" is flagged as a light master\\, but "
+                      "the game does not support such plugins\\, and will load "
+                      "it as a normal master\\."},
+              }),
+              esmMessages);
+    EXPECT_EQ(std::vector<SourcedMessage>({
+                  SourcedMessage{
+                      MessageType::warn,
+                      MessageSource::lightPluginNotSupported,
+                      "\\\"Blank\\.esp\\\" is flagged as a light plugin\\, but "
+                      "the game does not support such plugins\\, and will load "
+                      "it as a normal plugin\\."},
+              }),
+              espMessages);
+  } else {
+    EXPECT_TRUE(eslMessages.empty());
+    EXPECT_TRUE(esmMessages.empty());
+    EXPECT_TRUE(espMessages.empty());
+  }
+}
+
+TEST_P(
+    GameTest,
     redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
   using std::filesystem::u8path;
 
@@ -813,17 +927,12 @@ TEST_P(GameTest,
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
-  const auto messages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+  const auto messages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
-#ifdef _WIN32
   EXPECT_EQ(1, messages.size());
   EXPECT_EQ("You have not sorted your load order this session\\.",
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE)[0].text);
-#else
-  EXPECT_EQ(3, messages.size());
-  EXPECT_EQ("You have not sorted your load order this session\\.",
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE)[0].text);
-#endif
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false)[0].text);
 }
 
 TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsAtExternalPaths) {
@@ -867,6 +976,29 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
   EXPECT_TRUE(game.ArePluginsFullyLoaded());
+}
+
+TEST_P(GameTest,
+       supportsLightPluginsShouldReturnTrueForSkyrimVRIfSKSEPluginIsInstalled) {
+  Game game = CreateInitialisedGame();
+  const auto gameType = game.GetSettings().Type();
+
+  if (gameType == GameType::tes5se || gameType == GameType::fo4 ||
+      gameType == GameType::starfield) {
+    EXPECT_TRUE(game.SupportsLightPlugins());
+  } else {
+    EXPECT_FALSE(game.SupportsLightPlugins());
+  }
+
+  loot::test::touch(dataPath / "SKSE" / "Plugins" / "skyrimvresl.dll");
+  game.LoadAllInstalledPlugins(true);
+
+  if (gameType == GameType::tes5se || gameType == GameType::tes5vr ||
+      gameType == GameType::fo4 || gameType == GameType::starfield) {
+    EXPECT_TRUE(game.SupportsLightPlugins());
+  } else {
+    EXPECT_FALSE(game.SupportsLightPlugins());
+  }
 }
 
 TEST_P(GameTest,
@@ -1054,13 +1186,9 @@ TEST_P(GameTest, aMessageShouldBeCachedByDefault) {
   Game game = CreateInitialisedGame();
 
   const auto messageCount =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size();
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false).size();
 
-#ifdef _WIN32
   ASSERT_EQ(1, messageCount);
-#else
-  ASSERT_EQ(3, messageCount);
-#endif
 }
 
 TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
@@ -1102,54 +1230,78 @@ TEST_P(GameTest,
   Game game = CreateInitialisedGame();
   game.IncrementLoadOrderSortCount();
 
-  const auto messages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+  const auto messages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
-#ifdef _WIN32
   EXPECT_TRUE(messages.empty());
-#else
-  EXPECT_EQ(2, messages.size());
-#endif
 }
 
 TEST_P(GameTest,
        decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedMessage) {
   Game game = CreateInitialisedGame();
-  auto expectedMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+  auto expectedMessages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
   game.IncrementLoadOrderSortCount();
   game.DecrementLoadOrderSortCount();
 
   EXPECT_EQ(expectedMessages,
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE));
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false));
 }
 
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountThatIsAlreadyZeroShouldShowTheDefaultCachedMessage) {
   Game game = CreateInitialisedGame();
-  auto expectedMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+  auto expectedMessages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
   game.DecrementLoadOrderSortCount();
 
   EXPECT_EQ(expectedMessages,
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE));
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false));
 }
 
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
   Game game = CreateInitialisedGame();
-  auto expectedMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
   game.IncrementLoadOrderSortCount();
   game.IncrementLoadOrderSortCount();
   game.DecrementLoadOrderSortCount();
 
-  const auto messages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+  const auto messages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
-#ifdef _WIN32
   EXPECT_TRUE(messages.empty());
-#else
-  EXPECT_EQ(2, messages.size());
-#endif
 }
+
+#ifndef _WIN32
+TEST_P(GameTest,
+       getMessagesShouldIncludeCaseSensitivityWarningIfParameterIsTrue) {
+  Game game = CreateInitialisedGame();
+  const auto messages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, true);
+
+  EXPECT_EQ(3, messages.size());
+  EXPECT_EQ("You have not sorted your load order this session\\.",
+            messages[0].text);
+  EXPECT_TRUE(boost::contains(
+      messages[1].text, "is installed in a case\\-sensitive location\\."));
+  EXPECT_TRUE(boost::contains(
+      messages[2].text,
+      "local application data is stored in a case\\-sensitive location\\."));
+}
+
+TEST_P(GameTest,
+       getMessagesShouldIncludeCaseSensitivityWarningIfParameterIsFalse) {
+  Game game = CreateInitialisedGame();
+  const auto messages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
+
+  EXPECT_EQ(1, messages.size());
+  EXPECT_EQ("You have not sorted your load order this session\\.",
+            messages[0].text);
+}
+#endif
 
 TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
   Game game = CreateInitialisedGame();
@@ -1161,17 +1313,12 @@ TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
     game.AppendMessage(message);
   }
 
-  const auto gameMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+  const auto gameMessages =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
-#ifdef _WIN32
   ASSERT_EQ(3, gameMessages.size());
   EXPECT_EQ(messages[0], gameMessages[0]);
   EXPECT_EQ(messages[1], gameMessages[1]);
-#else
-  ASSERT_EQ(5, gameMessages.size());
-  EXPECT_EQ(messages[0], gameMessages[0]);
-  EXPECT_EQ(messages[1], gameMessages[1]);
-#endif
 }
 
 TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
@@ -1185,12 +1332,12 @@ TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
   }
 
   const auto previousSize =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size();
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false).size();
 
   game.ClearMessages();
 
   EXPECT_EQ(previousSize - messages.size(),
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size());
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false).size());
 }
 }
 }

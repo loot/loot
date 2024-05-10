@@ -51,7 +51,7 @@ void NetworkTask::onNetworkError(QNetworkReply::NetworkError networkError) {
     const auto logger = getLogger();
     if (logger) {
       logger->error("Network error code {}, description is: {}",
-                    networkError,
+                    static_cast<int>(networkError),
                     errorString);
     }
 

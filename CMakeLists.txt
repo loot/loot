@@ -70,11 +70,11 @@ if(libloot_FOUND)
 else()
     if(NOT DEFINED LIBLOOT_URL)
         if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.3/libloot-0.22.3-win64.7z")
-            set(LIBLOOT_HASH "SHA256=6ee26d25250fb255ead5781e092b6122877cc2526119d6fe1f9ea4f4ff9a094a")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.4/libloot-0.22.4-win64.7z")
+            set(LIBLOOT_HASH "SHA256=e5ad77f7747a849accc4469f6f1b9b1d5238dbffe2afa6618dd766f9eddbbcdc")
         else()
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.3/libloot-0.22.3-Linux.tar.xz")
-            set(LIBLOOT_HASH "SHA256=0b01797b1c52828d9c3af552e6aa63adcdea00aa2808f30b126256ff6f046794")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.4/libloot-0.22.4-Linux.tar.xz")
+            set(LIBLOOT_HASH "SHA256=3f0d7770912d0951c759c1571d3996422572652125cf8fcd0dbc466ece6b7c21")
         endif()
     endif()
 
@@ -87,11 +87,15 @@ else()
     ExternalProject_Get_Property(libloot SOURCE_DIR)
     set(LIBLOOT_INCLUDE_DIRS "${SOURCE_DIR}/include")
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-        set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot.dll${CMAKE_STATIC_LIBRARY_SUFFIX}")
+        set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}loot.dll${CMAKE_STATIC_LIBRARY_SUFFIX}")
     else()
-        set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
+        set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
     endif()
-    set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/bin/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    else()
+        set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    endif()
 endif()
 
 find_package(ZLIB)
@@ -109,8 +113,8 @@ if(ZLIB_FOUND)
     set(MZ_COMPRESS_ONLY ON)
     FetchContent_Declare(
         MINIZIP
-        URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz"
-        URL_HASH "SHA256=63e47a2b4dbac0da501f43f4da74f118dfb3ef0dee0ffbbe89428271002260f8"
+        URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.5.tar.gz"
+        URL_HASH "SHA256=9bb636474b8a4269280d32aca7de4501f5c24cc642c9b4225b4ed7b327f4ee73"
         FIND_PACKAGE_ARGS)
 
     FetchContent_MakeAvailable(MINIZIP)
@@ -120,12 +124,13 @@ else()
     # build-in-source so minizip-ng include won't find zconf.h.
 
     if(NOT DEFINED ZLIB_URL)
-        set(ZLIB_URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.tar.gz")
+        set(ZLIB_URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.1.tar.gz")
+        set(ZLIB_HASH "SHA256=17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c")
     endif()
 
     ExternalProject_Add(zlib
         URL ${ZLIB_URL}
-        URL_HASH "SHA256=b5b06d60ce49c8ba700e0ba517fa07de80b5d4628a037f4be8ad16955be7a7c0"
+        URL_HASH ${ZLIB_HASH}
         CMAKE_ARGS
             -DZLIB_BUILD_EXAMPLES=OFF
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
@@ -146,12 +151,13 @@ else()
         "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${ZLIB_LIB_NAME}")
 
     if(NOT DEFINED MINIZIP_NG_URL)
-        set(MINIZIP_NG_URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz")
+        set(MINIZIP_NG_URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.5.tar.gz")
+        set(MINIZIP_NG_HASH "SHA256=9bb636474b8a4269280d32aca7de4501f5c24cc642c9b4225b4ed7b327f4ee73")
     endif()
 
     ExternalProject_Add(minizip-ng
         URL ${MINIZIP_NG_URL}
-        URL_HASH "SHA256=63e47a2b4dbac0da501f43f4da74f118dfb3ef0dee0ffbbe89428271002260f8"
+        URL_HASH ${MINIZIP_NG_HASH}
         CMAKE_ARGS
             -DMZ_ZLIB=ON
             -DMZ_BZIP2=OFF
@@ -178,27 +184,28 @@ endif()
 
 FetchContent_Declare(
     tomlplusplus
-    URL "https://github.com/marzer/tomlplusplus/archive/v3.3.0.tar.gz"
-    URL_HASH "SHA256=fc1a5eb410f3c67e90e5ad1264a1386d020067cfb01b633cc8c0441789aa6cf2"
+    URL "https://github.com/marzer/tomlplusplus/archive/v3.4.0.tar.gz"
+    URL_HASH "SHA256=8517f65938a4faae9ccf8ebb36631a38c1cadfb5efa85d9a72e15b9e97d25155"
     FIND_PACKAGE_ARGS)
 
 FetchContent_Declare(
     spdlog
-    URL "https://github.com/gabime/spdlog/archive/v1.12.0.tar.gz"
-    URL_HASH "SHA256=4dccf2d10f410c1e2feaff89966bfc49a1abb29ef6f08246335b110e001e09a9"
+    URL "https://github.com/gabime/spdlog/archive/v1.14.1.tar.gz"
+    URL_HASH "SHA256=1586508029a7d0670dfcb2d97575dcdc242d3868a259742b69f100801ab4e16b"
     FIND_PACKAGE_ARGS)
 
 FetchContent_MakeAvailable(spdlog tomlplusplus)
 
 if(NOT DEFINED VALVE_FILE_VDF_URL)
-    set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/3ed733cac6d0306e39d228d4a00311adfcc682f6.tar.gz")
+    set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/c8adfc29e62cc980b595e965bedfb239087647ff.tar.gz")
+    set(VALVE_FILE_VDF_HASH "SHA256=48a078ff1e360d9c2217c9bd2eb766928a0234b73bb2bd458d04c64644669550")
 endif()
 
 # Use ExternalProject for ValveFileVDF because it's not properly set up to be
 # used with FetchContent.
 ExternalProject_Add(ValveFileVDF
     URL ${VALVE_FILE_VDF_URL}
-    URL_HASH "SHA256=3f93af9dda6a5eebd53398e572b77eb9ca488e7d422543dd571bee08e31db481"
+    URL_HASH ${VALVE_FILE_VDF_HASH}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
@@ -215,13 +222,14 @@ if(NOT OGDF_FOUND)
 
     if(NOT DEFINED OGDF_URL)
         set(OGDF_URL "https://ogdf.uos.de/wp-content/uploads/2023/09/ogdf.v2023.09.zip")
+        set(OGDF_HASH "SHA256=a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436")
     endif()
 
     # Use ExternalProject for OGDF as otherwise there's no way to stop it from
     # creating and building loads of unnecessary targets.
     ExternalProject_Add(OGDF
         URL ${OGDF_URL}
-        URL_HASH "SHA256=a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436"
+        URL_HASH ${OGDF_HASH}
         CMAKE_ARGS
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
         BUILD_COMMAND ${OGDF_BUILD_COMMAND}
@@ -545,6 +553,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
             COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
             COMMENT "Running windeployqt...")
     endif()
+
+    set(DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME "loot.dll")
+else()
+    set(DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME "libloot.so")
 endif()
 
 # Copy the API binary to the build directory.
@@ -552,7 +564,7 @@ get_filename_component(LIBLOOT_SHARED_LIBRARY_FILENAME ${LIBLOOT_SHARED_LIBRARY}
 add_custom_command(TARGET LOOT POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         ${LIBLOOT_SHARED_LIBRARY}
-        "$<TARGET_FILE_DIR:LOOT>/${LIBLOOT_SHARED_LIBRARY_FILENAME}")
+        "$<TARGET_FILE_DIR:LOOT>/${DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME}")
 
 if(LOOT_BUILD_TESTS)
     include("cmake/tests.cmake")

@@ -8,9 +8,9 @@ on:
   pull_request:
 
 env:
-  BOOST_VERSION: 1.83.0
+  BOOST_VERSION: 1.85.0
   OGDF_VERSION: elderberry-202309
-  QT_VERSION: 6.5.3
+  QT_VERSION: 6.7.0
 
 jobs:
   # Check if the template.pot file is up to date. Run this as a separate job
@@ -49,7 +49,11 @@ jobs:
           fi
 
   linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
+
+    env:
+      ICU_MAJOR_VERSION: 73
+      LIBLOOT_VERSION: 0.22.4
 
     steps:
       - uses: actions/checkout@v4
@@ -73,8 +77,8 @@ jobs:
           echo "root=$BOOST_ROOT" >> $GITHUB_OUTPUT
           echo "librarydir=${BOOST_ROOT}/stage/64/lib" >> $GITHUB_OUTPUT
 
-      - name: Set OGDF install path
-        run: echo "OGDF_INSTALL_PATH=${{ github.workspace }}/ogdf-${{ env.OGDF_VERSION }}-install" >> $GITHUB_ENV
+      - name: Set libloot install path
+        run: echo "LIBLOOT_INSTALL_PATH=${{ github.workspace }}/libloot-${{ env.LIBLOOT_VERSION }}-install" >> $GITHUB_ENV
 
       - name: Boost cache
         id: boost-cache
@@ -85,84 +89,103 @@ jobs:
             ${{ steps.boost-metadata.outputs.root }}/stage
           key: ${{ runner.os }}-Boost-${{ env.BOOST_VERSION }}
 
-      - name: OGDF cache
-        id: ogdf-cache
+      - name: libloot cache
+        id: libloot-cache
         uses: actions/cache@v4
         with:
-          path: ${{ env.OGDF_INSTALL_PATH }}
-          key: ${{ runner.os }}-ogdf-${{ env.OGDF_VERSION }}
+          path: ${{ env.LIBLOOT_INSTALL_PATH }}
+          # Key includes ICU major version because libloot links against it as a shared library.
+          key: ${{ runner.os }}-libloot-${{ env.LIBLOOT_VERSION }}-icu-${{ env.ICU_MAJOR_VERSION }}
 
       - name: Install C++ dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-upgrade \
             libtbb-dev \
-            g++-10 \
+            g++-12 \
             build-essential \
-            libgl1-mesa-dev \
-            gettext \
-            flatpak \
-            flatpak-builder
+            libgl1-mesa-dev
 
       - name: Download & build Boost
         run: |
           wget https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ~ --boost-version $BOOST_VERSION -a 64 -t gcc-10 locale
+          python install_boost.py --directory ~ --boost-version $BOOST_VERSION -a 64 -t gcc-12 locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Get ICU
         id: get-icu
         run: |
-          wget https://github.com/unicode-org/icu/releases/download/release-71-1/icu4c-71_1-Ubuntu20.04-x64.tgz
-          tar -xf icu4c-71_1-Ubuntu20.04-x64.tgz
+          wget https://github.com/unicode-org/icu/releases/download/release-${ICU_MAJOR_VERSION}-2/icu4c-${ICU_MAJOR_VERSION}_2-Ubuntu22.04-x64.tgz
+          tar -xf icu4c-${ICU_MAJOR_VERSION}_2-Ubuntu22.04-x64.tgz
 
-          echo "root=${{ github.workspace }}/icu/usr/local" >> $GITHUB_OUTPUT
+          ICU_INSTALL_PATH="${{ github.workspace }}/icu/usr/local"
+
+          echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ICU_INSTALL_PATH/lib" >> "$GITHUB_ENV"
+          echo "root=$ICU_INSTALL_PATH" >> $GITHUB_OUTPUT
 
       - name: Download Qt
         id: qt-metadata
         run: |
           python -m pip install aqtinstall
-          aqt install-qt linux desktop $QT_VERSION gcc_64
+          aqt install-qt linux desktop $QT_VERSION linux_gcc_64
           echo "root=${{ github.workspace }}/$QT_VERSION/gcc_64" >> $GITHUB_OUTPUT
 
-      - name: Download and build OGDF
+      - name: Download and build libloot
         run: |
-          curl -sSfLO https://github.com/ogdf/ogdf/archive/refs/tags/${OGDF_VERSION}.zip
-          unzip ${OGDF_VERSION}.zip -d .
+          wget https://github.com/loot/libloot/archive/$LIBLOOT_VERSION.tar.gz
+          tar -xf $LIBLOOT_VERSION.tar.gz
 
-          mkdir ogdf-${OGDF_VERSION}/build
-          cd ogdf-${OGDF_VERSION}/build
+          mkdir libloot-$LIBLOOT_VERSION/build
+          cd libloot-$LIBLOOT_VERSION/build
 
-          export CXX="g++-10" CC="gcc-10"
-          cmake .. -DCMAKE_INSTALL_PREFIX="${OGDF_INSTALL_PATH}"
-          cmake --build .
-          cmake --install .
-        if: steps.ogdf-cache.outputs.cache-hit != 'true'
+          export CXX="g++-12" CC="gcc-12"
+          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DICU_ROOT="${{ steps.get-icu.outputs.root }}" -DLIBLOOT_BUILD_TESTS=OFF -DLIBLOOT_INSTALL_DOCS=OFF -DCMAKE_INSTALL_PREFIX="$LIBLOOT_INSTALL_PATH"
+
+          cmake --build . --target loot --config Release
+          cmake --install . --config Release
+
+          echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LIBLOOT_INSTALL_PATH/lib" >> "$GITHUB_ENV"
+        if: steps.libloot-cache.outputs.cache-hit != 'true'
 
       - name: Run CMake
         run: |
           mkdir build
           cd build
-          export CXX="g++-10" CC="gcc-10"
-          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}" -DICU_ROOT="${{ steps.get-icu.outputs.root }}"
-          make all
+          export CXX="g++-12" CC="gcc-12"
+          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DICU_ROOT="${{ steps.get-icu.outputs.root }}" -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }}"
+          make loot_gui_tests
 
       - name: Run C++ tests
         run: |
           cd build
-          export LD_LIBRARY_PATH="${{ steps.get-icu.outputs.root }}/lib"
+
+          export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$LIBLOOT_INSTALL_PATH/lib"
+
           ./loot_gui_tests
 
-      - name: Install packages for building docs
-        run: |
-          python -m pip install -r docs/requirements.txt
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+  flatpak:
+    runs-on: ubuntu-22.04
 
-      - name: Build docs
-        run: sphinx-build -b html docs build/docs/html
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Build translation message object files
-        run: python scripts/po_to_mo.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: pip cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+
+      - name: flatpak-builder cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/build/.flatpak-builder
+          key: ${{ runner.os }}-flatpak-builder-${{ hashFiles('resources/linux/io.github.loot.loot.yml') }}
 
       - name: Get descriptive LOOT version
         id: get-loot-version
@@ -173,60 +196,33 @@ jobs:
           GIT_REF_SUFFIX=${GIT_REF#refs/*/}
           LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF_SUFFIX}
           LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
-          SAFE_GIT_REF_SUFFIX=${GIT_REF_SUFFIX//[\/<>\"|]/_}
           echo "version=$LOOT_SAFE_DESC_REF" >> $GITHUB_OUTPUT
-          echo "ref=$SAFE_GIT_REF_SUFFIX" >> $GITHUB_OUTPUT
 
-      - name: Build archive
-        id: build-archive
-        shell: bash
+      - name: Install Flatpak build dependencies
         run: |
-          VERSION="${{ steps.get-loot-version.outputs.version }}"
-          FILENAME="loot_${VERSION}-Linux.tar.xz"
-          export PATH="${{ steps.qt-metadata.outputs.root }}/bin:$PATH"
+          sudo apt-get update
+          sudo apt-get install -y --no-upgrade \
+            flatpak \
+            flatpak-builder
 
-          python scripts/archive.py . "${{ steps.get-loot-version.outputs.ref }}"
-          mv "build/loot_${{ steps.get-loot-version.outputs.version }}.tar.xz" "build/$FILENAME"
-
-          echo "filename=$FILENAME" >> $GITHUB_OUTPUT
-
-      - name: Import GPG key
-        run: echo -n "${{ secrets.GPG_SIGNING_KEY }}" | gpg --import
-        if: github.event_name == 'push'
-
-      - name: Sign archive
-        run: gpg --output "build/${{ steps.build-archive.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-archive.outputs.filename }}"
-        if: github.event_name == 'push'
-
-      - name: Set up Flatpak
-        run: |
-          flatpak --user remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-          flatpak --user install -y flathub org.kde.Platform//6.5 org.kde.Sdk//6.5
+      - name: Generate Flatpak dependency manifests
+        run: ./scripts/generate_manifests.sh
 
       - name: Build Flatpak package
         id: build-flatpak
         run: |
           PACKAGE_FILENAME=loot_${{ steps.get-loot-version.outputs.version }}.flatpak
 
-          cd build
-          ln -s ${{ steps.build-archive.outputs.filename }} loot.tar.xz
-
-          flatpak-builder --repo=flatpak-repo flatpak ../resources/linux/io.github.loot.loot.yml
-          flatpak build-bundle flatpak-repo $PACKAGE_FILENAME io.github.loot.loot --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+          ./scripts/build_flatpak.sh "$PACKAGE_FILENAME"
 
           echo "filename=$PACKAGE_FILENAME" >> $GITHUB_OUTPUT
 
-      - name: Sign Flatpak package
-        run: gpg --output "build/${{ steps.build-flatpak.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-flatpak.outputs.filename }}"
+      - name: Import GPG key
+        run: echo -n "${{ secrets.GPG_SIGNING_KEY }}" | gpg --import
         if: github.event_name == 'push'
 
-      - name: Upload archive
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.build-archive.outputs.filename }}
-          path: |
-            build/${{ steps.build-archive.outputs.filename }}
-            build/${{ steps.build-archive.outputs.filename }}.sig
+      - name: Sign Flatpak package
+        run: gpg --output "build/${{ steps.build-flatpak.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-flatpak.outputs.filename }}"
         if: github.event_name == 'push'
 
       - name: Upload Flatpak package
