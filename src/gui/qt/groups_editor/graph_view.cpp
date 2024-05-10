@@ -375,5 +375,9 @@ void GraphView::doLayout(const std::vector<GroupNodePosition> &nodePositions) {
   for (const auto &[node, position] : calculatedNodePositions) {
     node->setPosition(position);
   }
+
+  if (logger) {
+    logger->debug("Successfully calculated new graph layout");
+  }
 }
 }
