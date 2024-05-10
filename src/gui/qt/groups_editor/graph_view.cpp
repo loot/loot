@@ -373,6 +373,10 @@ void GraphView::doLayout(const std::vector<GroupNodePosition> &nodePositions) {
 
   const auto calculatedNodePositions = calculateGraphLayout(nodes);
   for (const auto &[node, position] : calculatedNodePositions) {
+    if (node == nullptr) {
+      throw std::logic_error("calculated node positions map contains a null node pointer");
+    }
+
     node->setPosition(position);
   }
 }
