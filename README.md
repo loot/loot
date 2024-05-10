@@ -61,6 +61,8 @@ Refer to `.github/workflows/release.yml` for the build process.
 
 The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gettext, Git, Inno Setup 6, Python, Visual Studio 2019 and 7-zip are already installed.
 
+vslavik's [precompiled Gettext binaries](https://github.com/vslavik/gettext-tools-windows/releases/download/v0.22.5/gettext-tools-windows-0.22.5.zip) are probably the easiest way to get an up-to-date version of Gettext on Windows.
+
 ### Linux
 
 The GitHub Actions workflow assumes that you have already cloned the LOOT
@@ -86,7 +88,14 @@ LOOT uses the following CMake variables to set build parameters:
 Parameter | Values | Default |Description
 ----------|--------|---------|-----------
 `LIBLOOT_URL` | A URL | A GitHub release archive URL | The URL to get the libloot release archive from. By default, this is the URL of a libloot release archive hosted on GitHub. Specifying this is useful if you want to link to a libloot that was built and packaged locally.
-`RUN_CLANG_TIDY` | `ON`, `OFF` | `OFF` | Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator.
+`LOOT_BUILD_TESTS` | `ON`, `OFF` | `ON` | Whether or not to build LOOT's tests.
+`LOOT_RUN_CLANG_TIDY` | `ON`, `OFF` | `OFF` | Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator.
+`MINIZIP_NG_URL` | A URL | A release archive URL | The URL to get a source archive from.
+`OGDF_URL` | A URL | A release archive URL | The URL to get a source archive from.
+`VALVE_FILE_VDF_URL` | A URL | A GitHub commit archive URL | The URL to get a source archive from.
+`ZLIB_URL` | A URL | A release archive URL | The URL to get a source archive from.
+
+The URL parameters can be used to supply a local path if the archive has already been downloaded (e.g. for offline builds).
 
 You may also need to set `BOOST_ROOT` if CMake cannot find Boost, and `Qt6_ROOT` (e.g. to `C:/Qt/6.5.3/msvc2019_64`) if CMake cannot find Qt.
 

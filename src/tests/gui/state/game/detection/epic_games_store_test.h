@@ -49,9 +49,7 @@ protected:
       epicManifestsPath(dataPath.parent_path().parent_path() / "Manifests") {
     std::filesystem::create_directory(epicManifestsPath);
 
-    const std::string appName = GetParam() == GameId::tes5se
-                                    ? "ac82db5035584c7f8a2c548d98c86b2c"
-                                    : "adeae8bbfc94427db57c7dfecce3f1d4";
+    const std::string appName = GetAppName(GetParam());
 
     if (GetParam() == GameId::fo3) {
       // FO3 has localised subdirectories.
@@ -85,20 +83,36 @@ protected:
   std::filesystem::path gamePath;
 
   TestRegistry registry;
+
+private:
+  static std::string GetAppName(const GameId gameId) {
+    switch (gameId) {
+      case GameId::tes5se:
+        return "ac82db5035584c7f8a2c548d98c86b2c";
+      case GameId::fo3:
+        return "adeae8bbfc94427db57c7dfecce3f1d4";
+      case GameId::fo4:
+        return "61d52ce4d09d41e48800c22784d13ae8";
+      default:
+        throw new std::logic_error("Unsupported game ID");
+    }
+  }
 };
 
-// Pass an empty first argument, as it's a prefix for the test instantation,
+// Pass an empty first argument, as it's a prefix for the test instantiation,
 // but we only have the one so no prefix is necessary.
 INSTANTIATE_TEST_SUITE_P(,
                          Epic_FindGameInstallsTest,
-                         ::testing::Values(GameId::tes5se, GameId::fo3));
+                         ::testing::Values(GameId::tes5se,
+                                           GameId::fo3,
+                                           GameId::fo4));
 
 TEST_P(Epic_FindGameInstallsTest, shouldFindAValidEpicInstall) {
   const auto install = epic::FindGameInstalls(registry, GetParam(), {});
 
-  const auto expectedInstallPath = GetParam() == GameId::tes5se
-                                       ? gamePath
-                                       : gamePath / "Fallout 3 GOTY English";
+  const auto expectedInstallPath = GetParam() == GameId::fo3
+                                       ? gamePath / "Fallout 3 GOTY English"
+                                       : gamePath;
 
   ASSERT_TRUE(install.has_value());
   EXPECT_EQ(GetParam(), install.value().gameId);
@@ -129,9 +143,8 @@ TEST_P(Epic_FindGameInstallsTest,
   const auto install =
       epic::FindGameInstalls(registry, GetParam(), {"fr", "en"});
 
-  const auto expectedInstallPath = GetParam() == GameId::tes5se
-                                       ? gamePath
-                                       : gamePath / "Fallout 3 GOTY French";
+  const auto expectedInstallPath =
+      GetParam() == GameId::fo3 ? gamePath / "Fallout 3 GOTY French" : gamePath;
 
   ASSERT_TRUE(install.has_value());
   EXPECT_EQ(GetParam(), install.value().gameId);

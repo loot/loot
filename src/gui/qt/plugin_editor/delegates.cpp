@@ -153,7 +153,7 @@ bool MessageContentDelegate::eventFilter(QObject* editor, QEvent* event) {
   switch (keyEvent->key()) {
     case Qt::Key_Tab:
     case Qt::Key_Backtab:
-      // Ignore tabs and back-tabs so that keyboard nagivation works within the
+      // Ignore tabs and back-tabs so that keyboard navigation works within the
       // editor (which is a dialog).
       return false;
     default:

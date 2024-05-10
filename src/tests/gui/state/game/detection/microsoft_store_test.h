@@ -102,7 +102,7 @@ protected:
   }
 };
 
-// Pass an empty first argument, as it's a prefix for the test instantation,
+// Pass an empty first argument, as it's a prefix for the test instantiation,
 // but we only have the one so no prefix is necessary.
 INSTANTIATE_TEST_SUITE_P(,
                          Microsoft_FindGameInstallsTest,
