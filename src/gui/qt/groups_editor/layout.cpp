@@ -79,7 +79,15 @@ std::map<Node *, QPointF> calculateGraphLayout(
       throw std::logic_error("Node is not in graph");
     }
 
+    if (node == nullptr) {
+      throw std::invalid_argument("nodes vector contains a null pointer");
+    }
+
     for (const auto outEdge : node->outEdges()) {
+      if (outEdge == nullptr) {
+        throw std::invalid_argument("nodes vector contains a null pointer");
+      }
+
       const auto toGraphNode = graphNodes.find(outEdge->destNode());
       if (toGraphNode == graphNodes.end()) {
         throw std::logic_error("Node is not in graph");
