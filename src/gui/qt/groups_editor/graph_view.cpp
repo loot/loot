@@ -381,7 +381,7 @@ void GraphView::doLayout(const std::vector<GroupNodePosition> &nodePositions) {
   }
 
   if (logger) {
-    logger->debug("Successfully calculated new graph layout");
+    logger->trace("Successfully calculated new graph layout");
   }
 }
 }

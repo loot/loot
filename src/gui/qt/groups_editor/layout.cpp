@@ -49,12 +49,21 @@ std::map<Node *, QPointF> calculateGraphLayout(
 
   graphAttributes.directed() = true;
 
+  const auto logger = getLogger();
+  if (logger) {
+    logger->trace("Adding nodes to OGDF graph");
+  }
+
   // Add all nodes to the graph.
   std::map<Node *, ogdf::node> graphNodes;
   std::map<ogdf::node, Node *> sceneNodes;
   for (const auto node : nodes) {
     if (node == nullptr) {
       throw std::invalid_argument("nodes vector contains a null pointer");
+    }
+
+    if (logger) {
+      logger->trace("Adding node: {}", node->getName().toStdString());
     }
 
     const auto graphNode = graph.newNode();
@@ -69,6 +78,10 @@ std::map<Node *, QPointF> calculateGraphLayout(
 
     graphNodes.emplace(node, graphNode);
     sceneNodes.emplace(graphNode, node);
+  }
+
+  if (logger) {
+    logger->trace("Adding edges to OGDF graph");
   }
 
   // Now add all edges to the graph, without having to worry if the nodes
@@ -93,6 +106,12 @@ std::map<Node *, QPointF> calculateGraphLayout(
         throw std::logic_error("Node is not in graph");
       }
 
+      if (logger) {
+        logger->trace("Adding edge from {} to {}",
+                      fromGraphNode->first->getName().toStdString(),
+                      toGraphNode->first->getName().toStdString());
+      }
+
       graph.newEdge(fromGraphNode->second, toGraphNode->second);
     }
   }
@@ -106,12 +125,20 @@ std::map<Node *, QPointF> calculateGraphLayout(
   ohl->nodeDistance(NODE_SPACING);
   SL.setLayout(ohl);
 
+  if (logger) {
+    logger->trace("Running layout algorithm");
+  }
+
   SL.call(graphAttributes);
 
   // Now rotate the layout to get a layers arranged horizontally.
   graphAttributes.rotateLeft90();
 
   std::map<Node *, QPointF> nodePositions;
+
+  if (logger) {
+    logger->trace("Reading node positions from OGDF graph");
+  }
 
   for (const auto node : graph.nodes) {
     QPointF position(graphAttributes.x(node), graphAttributes.y(node));
