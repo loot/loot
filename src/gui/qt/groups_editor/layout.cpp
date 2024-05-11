@@ -44,13 +44,7 @@ std::map<Node *, QPointF> calculateGraphLayout(
   }
 
   ogdf::Graph graph;
-  ogdf::GraphAttributes graphAttributes(
-      graph,
-      ogdf::GraphAttributes::nodeGraphics |
-          ogdf::GraphAttributes::edgeGraphics |
-          ogdf::GraphAttributes::edgeArrow | ogdf::GraphAttributes::nodeLabel |
-          ogdf::GraphAttributes::edgeStyle | ogdf::GraphAttributes::nodeStyle |
-          ogdf::GraphAttributes::nodeTemplate);
+  ogdf::GraphAttributes graphAttributes(graph);
 
   graphAttributes.directed() = true;
 
