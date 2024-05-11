@@ -44,7 +44,16 @@ std::map<Node *, QPointF> calculateGraphLayout(
   }
 
   ogdf::Graph graph;
+
+  if (logger) {
+    logger->trace("Creating graph attributes");
+  }
+
   ogdf::GraphAttributes graphAttributes(graph);
+
+  if (logger) {
+    logger->trace("Setting graph to be directed");
+  }
 
   graphAttributes.directed() = true;
 
