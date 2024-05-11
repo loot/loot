@@ -38,6 +38,11 @@ constexpr double LAYER_SPACING = 30.0;
 
 std::map<Node *, QPointF> calculateGraphLayout(
     const std::vector<Node *> &nodes) {
+  const auto logger = getLogger();
+  if (logger) {
+    logger->trace("Called calculateGraphLayout()");
+  }
+
   ogdf::Graph graph;
   ogdf::GraphAttributes graphAttributes(
       graph,
@@ -49,7 +54,6 @@ std::map<Node *, QPointF> calculateGraphLayout(
 
   graphAttributes.directed() = true;
 
-  const auto logger = getLogger();
   if (logger) {
     logger->trace("Adding nodes to OGDF graph");
   }
