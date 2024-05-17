@@ -65,6 +65,18 @@
   </screenshots>
 
   <releases>
+    <release version="0.22.4" date="2024-05-17">
+      <description>
+        <ul>
+          <li>Support for Fallout 4 from the Epic Games Store.</li>
+          <li>Better handling of light plugins in Fallout 4 VR and Skyrim VR.</li>
+          <li>LOOT no longer crashes if masterlist update fails to first update the prelude.</li>
+          <li>The Flatpak application is now built from source.</li>
+          <li>Other fixes and improvements.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.22.4/app/changelog.html#id1</url>
+    </release>
     <release version="0.22.3" date="2023-12-06">
       <description>
         <ul>

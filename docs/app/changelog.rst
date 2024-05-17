@@ -4,6 +4,55 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.22.4 - 2024-05-17
+===================
+
+Added
+-----
+
+- Support for Fallout 4 from the Epic Games Store.
+- A config option to disable the warning that is displayed when LOOT detects a
+  game install in a case-insensitive filesystem. The warning remains displayed
+  by default.
+- LOOT will now display an error message for any plugin that is its own master.
+- LOOT will now display an error message for any light plugin installed in a
+  post-Skyrim game that does not support light plugins.
+- The docs now include plugin card icon images where the icons are mentioned.
+
+Fixed
+-----
+
+- Fallout 4 VR is no longer treated as if it supports light plugins.
+- Skyrim VR is no longer treated as if it supports light plugins, unless the ESL
+  Support SKSEVR plugin is installed.
+- LOOT no longer crashes if masterlist update fails to first update the prelude.
+
+Changed
+-------
+
+- Masterlist update and LOOT update network requests now time out after 30
+  seconds.
+- The Flatpak application is now built from source within the Flatpak build
+  environment.
+- Updated Boost to 1.85.0.
+- Updated libloot to v0.22.4.
+- Updated minizip-ng to v4.0.5.
+- Updated Qt to v6.7.0.
+- Updated spdlog to v1.14.1.
+- Updated tomlplusplus to v3.4.0.
+- Updated ValveFileVDF to c8adfc29e62cc980b595e965bedfb239087647ff.
+- Updated zlib to v1.3.1.
+- Updated the Bulgarian translation.
+- Updated the German translation.
+- Updated the Russian translation.
+- Updated the Ukrainian translation.
+
+Removed
+-------
+
+- The Linux binary release archive. Releases are now only available for Linux as
+  a Flatpak application from Flathub.
+
 0.22.3 - 2023-12-06
 ===================
 
@@ -38,7 +87,6 @@ Changed
 -------
 
 - Updated libloot to v0.22.2.
-- Updated Qt to v6.7.0.
 
 0.22.1 - 2023-11-05
 ===================
