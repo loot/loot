@@ -42,7 +42,7 @@ modules:
         sha256: 7009fe1faa1697476bdc7027703a2badb84e849b7b0baad5086b087b971f8617
 
   - name: libtbb
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
@@ -53,7 +53,7 @@ modules:
         sha256: c7bb7aa69c254d91b8f0041a71c5bcc3936acb64408a1719aec0b2b7639dd84f
 
   - name: minizip-ng
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
@@ -74,7 +74,7 @@ modules:
         sha256: 9bb636474b8a4269280d32aca7de4501f5c24cc642c9b4225b4ed7b327f4ee73
 
   - name: tomlplusplus
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
@@ -84,7 +84,7 @@ modules:
         sha256: 8517f65938a4faae9ccf8ebb36631a38c1cadfb5efa85d9a72e15b9e97d25155
 
   - name: spdlog
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
@@ -95,7 +95,7 @@ modules:
         sha256: 1586508029a7d0670dfcb2d97575dcdc242d3868a259742b69f100801ab4e16b
 
   - name: OGDF
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
@@ -105,7 +105,7 @@ modules:
         sha256: a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436
 
   - name: yaml-cpp
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
@@ -168,7 +168,7 @@ modules:
       - ../../build/flatpak-manifests/loot-condition-interpreter.json
 
   - name: LOOT
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
