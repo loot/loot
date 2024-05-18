@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.19)
 if(POLICY CMP0135)
     cmake_policy(SET CMP0135 NEW)
 endif()
@@ -134,6 +134,7 @@ else()
         CMAKE_ARGS
             -DZLIB_BUILD_EXAMPLES=OFF
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         INSTALL_COMMAND ""
         BUILD_IN_SOURCE TRUE)
     ExternalProject_Get_Property(zlib SOURCE_DIR BINARY_DIR)
@@ -173,6 +174,7 @@ else()
             -DZLIB_ROOT=${SOURCE_DIR}
             -DZLIB_LIBRARY=${ZLIB_LIBRARY}
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         INSTALL_COMMAND ""
         DEPENDS zlib)
     ExternalProject_Get_Property(minizip-ng SOURCE_DIR BINARY_DIR)
@@ -215,7 +217,11 @@ set(VALVE_FILE_VDF_INCLUDE_DIRS "${SOURCE_DIR}")
 find_package(OGDF CONFIG)
 if(NOT OGDF_FOUND)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF --config Release)
+        set(OGDF_BUILD_COMMAND 
+            ${CMAKE_COMMAND} 
+            --build .
+            --target OGDF 
+            --config $<IF:$<CONFIG:Release,RelWithDebInfo>,Release,Debug>)
     else()
         set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF)
     endif()
@@ -232,6 +238,7 @@ if(NOT OGDF_FOUND)
         URL_HASH ${OGDF_HASH}
         CMAKE_ARGS
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         BUILD_COMMAND ${OGDF_BUILD_COMMAND}
         INSTALL_COMMAND "")
     ExternalProject_Get_Property(OGDF SOURCE_DIR BINARY_DIR)
@@ -240,7 +247,7 @@ if(NOT OGDF_FOUND)
         "${BINARY_DIR}/include")
 
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-        set(OGDF_LIBRARY_DIR "${BINARY_DIR}/Release")
+        set(OGDF_LIBRARY_DIR "${BINARY_DIR}/$<CONFIG>")
     else()
         set(OGDF_LIBRARY_DIR "${BINARY_DIR}")
     endif()
