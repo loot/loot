@@ -31,7 +31,9 @@ if(GIT_FOUND)
                   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                   OUTPUT_VARIABLE GIT_COMMIT_STRING
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
-else()
+endif()
+
+if(NOT GIT_COMMIT_STRING)
     set(GIT_COMMIT_STRING "unknown")
 endif()
 
