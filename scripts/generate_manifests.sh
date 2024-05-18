@@ -43,7 +43,7 @@ flatpak --user remote-add --if-not-exists flathub https://dl.flathub.org/repo/fl
 flatpak --user install -y flathub "$RUNTIME"
 
 echo "Generating manifest for docs..."
-./flatpak-pip-generator --runtime="$RUNTIME" --requirements-file ../../docs/requirements.txt --output docs --cleanup=all --build-isolation --checker-data
+./flatpak-pip-generator --runtime="$RUNTIME" --requirements-file ../../docs/requirements.txt --output docs --cleanup=all --build-isolation
 
 generate_cargo_manifest cbindgen
 generate_cargo_manifest esplugin
