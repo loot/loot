@@ -66,7 +66,7 @@ endif()
 find_package(libloot CONFIG)
 if(libloot_FOUND)
     get_target_property(LIBLOOT_INCLUDE_DIRS libloot::loot INTERFACE_INCLUDE_DIRECTORIES)
-    get_target_property(LIBLOOT_SHARED_LIBRARY libloot::loot IMPORTED_LOCATION_RELEASE)
+    set(LIBLOOT_SHARED_LIBRARY $<TARGET_LINKER_FILE:libloot::loot>)
 else()
     if(NOT DEFINED LIBLOOT_URL)
         if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -217,10 +217,10 @@ set(VALVE_FILE_VDF_INCLUDE_DIRS "${SOURCE_DIR}")
 find_package(OGDF CONFIG)
 if(NOT OGDF_FOUND)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        set(OGDF_BUILD_COMMAND 
-            ${CMAKE_COMMAND} 
+        set(OGDF_BUILD_COMMAND
+            ${CMAKE_COMMAND}
             --build .
-            --target OGDF 
+            --target OGDF
             --config $<IF:$<CONFIG:Release,RelWithDebInfo>,Release,Debug>)
     else()
         set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF)
