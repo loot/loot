@@ -216,12 +216,14 @@ set(VALVE_FILE_VDF_INCLUDE_DIRS "${SOURCE_DIR}")
 
 find_package(OGDF CONFIG)
 if(NOT OGDF_FOUND)
+    set(OGDF_CONFIG $<IF:$<CONFIG:Release,RelWithDebInfo>,Release,Debug>)
+
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         set(OGDF_BUILD_COMMAND
             ${CMAKE_COMMAND}
             --build .
             --target OGDF
-            --config $<IF:$<CONFIG:Release,RelWithDebInfo>,Release,Debug>)
+            --config ${OGDF_CONFIG})
     else()
         set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF)
     endif()
@@ -247,7 +249,7 @@ if(NOT OGDF_FOUND)
         "${BINARY_DIR}/include")
 
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-        set(OGDF_LIBRARY_DIR "${BINARY_DIR}/$<CONFIG>")
+        set(OGDF_LIBRARY_DIR "${BINARY_DIR}/${OGDF_CONFIG}")
     else()
         set(OGDF_LIBRARY_DIR "${BINARY_DIR}")
     endif()
