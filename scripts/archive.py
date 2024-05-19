@@ -68,7 +68,9 @@ def copy_qt_resources(executable_path, output_path):
 def get_language_folders(root_path):
     l10n_path = os.path.join(root_path, 'resources', 'l10n')
 
-    return [ f.name for f in os.scandir(l10n_path) if f.is_dir() ]
+    # The archive script only cares about languages with PO files that should
+    # have corresponding MO files.
+    return [ f.name for f in os.scandir(l10n_path) if os.path.exists(os.path.join(f.path, 'LC_MESSAGES', 'loot.po')) ]
 
 def compress(source_path, destination_path):
     # Ensure that the output directory is empty.

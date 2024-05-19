@@ -50,29 +50,29 @@ ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
-Name: "en"; MessagesFile: "compiler:Default.isl"
-Name: "bg"; MessagesFile: "compiler:Languages\Bulgarian.isl"
-Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
-Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
-Name: "de"; MessagesFile: "compiler:Languages\German.isl"
-Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
-Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
-Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
-Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
-Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
+Name: "en"; MessagesFile: "compiler:Default.isl,resources\l10n\en\LC_MESSAGES\inno.islu"
+Name: "bg"; MessagesFile: "compiler:Languages\Bulgarian.isl,resources\l10n\bg\LC_MESSAGES\inno.islu"
+Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl,resources\l10n\cs\LC_MESSAGES\inno.islu"
+Name: "da"; MessagesFile: "compiler:Languages\Danish.isl,resources\l10n\da\LC_MESSAGES\inno.islu"
+Name: "de"; MessagesFile: "compiler:Languages\German.isl,resources\l10n\de\LC_MESSAGES\inno.islu"
+Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl,resources\l10n\es\LC_MESSAGES\inno.islu"
+Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl,resources\l10n\fi\LC_MESSAGES\inno.islu"
+Name: "fr"; MessagesFile: "compiler:Languages\French.isl,resources\l10n\fr\LC_MESSAGES\inno.islu"
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl,resources\l10n\it\LC_MESSAGES\inno.islu"
+Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl,resources\l10n\ja\LC_MESSAGES\inno.islu"
 #ifdef KoreanExists
-Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl"
+Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl,resources\l10n\ko\LC_MESSAGES\inno.islu"
 #endif
-Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
-Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
+Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl,resources\l10n\pl\LC_MESSAGES\inno.islu"
+Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl,resources\l10n\pt_BR\LC_MESSAGES\inno.islu"
+Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl,resources\l10n\pt_PT\LC_MESSAGES\inno.islu"
+Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl,resources\l10n\ru\LC_MESSAGES\inno.islu"
 #ifdef SwedishExists
-Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl"
+Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl,resources\l10n\sv\LC_MESSAGES\inno.islu"
 #endif
-Name: "uk_UA"; MessagesFile: "compiler:Languages\Ukrainian.isl"
+Name: "uk_UA"; MessagesFile: "compiler:Languages\Ukrainian.isl,resources\l10n\uk_UA\LC_MESSAGES\inno.islu"
 #ifdef SimplifiedChineseExists
-Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
+Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl,resources\l10n\zh_CN\LC_MESSAGES\inno.islu"
 #endif
 
 [Tasks]
@@ -291,50 +291,6 @@ Type: dirifempty; Name: "{app}\styles";
 Type: dirifempty; Name: "{app}\tls";
 Type: dirifempty; Name: "{app}\translations";
 Type: dirifempty; Name: "{app}";
-
-[CustomMessages]
-en.DeleteUserFiles=Do you want to delete your settings and user metadata?
-bg.DeleteUserFiles=Искате ли да изтриете Вашите настройки и потребителските метаданни?
-cs.DeleteUserFiles=Vymazat Uživatelské Soubory
-da.DeleteUserFiles=Ønsker du at slette dine indstillinger og bruger metadata?
-de.DeleteUserFiles=Möchten Sie Ihre Einstellungen und Benutzer-Metadaten löschen?
-es.DeleteUserFiles=¿Desea borrar sus ajustes y metadatos de usuario?
-fi.DeleteUserFiles=Haluatko poistaa asetukset ja paikallisesti muokatut metatiedot?
-fr.DeleteUserFiles=Voulez-vous supprimer vos paramètres et les métadonnées de l'utilisateur?
-it.DeleteUserFiles=Vuoi cancellare le tue impostazioni e i meta-dati utente?
-ja.DeleteUserFiles=設定とユーザーメタデータを削除しますか？
-#ifdef KoreanExists
-ko.DeleteUserFiles=당신은 당신의 설정과 사용자 메타 데이터를 삭제 하시겠습니까?
-#endif
-pl.DeleteUserFiles=Czy chcesz usunąć swoje ustawienia i metadane użytkownika?
-pt_BR.DeleteUserFiles=Você quer deletar suas configurações e dados de usuário?
-pt_PT.DeleteUserFiles=Deseja apagar as suas configurações e metadados de utilizador?
-ru.DeleteUserFiles=Вы хотите удалить ваши настройки и метаданные пользователя?
-;#ifdef SwedishExists
-;sv.DeleteUserFiles=
-;#endif
-uk_UA.DeleteUserFiles=Чи ви хочете видалити ваші налаштування та метадані користувача?
-#ifdef SimplifiedChineseExists
-zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
-#endif
-
-en.InstallingMSVCRedist=Installing Visual C++ 2019 Redistributable…
-bg.InstallingMSVCRedist=Инсталиране на „Visual C++ 2019 Redistributable“…
-de.InstallingMSVCRedist=Installiere Visual C++ 2019 Redistributable…
-fi.InstallingMSVCRedist=Asennetaan Visual C++ 2019 Redistributable…
-it.InstallingMSVCRedist=Installazione di Visual C++ 2019 Redistributable…
-ja.InstallingMSVCRedist=Visual C++ 2019 再頒布可能パッケージをインストール中…
-pl.InstallingMSVCRedist=Instalowanie dystrybucji Visual C++ 2019…
-uk_UA.InstallingMSVCRedist=Встановлюємо Visual C++ 2019 Redistributable…
-
-en.DownloadMasterlists=Download and install the latest masterlists
-bg.DownloadMasterlists=Изтегляне и инсталиране на най-новите основни списъци
-de.DownloadMasterlists=Lade und installiere die aktuellen Masterlisten
-fi.DownloadMasterlists=Lataa ja asenna uusimmat pääluettelot
-it.DownloadMasterlists=Scarica e installa le ultime Masterlist
-ja.DownloadMasterlists=最新のマスターリストをダウンロード・インストールする
-pl.DownloadMasterlists=Ściągnij i zainstaluj ostatnią listę główną
-uk_UA.DownloadMasterlists=Завантажити та встановити останні правила сортування
 
 [Code]
 var DownloadPage: TDownloadWizardPage;
