@@ -54,7 +54,7 @@ void FolderPicker::setupUi() {
 }
 
 void FolderPicker::translateUi() {
-  browseButton->setText(translate("Browse..."));
+  browseButton->setText(translate("Browse…"));
 }
 
 void FolderPicker::on_browseButton_clicked() {

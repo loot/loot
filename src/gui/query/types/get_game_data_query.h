@@ -44,7 +44,7 @@ public:
 
   QueryResult executeLogic() override {
     sendProgressUpdate_(boost::locale::translate(
-        "Parsing, merging and evaluating metadata..."));
+        "Parsing, merging and evaluating metadata…"));
 
     /* If the game's plugins object is empty, this is the first time loading
        the game data, so also load the metadata lists. */

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-05-17 19:30+0100\n"
+"POT-Creation-Date: 2024-05-19 09:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -284,7 +284,7 @@ msgstr ""
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:718
-msgid "&Settings..."
+msgid "&Settings…"
 msgstr ""
 
 #. translators: This string is an action in the File menu.
@@ -315,12 +315,12 @@ msgstr ""
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:732
-msgid "&Edit Groups..."
+msgid "&Edit Groups…"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:734
-msgid "Searc&h Cards..."
+msgid "Searc&h Cards…"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
@@ -340,7 +340,7 @@ msgstr ""
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:742
-msgid "Redate &Plugins..."
+msgid "Redate &Plugins…"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
@@ -350,7 +350,7 @@ msgstr ""
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:746
-msgid "Clear All &User Metadata..."
+msgid "Clear All &User Metadata…"
 msgstr ""
 
 #. translators: The mnemonic in this string shouldn't conflict with other
@@ -376,12 +376,12 @@ msgstr ""
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:758
-msgid "&Edit Metadata..."
+msgid "&Edit Metadata…"
 msgstr ""
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:760
-msgid "Clear &User Metadata..."
+msgid "Clear &User Metadata…"
 msgstr ""
 
 #. translators: The mnemonic in this string shouldn't conflict with other
@@ -424,7 +424,7 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1083 src/gui/qt/main_window.cpp:1542
 #: src/gui/qt/main_window.cpp:2161
-msgid "Updating and parsing masterlist..."
+msgid "Updating and parsing masterlist…"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1148
@@ -524,7 +524,7 @@ msgid ""
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1569
-msgid "Updating all masterlists..."
+msgid "Updating all masterlists…"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1591
@@ -625,7 +625,7 @@ msgid "About LOOT"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:2363
-msgid "Identifying overlapping plugins..."
+msgid "Identifying overlapping plugins…"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:2511
@@ -946,7 +946,7 @@ msgid "Bash Tag"
 msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:57
-msgid "Browse..."
+msgid "Browse…"
 msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:150
@@ -1060,7 +1060,7 @@ msgid "General"
 msgstr ""
 
 #: src/gui/qt/settings/settings_dialog.cpp:114
-msgid "Add new game..."
+msgid "Add new game…"
 msgstr ""
 
 #: src/gui/query/types/apply_sort_query.h:76
@@ -1072,11 +1072,11 @@ msgid ""
 msgstr ""
 
 #: src/gui/query/types/get_game_data_query.h:47
-msgid "Parsing, merging and evaluating metadata..."
+msgid "Parsing, merging and evaluating metadata…"
 msgstr ""
 
 #: src/gui/query/types/sort_plugins_query.h:54
-msgid "Sorting load order..."
+msgid "Sorting load order…"
 msgstr ""
 
 #: src/gui/state/loot_settings.cpp:670

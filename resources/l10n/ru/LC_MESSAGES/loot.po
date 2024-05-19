@@ -285,8 +285,8 @@ msgstr "&Файл"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:718
-msgid "&Settings..."
-msgstr "&Настройки..."
+msgid "&Settings…"
+msgstr "&Настройки…"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:720
@@ -316,13 +316,13 @@ msgstr "&Игра"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:732
-msgid "&Edit Groups..."
-msgstr "&Редактировать группы..."
+msgid "&Edit Groups…"
+msgstr "&Редактировать группы…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:734
-msgid "Searc&h Cards..."
-msgstr "&Поиск по карточкам..."
+msgid "Searc&h Cards…"
+msgstr "&Поиск по карточкам…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:736
@@ -341,8 +341,8 @@ msgstr "О&бновить содержимое"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:742
-msgid "Redate &Plugins..."
-msgstr "Изменить &даты плагинов..."
+msgid "Redate &Plugins…"
+msgstr "Изменить &даты плагинов…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:744
@@ -351,8 +351,8 @@ msgstr "Исправить &неоднозначный порядок загру
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:746
-msgid "Clear All &User Metadata..."
-msgstr "Очистить все &метаданные пользователя..."
+msgid "Clear All &User Metadata…"
+msgstr "Очистить все &метаданные пользователя…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -377,13 +377,13 @@ msgstr "Копировать &метаданные"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:758
-msgid "&Edit Metadata..."
+msgid "&Edit Metadata…"
 msgstr "&Редактировать метаданные…"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:760
-msgid "Clear &User Metadata..."
-msgstr "&Очистить метаданные пользователя..."
+msgid "Clear &User Metadata…"
+msgstr "&Очистить метаданные пользователя…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -424,8 +424,8 @@ msgid "F&ilters"
 msgstr "Филь&тры"
 
 #: src/gui/qt/main_window.cpp:1081 src/gui/qt/main_window.cpp:1536 src/gui/qt/main_window.cpp:2155
-msgid "Updating and parsing masterlist..."
-msgstr "Обновление и обработка мастерлиста..."
+msgid "Updating and parsing masterlist…"
+msgstr "Обновление и обработка мастерлиста…"
 
 #: src/gui/qt/main_window.cpp:1146
 #, c++-format
@@ -523,8 +523,8 @@ msgstr ""
 "загрузки в соответствии с тем, что отображается в LOOT."
 
 #: src/gui/qt/main_window.cpp:1563
-msgid "Updating all masterlists..."
-msgstr "Обновление всех мастерлистов..."
+msgid "Updating all masterlists…"
+msgstr "Обновление всех мастерлистов…"
 
 #: src/gui/qt/main_window.cpp:1585
 #, c++-format
@@ -622,8 +622,8 @@ msgid "About LOOT"
 msgstr "О LOOT"
 
 #: src/gui/qt/main_window.cpp:2357
-msgid "Identifying overlapping plugins..."
-msgstr "Выявление пересекающихся плагинов..."
+msgid "Identifying overlapping plugins…"
+msgstr "Выявление пересекающихся плагинов…"
 
 #: src/gui/qt/main_window.cpp:2505
 msgid "Auto-sort has been cancelled as there is at least one error message displayed."
@@ -935,8 +935,8 @@ msgid "Bash Tag"
 msgstr "Bash-тег"
 
 #: src/gui/qt/settings/game_tab.cpp:57
-msgid "Browse..."
-msgstr "Обзор..."
+msgid "Browse…"
+msgstr "Обзор…"
 
 #: src/gui/qt/settings/game_tab.cpp:150 src/gui/qt/settings/new_game_dialog.cpp:124
 msgid "Base Game"
@@ -1043,8 +1043,8 @@ msgid "General"
 msgstr "Общие"
 
 #: src/gui/qt/settings/settings_dialog.cpp:114
-msgid "Add new game..."
-msgstr "Добавить новую игру..."
+msgid "Add new game…"
+msgstr "Добавить новую игру…"
 
 #: src/gui/query/types/apply_sort_query.h:76
 msgid ""
@@ -1056,12 +1056,12 @@ msgstr ""
 "главное меню) для получения дополнительной информации."
 
 #: src/gui/query/types/get_game_data_query.h:47
-msgid "Parsing, merging and evaluating metadata..."
-msgstr "Обработка, объединение и оценка метаданных..."
+msgid "Parsing, merging and evaluating metadata…"
+msgstr "Обработка, объединение и оценка метаданных…"
 
 #: src/gui/query/types/sort_plugins_query.h:54
-msgid "Sorting load order..."
-msgstr "Сортировка порядка загрузки..."
+msgid "Sorting load order…"
+msgstr "Сортировка порядка загрузки…"
 
 #: src/gui/state/loot_settings.cpp:670
 msgid ""

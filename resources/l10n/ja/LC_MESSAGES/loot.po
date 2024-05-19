@@ -256,8 +256,8 @@ msgstr "ファイル (&F)"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:687
-msgid "&Settings..."
-msgstr "設定... (&S)"
+msgid "&Settings…"
+msgstr "設定… (&S)"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:689
@@ -287,13 +287,13 @@ msgstr "ゲーム (&G)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:701
-msgid "&Edit Groups..."
-msgstr "グループの編集... (&E)"
+msgid "&Edit Groups…"
+msgstr "グループの編集… (&E)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:703
-msgid "Searc&h Cards..."
-msgstr "カード検索... (&H)"
+msgid "Searc&h Cards…"
+msgstr "カード検索… (&H)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:705
@@ -312,8 +312,8 @@ msgstr "データ内容を更新 (&R)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:711
-msgid "Redate &Plugins..."
-msgstr "プラグインの日付変更... (&P)"
+msgid "Redate &Plugins…"
+msgstr "プラグインの日付変更… (&P)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:713
@@ -322,8 +322,8 @@ msgstr "不定なロードオーダーを修正 (&F)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:715
-msgid "Clear All &User Metadata..."
-msgstr "ユーザーメタデータを完全に消去... (&U)"
+msgid "Clear All &User Metadata…"
+msgstr "ユーザーメタデータを完全に消去… (&U)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -348,13 +348,13 @@ msgstr "メタデータをコピー (&M)"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:727
-msgid "&Edit Metadata..."
-msgstr "メタデータの編集... (&E)"
+msgid "&Edit Metadata…"
+msgstr "メタデータの編集… (&E)"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:729
-msgid "Clear &User Metadata..."
-msgstr "ユーザーメタデータを消去... (&U)"
+msgid "Clear &User Metadata…"
+msgstr "ユーザーメタデータを消去… (&U)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -396,7 +396,7 @@ msgstr "フィルター"
 
 #: src/gui/qt/main_window.cpp:1048 src/gui/qt/main_window.cpp:1481
 #: src/gui/qt/main_window.cpp:2089
-msgid "Updating and parsing masterlist..."
+msgid "Updating and parsing masterlist…"
 msgstr "マスターリストの更新・解析中…"
 
 #: src/gui/qt/main_window.cpp:1113
@@ -516,7 +516,7 @@ msgstr ""
 "順に正しく合わせることができます。"
 
 #: src/gui/qt/main_window.cpp:1508
-msgid "Updating all masterlists..."
+msgid "Updating all masterlists…"
 msgstr "全マスターリストの更新・解析中…"
 
 #: src/gui/qt/main_window.cpp:1530
@@ -621,7 +621,7 @@ msgid "About LOOT"
 msgstr "LOOT について"
 
 #: src/gui/qt/main_window.cpp:2291
-msgid "Identifying conflicting plugins..."
+msgid "Identifying conflicting plugins…"
 msgstr "競合するプラグインを特定中…"
 
 #: src/gui/qt/main_window.cpp:2436
@@ -946,8 +946,8 @@ msgid "Bash Tag"
 msgstr "Bash Tag"
 
 #: src/gui/qt/settings/game_tab.cpp:57
-msgid "Browse..."
-msgstr "参照..."
+msgid "Browse…"
+msgstr "参照…"
 
 #: src/gui/qt/settings/game_tab.cpp:147
 #: src/gui/qt/settings/new_game_dialog.cpp:124
@@ -1056,8 +1056,8 @@ msgid "General"
 msgstr "全般"
 
 #: src/gui/qt/settings/settings_dialog.cpp:114
-msgid "Add new game..."
-msgstr "新しいゲームを追加..."
+msgid "Add new game…"
+msgstr "新しいゲームを追加…"
 
 #: src/gui/query/types/apply_sort_query.h:76
 msgid ""
@@ -1071,11 +1071,11 @@ msgstr ""
 "ニューから開けます）にて詳細を確認してください。"
 
 #: src/gui/query/types/get_game_data_query.h:47
-msgid "Parsing, merging and evaluating metadata..."
+msgid "Parsing, merging and evaluating metadata…"
 msgstr "メタデータの解析・マージ・評価中…"
 
 #: src/gui/query/types/sort_plugins_query.h:54
-msgid "Sorting load order..."
+msgid "Sorting load order…"
 msgstr "ロード順のソート中…"
 
 #: src/gui/state/loot_settings.cpp:657

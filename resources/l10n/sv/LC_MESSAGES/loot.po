@@ -18,8 +18,8 @@ msgstr ""
 "X-Generator: Poedit 1.8.9\n"
 
 #: src/gui/html/js/events.js:16
-msgid "Identifying conflicting plugins..."
-msgstr "Identifierar insticksmoduler i konflikt..."
+msgid "Identifying conflicting plugins…"
+msgstr "Identifierar insticksmoduler i konflikt…"
 
 #: src/gui/html/js/events.js:96
 msgid "No masterlist update was necessary."
@@ -601,8 +601,8 @@ msgstr ""
 "öppna LOOT:s hjälpdokumentation via huvudmenyn."
 
 #: src/gui/query_handler.cpp:111
-msgid "Parsing, merging and evaluating metadata..."
-msgstr "Parsar, slår samman och utvärderar metadata..."
+msgid "Parsing, merging and evaluating metadata…"
+msgstr "Parsar, slår samman och utvärderar metadata…"
 
 #: src/gui/query_handler.cpp:203 src/gui/query_handler.cpp:206
 msgid "Failed to change game. Details: {0}"
@@ -665,12 +665,12 @@ msgid "Failed to update the masterlist. Details: {0}"
 msgstr "Det gick inte att uppdatera huvudlistan. Information: {0}"
 
 #: src/gui/query_handler.cpp:845
-msgid "Loading plugin contents..."
-msgstr "Läser in insticksmodulinnehåll..."
+msgid "Loading plugin contents…"
+msgstr "Läser in insticksmodulinnehåll…"
 
 #: src/gui/query_handler.cpp:849
-msgid "Sorting load order..."
-msgstr "Sorterar inläsningsordning..."
+msgid "Sorting load order…"
+msgstr "Sorterar inläsningsordning…"
 
 #: src/gui/query_handler.cpp:906
 msgid "Failed to sort plugins. Details: {0}"

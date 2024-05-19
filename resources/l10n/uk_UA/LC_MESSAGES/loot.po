@@ -290,8 +290,8 @@ msgstr "&Файл"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:718
-msgid "&Settings..."
-msgstr "Н&алаштування..."
+msgid "&Settings…"
+msgstr "Н&алаштування…"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:720
@@ -321,13 +321,13 @@ msgstr "Гр&а"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:732
-msgid "&Edit Groups..."
-msgstr "&Редагувати групи..."
+msgid "&Edit Groups…"
+msgstr "&Редагувати групи…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:734
-msgid "Searc&h Cards..."
-msgstr "&Пошук карток..."
+msgid "Searc&h Cards…"
+msgstr "&Пошук карток…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:736
@@ -346,8 +346,8 @@ msgstr "Оновити з&міст"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:742
-msgid "Redate &Plugins..."
-msgstr "П&ередатувати плагіни..."
+msgid "Redate &Plugins…"
+msgstr "П&ередатувати плагіни…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:744
@@ -356,8 +356,8 @@ msgstr "В&иправити неоднозначний порядок заван
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:746
-msgid "Clear All &User Metadata..."
-msgstr "О&чистити всі користувацькі метадані..."
+msgid "Clear All &User Metadata…"
+msgstr "О&чистити всі користувацькі метадані…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -382,13 +382,13 @@ msgstr "Копію&вати метадані"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:758
-msgid "&Edit Metadata..."
-msgstr "&Редагувати метадані..."
+msgid "&Edit Metadata…"
+msgstr "&Редагувати метадані…"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:760
-msgid "Clear &User Metadata..."
-msgstr "Очис&тити користувацькі метадані..."
+msgid "Clear &User Metadata…"
+msgstr "Очис&тити користувацькі метадані…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -431,7 +431,7 @@ msgstr "Фільтр&и"
 # Suggest using ellipsis instead of triple-dot. Windows code is Alt + 0133 (use numpad)
 #: src/gui/qt/main_window.cpp:1083 src/gui/qt/main_window.cpp:1542
 #: src/gui/qt/main_window.cpp:2161
-msgid "Updating and parsing masterlist..."
+msgid "Updating and parsing masterlist…"
 msgstr "Оновлення та обробка правил сортування…"
 
 #: src/gui/qt/main_window.cpp:1148
@@ -553,7 +553,7 @@ msgstr ""
 "дії LOOT."
 
 #: src/gui/qt/main_window.cpp:1569
-msgid "Updating all masterlists..."
+msgid "Updating all masterlists…"
 msgstr "Оновлюємо всі правила сортування…"
 
 #: src/gui/qt/main_window.cpp:1591
@@ -667,7 +667,7 @@ msgid "About LOOT"
 msgstr "Про LOOT"
 
 #: src/gui/qt/main_window.cpp:2363
-msgid "Identifying overlapping plugins..."
+msgid "Identifying overlapping plugins…"
 msgstr "Визначення конфліктних плагінів…"
 
 #: src/gui/qt/main_window.cpp:2511
@@ -1000,7 +1000,7 @@ msgid "Bash Tag"
 msgstr "Bash-тег"
 
 #: src/gui/qt/settings/game_tab.cpp:57
-msgid "Browse..."
+msgid "Browse…"
 msgstr "Перегляд…"
 
 #: src/gui/qt/settings/game_tab.cpp:150
@@ -1114,7 +1114,7 @@ msgid "General"
 msgstr "Загальні налаштування"
 
 #: src/gui/qt/settings/settings_dialog.cpp:114
-msgid "Add new game..."
+msgid "Add new game…"
 msgstr "Додати нову гру…"
 
 #: src/gui/query/types/apply_sort_query.h:76
@@ -1130,11 +1130,11 @@ msgstr ""
 "\"Файл\")."
 
 #: src/gui/query/types/get_game_data_query.h:47
-msgid "Parsing, merging and evaluating metadata..."
+msgid "Parsing, merging and evaluating metadata…"
 msgstr "Обробка, об'єднання та оцінка метаданих…"
 
 #: src/gui/query/types/sort_plugins_query.h:54
-msgid "Sorting load order..."
+msgid "Sorting load order…"
 msgstr "Сортування порядку завантаження…"
 
 #: src/gui/state/loot_settings.cpp:670

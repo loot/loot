@@ -277,8 +277,8 @@ msgstr "&Файл"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:718
-msgid "&Settings..."
-msgstr "&Настройки..."
+msgid "&Settings…"
+msgstr "&Настройки…"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:720
@@ -308,13 +308,13 @@ msgstr "&Игра"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:732
-msgid "&Edit Groups..."
-msgstr "&Редактирай групите..."
+msgid "&Edit Groups…"
+msgstr "&Редактирай групите…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:734
-msgid "Searc&h Cards..."
-msgstr "&Търси в съдържанието..."
+msgid "Searc&h Cards…"
+msgstr "&Търси в съдържанието…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:736
@@ -333,8 +333,8 @@ msgstr "&Опресни съдържанието"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:742
-msgid "Redate &Plugins..."
-msgstr "Промени &датата на приставките..."
+msgid "Redate &Plugins…"
+msgstr "Промени &датата на приставките…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:744
@@ -343,8 +343,8 @@ msgstr "&Поправи реда за зареждане"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:746
-msgid "Clear All &User Metadata..."
-msgstr "&Изчисти всички добавени метаданни..."
+msgid "Clear All &User Metadata…"
+msgstr "&Изчисти всички добавени метаданни…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -369,13 +369,13 @@ msgstr "Копирай &метаданните"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:758
-msgid "&Edit Metadata..."
-msgstr "&Редактирай метаданните..."
+msgid "&Edit Metadata…"
+msgstr "&Редактирай метаданните…"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:760
-msgid "Clear &User Metadata..."
-msgstr "&Изчисти добавените метаданни..."
+msgid "Clear &User Metadata…"
+msgstr "&Изчисти добавените метаданни…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -417,8 +417,8 @@ msgstr "Фи&лтри"
 
 #: src/gui/qt/main_window.cpp:1083 src/gui/qt/main_window.cpp:1542
 #: src/gui/qt/main_window.cpp:2161
-msgid "Updating and parsing masterlist..."
-msgstr "Обновяване и разбор на основния списък..."
+msgid "Updating and parsing masterlist…"
+msgstr "Обновяване и разбор на основния списък…"
 
 #: src/gui/qt/main_window.cpp:1148
 msgid ""
@@ -535,8 +535,8 @@ msgstr ""
 "текущия ред за зареждане."
 
 #: src/gui/qt/main_window.cpp:1569
-msgid "Updating all masterlists..."
-msgstr "Обновяване на всички основни списъци..."
+msgid "Updating all masterlists…"
+msgstr "Обновяване на всички основни списъци…"
 
 #: src/gui/qt/main_window.cpp:1591
 msgid "Your LOOT data has been backed up to: {0}"
@@ -642,8 +642,8 @@ msgid "About LOOT"
 msgstr "За LOOT"
 
 #: src/gui/qt/main_window.cpp:2363
-msgid "Identifying overlapping plugins..."
-msgstr "Откриване на застъпените приставки..."
+msgid "Identifying overlapping plugins…"
+msgstr "Откриване на застъпените приставки…"
 
 #: src/gui/qt/main_window.cpp:2511
 msgid ""
@@ -963,8 +963,8 @@ msgid "Bash Tag"
 msgstr "Етикет на „Bash“"
 
 #: src/gui/qt/settings/game_tab.cpp:57
-msgid "Browse..."
-msgstr "Търси..."
+msgid "Browse…"
+msgstr "Търси…"
 
 #: src/gui/qt/settings/game_tab.cpp:150
 #: src/gui/qt/settings/new_game_dialog.cpp:124
@@ -1080,8 +1080,8 @@ msgid "General"
 msgstr "Общи"
 
 #: src/gui/qt/settings/settings_dialog.cpp:114
-msgid "Add new game..."
-msgstr "Добави нова игра..."
+msgid "Add new game…"
+msgstr "Добави нова игра…"
 
 #: src/gui/query/types/apply_sort_query.h:76
 msgid ""
@@ -1095,12 +1095,12 @@ msgstr ""
 "„LOOTDebugLog.txt“ (през главното меню) за повече информация."
 
 #: src/gui/query/types/get_game_data_query.h:47
-msgid "Parsing, merging and evaluating metadata..."
-msgstr "Анализиране, обединяване и оценяване на метаданните..."
+msgid "Parsing, merging and evaluating metadata…"
+msgstr "Анализиране, обединяване и оценяване на метаданните…"
 
 #: src/gui/query/types/sort_plugins_query.h:54
-msgid "Sorting load order..."
-msgstr "Сортиране на реда за зареждане..."
+msgid "Sorting load order…"
+msgstr "Сортиране на реда за зареждане…"
 
 #: src/gui/state/loot_settings.cpp:670
 msgid ""

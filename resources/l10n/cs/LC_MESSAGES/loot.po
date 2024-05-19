@@ -151,7 +151,7 @@ msgid "File"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:593
-msgid "Settings..."
+msgid "Settings…"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:594
@@ -171,11 +171,11 @@ msgid "Game"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:599
-msgid "Edit Groups..."
+msgid "Edit Groups…"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:600
-msgid "Search Cards..."
+msgid "Search Cards…"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:601
@@ -191,11 +191,11 @@ msgid "Refresh Content"
 msgstr "Obnovit obsah"
 
 #: src/gui/qt/main_window.cpp:604
-msgid "Redate Plugins..."
+msgid "Redate Plugins…"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:605
-msgid "Clear All User Metadata..."
+msgid "Clear All User Metadata…"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:607
@@ -211,11 +211,11 @@ msgid "Copy Card Content"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:610
-msgid "Edit Metadata..."
+msgid "Edit Metadata…"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:611
-msgid "Clear User Metadata..."
+msgid "Clear User Metadata…"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:613
@@ -243,8 +243,8 @@ msgid "Filters"
 msgstr "Filtry"
 
 #: src/gui/qt/main_window.cpp:809 src/gui/qt/main_window.cpp:1760
-msgid "Updating and parsing masterlist..."
-msgstr "Aktualizace a rozbor masterlistu..."
+msgid "Updating and parsing masterlist…"
+msgstr "Aktualizace a rozbor masterlistu…"
 
 #: src/gui/qt/main_window.cpp:870
 msgid ""
@@ -437,8 +437,8 @@ msgid "About LOOT"
 msgstr "O LOOT(u)"
 
 #: src/gui/qt/main_window.cpp:1923
-msgid "Identifying conflicting plugins..."
-msgstr "Identifikace konfliktujících pluginů..."
+msgid "Identifying conflicting plugins…"
+msgstr "Identifikace konfliktujících pluginů…"
 
 #: src/gui/qt/main_window.cpp:2016
 msgid ""
@@ -790,7 +790,7 @@ msgid "General"
 msgstr ""
 
 #: src/gui/qt/settings/settings_dialog.cpp:118
-msgid "Add new game..."
+msgid "Add new game…"
 msgstr ""
 
 #: src/gui/query/query.h:70
@@ -806,12 +806,12 @@ msgstr ""
 "informací."
 
 #: src/gui/query/types/get_game_data_query.h:48
-msgid "Parsing, merging and evaluating metadata..."
-msgstr "Analýza, slučování a vyhodnocování metadat..."
+msgid "Parsing, merging and evaluating metadata…"
+msgstr "Analýza, slučování a vyhodnocování metadat…"
 
 #: src/gui/query/types/sort_plugins_query.h:55
-msgid "Sorting load order..."
-msgstr "Seřazování načítací řady..."
+msgid "Sorting load order…"
+msgstr "Seřazování načítací řady…"
 
 #. translators: --auto-sort and --game are command-line arguments and shouldn't be translated.
 #: src/gui/state/loot_state.cpp:107

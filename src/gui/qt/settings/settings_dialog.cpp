@@ -111,7 +111,7 @@ void SettingsDialog::translateUi() {
 
   listWidget->item(0)->setText(translate("General"));
 
-  addGameButton->setText(translate("Add new game..."));
+  addGameButton->setText(translate("Add new game…"));
 }
 
 void SettingsDialog::addGameTab(const GameSettings& settings,

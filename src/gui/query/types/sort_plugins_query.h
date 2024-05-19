@@ -51,7 +51,7 @@ public:
     }
 
     // Sort plugins into their load order.
-    sendProgressUpdate_(boost::locale::translate("Sorting load order..."));
+    sendProgressUpdate_(boost::locale::translate("Sorting load order…"));
     std::vector<std::string> plugins = game_.SortPlugins();
 
     auto result = getResult(plugins);

@@ -212,8 +212,8 @@ msgstr "&Fil"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:663
-msgid "&Settings..."
-msgstr "&Indstillinger..."
+msgid "&Settings…"
+msgstr "&Indstillinger…"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:665
@@ -238,13 +238,13 @@ msgstr "&Spil"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:675
-msgid "&Edit Groups..."
-msgstr "&Rediger grupper..."
+msgid "&Edit Groups…"
+msgstr "&Rediger grupper…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:677
-msgid "Searc&h Cards..."
-msgstr "&Søg kort..."
+msgid "Searc&h Cards…"
+msgstr "&Søg kort…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:679
@@ -263,8 +263,8 @@ msgstr "&Genindlæs indhold"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:685
-msgid "Redate &Plugins..."
-msgstr "&Omdatér plugins..."
+msgid "Redate &Plugins…"
+msgstr "&Omdatér plugins…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:687
@@ -273,8 +273,8 @@ msgstr "&Fix tvetydig indlæsningsrækkefølge"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:689
-msgid "Clear All &User Metadata..."
-msgstr "Ryd al &brugermetadata..."
+msgid "Clear All &User Metadata…"
+msgstr "Ryd al &brugermetadata…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -299,13 +299,13 @@ msgstr "Kopiér &metadata"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:701
-msgid "&Edit Metadata..."
-msgstr "&Redigér metadata..."
+msgid "&Edit Metadata…"
+msgstr "&Redigér metadata…"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:703
-msgid "Clear &User Metadata..."
-msgstr "Ryd &bruger metadata..."
+msgid "Clear &User Metadata…"
+msgstr "Ryd &bruger metadata…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -341,8 +341,8 @@ msgid "F&ilters"
 msgstr "F&iltre"
 
 #: src/gui/qt/main_window.cpp:981 src/gui/qt/main_window.cpp:1920
-msgid "Updating and parsing masterlist..."
-msgstr "Opdaterer og læser masterliste..."
+msgid "Updating and parsing masterlist…"
+msgstr "Opdaterer og læser masterliste…"
 
 #: src/gui/qt/main_window.cpp:1040
 msgid ""
@@ -569,8 +569,8 @@ msgid "About LOOT"
 msgstr "Om LOOT"
 
 #: src/gui/qt/main_window.cpp:2137
-msgid "Identifying conflicting plugins..."
-msgstr "Identificerer modstridende plugins..."
+msgid "Identifying conflicting plugins…"
+msgstr "Identificerer modstridende plugins…"
 
 #: src/gui/qt/main_window.cpp:2256
 msgid ""
@@ -860,8 +860,8 @@ msgid "Bash Tag"
 msgstr "Bash‐tag"
 
 #: src/gui/qt/settings/game_tab.cpp:57
-msgid "Browse..."
-msgstr "Gennemse..."
+msgid "Browse…"
+msgstr "Gennemse…"
 
 #: src/gui/qt/settings/game_tab.cpp:159
 #: src/gui/qt/settings/new_game_dialog.cpp:88
@@ -975,8 +975,8 @@ msgid "General"
 msgstr "Generel"
 
 #: src/gui/qt/settings/settings_dialog.cpp:114
-msgid "Add new game..."
-msgstr "Tilføj nyt spil..."
+msgid "Add new game…"
+msgstr "Tilføj nyt spil…"
 
 #: src/gui/query/types/apply_sort_query.h:96
 msgid ""
@@ -991,12 +991,12 @@ msgstr ""
 "txt (du kan finde den via hovedmenuen) for mere information."
 
 #: src/gui/query/types/get_game_data_query.h:47
-msgid "Parsing, merging and evaluating metadata..."
-msgstr "Læser, sammenfletter og evaluerer metadata..."
+msgid "Parsing, merging and evaluating metadata…"
+msgstr "Læser, sammenfletter og evaluerer metadata…"
 
 #: src/gui/query/types/sort_plugins_query.h:54
-msgid "Sorting load order..."
-msgstr "Sortere indlæsningsrækkefølgen..."
+msgid "Sorting load order…"
+msgstr "Sortere indlæsningsrækkefølgen…"
 
 #: src/gui/state/loot_settings.cpp:541
 msgid ""
@@ -1479,7 +1479,7 @@ msgstr "LOOT har opdaget at “{0}” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Adding edges to plugin graph and performing topological sort..."
+#~ msgid "Adding edges to plugin graph and performing topological sort…"
 #~ msgstr "Tilføjer kanter til plugin‐graf og udfører topologisk sortering…"
 
 #
@@ -1546,7 +1546,7 @@ msgstr "LOOT har opdaget at “{0}” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Building plugin graph..."
+#~ msgid "Building plugin graph…"
 #~ msgstr "Bygger plugin‐graf…"
 
 #
@@ -1556,7 +1556,7 @@ msgstr "LOOT har opdaget at “{0}” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Checking if plugins have been loaded..."
+#~ msgid "Checking if plugins have been loaded…"
 #~ msgstr "Tjekker om plugins er blevet indlæst…"
 
 #
@@ -1744,22 +1744,22 @@ msgstr "LOOT har opdaget at “{0}” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Loading game data..."
+#~ msgid "Loading game data…"
 #~ msgstr "Indlæser spildata…"
 
 #
 #
-#~ msgid "Loading general messages..."
+#~ msgid "Loading general messages…"
 #~ msgstr "Indlæser generelle beskeder…"
 
 #
 #
-#~ msgid "Loading plugin contents..."
+#~ msgid "Loading plugin contents…"
 #~ msgstr "Indlæser plugin‐indhold…"
 
 #
 #
-#~ msgid "Loading plugin headers..."
+#~ msgid "Loading plugin headers…"
 #~ msgstr "Indlæser plugin‐hoveder…"
 
 #
@@ -1769,12 +1769,12 @@ msgstr "LOOT har opdaget at “{0}” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Parsing masterlist..."
+#~ msgid "Parsing masterlist…"
 #~ msgstr "Analyserer masterliste…"
 
 #
 #
-#~ msgid "Parsing userlist..."
+#~ msgid "Parsing userlist…"
 #~ msgstr "Analyserer brugerliste…"
 
 #
@@ -1789,12 +1789,12 @@ msgstr "LOOT har opdaget at “{0}” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Refreshing data..."
+#~ msgid "Refreshing data…"
 #~ msgstr "Genindlæser data…"
 
 #
 #
-#~ msgid "Regenerating displayed content..."
+#~ msgid "Regenerating displayed content…"
 #~ msgstr "Regenerér vist indhold…"
 
 #
@@ -1829,7 +1829,7 @@ msgstr "LOOT har opdaget at “{0}” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Sorting plugins..."
+#~ msgid "Sorting plugins…"
 #~ msgstr "Sorterer plugins…"
 
 #
@@ -1854,7 +1854,7 @@ msgstr "LOOT har opdaget at “{0}” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Updating masterlist..."
+#~ msgid "Updating masterlist…"
 #~ msgstr "Opdaterer masterliste…"
 
 #

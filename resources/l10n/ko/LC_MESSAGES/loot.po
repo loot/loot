@@ -43,8 +43,8 @@ msgstr ""
 "얻을 수 있음)에서 확인할 수 있습니다."
 
 #: src/gui/cef/query/types/get_game_data_query.h:47
-msgid "Parsing, merging and evaluating metadata..."
-msgstr "플러그인 메타데이터를 파싱, 병합 및 평가 중..."
+msgid "Parsing, merging and evaluating metadata…"
+msgstr "플러그인 메타데이터를 파싱, 병합 및 평가 중…"
 
 #: src/gui/cef/query/types/metadata_query.h:205
 #: src/gui/cef/query/types/metadata_query.h:232
@@ -69,8 +69,8 @@ msgid "(edited)"
 msgstr "(편집됨)"
 
 #: src/gui/cef/query/types/sort_plugins_query.h:54
-msgid "Sorting load order..."
-msgstr "로드 순서 정렬 중..."
+msgid "Sorting load order…"
+msgstr "로드 순서 정렬 중…"
 
 #. translators: --auto-sort and --game are command-line arguments and shouldn't be translated.
 #: src/gui/state/loot_state.cpp:106
@@ -278,12 +278,12 @@ msgid "Verified clean by {0}"
 msgstr "{0}에서 정리 확인"
 
 #: src/gui/html/js/events.ts:218
-msgid "Identifying conflicting plugins..."
-msgstr "플러그인 충돌 식별 중..."
+msgid "Identifying conflicting plugins…"
+msgstr "플러그인 충돌 식별 중…"
 
 #: src/gui/html/js/events.ts:314
-msgid "Updating and parsing masterlist..."
-msgstr "마스터 리스트 갱신 및 구문 분석 중..."
+msgid "Updating and parsing masterlist…"
+msgstr "마스터 리스트 갱신 및 구문 분석 중…"
 
 #: src/gui/html/js/events.ts:337
 msgid "Masterlist updated to revision {0}."
@@ -1071,11 +1071,11 @@ msgstr ""
 #~ msgid "Could not create LOOT folder for game. Details:"
 #~ msgstr "게임에 대한 LOOT폴더를 생성할 수 없습니다. 자세한 사항:"
 
-#~ msgid "Building plugin graph..."
-#~ msgstr "플러그인 그래프 빌드 중..."
+#~ msgid "Building plugin graph…"
+#~ msgstr "플러그인 그래프 빌드 중…"
 
-#~ msgid "Adding edges to plugin graph and performing topological sort..."
-#~ msgstr "플러그인 그래프에 엣지를 추가하고 위상 정렬을 수행 중..."
+#~ msgid "Adding edges to plugin graph and performing topological sort…"
+#~ msgstr "플러그인 그래프에 엣지를 추가하고 위상 정렬을 수행 중…"
 
 #~ msgid "Git operation failed. Error: {0}"
 #~ msgstr "Git 작업이 실패했습니다. 오류: {0}"
@@ -1192,29 +1192,29 @@ msgstr ""
 #~ msgid "Failed to copy plugin metadata. Details: {0}"
 #~ msgstr "플러그인 메타데이터를 복사하지 못했습니다. 자세한 사항: {0}"
 
-#~ msgid "Loading plugin contents..."
-#~ msgstr "플러그인 내용 로드 중..."
+#~ msgid "Loading plugin contents…"
+#~ msgstr "플러그인 내용 로드 중…"
 
 #~ msgid "Shell execute failed."
 #~ msgstr "명령을 실행하지 못했습니다."
 
-#~ msgid "Loading plugin headers..."
-#~ msgstr "플러그인 헤더 로드 중..."
+#~ msgid "Loading plugin headers…"
+#~ msgstr "플러그인 헤더 로드 중…"
 
-#~ msgid "Parsing masterlist..."
-#~ msgstr "마스터 리스트 구문 분석 중..."
+#~ msgid "Parsing masterlist…"
+#~ msgstr "마스터 리스트 구문 분석 중…"
 
 #~ msgid "An error occurred while parsing the masterlist: {0}"
 #~ msgstr "마스터 리스트를 구문 분석하는 동안 오류가 발생했습니다: {0}"
 
-#~ msgid "Parsing userlist..."
-#~ msgstr "유저리스트 구문 분석 중..."
+#~ msgid "Parsing userlist…"
+#~ msgstr "유저리스트 구문 분석 중…"
 
 #~ msgid "An error occurred while parsing the userlist: {0}"
 #~ msgstr "유저리스트를 구문 분석하는 동안 오류가 발생했습니다: {0}"
 
-#~ msgid "Loading general messages..."
-#~ msgstr "일반 메시지 로드 중..."
+#~ msgid "Loading general messages…"
+#~ msgstr "일반 메시지 로드 중…"
 
 #~ msgid ""
 #~ "A global message contains a condition that could not be evaluated. "
@@ -1225,8 +1225,8 @@ msgstr ""
 #~ msgid "Failed to get game data. Details: {0}"
 #~ msgstr "게임 데이터를 가져오지 못했습니다. 자세한 사항: {0}"
 
-#~ msgid "Regenerating displayed content..."
-#~ msgstr "표시되는 내용을 재생성 중..."
+#~ msgid "Regenerating displayed content…"
+#~ msgstr "표시되는 내용을 재생성 중…"
 
 #~ msgid "Failed to update the masterlist. Details: {0}"
 #~ msgstr "마스터 리스트를 갱신하지 못했습니다. 자세한 사항: {0}"
@@ -1265,23 +1265,23 @@ msgstr ""
 #~ msgid "Version"
 #~ msgstr "버전"
 
-#~ msgid "Filter content..."
-#~ msgstr "필터링할 콘텐츠..."
+#~ msgid "Filter content…"
+#~ msgstr "필터링할 콘텐츠…"
 
-#~ msgid "Checking if plugins have been loaded..."
-#~ msgstr "플러그인이 로드되었는지 확인 중..."
+#~ msgid "Checking if plugins have been loaded…"
+#~ msgstr "플러그인이 로드되었는지 확인 중…"
 
-#~ msgid "Loading game data..."
-#~ msgstr "게임 데이터 로드 중..."
+#~ msgid "Loading game data…"
+#~ msgstr "게임 데이터 로드 중…"
 
-#~ msgid "Updating masterlist..."
-#~ msgstr "마스터 리스트 갱신 중..."
+#~ msgid "Updating masterlist…"
+#~ msgstr "마스터 리스트 갱신 중…"
 
-#~ msgid "Sorting plugins..."
-#~ msgstr "플러그인 정렬 중..."
+#~ msgid "Sorting plugins…"
+#~ msgstr "플러그인 정렬 중…"
 
 #~ msgid "unknown"
 #~ msgstr "알 수 없음"
 
-#~ msgid "Refreshing data..."
-#~ msgstr "데이터 새로 고침 중..."
+#~ msgid "Refreshing data…"
+#~ msgstr "데이터 새로 고침 중…"

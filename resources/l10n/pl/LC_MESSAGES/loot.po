@@ -210,8 +210,8 @@ msgstr "&Plik"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:656
-msgid "&Settings..."
-msgstr "&Ustawienia..."
+msgid "&Settings…"
+msgstr "&Ustawienia…"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:658
@@ -236,13 +236,13 @@ msgstr "&Gra"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:668
-msgid "&Edit Groups..."
-msgstr "&Edytuj grupy..."
+msgid "&Edit Groups…"
+msgstr "&Edytuj grupy…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:670
-msgid "Searc&h Cards..."
-msgstr "Szukaj ka&rty..."
+msgid "Searc&h Cards…"
+msgstr "Szukaj ka&rty…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:672
@@ -261,8 +261,8 @@ msgstr "&Odśwież zawartość"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:678
-msgid "Redate &Plugins..."
-msgstr "Przedatuj &Wtyczki..."
+msgid "Redate &Plugins…"
+msgstr "Przedatuj &Wtyczki…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:680
@@ -271,8 +271,8 @@ msgstr "&Napraw niejednoznaczną kolejność ładowania"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:682
-msgid "Clear All &User Metadata..."
-msgstr "Usuń wszystkie &meta informacje użytkownika..."
+msgid "Clear All &User Metadata…"
+msgstr "Usuń wszystkie &meta informacje użytkownika…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -297,13 +297,13 @@ msgstr "Kopiuj &metadane"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:694
-msgid "&Edit Metadata..."
-msgstr "&Edytuj Metadane..."
+msgid "&Edit Metadata…"
+msgstr "&Edytuj Metadane…"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:696
-msgid "Clear &User Metadata..."
-msgstr "Wyczyść metadane &użytkownika..."
+msgid "Clear &User Metadata…"
+msgstr "Wyczyść metadane &użytkownika…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -339,8 +339,8 @@ msgid "F&ilters"
 msgstr "Filtr&y"
 
 #: src/gui/qt/main_window.cpp:999 src/gui/qt/main_window.cpp:1946
-msgid "Updating and parsing masterlist..."
-msgstr "Aktualizowanie i analizowanie listy głównej..."
+msgid "Updating and parsing masterlist…"
+msgstr "Aktualizowanie i analizowanie listy głównej…"
 
 #: src/gui/qt/main_window.cpp:1058
 msgid ""
@@ -566,8 +566,8 @@ msgid "About LOOT"
 msgstr "O LOOT"
 
 #: src/gui/qt/main_window.cpp:2142
-msgid "Identifying conflicting plugins..."
-msgstr "Identyfikacja wtyczek powodujących konflikty..."
+msgid "Identifying conflicting plugins…"
+msgstr "Identyfikacja wtyczek powodujących konflikty…"
 
 #: src/gui/qt/main_window.cpp:2285
 msgid ""
@@ -865,8 +865,8 @@ msgid "Bash Tag"
 msgstr "Tag Bash"
 
 #: src/gui/qt/settings/game_tab.cpp:57
-msgid "Browse..."
-msgstr "Przeglądaj..."
+msgid "Browse…"
+msgstr "Przeglądaj…"
 
 #: src/gui/qt/settings/game_tab.cpp:159
 #: src/gui/qt/settings/new_game_dialog.cpp:88
@@ -982,8 +982,8 @@ msgid "General"
 msgstr "Ogólny"
 
 #: src/gui/qt/settings/settings_dialog.cpp:114
-msgid "Add new game..."
-msgstr "Dodaj nową grę..."
+msgid "Add new game…"
+msgstr "Dodaj nową grę…"
 
 #: src/gui/query/types/apply_sort_query.h:76
 msgid ""
@@ -998,12 +998,12 @@ msgstr ""
 "się do niego za pośrednictwem menu głównego), aby uzyskać więcej informacji."
 
 #: src/gui/query/types/get_game_data_query.h:47
-msgid "Parsing, merging and evaluating metadata..."
-msgstr "Analizowanie, scalanie i ocena metadanych..."
+msgid "Parsing, merging and evaluating metadata…"
+msgstr "Analizowanie, scalanie i ocena metadanych…"
 
 #: src/gui/query/types/sort_plugins_query.h:54
-msgid "Sorting load order..."
-msgstr "Sortowanie kolejności ładowania..."
+msgid "Sorting load order…"
+msgstr "Sortowanie kolejności ładowania…"
 
 #: src/gui/state/loot_settings.cpp:538
 msgid ""

@@ -39,8 +39,8 @@ msgstr ""
 "obtido pelo menu principal) para mais informação."
 
 #: src/gui/cef/query/types/get_game_data_query.h:46
-msgid "Parsing, merging and evaluating metadata..."
-msgstr "Analisando, juntando e avaliando metadados..."
+msgid "Parsing, merging and evaluating metadata…"
+msgstr "Analisando, juntando e avaliando metadados…"
 
 #: src/gui/cef/query/types/metadata_query.h:201
 #: src/gui/cef/query/types/metadata_query.h:228
@@ -64,8 +64,8 @@ msgid "(edited)"
 msgstr "(editado)"
 
 #: src/gui/cef/query/types/sort_plugins_query.h:53
-msgid "Sorting load order..."
-msgstr "Ordenando a ordem de carregamento..."
+msgid "Sorting load order…"
+msgstr "Ordenando a ordem de carregamento…"
 
 #: src/gui/state/loot_state.cpp:94
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
@@ -267,12 +267,12 @@ msgid "Verified clean by {0}"
 msgstr "Verificado como limpo por {0}"
 
 #: src/gui/html/js/events.ts:201
-msgid "Identifying conflicting plugins..."
-msgstr "A identificar plugins em conflito..."
+msgid "Identifying conflicting plugins…"
+msgstr "A identificar plugins em conflito…"
 
 #: src/gui/html/js/events.ts:287
-msgid "Updating and parsing masterlist..."
-msgstr "Atualizando e analisando a lista-mestre..."
+msgid "Updating and parsing masterlist…"
+msgstr "Atualizando e analisando a lista-mestre…"
 
 #: src/gui/html/js/events.ts:310
 msgid "Masterlist updated to revision {0}."

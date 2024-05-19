@@ -715,7 +715,7 @@ void MainWindow::translateUi() {
      menus or sidebar sections. */
   menuFile->setTitle(translate("&File"));
   /* translators: This string is an action in the File menu. */
-  actionSettings->setText(translate("&Settings..."));
+  actionSettings->setText(translate("&Settings…"));
   /* translators: This string is an action in the File menu. */
   actionUpdateMasterlists->setText(translate("&Update All Masterlists"));
   /* translators: This string is an action in the File menu. */
@@ -729,9 +729,9 @@ void MainWindow::translateUi() {
      menus or sidebar sections. */
   menuGame->setTitle(translate("&Game"));
   /* translators: This string is an action in the Game menu. */
-  actionOpenGroupsEditor->setText(translate("&Edit Groups..."));
+  actionOpenGroupsEditor->setText(translate("&Edit Groups…"));
   /* translators: This string is an action in the Game menu. */
-  actionSearch->setText(translate("Searc&h Cards..."));
+  actionSearch->setText(translate("Searc&h Cards…"));
   /* translators: This string is an action in the Game menu. */
   actionCopyLoadOrder->setText(translate("Copy &Load Order"));
   /* translators: This string is an action in the Game menu. */
@@ -739,11 +739,11 @@ void MainWindow::translateUi() {
   /* translators: This string is an action in the Game menu. */
   actionRefreshContent->setText(translate("&Refresh Content"));
   /* translators: This string is an action in the Game menu. */
-  actionRedatePlugins->setText(translate("Redate &Plugins..."));
+  actionRedatePlugins->setText(translate("Redate &Plugins…"));
   /* translators: This string is an action in the Game menu. */
   actionFixAmbiguousLoadOrder->setText(translate("&Fix Ambiguous Load Order"));
   /* translators: This string is an action in the Game menu. */
-  actionClearAllUserMetadata->setText(translate("Clear All &User Metadata..."));
+  actionClearAllUserMetadata->setText(translate("Clear All &User Metadata…"));
 
   /* translators: The mnemonic in this string shouldn't conflict with other
      menus or sidebar sections. */
@@ -755,9 +755,9 @@ void MainWindow::translateUi() {
   /* translators: This string is an action in the Plugin menu. */
   actionCopyMetadata->setText(translate("Copy &Metadata"));
   /* translators: This string is an action in the Plugin menu. */
-  actionEditMetadata->setText(translate("&Edit Metadata..."));
+  actionEditMetadata->setText(translate("&Edit Metadata…"));
   /* translators: This string is an action in the Plugin menu. */
-  actionClearMetadata->setText(translate("Clear &User Metadata..."));
+  actionClearMetadata->setText(translate("Clear &User Metadata…"));
 
   /* translators: The mnemonic in this string shouldn't conflict with other
      menus or sidebar sections. */
@@ -1080,7 +1080,7 @@ void MainWindow::sortPlugins(bool isAutoSort) {
   std::vector<Task*> tasks;
 
   if (state.getSettings().isMasterlistUpdateBeforeSortEnabled()) {
-    handleProgressUpdate(translate("Updating and parsing masterlist..."));
+    handleProgressUpdate(translate("Updating and parsing masterlist…"));
 
     const auto preludeTask = new UpdatePreludeTask(state);
     connect(preludeTask, &Task::error, this, &MainWindow::handleError);
@@ -1539,7 +1539,7 @@ void MainWindow::on_actionSettings_triggered() {
 
 void MainWindow::on_actionUpdateMasterlists_triggered() {
   try {
-    handleProgressUpdate(translate("Updating and parsing masterlist..."));
+    handleProgressUpdate(translate("Updating and parsing masterlist…"));
 
     const auto preludeSource = state.getSettings().getPreludeSource();
     const auto preludePath = state.getPreludePath();
@@ -1566,7 +1566,7 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
       tasks.push_back(task);
     }
 
-    handleProgressUpdate(translate("Updating all masterlists..."));
+    handleProgressUpdate(translate("Updating all masterlists…"));
 
     const auto executor = new ParallelTaskExecutor(this, tasks);
 
@@ -2158,7 +2158,7 @@ void MainWindow::on_actionDiscardSort_triggered() {
 
 void MainWindow::on_actionUpdateMasterlist_triggered() {
   try {
-    handleProgressUpdate(translate("Updating and parsing masterlist..."));
+    handleProgressUpdate(translate("Updating and parsing masterlist…"));
 
     const auto preludeTask = new UpdatePreludeTask(state);
     connect(preludeTask, &Task::error, this, &MainWindow::handleError);
@@ -2360,7 +2360,7 @@ void MainWindow::on_filtersWidget_overlapFilterChanged(
       return;
     }
 
-    handleProgressUpdate(translate("Identifying overlapping plugins..."));
+    handleProgressUpdate(translate("Identifying overlapping plugins…"));
 
     std::unique_ptr<Query> query = std::make_unique<GetOverlappingPluginsQuery>(
         state.GetCurrentGame(),

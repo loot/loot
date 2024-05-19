@@ -208,8 +208,8 @@ msgstr "文件(&F)"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:665
-msgid "&Settings..."
-msgstr "设置...(&S)"
+msgid "&Settings…"
+msgstr "设置…(&S)"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:667
@@ -234,13 +234,13 @@ msgstr "游戏(&G)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:677
-msgid "&Edit Groups..."
-msgstr "编辑组...(&E)"
+msgid "&Edit Groups…"
+msgstr "编辑组…(&E)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:679
-msgid "Searc&h Cards..."
-msgstr "搜索卡片...(&H)"
+msgid "Searc&h Cards…"
+msgstr "搜索卡片…(&H)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:681
@@ -259,8 +259,8 @@ msgstr "刷新内容(&R)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:687
-msgid "Redate &Plugins..."
-msgstr "修改插件时间...(&P)"
+msgid "Redate &Plugins…"
+msgstr "修改插件时间…(&P)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:689
@@ -269,8 +269,8 @@ msgstr "复制加载顺序(&F)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:691
-msgid "Clear All &User Metadata..."
-msgstr "清除所有用户元数据...(&U)"
+msgid "Clear All &User Metadata…"
+msgstr "清除所有用户元数据…(&U)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -295,13 +295,13 @@ msgstr "复制元数据(&M)"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:703
-msgid "&Edit Metadata..."
-msgstr "编辑元数据...(&E)"
+msgid "&Edit Metadata…"
+msgstr "编辑元数据…(&E)"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:705
-msgid "Clear &User Metadata..."
-msgstr "清除用户元数据...(&U)"
+msgid "Clear &User Metadata…"
+msgstr "清除用户元数据…(&U)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -337,8 +337,8 @@ msgid "F&ilters"
 msgstr "筛选(&I)"
 
 #: src/gui/qt/main_window.cpp:1003 src/gui/qt/main_window.cpp:1957
-msgid "Updating and parsing masterlist..."
-msgstr "更新并解析主列表..."
+msgid "Updating and parsing masterlist…"
+msgstr "更新并解析主列表…"
 
 #: src/gui/qt/main_window.cpp:1062
 msgid ""
@@ -538,8 +538,8 @@ msgid "About LOOT"
 msgstr "关于LOOT"
 
 #: src/gui/qt/main_window.cpp:2159
-msgid "Identifying conflicting plugins..."
-msgstr "识别冲突插件..."
+msgid "Identifying conflicting plugins…"
+msgstr "识别冲突插件…"
 
 #: src/gui/qt/main_window.cpp:2302
 msgid ""
@@ -832,8 +832,8 @@ msgid "Bash Tag"
 msgstr "Bash 标签"
 
 #: src/gui/qt/settings/game_tab.cpp:57
-msgid "Browse..."
-msgstr "浏览..."
+msgid "Browse…"
+msgstr "浏览…"
 
 #: src/gui/qt/settings/game_tab.cpp:159
 #: src/gui/qt/settings/new_game_dialog.cpp:88
@@ -947,8 +947,8 @@ msgid "General"
 msgstr "常规"
 
 #: src/gui/qt/settings/settings_dialog.cpp:114
-msgid "Add new game..."
-msgstr "添加新游戏..."
+msgid "Add new game…"
+msgstr "添加新游戏…"
 
 #: src/gui/query/types/apply_sort_query.h:97
 msgid ""
@@ -962,12 +962,12 @@ msgstr ""
 "得详细信息。"
 
 #: src/gui/query/types/get_game_data_query.h:47
-msgid "Parsing, merging and evaluating metadata..."
-msgstr "解析、融合并评估插件元数据..."
+msgid "Parsing, merging and evaluating metadata…"
+msgstr "解析、融合并评估插件元数据…"
 
 #: src/gui/query/types/sort_plugins_query.h:54
-msgid "Sorting load order..."
-msgstr "排序加载顺序..."
+msgid "Sorting load order…"
+msgstr "排序加载顺序…"
 
 #: src/gui/state/loot_settings.cpp:541
 msgid ""
@@ -1312,8 +1312,8 @@ msgstr "LOOT检测到\"{0}\"无效，现在将忽略它。"
 #~ "Details: {0}"
 #~ msgstr "一条全局信息包含的条件无法被解析，详细信息：{0}"
 
-#~ msgid "Loading plugin contents..."
-#~ msgstr "加载插件内容..."
+#~ msgid "Loading plugin contents…"
+#~ msgstr "加载插件内容…"
 
 #~ msgid "Failed to get %LOCALAPPDATA% path."
 #~ msgstr "无法获取%LOCALAPPDATA%路径。"
@@ -1474,29 +1474,29 @@ msgstr "LOOT检测到\"{0}\"无效，现在将忽略它。"
 #~ msgid "Contains {0} ITM records. Clean with {1}."
 #~ msgstr "包含{0}个ITM记录。使用{1}清理。"
 
-#~ msgid "Building plugin graph..."
-#~ msgstr "构建插件图表..."
+#~ msgid "Building plugin graph…"
+#~ msgstr "构建插件图表…"
 
-#~ msgid "Adding edges to plugin graph and performing topological sort..."
-#~ msgstr "添加插件图表路段并执行拓扑排序..."
+#~ msgid "Adding edges to plugin graph and performing topological sort…"
+#~ msgstr "添加插件图表路段并执行拓扑排序…"
 
 #~ msgid "Shell execute failed."
 #~ msgstr "Shell 执行失败。"
 
-#~ msgid "Loading plugin headers..."
-#~ msgstr "加载插件信息..."
+#~ msgid "Loading plugin headers…"
+#~ msgstr "加载插件信息…"
 
-#~ msgid "Parsing masterlist..."
-#~ msgstr "解析主列表..."
+#~ msgid "Parsing masterlist…"
+#~ msgstr "解析主列表…"
 
-#~ msgid "Parsing userlist..."
-#~ msgstr "解析用户列表..."
+#~ msgid "Parsing userlist…"
+#~ msgstr "解析用户列表…"
 
-#~ msgid "Loading general messages..."
-#~ msgstr "载入综合信息..."
+#~ msgid "Loading general messages…"
+#~ msgstr "载入综合信息…"
 
-#~ msgid "Regenerating displayed content..."
-#~ msgstr "重建显示内容..."
+#~ msgid "Regenerating displayed content…"
+#~ msgstr "重建显示内容…"
 
 #~ msgid "Error: Games' settings parsing failed. {0}"
 #~ msgstr "错误：游戏设置解析失败。{0}"
@@ -1504,20 +1504,20 @@ msgstr "LOOT检测到\"{0}\"无效，现在将忽略它。"
 #~ msgid "Invalid folder path:"
 #~ msgstr "无效文件夹路径："
 
-#~ msgid "Loading game data..."
-#~ msgstr "载入游戏数据..."
+#~ msgid "Loading game data…"
+#~ msgstr "载入游戏数据…"
 
-#~ msgid "Updating masterlist..."
-#~ msgstr "更新主列表..."
+#~ msgid "Updating masterlist…"
+#~ msgstr "更新主列表…"
 
-#~ msgid "Sorting plugins..."
-#~ msgstr "排序插件..."
+#~ msgid "Sorting plugins…"
+#~ msgstr "排序插件…"
 
-#~ msgid "Refreshing data..."
-#~ msgstr "刷新数据..."
+#~ msgid "Refreshing data…"
+#~ msgstr "刷新数据…"
 
-#~ msgid "Checking if plugins have been loaded..."
-#~ msgstr "检查插件是否被加载..."
+#~ msgid "Checking if plugins have been loaded…"
+#~ msgstr "检查插件是否被加载…"
 
 #~ msgid "unknown"
 #~ msgstr "未知"

@@ -35,8 +35,8 @@ msgstr ""
 "información."
 
 #: src/gui/query/types/get_game_data_query.h:47
-msgid "Parsing, merging and evaluating metadata..."
-msgstr "Analizando, mezclando y evaluando metadatos..."
+msgid "Parsing, merging and evaluating metadata…"
+msgstr "Analizando, mezclando y evaluando metadatos…"
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
 #: src/gui/query/types/get_prelude_info_query.h:49
@@ -60,8 +60,8 @@ msgid "N/A: No masterlist present"
 msgstr "No aplica: No se encuentra la lista de referencia (masterlist)"
 
 #: src/gui/query/types/sort_plugins_query.h:54
-msgid "Sorting load order..."
-msgstr "Ordenando la lista de mods..."
+msgid "Sorting load order…"
+msgstr "Ordenando la lista de mods…"
 
 #. translators: --auto-sort and --game are command-line arguments and shouldn't be translated.
 #: src/gui/state/loot_state.cpp:107
@@ -278,12 +278,12 @@ msgid "Verified clean by {0}"
 msgstr "{0} ha verificado que está limpio"
 
 #: src/gui/html/js/events.ts:225
-msgid "Identifying conflicting plugins..."
-msgstr "Identificando plugins con conflictos..."
+msgid "Identifying conflicting plugins…"
+msgstr "Identificando plugins con conflictos…"
 
 #: src/gui/html/js/events.ts:338
-msgid "Updating and parsing masterlist..."
-msgstr "Actualizando y analizando la masterlist..."
+msgid "Updating and parsing masterlist…"
+msgstr "Actualizando y analizando la masterlist…"
 
 #: src/gui/html/js/events.ts:367
 msgid "Masterlist updated to revision {0}."
@@ -1255,18 +1255,18 @@ msgstr ""
 #~ msgid "&Help"
 #~ msgstr "&Ayuda"
 
-#~ msgid "BOSS: Working..."
-#~ msgstr "BOSS: Trabajando..."
+#~ msgid "BOSS: Working…"
+#~ msgstr "BOSS: Trabajando…"
 
-#~ msgid "BOSS working..."
-#~ msgstr "BOSS trabajando..."
+#~ msgid "BOSS working…"
+#~ msgstr "BOSS trabajando…"
 
 #~ msgid "Error: {0}"
 #~ msgstr "Error: {0}"
 
 #, fuzzy
 #~ msgid "BOSS: Warning"
-#~ msgstr "BOSS: Trabajando..."
+#~ msgstr "BOSS: Trabajando…"
 
 #~ msgid "BOSS: Settings"
 #~ msgstr "BOSS: Configuracion"
