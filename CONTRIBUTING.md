@@ -43,7 +43,7 @@ First check that an [Inno Setup translation](http://www.jrsoftware.org/files/ist
 
 To translate the LOOT-specific messages:
 
-1. Copy `resources/l10n/en/LC_MESSAGES/inno.islu` to `resources/l10n/<language>/LC_MESSAGES/inno.islu` if the latter file does not exist, where `<language>` is the [POSIX locale code](https://www.gnu.org/software/gettext/manual/html_node/Locale-Names.html) for your language.
+1. Copy `resources/l10n/en/LC_MESSAGES/installer.islu` to `resources/l10n/<language>/LC_MESSAGES/installer.islu` if the latter file does not exist, where `<language>` is the [POSIX locale code](https://www.gnu.org/software/gettext/manual/html_node/Locale-Names.html) for your language.
 2. Open the copied file in your favourite text editor.
 2. Translate the string(s) into your language. Do not change the text before the first `=` as that is the message's name.
 3. Save your changes.
@@ -56,7 +56,7 @@ To add your language as an option in LOOT's installer:
 
    The `Name` value should be the POSIX locale code for your language.
 
-   The `MessagesFile` value should be `compiler:Languages\<translation file>,resources/l10n/<language>/LC_MESSAGES/inno.islu`, where `<translation file>` is the filename of the Inno Setup translation that you checked exists and `<language>` is your language's POSIX locale code.
+   The `MessagesFile` value should be `compiler:Languages\<translation file>,resources/l10n/<language>/LC_MESSAGES/installer.islu`, where `<translation file>` is the filename of the Inno Setup translation that you checked exists and `<language>` is your language's POSIX locale code.
 
    If your language only has an unofficial translation, wrap its line in `#ifdef` and `#endif` lines, again like it has been done for Korean and Simplified Chinese.
 5. Save your changes.

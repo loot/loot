@@ -50,29 +50,29 @@ ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
-Name: "en"; MessagesFile: "compiler:Default.isl,resources\l10n\en\LC_MESSAGES\inno.islu"
-Name: "bg"; MessagesFile: "compiler:Languages\Bulgarian.isl,resources\l10n\bg\LC_MESSAGES\inno.islu"
-Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl,resources\l10n\cs\LC_MESSAGES\inno.islu"
-Name: "da"; MessagesFile: "compiler:Languages\Danish.isl,resources\l10n\da\LC_MESSAGES\inno.islu"
-Name: "de"; MessagesFile: "compiler:Languages\German.isl,resources\l10n\de\LC_MESSAGES\inno.islu"
-Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl,resources\l10n\es\LC_MESSAGES\inno.islu"
-Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl,resources\l10n\fi\LC_MESSAGES\inno.islu"
-Name: "fr"; MessagesFile: "compiler:Languages\French.isl,resources\l10n\fr\LC_MESSAGES\inno.islu"
-Name: "it"; MessagesFile: "compiler:Languages\Italian.isl,resources\l10n\it\LC_MESSAGES\inno.islu"
-Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl,resources\l10n\ja\LC_MESSAGES\inno.islu"
+Name: "en"; MessagesFile: "compiler:Default.isl,resources\l10n\en\LC_MESSAGES\installer.islu"
+Name: "bg"; MessagesFile: "compiler:Languages\Bulgarian.isl,resources\l10n\bg\LC_MESSAGES\installer.islu"
+Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl,resources\l10n\cs\LC_MESSAGES\installer.islu"
+Name: "da"; MessagesFile: "compiler:Languages\Danish.isl,resources\l10n\da\LC_MESSAGES\installer.islu"
+Name: "de"; MessagesFile: "compiler:Languages\German.isl,resources\l10n\de\LC_MESSAGES\installer.islu"
+Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl,resources\l10n\es\LC_MESSAGES\installer.islu"
+Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl,resources\l10n\fi\LC_MESSAGES\installer.islu"
+Name: "fr"; MessagesFile: "compiler:Languages\French.isl,resources\l10n\fr\LC_MESSAGES\installer.islu"
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl,resources\l10n\it\LC_MESSAGES\installer.islu"
+Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl,resources\l10n\ja\LC_MESSAGES\installer.islu"
 #ifdef KoreanExists
-Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl,resources\l10n\ko\LC_MESSAGES\inno.islu"
+Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl,resources\l10n\ko\LC_MESSAGES\installer.islu"
 #endif
-Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl,resources\l10n\pl\LC_MESSAGES\inno.islu"
-Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl,resources\l10n\pt_BR\LC_MESSAGES\inno.islu"
-Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl,resources\l10n\pt_PT\LC_MESSAGES\inno.islu"
-Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl,resources\l10n\ru\LC_MESSAGES\inno.islu"
+Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl,resources\l10n\pl\LC_MESSAGES\installer.islu"
+Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl,resources\l10n\pt_BR\LC_MESSAGES\installer.islu"
+Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl,resources\l10n\pt_PT\LC_MESSAGES\installer.islu"
+Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl,resources\l10n\ru\LC_MESSAGES\installer.islu"
 #ifdef SwedishExists
-Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl,resources\l10n\sv\LC_MESSAGES\inno.islu"
+Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl,resources\l10n\sv\LC_MESSAGES\installer.islu"
 #endif
-Name: "uk_UA"; MessagesFile: "compiler:Languages\Ukrainian.isl,resources\l10n\uk_UA\LC_MESSAGES\inno.islu"
+Name: "uk_UA"; MessagesFile: "compiler:Languages\Ukrainian.isl,resources\l10n\uk_UA\LC_MESSAGES\installer.islu"
 #ifdef SimplifiedChineseExists
-Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl,resources\l10n\zh_CN\LC_MESSAGES\inno.islu"
+Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl,resources\l10n\zh_CN\LC_MESSAGES\installer.islu"
 #endif
 
 [Tasks]
