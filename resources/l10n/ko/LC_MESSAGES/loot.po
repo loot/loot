@@ -2,19 +2,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-07-18 08:47+0100\n"
-"PO-Revision-Date: 2021-08-12 18:06+0900\n"
+"POT-Creation-Date: 2024-05-19 09:33+0100\n"
+"PO-Revision-Date: 2024-05-22 20:02+0100\n"
 "Last-Translator: SteamB23 <steamb23@gmail.com>\n"
 "Language-Team: SteamB23 <steamb23@gmail.com>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.4.4\n"
 "X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SearchPath-0: src/backend\n"
 "X-Poedit-SearchPath-1: src/gui\n"
 "X-Poedit-SearchPath-2: resources/report/js\n"
@@ -22,19 +22,490 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-1: resources/report/js/marked.js\n"
 "X-Poedit-SearchPathExcluded-2: resources/report/js/require.js\n"
 
-#: src/gui/cef/query/query.h:49
-msgid ""
-"Oh no, something went wrong! This is usually because \"{0}\" is set to be "
-"read-only. If it is, unset it and try again. If it isn't, you can check your "
-"LOOTDebugLog.txt (you can get to it through the main menu) for more "
-"information."
-msgstr ""
-"이런, 문제가 발생했습니다! \"{0}\"가 읽기 전용으로 설정되어 있기 때문입니다. "
-"만약 그렇다면 해당 설정을 해제한 후 다시 시도하십시오. 그렇지 않다면 "
-"LOOTDebugLog.txt (메인 메뉴를 통해 얻을 수 있음)에서 자세한 정보를 확인할 수 "
-"있습니다."
+#: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
+#, c++-format
+msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
+msgstr "\"{0}\"에는 평가될 수 없는 조건이 포함되어 있습니다. 자세한 사항: {1}"
 
-#: src/gui/cef/query/query_executor.h:44
+#: src/gui/plugin_item.cpp:191
+msgid "Location"
+msgstr ""
+
+#: src/gui/plugin_item.cpp:196
+#, c++-format
+msgid "Location {0}"
+msgstr ""
+
+#: src/gui/sourced_message.cpp:80
+#, c++-format
+msgid "{0} ITM record"
+msgid_plural "{0} ITM records"
+msgstr[0] "ITM 레코드 {0} 개"
+
+#: src/gui/sourced_message.cpp:86
+#, c++-format
+msgid "{0} deleted reference"
+msgid_plural "{0} deleted references"
+msgstr[0] "삭제된 참조 {0}개"
+
+#: src/gui/sourced_message.cpp:92
+#, c++-format
+msgid "{0} deleted navmesh"
+msgid_plural "{0} deleted navmeshes"
+msgstr[0] "삭제된 Navmesh {0}개"
+
+#: src/gui/sourced_message.cpp:102
+#, c++-format
+msgid "{0} found {1}, {2} and {3}."
+msgstr "{1}, {2}과 {3} {0}개 찾음."
+
+#: src/gui/sourced_message.cpp:110
+#, c++-format
+msgid "{0} found dirty edits."
+msgstr "지저분한 편집 {0} 개 찾음."
+
+#: src/gui/sourced_message.cpp:115 src/gui/sourced_message.cpp:122
+#: src/gui/sourced_message.cpp:129
+#, c++-format
+msgid "{0} found {1} and {2}."
+msgstr "{1}과 {2} {0}개 찾음."
+
+#: src/gui/sourced_message.cpp:134 src/gui/sourced_message.cpp:138
+#: src/gui/sourced_message.cpp:142
+#, c++-format
+msgid "{0} found {1}."
+msgstr "{1} {0}개 찾음."
+
+#: src/gui/qt/filters_widget.cpp:244
+msgid "Show only overlapping plugins for"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:245
+msgid "Show only plugins in group"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:247
+msgid "Show only plugins with cards that contain"
+msgstr "다음을 포함하는 카드가 있는 플러그인만 표시"
+
+#: src/gui/qt/filters_widget.cpp:248 src/gui/qt/search_dialog.cpp:113
+msgid "Use regular expression"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:249
+msgid "Hide version numbers"
+msgstr "버전 번호 숨기기"
+
+#: src/gui/qt/filters_widget.cpp:250
+msgid "Hide CRCs"
+msgstr "CRC 숨기기"
+
+#: src/gui/qt/filters_widget.cpp:251
+msgid "Hide Bash Tags"
+msgstr "배쉬 태그 숨기기"
+
+#: src/gui/qt/filters_widget.cpp:252
+msgid "Hide Sources"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:253
+msgid "Hide notes"
+msgstr "노트 숨기기"
+
+#: src/gui/qt/filters_widget.cpp:255
+msgid "Hide official plugins' cleaning messages"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:256
+msgid "Hide all plugin messages"
+msgstr "모든 플러그인 메시지 숨기기"
+
+#: src/gui/qt/filters_widget.cpp:257
+msgid "Hide inactive plugins"
+msgstr "비활성 플러그인 숨기기"
+
+#: src/gui/qt/filters_widget.cpp:258
+msgid "Hide messageless plugins"
+msgstr "메시지 적은 플러그인 숨기기"
+
+#: src/gui/qt/filters_widget.cpp:259
+msgid "Hide Creation Club plugins"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:260
+msgid "Show only empty plugins"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:262
+msgid "Show only warnings and errors"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:263
+msgid "Hidden plugins:"
+msgstr "숨겨진 플러그인:"
+
+#: src/gui/qt/filters_widget.cpp:264
+msgid "Hidden messages:"
+msgstr "숨겨진 메시지:"
+
+#: src/gui/qt/filters_widget.cpp:266
+msgid "No plugin selected"
+msgstr "선택한 플러그인 없음"
+
+#: src/gui/qt/filters_widget.cpp:273
+msgid "No group selected"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:280
+msgid "No text specified"
+msgstr "지정된 텍스트 없음"
+
+#: src/gui/qt/filters_widget.cpp:283
+msgid "If checked, interprets the content filter text as a regular expression."
+msgstr ""
+
+#: src/gui/qt/general_info_card.cpp:176
+msgid "General Information"
+msgstr "일반 정보"
+
+#: src/gui/qt/general_info_card.cpp:178
+msgid "Masterlist Revision ID"
+msgstr ""
+
+#: src/gui/qt/general_info_card.cpp:179
+msgid "Masterlist Update Date"
+msgstr ""
+
+#: src/gui/qt/general_info_card.cpp:180
+msgid "Masterlist Prelude Revision ID"
+msgstr ""
+
+#: src/gui/qt/general_info_card.cpp:181
+msgid "Masterlist Prelude Update Date"
+msgstr ""
+
+#: src/gui/qt/general_info_card.cpp:183
+msgid "Warnings"
+msgstr "경고"
+
+#: src/gui/qt/general_info_card.cpp:184
+msgid "Errors"
+msgstr "오류"
+
+#: src/gui/qt/general_info_card.cpp:185
+msgid "Total Messages"
+msgstr "전체 메시지"
+
+#: src/gui/qt/general_info_card.cpp:187
+msgid "Active Plugins"
+msgstr "활성화된 플러그인"
+
+#: src/gui/qt/general_info_card.cpp:188
+msgid "Active Regular Plugins"
+msgstr ""
+
+#: src/gui/qt/general_info_card.cpp:189
+msgid "Active Light Plugins"
+msgstr ""
+
+#: src/gui/qt/general_info_card.cpp:190
+msgid "Dirty Plugins"
+msgstr "지저분한 플러그인"
+
+#: src/gui/qt/general_info_card.cpp:191
+msgid "Total Plugins"
+msgstr "전체 플러그인"
+
+#. translators: this text is displayed if LOOT has detected that the
+#. masterlist has been modified since it was downloaded.
+#: src/gui/qt/helpers.cpp:94
+msgid "(edited)"
+msgstr "(편집됨)"
+
+#: src/gui/qt/helpers.cpp:209
+msgid "N/A: No masterlist present"
+msgstr "N/A: 마스터 리스트가 존재하지 않음"
+
+#. translators: N/A is an abbreviation for Not Applicable. A
+#. masterlist is a database that contains information for
+#. various mods.
+#: src/gui/qt/helpers.cpp:214
+msgid "N/A: No masterlist prelude present"
+msgstr ""
+
+#: src/gui/qt/helpers.cpp:222
+msgid "Unknown: No revision metadata found"
+msgstr ""
+
+#: src/gui/qt/helpers.cpp:358
+#, c++-format
+msgid "Invalid regular expression: {0}"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:74
+msgid ""
+"LOOT could not unambiguously set the load order. This may be due to the "
+"presence of one or more sTestFile properties in the game's ini files. Remove "
+"all such properties and then restart LOOT."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:78
+msgid "LOOT could not unambiguously set the load order."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1488
+msgid "Ambiguous load order detected"
+msgstr ""
+
+#. translators: This string is also an action in the Game menu.
+#: src/gui/qt/main_window.cpp:705
+msgid "&Sort Plugins"
+msgstr ""
+
+#. translators: This string is also an action in the Game menu.
+#: src/gui/qt/main_window.cpp:707
+msgid "Update &Masterlist"
+msgstr ""
+
+#. translators: This string is also an action in the Game menu.
+#: src/gui/qt/main_window.cpp:709
+msgid "&Apply Sorted Load Order"
+msgstr ""
+
+#. translators: This string is also an action in the Game menu.
+#: src/gui/qt/main_window.cpp:711
+msgid "&Discard Sorted Load Order"
+msgstr ""
+
+#. translators: The mnemonic in this string shouldn't conflict with other
+#. menus or sidebar sections.
+#: src/gui/qt/main_window.cpp:716
+msgid "&File"
+msgstr ""
+
+#. translators: This string is an action in the File menu.
+#: src/gui/qt/main_window.cpp:718
+msgid "&Settings…"
+msgstr ""
+
+#. translators: This string is an action in the File menu.
+#: src/gui/qt/main_window.cpp:720
+msgid "&Update All Masterlists"
+msgstr ""
+
+#. translators: This string is an action in the File menu.
+#: src/gui/qt/main_window.cpp:722
+msgid "&Backup LOOT Data"
+msgstr ""
+
+#. translators: This string is an action in the File menu.
+#: src/gui/qt/main_window.cpp:724
+msgid "&Open LOOT Data Folder"
+msgstr ""
+
+#. translators: This string is an action in the File menu.
+#: src/gui/qt/main_window.cpp:726
+msgid "&Quit"
+msgstr ""
+
+#. translators: The mnemonic in this string shouldn't conflict with other
+#. menus or sidebar sections.
+#: src/gui/qt/main_window.cpp:730
+msgid "&Game"
+msgstr ""
+
+#. translators: This string is an action in the Game menu.
+#: src/gui/qt/main_window.cpp:732
+msgid "&Edit Groups…"
+msgstr ""
+
+#. translators: This string is an action in the Game menu.
+#: src/gui/qt/main_window.cpp:734
+msgid "Searc&h Cards…"
+msgstr ""
+
+#. translators: This string is an action in the Game menu.
+#: src/gui/qt/main_window.cpp:736
+msgid "Copy &Load Order"
+msgstr ""
+
+#. translators: This string is an action in the Game menu.
+#: src/gui/qt/main_window.cpp:738
+msgid "&Copy Content"
+msgstr ""
+
+#. translators: This string is an action in the Game menu.
+#: src/gui/qt/main_window.cpp:740
+msgid "&Refresh Content"
+msgstr ""
+
+#. translators: This string is an action in the Game menu.
+#: src/gui/qt/main_window.cpp:742
+msgid "Redate &Plugins…"
+msgstr ""
+
+#. translators: This string is an action in the Game menu.
+#: src/gui/qt/main_window.cpp:744
+msgid "&Fix Ambiguous Load Order"
+msgstr ""
+
+#. translators: This string is an action in the Game menu.
+#: src/gui/qt/main_window.cpp:746
+msgid "Clear All &User Metadata…"
+msgstr ""
+
+#. translators: The mnemonic in this string shouldn't conflict with other
+#. menus or sidebar sections.
+#: src/gui/qt/main_window.cpp:750
+msgid "&Plugin"
+msgstr ""
+
+#. translators: This string is an action in the Plugin menu.
+#: src/gui/qt/main_window.cpp:752
+msgid "Copy &Plugin Name"
+msgstr ""
+
+#. translators: This string is an action in the Plugin menu.
+#: src/gui/qt/main_window.cpp:754
+msgid "Copy &Card Content"
+msgstr ""
+
+#. translators: This string is an action in the Plugin menu.
+#: src/gui/qt/main_window.cpp:756
+msgid "Copy &Metadata"
+msgstr ""
+
+#. translators: This string is an action in the Plugin menu.
+#: src/gui/qt/main_window.cpp:758
+msgid "&Edit Metadata…"
+msgstr ""
+
+#. translators: This string is an action in the Plugin menu.
+#: src/gui/qt/main_window.cpp:760
+msgid "Clear &User Metadata…"
+msgstr ""
+
+#. translators: The mnemonic in this string shouldn't conflict with other
+#. menus or sidebar sections.
+#: src/gui/qt/main_window.cpp:764
+msgid "&Help"
+msgstr ""
+
+#. translators: This string is an action in the Help menu.
+#: src/gui/qt/main_window.cpp:766
+msgid "&View Documentation"
+msgstr ""
+
+#. translators: This string is an action in the Help menu.
+#: src/gui/qt/main_window.cpp:768
+msgid "&Open FAQs"
+msgstr ""
+
+#. translators: This string is an action in the Help menu.
+#: src/gui/qt/main_window.cpp:770
+msgid "&Join Discord Server"
+msgstr ""
+
+#. translators: This string is an action in the Help menu.
+#: src/gui/qt/main_window.cpp:772
+msgid "&About"
+msgstr ""
+
+#. translators: The mnemonic in this string shouldn't conflict with other
+#. menus or sidebar sections.
+#: src/gui/qt/main_window.cpp:777
+msgid "P&lugins"
+msgstr ""
+
+#. translators: The mnemonic in this string shouldn't conflict with other
+#. menus or sidebar sections.
+#: src/gui/qt/main_window.cpp:780
+msgid "F&ilters"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1083 src/gui/qt/main_window.cpp:1542
+#: src/gui/qt/main_window.cpp:2161
+msgid "Updating and parsing masterlist…"
+msgstr "마스터 리스트 갱신 및 구문 분석 중…"
+
+#: src/gui/qt/main_window.cpp:1148
+#, c++-format
+msgid ""
+"This appears to be the first time you have run LOOT v{0}. Your current LOOT "
+"data has been backed up to: {1}"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1156
+#, c++-format
+msgid "This appears to be the first time you have run LOOT v{0}."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1163
+msgid "Here are some tips to help you get started with the interface."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1168
+msgid ""
+"CRCs are only displayed after plugins have been loaded, either by overlap "
+"filtering, or by sorting."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1174
+msgid ""
+"Plugins can be drag and dropped from the sidebar into the metadata editor's "
+"\"load after\", \"requirements\" and \"incompatibility\" tables."
+msgstr ""
+"플러그인은 사이드바에서 메타데이터 편집기로 '선행 로드',  요구 사항', '비호환"
+"성'테이블을 끌어다 놓을 수 있습니다."
+
+#: src/gui/qt/main_window.cpp:1180
+msgid ""
+"Some features are disabled while the metadata editor is open, or while there "
+"is a sorted load order that has not been applied or discarded."
+msgstr ""
+"메타 데이터 편집기가 열려있거나 적용 또는 삭제되지 않은 정렬된 로드 순서가 있"
+"는 동안에는 일부 기능이 비활성화됩니다."
+
+#: src/gui/qt/main_window.cpp:1187 src/gui/qt/main_window.cpp:2037
+#, c++-format
+msgid ""
+"LOOT is free, but if you want to show your appreciation with some money, "
+"donations may be made to WrinklyNinja (LOOT's creator and main developer) "
+"using {0}."
+msgstr ""
+"LOOT는 무료입니다. 하지만 약간의 기부금으로 감사의 마음을 표현하고 싶다면 {0}"
+"를 사용하여 WrinklyNinja (LOOT의 제작자 및 메인 개발자)에게 기부할 수 있습니"
+"다."
+
+#: src/gui/qt/main_window.cpp:1202
+msgid "First-Time Tips"
+msgstr "처음 팁"
+
+#: src/gui/qt/main_window.cpp:1237
+msgid "metadata edits"
+msgstr "메타데이터 편집"
+
+#: src/gui/qt/main_window.cpp:1238
+msgid "sorted load order"
+msgstr "정렬된 로드 순서"
+
+#: src/gui/qt/main_window.cpp:1241
+#, c++-format
+msgid ""
+"You have not yet applied or cancelled your {0}. Are you sure you want to "
+"quit?"
+msgstr "아직 {0}을/를 적용하거나 취소하지 않았습니다. 종료하시겠습니까?"
+
+#: src/gui/qt/main_window.cpp:1357
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:370
+#: src/gui/qt/plugin_editor/table_tabs.cpp:396
+#: src/gui/qt/plugin_editor/table_tabs.cpp:433
+msgid "Error"
+msgstr "오류"
+
+#: src/gui/qt/main_window.cpp:1367
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:364
+#: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
@@ -42,275 +513,57 @@ msgstr ""
 "이런, 문제가 발생했습니다! 자세한 내용은 LOOTDebugLog.txt (메인 메뉴를 통해 "
 "얻을 수 있음)에서 확인할 수 있습니다."
 
-#: src/gui/cef/query/types/get_game_data_query.h:47
-msgid "Parsing, merging and evaluating metadata…"
-msgstr "플러그인 메타데이터를 파싱, 병합 및 평가 중…"
-
-#: src/gui/cef/query/types/metadata_query.h:205
-#: src/gui/cef/query/types/metadata_query.h:232
-msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
-msgstr "\"{0}\"에는 평가될 수 없는 조건이 포함되어 있습니다. 자세한 사항: {1}"
-
-#. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
-#: src/gui/cef/query/types/metadata_query.h:256
-#: src/gui/cef/query/types/metadata_query.h:257
-msgid "N/A: No masterlist present"
-msgstr "N/A: 마스터 리스트가 존재하지 않음"
-
-#. translators: Git is the software LOOT uses to track changes to the source code.
-#: src/gui/cef/query/types/metadata_query.h:265
-#: src/gui/cef/query/types/metadata_query.h:266
-msgid "Unknown: Git repository missing"
-msgstr "알 수 없음: Git 저장소 누락"
-
-#. translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded.
-#: src/gui/cef/query/types/metadata_query.h:276
-msgid "(edited)"
-msgstr "(편집됨)"
-
-#: src/gui/cef/query/types/sort_plugins_query.h:54
-msgid "Sorting load order…"
-msgstr "로드 순서 정렬 중…"
-
-#. translators: --auto-sort and --game are command-line arguments and shouldn't be translated.
-#: src/gui/state/loot_state.cpp:106
-msgid "Error: --auto-sort was passed but no --game parameter was provided."
-msgstr ""
-"오류: --auto-sort가 전달되었지만 --game 매개 변수가 제공되지 않았습니다."
-
-#: src/gui/state/loot_state.cpp:129
-msgid "Error: Could not create LOOT settings file. {0}"
-msgstr "오류: LOOT 설정 파일을 만들 수 없습니다. {0}"
-
-#. translators: This error is displayed when LOOT is unable to load its own settings file. The placeholder is for additional detail about what went wrong.
-#: src/gui/state/loot_state.cpp:148
-msgid "Error: Settings parsing failed. {0}"
-msgstr "오류: 설정의 구문 분석을 하지 못했습니다. {0}"
-
-#: src/gui/state/loot_state.cpp:208
-msgid "Error: Game-specific settings could not be initialised. {0}"
-msgstr "오류: 게임별 설정을 초기화 할 수 없습니다. {0}"
-
-#: src/gui/state/game/game.cpp:178 src/gui/state/game/game.cpp:214
-msgid "This plugin requires \"{0}\" to be installed, but it is missing."
-msgstr "이 플러그인은 \"{0}\"가 설치되어야 하지만 찾을 수 없습니다."
-
-#: src/gui/state/game/game.cpp:191
-msgid "This plugin requires \"{0}\" to be active, but it is inactive."
-msgstr "이 플러그인은 \"{0}\"가 활성화되어야 하지만 비활성화되어있습니다."
-
-#: src/gui/state/game/game.cpp:240
-msgid "This plugin is incompatible with \"{0}\", but both are present."
-msgstr "이 플러그인은 \"{0}\"와 호환되지 않지만 둘 다 존재합니다."
-
-#: src/gui/state/game/game.cpp:276
+#: src/gui/qt/main_window.cpp:1420
 msgid ""
-"This plugin is a light master and requires the non-master plugin \"{0}\". "
-"This can cause issues in-game, and sorting will fail while this plugin is "
-"installed."
+"Failed to sort plugins. Details may be provided in the General Information "
+"section."
 msgstr ""
-"이 플러그인은 경량 마스터이며 비 마스터 플러그인 \"{0}\"가 필요합니다. 이로 "
-"인해 게임 내에서 문제가 발생하고 플러그인이 설치된 동안 정렬이 실패할 수 있습"
-"니다."
 
-#: src/gui/state/game/game.cpp:296
-msgid ""
-"This plugin contains records that have FormIDs outside the valid range for "
-"an ESL plugin. Using this plugin will cause irreversible damage to your game "
-"saves."
-msgstr ""
-"이 플러그인에는 ESL 플러그인의 유효한 범위를 벗어난 FormID가 있는 레코드가 포"
-"함되어 있습니다. 이 플러그인을 사용하면 게임 저장에 돌이킬 수 없는 손상이 발"
-"생합니다."
-
-#. translators: A header is the part of a file that stores data like file name and version.
-#: src/gui/state/game/game.cpp:314
-msgid ""
-"This plugin has a header version of {0}, which is less than the game's "
-"minimum supported header version of {1}."
-msgstr ""
-"이 플러그인의 헤더 버전은 {0}이며,  이는 게임에서 지원되는 최소 헤더 버전인 "
-"{1}보다 낮습니다."
-
-#: src/gui/state/game/game.cpp:333
-msgid "This plugin belongs to the group \"{0}\", which does not exist."
-msgstr "이 플러그인은 존재하지 않는 \"{0}\" 그룹에 속해 있습니다."
-
-#: src/gui/state/game/game.cpp:402 src/gui/state/game/game.cpp:487
-msgid ""
-"Failed to load the current load order, information displayed may be "
-"incorrect."
-msgstr ""
-"현재 로드 순서를 로드하지 못했습니다. 표시된 정보가 올바르지 않을 수 있습니"
-"다."
-
-#: src/gui/state/game/game.cpp:512
-msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
-msgstr "\"{0}\"와 \"{1}\"플러그인 사이의 순환 참조가 감지됨 : {2}"
-
-#: src/gui/state/game/game.cpp:524
-msgid "The group \"{0}\" does not exist."
-msgstr "\"{0}\" 그룹이 존재하지 않습니다."
-
-#: src/gui/state/game/game.cpp:560
-msgid "You have not sorted your load order this session."
-msgstr "이 세션에서 로드 순서를 정렬하지 않았습니다."
-
-#: src/gui/state/game/game.cpp:584
-msgid ""
-"You have a normal plugin and at least one light plugin sharing the FE load "
-"order index. Deactivate a normal plugin or all your light plugins to avoid "
-"potential issues."
-msgstr ""
-"일반 플러그인과 FE로드 순서 색인을 공유하는 하나 이상의 경량 마스터가 있습니"
-"다. 잠재적인 문제를 방지하려면 일반 플러그인 또는 모든 경량 마스터를 비활성화"
-"하십시오."
-
-#: src/gui/state/game/game.cpp:612
-msgid ""
-"The latest masterlist revision contains a syntax error, LOOT is using the "
-"most recent valid revision instead. Syntax errors are usually minor and "
-"fixed within hours."
-msgstr ""
-"최신 마스터 목록 수정본에 구문 오류가 있습니다. 대신에 LOOT는 유효한 최신 수"
-"정본을 사용하고 있습니다. 구문 오류는 일반적으로 경미하고 몇 시간 내에 수정됩"
-"니다."
-
-#: src/gui/state/game/game.cpp:657
-msgid ""
-"An error occurred while parsing the metadata list(s): {0}.\n"
-"\n"
-"Try updating your masterlist to resolve the error. If the error is with your "
-"user metadata, this probably happened because an update to LOOT changed its "
-"metadata syntax support. Your user metadata will have to be updated "
-"manually.\n"
-"\n"
-"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
-"data folder, then open your 'userlist.yaml' file in the relevant game "
-"folder. You can then edit the metadata it contains with reference to the "
-"documentation, which is accessible through LOOT's main menu.\n"
-"\n"
-"You can also seek support on LOOT's forum thread, which is linked to on "
-"[LOOT's website](https://loot.github.io/)."
-msgstr ""
-"메타데이터 목록을 구문 분석하는 동안 오류가 발생했습니다. : {0}.\n"
-"\n"
-"마스터 목록을 업데이트하여 오류를 해결하십시오. 사용자 메타데이터에 오류가 있"
-"는 경우 LOOT 업데이트로 메타데이터 구문 지원이 변경되었기 때문일 수 있습니"
-"다. 사용자 메타데이터를 수동으로 업데이트해야 합니다.\n"
-"\n"
-"그러기 위해서는 LOOT의 기본 메뉴에 있는 '디버그 로그 위치 열기'를 사용하여 데"
-"이터 폴더를 연다음 해당 게임 폴더에 있는 'userlist.yaml'파일을 여십시오. 그"
-"런 다음 LOOT의 기본 메뉴를 통해 액세스할 수 있는 설명서를 참조하여 메타데이터"
-"에 포함된 메타데이터를 편집할 수 있습니다.\n"
-"\n"
-"[LOOT 홈페이지](https://loot.github.io/)에 링크된 LOOT의 포럼 스레드에서 지원"
-"을 요청할 수도 있습니다."
-
-#: src/gui/state/game/helpers.cpp:88
-msgid "{0} ITM record"
-msgid_plural "{0} ITM records"
-msgstr[0] "ITM 레코드 {0} 개"
-
-#: src/gui/state/game/helpers.cpp:92
-msgid "{0} deleted reference"
-msgid_plural "{0} deleted references"
-msgstr[0] "삭제된 참조 {0}개"
-
-#: src/gui/state/game/helpers.cpp:98
-msgid "{0} deleted navmesh"
-msgid_plural "{0} deleted navmeshes"
-msgstr[0] "삭제된 Navmesh {0}개"
-
-#: src/gui/state/game/helpers.cpp:108
-msgid "{0} found {1}, {2} and {3}."
-msgstr "{1}, {2}과 {3} {0}개 찾음."
-
-#: src/gui/state/game/helpers.cpp:114
-msgid "{0} found dirty edits."
-msgstr "지저분한 편집 {0} 개 찾음."
-
-#: src/gui/state/game/helpers.cpp:120 src/gui/state/game/helpers.cpp:126
-#: src/gui/state/game/helpers.cpp:131
-msgid "{0} found {1} and {2}."
-msgstr "{1}과 {2} {0}개 찾음."
-
-#: src/gui/state/game/helpers.cpp:135 src/gui/state/game/helpers.cpp:138
-#: src/gui/state/game/helpers.cpp:141
-msgid "{0} found {1}."
-msgstr "{1} {0}개 찾음."
-
-#: src/gui/state/game/helpers.cpp:222
-msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
-msgstr "LOOT에서 {0}가 유효하지 않음을 감지하여 현재 무시하고 있습니다."
-
-#: src/gui/html/elements/editable-table.ts:438
-msgid "Add New Row"
-msgstr "새 행 추가"
-
-#: src/gui/html/elements/loot-groups-editor.ts:426
-#: src/gui/html/js/translateStaticText.ts:369
-msgid "View Documentation"
-msgstr "문서 보기"
-
-#: src/gui/html/elements/loot-groups-editor.ts:427
-msgid "Add a new group"
-msgstr "새 그룹 추가"
-
-#: src/gui/html/elements/loot-groups-editor.ts:428
-msgid "Group name"
-msgstr "그룹 이름"
-
-#: src/gui/html/elements/loot-groups-editor.ts:429
-msgid "Group already exists!"
-msgstr "그룹이 이미 존재함!"
-
-#: src/gui/html/elements/loot-groups-editor.ts:430
-msgid "No plugins are in this group."
-msgstr "이 그룹에는 플러그인이 없습니다."
-
-#: src/gui/html/elements/loot-groups-editor.ts:440
-msgid "Plugins in {0}"
-msgstr "{0}의 플러그인"
-
-#: src/gui/html/elements/loot-plugin-card.ts:339
-msgid "Verified clean by {0}"
-msgstr "{0}에서 정리 확인"
-
-#: src/gui/html/js/events.ts:218
-msgid "Identifying conflicting plugins…"
-msgstr "플러그인 충돌 식별 중…"
-
-#: src/gui/html/js/events.ts:314
-msgid "Updating and parsing masterlist…"
-msgstr "마스터 리스트 갱신 및 구문 분석 중…"
-
-#: src/gui/html/js/events.ts:337
-msgid "Masterlist updated to revision {0}."
-msgstr "마스터 리스트를 {0}버전으로 갱신되었습니다."
-
-#: src/gui/html/js/events.ts:344
-msgid "No masterlist update was necessary."
-msgstr "마스터 리스트를 갱신할 필요가 없었습니다."
-
-#: src/gui/html/js/events.ts:417
-msgid "Cyclic interaction detected"
-msgstr "순환 상호 작용 감지됨"
-
-#: src/gui/html/js/events.ts:424
-msgid "Failed to sort plugins. Details: {0}"
-msgstr "플러그인을 정렬하지 못했습니다. 세부 정보: {0}"
-
-#: src/gui/html/js/events.ts:460
+#: src/gui/qt/main_window.cpp:1438
 msgid "Sorting made no changes to the load order."
 msgstr "정렬은 순서를 변경하지 않았습니다."
 
-#. Title of a dialog box.
-#: src/gui/html/js/events.ts:504
+#: src/gui/qt/main_window.cpp:1489
+msgid ""
+"LOOT has detected that the current load order is ambiguous, which means that "
+"other applications might use a different load order than what LOOT "
+"displays.\n"
+"\n"
+"You can use the \"Fix Ambiguous Load Order\" action in the Game menu to "
+"unambiguously set the load order to what is displayed by LOOT."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1569
+msgid "Updating all masterlists…"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1591
+#, c++-format
+msgid "Your LOOT data has been backed up to: {0}"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1598
+msgid "No backup has been created as LOOT has no data to backup."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1642
+msgid "The load order has been copied to the clipboard."
+msgstr "로드 순서가 클립보드에 복사되었습니다."
+
+#: src/gui/qt/main_window.cpp:1660
+msgid "LOOT's content has been copied to the clipboard."
+msgstr "LOOT의 내용이 클립보드에 복사되었습니다."
+
+#: src/gui/qt/main_window.cpp:1672
+msgid "The load order displayed by LOOT has been set."
+msgstr ""
+
+#. translators: Title of a dialog box.
+#: src/gui/qt/main_window.cpp:1697
 msgid "Redate Plugins?"
 msgstr "플러그인 날짜를 변경할까요?"
 
-#: src/gui/html/js/events.ts:505
+#: src/gui/qt/main_window.cpp:1699
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -322,81 +575,105 @@ msgstr ""
 "시 다운로드 된다는 것입니다 (Skyrim Special Edition에는 영향을 주지 않음). 계"
 "속하시겠습니까?"
 
-#. Affirmative confirmation button text for the Redate Plugins dialog box.
-#: src/gui/html/js/events.ts:509
-msgid "Redate"
-msgstr "날짜 변경"
-
-#. Notification text.
-#: src/gui/html/js/events.ts:516
+#. translators: Notification text.
+#: src/gui/qt/main_window.cpp:1711
 msgid "Plugins were successfully redated."
 msgstr "플러그인이 성공적으로 수정되었습니다."
 
-#: src/gui/html/js/events.ts:535
+#: src/gui/qt/main_window.cpp:1723
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr ""
 "모든 플러그인에서 기존의 모든 사용자 추가 메타데이터를 삭제하시겠습니까?"
 
-#: src/gui/html/js/events.ts:538 src/gui/html/js/events.ts:1111
-msgid "Clear"
-msgstr "삭제"
-
-#: src/gui/html/js/events.ts:549
+#: src/gui/qt/main_window.cpp:1771
 msgid "All user-added metadata has been cleared."
 msgstr "모든 사용자 추가 메타데이터가 삭제되었습니다."
 
-#: src/gui/html/js/events.ts:586
-msgid "LOOT's content has been copied to the clipboard."
-msgstr "LOOT의 내용이 클립보드에 복사되었습니다."
-
-#: src/gui/html/js/events.ts:604
-msgid "The load order has been copied to the clipboard."
-msgstr "로드 순서가 클립보드에 복사되었습니다."
-
-#: src/gui/html/js/events.ts:640
+#: src/gui/qt/main_window.cpp:1784
 msgid ""
-"You have not yet applied or cancelled your {0}. Are you sure you want to quit?"
-msgstr "아직 {0}을/를 적용하거나 취소하지 않았습니다. 종료하시겠습니까?"
+"The plugin metadata editor is already open, first close the editor before "
+"attempting to edit another plugin's metadata."
+msgstr ""
 
-#: src/gui/html/js/events.ts:644 src/gui/html/js/translateStaticText.ts:372
-msgid "Quit"
-msgstr "종료"
-
-#: src/gui/html/js/events.ts:662
-msgid "sorted load order"
-msgstr "정렬된 로드 순서"
-
-#. Text that is substituted into the unapplied changes dialog text, describing the type of change that is unapplied.
-#: src/gui/html/js/events.ts:667
-msgid "metadata edits"
-msgstr "메타데이터 편집"
-
-#: src/gui/html/js/events.ts:1086
+#: src/gui/qt/main_window.cpp:1848
+#, c++-format
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\"에 대한 메타데이터가 클립보드에 복사되었습니다."
 
-#: src/gui/html/js/events.ts:1107
+#: src/gui/qt/main_window.cpp:1866
+#, c++-format
+msgid "The plugin name \"{0}\" has been copied to the clipboard."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1885
+#, c++-format
+msgid "The card content for \"{0}\" has been copied to the clipboard."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1900
+#, c++-format
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr "\"{0}\"에서 기존의 모든 사용자 추가 메타데이터를 삭제하시겠습니까?"
 
-#: src/gui/html/js/events.ts:1129
+#: src/gui/qt/main_window.cpp:1940
+#, c++-format
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "\"{0}\"에 대한 사용자 추가 메타데이터가 삭제되었습니다."
 
-#. An abbreviation of Not Applicable.
-#: src/gui/html/js/game.ts:141
-msgid "N/A"
-msgstr "N/A"
+#: src/gui/qt/main_window.cpp:2023
+#, c++-format
+msgid "Version {0} (build {1})"
+msgstr "버전 {0} (빌드 {1})"
 
-#: src/gui/html/js/handlePromiseError.ts:8
-#: src/gui/html/js/translateStaticText.ts:245
-msgid "Error"
-msgstr "오류"
+#: src/gui/qt/main_window.cpp:2029
+msgid ""
+"Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
+"Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
+"3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+msgstr ""
 
-#: src/gui/html/js/loot.ts:314
+#: src/gui/qt/main_window.cpp:2047
+msgid "About LOOT"
+msgstr "LOOT 정보"
+
+#: src/gui/qt/main_window.cpp:2363
+msgid "Identifying overlapping plugins…"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:2511
+msgid ""
+"Auto-sort has been cancelled as there is at least one error message "
+"displayed."
+msgstr "하나 이상의 오류 메시지가 표시되어 자동 정렬이 취소되었습니다."
+
+#: src/gui/qt/main_window.cpp:2574
+msgid "No masterlist update was necessary."
+msgstr "마스터 리스트를 갱신할 필요가 없었습니다."
+
+#: src/gui/qt/main_window.cpp:2594
+#, c++-format
+msgid "Masterlist updated to revision {0}."
+msgstr "마스터 리스트를 {0}버전으로 갱신되었습니다."
+
+#: src/gui/qt/main_window.cpp:2658
+msgid "No masterlist updates were necessary."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:2679
+msgid ""
+"Masterlists updated for the following games:\n"
+"\n"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:2741
+#, c++-format
+msgid "A [new release]({0}) of LOOT is available."
+msgstr "LOOT의 [새 버전]({0})을 사용할 수 있습니다."
+
+#: src/gui/qt/main_window.cpp:2758
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -404,884 +681,688 @@ msgstr ""
 "LOOT 업데이트를 확인하지 못했습니다! 자세한 내용은 LOOTDebugLog.txt (메인 메"
 "뉴를 통해 얻을 수 있음)에서 확인할 수 있습니다."
 
-#: src/gui/html/js/loot.ts:330
-msgid "A [new release]({0}) of LOOT is available."
-msgstr "LOOT의 [새 버전]({0})을 사용할 수 있습니다."
+#: src/gui/qt/plugin_card.cpp:156
+msgid "Source:"
+msgstr ""
 
-#: src/gui/html/js/loot.ts:370
-msgid ""
-"Auto-sort has been cancelled as there is at least one error message "
-"displayed."
-msgstr "하나 이상의 오류 메시지가 표시되어 자동 정렬이 취소되었습니다."
+#: src/gui/qt/plugin_card.cpp:157
+msgid "Sources:"
+msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:72
+#: src/gui/qt/plugin_card.cpp:173
+#, c++-format
+msgid "Verified clean by {0}"
+msgstr "{0}에서 정리 확인"
+
+#: src/gui/qt/plugin_card.cpp:287
 msgid "Active Plugin"
 msgstr "활성화된 플러그인"
 
-#: src/gui/html/js/translateStaticText.ts:74
-#: src/gui/html/js/translateStaticText.ts:570
-msgid "Master File"
-msgstr "마스터 파일"
+#: src/gui/qt/plugin_card.cpp:288
+msgid "Master Plugin"
+msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:76
+#: src/gui/qt/plugin_card.cpp:289
 msgid "Light Plugin"
 msgstr "경량 플러그인"
 
-#: src/gui/html/js/translateStaticText.ts:78
+#: src/gui/qt/plugin_card.cpp:290
 msgid "Empty Plugin"
 msgstr "빈 플러그인"
 
-#. Tooltip text for an icon that may be displayed on plugin cards. The icon indicates that the plugin in question loads a .bsa or .ba2 (depending on the game) archive.
-#: src/gui/html/js/translateStaticText.ts:81
+#: src/gui/qt/plugin_card.cpp:291
 msgid "Loads Archive"
 msgstr "아카이브 로드"
 
-#: src/gui/html/js/translateStaticText.ts:83
-#: src/gui/html/js/translateStaticText.ts:209
+#: src/gui/qt/plugin_card.cpp:292 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr "사용자 메타데이터를 가짐"
 
-#: src/gui/html/js/translateStaticText.ts:86
-msgid "Edit Metadata"
-msgstr "메타데이터 편집"
-
-#: src/gui/html/js/translateStaticText.ts:88
-msgid "Copy Metadata"
-msgstr "메타데이터 복사"
-
-#: src/gui/html/js/translateStaticText.ts:90
-msgid "Clear User Metadata"
-msgstr "유저 데이터 삭제"
-
-#: src/gui/html/js/translateStaticText.ts:113
-#: src/gui/html/js/translateStaticText.ts:207
-msgid "Group"
-msgstr "그루"
-
-#: src/gui/html/js/translateStaticText.ts:116
-msgid "Main"
-msgstr "메인"
-
-#: src/gui/html/js/translateStaticText.ts:118
-msgid "Load After"
-msgstr "선행 로드"
-
-#: src/gui/html/js/translateStaticText.ts:120
-msgid "Requirements"
-msgstr "요구 사항"
-
-#: src/gui/html/js/translateStaticText.ts:122
-msgid "Incompatibilities"
-msgstr "비호환성"
-
-#: src/gui/html/js/translateStaticText.ts:124
-msgid "Messages"
-msgstr "메시지"
-
-#. Title of a tab in the metadata editor.
-#: src/gui/html/js/translateStaticText.ts:127
+#: src/gui/qt/plugin_card.cpp:294
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr "배쉬 태그"
 
-#: src/gui/html/js/translateStaticText.ts:129
-msgid "Dirty Plugin Info"
-msgstr "지저분한 플러그인 정보"
+#: src/gui/qt/plugin_card.cpp:295
+msgid "Current"
+msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:131
-msgid "Clean Plugin Info"
-msgstr "정리된 플러그인 정보"
-
-#: src/gui/html/js/translateStaticText.ts:133
-msgid "Locations"
-msgstr "위치"
-
-#: src/gui/html/js/translateStaticText.ts:141
-#: src/gui/html/js/translateStaticText.ts:150
-#: src/gui/html/js/translateStaticText.ts:157
-msgid "Filename"
-msgstr "파일 이름"
-
-#: src/gui/html/js/translateStaticText.ts:144
-#: src/gui/html/js/translateStaticText.ts:152
-#: src/gui/html/js/translateStaticText.ts:159
-msgid "Display Name"
-msgstr "표시되는 이름"
-
-#: src/gui/html/js/translateStaticText.ts:147
-#: src/gui/html/js/translateStaticText.ts:154
-#: src/gui/html/js/translateStaticText.ts:161
-#: src/gui/html/js/translateStaticText.ts:168
-#: src/gui/html/js/translateStaticText.ts:177
-msgid "Condition"
-msgstr "상태"
-
-#: src/gui/html/js/translateStaticText.ts:164
-msgid "Type"
-msgstr "형식"
-
-#: src/gui/html/js/translateStaticText.ts:166
-msgid "Content"
-msgstr "내용"
-
-#: src/gui/html/js/translateStaticText.ts:170
-#: src/gui/html/js/translateStaticText.ts:519
-msgid "Language"
-msgstr "언어"
-
-#: src/gui/html/js/translateStaticText.ts:173
-msgid "Add/Remove"
-msgstr "추가/제거"
-
-#: src/gui/html/js/translateStaticText.ts:175
-msgid "Bash Tag"
-msgstr "배쉬 태그"
-
-#: src/gui/html/js/translateStaticText.ts:180
-#: src/gui/html/js/translateStaticText.ts:191
-msgid "CRC"
-msgstr "CRC"
-
-#: src/gui/html/js/translateStaticText.ts:182
-msgid "ITM Count"
-msgstr "ITM 개수"
-
-#: src/gui/html/js/translateStaticText.ts:184
-msgid "Deleted References"
-msgstr "삭제된 참조"
-
-#: src/gui/html/js/translateStaticText.ts:186
-msgid "Deleted Navmeshes"
-msgstr "삭제된 Navmesh"
-
-#: src/gui/html/js/translateStaticText.ts:188
-#: src/gui/html/js/translateStaticText.ts:193
-msgid "Cleaning Utility"
-msgstr "청소 유틸리티"
-
-#: src/gui/html/js/translateStaticText.ts:196
-msgid "URL"
-msgstr "URL"
-
-#: src/gui/html/js/translateStaticText.ts:198
-#: src/gui/html/js/translateStaticText.ts:551
-msgid "Name"
-msgstr "이름"
-
-#: src/gui/html/js/translateStaticText.ts:201
-msgid "Save Metadata"
-msgstr "메타데이터 저장"
-
-#: src/gui/html/js/translateStaticText.ts:203
-#: src/gui/html/js/translateStaticText.ts:345
-#: src/gui/html/js/translateStaticText.ts:607
-#: src/gui/html/js/translateStaticText.ts:619
-msgid "Cancel"
-msgstr "취소"
-
-#: src/gui/html/js/translateStaticText.ts:211
-msgid "Editor Is Open"
-msgstr "편집기 열림"
-
-#: src/gui/html/js/translateStaticText.ts:230
-msgid "A filename is required."
-msgstr "파일 이름이 필요합니다."
-
-#: src/gui/html/js/translateStaticText.ts:233
-#: src/gui/html/js/translateStaticText.ts:252
-#: src/gui/html/js/translateStaticText.ts:268
-#: src/gui/html/js/translateStaticText.ts:300
-#: src/gui/html/js/translateStaticText.ts:316
-#: src/gui/html/js/translateStaticText.ts:328
-msgid "Delete Row"
-msgstr "행 삭제"
-
-#: src/gui/html/js/translateStaticText.ts:241
-msgid "Note"
-msgstr "노트"
-
-#: src/gui/html/js/translateStaticText.ts:243
-msgid "Warning"
-msgstr "경고"
-
-#. The error message displayed if you add a message with no content in the metadata editor.
-#: src/gui/html/js/translateStaticText.ts:249
-msgid "A content string is required."
-msgstr "내용 문자열이 필요합니다."
-
-#: src/gui/html/js/translateStaticText.ts:260
+#: src/gui/qt/plugin_card.cpp:296 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr "추가"
 
-#: src/gui/html/js/translateStaticText.ts:262
+#: src/gui/qt/plugin_card.cpp:297 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr "제거"
 
-#: src/gui/html/js/translateStaticText.ts:265
-#: src/gui/html/js/translateStaticText.ts:547
-msgid "A name is required."
-msgstr "이름이 필요합니다."
+#: src/gui/qt/plugin_item_model.cpp:126
+msgid "Editor Is Open"
+msgstr "편집기 열림"
 
-#: src/gui/html/js/translateStaticText.ts:277
-#: src/gui/html/js/translateStaticText.ts:309
-msgid "A CRC is required."
-msgstr "CRC가 필요합니다."
+#: src/gui/qt/plugin_item_model.cpp:177
+msgid "Position"
+msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:282
-#: src/gui/html/js/translateStaticText.ts:287
-#: src/gui/html/js/translateStaticText.ts:292
-msgid "Values must be integers."
-msgstr "값은 정수여야 합니다."
+#: src/gui/qt/plugin_item_model.cpp:179
+msgid "Index"
+msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:297
-#: src/gui/html/js/translateStaticText.ts:313
-msgid "A utility name is required."
-msgstr "유틸리티 이름이 필요합니다."
+#: src/gui/qt/plugin_item_model.cpp:181
+msgid "Plugin Name"
+msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:325
-msgid "A link is required."
-msgstr "링크가 필요합니다."
-
-#: src/gui/html/js/translateStaticText.ts:337
-msgid "Jump To General Information"
-msgstr "일반 정보로 이동"
-
-#: src/gui/html/js/translateStaticText.ts:339
-msgid "Sort Plugins"
-msgstr "플러그인 정렬"
-
-#: src/gui/html/js/translateStaticText.ts:343
-msgid "Update Masterlist"
-msgstr "마스터 리스트 갱신"
-
-#: src/gui/html/js/translateStaticText.ts:344
-#: src/gui/html/js/translateStaticText.ts:604
-#: src/gui/html/js/translateStaticText.ts:617
-msgid "Apply"
-msgstr "적용"
-
-#. The tooltip for the search icon that reveals the content search input when clicked.
-#: src/gui/html/js/translateStaticText.ts:348
+#: src/gui/qt/search_dialog.cpp:109
 msgid "Search Cards"
 msgstr "카드 검색"
 
-#. Text of menu option that triggers display of the Redate Plugins dialog.
-#: src/gui/html/js/translateStaticText.ts:353
-msgid "Redate Plugins"
-msgstr "플러그인 날짜 변경"
-
-#: src/gui/html/js/translateStaticText.ts:354
-msgid "Open Debug Log Location"
-msgstr "디버그 로그 위치 열기"
-
-#: src/gui/html/js/translateStaticText.ts:358
-msgid "Open Groups Editor"
-msgstr "그룹 편집기 열기"
-
-#: src/gui/html/js/translateStaticText.ts:359
-msgid "Clear All User Metadata"
-msgstr "유저 메타데이터 모두 삭제"
-
-#: src/gui/html/js/translateStaticText.ts:363
-msgid "Copy Load Order"
-msgstr "로드 순서 복사"
-
-#: src/gui/html/js/translateStaticText.ts:365
-msgid "Copy Content"
-msgstr "내용 복사"
-
-#: src/gui/html/js/translateStaticText.ts:367
-msgid "Refresh Content"
-msgstr "내용 새로고침"
-
-#: src/gui/html/js/translateStaticText.ts:370
-msgid "About"
-msgstr "정보"
-
-#: src/gui/html/js/translateStaticText.ts:371
-#: src/gui/html/js/translateStaticText.ts:507
-msgid "Settings"
-msgstr "설정"
-
-#. The label on the content search text input.
-#: src/gui/html/js/translateStaticText.ts:382
+#: src/gui/qt/search_dialog.cpp:111
 msgid "Search cards"
 msgstr "카드 검색"
 
-#: src/gui/html/js/translateStaticText.ts:424
-msgid "Plugins"
-msgstr "플러그인"
+#: src/gui/qt/search_dialog.cpp:115
+msgid ""
+"If checked, interprets the search text as a Perl-like regular expression."
+msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:433
-msgid "Filters"
-msgstr "필터"
+#: src/gui/qt/search_dialog.cpp:118
+msgid "Find Previous"
+msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:438
-msgid "Press Enter or click outside the input to set the filter."
-msgstr "필터를 설정하기 위해 Enter를 누르거나 바깥 쪽을 클릭하십시오."
+#: src/gui/qt/search_dialog.cpp:119
+msgid "Find Next"
+msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:442
-msgid "Show only plugins with cards that contain"
-msgstr "다음을 포함하는 카드가 있는 플러그인만 표시"
-
-#: src/gui/html/js/translateStaticText.ts:445
-msgid "No text specified"
-msgstr "지정된 텍스트 없음"
-
-#: src/gui/html/js/translateStaticText.ts:448
-msgid "Hide version numbers"
-msgstr "버전 번호 숨기기"
-
-#: src/gui/html/js/translateStaticText.ts:451
-msgid "Hide CRCs"
-msgstr "CRC 숨기기"
-
-#. Text of a filter in the sidebar.
-#: src/gui/html/js/translateStaticText.ts:454
-msgid "Hide Bash Tags"
-msgstr "배쉬 태그 숨기기"
-
-#: src/gui/html/js/translateStaticText.ts:455
-msgid "Hide notes"
-msgstr "노트 숨기기"
-
-#: src/gui/html/js/translateStaticText.ts:456
-msgid "Hide all plugin messages"
-msgstr "모든 플러그인 메시지 숨기기"
-
-#: src/gui/html/js/translateStaticText.ts:459
-msgid "Hide inactive plugins"
-msgstr "비활성 플러그인 숨기기"
-
-#: src/gui/html/js/translateStaticText.ts:462
-msgid "Hide messageless plugins"
-msgstr "메시지 적은 플러그인 숨기기"
-
-#: src/gui/html/js/translateStaticText.ts:467
-msgid "Show only conflicting plugins for"
-msgstr "다음에 대해 충돌하는 플러그인만 표시"
-
-#: src/gui/html/js/translateStaticText.ts:469
-msgid "No plugin selected"
-msgstr "선택한 플러그인 없음"
-
-#: src/gui/html/js/translateStaticText.ts:474
-msgid "Hidden plugins:"
-msgstr "숨겨진 플러그인:"
-
-#: src/gui/html/js/translateStaticText.ts:476
-msgid "Hidden messages:"
-msgstr "숨겨진 메시지:"
-
-#: src/gui/html/js/translateStaticText.ts:481
-msgid "General Information"
-msgstr "일반 정보"
-
-#: src/gui/html/js/translateStaticText.ts:485
-msgid "Masterlist Revision"
-msgstr "마스터 리스트 버전"
-
-#: src/gui/html/js/translateStaticText.ts:487
-msgid "Masterlist Date"
-msgstr "마스터 리스트 일자"
-
-#. The number of warning messages present. This text appears in the General Information card.
-#: src/gui/html/js/translateStaticText.ts:490
-msgid "Warnings"
-msgstr "경고"
-
-#. The number of error messages present. This text appears in the General Information card.
-#: src/gui/html/js/translateStaticText.ts:493
-msgid "Errors"
-msgstr "오류"
-
-#: src/gui/html/js/translateStaticText.ts:495
-msgid "Total Messages"
-msgstr "전체 메시지"
-
-#: src/gui/html/js/translateStaticText.ts:497
-msgid "Active Plugins"
-msgstr "활성화된 플러그인"
-
-#: src/gui/html/js/translateStaticText.ts:499
-msgid "Dirty Plugins"
-msgstr "지저분한 플러그인"
-
-#: src/gui/html/js/translateStaticText.ts:501
-msgid "Total Plugins"
-msgstr "전체 플러그인"
-
-#: src/gui/html/js/translateStaticText.ts:509
-msgid "General"
-msgstr "일반"
-
-#: src/gui/html/js/translateStaticText.ts:513
-msgid "Default Game"
-msgstr "기본 게임"
-
-#: src/gui/html/js/translateStaticText.ts:515
-msgid "Autodetect"
-msgstr "자동 감지"
-
-#: src/gui/html/js/translateStaticText.ts:520
-msgid "Language changes will be applied after LOOT is restarted."
-msgstr "LOOT가 다시 시작 된후 언어 변경이 적용됩니다."
-
-#: src/gui/html/js/translateStaticText.ts:524
-msgid "Theme"
-msgstr "테마"
-
-#: src/gui/html/js/translateStaticText.ts:525
-msgid "Theme changes will be applied after LOOT is restarted."
-msgstr "테마 변경 사항은 LOOT가 다시 시작 된후 언어 변경이 적용됩니다."
-
-#: src/gui/html/js/translateStaticText.ts:529
-msgid "default"
-msgstr "기본"
-
-#: src/gui/html/js/translateStaticText.ts:534
-msgid "Enable debug logging"
-msgstr "디버그 로깅 사용"
-
-#: src/gui/html/js/translateStaticText.ts:535
-msgid "The output is logged to the LOOTDebugLog.txt file."
-msgstr "출력은 LOOTDebugLog.txt 파일에 기록됩니다."
-
-#: src/gui/html/js/translateStaticText.ts:540
-msgid "Update masterlist before sorting"
-msgstr "정렬하기 전에 마스터 리스트 갱신"
-
-#: src/gui/html/js/translateStaticText.ts:543
-msgid "Check for LOOT updates on startup"
-msgstr "시작시 LOOT 업데이트 확인"
-
-#: src/gui/html/js/translateStaticText.ts:556
-msgid "Base Game"
-msgstr "기반 게임"
-
-#: src/gui/html/js/translateStaticText.ts:561
-msgid "A folder is required."
-msgstr "폴더가 필요합니다."
-
-#: src/gui/html/js/translateStaticText.ts:565
-msgid "LOOT Folder"
-msgstr "LOOT 폴더"
-
-#: src/gui/html/js/translateStaticText.ts:575
-msgid "Masterlist Repository URL"
-msgstr "마스터 리스트 저장소 URL"
-
-#: src/gui/html/js/translateStaticText.ts:580
-msgid "Masterlist Repository Branch"
-msgstr "마스터 리스트 저장소 브랜치"
-
-#: src/gui/html/js/translateStaticText.ts:585
-msgid "Install Path"
-msgstr "설치 경로"
-
-#: src/gui/html/js/translateStaticText.ts:590
-msgid "Install Path Registry Keys"
-msgstr "설치 경로 레지스트리 키"
-
-#: src/gui/html/js/translateStaticText.ts:595
-msgid "Local Data Path"
-msgstr "로컬 데이터 경로"
-
-#: src/gui/html/js/translateStaticText.ts:598
-msgid "Add new game"
-msgstr "새 게임 추가"
-
-#: src/gui/html/js/translateStaticText.ts:600
-msgid "Delete game"
-msgstr "게임 제거"
-
-#: src/gui/html/js/translateStaticText.ts:614
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:204
 msgid "Groups Editor"
 msgstr "그룹 편집기"
 
-#: src/gui/html/js/translateStaticText.ts:625
-msgid "First-Time Tips"
-msgstr "처음 팁"
-
-#: src/gui/html/js/translateStaticText.ts:628
-msgid ""
-"This appears to be the first time you have run LOOT v{0}. Here are some tips "
-"to help you get started with the interface."
+#. translators: This string is an action in the Groups Editor plugin list
+#. context menu. It is currently the only entry.
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:208
+msgid "&Copy Plugin Names"
 msgstr ""
-"LOOT v{0}를 실행하신 것은 이번이 처음이신 것 같습니다. 다음은 인터페이스를 시"
-"작하는데 도움이되는 몇가지 팁입니다."
 
-#. The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
-#: src/gui/html/js/translateStaticText.ts:635
-msgid "Click %(menu_icon)s buttons to open menus."
-msgstr "%(menu_icon)s 버튼을 클릭하여 메뉴를 엽니다."
-
-#: src/gui/html/js/translateStaticText.ts:639
-msgid ""
-"As well as messages, LOOT displays plugin <span class=\"version\">version "
-"numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions for "
-"<span class=\"tag add\">addition</span> and <span class=\"tag remove"
-"\">removal</span>."
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:210
+msgid "Add plugin to group"
 msgstr ""
-"LOOT는 메시지뿐만 아니라 <span class=\"tag add\">추가</span> 및 <span class="
-"\"tag remove\">제거</span>를 위한 플러그인 <span class=\"version\">버전 번호"
-"</span>, <span class=\"crc\">CRC</span> 및 Bash 태그 제안을 표시합니다."
 
-#: src/gui/html/js/translateStaticText.ts:642
-msgid ""
-"CRCs are only displayed after plugins have been loaded, either by conflict "
-"filtering, or by sorting."
-msgstr "CRC는 플러그인이 로드된후 충돌 필터링이나 정렬 중에서 표시됩니다."
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:212
+msgid "Group name"
+msgstr "그룹 이름"
 
-#: src/gui/html/js/translateStaticText.ts:645
-msgid ""
-"Double-click a plugin in the sidebar to quickly open it in the metadata "
-"editor."
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:213
+msgid "Add a new group"
+msgstr "새 그룹 추가"
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:214
+msgid "Rename current group"
 msgstr ""
-"사이드바에서 플러그인을 두 번 클릭하여 빠르게 메타데이터 편집기를 엽니다."
 
-#: src/gui/html/js/translateStaticText.ts:648
-msgid ""
-"Plugins can be drag and dropped from the sidebar into the metadata editor's "
-"\"load after\", \"requirements\" and \"incompatibility\" tables."
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:215
+msgid "Auto arrange groups"
 msgstr ""
-"플러그인은 사이드바에서 메타데이터 편집기로 '선행 로드',  요구 사항', '비호환"
-"성'테이블을 끌어다 놓을 수 있습니다."
 
-#: src/gui/html/js/translateStaticText.ts:651
-msgid ""
-"Some features are disabled while the metadata editor is open, or while there "
-"is a sorted load order that has not been applied or discarded."
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:232
+msgid "You have unsaved changes. Are you sure you want to discard them?"
 msgstr ""
-"메타 데이터 편집기가 열려있거나 적용 또는 삭제되지 않은 정렬된 로드 순서가 있"
-"는 동안에는 일부 기능이 비활성화됩니다."
 
-#: src/gui/html/js/translateStaticText.ts:654
-msgid ""
-"Many interface elements have tooltips. If you don't know what something is, "
-"try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
-"can be accessed through the main menu."
-msgstr ""
-"대부분의 인터페이스 요소는 툴팁이 있습니다. 무엇인지 알 수 없을 때 에는 마우"
-"스를 올려 찾을 수 있습니다. 그래도 알 수 없다면 메인 메뉴를 통해 LOOT의 문서"
-"에 접근할 수 있습니다."
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:303
+msgid "No plugins are in this group."
+msgstr "이 그룹에는 플러그인이 없습니다."
 
-#: src/gui/html/js/translateStaticText.ts:658
-#: src/gui/html/js/translateStaticText.ts:680
-msgid ""
-"LOOT is free, but if you want to show your appreciation with some money, "
-"donations may be made to WrinklyNinja (LOOT's creator and main developer) "
-"using {0}."
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:423
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:559
+#, c++-format
+msgid "Plugins in {0}"
+msgstr "{0}의 플러그인"
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:516
+msgid "Group already exists!"
+msgstr "그룹이 이미 존재함!"
+
+#: src/gui/qt/groups_editor/node.cpp:247
+msgid "Only user groups can be removed!"
 msgstr ""
-"LOOT는 무료입니다. 하지만 약간의 기부금으로 감사의 마음을 표현하고 싶다면 {0}"
-"를 사용하여 WrinklyNinja (LOOT의 제작자 및 메인 개발자)에게 기부할 수 있습니"
+
+#: src/gui/qt/groups_editor/node.cpp:252
+msgid "A group that is not empty cannot be removed!"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/group_tab.cpp:60
+#, c++-format
+msgid "{0} (Group does not exist)"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/group_tab.cpp:103
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
+msgid "Group"
+msgstr "그루"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:188
+msgid "Load After"
+msgstr "선행 로드"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:189
+msgid "Requirements"
+msgstr "요구 사항"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:190
+msgid "Incompatibilities"
+msgstr "비호환성"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:191
+msgid "Messages"
+msgstr "메시지"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:193
+msgid "Dirty Plugin Info"
+msgstr "지저분한 플러그인 정보"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:194
+msgid "Clean Plugin Info"
+msgstr "정리된 플러그인 정보"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
+msgid "Locations"
+msgstr "위치"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:247
+msgid "This tab contains user metadata."
+msgstr ""
+
+#: src/gui/qt/plugin_editor/table_tabs.cpp:277
+msgid "Add new row"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/table_tabs.cpp:278
+msgid "Delete row"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/table_tabs.cpp:394
+#: src/gui/qt/plugin_editor/table_tabs.cpp:431
+msgid "Note"
+msgstr "노트"
+
+#: src/gui/qt/plugin_editor/table_tabs.cpp:395
+#: src/gui/qt/plugin_editor/table_tabs.cpp:432
+msgid "Warning"
+msgstr "경고"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:82
+msgid "CRC"
+msgstr "CRC"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
+msgid "ITM Count"
+msgstr "ITM 개수"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
+msgid "Deleted References"
+msgstr "삭제된 참조"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
+msgid "Deleted Navmeshes"
+msgstr "삭제된 Navmesh"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
+msgid "Cleaning Utility"
+msgstr "청소 유틸리티"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
+msgid "Detail"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:73
+msgid "Filename"
+msgstr "파일 이름"
+
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
+msgid "Display Name"
+msgstr "표시되는 이름"
+
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
+msgid "Condition"
+msgstr "상태"
+
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
+msgid "URL"
+msgstr "URL"
+
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
+#: src/gui/qt/settings/game_tab.cpp:149
+#: src/gui/qt/settings/new_game_dialog.cpp:123
+msgid "Name"
+msgstr "이름"
+
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:69
+#: src/gui/qt/settings/general_tab.cpp:161
+msgid "Language"
+msgstr "언어"
+
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:71
+msgid "Text"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:94
+msgid "Type"
+msgstr "형식"
+
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:96
+msgid "Content"
+msgstr "내용"
+
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:63
+msgid "Add/Remove"
+msgstr "추가/제거"
+
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:65
+msgid "Bash Tag"
+msgstr "배쉬 태그"
+
+#: src/gui/qt/settings/game_tab.cpp:57
+msgid "Browse…"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:150
+#: src/gui/qt/settings/new_game_dialog.cpp:124
+msgid "Base Game"
+msgstr "기반 게임"
+
+#: src/gui/qt/settings/game_tab.cpp:151
+#: src/gui/qt/settings/new_game_dialog.cpp:125
+msgid "LOOT Folder"
+msgstr "LOOT 폴더"
+
+#: src/gui/qt/settings/game_tab.cpp:152
+msgid "Main Master Plugin"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:153
+msgid "Minimum Header Version"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:154
+msgid "Masterlist Source"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:155
+msgid "Install Path"
+msgstr "설치 경로"
+
+#: src/gui/qt/settings/game_tab.cpp:156
+msgid "Local AppData Path"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:158
+msgid "Delete game"
+msgstr "게임 제거"
+
+#: src/gui/qt/settings/general_tab.cpp:160
+msgid "Default Game"
+msgstr "기본 게임"
+
+#: src/gui/qt/settings/general_tab.cpp:162
+msgid "Theme"
+msgstr "테마"
+
+#: src/gui/qt/settings/general_tab.cpp:163
+msgid "Update masterlist before sorting"
+msgstr "정렬하기 전에 마스터 리스트 갱신"
+
+#: src/gui/qt/settings/general_tab.cpp:164
+msgid "Check for LOOT updates on startup"
+msgstr "시작시 LOOT 업데이트 확인"
+
+#: src/gui/qt/settings/general_tab.cpp:165
+msgid "Enable debug logging"
+msgstr "디버그 로깅 사용"
+
+#: src/gui/qt/settings/general_tab.cpp:166
+msgid "Masterlist prelude source"
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:168
+msgid "Display dialog when sorting makes no changes"
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:170
+msgid "Warn if the game's paths are in a case-sensitive filesystem"
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:173
+msgid "The output is logged to the LOOTDebugLog.txt file."
+msgstr "출력은 LOOTDebugLog.txt 파일에 기록됩니다."
+
+#: src/gui/qt/settings/general_tab.cpp:175
+msgid "A prelude source is required."
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:178
+msgid "Language changes will be applied after LOOT is restarted."
+msgstr "LOOT가 다시 시작 된후 언어 변경이 적용됩니다."
+
+#: src/gui/qt/settings/general_tab.cpp:180
+msgid "Autodetect"
+msgstr "자동 감지"
+
+#: src/gui/qt/settings/new_game_dialog.cpp:121
+msgid "Add new game"
+msgstr "새 게임 추가"
+
+#: src/gui/qt/settings/new_game_dialog.cpp:127
+msgid "A name is required."
+msgstr "이름이 필요합니다."
+
+#: src/gui/qt/settings/new_game_dialog.cpp:128
+msgid "A folder is required."
+msgstr "폴더가 필요합니다."
+
+#: src/gui/qt/settings/new_game_dialog.cpp:148
+msgid "This is not a valid Windows folder name."
+msgstr ""
+
+#: src/gui/qt/settings/new_game_dialog.cpp:157
+msgid "A game with this folder already exists."
+msgstr ""
+
+#: src/gui/qt/settings/settings_dialog.cpp:110
+msgid "Settings"
+msgstr "설정"
+
+#: src/gui/qt/settings/settings_dialog.cpp:112
+msgid "General"
+msgstr "일반"
+
+#: src/gui/qt/settings/settings_dialog.cpp:114
+msgid "Add new game…"
+msgstr ""
+
+#: src/gui/query/types/apply_sort_query.h:76
+msgid ""
+"Oh no, something went wrong! This is usually because \"{0}\" is set to be "
+"read-only. If it is, unset it and try again. If it isn't, you can check your "
+"LOOTDebugLog.txt (you can get to it through the main menu) for more "
+"information."
+msgstr ""
+"이런, 문제가 발생했습니다! \"{0}\"가 읽기 전용으로 설정되어 있기 때문입니다. "
+"만약 그렇다면 해당 설정을 해제한 후 다시 시도하십시오. 그렇지 않다면 "
+"LOOTDebugLog.txt (메인 메뉴를 통해 얻을 수 있음)에서 자세한 정보를 확인할 수 "
+"있습니다."
+
+#: src/gui/query/types/get_game_data_query.h:47
+msgid "Parsing, merging and evaluating metadata…"
+msgstr "플러그인 메타데이터를 파싱, 병합 및 평가 중…"
+
+#: src/gui/query/types/sort_plugins_query.h:54
+msgid "Sorting load order…"
+msgstr "로드 순서 정렬 중…"
+
+#: src/gui/state/loot_settings.cpp:670
+msgid ""
+"Your masterlist prelude repository URL and branch settings could not be "
+"migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
+"File menu) for more information."
+msgstr ""
+
+#: src/gui/state/loot_settings.cpp:693
+msgid ""
+"Your masterlist repository URL and branch settings could not be migrated! "
+"You can check your LOOTDebugLog.txt (you can get to it through the File "
+"menu) for more information."
+msgstr ""
+
+#: src/gui/state/loot_state.cpp:174
+#, c++-format
+msgid "Error: Game-specific settings could not be initialised. {0}"
+msgstr "오류: 게임별 설정을 초기화 할 수 없습니다. {0}"
+
+#: src/gui/state/loot_state.cpp:197
+#, c++-format
+msgid "Error: Could not create LOOT data directory. {0}"
+msgstr ""
+
+#. translators: This error is displayed when LOOT is unable to
+#. load its own settings file. The placeholder is for additional
+#. detail about what went wrong.
+#: src/gui/state/loot_state.cpp:211 src/gui/state/loot_state.cpp:265
+#, c++-format
+msgid "Error: Settings parsing failed. {0}"
+msgstr "오류: 설정의 구문 분석을 하지 못했습니다. {0}"
+
+#. translators: --auto-sort and --game are command-line arguments and
+#. shouldn't be translated.
+#: src/gui/state/loot_state.cpp:220
+msgid "Error: --auto-sort was passed but no --game parameter was provided."
+msgstr ""
+"오류: --auto-sort가 전달되었지만 --game 매개 변수가 제공되지 않았습니다."
+
+#: src/gui/state/loot_state.cpp:306
+#, c++-format
+msgid "Error: Could not create LOOT prelude directory. {0}"
+msgstr ""
+
+#. translators: --game and --game-path are command-line arguments and
+#. shouldn't be translated.
+#: src/gui/state/loot_state.cpp:323
+msgid "Error: --game-path was passed but no --game parameter was provided."
+msgstr ""
+
+#: src/gui/state/loot_state.cpp:336
+#, c++-format
+msgid "Error: failed to override game path, the game {0} was not recognised."
+msgstr ""
+
+#: src/gui/state/loot_state.cpp:370
+msgid ""
+"No supported games were detected. Try running the launcher(s) for the "
+"supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
+"GOG Galaxy), then restarting LOOT."
+msgstr ""
+
+#: src/gui/state/loot_state.cpp:389
+#, c++-format
+msgid ""
+"The initial game with folder name \"{0}\" could not be set. If it is "
+"installed, try running its launcher then restarting LOOT."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:414 src/gui/state/game/game.cpp:458
+#, c++-format
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr "이 플러그인은 \"{0}\"가 설치되어야 하지만 찾을 수 없습니다."
+
+#: src/gui/state/game/game.cpp:428
+#, c++-format
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr "이 플러그인은 \"{0}\"가 활성화되어야 하지만 비활성화되어있습니다."
+
+#: src/gui/state/game/game.cpp:500
+#, c++-format
+msgid "This plugin is incompatible with \"{0}\", but both are present."
+msgstr "이 플러그인은 \"{0}\"와 호환되지 않지만 둘 다 존재합니다."
+
+#: src/gui/state/game/game.cpp:547
+#, c++-format
+msgid ""
+"This plugin is a light master and requires the non-master plugin \"{0}\". "
+"This can cause issues in-game, and sorting will fail while this plugin is "
+"installed."
+msgstr ""
+"이 플러그인은 경량 마스터이며 비 마스터 플러그인 \"{0}\"가 필요합니다. 이로 "
+"인해 게임 내에서 문제가 발생하고 플러그인이 설치된 동안 정렬이 실패할 수 있습"
+"니다."
+
+#: src/gui/state/game/game.cpp:569
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for "
+"an ESL plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
+msgstr ""
+"이 플러그인에는 ESL 플러그인의 유효한 범위를 벗어난 FormID가 있는 레코드가 포"
+"함되어 있습니다. 이 플러그인을 사용하면 게임 저장에 돌이킬 수 없는 손상이 발"
+"생합니다."
+
+#: src/gui/state/game/game.cpp:582
+msgid "plugin"
+msgstr ""
+
+#. translators: master as in a plugin that is
+#. loaded as if its master flag is set.
+#: src/gui/state/game/game.cpp:585
+msgid "master"
+msgstr ""
+
+#: src/gui/state/game/game.cpp:591
+#, c++-format
+msgid ""
+"\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
+"correctly installed {2} and all its requirements."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:604
+#, c++-format
+msgid ""
+"\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
+"will not load it."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:614
+#, c++-format
+msgid ""
+"\"{0}\" is flagged as a light {1}, but the game does not support such "
+"plugins, and will load it as a normal {1}."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:634
+msgid ""
+"This plugin is an overlay plugin but adds new records. Using this plugin may "
+"cause irreversible damage to your game saves."
+msgstr ""
+
+#. translators: A header is the part of a file that stores data
+#. like file name and version.
+#: src/gui/state/game/game.cpp:655
+#, c++-format
+msgid ""
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
+msgstr ""
+"이 플러그인의 헤더 버전은 {0}이며,  이는 게임에서 지원되는 최소 헤더 버전인 "
+"{1}보다 낮습니다."
+
+#: src/gui/state/game/game.cpp:670
+msgid "This plugin has itself as a master."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:688
+#, c++-format
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
+msgstr "이 플러그인은 존재하지 않는 \"{0}\" 그룹에 속해 있습니다."
+
+#: src/gui/state/game/game.cpp:714
+#, c++-format
+msgid ""
+"This plugin has a BashTags file that will override the suggestions made by "
+"LOOT for the following Bash Tags: {0}."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:835 src/gui/state/game/game.cpp:934
+msgid ""
+"Failed to load the current load order, information displayed may be "
+"incorrect."
+msgstr ""
+"현재 로드 순서를 로드하지 못했습니다. 표시된 정보가 올바르지 않을 수 있습니"
 "다."
 
-#: src/gui/html/js/translateStaticText.ts:664
-msgid "OK"
-msgstr "확인"
+#: src/gui/state/game/game.cpp:964
+#, c++-format
+msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
+msgstr "\"{0}\"와 \"{1}\"플러그인 사이의 순환 참조가 감지됨 : {2}"
 
-#: src/gui/html/js/translateStaticText.ts:669
-msgid "About LOOT"
-msgstr "LOOT 정보"
+#: src/gui/state/game/game.cpp:978
+#, c++-format
+msgid "The group \"{0}\" does not exist."
+msgstr "\"{0}\" 그룹이 존재하지 않습니다."
 
-#: src/gui/html/js/translateStaticText.ts:671
-msgid "Version {0} (build {1})"
-msgstr "버전 {0} (빌드 {1})"
+#: src/gui/state/game/game.cpp:1017
+msgid "You have not sorted your load order this session."
+msgstr "이 세션에서 로드 순서를 정렬하지 않았습니다."
 
-#: src/gui/html/js/translateStaticText.ts:676
+#: src/gui/state/game/game.cpp:1065
+#, c++-format
 msgid ""
-"Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
-"Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
-"Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+"You have {0} active normal plugins but the game only supports up to {1}."
 msgstr ""
-"Morrowind, Oblivion, Nehrim, Skyrim, Enderal, Skyrim Special Edition, "
-"Enderal Special Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 "
-"및 Fallout 4 VR에 대한 로드 순서 최적화."
 
-#~ msgid "Do not clean"
-#~ msgstr "청소 금지"
-
-#~ msgid "Light Master File"
-#~ msgstr "경량 마스터 파일"
-
-#~ msgid "Enable Edits"
-#~ msgstr "편집 사용"
-
-#~ msgid "Invalid game ID supplied."
-#~ msgstr "잘못된 게임 ID가 제공되었습니다."
-
-#~ msgid "Game path could not be detected."
-#~ msgstr "게임 경로를 감지 할 수 없습니다."
-
-#~ msgid ""
-#~ "libloadorder failed to create a game handle. Details could not be fetched."
-#~ msgstr ""
-#~ "libloadorder가 게임 핸들을 만들지 못했습니다. 자세한 사항은 가져올 수 없습"
-#~ "니다."
-
-#~ msgid "libloadorder failed to create a game handle. Details:"
-#~ msgstr "libloadorder가 게임 핸들을 만들지 못했습니다. 자세한 사항:"
-
-#~ msgid ""
-#~ "libloadorder failed to initialise game master file support. Details could "
-#~ "not be fetched."
-#~ msgstr ""
-#~ "libloadorder가 게임 마스터 파일 지원을 초기화하지 못했습니다. 자세한 사항"
-#~ "은 가져올 수 없습니다."
-
-#~ msgid "libloadorder failed to initialise game master file support. Details:"
-#~ msgstr ""
-#~ "libloadorder가 게임 마스터 파일 지원을 초기화하지 못했습니다. 자세한 사항:"
-
-#~ msgid ""
-#~ "libloadorder failed to get the active plugins list. Details could not be "
-#~ "fetched."
-#~ msgstr ""
-#~ "libloadorder가 활성 플러그인 목록을 가져오지 못했습니다. 자세한 사항은 가"
-#~ "져올 수 없습니다."
-
-#~ msgid "libloadorder failed to get the active plugins list. Details:"
-#~ msgstr ""
-#~ "libloadorder가 활성 플러그인 목록을 가져오지 못했습니다. 자세한 사항:"
-
-#~ msgid ""
-#~ "libloadorder failed to get the load order. Details could not be fetched."
-#~ msgstr ""
-#~ "libloadorder가 로드 순서를 가져오지 못했습니다. 자세한 사항은 가져올 수 없"
-#~ "습니다."
-
-#~ msgid "libloadorder failed to get the load order. Details:"
-#~ msgstr "libloadorder가 로드 순서를 가져오지 못했습니다. 자세한 사항:"
-
-#~ msgid ""
-#~ "libloadorder failed to set the load order. Details could not be fetched."
-#~ msgstr ""
-#~ "libloadorder가 로드 순서를 설정하지 못했습니다. 자세한 사항은 가져올 수 없"
-#~ "습니다."
-
-#~ msgid "libloadorder failed to set the load order. Details:"
-#~ msgstr "libloadorder가 로드 순서를 설정하지 못했습니다. 자세한 사항:"
-
-#~ msgid "An exception occurred while loading this plugin. Details: "
-#~ msgstr "이 플러그인을 로드하는 동안 예외가 발생했습니다. 자세한 사항: "
-
-#~ msgid "An exception occurred while loading this plugin. Details:"
-#~ msgstr "이 플러그인을 로드하는 동안 예외가 발생했습니다. 자세한 사항:"
-
-#~ msgid "Could not create LOOT folder for game. Details:"
-#~ msgstr "게임에 대한 LOOT폴더를 생성할 수 없습니다. 자세한 사항:"
-
-#~ msgid "Building plugin graph…"
-#~ msgstr "플러그인 그래프 빌드 중…"
-
-#~ msgid "Adding edges to plugin graph and performing topological sort…"
-#~ msgstr "플러그인 그래프에 엣지를 추가하고 위상 정렬을 수행 중…"
-
-#~ msgid "Git operation failed. Error: {0}"
-#~ msgstr "Git 작업이 실패했습니다. 오류: {0}"
-
-#~ msgid "Object memory already allocated!"
-#~ msgstr "개체 메모리는 이미 할당되어있습니다!"
-
-#~ msgid "Tree memory already allocated!"
-#~ msgstr "계층 트리 메모리는 이미 할당되어있습니다!"
-
-#~ msgid "Diff memory already allocated!"
-#~ msgstr "차분 메모리는 이미 할당되어있습니다!"
-
-#~ msgid "Repository handle not open!"
-#~ msgstr "저장소 핸들을 열 수 없습니다!"
-
-#~ msgid ""
-#~ "An error occurred while trying to read the local masterlist's version. If "
-#~ "this error happens again, try deleting the \".git\" folder in {0}."
-#~ msgstr ""
-#~ "로컬 마스터 리스트의 버전을 읽는 동안 오류가 발생했습니다. 이 오류가 다시 "
-#~ "발생한다면 {0}에서 \".git\" 폴더를 삭제하십시오."
-
-#~ msgid ""
-#~ "An error occurred while trying to clone the remote masterlist repository."
-#~ msgstr "원격 마스터 리스트 저장소를 복재하는 동안 오류가 발생했습니다."
-
-#~ msgid ""
-#~ "An error occurred while trying to access the local masterlist repository. "
-#~ "If this error happens again, try deleting the \".git\" folder in {0}."
-#~ msgstr ""
-#~ "로컬 마스터 리스트 저장소에 저장하는 동안 오류가 발생했습니다. 이 오류가 "
-#~ "다시 발생한다면 {0}에서 \".git\" 폴더를 삭제하십시오."
-
-#~ msgid ""
-#~ "An error occurred while trying to update the masterlist. This could be "
-#~ "due to a server-side error. Try again in a few minutes."
-#~ msgstr ""
-#~ "마스터 리스트를 갱신하는 동안 오류가 발생했습니다. 이것은 서버 측의 오류"
-#~ "로 인한 것일 수도 있습니다. 잠시 후에 다시 시도하십시오."
-
-#~ msgid ""
-#~ "An error occurred while trying to read information on the updated "
-#~ "masterlist. If this error happens again, try deleting the \".git\" folder "
-#~ "in {0}."
-#~ msgstr ""
-#~ "갱신된 마스터 리스트에 대한 정보를 읽는 동안 오류가 발생했습니다. 이 오류"
-#~ "가 다시 발생한다면 {0}에서 \".git\" 폴더를 삭제하십시오."
-
-#~ msgid "Masterlist revision"
-#~ msgstr "마스터 리스트 버전"
-
-#~ msgid "Rolled back to the previous revision."
-#~ msgstr "이전 버전으로 되돌립니다."
-
-#~ msgid "Unable to open \"{0}\" for CRC calculation."
-#~ msgstr "CRC 연산을 위해 \"{0}\"을 열 수 없습니다."
-
-#~ msgid "Failed to parse condition \"{0}\": {1}"
-#~ msgstr "\"{0}\"조건을 구문 분석하지 못했습니다: {1}"
-
-#~ msgid "Failed to parse condition \"{0}\"."
-#~ msgstr "\"{0}\"조건을 구문 분석하지 못했습니다."
-
-#~ msgid "Cannot read \"{0}\". Details: {1}"
-#~ msgstr "\"{0}\"을 읽을 수 없습니다. 자세한 사항: {1}"
-
-#~ msgid ""
-#~ "Contains {0} ITM records, {1} deleted references and {2} deleted "
-#~ "navmeshes. Clean with {3}."
-#~ msgstr ""
-#~ "{0}개의 ITM 레코드, {1}개의 삭제된 참조와 {2}개의 삭제된 Navmesh가 포함되"
-#~ "어있습니다. {3}를 사용하여 청소하십시오."
-
-#~ msgid "Clean with {0}."
-#~ msgstr "{0}를 사용하여 청소하십시오."
-
-#~ msgid ""
-#~ "Contains {0} deleted references and {1} deleted navmeshes. Clean with {2}."
-#~ msgstr ""
-#~ "{0}개의 삭제된 참조와 {1}개의 삭제된 Navmesh가 포함되어있습니다. {2}를 사"
-#~ "용하여 청소하십시오."
-
-#~ msgid "Contains {0} deleted navmeshes. Clean with {1}."
-#~ msgstr ""
-#~ "{0}개의 삭제된 navmesh가 포함되어있습니다. {1}를 사용하여 청소하십시오."
-
-#~ msgid "Contains {0} deleted references. Clean with {1}."
-#~ msgstr ""
-#~ "{0}개의 삭제된 참조가 포함되어있습니다. {1}를 사용하여 청소하십시오."
-
-#~ msgid "Contains {0} ITM records and {1} deleted navmeshes. Clean with {2}."
-#~ msgstr ""
-#~ "{0}개의 ITM 레코드와 {1}개의 삭제된 Navmesh가 포함되어있습니다. {2}를 사용"
-#~ "하여 청소하십시오."
-
-#~ msgid "Contains {0} ITM records. Clean with {1}."
-#~ msgstr "{0}개의 ITM 레코드가 포함되어있습니다. {1}를 사용하여 청소하십시오."
-
-#~ msgid "Contains {0} ITM records and {1} deleted references. Clean with {2}."
-#~ msgstr ""
-#~ "{0}개의 ITM 레코드와 {1}개의 삭제된 참조가 포함되어있습니다. {2}를 사용하"
-#~ "여 청소하십시오."
-
-#~ msgid "Error: Games' settings parsing failed. {0}"
-#~ msgstr "오류: 게임 설정의 구문 분석을 하지 못했습니다. {0}"
-
-#~ msgid "None of the supported games were detected."
-#~ msgstr "지원되는 게임 중 어느 것도 감지되지 않았습니다."
-
-#~ msgid "Failed to change game. Details: {0}"
-#~ msgstr "게임을 변경하지 못했습니다. 자세한 사항: {0}"
-
-#~ msgid "Failed to copy plugin metadata. Details: {0}"
-#~ msgstr "플러그인 메타데이터를 복사하지 못했습니다. 자세한 사항: {0}"
-
-#~ msgid "Loading plugin contents…"
-#~ msgstr "플러그인 내용 로드 중…"
-
-#~ msgid "Shell execute failed."
-#~ msgstr "명령을 실행하지 못했습니다."
-
-#~ msgid "Loading plugin headers…"
-#~ msgstr "플러그인 헤더 로드 중…"
-
-#~ msgid "Parsing masterlist…"
-#~ msgstr "마스터 리스트 구문 분석 중…"
-
-#~ msgid "An error occurred while parsing the masterlist: {0}"
-#~ msgstr "마스터 리스트를 구문 분석하는 동안 오류가 발생했습니다: {0}"
-
-#~ msgid "Parsing userlist…"
-#~ msgstr "유저리스트 구문 분석 중…"
-
-#~ msgid "An error occurred while parsing the userlist: {0}"
-#~ msgstr "유저리스트를 구문 분석하는 동안 오류가 발생했습니다: {0}"
-
-#~ msgid "Loading general messages…"
-#~ msgstr "일반 메시지 로드 중…"
-
-#~ msgid ""
-#~ "A global message contains a condition that could not be evaluated. "
-#~ "Details: {0}"
-#~ msgstr ""
-#~ "전역 메세지에는 평가될 수 없는 조건이 포함되어 있습니다. 자세한 사항: {0}"
-
-#~ msgid "Failed to get game data. Details: {0}"
-#~ msgstr "게임 데이터를 가져오지 못했습니다. 자세한 사항: {0}"
-
-#~ msgid "Regenerating displayed content…"
-#~ msgstr "표시되는 내용을 재생성 중…"
-
-#~ msgid "Failed to update the masterlist. Details: {0}"
-#~ msgstr "마스터 리스트를 갱신하지 못했습니다. 자세한 사항: {0}"
-
-#~ msgid "Invalid file path:"
-#~ msgstr "잘못된 파일 경로:"
-
-#~ msgid "Invalid folder path:"
-#~ msgstr "잘못된 폴더 경로:"
-
-#~ msgid "Invalid regex string:"
-#~ msgstr "잘못된 정규식 문자열:"
-
-#~ msgid "Expected \"{0}\" at \"{1}\"."
-#~ msgstr "\"{0}\"에서 \"{1}\"가 예상됩니다."
-
-#~ msgid "Show Only Conflicts"
-#~ msgstr "충돌만 보기"
-
-#~ msgid ""
-#~ "Global priorities are compared against all other plugins. Normal "
-#~ "priorities are compared against only conflicting plugins."
-#~ msgstr ""
-#~ "전역 우선 순위는 다른 모든 플러그인에 대해 비교됩니다. 일반 우선 순위는 충"
-#~ "돌하는 플러그인과 비교됩니다."
-
-#~ msgid "Global Priority"
-#~ msgstr "전역 우선 순위"
-
-#~ msgid "Priority Value"
-#~ msgstr "우선 순위 값"
-
-#~ msgid "Dirty Info"
-#~ msgstr "지저분한 정보"
-
-#~ msgid "Version"
-#~ msgstr "버전"
-
-#~ msgid "Filter content…"
-#~ msgstr "필터링할 콘텐츠…"
-
-#~ msgid "Checking if plugins have been loaded…"
-#~ msgstr "플러그인이 로드되었는지 확인 중…"
-
-#~ msgid "Loading game data…"
-#~ msgstr "게임 데이터 로드 중…"
-
-#~ msgid "Updating masterlist…"
-#~ msgstr "마스터 리스트 갱신 중…"
-
-#~ msgid "Sorting plugins…"
-#~ msgstr "플러그인 정렬 중…"
-
-#~ msgid "unknown"
-#~ msgstr "알 수 없음"
-
-#~ msgid "Refreshing data…"
-#~ msgstr "데이터 새로 고침 중…"
+#: src/gui/state/game/game.cpp:1073
+#, c++-format
+msgid "You have {0} active plugins but the game only supports up to {1}."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:1095
+msgid ""
+"Do not launch Morrowind without the use of MWSE or it will cause severe "
+"damage to your game."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:1109
+#, c++-format
+msgid "You have {0} active light plugins but the game only supports up to {1}."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:1128
+msgid ""
+"You have a normal plugin and at least one light plugin sharing the FE load "
+"order index. Deactivate a normal plugin or all your light plugins to avoid "
+"potential issues."
+msgstr ""
+"일반 플러그인과 FE로드 순서 색인을 공유하는 하나 이상의 경량 마스터가 있습니"
+"다. 잠재적인 문제를 방지하려면 일반 플러그인 또는 모든 경량 마스터를 비활성화"
+"하십시오."
+
+#. translators: The placeholder is for the current game's name.
+#.
+#: src/gui/state/game/game.cpp:1141
+#, c++-format
+msgid ""
+"{0} is installed in a case-sensitive location. This may cause issues as the "
+"game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
+"which is the default on Windows."
+msgstr ""
+
+#. translators: The placeholder is for the current game's
+#. name.
+#: src/gui/state/game/game.cpp:1172
+#, c++-format
+msgid ""
+"{0}'s local application data is stored in a case-sensitive location. This "
+"may cause issues as the game, mods and LOOT may assume that filesystem paths "
+"are not case-sensitive, which is the default on Windows."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:1241
+#, c++-format
+msgid ""
+"An error occurred while parsing the metadata list(s): {0}.\n"
+"\n"
+"Try updating your masterlist to resolve the error. If the error is with your "
+"user metadata, this probably happened because an update to LOOT changed its "
+"metadata syntax support. Your user metadata will have to be updated "
+"manually.\n"
+"\n"
+"To do so, use 'Open LOOT Data Folder' in LOOT's File menu to open its data "
+"folder, then open your 'userlist.yaml' file in the relevant game folder. You "
+"can then edit the metadata it contains with reference to the documentation, "
+"which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website]({1})."
+msgstr ""
+
+#: src/gui/state/game/helpers.cpp:191
+#, c++-format
+msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
+msgstr "LOOT에서 {0}가 유효하지 않음을 감지하여 현재 무시하고 있습니다."
