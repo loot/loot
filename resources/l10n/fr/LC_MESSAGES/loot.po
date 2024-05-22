@@ -1109,7 +1109,7 @@ msgstr "Général"
 
 #: src/gui/qt/settings/settings_dialog.cpp:114
 msgid "Add new game…"
-msgstr "Ajouter un nouveau jeu.."
+msgstr "Ajouter un nouveau jeu…"
 
 #: src/gui/query/types/apply_sort_query.h:76
 msgid ""
@@ -1243,7 +1243,7 @@ msgid ""
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Ce plugin maître est un plugin maître et requiert le  plugin non-maître "
+"Ce plugin maître est un plugin maître et requiert le plugin non-maître "
 "\"{0}\". Cela peut causer des problèmes dans le jeu, et le tri ne pourra pas "
 "être effectué tant que le plugin est installé."
 

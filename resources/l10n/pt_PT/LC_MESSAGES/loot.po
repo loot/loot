@@ -21,7 +21,7 @@ msgstr ""
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 #, c++-format
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
-msgstr "\"{0}\" contém uma condição que não pôde ser avaliada.  Detalhes: {1}"
+msgstr "\"{0}\" contém uma condição que não pôde ser avaliada. Detalhes: {1}"
 
 #: src/gui/plugin_item.cpp:191
 msgid "Location"
@@ -499,7 +499,7 @@ msgstr "a sua ordem de carregamento ordenada"
 msgid ""
 "You have not yet applied or cancelled your {0}. Are you sure you want to "
 "quit?"
-msgstr "Ainda não aplicou ou cancelou  {0}. Tem a certeza que deseja sair?"
+msgstr "Ainda não aplicou ou cancelou {0}. Tem a certeza que deseja sair?"
 
 #: src/gui/qt/main_window.cpp:1357
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:370

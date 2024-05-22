@@ -522,7 +522,7 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1438
 msgid "Sorting made no changes to the load order."
-msgstr "Seřazení neudělalo žádné změny  do seřazovací řady."
+msgstr "Seřazení neudělalo žádné změny do seřazovací řady."
 
 #: src/gui/qt/main_window.cpp:1489
 msgid ""
