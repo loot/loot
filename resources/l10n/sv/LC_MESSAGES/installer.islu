@@ -1,5 +1,5 @@
 ﻿[CustomMessages]
-DeleteUserFiles=More testing
+DeleteUserFiles=Do you want to delete your settings and user metadata?
 
 InstallingMSVCRedist=Installing Visual C++ 2019 Redistributable…
 
