@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT v0.22.3\n"
+"Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2024-05-19 09:33+0100\n"
 "PO-Revision-Date: \n"
