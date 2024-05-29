@@ -124,10 +124,10 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualLanguages[13]);
   EXPECT_EQ(LootSettings::Language({"ru", "Русский"}), actualLanguages[14]);
   EXPECT_EQ(LootSettings::Language({"sv", "Svenska"}), actualLanguages[15]);
+  EXPECT_EQ(LootSettings::Language({"tr_TR", "Türkçe"}), actualLanguages[16]);
   EXPECT_EQ(LootSettings::Language({"uk_UA", "Українська"}),
-            actualLanguages[16]);
-  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文"}), actualLanguages[17]);
-  EXPECT_EQ(LootSettings::Language({"tr_TR", "Türkçe"}), actualLanguages[18]);
+            actualLanguages[17]);
+  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文"}), actualLanguages[18]);
 }
 
 TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
