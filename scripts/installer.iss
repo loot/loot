@@ -70,6 +70,7 @@ Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl,resources\l10n\ru\LC_M
 #ifdef SwedishExists
 Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl,resources\l10n\sv\LC_MESSAGES\installer.islu"
 #endif
+Name: "tr_TR"; MessagesFile: "compiler:Languages\Turkush.isl,resources\l10n\tr_TR\LC_MESSAGES\installer.islu"
 Name: "uk_UA"; MessagesFile: "compiler:Languages\Ukrainian.isl,resources\l10n\uk_UA\LC_MESSAGES\installer.islu"
 #ifdef SimplifiedChineseExists
 Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl,resources\l10n\zh_CN\LC_MESSAGES\installer.islu"
@@ -146,6 +147,8 @@ Source: "resources\l10n\ru\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\ru\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\sv\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\sv\LC_MESSAGES"; Flags: ignoreversion
+Source: "resources\l10n\tr_TR\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\tr_TR\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\uk_UA\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\uk_UA\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\zh_CN\LC_MESSAGES\loot.mo"; \
