@@ -356,7 +356,7 @@ msgstr "&Belirsiz Yükleme Sırasını Düzelt"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:746
 msgid "Clear All &User Metadata…"
-msgstr "&Tüm Kullanıcı Meta Verilerini Temizle…
+msgstr "&Tüm Kullanıcı Meta Verilerini Temizle…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
