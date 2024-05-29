@@ -295,9 +295,6 @@ Type: dirifempty; Name: "{app}\tls";
 Type: dirifempty; Name: "{app}\translations";
 Type: dirifempty; Name: "{app}";
 
-[CustomMessages]
-tr_TR.DeleteUserFiles=Ayarlarınızı ve kullanıcı meta verilerinizi silmek istiyor musunuz?
-
 [Code]
 var DownloadPage: TDownloadWizardPage;
 var VC2019RedistNeedsInstall: Boolean;
