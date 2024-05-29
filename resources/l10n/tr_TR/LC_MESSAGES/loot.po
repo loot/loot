@@ -322,7 +322,6 @@ msgstr "&Oyun"
 msgid "&Edit Groups…"
 msgstr "Grupları &Düzenle…"
 
-# Search is meaning "Ara" in Turkish language. But I don't know where to put the "&". 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:734
 #, fuzzy
