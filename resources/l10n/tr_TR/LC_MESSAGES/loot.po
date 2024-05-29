@@ -304,7 +304,7 @@ msgstr "LOOT Verilerini &Yedekle"
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:724
 msgid "&Open LOOT Data Folder"
-msgstr "LOOT Veri Klasörünü &Aç"
+msgstr "LOOT &Veri Klasörünü Aç"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:726
@@ -327,7 +327,7 @@ msgstr "Grupları &Düzenle…"
 #: src/gui/qt/main_window.cpp:734
 #, fuzzy
 msgid "Searc&h Cards…"
-msgstr "Kartları Ara…"
+msgstr "Kartları &Ara…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:736
@@ -337,7 +337,7 @@ msgstr "Yükleme Sırasını &Kopyala"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:738
 msgid "&Copy Content"
-msgstr "İçeriği &Kopyala"
+msgstr "İçeriği K&opyala"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:740
@@ -352,12 +352,12 @@ msgstr "&Eklentilerin Tarihini Değiştir…"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:744
 msgid "&Fix Ambiguous Load Order"
-msgstr "Belirsiz Yükleme Sırasını &Düzelt"
+msgstr "&Belirsiz Yükleme Sırasını Düzelt"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:746
 msgid "Clear All &User Metadata…"
-msgstr "Tüm &Kullanıcı Meta Verilerini Temizle…"
+msgstr "&Tüm Kullanıcı Meta Verilerini Temizle…
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -388,7 +388,7 @@ msgstr "Meta Verilerini &Düzenle…"
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:760
 msgid "Clear &User Metadata…"
-msgstr "&Kullanıcı Meta Verilerini Temizle…"
+msgstr "Kullanıcı Meta &Verilerini Temizle…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
