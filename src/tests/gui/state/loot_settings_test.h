@@ -105,7 +105,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_TRUE(settings_.getGameSettings().empty());
 
   auto actualLanguages = settings_.getLanguages();
-  EXPECT_EQ(18, actualLanguages.size());
+  EXPECT_EQ(19, actualLanguages.size());
   EXPECT_EQ(LootSettings::Language({"en", "English"}), actualLanguages[0]);
   EXPECT_EQ(LootSettings::Language({"bg", "Български"}), actualLanguages[1]);
   EXPECT_EQ(LootSettings::Language({"cs", "Čeština"}), actualLanguages[2]);
@@ -127,6 +127,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_EQ(LootSettings::Language({"uk_UA", "Українська"}),
             actualLanguages[16]);
   EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文"}), actualLanguages[17]);
+  EXPECT_EQ(LootSettings::Language({"tr_TR", "Türkçe"}), actualLanguages[18]);
 }
 
 TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
