@@ -37,16 +37,11 @@ To translate everything but masterlist messages, first fork this repository. All
 
 Keep in mind that you don't need to submit a perfect pull request; just follow the instructions below to the best of your ability and we will correct any coding-related mistakes when we review your submission.
 
-### Translating the Installer
+### Adding a new translation
+
+#### Adding a new installer translation
 
 First check that an [Inno Setup translation](http://www.jrsoftware.org/files/istrans/) exists for your language. Unofficial translations are acceptable, but require a bit of extra handling. If there isn't an official or unofficial translation for Inno Setup, you're better off making a translation and getting it listed on the linked page before continuing.
-
-To translate the LOOT-specific messages:
-
-1. Copy `resources/l10n/en/LC_MESSAGES/installer.islu` to `resources/l10n/<language>/LC_MESSAGES/installer.islu` if the latter file does not exist, where `<language>` is the [POSIX locale code](https://www.gnu.org/software/gettext/manual/html_node/Locale-Names.html) for your language.
-2. Open the copied file in your favourite text editor.
-2. Translate the string(s) into your language. Do not change the text before the first `=` as that is the message's name.
-3. Save your changes.
 
 To add your language as an option in LOOT's installer:
 
@@ -54,12 +49,14 @@ To add your language as an option in LOOT's installer:
 2. If your language only has an unofficial translation, add a `#define <Language>Exists` block for it near the top of the script, like it has been done for Korean and Simplified Chinese.
 3. Add your language to the `[Languages]` section.
 
-   The `Name` value should be the POSIX locale code for your language.
+   The `Name` value should be the [POSIX locale code](https://www.gnu.org/software/gettext/manual/html_node/Locale-Names.html) for your language.
 
-   The `MessagesFile` value should be `compiler:Languages\<translation file>,resources/l10n/<language>/LC_MESSAGES/installer.islu`, where `<translation file>` is the filename of the Inno Setup translation that you checked exists and `<language>` is your language's POSIX locale code.
+   The `MessagesFile` value should be `compiler:Languages\<translation file>,resources/l10n/<locale>/LC_MESSAGES/installer.islu`, where `<translation file>` is the filename of the Inno Setup translation that you checked exists and `<locale>` is your language's POSIX locale code.
 
    If your language only has an unofficial translation, wrap its line in `#ifdef` and `#endif` lines, again like it has been done for Korean and Simplified Chinese.
 5. Save your changes.
+
+To create the `installer.islu` translation file for your language, copy `resources/l10n/en/LC_MESSAGES/installer.islu` to `resources/l10n/<locale>/LC_MESSAGES/installer.islu`, where `<locale>` is the POSIX locale code for your language.
 
 If your language's Inno Setup translation is unofficial, also do the following:
 
@@ -67,14 +64,46 @@ If your language's Inno Setup translation is unofficial, also do the following:
 2. Add an entry for your language's translation file to the `$unofficialLanguageFiles` array.
 3. Save your changes.
 
-### Translating the LOOT application
+Once you've completed these steps, follow the instructions further down for updating an existing translation.
+
+#### Adding a new application translation
+
+To create a `loot.po` translation file for your language:
 
 1. Download and install the latest version of [Poedit](https://poedit.net/).
 2. If you are starting a new translation, select `Create new...` on the welcome page or `File -> New from POT/PO file...` and select the template file at `resources/l10n/template.pot`. Select your language from the drop-down list, specifying a region/dialect if desired, and click `OK`.
-3. If you are updating a previous translation, in Poedit, open the `loot.po` translation file in the relevant subdirectory of `resources/l10n`, then select `Translation -> Update from POT file...` and select the template file at `resources/l10n/template.pot`. Click `OK` in the `Update summary` dialog if it appears.
-4. Edit the translation file to add or update translations of the programs' text. Strings that were added since the last translation will be missing a translation, and strings that have been changed since the last translation will be highlighted in orange.
-5. Go to `Translation -> Properties... -> Translation Properties -> Project name and version:` and check that it matches the latest version of LOOT. If it doesn't, please update it. Then go to `File -> Preferences -> General -> Information about the translator` and fill the `Name:` field with your name/alias. If you don't mind, you can also fill out the `Email:` field so that we or future translators can contact you if need be.
-6. Save the translation file with the filename `loot.po` in `resources/l10n/<locale>/LC_MESSAGES/`, where `<locale>` is your language's POSIX locale code.
+3. Save the translation file with the filename `loot.po` in `resources/l10n/<locale>/LC_MESSAGES/`, where `<locale>` is your language's POSIX locale code.
+
+LOOT's source code must be updated to recognise the new translation. While you're welcome to do this yourself and include the changes in your translation's pull request, you don't have to if you're not comfortable with them; we can add them later. The files and functions which must be updated are given below:
+
+* In [loot_settings.h](src/gui/state/loot_settings.h), add the language's
+  ISO code and name to the `languages_` initialiser list.
+* In [loot_settings_test.h](src/tests/gui/state/loot_settings_test.h), update
+  the `defaultConstructorShouldSetDefaultValues` test so that it includes the
+  added language, updating the `actualLanguages.size()` check and adding a new
+  `EXPECT_EQ(...)` line for the new language.
+
+See commit [8c28aed7f54dee3a381425b2d4ecf4341309d139](https://github.com/loot/loot/commit/8c28aed7f54dee3a381425b2d4ecf4341309d139)
+for an example of the relevant changes.
+
+Once you've completed these steps, follow the instructions further down for updating an existing translation.
+
+### Updating an existing translation
+
+#### Translating the Installer
+
+1. Open `resources/l10n/<locale>/LC_MESSAGES/installer.islu` in your favourite text editor, where `<locale>` is your language's POSIX locale code.
+2. If you didn't just create your language's `installer.islu`, open `resources/l10n/en/LC_MESSAGES/installer.islu` to check if there are any entries in it that aren't in your language's `installer.islu` file: if there are, copy them into your language's file.
+2. Translate the string(s) in your language's `installer.islu` file into your language. Do not change the text before the first `=` as that is the message's name.
+3. Save your changes.
+
+### Translating the LOOT application
+
+1. Download and install the latest version of [Poedit](https://poedit.net/).
+2. In Poedit, open the `loot.po` translation file in the relevant subdirectory of `resources/l10n`, then select `Translation -> Update from POT file...` and select the template file at `resources/l10n/template.pot`. Click `OK` in the `Update summary` dialog if it appears.
+3. Edit the translation file to add or update translations of the programs' text. Strings that were added since the last translation will be missing a translation, and strings that have been changed since the last translation will be highlighted in orange.
+4. Go to `Translation -> Properties... -> Translation Properties -> Project name and version:` and check that it matches the latest version of LOOT. If it doesn't, please update it. Then go to `File -> Preferences -> General -> Information about the translator` and fill the `Name:` field with your name/alias. If you don't mind, you can also fill out the `Email:` field so that we or future translators can contact you if need be.
+5. Save the translation file.
 
 Some helpful Poedit settings include:
 * Deselecting `File -> Preferences... -> General -> Editing -> Automatically compile MO file when saving`. This file is built by LOOT at runtime and doesn't need to be included in your PR, but you might accidentally submit it alongside your translation.
@@ -95,26 +124,6 @@ Some strings to be translated may contain special characters. Different types of
   For a better overview you can also look at the following Google Sheet document: [LOOT - Mnemonic Shortcuts](https://docs.google.com/spreadsheets/d/1WS6pUBLS-3X-YRB303jmzpmPNEj68gecz9T2lBPPJco/edit#gid=0)
   This document features every string with ampersands (`&`) added to them. `Table 1` includes all the original English strings, `Table 2` adds the ampersands to them and `Table 3` lists every `&+character` combination that it finds in `Table 2`, plus it will automatically colourize duplicate entries red. You can utilise this document to first translate all the strings from `Table 1` into your own language and then add the ampersands accordingly. Once you are finished and every `&+character` combination within the different "Levels" is unique, you can add your translations in Poedit. In order to be able to use the document, open it by clicking on the above link, then rightclick on the sheet `English -> Copy to -> New Spreadsheet` which will create your own copy of the document, which you now should be able to change.
 * A small number of strings include Markdown hyperlinks (e.g. `[example text](http://example.com/)`). The text between the square brackets should be translated, but the text between the parentheses should not be.
-
-### Adding A New Translation
-
-If you're adding a new translation, LOOT's source code must be updated to recognise it. While you're welcome to do this yourself and include the changes in your translation's pull request, you don't have to if you're not comfortable with them; we can add them later. The files and functions which must be updated are given below:
-
-* In [loot_settings.h](src/gui/state/loot_settings.h), add the language's
-  ISO code and name to the `languages_` initialiser list.
-* In [loot_settings_test.h](src/tests/gui/state/loot_settings_test.h), update
-  the `defaultConstructorShouldSetDefaultValues` test so that it includes the
-  added language, updating the `actualLanguages.size()` check and adding a new
-  `EXPECT_EQ(...)` line for the new language.
-* In [installer.iss](scripts/installer.iss):
-  - Add a line for your language in the `[Languages]` section. If you have Inno
-    Setup installed, the available translation files are at
-    `C:\Program Files (x86)\Inno Setup 6\Languages\`.
-  - Add an entry for your language's translation file to the `[Files]` section.
-  - Add a translation for your language to the `[CustomMessages]` section.
-
-See commit [8c28aed7f54dee3a381425b2d4ecf4341309d139](https://github.com/loot/loot/commit/8c28aed7f54dee3a381425b2d4ecf4341309d139)
-for an example of the relevant changes.
 
 ## Depending on libloot snapshot builds
 
