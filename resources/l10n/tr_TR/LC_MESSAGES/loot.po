@@ -792,7 +792,7 @@ msgstr "Kartları ara"
 #: src/gui/qt/search_dialog.cpp:115
 msgid ""
 "If checked, interprets the search text as a Perl-like regular expression."
-msgstr "İşaretlenirse, içerik filtresi metnini düzenli ifade olarak yorumlar."
+msgstr "İşaretlenirse, arama metnini Perl benzeri bir düzenli ifade olarak yorumlar."
 
 #: src/gui/qt/search_dialog.cpp:118
 msgid "Find Previous"
