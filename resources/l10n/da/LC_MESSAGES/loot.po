@@ -1,7 +1,8 @@
-# Danish translation of LOOT
+# LOOT - Danish Translation
 # Copyright (C) 2014 Freso & WrinklyNinja
 # This file is distributed under the same license as the LOOT package.
 # Frederik “Freso” S. Olesen, 2014-2018
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
@@ -22,8 +23,6 @@ msgstr ""
 "X-Poedit-SearchPath-0: backend\n"
 "X-Poedit-SearchPath-1: gui\n"
 
-#
-#
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 #, c++-format
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"

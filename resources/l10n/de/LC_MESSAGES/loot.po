@@ -1,11 +1,11 @@
-# German LOOT translation
+# LOOT - German Translation
 # Copyright (C) 2012 WrinklyNinja
 # Copyright (C) 2014 Ipradel
 # Copyright (C) 2015 Freso
 # Copyright (C) 2019 DaCoolX
 # Copyright (C) 2022 pStyl3
 # This file is distributed under the same license as the LOOT package.
-# Diese Datei untersteht derselben Lizenz wie das LOOT Paket
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
