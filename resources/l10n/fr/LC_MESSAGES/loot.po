@@ -1,5 +1,4 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR WrinklyNinja
+# LOOT - French Translation
 # This file is distributed under the same license as the LOOT package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #

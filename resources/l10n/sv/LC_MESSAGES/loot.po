@@ -1,7 +1,8 @@
-# LOOT - translation into Swedish (sv).
+# LOOT - Swedish Translation
 # Copyright (C) YEAR WrinklyNinja
 # This file is distributed under the same license as the LOOT package.
 # Mikael Hiort af Ornäs <mikael.hafo@hotmail.com>, 2016.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
