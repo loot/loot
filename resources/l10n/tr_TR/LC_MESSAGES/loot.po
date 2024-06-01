@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the LOOT package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
@@ -324,7 +323,6 @@ msgstr "Grupları &Düzenle…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:734
-#, fuzzy
 msgid "Searc&h Cards…"
 msgstr "Kartları &Ara…"
 
