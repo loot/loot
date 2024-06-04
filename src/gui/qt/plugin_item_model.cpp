@@ -324,13 +324,15 @@ std::unordered_map<std::string, int> PluginItemModel::getPluginNameToRowMap()
 }
 
 void PluginItemModel::setPluginItems(std::vector<PluginItem>&& newItems) {
-  beginRemoveRows(QModelIndex(), 1, static_cast<int>(items.size()));
+  if (!items.empty()) {
+    beginRemoveRows(QModelIndex(), 1, static_cast<int>(items.size()));
 
-  items.clear();
-  searchResults.clear();
-  currentSearchResultIndex = std::nullopt;
+    items.clear();
+    searchResults.clear();
+    currentSearchResultIndex = std::nullopt;
 
-  endRemoveRows();
+    endRemoveRows();
+  }
 
   beginInsertRows(QModelIndex(), 1, static_cast<int>(newItems.size()));
 
