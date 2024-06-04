@@ -996,9 +996,8 @@ void MainWindow::updateSidebarColumnWidths() {
   // to calculate the load order section width because that's one of the games
   // that uses the wider width.
   const auto gameSupportsLightPlugins =
-      state.HasCurrentGame()
-          ? state.GetCurrentGame().SupportsLightPlugins()
-          : false;
+      state.HasCurrentGame() ? state.GetCurrentGame().SupportsLightPlugins()
+                             : false;
   const auto indexSectionWidth =
       calculateSidebarIndexSectionWidth(gameSupportsLightPlugins);
 
