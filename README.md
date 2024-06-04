@@ -101,9 +101,13 @@ You may also need to set `BOOST_ROOT` if CMake cannot find Boost, and `Qt6_ROOT`
 The documentation is built using [Sphinx](http://www.sphinx-doc.org/en/stable/). Install Python and make sure it's accessible from your `PATH`, then run:
 
 ```
+py -m venv .venv
+.venv\Scripts\activate
 pip install -r docs/requirements.txt
 sphinx-build -b html docs build/docs/html
 ```
+
+If running on Linux, replace `.venv\Scripts\activate` with `.venv/bin/activate`.
 
 Alternatively, you can use Docker to avoid changing your development environment, by running `docker run -it --rm -v ${PWD}/docs:/docs/docs:ro -v ${PWD}/resources:/docs/resources:ro -v ${PWD}/build:/docs/build sphinxdoc/sphinx:7.1.2 bash` to obtain a shell that you can use to run the two commands above.
 

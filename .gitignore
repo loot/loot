@@ -44,6 +44,7 @@ Thumbs.db
 # Other #
 #########
 
+.venv/
 .vscode/
 *.user
 *.suo
