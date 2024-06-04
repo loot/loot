@@ -1306,14 +1306,21 @@ void MainWindow::executeBackgroundQuery(
     std::unique_ptr<Query> query,
     void (MainWindow::*onComplete)(QueryResult),
     ProgressUpdater* progressUpdater) {
-  auto task = new QueryTask(std::move(query));
+  if (progressUpdater != nullptr) {
+    connect(progressUpdater,
+            &ProgressUpdater::progressUpdate,
+            this,
+            &MainWindow::handleProgressUpdate);
+  }
 
-  connect(task, &Task::finished, this, onComplete);
-  connect(task, &Task::error, this, &MainWindow::handleError);
-
-  const auto executor = new SequentialTaskExecutor(this, {task});
-
-  executeBackgroundTasks(executor, progressUpdater, nullptr);
+  loot::executeBackgroundQuery(std::move(query))
+      .then(this,
+            [this, onComplete](QueryResult result) {
+              (this->*onComplete)(result);
+            })
+      .onFailed(this,
+                [this](const std::exception& e) { handleError(e.what()); })
+      .then(this, [progressUpdater]() { progressUpdater->deleteLater(); });
 }
 
 void MainWindow::executeBackgroundTasks(

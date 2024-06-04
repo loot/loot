@@ -25,6 +25,8 @@
 
 #include "gui/qt/tasks/tasks.h"
 
+#include <QtConcurrent/QtConcurrent>
+
 namespace loot {
 QueryTask::QueryTask(std::unique_ptr<Query> query) : query(std::move(query)) {}
 
@@ -181,5 +183,31 @@ void ParallelTaskExecutor::onWorkerThreadFinished() {
 
     emit finished(taskResults);
   }
+}
+
+QFuture<QueryResult> executeBackgroundQuery(std::unique_ptr<Query> query) {
+  const auto sharedQuery = std::shared_ptr<Query>(std::move(query));
+
+  return QtConcurrent::run([sharedQuery]() {
+    if (sharedQuery == nullptr) {
+      throw std::runtime_error(
+          "Attempted to execute a query with no query set!");
+    }
+
+    try {
+      return sharedQuery->executeLogic();
+    } catch (const std::exception &e) {
+      const auto logger = getLogger();
+      if (logger) {
+        logger->error("Exception while executing query: {}", e.what());
+      }
+
+      const auto errorMessage = sharedQuery == nullptr
+                                    ? std::string(e.what())
+                                    : sharedQuery->getErrorMessage();
+
+      throw std::runtime_error(errorMessage.c_str());
+    }
+  });
 }
 }

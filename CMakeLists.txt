@@ -59,7 +59,7 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(TBB REQUIRED)
 endif()
 
-find_package(Qt6 6.4 COMPONENTS Widgets Network REQUIRED)
+find_package(Qt6 6.4 COMPONENTS Widgets Network Concurrent REQUIRED)
 
 if(NOT DEFINED EP_PREFIX)
     set_directory_properties(PROPERTIES "EP_PREFIX" "external")
@@ -440,7 +440,7 @@ endif()
 add_executable(LOOT ${LOOT_ALL_SOURCES})
 add_dependencies(LOOT ValveFileVDF)
 target_link_libraries(LOOT PRIVATE
-    Qt::Widgets Qt::Network
+    Qt::Widgets Qt::Network Qt::Concurrent
     Boost::headers Boost::locale
     spdlog::spdlog_header_only
     tomlplusplus::tomlplusplus)
@@ -573,9 +573,9 @@ endif()
 # Copy the API binary to the build directory.
 get_filename_component(LIBLOOT_SHARED_LIBRARY_FILENAME ${LIBLOOT_SHARED_LIBRARY} NAME)
 add_custom_command(TARGET LOOT POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${LIBLOOT_SHARED_LIBRARY}
-        "$<TARGET_FILE_DIR:LOOT>/${DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME}")
+   COMMAND ${CMAKE_COMMAND} -E copy_if_different
+       ${LIBLOOT_SHARED_LIBRARY}
+       "$<TARGET_FILE_DIR:LOOT>/${DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME}")
 
 if(LOOT_BUILD_TESTS)
     include("cmake/tests.cmake")

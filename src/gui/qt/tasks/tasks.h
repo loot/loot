@@ -26,6 +26,7 @@
 #ifndef LOOT_GUI_QT_TASKS_TASKS
 #define LOOT_GUI_QT_TASKS_TASKS
 
+#include <QtCore/QFuture>
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
 #include <QtCore/QThread>
@@ -120,6 +121,8 @@ private slots:
   void onTaskError();
   void onWorkerThreadFinished();
 };
+
+QFuture<QueryResult> executeBackgroundQuery(std::unique_ptr<Query> query);
 }
 
 #endif

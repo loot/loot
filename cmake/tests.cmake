@@ -126,7 +126,7 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests ValveFileVDF)
 target_link_libraries(loot_gui_tests PRIVATE
-    Qt::Widgets Qt::Network Qt::Test
+    Qt::Widgets Qt::Network Qt::Concurrent Qt::Test
     Boost::headers Boost::locale
     GTest::gtest_main
     spdlog::spdlog_header_only
@@ -227,6 +227,8 @@ else()
         libicui18n.so.73.2
         libicuuc.so.73
         libicuuc.so.73.2
+        libQt6Concurrent.so.6
+        libQt6Concurrent.so.6.7.1
         libQt6Core.so.6
         libQt6Core.so.6.7.1
         libQt6DBus.so.6
