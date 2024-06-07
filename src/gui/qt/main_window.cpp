@@ -2167,17 +2167,25 @@ void MainWindow::on_actionUpdateMasterlist_triggered() {
     handleProgressUpdate(translate("Updating and parsing masterlist…"));
 
     const auto preludeTask = new UpdatePreludeTask(state);
-    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
+    const auto masterlistTask =
+        new UpdateMasterlistTask(state.GetCurrentGame());
 
-    auto masterlistTask = new UpdateMasterlistTask(state.GetCurrentGame());
+    const std::vector<Task*> tasks{preludeTask, masterlistTask};
 
-    connect(masterlistTask, &Task::error, this, &MainWindow::handleError);
+    auto whenAll =
+        whenAllTasks(tasks)
+            .then(this,
+                  [this](const QList<QFuture<QueryResult>> futures) {
+                    auto preludeResult = futures[0].result();
+                    auto masterlistResult = futures[1].result();
 
-    const auto executor =
-        new SequentialTaskExecutor(this, {preludeTask, masterlistTask});
+                    handleMasterlistUpdated({preludeResult, masterlistResult});
+                  })
+            .onFailed(this, [this](const std::exception& e) {
+              handleError(e.what());
+            });
 
-    executeBackgroundTasks(
-        executor, nullptr, &MainWindow::handleMasterlistUpdated);
+    executeConcurrentBackgroundTasks(tasks, whenAll);
   } catch (const std::exception& e) {
     handleException(e);
   }

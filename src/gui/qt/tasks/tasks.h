@@ -123,6 +123,14 @@ private slots:
 };
 
 QFuture<QueryResult> executeBackgroundQuery(std::unique_ptr<Query> query);
+
+QFuture<QueryResult> taskFuture(Task *task);
+
+QFuture<QList<QFuture<QueryResult>>> whenAllTasks(
+    const std::vector<Task *> &tasks);
+
+void executeConcurrentBackgroundTasks(const std::vector<Task *> &tasks,
+                                      QFuture<void> whenAll);
 }
 
 #endif

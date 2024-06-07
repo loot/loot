@@ -210,4 +210,49 @@ QFuture<QueryResult> executeBackgroundQuery(std::unique_ptr<Query> query) {
     }
   });
 }
+
+QFuture<QueryResult> taskFuture(Task *task) {
+  QFuture<QueryResult> taskFinishedFuture =
+      QtFuture::connect(task, &Task::finished);
+  QFuture<std::string> taskErrorFuture = QtFuture::connect(task, &Task::error);
+
+  return QtFuture::whenAny(taskFinishedFuture, taskErrorFuture)
+      .then(
+          [](std::variant<QFuture<QueryResult>, QFuture<std::string>> variant) {
+            if (std::holds_alternative<QFuture<QueryResult>>(variant)) {
+              return std::get<QFuture<QueryResult>>(variant).result();
+            } else {
+              throw std::runtime_error(
+                  std::get<QFuture<std::string>>(variant).result().c_str());
+            }
+          });
+}
+
+QFuture<QList<QFuture<QueryResult>>> whenAllTasks(
+    const std::vector<Task *> &tasks) {
+  std::vector<QFuture<QueryResult>> futures;
+  for (const auto task : tasks) {
+    futures.push_back(taskFuture(task));
+  }
+
+  return QtFuture::whenAll(futures.begin(), futures.end());
+}
+
+void executeConcurrentBackgroundTasks(const std::vector<Task *> &tasks,
+                                      QFuture<void> whenAll) {
+  QThread *workerThread = new QThread();
+
+  QObject::connect(
+      workerThread, &QThread::finished, workerThread, &QObject::deleteLater);
+
+  whenAll.then(workerThread, [workerThread]() { workerThread->quit(); });
+
+  workerThread->start();
+
+  for (auto task : tasks) {
+    task->moveToThread(workerThread);
+
+    QMetaObject::invokeMethod(task, "execute", Qt::QueuedConnection);
+  }
+}
 }
