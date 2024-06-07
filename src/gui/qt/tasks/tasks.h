@@ -99,29 +99,6 @@ private slots:
   void onWorkerThreadFinished();
 };
 
-class ParallelTaskExecutor : public TaskExecutor {
-  Q_OBJECT
-public:
-  ParallelTaskExecutor(QObject *parent, std::vector<Task *> tasks);
-  ParallelTaskExecutor(const TaskExecutor &) = delete;
-  ParallelTaskExecutor(TaskExecutor &&) = delete;
-  ~ParallelTaskExecutor();
-
-  ParallelTaskExecutor &operator=(const ParallelTaskExecutor &) = delete;
-  ParallelTaskExecutor &operator=(ParallelTaskExecutor &&) = delete;
-
-private:
-  std::recursive_mutex mutex;
-  std::vector<Task *> tasks;
-  std::vector<QueryResult> taskResults;
-  std::vector<QThread *> workerThreads;
-
-private slots:
-  void onTaskFinished(QueryResult result);
-  void onTaskError();
-  void onWorkerThreadFinished();
-};
-
 QFuture<QueryResult> executeBackgroundQuery(std::unique_ptr<Query> query);
 
 QFuture<QueryResult> taskFuture(Task *task);

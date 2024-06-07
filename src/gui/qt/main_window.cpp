@@ -1554,8 +1554,6 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
 
     const auto preludeTask = new UpdatePreludeTask(state);
 
-    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
-
     tasks.push_back(preludeTask);
 
     for (const auto& settings : state.getSettings().getGameSettings()) {
@@ -1567,18 +1565,27 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
           settings.MasterlistSource(),
           GetMasterlistPath(state.getLootDataPath(), settings));
 
-      connect(task, &Task::error, this, &MainWindow::handleError);
-
       tasks.push_back(task);
     }
 
     handleProgressUpdate(translate("Updating all masterlists…"));
 
-    const auto executor = new ParallelTaskExecutor(this, tasks);
+    auto whenAll =
+        whenAllTasks(tasks)
+            .then(this,
+                  [this](const QList<QFuture<QueryResult>> futures) {
+                    std::vector<QueryResult> results;
+                    for (const auto& future : futures) {
+                      results.push_back(future.result());
+                    }
 
-    executeBackgroundTasks(
-        executor, nullptr, &MainWindow::handleMasterlistsUpdated);
+                    handleMasterlistsUpdated(results);
+                  })
+            .onFailed(this, [this](const std::exception& e) {
+              handleError(e.what());
+            });
 
+    executeConcurrentBackgroundTasks(tasks, whenAll);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2687,6 +2694,8 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
                          state.getSettings().getLanguage());
 
       handleGameDataLoaded(pluginItems);
+    } else {
+      progressDialog->reset();
     }
 
     auto message =
