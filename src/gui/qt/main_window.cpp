@@ -1076,25 +1076,26 @@ bool MainWindow::hasErrorMessages() const {
 }
 
 void MainWindow::sortPlugins(bool isAutoSort) {
-  std::vector<Task*> tasks;
+  std::vector<Task*> updateTasks;
 
   if (state.getSettings().isMasterlistUpdateBeforeSortEnabled()) {
     handleProgressUpdate(translate("Updating and parsing masterlist…"));
 
     const auto preludeTask = new UpdatePreludeTask(state);
-    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
 
-    tasks.push_back(preludeTask);
+    updateTasks.push_back(preludeTask);
 
     const auto masterlistTask =
         new UpdateMasterlistTask(state.GetCurrentGame());
 
-    connect(masterlistTask, &Task::error, this, &MainWindow::handleError);
-
-    tasks.push_back(masterlistTask);
+    updateTasks.push_back(masterlistTask);
   }
 
   auto progressUpdater = new ProgressUpdater();
+  connect(progressUpdater,
+          &ProgressUpdater::progressUpdate,
+          this,
+          &MainWindow::handleProgressUpdate);
 
   // This lambda will run from the worker thread.
   auto sendProgressUpdate = [progressUpdater](std::string message) {
@@ -1112,13 +1113,35 @@ void MainWindow::sortPlugins(bool isAutoSort) {
   const auto sortHandler = isAutoSort ? &MainWindow::handlePluginsAutoSorted
                                       : &MainWindow::handlePluginsManualSorted;
 
-  connect(sortTask, &Task::error, this, &MainWindow::handleError);
+  auto results = std::make_shared<std::vector<QueryResult>>();
 
-  tasks.push_back(sortTask);
+  auto updatesFuture =
+      whenAllTasks(updateTasks)
+          .then(this,
+                [this, results](const QList<QFuture<QueryResult>> futures) {
+                  for (const auto& future : futures) {
+                    results->push_back(future.result());
+                  }
+                })
+          .then(this, [sortTask]() { executeBackgroundTask(sortTask); })
+          .onFailed(this,
+                    [this](const std::exception& e) { handleError(e.what()); });
 
-  const auto executor = new SequentialTaskExecutor(this, tasks);
+  auto sortFuture =
+      taskFuture(sortTask)
+          .then(this,
+                [this, sortHandler, results](QueryResult result) {
+                  results->push_back(result);
+                  (this->*sortHandler)(*results);
+                })
+          .onFailed(this,
+                    [this](const std::exception& e) { handleError(e.what()); })
+          .then(this, [this, progressUpdater]() {
+            progressDialog->reset();
+            progressUpdater->deleteLater();
+          });
 
-  executeBackgroundTasks(executor, progressUpdater, sortHandler);
+  executeConcurrentBackgroundTasks(updateTasks, updatesFuture);
 }
 
 void MainWindow::showFirstRunDialog() {
@@ -1318,42 +1341,8 @@ void MainWindow::executeBackgroundQuery(
             [this, onComplete](QueryResult result) {
               (this->*onComplete)(result);
             })
-      .onFailed(this,
-                [this](const std::exception& e) { handleError(e.what()); })
+      .onFailed(this, [this](std::exception& e) { handleError(e.what()); })
       .then(this, [progressUpdater]() { progressUpdater->deleteLater(); });
-}
-
-void MainWindow::executeBackgroundTasks(
-    TaskExecutor* executor,
-    const ProgressUpdater* progressUpdater,
-    void (MainWindow::*onComplete)(std::vector<QueryResult>)) {
-  if (progressUpdater != nullptr) {
-    connect(progressUpdater,
-            &ProgressUpdater::progressUpdate,
-            this,
-            &MainWindow::handleProgressUpdate);
-
-    connect(executor,
-            &TaskExecutor::finished,
-            progressUpdater,
-            &QObject::deleteLater);
-  }
-
-  if (onComplete != nullptr) {
-    connect(executor, &TaskExecutor::finished, this, onComplete);
-  }
-
-  connect(executor, &TaskExecutor::finished, executor, &QObject::deleteLater);
-
-  // Reset (i.e. close) the progress dialog once the thread has finished in case
-  // it was used while running these queries. This can't be done from any one
-  // handler because none of them know if they are the last to run.
-  connect(executor,
-          &TaskExecutor::finished,
-          this,
-          &MainWindow::handleTaskExecutorFinished);
-
-  executor->start();
 }
 
 void MainWindow::handleError(const std::string& message) {
@@ -1570,20 +1559,19 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
 
     handleProgressUpdate(translate("Updating all masterlists…"));
 
-    auto whenAll =
-        whenAllTasks(tasks)
-            .then(this,
-                  [this](const QList<QFuture<QueryResult>> futures) {
-                    std::vector<QueryResult> results;
-                    for (const auto& future : futures) {
-                      results.push_back(future.result());
-                    }
+    auto whenAll = whenAllTasks(tasks)
+                       .then(this,
+                             [this](const QList<QFuture<QueryResult>> futures) {
+                               std::vector<QueryResult> results;
+                               for (const auto& future : futures) {
+                                 results.push_back(future.result());
+                               }
 
-                    handleMasterlistsUpdated(results);
-                  })
-            .onFailed(this, [this](const std::exception& e) {
-              handleError(e.what());
-            });
+                               handleMasterlistsUpdated(results);
+                             })
+                       .onFailed(this, [this](const std::exception& e) {
+                         handleError(e.what());
+                       });
 
     executeConcurrentBackgroundTasks(tasks, whenAll);
   } catch (const std::exception& e) {
@@ -2562,10 +2550,6 @@ void MainWindow::handlePluginsManualSorted(std::vector<QueryResult> results) {
 
 void MainWindow::handlePluginsAutoSorted(std::vector<QueryResult> results) {
   try {
-    if (results.empty()) {
-      return;
-    }
-
     handlePluginsSorted(results);
 
     if (actionApplySort->isVisible()) {
@@ -2797,8 +2781,6 @@ void MainWindow::handleUpdateCheckError(const std::string&) {
     handleException(e);
   }
 }
-
-void MainWindow::handleTaskExecutorFinished() { progressDialog->reset(); }
 
 void MainWindow::handleIconColorChanged() {
   IconFactory::setColours(

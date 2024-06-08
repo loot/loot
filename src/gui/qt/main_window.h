@@ -222,10 +222,6 @@ private:
   void executeBackgroundQuery(std::unique_ptr<Query> query,
                               void (MainWindow::*onComplete)(QueryResult),
                               ProgressUpdater *progressUpdater);
-  void executeBackgroundTasks(
-      TaskExecutor *executor,
-      const ProgressUpdater *progressUpdater,
-      void (MainWindow::*onComplete)(std::vector<QueryResult>));
 
   void handleError(const std::string &message);
   void handleException(const std::exception &exception);
@@ -233,7 +229,7 @@ private:
                             const std::exception &exception);
 
   void handleGameDataLoaded(QueryResult result);
-  bool handlePluginsSorted(std::vector<QueryResult> results);
+  bool handlePluginsSorted(std::vector<QueryResult> result);
 
   QMenu *createPopupMenu() override;
 
@@ -308,15 +304,14 @@ private slots:
   void handleGameChanged(QueryResult result);
   void handleRefreshGameDataLoaded(QueryResult result);
   void handleStartupGameDataLoaded(QueryResult result);
-  void handlePluginsManualSorted(std::vector<QueryResult> results);
-  void handlePluginsAutoSorted(std::vector<QueryResult> results);
+  void handlePluginsManualSorted(std::vector<QueryResult> result);
+  void handlePluginsAutoSorted(std::vector<QueryResult> result);
   void handleMasterlistUpdated(std::vector<QueryResult> results);
   void handleMasterlistsUpdated(std::vector<QueryResult> results);
   void handleOverlapFilterChecked(QueryResult result);
   void handleProgressUpdate(const QString &message);
   void handleUpdateCheckFinished(QueryResult result);
   void handleUpdateCheckError(const std::string &);
-  void handleTaskExecutorFinished();
 
   void handleIconColorChanged();
   void handleSidebarTextColorChanged();

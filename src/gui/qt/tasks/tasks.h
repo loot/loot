@@ -65,40 +65,6 @@ private:
   std::unique_ptr<Query> query;
 };
 
-class TaskExecutor : public QObject {
-  Q_OBJECT
-public:
-  TaskExecutor(QObject *parent);
-
-signals:
-  void start();
-  void finished(std::vector<QueryResult> results);
-};
-
-class SequentialTaskExecutor : public TaskExecutor {
-  Q_OBJECT
-public:
-  SequentialTaskExecutor(QObject *parent, std::vector<Task *> tasks);
-  SequentialTaskExecutor(const TaskExecutor &) = delete;
-  SequentialTaskExecutor(TaskExecutor &&) = delete;
-  ~SequentialTaskExecutor();
-
-  SequentialTaskExecutor &operator=(const SequentialTaskExecutor &) = delete;
-  SequentialTaskExecutor &operator=(SequentialTaskExecutor &&) = delete;
-
-private:
-  QThread workerThread;
-  std::vector<Task *> tasks;
-  size_t currentTask{0};
-
-  std::vector<QueryResult> taskResults;
-
-private slots:
-  void onTaskFinished(QueryResult result);
-  void onTaskError();
-  void onWorkerThreadFinished();
-};
-
 QFuture<QueryResult> executeBackgroundQuery(std::unique_ptr<Query> query);
 
 QFuture<QueryResult> taskFuture(Task *task);
@@ -108,6 +74,8 @@ QFuture<QList<QFuture<QueryResult>>> whenAllTasks(
 
 void executeConcurrentBackgroundTasks(const std::vector<Task *> &tasks,
                                       QFuture<void> whenAll);
+
+QFuture<QueryResult> executeBackgroundTask(Task *task);
 }
 
 #endif
