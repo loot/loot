@@ -1113,26 +1113,26 @@ void MainWindow::sortPlugins(bool isAutoSort) {
   const auto sortHandler = isAutoSort ? &MainWindow::handlePluginsAutoSorted
                                       : &MainWindow::handlePluginsManualSorted;
 
-  auto results = std::make_shared<std::vector<QueryResult>>();
-
   auto updatesFuture =
       whenAllTasks(updateTasks)
           .then(this,
-                [this, results](const QList<QFuture<QueryResult>> futures) {
+                [this](const QList<QFuture<QueryResult>> futures) {
+                  std::vector<QueryResult> results;
                   for (const auto& future : futures) {
-                    results->push_back(future.result());
+                    results.push_back(future.result());
                   }
+
+                  handleMasterlistUpdated(results);
                 })
-          .then(this, [sortTask]() { executeBackgroundTask(sortTask); })
           .onFailed(this,
-                    [this](const std::exception& e) { handleError(e.what()); });
+                    [this](const std::exception& e) { handleError(e.what()); })
+          .then(this, [sortTask]() { executeBackgroundTask(sortTask); });
 
   auto sortFuture =
       taskFuture(sortTask)
           .then(this,
-                [this, sortHandler, results](QueryResult result) {
-                  results->push_back(result);
-                  (this->*sortHandler)(*results);
+                [this, sortHandler](QueryResult result) {
+                  (this->*sortHandler)(result);
                 })
           .onFailed(this,
                     [this](const std::exception& e) { handleError(e.what()); })
@@ -1392,18 +1392,10 @@ void MainWindow::handleGameDataLoaded(QueryResult result) {
   enableGameActions();
 }
 
-bool MainWindow::handlePluginsSorted(std::vector<QueryResult> results) {
-  if (results.empty()) {
-    return false;
-  }
-
-  if (results.size() > 1) {
-    handleMasterlistUpdated(results);
-  }
-
+bool MainWindow::handlePluginsSorted(QueryResult result) {
   filtersWidget->resetOverlapAndGroupsFilters();
 
-  auto sortedPlugins = std::get<PluginItems>(results.back());
+  auto sortedPlugins = std::get<PluginItems>(result);
 
   if (sortedPlugins.empty()) {
     // If there was a sorting failure the array of plugins will be empty.
@@ -2534,9 +2526,9 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
   }
 }
 
-void MainWindow::handlePluginsManualSorted(std::vector<QueryResult> results) {
+void MainWindow::handlePluginsManualSorted(QueryResult result) {
   try {
-    const auto loadOrderChanged = handlePluginsSorted(results);
+    const auto loadOrderChanged = handlePluginsSorted(result);
 
     if (!loadOrderChanged) {
       // Perform ambiguous load order check because load order state was
@@ -2548,9 +2540,9 @@ void MainWindow::handlePluginsManualSorted(std::vector<QueryResult> results) {
   }
 }
 
-void MainWindow::handlePluginsAutoSorted(std::vector<QueryResult> results) {
+void MainWindow::handlePluginsAutoSorted(QueryResult result) {
   try {
-    handlePluginsSorted(results);
+    handlePluginsSorted(result);
 
     if (actionApplySort->isVisible()) {
       actionApplySort->trigger();
