@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2024-06-09 08:20+0100\n"
-"PO-Revision-Date: 2024-06-08 19:09+0000\n"
+"PO-Revision-Date: 2024-06-10 10:09+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/loot/loot/es/>\n"
 "Language: es\n"
@@ -549,7 +549,7 @@ msgstr ""
 #. translators: Title of a dialog box.
 #: src/gui/qt/main_window.cpp:1690
 msgid "Redate Plugins?"
-msgstr "Cambiar fecha?"
+msgstr "¿Reactualizar plugins?"
 
 #: src/gui/qt/main_window.cpp:1692
 msgid ""
