@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-05-29 19:05+0100\n"
+"POT-Creation-Date: 2024-06-09 08:20+0100\n"
 "PO-Revision-Date: 2024-05-22 20:04+0100\n"
 "Last-Translator: S猫 <silent.haven@gmail.com>\n"
 "Language-Team: S猫 <silent.haven@gmail.com>\n"
@@ -231,226 +231,226 @@ msgstr "未知：未找到修订元数据"
 msgid "Invalid regular expression: {0}"
 msgstr "无效的正则表达式：{0}"
 
-#: src/gui/qt/main_window.cpp:75
+#: src/gui/qt/main_window.cpp:74
 msgid ""
 "LOOT could not unambiguously set the load order. This may be due to the "
 "presence of one or more sTestFile properties in the game's ini files. Remove "
 "all such properties and then restart LOOT."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:79
+#: src/gui/qt/main_window.cpp:78
 msgid "LOOT could not unambiguously set the load order."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:82 src/gui/qt/main_window.cpp:1511
+#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1475
 msgid "Ambiguous load order detected"
 msgstr "检测到不明确的加载顺序"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:706
+#: src/gui/qt/main_window.cpp:705
 msgid "&Sort Plugins"
 msgstr "调整排序(&S)"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:708
+#: src/gui/qt/main_window.cpp:707
 msgid "Update &Masterlist"
 msgstr "更新主列表(&M)"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:710
+#: src/gui/qt/main_window.cpp:709
 msgid "&Apply Sorted Load Order"
 msgstr "应用已调整的加载顺序(&A)"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:712
+#: src/gui/qt/main_window.cpp:711
 msgid "&Discard Sorted Load Order"
 msgstr "放弃已调整的加载顺序(&D)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:717
+#: src/gui/qt/main_window.cpp:716
 msgid "&File"
 msgstr "文件(&F)"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:719
+#: src/gui/qt/main_window.cpp:718
 msgid "&Settings…"
 msgstr "设置…(&S)"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:721
+#: src/gui/qt/main_window.cpp:720
 msgid "&Update All Masterlists"
 msgstr ""
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:723
+#: src/gui/qt/main_window.cpp:722
 msgid "&Backup LOOT Data"
 msgstr "备份LOOT数据(&B)"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:725
+#: src/gui/qt/main_window.cpp:724
 msgid "&Open LOOT Data Folder"
 msgstr "打开LOOT数据文件夹(&O)"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:727
+#: src/gui/qt/main_window.cpp:726
 msgid "&Quit"
 msgstr "退出(&Q)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:731
+#: src/gui/qt/main_window.cpp:730
 msgid "&Game"
 msgstr "游戏(&G)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:733
+#: src/gui/qt/main_window.cpp:732
 msgid "&Edit Groups…"
 msgstr "编辑组…(&E)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:735
+#: src/gui/qt/main_window.cpp:734
 msgid "Searc&h Cards…"
 msgstr "搜索卡片…(&H)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:737
+#: src/gui/qt/main_window.cpp:736
 msgid "Copy &Load Order"
 msgstr "复制加载顺序(&L)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:739
+#: src/gui/qt/main_window.cpp:738
 msgid "&Copy Content"
 msgstr "复制内容(&C)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:741
+#: src/gui/qt/main_window.cpp:740
 msgid "&Refresh Content"
 msgstr "刷新内容(&R)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:743
+#: src/gui/qt/main_window.cpp:742
 msgid "Redate &Plugins…"
 msgstr "修改插件时间…(&P)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:745
+#: src/gui/qt/main_window.cpp:744
 msgid "&Fix Ambiguous Load Order"
 msgstr "复制加载顺序(&F)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:747
+#: src/gui/qt/main_window.cpp:746
 msgid "Clear All &User Metadata…"
 msgstr "清除所有用户元数据…(&U)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:751
+#: src/gui/qt/main_window.cpp:750
 msgid "&Plugin"
 msgstr "插件(&P)"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:753
+#: src/gui/qt/main_window.cpp:752
 msgid "Copy &Plugin Name"
 msgstr "复制插件名称(&P)"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:755
+#: src/gui/qt/main_window.cpp:754
 msgid "Copy &Card Content"
 msgstr "复制卡片内容(&C)"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:757
+#: src/gui/qt/main_window.cpp:756
 msgid "Copy &Metadata"
 msgstr "复制元数据(&M)"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:759
+#: src/gui/qt/main_window.cpp:758
 msgid "&Edit Metadata…"
 msgstr "编辑元数据…(&E)"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:761
+#: src/gui/qt/main_window.cpp:760
 msgid "Clear &User Metadata…"
 msgstr "清除用户元数据…(&U)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:765
+#: src/gui/qt/main_window.cpp:764
 msgid "&Help"
 msgstr "帮助(&H)"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:767
+#: src/gui/qt/main_window.cpp:766
 msgid "&View Documentation"
 msgstr "查看文档(&V)"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:769
+#: src/gui/qt/main_window.cpp:768
 msgid "&Open FAQs"
 msgstr ""
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:771
+#: src/gui/qt/main_window.cpp:770
 msgid "&Join Discord Server"
 msgstr "加入Discord服务器(&J)"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:773
+#: src/gui/qt/main_window.cpp:772
 msgid "&About"
 msgstr "关于(&A)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:778
+#: src/gui/qt/main_window.cpp:777
 msgid "P&lugins"
 msgstr "插件(&L)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:781
+#: src/gui/qt/main_window.cpp:780
 msgid "F&ilters"
 msgstr "筛选(&I)"
 
-#: src/gui/qt/main_window.cpp:1083 src/gui/qt/main_window.cpp:1565
-#: src/gui/qt/main_window.cpp:2184
+#: src/gui/qt/main_window.cpp:1082 src/gui/qt/main_window.cpp:1529
+#: src/gui/qt/main_window.cpp:2154
 msgid "Updating and parsing masterlist…"
 msgstr "更新并解析主列表…"
 
-#: src/gui/qt/main_window.cpp:1148
+#: src/gui/qt/main_window.cpp:1170
 msgid ""
 "This appears to be the first time you have run LOOT v{0}. Your current LOOT "
 "data has been backed up to: {1}"
 msgstr "这似乎是你第一次运行LOOT v{0}。你当前的LOOT数据已备份到：{1}"
 
-#: src/gui/qt/main_window.cpp:1156
+#: src/gui/qt/main_window.cpp:1178
 msgid "This appears to be the first time you have run LOOT v{0}."
 msgstr "这似乎是你第一次运行LOOT v{0}。"
 
-#: src/gui/qt/main_window.cpp:1163
+#: src/gui/qt/main_window.cpp:1185
 msgid "Here are some tips to help you get started with the interface."
 msgstr "这里有一些技巧可以帮助你开始使用这个软件。"
 
-#: src/gui/qt/main_window.cpp:1168
+#: src/gui/qt/main_window.cpp:1190
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by overlap "
 "filtering, or by sorting."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1174
+#: src/gui/qt/main_window.cpp:1196
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
 "插件可以从侧边栏拖动进入编辑器的\"加载在后面，\"需求\"和\"不兼容\"表格。"
 
-#: src/gui/qt/main_window.cpp:1180
+#: src/gui/qt/main_window.cpp:1202
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
 msgstr "在编辑器打开，或者排序未应用和取消时，有些功能会被禁用。"
 
-#: src/gui/qt/main_window.cpp:1187 src/gui/qt/main_window.cpp:2060
+#: src/gui/qt/main_window.cpp:1209 src/gui/qt/main_window.cpp:2030
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -459,32 +459,32 @@ msgstr ""
 "LOOT是免费的，但如果你想要表达你的感激，可以捐款给WrinklyNinja （LOOT的创造者"
 "和主要开发者） 使用 {0}。"
 
-#: src/gui/qt/main_window.cpp:1202
+#: src/gui/qt/main_window.cpp:1224
 msgid "First-Time Tips"
 msgstr "首次运行小贴士"
 
-#: src/gui/qt/main_window.cpp:1237
+#: src/gui/qt/main_window.cpp:1259
 msgid "metadata edits"
 msgstr "元数据编辑"
 
-#: src/gui/qt/main_window.cpp:1238
+#: src/gui/qt/main_window.cpp:1260
 msgid "sorted load order"
 msgstr "已调整的加载顺序"
 
-#: src/gui/qt/main_window.cpp:1241
+#: src/gui/qt/main_window.cpp:1263
 msgid ""
 "You have not yet applied or cancelled your {0}. Are you sure you want to "
 "quit?"
 msgstr "你还没用应用或取消你的{0}。确定要退出吗？"
 
-#: src/gui/qt/main_window.cpp:1380
+#: src/gui/qt/main_window.cpp:1352
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:370
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr "错误"
 
-#: src/gui/qt/main_window.cpp:1390
+#: src/gui/qt/main_window.cpp:1362
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:364
 #: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
@@ -494,17 +494,17 @@ msgstr ""
 "哦不，出错了！你可以检查你的LOOTDebugLog.txt（你可以在主菜单中找到它）来获得"
 "详细信息。"
 
-#: src/gui/qt/main_window.cpp:1443
+#: src/gui/qt/main_window.cpp:1407
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
 msgstr "未能对插件进行排序。详细信息可能在一般信息中提供。"
 
-#: src/gui/qt/main_window.cpp:1461
+#: src/gui/qt/main_window.cpp:1425
 msgid "Sorting made no changes to the load order."
 msgstr "加载顺序没有变化。"
 
-#: src/gui/qt/main_window.cpp:1512
+#: src/gui/qt/main_window.cpp:1476
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -519,36 +519,36 @@ msgstr ""
 "你可以使用游戏菜单中的“修复不明确的加载顺序”，将加载顺序明确设置为LOOT显示的"
 "顺序。"
 
-#: src/gui/qt/main_window.cpp:1592
+#: src/gui/qt/main_window.cpp:1552
 msgid "Updating all masterlists…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1614
+#: src/gui/qt/main_window.cpp:1584
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr "你的LOOT数据已备份到：{0}"
 
-#: src/gui/qt/main_window.cpp:1621
+#: src/gui/qt/main_window.cpp:1591
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr "未能创建备份，因为LOOT没有要备份的数据。"
 
-#: src/gui/qt/main_window.cpp:1665
+#: src/gui/qt/main_window.cpp:1635
 msgid "The load order has been copied to the clipboard."
 msgstr "加载顺序已被复制到剪贴板。"
 
-#: src/gui/qt/main_window.cpp:1683
+#: src/gui/qt/main_window.cpp:1653
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "LOOT 的内容已被复制到剪贴板。"
 
-#: src/gui/qt/main_window.cpp:1695
+#: src/gui/qt/main_window.cpp:1665
 msgid "The load order displayed by LOOT has been set."
 msgstr "LOOT显示的加载顺序已设置。"
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1720
+#: src/gui/qt/main_window.cpp:1690
 msgid "Redate Plugins?"
 msgstr "修改插件时间？"
 
-#: src/gui/qt/main_window.cpp:1722
+#: src/gui/qt/main_window.cpp:1692
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -559,96 +559,96 @@ msgstr ""
 "Workshop订阅的mod都会被Steam重新下载(这不影响天际特别版)。您确定要继续吗？"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1734
+#: src/gui/qt/main_window.cpp:1704
 msgid "Plugins were successfully redated."
 msgstr "修改插件日期已完成。"
 
-#: src/gui/qt/main_window.cpp:1746
+#: src/gui/qt/main_window.cpp:1716
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr "你确定要清除所有插件里用户添加的元数据？"
 
-#: src/gui/qt/main_window.cpp:1794
+#: src/gui/qt/main_window.cpp:1764
 msgid "All user-added metadata has been cleared."
 msgstr "所有用户添加的元数据已被清除。"
 
-#: src/gui/qt/main_window.cpp:1807
+#: src/gui/qt/main_window.cpp:1777
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
 msgstr ""
 "插件元数据编辑器已打开，请先关闭编辑器，然后再尝试编辑另一个插件的元数据。"
 
-#: src/gui/qt/main_window.cpp:1871
+#: src/gui/qt/main_window.cpp:1841
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\"的元数据已被复制到剪贴板。"
 
-#: src/gui/qt/main_window.cpp:1889
+#: src/gui/qt/main_window.cpp:1859
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "插件名称\"{0}\"已被复制到剪贴板。"
 
-#: src/gui/qt/main_window.cpp:1908
+#: src/gui/qt/main_window.cpp:1878
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\"的卡片内容已被复制到剪贴板。"
 
-#: src/gui/qt/main_window.cpp:1923
+#: src/gui/qt/main_window.cpp:1893
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr "你确定要清除从\"{0}\"清除所有用户添加的元数据？"
 
-#: src/gui/qt/main_window.cpp:1963
+#: src/gui/qt/main_window.cpp:1933
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "\"{0}\"中用户添加的元数据已被清除。"
 
-#: src/gui/qt/main_window.cpp:2046
+#: src/gui/qt/main_window.cpp:2016
 msgid "Version {0} (build {1})"
 msgstr "版本 {0} (编译 {1})"
 
-#: src/gui/qt/main_window.cpp:2052
+#: src/gui/qt/main_window.cpp:2022
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
 "3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2070
+#: src/gui/qt/main_window.cpp:2040
 msgid "About LOOT"
 msgstr "关于LOOT"
 
-#: src/gui/qt/main_window.cpp:2386
+#: src/gui/qt/main_window.cpp:2364
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2534
+#: src/gui/qt/main_window.cpp:2512
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr "自动排序被取消，因为至少显示了一条错误消息。"
 
-#: src/gui/qt/main_window.cpp:2597
+#: src/gui/qt/main_window.cpp:2571
 msgid "No masterlist update was necessary."
 msgstr "主列表无需更新。"
 
-#: src/gui/qt/main_window.cpp:2617
+#: src/gui/qt/main_window.cpp:2591
 msgid "Masterlist updated to revision {0}."
 msgstr "主列表已更新到版次{0}。"
 
-#: src/gui/qt/main_window.cpp:2681
+#: src/gui/qt/main_window.cpp:2655
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2702
+#: src/gui/qt/main_window.cpp:2678
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2764
+#: src/gui/qt/main_window.cpp:2740
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "一个[新版本]({0})的LOOT发行了。"
 
-#: src/gui/qt/main_window.cpp:2781
+#: src/gui/qt/main_window.cpp:2757
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
