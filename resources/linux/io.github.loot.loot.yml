@@ -146,24 +146,24 @@ modules:
       - -DCMAKE_BUILD_TYPE=Release
       - -DLIBLOOT_BUILD_TESTS=OFF
       - -DLIBLOOT_INSTALL_DOCS=OFF
-      - -DESPLUGIN_URL=/run/build/libloot/5.0.1.tar.gz
-      - -DLIBLOADORDER_URL=/run/build/libloot/16.0.0.tar.gz
-      - -DLOOT_CONDITION_INTERPRETER_URL=/run/build/libloot/4.0.0.tar.gz
+      - -DESPLUGIN_URL=/run/build/libloot/6.0.0.tar.gz
+      - -DLIBLOADORDER_URL=/run/build/libloot/17.0.1.tar.gz
+      - -DLOOT_CONDITION_INTERPRETER_URL=/run/build/libloot/4.0.1.tar.gz
     sources:
       # Use the Git repository so that libloot's commit hash gets embedded in the build.
       - type: git
         url: https://github.com/loot/libloot.git
-        tag: 0.22.4
-        commit: 03baecec4c442735646edd4241ae5992298edcb7
+        tag: 0.23.0
+        commit: f3eabb639bbdfe266e51d00e578504a3ab49968c
       - type: file
-        url: https://github.com/Ortham/esplugin/archive/5.0.1.tar.gz
-        sha256: 4feb855e1f90046357497b5f0fdebe3e126f84d8dc9bc468e153bcbcb1aa9171
+        url: https://github.com/Ortham/esplugin/archive/refs/tags/6.0.0.tar.gz
+        sha256: d9deea7581bcd823bcc2ce6903a7c711404b6b80242c47d93f70ec79b9ab59b7
       - type: file
-        url: https://github.com/Ortham/libloadorder/archive/16.0.0.tar.gz
-        sha256: 920d1f1f52b204ef70d726d50c6c7d03ce206b5f28f642aceeb7bad578d0635c
+        url: https://github.com/Ortham/libloadorder/archive/refs/tags/17.0.1.tar.gz
+        sha256: 36d90eb5cd53cbbf9d04de7ead561d69ea6aadcf3363d425a3c8370dc566c1b6
       - type: file
-        url: https://github.com/loot/loot-condition-interpreter/archive/4.0.0.tar.gz
-        sha256: 8ed76a1393bd4a909a39d560444ac9186b795a56929d8b07ff77e4aef1e54adc
+        url: https://github.com/loot/loot-condition-interpreter/archive/refs/tags/4.0.1.tar.gz
+        sha256: 12bf0b108e4734baa3634e98cd7952a9411352539be3ec270aeee97c1b8db92f
       # Generated using scripts/generate_manifests.sh
       - ../../build/flatpak-manifests/esplugin.json
       - ../../build/flatpak-manifests/libloadorder.json

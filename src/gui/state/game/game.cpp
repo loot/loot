@@ -626,7 +626,7 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
     }
   }
 
-  if (plugin.IsOverridePlugin() && !plugin.IsValidAsOverridePlugin()) {
+  if (plugin.IsUpdatePlugin() && !plugin.IsValidAsUpdatePlugin()) {
     if (logger) {
       logger->error(
           "\"{}\" is an overlay plugin but adds new records. Using this "

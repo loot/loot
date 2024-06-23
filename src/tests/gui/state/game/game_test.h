@@ -1160,10 +1160,10 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
 
   auto thirdSetLoadOrder = loadOrderToSet_;
 
-  ASSERT_NE(blankDifferentMasterDependentEsm, loadOrderToSet_[3]);
-  ASSERT_NE(blankDifferentEsm, loadOrderToSet_[4]);
-  loadOrderToSet_[3] = blankDifferentMasterDependentEsm;
-  loadOrderToSet_[4] = blankDifferentEsm;
+  ASSERT_NE(blankDifferentEsm, loadOrderToSet_[2]);
+  ASSERT_NE(blankMasterDependentEsm, loadOrderToSet_[3]);
+  loadOrderToSet_[2] = blankDifferentEsm;
+  loadOrderToSet_[3] = blankMasterDependentEsm;
 
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
