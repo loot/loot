@@ -812,8 +812,7 @@ void MainWindow::setIcons() {
 
 void MainWindow::enableGameActions() {
   menuGame->setEnabled(true);
-  actionSort->setEnabled(state.GetCurrentGame().GetSettings().Id() !=
-                         GameId::starfield);
+  actionSort->setEnabled(true);
   actionUpdateMasterlist->setEnabled(true);
   actionSearch->setEnabled(true);
 
@@ -865,8 +864,7 @@ void MainWindow::exitEditingState() {
   actionClearMetadata->setEnabled(true);
   gameComboBox->setEnabled(true);
   actionUpdateMasterlist->setEnabled(true);
-  actionSort->setEnabled(state.GetCurrentGame().GetSettings().Id() !=
-                         GameId::starfield);
+  actionSort->setEnabled(true);
 
   sidebarPluginsView->verticalHeader()->setDefaultSectionSize(
       getSidebarRowHeight(false));
