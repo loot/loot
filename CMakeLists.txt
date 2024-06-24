@@ -78,6 +78,8 @@ else()
             set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.22.4/libloot-0.22.4-Linux.tar.xz")
             set(LIBLOOT_HASH "SHA256=3f0d7770912d0951c759c1571d3996422572652125cf8fcd0dbc466ece6b7c21")
         endif()
+    else()
+        file(TO_CMAKE_PATH "${LIBLOOT_URL}" LIBLOOT_URL)
     endif()
 
     ExternalProject_Add(libloot
