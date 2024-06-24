@@ -199,13 +199,12 @@ std::vector<T> MapFromLoadOrderData(
     }
 
     const auto isLight = plugin->IsLightPlugin();
-    const auto isOverride = plugin->IsOverridePlugin();
     const auto isActive = game.IsPluginActive(pluginName);
 
     const auto numberOfActivePlugins =
         isLight ? numberOfActiveLightPlugins : numberOfActiveNormalPlugins;
 
-    const auto activeLoadOrderIndex = isActive && !isOverride
+    const auto activeLoadOrderIndex = isActive
                                           ? std::optional(numberOfActivePlugins)
                                           : std::nullopt;
 
@@ -214,7 +213,7 @@ std::vector<T> MapFromLoadOrderData(
     if (isActive) {
       if (isLight) {
         ++numberOfActiveLightPlugins;
-      } else if (!isOverride) {
+      } else {
         ++numberOfActiveNormalPlugins;
       }
     }
