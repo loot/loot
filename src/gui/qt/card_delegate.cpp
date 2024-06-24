@@ -138,7 +138,7 @@ GeneralInfoCard* setGeneralInfoCardContent(GeneralInfoCard* card,
       counters.warnings, counters.errors, counters.totalMessages);
   card->setPluginCounts(counters.activeLight,
                         counters.activeMedium,
-                        counters.activeRegular,
+                        counters.activeFull,
                         counters.dirty,
                         counters.totalPlugins);
   card->setGeneralMessages(generalInfo.generalMessages);

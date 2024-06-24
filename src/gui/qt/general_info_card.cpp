@@ -54,14 +54,14 @@ void GeneralInfoCard::setMessageCounts(size_t warnings,
 
 void GeneralInfoCard::setPluginCounts(size_t activeLight,
                                       size_t activeMedium,
-                                      size_t activeRegular,
+                                      size_t activeFull,
                                       size_t dirty,
                                       size_t total) {
   activeLightCountValue->setText(QString::number(activeLight));
   activeMediumCountValue->setText(QString::number(activeMedium));
-  activeRegularCountValue->setText(QString::number(activeRegular));
+  activeFullCountValue->setText(QString::number(activeFull));
   activeCountValue->setText(
-      QString::number(activeLight + activeMedium + activeRegular));
+      QString::number(activeLight + activeMedium + activeFull));
 
   dirtyCountValue->setText(QString::number(dirty));
   totalPluginsCountValue->setText(QString::number(total));
@@ -102,8 +102,8 @@ void GeneralInfoCard::updatePluginRowsAndColumns() {
 
   activeCountLabel->setVisible(!showSeparateCounts);
   activeCountValue->setVisible(!showSeparateCounts);
-  activeRegularCountLabel->setVisible(showSeparateCounts);
-  activeRegularCountValue->setVisible(showSeparateCounts);
+  activeFullCountLabel->setVisible(showSeparateCounts);
+  activeFullCountValue->setVisible(showSeparateCounts);
   activeMediumCountLabel->setVisible(showSeparateMediumPluginCount);
   activeMediumCountValue->setVisible(showSeparateMediumPluginCount);
   activeLightCountLabel->setVisible(showSeparateLightPluginCount);
@@ -114,8 +114,8 @@ void GeneralInfoCard::updatePluginRowsAndColumns() {
   auto row = 0;
 
   if (showSeparateCounts) {
-    gridLayout->addWidget(activeRegularCountLabel, row, PLUGIN_LABEL_COLUMN);
-    gridLayout->addWidget(activeRegularCountValue, row, PLUGIN_VALUE_COLUMN);
+    gridLayout->addWidget(activeFullCountLabel, row, PLUGIN_LABEL_COLUMN);
+    gridLayout->addWidget(activeFullCountValue, row, PLUGIN_VALUE_COLUMN);
     row += 1;
 
     if (showSeparateMediumPluginCount) {
@@ -141,11 +141,6 @@ void GeneralInfoCard::updatePluginRowsAndColumns() {
 
   gridLayout->addWidget(totalPluginsCountLabel, row, PLUGIN_LABEL_COLUMN);
   gridLayout->addWidget(totalPluginsCountValue, row, PLUGIN_VALUE_COLUMN);
-
-  const auto activeRegularCountText = showSeparateMediumPluginCount
-                                          ? translate("Active Full Plugins")
-                                          : translate("Active Regular Plugins");
-  activeRegularCountLabel->setText(activeRegularCountText);
 
   const auto activeLightCountText = showSeparateMediumPluginCount
                                         ? translate("Active Small Plugins")
@@ -220,7 +215,7 @@ void GeneralInfoCard::translateUi() {
   totalMessagesCountLabel->setText(translate("Total Messages"));
 
   activeCountLabel->setText(translate("Active Plugins"));
-  activeRegularCountLabel->setText(translate("Active Regular Plugins"));
+  activeFullCountLabel->setText(translate("Active Full Plugins"));
   activeMediumCountLabel->setText(translate("Active Medium Plugins"));
   activeLightCountLabel->setText(translate("Active Light Plugins"));
   dirtyCountLabel->setText(translate("Dirty Plugins"));

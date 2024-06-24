@@ -72,7 +72,7 @@ namespace {
 using loot::GameType;
 
 struct Counters {
-  size_t activeNormal = 0;
+  size_t activeFullPlugins = 0;
   size_t activeLightPlugins = 0;
   size_t activeMediumPlugins = 0;
 };
@@ -244,9 +244,10 @@ std::string GetLoadOrderAsTextTable(const gui::Game& game,
              << counters.activeMediumPlugins << std::dec << " ";
       counters.activeMediumPlugins += 1;
     } else if (isActive) {
-      stream << std::setw(3) << counters.activeNormal << " " << std::hex
-             << std::setw(2) << counters.activeNormal << std::dec << "     ";
-      counters.activeNormal += 1;
+      stream << std::setw(3) << counters.activeFullPlugins << " " << std::hex
+             << std::setw(2) << counters.activeFullPlugins << std::dec
+             << "     ";
+      counters.activeFullPlugins += 1;
     } else {
       stream << "           ";
     }
@@ -648,7 +649,7 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
               boost::locale::translate(
                   "\"{0}\" is flagged as a light {1}, but the game "
                   "does not support such plugins, and will load it as "
-                  "a normal {1}.")
+                  "a full {1}.")
                   .str(),
               plugin.GetName(),
               pluginType.str())));
@@ -1056,7 +1057,7 @@ std::vector<SourcedMessage> Game::GetMessages(
                    "You have not sorted your load order this session."));
   }
 
-  size_t activeNormalPluginsCount = 0;
+  size_t activeFullPluginsCount = 0;
   size_t activeLightPluginsCount = 0;
   size_t activeMediumPluginsCount = 0;
   for (const auto& plugin : GetPlugins()) {
@@ -1066,13 +1067,13 @@ std::vector<SourcedMessage> Game::GetMessages(
       } else if (plugin->IsMediumPlugin()) {
         ++activeMediumPluginsCount;
       } else {
-        ++activeNormalPluginsCount;
+        ++activeFullPluginsCount;
       }
     }
   }
 
-  static constexpr size_t MWSE_SAFE_MAX_ACTIVE_NORMAL_PLUGINS = 1023;
-  static constexpr size_t SAFE_MAX_ACTIVE_NORMAL_PLUGINS = 255;
+  static constexpr size_t MWSE_SAFE_MAX_ACTIVE_FULL_PLUGINS = 1023;
+  static constexpr size_t SAFE_MAX_ACTIVE_FULL_PLUGINS = 255;
   static constexpr size_t SAFE_MAX_ACTIVE_MEDIUM_PLUGINS = 255;
   static constexpr size_t SAFE_MAX_ACTIVE_LIGHT_PLUGINS = 4096;
 
@@ -1081,56 +1082,56 @@ std::vector<SourcedMessage> Game::GetMessages(
       settings_.Id() == GameId::tes3 &&
       std::filesystem::exists(settings_.GamePath() / "MWSE.dll");
 
-  auto safeMaxActiveNormalPlugins = SAFE_MAX_ACTIVE_NORMAL_PLUGINS;
+  auto safeMaxActiveFullPlugins = SAFE_MAX_ACTIVE_FULL_PLUGINS;
 
   if (isMWSEInstalled) {
     if (logger) {
       logger->info(
           "MWSE is installed, which raises the safe maximum number of active "
           "plugins from {} to {}",
-          SAFE_MAX_ACTIVE_NORMAL_PLUGINS,
-          MWSE_SAFE_MAX_ACTIVE_NORMAL_PLUGINS);
+          SAFE_MAX_ACTIVE_FULL_PLUGINS,
+          MWSE_SAFE_MAX_ACTIVE_FULL_PLUGINS);
     }
-    safeMaxActiveNormalPlugins = MWSE_SAFE_MAX_ACTIVE_NORMAL_PLUGINS;
+    safeMaxActiveFullPlugins = MWSE_SAFE_MAX_ACTIVE_FULL_PLUGINS;
   }
 
-  if (activeNormalPluginsCount > safeMaxActiveNormalPlugins) {
+  if (activeFullPluginsCount > safeMaxActiveFullPlugins) {
     if (logger) {
       logger->warn(
-          "The load order has {} active normal plugins, the safe limit is {}.",
-          activeNormalPluginsCount,
-          safeMaxActiveNormalPlugins);
+          "The load order has {} active full plugins, the safe limit is {}.",
+          activeFullPluginsCount,
+          safeMaxActiveFullPlugins);
     }
 
     if (activeLightPluginsCount > 0 || activeMediumPluginsCount > 0) {
       addWarning(MessageSource::activePluginsCountCheck,
                  fmt::format(boost::locale::translate(
-                                 "You have {0} active normal plugins but the "
+                                 "You have {0} active full plugins but the "
                                  "game only supports up to {1}.")
                                  .str(),
-                             activeNormalPluginsCount,
-                             safeMaxActiveNormalPlugins));
+                             activeFullPluginsCount,
+                             safeMaxActiveFullPlugins));
     } else {
       addWarning(MessageSource::activePluginsCountCheck,
                  fmt::format(boost::locale::translate(
                                  "You have {0} active plugins but the "
                                  "game only supports up to {1}.")
                                  .str(),
-                             activeNormalPluginsCount,
-                             safeMaxActiveNormalPlugins));
+                             activeFullPluginsCount,
+                             safeMaxActiveFullPlugins));
     }
   }
 
   if (isMWSEInstalled &&
-      activeNormalPluginsCount > SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
-      activeNormalPluginsCount <= MWSE_SAFE_MAX_ACTIVE_NORMAL_PLUGINS) {
+      activeFullPluginsCount > SAFE_MAX_ACTIVE_FULL_PLUGINS &&
+      activeFullPluginsCount <= MWSE_SAFE_MAX_ACTIVE_FULL_PLUGINS) {
     if (logger) {
       logger->warn(
           "Morrowind must be launched using MWSE: {} plugins are active, "
           "which is more than the {} plugins that vanilla Morrowind "
           "supports.",
-          activeNormalPluginsCount,
-          SAFE_MAX_ACTIVE_NORMAL_PLUGINS);
+          activeFullPluginsCount,
+          SAFE_MAX_ACTIVE_FULL_PLUGINS);
     }
 
     addWarning(MessageSource::activePluginsCountCheck,
@@ -1166,20 +1167,20 @@ std::vector<SourcedMessage> Game::GetMessages(
                     SAFE_MAX_ACTIVE_LIGHT_PLUGINS));
   }
 
-  if (activeNormalPluginsCount >= SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
+  if (activeFullPluginsCount >= SAFE_MAX_ACTIVE_FULL_PLUGINS &&
       activeLightPluginsCount > 0) {
     if (logger) {
       logger->warn(
-          "{} normal plugins and at least one light plugin are active at "
+          "{} full plugins and at least one light plugin are active at "
           "the same time.",
-          activeNormalPluginsCount);
+          activeFullPluginsCount);
     }
 
     addWarning(
         MessageSource::activePluginsCountCheck,
         fmt::format(boost::locale::translate(
-                        "You have a normal plugin and {0} {1} sharing the FE "
-                        "load order index. Deactivate a normal plugin or your "
+                        "You have a full plugin and {0} {1} sharing the FE "
+                        "load order index. Deactivate a full plugin or your "
                         "{1} to avoid potential issues.")
                         .str(),
                     activeLightPluginsCount,
@@ -1203,20 +1204,20 @@ std::vector<SourcedMessage> Game::GetMessages(
                            SAFE_MAX_ACTIVE_MEDIUM_PLUGINS));
   }
 
-  if (activeNormalPluginsCount >= (SAFE_MAX_ACTIVE_NORMAL_PLUGINS - 1) &&
+  if (activeFullPluginsCount >= (SAFE_MAX_ACTIVE_FULL_PLUGINS - 1) &&
       activeMediumPluginsCount > 0) {
     if (logger) {
       logger->warn(
-          "{} normal plugins and at least one medium plugin are active at "
+          "{} full plugins and at least one medium plugin are active at "
           "the same time.",
-          activeNormalPluginsCount);
+          activeFullPluginsCount);
     }
 
     addWarning(
         MessageSource::activePluginsCountCheck,
         boost::locale::translate(
-            "You have a normal plugin and at least one medium plugin sharing "
-            "the FD load order index. Deactivate a normal plugin or all your "
+            "You have a full plugin and at least one medium plugin sharing "
+            "the FD load order index. Deactivate a full plugin or all your "
             "medium plugins to avoid potential issues."));
   }
 

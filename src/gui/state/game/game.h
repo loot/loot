@@ -191,7 +191,7 @@ std::vector<T> MapFromLoadOrderData(
 
   short numberOfActiveLightPlugins = 0;
   short numberOfActiveMediumPlugins = 0;
-  short numberOfActiveNormalPlugins = 0;
+  short numberOfActiveFullPlugins = 0;
 
   // First get all the necessary data to call the mapper, as this is fast.
   for (const auto& pluginName : loadOrder) {
@@ -210,7 +210,7 @@ std::vector<T> MapFromLoadOrderData(
     } else if (isMedium) {
       numberOfActivePlugins = numberOfActiveMediumPlugins;
     } else {
-      numberOfActivePlugins = numberOfActiveNormalPlugins;
+      numberOfActivePlugins = numberOfActiveFullPlugins;
     }
 
     const auto activeLoadOrderIndex = isActive
@@ -225,7 +225,7 @@ std::vector<T> MapFromLoadOrderData(
       } else if (isMedium) {
         ++numberOfActiveMediumPlugins;
       } else {
-        ++numberOfActiveNormalPlugins;
+        ++numberOfActiveFullPlugins;
       }
     }
   }

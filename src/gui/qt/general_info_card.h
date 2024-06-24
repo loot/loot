@@ -49,7 +49,7 @@ public:
 
   void setPluginCounts(size_t activeLight,
                        size_t activeMedium,
-                       size_t activeRegular,
+                       size_t activeFull,
                        size_t dirty,
                        size_t total);
 
@@ -85,8 +85,8 @@ private:
   QLabel* activeLightCountValue{new QLabel(this)};
   QLabel* activeMediumCountLabel{new QLabel(this)};
   QLabel* activeMediumCountValue{new QLabel(this)};
-  QLabel* activeRegularCountLabel{new QLabel(this)};
-  QLabel* activeRegularCountValue{new QLabel(this)};
+  QLabel* activeFullCountLabel{new QLabel(this)};
+  QLabel* activeFullCountValue{new QLabel(this)};
   QLabel* dirtyCountLabel{new QLabel(this)};
   QLabel* dirtyCountValue{new QLabel(this)};
   QLabel* totalPluginsCountLabel{new QLabel(this)};

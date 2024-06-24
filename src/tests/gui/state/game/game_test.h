@@ -810,7 +810,7 @@ TEST_P(
                       MessageSource::lightPluginNotSupported,
                       "\\\"Blank\\.esm\\\" is flagged as a light master\\, but "
                       "the game does not support such plugins\\, and will load "
-                      "it as a normal master\\."},
+                      "it as a full master\\."},
               }),
               esmMessages);
     EXPECT_EQ(std::vector<SourcedMessage>({
@@ -819,7 +819,7 @@ TEST_P(
                       MessageSource::lightPluginNotSupported,
                       "\\\"Blank\\.esp\\\" is flagged as a light plugin\\, but "
                       "the game does not support such plugins\\, and will load "
-                      "it as a normal plugin\\."},
+                      "it as a full plugin\\."},
               }),
               espMessages);
   } else {

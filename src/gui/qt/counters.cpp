@@ -42,7 +42,7 @@ GeneralInformationCounters::GeneralInformationCounters(
       } else if (plugin.isMediumPlugin) {
         activeMedium += 1;
       } else {
-        activeRegular += 1;
+        activeFull += 1;
       }
     }
     if (plugin.isDirty) {
