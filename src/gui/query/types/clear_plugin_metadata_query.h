@@ -49,6 +49,7 @@ public:
     auto plugin = game_.GetPlugin(pluginName_);
     if (plugin) {
       return PluginItem(
+          game_.GetSettings().Id(),
           *plugin,
           game_,
           game_.GetActiveLoadOrderIndex(*plugin, game_.GetLoadOrder()),

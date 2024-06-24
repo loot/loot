@@ -39,12 +39,14 @@
 namespace loot {
 struct PluginItem {
   PluginItem() = default;
-  PluginItem(const PluginInterface& plugin,
+  PluginItem(GameId gameId,
+             const PluginInterface& plugin,
              const gui::Game& game,
              const std::optional<short>& loadOrderIndex,
              const bool isActive,
              std::string language);
 
+  GameId gameId{GameId::tes4};
   std::string name;
   std::optional<short> loadOrderIndex;
   std::optional<uint32_t> crc;

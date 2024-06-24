@@ -67,8 +67,12 @@ private:
         mapper = [&](const PluginInterface* const otherPlugin,
                      std::optional<short> loadOrderIndex,
                      bool isActive) {
-          const auto pluginItem = PluginItem(
-              *otherPlugin, game_, loadOrderIndex, isActive, language_);
+          const auto pluginItem = PluginItem(game_.GetSettings().Id(),
+                                             *otherPlugin,
+                                             game_,
+                                             loadOrderIndex,
+                                             isActive,
+                                             language_);
           const auto overlap = plugin->DoRecordsOverlap(*otherPlugin);
 
           return std::make_pair(pluginItem, overlap);

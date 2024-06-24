@@ -123,11 +123,13 @@ std::pair<PluginMetadata, std::vector<SourcedMessage>> evaluateMetadata(
   return {metadata, evalErrors};
 }
 
-PluginItem::PluginItem(const PluginInterface& plugin,
+PluginItem::PluginItem(GameId gameId,
+                       const PluginInterface& plugin,
                        const gui::Game& game,
                        const std::optional<short>& loadOrderIndex,
                        const bool isActive,
                        std::string language) :
+    gameId(gameId),
     name(plugin.GetName()),
     loadOrderIndex(loadOrderIndex),
     crc(plugin.GetCRC()),
@@ -365,7 +367,11 @@ std::string PluginItem::getMarkdownContent() const {
   }
 
   if (isLightPlugin) {
-    attributes.push_back("Light Plugin");
+    if (gameId == GameId::starfield) {
+      attributes.push_back("Small Plugin");
+    } else {
+      attributes.push_back("Light Plugin");
+    }
   }
 
   if (isMediumPlugin) {
@@ -452,7 +458,12 @@ std::vector<PluginItem> GetPluginItems(
       mapper = [&](const PluginInterface* const plugin,
                    std::optional<short> loadOrderIndex,
                    bool isActive) {
-        return PluginItem(*plugin, game, loadOrderIndex, isActive, language);
+        return PluginItem(game.GetSettings().Id(),
+                          *plugin,
+                          game,
+                          loadOrderIndex,
+                          isActive,
+                          language);
       };
 
   return MapFromLoadOrderData(game, pluginNames, mapper);

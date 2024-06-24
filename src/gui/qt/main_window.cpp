@@ -1054,6 +1054,7 @@ void MainWindow::refreshPluginRawData(const std::string& pluginName) {
     if (pluginItem.name == pluginName) {
       const auto& plugin = *state.GetCurrentGame().GetPlugin(pluginName);
       const auto newPluginItem = PluginItem(
+          state.GetCurrentGame().GetSettings().Id(),
           plugin,
           state.GetCurrentGame(),
           state.GetCurrentGame().GetActiveLoadOrderIndex(plugin, loadOrder),

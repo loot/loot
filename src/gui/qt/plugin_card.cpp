@@ -177,6 +177,12 @@ void PluginCard::setContent(const PluginItem& plugin,
     isCleanLabel->setToolTip(QString());
   }
 
+  if (plugin.gameId == GameId::starfield) {
+    lightPluginLabel->setToolTip(translate("Small Plugin"));
+  } else {
+    lightPluginLabel->setToolTip(translate("Light Plugin"));
+  }
+
   layout()->activate();
 }
 
