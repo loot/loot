@@ -141,6 +141,16 @@ void GeneralInfoCard::updatePluginRowsAndColumns() {
 
   gridLayout->addWidget(totalPluginsCountLabel, row, PLUGIN_LABEL_COLUMN);
   gridLayout->addWidget(totalPluginsCountValue, row, PLUGIN_VALUE_COLUMN);
+
+  const auto activeRegularCountText = showSeparateMediumPluginCount
+                                          ? translate("Active Full Plugins")
+                                          : translate("Active Regular Plugins");
+  activeRegularCountLabel->setText(activeRegularCountText);
+
+  const auto activeLightCountText = showSeparateMediumPluginCount
+                                        ? translate("Active Small Plugins")
+                                        : translate("Active Light Plugins");
+  activeLightCountLabel->setText(activeLightCountText);
 }
 
 void GeneralInfoCard::refreshMessages() { messagesWidget->refresh(); }
