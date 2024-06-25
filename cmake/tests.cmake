@@ -14,8 +14,8 @@ FetchContent_Declare(
 
 FetchContent_Declare(
     testing-plugins
-    URL "https://github.com/Ortham/testing-plugins/archive/1.4.1.tar.gz"
-    URL_HASH "SHA256=57f82495a737013c1b828d43fbe87edcb57768f85c6416e8d17f273d692691cf")
+    URL "https://github.com/Ortham/testing-plugins/archive/1.6.2.tar.gz"
+    URL_HASH "SHA256=f6e5b55e2669993ab650ba470424b725d1fab71ace979134a77de3373bd55620")
 
 FetchContent_MakeAvailable(GTest testing-plugins)
 
