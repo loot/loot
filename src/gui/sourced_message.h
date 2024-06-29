@@ -40,7 +40,7 @@ enum struct MessageSource : unsigned int {
   inactiveMaster,
   lightPluginRequiresNonMaster,
   invalidLightPlugin,
-  invalidOverridePlugin,
+  invalidUpdatePlugin,
   invalidHeaderVersion,
   missingGroup,
   bashTagsOverride,

@@ -652,15 +652,15 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
   if (plugin.IsUpdatePlugin() && !plugin.IsValidAsUpdatePlugin()) {
     if (logger) {
       logger->error(
-          "\"{}\" is an overlay plugin but adds new records. Using this "
+          "\"{}\" is an update plugin but adds new records. Using this "
           "plugin may cause irreversible damage to your game saves.",
           plugin.GetName());
     }
     messages.push_back(CreatePlainTextSourcedMessage(
         MessageType::error,
-        MessageSource::invalidOverridePlugin,
+        MessageSource::invalidUpdatePlugin,
         boost::locale::translate(
-            "This plugin is an overlay plugin but adds new records. Using "
+            "This plugin is an update plugin but adds new records. Using "
             "this plugin may cause irreversible damage to your game saves.")));
   }
 
