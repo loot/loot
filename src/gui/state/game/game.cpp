@@ -544,16 +544,22 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
               plugin.GetName(),
               masterName);
         }
+
+        const auto pluginType =
+            settings_.Id() == GameId::starfield
+                ? boost::locale::translate("small master").str()
+                : boost::locale::translate("light master").str();
+
         messages.push_back(CreatePlainTextSourcedMessage(
             MessageType::error,
             MessageSource::lightPluginRequiresNonMaster,
             fmt::format(
                 boost::locale::translate(
-                    "This plugin is a light master and requires the non-master "
-                    "plugin \"{0}\". This can cause issues in-game, and "
-                    "sorting "
-                    "will fail while this plugin is installed.")
+                    "This plugin is a {0} and requires the non-master plugin "
+                    "\"{1}\". This can cause issues in-game, and sorting will "
+                    "fail while this plugin is installed.")
                     .str(),
+                pluginType,
                 masterName)));
       }
     }
@@ -938,8 +944,7 @@ std::optional<short> Game::GetActiveLoadOrderIndex(
     }
 
     auto otherPlugin = GetPlugin(otherPluginName);
-    if (otherPlugin &&
-        plugin.IsLightPlugin() == otherPlugin->IsLightPlugin() &&
+    if (otherPlugin && plugin.IsLightPlugin() == otherPlugin->IsLightPlugin() &&
         plugin.IsMediumPlugin() == otherPlugin->IsMediumPlugin() &&
         IsPluginActive(otherPluginName)) {
       ++numberOfActivePlugins;
@@ -1134,6 +1139,15 @@ std::vector<SourcedMessage> Game::GetMessages(
                    "cause severe damage to your game."));
   }
 
+  const auto lightPluginType =
+      settings_.Id() == GameId::starfield
+          ? boost::locale::translate(
+                "small plugin", "small plugins", activeLightPluginsCount)
+                .str()
+          : boost::locale::translate(
+                "light plugin", "light plugins", activeLightPluginsCount)
+                .str();
+
   if (activeLightPluginsCount > SAFE_MAX_ACTIVE_LIGHT_PLUGINS) {
     if (logger) {
       logger->warn(
@@ -1142,13 +1156,14 @@ std::vector<SourcedMessage> Game::GetMessages(
           SAFE_MAX_ACTIVE_LIGHT_PLUGINS);
     }
 
-    addWarning(MessageSource::activePluginsCountCheck,
-               fmt::format(boost::locale::translate(
-                               "You have {0} active light plugins but the "
-                               "game only supports up to {1}.")
-                               .str(),
-                           activeLightPluginsCount,
-                           SAFE_MAX_ACTIVE_LIGHT_PLUGINS));
+    addWarning(
+        MessageSource::activePluginsCountCheck,
+        fmt::format(boost::locale::translate("You have {0} active {1} but the "
+                                             "game only supports up to {2}.")
+                        .str(),
+                    activeLightPluginsCount,
+                    lightPluginType,
+                    SAFE_MAX_ACTIVE_LIGHT_PLUGINS));
   }
 
   if (activeNormalPluginsCount >= SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
@@ -1162,10 +1177,13 @@ std::vector<SourcedMessage> Game::GetMessages(
 
     addWarning(
         MessageSource::activePluginsCountCheck,
-        boost::locale::translate(
-            "You have a normal plugin and at least one light plugin sharing "
-            "the FE load order index. Deactivate a normal plugin or all your "
-            "light plugins to avoid potential issues."));
+        fmt::format(boost::locale::translate(
+                        "You have a normal plugin and {0} {1} sharing the FE "
+                        "load order index. Deactivate a normal plugin or your "
+                        "{1} to avoid potential issues.")
+                        .str(),
+                    activeLightPluginsCount,
+                    lightPluginType));
   }
 
   if (activeMediumPluginsCount > SAFE_MAX_ACTIVE_MEDIUM_PLUGINS) {
