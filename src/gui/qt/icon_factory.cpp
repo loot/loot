@@ -54,6 +54,10 @@ QIcon IconFactory::getLightPluginIcon() {
   return getIcon(":/icons/material-icons/light_mode_black_48dp.svg");
 }
 
+QIcon IconFactory::getMediumPluginIcon() {
+  return getIcon(":/icons/medium.svg");
+}
+
 QIcon IconFactory::getEmptyPluginIcon() {
   return getIcon(":/icons/material-icons/visibility_off_black_48dp.svg");
 }

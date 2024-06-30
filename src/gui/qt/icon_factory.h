@@ -38,6 +38,7 @@ public:
   static QIcon getIsActiveIcon();
   static QIcon getMasterFileIcon();
   static QIcon getLightPluginIcon();
+  static QIcon getMediumPluginIcon();
   static QIcon getEmptyPluginIcon();
   static QIcon getLoadsArchiveIcon();
   static QIcon getIsCleanIcon();

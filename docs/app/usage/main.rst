@@ -64,6 +64,7 @@ The plugin card's header holds the following information, some of which is only 
 - The "Active Plugin" |active_plugin_icon| icon.
 - The "Master Plugin" |master_plugin_icon| icon.
 - The "Light Plugin" |light_plugin_icon| icon.
+- The "Medium Plugin" |medium_plugin_icon| icon.
 - The "Empty Plugin" |empty_plugin_icon| icon.
 - The "Loads Archive" |loads_archive_icon| icon.
 - The "Verified clean" |verified_clean_icon| icon.
@@ -74,6 +75,8 @@ The plugin card's header holds the following information, some of which is only 
 .. |master_plugin_icon| image:: ../../../resources/icons/crown.svg
   :scale: 45%
 .. |light_plugin_icon| image:: ../../../resources/icons/material-icons/light_mode_black_48dp.svg
+  :scale: 45%
+.. |medium_plugin_icon| image:: ../../../resources/icons/medium.svg
   :scale: 45%
 .. |empty_plugin_icon| image:: ../../../resources/icons/material-icons/visibility_off_black_48dp.svg
   :scale: 45%
