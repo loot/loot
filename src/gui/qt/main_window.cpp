@@ -1385,6 +1385,8 @@ void MainWindow::handleGameDataLoaded(QueryResult result) {
   updateGeneralInformation();
 
   filtersWidget->setGroups(GetGroupNames(state.GetCurrentGame()));
+  filtersWidget->showCreationClubPluginsFilter(
+      state.GetCurrentGame().HadCreationClub());
 
   pluginEditorWidget->setBashTagCompletions(
       state.GetCurrentGame().GetKnownBashTags());

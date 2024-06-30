@@ -51,6 +51,8 @@ public:
 
   void resetOverlapAndGroupsFilters();
 
+  void showCreationClubPluginsFilter(bool show);
+
   void setFilterStates(const LootSettings::Filters &filters);
   LootSettings::Filters getFilterSettings() const;
 

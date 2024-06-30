@@ -63,6 +63,10 @@ void FiltersWidget::resetOverlapAndGroupsFilters() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
+void FiltersWidget::showCreationClubPluginsFilter(bool show) {
+  creationClubPluginsFilter->setVisible(show);
+}
+
 void FiltersWidget::setFilterStates(const LootSettings::Filters& filters) {
   bool hasContentFilterChanged{false};
   bool hasPluginFilterChanged{false};
@@ -240,8 +244,7 @@ void FiltersWidget::setupUi() {
 }
 
 void FiltersWidget::translateUi() {
-  overlapFilterLabel->setText(
-      translate("Show only overlapping plugins for"));
+  overlapFilterLabel->setText(translate("Show only overlapping plugins for"));
   groupPluginsFilterLabel->setText(translate("Show only plugins in group"));
   contentFilterLabel->setText(
       translate("Show only plugins with cards that contain"));
@@ -344,8 +347,7 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
   filters.showOnlyEmptyPlugins = showOnlyEmptyPluginsFilter->isChecked();
 
   if (overlapFilter->currentIndex() > 0) {
-    filters.overlapPluginName =
-        overlapFilter->currentText().toStdString();
+    filters.overlapPluginName = overlapFilter->currentText().toStdString();
   }
 
   if (groupPluginsFilter->currentIndex() > 0) {
@@ -381,8 +383,7 @@ void FiltersWidget::on_overlapFilter_activated() {
   if (overlapFilter->currentIndex() == 0) {
     emit overlapFilterChanged(std::nullopt);
   } else {
-    emit overlapFilterChanged(
-        overlapFilter->currentText().toStdString());
+    emit overlapFilterChanged(overlapFilter->currentText().toStdString());
   }
 }
 
