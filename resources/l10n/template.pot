@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-06-30 08:44+0100\n"
+"POT-Creation-Date: 2024-06-30 16:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1265,73 +1265,73 @@ msgid ""
 "LOOT for the following Bash Tags: {0}."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:871 src/gui/state/game/game.cpp:974
+#: src/gui/state/game/game.cpp:884 src/gui/state/game/game.cpp:987
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1004
+#: src/gui/state/game/game.cpp:1017
 #, c++-format
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1018
+#: src/gui/state/game/game.cpp:1031
 #, c++-format
 msgid "The group \"{0}\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1057
+#: src/gui/state/game/game.cpp:1070
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1109
+#: src/gui/state/game/game.cpp:1122
 #, c++-format
 msgid "You have {0} active full plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1117
+#: src/gui/state/game/game.cpp:1130
 #, c++-format
 msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1139
+#: src/gui/state/game/game.cpp:1152
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1146
+#: src/gui/state/game/game.cpp:1159
 msgid "small plugin"
 msgid_plural "small plugins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/game.cpp:1149
+#: src/gui/state/game/game.cpp:1162
 msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/game.cpp:1162
+#: src/gui/state/game/game.cpp:1175
 #, c++-format
 msgid "You have {0} active {1} but the game only supports up to {2}."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1182
+#: src/gui/state/game/game.cpp:1195
 #, c++-format
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
 "Deactivate a full plugin or your {1} to avoid potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1200
+#: src/gui/state/game/game.cpp:1213
 #, c++-format
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1219
+#: src/gui/state/game/game.cpp:1232
 msgid ""
 "You have a full plugin and at least one medium plugin sharing the FD load "
 "order index. Deactivate a full plugin or all your medium plugins to avoid "
@@ -1340,7 +1340,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's name.
 #.
-#: src/gui/state/game/game.cpp:1232
+#: src/gui/state/game/game.cpp:1245
 #, c++-format
 msgid ""
 "{0} is installed in a case-sensitive location. This may cause issues as the "
@@ -1350,7 +1350,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's
 #. name.
-#: src/gui/state/game/game.cpp:1263
+#: src/gui/state/game/game.cpp:1276
 #, c++-format
 msgid ""
 "{0}'s local application data is stored in a case-sensitive location. This "
@@ -1358,7 +1358,7 @@ msgid ""
 "are not case-sensitive, which is the default on Windows."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1332
+#: src/gui/state/game/game.cpp:1345
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"

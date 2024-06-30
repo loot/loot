@@ -814,6 +814,13 @@ void Game::LoadCreationClubPluginNames() {
 
   creationClubPlugins_.clear();
 
+  if (!HadCreationClub()) {
+    logger->debug(
+        "The current game was not part of the Creation Club while it was "
+        "active, skipping loading Creation Club plugin names.");
+    return;
+  }
+
   const auto cccFilename = GetCCCFilename(settings_.Type());
 
   if (!cccFilename.has_value()) {
@@ -855,6 +862,12 @@ void Game::LoadCreationClubPluginNames() {
         "The following plugins will be hidden by the Creation Club filter: {}",
         lines);
   }
+}
+
+bool Game::HadCreationClub() const {
+  // The Creation Club has been replaced, but while it was active it was
+  // available for Skyrim SE and Fallout 4.
+  return settings_.Id() == GameId::tes5se || settings_.Id() == GameId::fo4;
 }
 
 void Game::LoadAllInstalledPlugins(bool headersOnly) {
