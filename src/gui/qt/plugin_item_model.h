@@ -96,6 +96,7 @@ public:
   void setEditorPluginName(const std::optional<std::string>& editorPluginName);
 
   void setGeneralInformation(bool gameSupportsLightPlugins,
+                             bool gameSupportsMediumPlugins,
                              const FileRevisionSummary& masterlistRevision,
                              const FileRevisionSummary& preludeRevision,
                              const std::vector<SourcedMessage>& messages);

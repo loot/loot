@@ -48,7 +48,7 @@ namespace loot {
 //   2. Longest text in fourth table column (total messages count)
 //   3. Longest text in sixth table column (total plugins count)
 //   4. Message texts
-//   5. Whether the game supports light plugins or not
+//   5. How many types of plugins supported by the game have count rows
 //   6. true
 //
 //   Plugin card:

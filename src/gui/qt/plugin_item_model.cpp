@@ -355,12 +355,14 @@ void PluginItemModel::setEditorPluginName(
 
 void PluginItemModel::setGeneralInformation(
     bool gameSupportsLightPlugins,
+    bool gameSupportsMediumPlugins,
     const FileRevisionSummary& masterlistRevision,
     const FileRevisionSummary& preludeRevision,
     const std::vector<SourcedMessage>& messages) {
   const auto infoIndex = index(0, CARDS_COLUMN);
 
   generalInformation.gameSupportsLightPlugins = gameSupportsLightPlugins;
+  generalInformation.gameSupportsMediumPlugins = gameSupportsMediumPlugins;
   generalInformation.masterlistRevision = masterlistRevision;
   generalInformation.preludeRevision = preludeRevision;
   generalInformation.generalMessages = messages;

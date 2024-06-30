@@ -940,7 +940,7 @@ void MainWindow::updateGeneralInformation() {
 
   if (!state.HasCurrentGame()) {
     pluginItemModel->setGeneralInformation(
-        false, FileRevisionSummary(), preludeInfo, initMessages);
+        false, false, FileRevisionSummary(), preludeInfo, initMessages);
     return;
   }
 
@@ -955,6 +955,7 @@ void MainWindow::updateGeneralInformation() {
 
   pluginItemModel->setGeneralInformation(
       state.GetCurrentGame().SupportsLightPlugins(),
+      state.GetCurrentGame().SupportsMediumPlugins(),
       masterlistInfo,
       preludeInfo,
       initMessages);

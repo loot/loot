@@ -74,6 +74,7 @@ using loot::GameType;
 struct Counters {
   size_t activeNormal = 0;
   size_t activeLightPlugins = 0;
+  size_t activeMediumPlugins = 0;
 };
 
 std::filesystem::path GetLOOTGamePath(const std::filesystem::path& lootDataPath,
@@ -238,6 +239,10 @@ std::string GetLoadOrderAsTextTable(const gui::Game& game,
       stream << "254 FE " << std::setw(3) << std::hex
              << counters.activeLightPlugins << std::dec << " ";
       counters.activeLightPlugins += 1;
+    } else if (isActive && plugin->IsMediumPlugin()) {
+      stream << "253 FD " << std::setw(2) << std::hex
+             << counters.activeMediumPlugins << std::dec << " ";
+      counters.activeMediumPlugins += 1;
     } else if (isActive) {
       stream << std::setw(3) << counters.activeNormal << " " << std::hex
              << std::setw(2) << counters.activeNormal << std::dec << "     ";
@@ -571,6 +576,24 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
             "will cause irreversible damage to your game saves.")));
   }
 
+  if (plugin.IsMediumPlugin() && !plugin.IsValidAsMediumPlugin()) {
+    if (logger) {
+      logger->error(
+          "\"{}\" contains records that have FormIDs outside the valid range "
+          "for a medium plugin. Using this plugin will cause irreversible "
+          "damage "
+          "to your game saves.",
+          plugin.GetName());
+    }
+    messages.push_back(CreatePlainTextSourcedMessage(
+        MessageType::error,
+        MessageSource::invalidMediumPlugin,
+        boost::locale::translate(
+            "This plugin contains records that have FormIDs outside "
+            "the valid range for a medium plugin. Using this plugin "
+            "will cause irreversible damage to your game saves.")));
+  }
+
   if (!supportsLightPlugins_ && plugin.IsLightPlugin()) {
     if (logger) {
       logger->error(
@@ -864,6 +887,10 @@ bool Game::ArePluginsFullyLoaded() const { return pluginsFullyLoaded_; }
 
 bool Game::SupportsLightPlugins() const { return supportsLightPlugins_; }
 
+bool Game::SupportsMediumPlugins() const {
+  return settings_.Id() == GameId::starfield;
+}
+
 fs::path Game::MasterlistPath() const {
   return GetMasterlistPath(lootDataPath_, settings_);
 }
@@ -911,7 +938,9 @@ std::optional<short> Game::GetActiveLoadOrderIndex(
     }
 
     auto otherPlugin = GetPlugin(otherPluginName);
-    if (otherPlugin && plugin.IsLightPlugin() == otherPlugin->IsLightPlugin() &&
+    if (otherPlugin &&
+        plugin.IsLightPlugin() == otherPlugin->IsLightPlugin() &&
+        plugin.IsMediumPlugin() == otherPlugin->IsMediumPlugin() &&
         IsPluginActive(otherPluginName)) {
       ++numberOfActivePlugins;
     }
@@ -1024,10 +1053,13 @@ std::vector<SourcedMessage> Game::GetMessages(
 
   size_t activeNormalPluginsCount = 0;
   size_t activeLightPluginsCount = 0;
+  size_t activeMediumPluginsCount = 0;
   for (const auto& plugin : GetPlugins()) {
     if (IsPluginActive(plugin->GetName())) {
       if (plugin->IsLightPlugin()) {
         ++activeLightPluginsCount;
+      } else if (plugin->IsMediumPlugin()) {
+        ++activeMediumPluginsCount;
       } else {
         ++activeNormalPluginsCount;
       }
@@ -1036,6 +1068,7 @@ std::vector<SourcedMessage> Game::GetMessages(
 
   static constexpr size_t MWSE_SAFE_MAX_ACTIVE_NORMAL_PLUGINS = 1023;
   static constexpr size_t SAFE_MAX_ACTIVE_NORMAL_PLUGINS = 255;
+  static constexpr size_t SAFE_MAX_ACTIVE_MEDIUM_PLUGINS = 255;
   static constexpr size_t SAFE_MAX_ACTIVE_LIGHT_PLUGINS = 4096;
 
   const auto logger = getLogger();
@@ -1064,7 +1097,7 @@ std::vector<SourcedMessage> Game::GetMessages(
           safeMaxActiveNormalPlugins);
     }
 
-    if (activeLightPluginsCount > 0) {
+    if (activeLightPluginsCount > 0 || activeMediumPluginsCount > 0) {
       addWarning(MessageSource::activePluginsCountCheck,
                  fmt::format(boost::locale::translate(
                                  "You have {0} active normal plugins but the "
@@ -1133,6 +1166,40 @@ std::vector<SourcedMessage> Game::GetMessages(
             "You have a normal plugin and at least one light plugin sharing "
             "the FE load order index. Deactivate a normal plugin or all your "
             "light plugins to avoid potential issues."));
+  }
+
+  if (activeMediumPluginsCount > SAFE_MAX_ACTIVE_MEDIUM_PLUGINS) {
+    if (logger) {
+      logger->warn(
+          "The load order has {} active medium plugins, the safe limit is {}.",
+          activeMediumPluginsCount,
+          SAFE_MAX_ACTIVE_MEDIUM_PLUGINS);
+    }
+
+    addWarning(MessageSource::activePluginsCountCheck,
+               fmt::format(boost::locale::translate(
+                               "You have {0} active medium plugins but the "
+                               "game only supports up to {1}.")
+                               .str(),
+                           activeMediumPluginsCount,
+                           SAFE_MAX_ACTIVE_MEDIUM_PLUGINS));
+  }
+
+  if (activeNormalPluginsCount >= (SAFE_MAX_ACTIVE_NORMAL_PLUGINS - 1) &&
+      activeMediumPluginsCount > 0) {
+    if (logger) {
+      logger->warn(
+          "{} normal plugins and at least one medium plugin are active at "
+          "the same time.",
+          activeNormalPluginsCount);
+    }
+
+    addWarning(
+        MessageSource::activePluginsCountCheck,
+        boost::locale::translate(
+            "You have a normal plugin and at least one medium plugin sharing "
+            "the FD load order index. Deactivate a normal plugin or all your "
+            "medium plugins to avoid potential issues."));
   }
 
   if (warnOnCaseSensitivePaths &&

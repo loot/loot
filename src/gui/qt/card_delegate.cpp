@@ -89,14 +89,19 @@ SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
     const auto fourthColumnString = QString::number(counters.totalMessages);
     const auto sixthColumnString = QString::number(counters.totalPlugins);
 
-    const auto supportsLightPlugins =
-        generalInfo.gameSupportsLightPlugins ? "true" : "false";
+    auto pluginTypeRowCount = 1;
+    if (generalInfo.gameSupportsMediumPlugins) {
+      pluginTypeRowCount += 1;
+    }
+    if (generalInfo.gameSupportsLightPlugins) {
+      pluginTypeRowCount += 1;
+    }
 
     return SizeHintCacheKey(secondColumnString,
                             fourthColumnString,
                             sixthColumnString,
                             getMessageTexts(generalInfo.generalMessages),
-                            {supportsLightPlugins},
+                            {std::to_string(pluginTypeRowCount)},
                             true);
   } else {
     auto pluginItem = index.data(RawDataRole).value<PluginItem>();
@@ -126,11 +131,13 @@ GeneralInfoCard* setGeneralInfoCardContent(GeneralInfoCard* card,
   auto counters = index.data(CountersRole).value<GeneralInformationCounters>();
 
   card->setShowSeparateLightPluginCount(generalInfo.gameSupportsLightPlugins);
+  card->setShowSeparateMediumPluginCount(generalInfo.gameSupportsMediumPlugins);
   card->setMasterlistInfo(generalInfo.masterlistRevision);
   card->setPreludeInfo(generalInfo.preludeRevision);
   card->setMessageCounts(
       counters.warnings, counters.errors, counters.totalMessages);
   card->setPluginCounts(counters.activeLight,
+                        counters.activeMedium,
                         counters.activeRegular,
                         counters.dirty,
                         counters.totalPlugins);

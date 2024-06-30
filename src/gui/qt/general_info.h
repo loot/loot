@@ -35,6 +35,7 @@
 namespace loot {
 struct GeneralInformation {
   bool gameSupportsLightPlugins{false};
+  bool gameSupportsMediumPlugins{false};
   FileRevisionSummary masterlistRevision;
   FileRevisionSummary preludeRevision;
   std::vector<SourcedMessage> generalMessages;

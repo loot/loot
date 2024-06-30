@@ -136,6 +136,7 @@ PluginItem::PluginItem(const PluginInterface& plugin,
     isEmpty(plugin.IsEmpty()),
     isMaster(plugin.IsMaster()),
     isLightPlugin(plugin.IsLightPlugin()),
+    isMediumPlugin(plugin.IsMediumPlugin()),
     loadsArchive(plugin.LoadsArchive()),
     isCreationClubPlugin(game.IsCreationClubPlugin(plugin.GetName())) {
   auto userMetadata = game.GetUserMetadata(plugin.GetName());
@@ -367,6 +368,10 @@ std::string PluginItem::getMarkdownContent() const {
     attributes.push_back("Light Plugin");
   }
 
+  if (isMediumPlugin) {
+    attributes.push_back("Medium Plugin");
+  }
+
   if (loadsArchive) {
     attributes.push_back("Loads Archive");
   }
@@ -423,7 +428,14 @@ std::string PluginItem::getMarkdownContent() const {
 
 std::string PluginItem::loadOrderIndexText() const {
   if (loadOrderIndex.has_value()) {
-    auto formatString = isLightPlugin ? "FE {:03X}" : "{:02X}";
+    std::string formatString;
+    if (isLightPlugin) {
+      formatString = "FE {:03X}";
+    } else if (isMediumPlugin) {
+      formatString = "FD {:02X}";
+    } else {
+      formatString = "{:02X}";
+    }
 
     return fmt::format(formatString, loadOrderIndex.value());
   } else {

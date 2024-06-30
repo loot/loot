@@ -608,6 +608,37 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
       messages);
 }
 
+TEST_P(GameTest, checkInstallValidityShouldCheckThatAMediumPluginIsValid) {
+  if (GetParam() != GameId::starfield) {
+    return;
+  }
+
+  std::fstream out(
+      dataPath / blankEsm,
+      std::ios_base::in | std::ios_base::out | std::ios_base::binary);
+  out.seekp(0x09, std::ios_base::beg);
+  out.put('\x04');
+  out.seekp(0x10619, std::ios_base::beg);
+  out.put('\xFF');
+  out.close();
+
+  Game game = CreateInitialisedGame();
+  game.LoadAllInstalledPlugins(false);
+
+  auto messages = game.CheckInstallValidity(
+      *game.GetPlugin(blankEsm), PluginMetadata(blankEsm), "en");
+  EXPECT_EQ(
+      std::vector<SourcedMessage>({
+          SourcedMessage{
+              MessageType::error,
+              MessageSource::invalidMediumPlugin,
+              "This plugin contains records that have FormIDs outside the "
+              "valid range for a medium plugin\\. Using this plugin will cause "
+              "irreversible damage to your game saves\\."},
+      }),
+      messages);
+}
+
 TEST_P(
     GameTest,
     checkInstallValidityShouldCheckThatAPluginHeaderVersionIsNotLessThanTheMinimum) {

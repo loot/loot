@@ -101,6 +101,7 @@ public:
   bool ArePluginsFullyLoaded()
       const;  // Checks if the game's plugins have already been loaded.
   bool SupportsLightPlugins() const;
+  bool SupportsMediumPlugins() const;
 
   std::filesystem::path MasterlistPath() const;
   std::filesystem::path UserlistPath() const;
@@ -189,6 +190,7 @@ std::vector<T> MapFromLoadOrderData(
   data.reserve(loadOrder.size());
 
   short numberOfActiveLightPlugins = 0;
+  short numberOfActiveMediumPlugins = 0;
   short numberOfActiveNormalPlugins = 0;
 
   // First get all the necessary data to call the mapper, as this is fast.
@@ -199,10 +201,17 @@ std::vector<T> MapFromLoadOrderData(
     }
 
     const auto isLight = plugin->IsLightPlugin();
+    const auto isMedium = plugin->IsMediumPlugin();
     const auto isActive = game.IsPluginActive(pluginName);
 
-    const auto numberOfActivePlugins =
-        isLight ? numberOfActiveLightPlugins : numberOfActiveNormalPlugins;
+    short numberOfActivePlugins;
+    if (isLight) {
+      numberOfActivePlugins = numberOfActiveLightPlugins;
+    } else if (isMedium) {
+      numberOfActivePlugins = numberOfActiveMediumPlugins;
+    } else {
+      numberOfActivePlugins = numberOfActiveNormalPlugins;
+    }
 
     const auto activeLoadOrderIndex = isActive
                                           ? std::optional(numberOfActivePlugins)
@@ -213,6 +222,8 @@ std::vector<T> MapFromLoadOrderData(
     if (isActive) {
       if (isLight) {
         ++numberOfActiveLightPlugins;
+      } else if (isMedium) {
+        ++numberOfActiveMediumPlugins;
       } else {
         ++numberOfActiveNormalPlugins;
       }
