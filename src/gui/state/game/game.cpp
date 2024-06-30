@@ -1439,6 +1439,7 @@ std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
   // found to a buffer and then check if they're valid plugins in parallel.
   std::vector<std::filesystem::path> maybePlugins;
   std::set<Filename> foundPlugins;
+  std::set<Filename> internallyFoundPlugins;
 
   // Scan external data paths first, as the game checks them before the main
   // data path.
@@ -1466,8 +1467,6 @@ std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
     }
   }
 
-  // Scan main data path separately as only its filenames need to be stored,
-  // not the whole path, which simplifies the log/debugging.
   if (logger) {
     logger->trace("Scanning for plugins in {}",
                   settings_.DataPath().u8string());
@@ -1481,8 +1480,34 @@ std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
       if (foundPlugins.count(filename) == 0) {
         maybePlugins.push_back(it->path());
         foundPlugins.insert(filename);
+
+        if (settings_.Id() == GameId::starfield) {
+          internallyFoundPlugins.insert(filename);
+        }
       }
     }
+  }
+
+  if (settings_.Id() == GameId::starfield) {
+    const auto newEndIt =
+        std::remove_if(std::execution::par_unseq,
+                       maybePlugins.begin(),
+                       maybePlugins.end(),
+                       [&](const std::filesystem::path& path) {
+                         // Starfield will only load a plugin that's present in
+                         // My Games if it's also present in the install path.
+                         const auto ignorePlugin =
+                             internallyFoundPlugins.count(
+                                 Filename(path.filename().u8string())) == 0;
+                         if (ignorePlugin && logger) {
+                           logger->debug(
+                               "Ignoring plugin {} as it is not also present "
+                               "in the game install's Data folder",
+                               path.u8string());
+                         }
+                         return ignorePlugin;
+                       });
+    maybePlugins.erase(newEndIt, maybePlugins.end());
   }
 
   const auto newEndIt =
