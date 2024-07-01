@@ -4,6 +4,7 @@
     <file>icons/loot.svg</file>
     <file>icons/crown.svg</file>
     <file>icons/droplet.svg</file>
+    <file>icons/feather.svg</file>
     <file>icons/medium.svg</file>
     <file>icons/material-icons/account_circle_black_48dp.svg</file>
     <file>icons/material-icons/archive_black_48dp.svg</file>
@@ -21,7 +22,6 @@
     <file>icons/material-icons/forum_black_48dp.svg</file>
     <file>icons/material-icons/group_work_black_48dp.svg</file>
     <file>icons/material-icons/help_black_48dp.svg</file>
-    <file>icons/material-icons/light_mode_black_48dp.svg</file>
     <file>icons/material-icons/quiz_black_48dp.svg</file>
     <file>icons/material-icons/receipt_black_48dp.svg</file>
     <file>icons/material-icons/refresh_black_48dp.svg</file>

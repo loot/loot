@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-06-30 21:23+0100\n"
+"POT-Creation-Date: 2024-07-01 22:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -672,61 +672,65 @@ msgid ""
 "can get to it through the main menu) for more information."
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:156
+#: src/gui/qt/plugin_card.cpp:158
 msgid "Source:"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:157
+#: src/gui/qt/plugin_card.cpp:159
 msgid "Sources:"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:173
+#: src/gui/qt/plugin_card.cpp:175
 #, c++-format
 msgid "Verified clean by {0}"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:181
+#: src/gui/qt/plugin_card.cpp:183
 msgid "Small Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:183 src/gui/qt/plugin_card.cpp:295
+#: src/gui/qt/plugin_card.cpp:185 src/gui/qt/plugin_card.cpp:299
 msgid "Light Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:293
+#: src/gui/qt/plugin_card.cpp:297
 msgid "Active Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:294
+#: src/gui/qt/plugin_card.cpp:298
 msgid "Master Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:296
+#: src/gui/qt/plugin_card.cpp:300
+msgid "Medium Plugin"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:301
 msgid "Empty Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:297
+#: src/gui/qt/plugin_card.cpp:302
 msgid "Loads Archive"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:298 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:303 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:300
+#: src/gui/qt/plugin_card.cpp:305
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:301
+#: src/gui/qt/plugin_card.cpp:306
 msgid "Current"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:302 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:307 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:303 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:308 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr ""
 

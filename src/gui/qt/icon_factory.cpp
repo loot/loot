@@ -51,7 +51,7 @@ QIcon IconFactory::getIsActiveIcon() {
 QIcon IconFactory::getMasterFileIcon() { return getIcon(":/icons/crown.svg"); }
 
 QIcon IconFactory::getLightPluginIcon() {
-  return getIcon(":/icons/material-icons/light_mode_black_48dp.svg");
+  return getIcon(":/icons/feather.svg");
 }
 
 QIcon IconFactory::getMediumPluginIcon() {

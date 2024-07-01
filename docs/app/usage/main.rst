@@ -74,7 +74,7 @@ The plugin card's header holds the following information, some of which is only 
   :scale: 45%
 .. |master_plugin_icon| image:: ../../../resources/icons/crown.svg
   :scale: 45%
-.. |light_plugin_icon| image:: ../../../resources/icons/material-icons/light_mode_black_48dp.svg
+.. |light_plugin_icon| image:: ../../../resources/icons/feather.svg
   :scale: 45%
 .. |medium_plugin_icon| image:: ../../../resources/icons/medium.svg
   :scale: 45%

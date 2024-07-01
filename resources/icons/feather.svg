@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="48"
+   height="48"
+   viewBox="0 0 24 24"
+   xmlns="http://www.w3.org/2000/svg"
+   style="pointer-events: none; display: block; color: #000000;">
+  <g id="feather">
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="m 4.7575957,20.214705 c 0,0 0.4539344,-4.591713 1.462946,-6.610349 1.1367947,-2.274278 2.7382485,-4.1484071 4.9399733,-5.8554857 0.633145,-0.4909011 1.599579,2.5304537 1.821292,1.6799333 0.668842,-2.5657631 -0.400955,-2.5836287 0.489311,-3.3165721 2.639919,-2.1734012 7.817245,-6.55471017 8.911882,-2.3057357 0.58679,2.5356435 0.473899,5.543921 -1.427594,8.8277902 -1.083204,1.870689 -2.97303,3.585603 -3.431283,3.808877 -2.851083,1.389127 -4.093935,0.101162 -5.202425,0.735835 -0.518961,0.29713 2.263762,1.573096 1.7249,1.815087 -2.236181,1.004221 -9.2890023,1.220628 -9.2890023,1.220628 z" />
+    <path
+       style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1.1126477,22.313505 C 15.78397,14.011233 18.615277,6.7297321 18.615277,6.7297321 v 0" />
+  </g>
+</svg>
