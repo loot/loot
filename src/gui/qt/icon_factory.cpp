@@ -54,6 +54,10 @@ QIcon IconFactory::getLightPluginIcon() {
   return getIcon(":/icons/feather.svg");
 }
 
+QIcon IconFactory::getSmallPluginIcon() {
+  return getIcon(":/icons/small.svg");
+}
+
 QIcon IconFactory::getMediumPluginIcon() {
   return getIcon(":/icons/medium.svg");
 }

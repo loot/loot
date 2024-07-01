@@ -84,6 +84,7 @@ void PluginCard::setIcons() {
   setIcon(isActiveLabel, IconFactory::getIsActiveIcon());
   setIcon(masterFileLabel, IconFactory::getMasterFileIcon());
   setIcon(lightPluginLabel, IconFactory::getLightPluginIcon());
+  setIcon(lightPluginLabel, IconFactory::getLightPluginIcon());
   setIcon(mediumPluginLabel, IconFactory::getMediumPluginIcon());
   setIcon(emptyPluginLabel, IconFactory::getEmptyPluginIcon());
   setIcon(loadsArchiveLabel, IconFactory::getLoadsArchiveIcon());
@@ -181,8 +182,10 @@ void PluginCard::setContent(const PluginItem& plugin,
 
   if (plugin.gameId == GameId::starfield) {
     lightPluginLabel->setToolTip(translate("Small Plugin"));
+    setIcon(lightPluginLabel, IconFactory::getSmallPluginIcon());
   } else {
     lightPluginLabel->setToolTip(translate("Light Plugin"));
+    setIcon(lightPluginLabel, IconFactory::getLightPluginIcon());
   }
 
   layout()->activate();
