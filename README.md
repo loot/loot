@@ -2,6 +2,7 @@
 
 ![CI](https://github.com/loot/loot/workflows/CI/badge.svg?branch=master&event=push)
 [![Documentation Status](https://readthedocs.org/projects/loot/badge/?version=latest)](https://loot.readthedocs.io/en/latest/?badge=latest)
+[![Translation status](https://hosted.weblate.org/widget/loot/svg-badge.svg)](https://hosted.weblate.org/engage/loot/)
 
 ## Introduction
 
