@@ -7,7 +7,7 @@ on:
 env:
   BOOST_VERSION: 1.85.0
   OGDF_VERSION: elderberry-202309
-  QT_VERSION: 6.7.1
+  QT_VERSION: 6.7.2
 
 jobs:
   create_release:
