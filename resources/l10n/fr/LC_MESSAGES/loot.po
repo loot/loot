@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-06-30 21:23+0100\n"
+"POT-Creation-Date: 2024-07-02 18:12+0100\n"
 "PO-Revision-Date: 2024-05-22 20:01+0100\n"
 "Last-Translator: Simple Shawn\n"
 "Language-Team: \n"
@@ -691,60 +691,64 @@ msgstr ""
 "veuillez consulter votre LOOTDebugLog.txt (vous pouvez y accéder depuis le "
 "menu principal)."
 
-#: src/gui/qt/plugin_card.cpp:156
+#: src/gui/qt/plugin_card.cpp:159
 msgid "Source:"
 msgstr "Source:"
 
-#: src/gui/qt/plugin_card.cpp:157
+#: src/gui/qt/plugin_card.cpp:160
 msgid "Sources:"
 msgstr "Sources:"
 
-#: src/gui/qt/plugin_card.cpp:173
+#: src/gui/qt/plugin_card.cpp:176
 msgid "Verified clean by {0}"
 msgstr "Vérifié propre par {0}"
 
-#: src/gui/qt/plugin_card.cpp:181
+#: src/gui/qt/plugin_card.cpp:184
 msgid "Small Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:183 src/gui/qt/plugin_card.cpp:295
+#: src/gui/qt/plugin_card.cpp:187 src/gui/qt/plugin_card.cpp:302
 msgid "Light Plugin"
 msgstr "Plugin léger"
 
-#: src/gui/qt/plugin_card.cpp:293
+#: src/gui/qt/plugin_card.cpp:300
 msgid "Active Plugin"
 msgstr "Plugins actifs"
 
-#: src/gui/qt/plugin_card.cpp:294
+#: src/gui/qt/plugin_card.cpp:301
 msgid "Master Plugin"
 msgstr "Plugin maître"
 
-#: src/gui/qt/plugin_card.cpp:296
+#: src/gui/qt/plugin_card.cpp:303
+msgid "Medium Plugin"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:304
 msgid "Empty Plugin"
 msgstr "Plugin vide"
 
-#: src/gui/qt/plugin_card.cpp:297
+#: src/gui/qt/plugin_card.cpp:305
 msgid "Loads Archive"
 msgstr "Charge l'archive"
 
-#: src/gui/qt/plugin_card.cpp:298 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:306 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr "Contient les métadonnées de l'utilisateur"
 
-#: src/gui/qt/plugin_card.cpp:300
+#: src/gui/qt/plugin_card.cpp:308
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr "Bash Tags"
 
-#: src/gui/qt/plugin_card.cpp:301
+#: src/gui/qt/plugin_card.cpp:309
 msgid "Current"
 msgstr "Actuel"
 
-#: src/gui/qt/plugin_card.cpp:302 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:310 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr "Ajouter"
 
-#: src/gui/qt/plugin_card.cpp:303 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:311 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr "Supprimer"
 
