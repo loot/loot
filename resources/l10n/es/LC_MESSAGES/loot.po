@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2024-07-02 18:12+0100\n"
-"PO-Revision-Date: 2024-06-30 20:36+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2024-07-03 17:24+0000\n"
+"Last-Translator: Ortham <weblate@ortham.net>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/loot/loot/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -618,12 +618,11 @@ msgstr "Los metadatos de \"{0}\" han sido copiados al portapapeles."
 
 #: src/gui/qt/main_window.cpp:1861
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
-msgstr "El nombre del complemento \"{0} \" se ha copiado al portapapeles."
+msgstr "El nombre del complemento \"{0}\" se ha copiado al portapapeles."
 
 #: src/gui/qt/main_window.cpp:1880
 msgid "The card content for \"{0}\" has been copied to the clipboard."
-msgstr ""
-"El contenido de la tarjeta para \" {0} \" se ha copiado al portapapeles."
+msgstr "El contenido de la tarjeta para \"{0}\" se ha copiado al portapapeles."
 
 #: src/gui/qt/main_window.cpp:1895
 msgid ""
