@@ -305,36 +305,45 @@ bool SupportsLightPlugins(const GameType gameType) {
          gameType == GameType::starfield;
 }
 
-void LogLoadOrderPaths(const gui::Game& game) {
+void WriteStarfieldCCCFile(const GameSettings& settings) {
+  if (settings.Id() != GameId::starfield) {
+    return;
+  }
+
   const auto logger = getLogger();
-  if (!logger) {
-    return;
-  }
 
-  if (game.GetSettings().Id() != GameId::starfield) {
-    return;
-  }
-
-  const auto dataPath = game.GetSettings().DataPath();
   // Pass false for isMicrosoftStoreInstall, it doesn't matter for Starfield.
-  const auto dataPaths =
-      GetExternalDataPaths(game.GetSettings().Id(),
-                           false,
-                           dataPath,
-                           game.GetSettings().GameLocalPath());
+  const auto externalDataPaths = GetExternalDataPaths(
+      settings.Id(), false, settings.DataPath(), settings.GameLocalPath());
 
-  const auto cccFilename = GetCCCFilename(game.GetSettings().Type()).value();
+  const auto cccFilename = GetCCCFilename(settings.Type()).value();
 
-  const std::vector<std::filesystem::path> cccFilePaths = {
-      dataPaths.at(0).parent_path() / cccFilename,
-      dataPath.parent_path() / cccFilename};
+  const auto cccFilePath = externalDataPaths.at(0).parent_path() / cccFilename;
 
-  for (const auto& path : cccFilePaths) {
-    if (std::filesystem::exists(path)) {
-      logger->debug("Using CCC file at {}", path.u8string());
-      break;
-    }
+  if (logger) {
+    logger->debug("Writing official plugins to CCC file at {}",
+                  cccFilePath.u8string());
   }
+
+  std::ofstream out(cccFilePath, std::ios_base::out | std::ios_base::trunc);
+  if (out.fail()) {
+    throw FileAccessError("Couldn't open Starfield CCC file.");
+  }
+
+  // Write out the official plugins so that they have fixed load order positions,
+  // as otherwise LOOT might sort them into an order that would get written to
+  // plugins.txt and then overwritten on the next game load.
+  // This list is the same as what is used by Mod Organizer 2:
+  // <https://github.com/ModOrganizer2/modorganizer-game_bethesda/blob/master/game_starfield/src/gamestarfield.cpp#L256>
+  out << "Starfield.esm" << std::endl
+      << "Constellation.esm" << std::endl
+      << "OldMars.esm" << std::endl
+      << "BlueprintShips-Starfield.esm" << std::endl
+      << "SFBGS007.esm" << std::endl
+      << "SFBGS008.esm" << std::endl
+      << "SFBGS006.esm" << std::endl
+      << "SFBGS003.esm" << std::endl;
+  out.close();
 }
 
 namespace gui {
@@ -406,6 +415,10 @@ void Game::Init() {
   gameHandle_->IdentifyMainMasterFile(settings_.Master());
 
   InitLootGameFolder(lootDataPath_, settings_);
+
+  if (settings_.Id() == GameId::starfield) {
+    WriteStarfieldCCCFile(settings_);
+  }
 }
 
 bool Game::IsInitialised() const { return gameHandle_ != nullptr; }
@@ -904,7 +917,6 @@ bool Game::HadCreationClub() const {
 
 void Game::LoadAllInstalledPlugins(bool headersOnly) {
   try {
-    LogLoadOrderPaths(*this);
     gameHandle_->LoadCurrentLoadOrderState();
   } catch (const std::exception& e) {
     auto logger = getLogger();
@@ -1009,7 +1021,6 @@ std::vector<std::string> Game::SortPlugins() {
   auto logger = getLogger();
 
   try {
-    LogLoadOrderPaths(*this);
     gameHandle_->LoadCurrentLoadOrderState();
   } catch (const std::exception& e) {
     if (logger) {
