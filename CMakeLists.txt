@@ -102,6 +102,12 @@ else()
     endif()
 endif()
 
+
+if(NOT DEFINED MINIZIP_NG_URL)
+    set(MINIZIP_NG_URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.7.tar.gz")
+    set(MINIZIP_NG_HASH "SHA256=a87f1f734f97095fe1ef0018217c149d53d0f78438bcb77af38adc21dff2dfbc")
+endif()
+
 find_package(ZLIB)
 if(ZLIB_FOUND)
     set(MZ_ZLIB ON)
@@ -117,8 +123,8 @@ if(ZLIB_FOUND)
     set(MZ_COMPRESS_ONLY ON)
     FetchContent_Declare(
         MINIZIP
-        URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.5.tar.gz"
-        URL_HASH "SHA256=9bb636474b8a4269280d32aca7de4501f5c24cc642c9b4225b4ed7b327f4ee73"
+        URL ${MINIZIP_NG_URL}
+        URL_HASH ${MINIZIP_NG_HASH}
         FIND_PACKAGE_ARGS)
 
     FetchContent_MakeAvailable(MINIZIP)
@@ -155,11 +161,6 @@ else()
     set(ZLIB_LIBRARY
         "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${ZLIB_LIB_NAME}")
 
-    if(NOT DEFINED MINIZIP_NG_URL)
-        set(MINIZIP_NG_URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.5.tar.gz")
-        set(MINIZIP_NG_HASH "SHA256=9bb636474b8a4269280d32aca7de4501f5c24cc642c9b4225b4ed7b327f4ee73")
-    endif()
-
     ExternalProject_Add(minizip-ng
         URL ${MINIZIP_NG_URL}
         URL_HASH ${MINIZIP_NG_HASH}
@@ -184,7 +185,7 @@ else()
     ExternalProject_Get_Property(minizip-ng SOURCE_DIR BINARY_DIR)
     set(MINIZIP_NG_INCLUDE_DIRS "${SOURCE_DIR}")
     set(MINIZIP_NG_LIBRARIES
-        "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/libminizip${CMAKE_STATIC_LIBRARY_SUFFIX}"
+        "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}minizip${CMAKE_STATIC_LIBRARY_SUFFIX}"
         ${ZLIB_LIBRARY})
 endif()
 
