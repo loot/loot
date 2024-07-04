@@ -201,23 +201,17 @@ FetchContent_Declare(
     URL_HASH "SHA256=1586508029a7d0670dfcb2d97575dcdc242d3868a259742b69f100801ab4e16b"
     FIND_PACKAGE_ARGS)
 
-FetchContent_MakeAvailable(spdlog tomlplusplus)
-
 if(NOT DEFINED VALVE_FILE_VDF_URL)
-    set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/c8adfc29e62cc980b595e965bedfb239087647ff.tar.gz")
-    set(VALVE_FILE_VDF_HASH "SHA256=48a078ff1e360d9c2217c9bd2eb766928a0234b73bb2bd458d04c64644669550")
+    set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/1a132f3b0b3cf501bdec03a99cdf009d99fc951c.tar.gz")
+    set(VALVE_FILE_VDF_HASH "SHA256=28390fbc0f3d3250262c9229007d2989738c67c9c3a6ed47964fec8c7e84e073")
 endif()
 
-# Use ExternalProject for ValveFileVDF because it's not properly set up to be
-# used with FetchContent.
-ExternalProject_Add(ValveFileVDF
+FetchContent_Declare(
+    ValveFileVDF
     URL ${VALVE_FILE_VDF_URL}
-    URL_HASH ${VALVE_FILE_VDF_HASH}
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND "")
-ExternalProject_Get_Property(ValveFileVDF SOURCE_DIR)
-set(VALVE_FILE_VDF_INCLUDE_DIRS "${SOURCE_DIR}")
+    URL_HASH ${VALVE_FILE_VDF_HASH})
+
+FetchContent_MakeAvailable(spdlog tomlplusplus ValveFileVDF)
 
 find_package(OGDF CONFIG)
 if(NOT OGDF_FOUND)
@@ -441,12 +435,12 @@ endif()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_ALL_SOURCES})
-add_dependencies(LOOT ValveFileVDF)
 target_link_libraries(LOOT PRIVATE
     Qt::Widgets Qt::Network Qt::Concurrent
     Boost::headers Boost::locale
     spdlog::spdlog_header_only
-    tomlplusplus::tomlplusplus)
+    tomlplusplus::tomlplusplus
+    ValveFileVDF::ValveFileVDF)
 
 ##############################
 # Set Target-Specific Flags
@@ -484,8 +478,6 @@ endif()
 
 # Include source and library directories.
 target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
-target_include_directories(LOOT SYSTEM PRIVATE
-    ${VALVE_FILE_VDF_INCLUDE_DIRS})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(LOOT PRIVATE UNICODE _UNICODE NOMINMAX)

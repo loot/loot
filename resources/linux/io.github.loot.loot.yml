@@ -175,7 +175,7 @@ modules:
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DLOOT_BUILD_TESTS=OFF
-      - -DVALVE_FILE_VDF_URL=/run/build/LOOT/c8adfc29e62cc980b595e965bedfb239087647ff.tar.gz
+      - -DVALVE_FILE_VDF_URL=/run/build/LOOT/1a132f3b0b3cf501bdec03a99cdf009d99fc951c.tar.gz
     build-commands:
       - install -D LOOT /app/bin/LOOT
       - install -D ../resources/linux/io.github.loot.loot.metainfo.xml /app/share/metainfo/io.github.loot.loot.metainfo.xml
@@ -203,8 +203,8 @@ modules:
           - .github
           - build
       - type: file
-        url: https://github.com/TinyTinni/ValveFileVDF/archive/c8adfc29e62cc980b595e965bedfb239087647ff.tar.gz
-        sha256: 48a078ff1e360d9c2217c9bd2eb766928a0234b73bb2bd458d04c64644669550
+        url: https://github.com/TinyTinni/ValveFileVDF/archive/1a132f3b0b3cf501bdec03a99cdf009d99fc951c.tar.gz
+        sha256: 28390fbc0f3d3250262c9229007d2989738c67c9c3a6ed47964fec8c7e84e073
 cleanup:
   - /bin/cbindgen
   - /include

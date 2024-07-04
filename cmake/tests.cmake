@@ -130,7 +130,8 @@ target_link_libraries(loot_gui_tests PRIVATE
     Boost::headers Boost::locale
     GTest::gtest_main
     spdlog::spdlog_header_only
-    tomlplusplus::tomlplusplus)
+    tomlplusplus::tomlplusplus
+    ValveFileVDF::ValveFileVDF)
 
 ##############################
 # Set Target-Specific Flags
