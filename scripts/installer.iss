@@ -1,4 +1,4 @@
-﻿; LOOT installer Inno Setup script.
+; LOOT installer Inno Setup script.
 ; This file must be encoded in UTF-8 WITH a BOM for Unicode text to
 ; be displayed correctly.
 
