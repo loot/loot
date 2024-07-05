@@ -49,6 +49,8 @@ WizardStyle=modern
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 PrivilegesRequired=lowest
+PrivilegesRequiredOverridesAllowed=dialog
+UsePreviousPrivileges=yes
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl,resources\l10n\en\LC_MESSAGES\installer.islu"
