@@ -4,6 +4,127 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.23.0 - Unreleased
+===================
+
+Added
+-----
+
+- Support for medium plugins when Starfield is the current game.
+
+  - Active medium plugins are shown in the plugins sidebar with an index of the
+    form ``FD 01``, where ``01`` is the medium-plugin-specific index.
+  - The General Information card now shows a count of the active medium plugins
+    when Starfield is the current game.
+  - If a medium plugin contains records with FormIDs outside of the valid range
+    for a medium plugin, an error message will be shown on its card.
+  - Medium plugins have an active plugin limit of 256 plugins that is separate
+    to the limits for small (a.k.a. light) and full plugins. If that limit is
+    breached, a warning message will be displayed.
+  - A new "Medium Plugin" icon is displayed in medium plugins' cards.
+
+- A new "Small Plugin" icon is displayed in small plugins' cards when Starfield
+  is the current game.
+- A Turkish translation by Ilker Binzet.
+
+Fixed
+-----
+
+- When checking if a Morrowind plugin was a master file, LOOT incorrectly
+  checked the file extension instead of the plugin header's master flag (via
+  libloot).
+- LOOT was not able to reliably check if two Starfield plugins had overlapping
+  records, which affected the overlapping plugins filter and was partly
+  responsible for LOOT's sorting functionality being disabled for Starfield (via
+  libloot).
+- If a non-master plugin was a master of two master plugins, it would be hoisted
+  to load before the master that loaded second instead of the master that loaded
+  first (via libloot).
+- If more than one plugin needed to be hoisted while reading the load order,
+  some plugins could be moved too late in the load order (via libloot).
+- When getting the load order, the result will now correctly reflect the
+  supported games' ability to hoist master files to load above other master
+  files that depend on them (via libloot).
+
+Changed
+-------
+
+- Sorting has been re-enabled for Starfield.
+- Reading Starfield's load order will now take
+  ``%USERPROFILE%\Documents\My Games\Starfield\Starfield.ccc`` into account if
+  it exists (via libloot).
+- LOOT now writes to
+  ``%USERPROFILE%\Documents\My Games\Starfield\Starfield.ccc`` when it is
+  initialised for Starfield, replacing the contents of the file if it already
+  exists. This is done to ensure the following load order for Starfield's
+  official plugins::
+
+    Starfield.esm
+    Constellation.esm
+    OldMars.esm
+    BlueprintShips-Starfield.esm
+    SFBGS007.esm
+    SFBGS008.esm
+    SFBGS006.esm
+    SFBGS003.esm
+
+- Various updates to match terminology introduced by Starfield's Creation Kit:
+
+  - The "Active Regular Plugins" row in the General Information card has been
+    renamed to "Active Full Plugins".
+  - A few warning messages that referred to non-small, non-medium plugins as
+    "normal" now refer to them as "full".
+  - Light plugins are now referred to as small plugins when Starfield is the
+    current game.
+  - Overlay plugins are now referred to as update plugins.
+
+- Update plugins no longer avoid taking up a load order slot when active, to
+  reflect a change in Starfield's behaviour.
+- Plugins in ``%USERPROFILE%\Documents\My Games\Starfield\Data`` are now ignored
+  unless a plugin of the same name is present in the Starfield install path's
+  ``Data`` folder, to reflect a change in Starfield's behaviour.
+- The "Hide Creation Club plugins" filter is now hidden for all games apart from
+  Skyrim Special Edition and Fallout 4.
+- When updating a game's masterlist, the masterlist and masterlist prelude are
+  now updated in parallel.
+- If LOOT is configured to update a game's masterlist before sorting, it will
+  now sort the load order even if updating the masterlist fails.
+- The plugin card icon displayed for light plugins has been replaced.
+- LOOT's installer can now run without administrative privileges. The first time
+  you install LOOT, the installer will now ask if you want to install it for you
+  only, or for all users. Only the option to install for all users requires
+  administrative privileges.
+
+  If LOOT (v0.8.0 or newer) was already installed using the installer, then the
+  installer will now automatically try to use the same privileges as last time.
+  To avoid that, uninstall LOOT before running the installer.
+
+  If LOOT is installed for only the current user, its default install location
+  is ``%LOCALAPPDATA%\Programs`` instead of ``%ProgramFiles%``, and the
+  installer will write its Registry entries under ``HKEY_CURRENT_USER``
+  instead of under ``HKEY_LOCAL_MACHINE``.
+
+- Updated libloot to v0.23.0.
+- Updated minizip-ng to v4.0.7.
+- Updated Qt to v6.7.2.
+- Updated ValveFileVDF to 1a132f3b0b3cf501bdec03a99cdf009d99fc951c.
+- Updated the Bulgarian translation.
+- Updated the German translation.
+- Updated the Spanish translation.
+
+Removed
+-------
+
+- LOOT's installer no longer writes to the Registry under
+  ``HKEY_LOCAL_MACHINE\Software\LOOT``.
+
+  If you want to detect LOOT's install path, every installer since LOOT v0.8.0
+  has written it as the value of ``InstallLocation`` under
+  ``Software\Microsoft\Windows\CurrentVersion\Uninstall\{BF634210-A0D4-443F-A657-0DCE38040374}_is1``.
+  That subkey may appear under ``HKEY_CURRENT_USER`` or ``HKEY_LOCAL_MACHINE``,
+  depending on whether LOOT was installed per-user or for all users.
+
+
 0.22.4 - 2024-05-17
 ===================
 
