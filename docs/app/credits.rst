@@ -24,7 +24,7 @@ In addition, the following are credited with application-related support:
   * Polish: Łukasz Niemczyk, Yoosk, alemisiu
   * Portuguese: ironmagician
   * Portuguese (Brazil): Kassane, zDasF1xer, Kyo-- (Carlos Gabriel), Hollow_666
-  * Russian: Tokc.D.K., Kerber, IllusiveMan196, xsSplater
+  * Russian: Tokc.D.K., Kerber, IllusiveMan196, xsSplater, Aimdru
   * Spanish: Sharlikran, Artaios, Mr. Robo, Allen1351 (Ale), gallegonovato
   * Swedish: Mikael Hiort af Ornäs, simoneddeland, ddbb07
   * Turkish: Ilker Binzet
