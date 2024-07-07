@@ -7,16 +7,16 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2024-07-03 17:17+0100\n"
-"PO-Revision-Date: 2024-05-22 20:03+0100\n"
-"Last-Translator: xsSplater\n"
-"Language-Team: Russian\n"
-"Language: ru_RU\n"
+"PO-Revision-Date: 2024-07-07 10:09+0000\n"
+"Last-Translator: Vlad <aimdru1@gmail.com>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.4.4\n"
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -161,7 +161,7 @@ msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:146
 msgid "Active Small Plugins"
-msgstr ""
+msgstr "Активные малые плагины"
 
 #: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:220
 msgid "Active Light Plugins"
@@ -205,11 +205,11 @@ msgstr "Активных плагинов"
 
 #: src/gui/qt/general_info_card.cpp:218
 msgid "Active Full Plugins"
-msgstr ""
+msgstr "Активные полные плагины"
 
 #: src/gui/qt/general_info_card.cpp:219
 msgid "Active Medium Plugins"
-msgstr ""
+msgstr "Активные средние плагины"
 
 #: src/gui/qt/general_info_card.cpp:221
 msgid "Dirty Plugins"
@@ -439,7 +439,7 @@ msgid ""
 "data has been backed up to: {1}"
 msgstr ""
 "Похоже, вы впервые запускаете LOOT версии {0}. Резервная копия ваших текущих "
-"данных LOOT сохранена в: {1}."
+"данных LOOT сохранена в: {1}"
 
 #: src/gui/qt/main_window.cpp:1178
 msgid "This appears to be the first time you have run LOOT v{0}."
@@ -719,7 +719,7 @@ msgstr "Подтверждён как очищенный: {0}"
 
 #: src/gui/qt/plugin_card.cpp:184
 msgid "Small Plugin"
-msgstr ""
+msgstr "Малый плагин"
 
 #: src/gui/qt/plugin_card.cpp:187 src/gui/qt/plugin_card.cpp:302
 msgid "Light Plugin"
@@ -735,7 +735,7 @@ msgstr "Мастер-плагин"
 
 #: src/gui/qt/plugin_card.cpp:303
 msgid "Medium Plugin"
-msgstr ""
+msgstr "Средний плагин"
 
 #: src/gui/qt/plugin_card.cpp:304
 msgid "Empty Plugin"
@@ -1063,6 +1063,8 @@ msgstr "Показывать окно, если сортировка не вно
 #: src/gui/qt/settings/general_tab.cpp:170
 msgid "Warn if the game's paths are in a case-sensitive filesystem"
 msgstr ""
+"Предупреждать, если пути к игре находятся в файловой системе, чувствительной "
+"к регистру"
 
 #: src/gui/qt/settings/general_tab.cpp:173
 msgid "The output is logged to the LOOTDebugLog.txt file."
@@ -1206,34 +1208,37 @@ msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "
 "installed, try running its launcher then restarting LOOT."
 msgstr ""
-"Не удалось установить исходную игру с названием папки «{0}». Если она "
+"Не удалось установить исходную игру с названием папки \"{0}\". Если она "
 "установлена, попробуйте запустить её, а затем перезапустить LOOT."
 
 #: src/gui/state/game/game.cpp:465 src/gui/state/game/game.cpp:509
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
-msgstr "Для этого плагина требуется установка «{0}», но он отсутствует."
+msgstr "Для этого плагина требуется установка \"{0}\", но он отсутствует."
 
 #: src/gui/state/game/game.cpp:479
 msgid "This plugin requires \"{0}\" to be active, but it is inactive."
-msgstr "Этот плагин требует, чтобы «{0}» был активен, но он неактивен."
+msgstr "Этот плагин требует, чтобы \"{0}\" был активен, но он неактивен."
 
 #: src/gui/state/game/game.cpp:551
 msgid "This plugin is incompatible with \"{0}\", but both are present."
-msgstr "Этот плагин несовместим с «{0}», но оба они присутствуют."
+msgstr "Этот плагин несовместим с \"{0}\", но оба они присутствуют."
 
 #: src/gui/state/game/game.cpp:596
 msgid "small master"
-msgstr ""
+msgstr "малый мастер"
 
 #: src/gui/state/game/game.cpp:597
 msgid "light master"
-msgstr ""
+msgstr "легкий мастер"
 
 #: src/gui/state/game/game.cpp:604
 msgid ""
 "This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
 "cause issues in-game, and sorting will fail while this plugin is installed."
 msgstr ""
+"Этот подключаемый модуль является {0} и требует наличия не главного "
+"подключаемого модуля \"{1}\". Это может вызвать проблемы в игре, и "
+"сортировка не будет работать, пока установлен этот плагин."
 
 #: src/gui/state/game/game.cpp:626
 msgid ""
@@ -1251,40 +1256,52 @@ msgid ""
 "medium plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
+"Этот плагин содержит записи, идентификаторы FormID которых выходят за "
+"пределы допустимого диапазона для среднего плагина. Использование этого "
+"плагина нанесет необратимый ущерб вашим игровым сохранениям."
 
 #: src/gui/state/game/game.cpp:657
 msgid "plugin"
-msgstr ""
+msgstr "плагин"
 
 #. translators: master as in a plugin that is
 #. loaded as if its master flag is set.
 #: src/gui/state/game/game.cpp:660
 msgid "master"
-msgstr ""
+msgstr "мастер"
 
 #: src/gui/state/game/game.cpp:669
 msgid ""
 "\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
 "correctly installed {2} and all its requirements."
 msgstr ""
+"\"{0}\" горит {1}, но {2}, похоже, отсутствует. Убедитесь, что вы правильно "
+"установили {2} и выполнили все его требования."
 
 #: src/gui/state/game/game.cpp:682
 msgid ""
 "\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
 "will not load it."
 msgstr ""
+"\"{0}\" — это плагин .esl, но игра не поддерживает такие плагины и не "
+"загружает его."
 
 #: src/gui/state/game/game.cpp:695
 msgid ""
 "\"{0}\" is flagged as a light {1}, but the game does not support such "
 "plugins, and will load it as a full {1}."
 msgstr ""
+"\"{0}\" помечен как легкий {1}, но игра не поддерживает такие плагины и "
+"загружает его как полный {1}."
 
 #: src/gui/state/game/game.cpp:715
 msgid ""
 "This plugin is an update plugin but adds new records. Using this plugin may "
 "cause irreversible damage to your game saves."
 msgstr ""
+"Этот плагин является плагином обновления, но добавляет новые записи. "
+"Использование этого плагина может нанести необратимый ущерб вашим игровым "
+"сохранениям."
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
@@ -1298,7 +1315,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:751
 msgid "This plugin has itself as a master."
-msgstr ""
+msgstr "Этот плагин является мастером."
 
 #: src/gui/state/game/game.cpp:769
 msgid "This plugin belongs to the group \"{0}\", which does not exist."
@@ -1335,6 +1352,7 @@ msgstr "Вы ещё не отсортировали порядок загруз�
 #: src/gui/state/game/game.cpp:1167
 msgid "You have {0} active full plugins but the game only supports up to {1}."
 msgstr ""
+"У вас есть {0} активных полных плагинов, но игра поддерживает только до {1}."
 
 #: src/gui/state/game/game.cpp:1175
 msgid "You have {0} active plugins but the game only supports up to {1}."
@@ -1353,29 +1371,33 @@ msgid "small plugin"
 msgid_plural "small plugins"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
+msgstr[2] "небольшие плагины"
 
 #: src/gui/state/game/game.cpp:1207
 msgid "light plugin"
 msgid_plural "light plugins"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "легкий плагин"
+msgstr[1] "легкие плагины"
+msgstr[2] "легкие плагины"
 
 #: src/gui/state/game/game.cpp:1220
 msgid "You have {0} active {1} but the game only supports up to {2}."
-msgstr ""
+msgstr "У вас {0} активен {1}, но игра поддерживает только до {2}."
 
 #: src/gui/state/game/game.cpp:1240
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
 "Deactivate a full plugin or your {1} to avoid potential issues."
 msgstr ""
+"У вас есть полноценный плагин и {0} {1} совместно использует индекс порядка "
+"загрузки FE. Деактивируйте полный плагин или {1}, чтобы избежать "
+"потенциальных проблем."
 
 #: src/gui/state/game/game.cpp:1258
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
 msgstr ""
+"У вас есть {0} активных средних плагинов, но игра поддерживает только до {1}."
 
 #: src/gui/state/game/game.cpp:1277
 msgid ""
@@ -1383,6 +1405,9 @@ msgid ""
 "order index. Deactivate a full plugin or all your medium plugins to avoid "
 "potential issues."
 msgstr ""
+"У вас есть полный плагин и как минимум один средний плагин, использующий "
+"индекс порядка загрузки FD. Деактивируйте полный плагин или все средние "
+"плагины, чтобы избежать потенциальных проблем."
 
 #. translators: The placeholder is for the current game's name.
 #.
