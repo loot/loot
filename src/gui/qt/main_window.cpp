@@ -1342,7 +1342,11 @@ void MainWindow::executeBackgroundQuery(
               (this->*onComplete)(result);
             })
       .onFailed(this, [this](std::exception& e) { handleError(e.what()); })
-      .then(this, [progressUpdater]() { progressUpdater->deleteLater(); });
+      .then(this, [progressUpdater]() {
+        if (progressUpdater) {
+          progressUpdater->deleteLater();
+        }
+      });
 }
 
 void MainWindow::handleError(const std::string& message) {
