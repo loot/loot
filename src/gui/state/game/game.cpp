@@ -1525,10 +1525,10 @@ std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
       if (foundPlugins.count(filename) == 0) {
         maybePlugins.push_back(it->path());
         foundPlugins.insert(filename);
+      }
 
-        if (settings_.Id() == GameId::starfield) {
-          internallyFoundPlugins.insert(filename);
-        }
+      if (settings_.Id() == GameId::starfield) {
+        internallyFoundPlugins.insert(filename);
       }
     }
   }
