@@ -69,6 +69,18 @@
   </screenshots>
 
   <releases>
+    <release version="0.23.0" date="2024-07-10">
+      <description>
+        <ul>
+          <li>Re-enabled sorting for Starfield.</li>
+          <li>Added support for Starfield's medium plugin type.</li>
+          <li>Various updates to reflect changes in Starfield's behaviour.</li>
+          <li>Added a Turkish translation.</li>
+          <li>Other fixes and improvements.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.23.0/app/changelog.html#id1</url>
+    </release>
     <release version="0.22.4" date="2024-05-17">
       <description>
         <ul>

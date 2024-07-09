@@ -4,7 +4,7 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.23.0 - Unreleased
+0.23.0 - 2024-07-10
 ===================
 
 Added
@@ -103,13 +103,17 @@ Changed
   is ``%LOCALAPPDATA%\Programs`` instead of ``%ProgramFiles%``, and the
   installer will write its Registry entries under ``HKEY_CURRENT_USER``
   instead of under ``HKEY_LOCAL_MACHINE``.
-
+- LOOT's installer may now be run on the ARM64 version of Windows 11 (though
+  this is untested). Note that the installer is still an x86 application, and
+  LOOT is still an x86-64 application, so running both relies on Windows 11's
+  emulation layer.
 - Updated libloot to v0.23.0.
 - Updated minizip-ng to v4.0.7.
 - Updated Qt to v6.7.2.
 - Updated ValveFileVDF to 1a132f3b0b3cf501bdec03a99cdf009d99fc951c.
 - Updated the Bulgarian translation.
 - Updated the German translation.
+- Updated the Russian translation.
 - Updated the Spanish translation.
 
 Removed
