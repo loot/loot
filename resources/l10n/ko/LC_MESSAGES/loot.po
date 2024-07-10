@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-07-03 17:17+0100\n"
+"POT-Creation-Date: 2024-07-10 17:15+0100\n"
 "PO-Revision-Date: 2024-05-22 20:02+0100\n"
 "Last-Translator: SteamB23 <steamb23@gmail.com>\n"
 "Language-Team: SteamB23 <steamb23@gmail.com>\n"
@@ -253,7 +253,7 @@ msgstr ""
 msgid "LOOT could not unambiguously set the load order."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1477
+#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1481
 msgid "Ambiguous load order detected"
 msgstr ""
 
@@ -423,8 +423,8 @@ msgstr ""
 msgid "F&ilters"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1082 src/gui/qt/main_window.cpp:1531
-#: src/gui/qt/main_window.cpp:2156
+#: src/gui/qt/main_window.cpp:1082 src/gui/qt/main_window.cpp:1535
+#: src/gui/qt/main_window.cpp:2160
 msgid "Updating and parsing masterlist…"
 msgstr "마스터 리스트 갱신 및 구문 분석 중…"
 
@@ -464,7 +464,7 @@ msgstr ""
 "메타 데이터 편집기가 열려있거나 적용 또는 삭제되지 않은 정렬된 로드 순서가 있"
 "는 동안에는 일부 기능이 비활성화됩니다."
 
-#: src/gui/qt/main_window.cpp:1209 src/gui/qt/main_window.cpp:2032
+#: src/gui/qt/main_window.cpp:1209 src/gui/qt/main_window.cpp:2036
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -492,14 +492,14 @@ msgid ""
 "quit?"
 msgstr "아직 {0}을/를 적용하거나 취소하지 않았습니다. 종료하시겠습니까?"
 
-#: src/gui/qt/main_window.cpp:1352
+#: src/gui/qt/main_window.cpp:1356
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:370
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr "오류"
 
-#: src/gui/qt/main_window.cpp:1362
+#: src/gui/qt/main_window.cpp:1366
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:364
 #: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
@@ -509,17 +509,17 @@ msgstr ""
 "이런, 문제가 발생했습니다! 자세한 내용은 LOOTDebugLog.txt (메인 메뉴를 통해 "
 "얻을 수 있음)에서 확인할 수 있습니다."
 
-#: src/gui/qt/main_window.cpp:1409
+#: src/gui/qt/main_window.cpp:1413
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1427
+#: src/gui/qt/main_window.cpp:1431
 msgid "Sorting made no changes to the load order."
 msgstr "정렬은 순서를 변경하지 않았습니다."
 
-#: src/gui/qt/main_window.cpp:1478
+#: src/gui/qt/main_window.cpp:1482
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -529,36 +529,36 @@ msgid ""
 "unambiguously set the load order to what is displayed by LOOT."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1554
+#: src/gui/qt/main_window.cpp:1558
 msgid "Updating all masterlists…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1586
+#: src/gui/qt/main_window.cpp:1590
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1593
+#: src/gui/qt/main_window.cpp:1597
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1637
+#: src/gui/qt/main_window.cpp:1641
 msgid "The load order has been copied to the clipboard."
 msgstr "로드 순서가 클립보드에 복사되었습니다."
 
-#: src/gui/qt/main_window.cpp:1655
+#: src/gui/qt/main_window.cpp:1659
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "LOOT의 내용이 클립보드에 복사되었습니다."
 
-#: src/gui/qt/main_window.cpp:1667
+#: src/gui/qt/main_window.cpp:1671
 msgid "The load order displayed by LOOT has been set."
 msgstr ""
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1692
+#: src/gui/qt/main_window.cpp:1696
 msgid "Redate Plugins?"
 msgstr "플러그인 날짜를 변경할까요?"
 
-#: src/gui/qt/main_window.cpp:1694
+#: src/gui/qt/main_window.cpp:1698
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -571,96 +571,96 @@ msgstr ""
 "속하시겠습니까?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1706
+#: src/gui/qt/main_window.cpp:1710
 msgid "Plugins were successfully redated."
 msgstr "플러그인이 성공적으로 수정되었습니다."
 
-#: src/gui/qt/main_window.cpp:1718
+#: src/gui/qt/main_window.cpp:1722
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr ""
 "모든 플러그인에서 기존의 모든 사용자 추가 메타데이터를 삭제하시겠습니까?"
 
-#: src/gui/qt/main_window.cpp:1766
+#: src/gui/qt/main_window.cpp:1770
 msgid "All user-added metadata has been cleared."
 msgstr "모든 사용자 추가 메타데이터가 삭제되었습니다."
 
-#: src/gui/qt/main_window.cpp:1779
+#: src/gui/qt/main_window.cpp:1783
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1843
+#: src/gui/qt/main_window.cpp:1847
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\"에 대한 메타데이터가 클립보드에 복사되었습니다."
 
-#: src/gui/qt/main_window.cpp:1861
+#: src/gui/qt/main_window.cpp:1865
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1880
+#: src/gui/qt/main_window.cpp:1884
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1895
+#: src/gui/qt/main_window.cpp:1899
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr "\"{0}\"에서 기존의 모든 사용자 추가 메타데이터를 삭제하시겠습니까?"
 
-#: src/gui/qt/main_window.cpp:1935
+#: src/gui/qt/main_window.cpp:1939
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "\"{0}\"에 대한 사용자 추가 메타데이터가 삭제되었습니다."
 
-#: src/gui/qt/main_window.cpp:2018
+#: src/gui/qt/main_window.cpp:2022
 msgid "Version {0} (build {1})"
 msgstr "버전 {0} (빌드 {1})"
 
-#: src/gui/qt/main_window.cpp:2024
+#: src/gui/qt/main_window.cpp:2028
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
 "3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2042
+#: src/gui/qt/main_window.cpp:2046
 msgid "About LOOT"
 msgstr "LOOT 정보"
 
-#: src/gui/qt/main_window.cpp:2366
+#: src/gui/qt/main_window.cpp:2370
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2514
+#: src/gui/qt/main_window.cpp:2518
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr "하나 이상의 오류 메시지가 표시되어 자동 정렬이 취소되었습니다."
 
-#: src/gui/qt/main_window.cpp:2573
+#: src/gui/qt/main_window.cpp:2577
 msgid "No masterlist update was necessary."
 msgstr "마스터 리스트를 갱신할 필요가 없었습니다."
 
-#: src/gui/qt/main_window.cpp:2593
+#: src/gui/qt/main_window.cpp:2597
 msgid "Masterlist updated to revision {0}."
 msgstr "마스터 리스트를 {0}버전으로 갱신되었습니다."
 
-#: src/gui/qt/main_window.cpp:2657
+#: src/gui/qt/main_window.cpp:2661
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2680
+#: src/gui/qt/main_window.cpp:2684
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2742
+#: src/gui/qt/main_window.cpp:2746
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "LOOT의 [새 버전]({0})을 사용할 수 있습니다."
 
-#: src/gui/qt/main_window.cpp:2759
+#: src/gui/qt/main_window.cpp:2763
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-07-03 17:17+0100\n"
+"POT-Creation-Date: 2024-07-10 17:15+0100\n"
 "PO-Revision-Date: 2024-05-22 20:04+0100\n"
 "Last-Translator: S猫 <silent.haven@gmail.com>\n"
 "Language-Team: S猫 <silent.haven@gmail.com>\n"
@@ -250,7 +250,7 @@ msgstr ""
 msgid "LOOT could not unambiguously set the load order."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1477
+#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1481
 msgid "Ambiguous load order detected"
 msgstr "检测到不明确的加载顺序"
 
@@ -420,8 +420,8 @@ msgstr "插件(&L)"
 msgid "F&ilters"
 msgstr "筛选(&I)"
 
-#: src/gui/qt/main_window.cpp:1082 src/gui/qt/main_window.cpp:1531
-#: src/gui/qt/main_window.cpp:2156
+#: src/gui/qt/main_window.cpp:1082 src/gui/qt/main_window.cpp:1535
+#: src/gui/qt/main_window.cpp:2160
 msgid "Updating and parsing masterlist…"
 msgstr "更新并解析主列表…"
 
@@ -458,7 +458,7 @@ msgid ""
 "is a sorted load order that has not been applied or discarded."
 msgstr "在编辑器打开，或者排序未应用和取消时，有些功能会被禁用。"
 
-#: src/gui/qt/main_window.cpp:1209 src/gui/qt/main_window.cpp:2032
+#: src/gui/qt/main_window.cpp:1209 src/gui/qt/main_window.cpp:2036
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -485,14 +485,14 @@ msgid ""
 "quit?"
 msgstr "你还没用应用或取消你的{0}。确定要退出吗？"
 
-#: src/gui/qt/main_window.cpp:1352
+#: src/gui/qt/main_window.cpp:1356
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:370
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr "错误"
 
-#: src/gui/qt/main_window.cpp:1362
+#: src/gui/qt/main_window.cpp:1366
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:364
 #: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
@@ -502,17 +502,17 @@ msgstr ""
 "哦不，出错了！你可以检查你的LOOTDebugLog.txt（你可以在主菜单中找到它）来获得"
 "详细信息。"
 
-#: src/gui/qt/main_window.cpp:1409
+#: src/gui/qt/main_window.cpp:1413
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
 msgstr "未能对插件进行排序。详细信息可能在一般信息中提供。"
 
-#: src/gui/qt/main_window.cpp:1427
+#: src/gui/qt/main_window.cpp:1431
 msgid "Sorting made no changes to the load order."
 msgstr "加载顺序没有变化。"
 
-#: src/gui/qt/main_window.cpp:1478
+#: src/gui/qt/main_window.cpp:1482
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -527,36 +527,36 @@ msgstr ""
 "你可以使用游戏菜单中的“修复不明确的加载顺序”，将加载顺序明确设置为LOOT显示的"
 "顺序。"
 
-#: src/gui/qt/main_window.cpp:1554
+#: src/gui/qt/main_window.cpp:1558
 msgid "Updating all masterlists…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1586
+#: src/gui/qt/main_window.cpp:1590
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr "你的LOOT数据已备份到：{0}"
 
-#: src/gui/qt/main_window.cpp:1593
+#: src/gui/qt/main_window.cpp:1597
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr "未能创建备份，因为LOOT没有要备份的数据。"
 
-#: src/gui/qt/main_window.cpp:1637
+#: src/gui/qt/main_window.cpp:1641
 msgid "The load order has been copied to the clipboard."
 msgstr "加载顺序已被复制到剪贴板。"
 
-#: src/gui/qt/main_window.cpp:1655
+#: src/gui/qt/main_window.cpp:1659
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "LOOT 的内容已被复制到剪贴板。"
 
-#: src/gui/qt/main_window.cpp:1667
+#: src/gui/qt/main_window.cpp:1671
 msgid "The load order displayed by LOOT has been set."
 msgstr "LOOT显示的加载顺序已设置。"
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1692
+#: src/gui/qt/main_window.cpp:1696
 msgid "Redate Plugins?"
 msgstr "修改插件时间？"
 
-#: src/gui/qt/main_window.cpp:1694
+#: src/gui/qt/main_window.cpp:1698
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -567,96 +567,96 @@ msgstr ""
 "Workshop订阅的mod都会被Steam重新下载(这不影响天际特别版)。您确定要继续吗？"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1706
+#: src/gui/qt/main_window.cpp:1710
 msgid "Plugins were successfully redated."
 msgstr "修改插件日期已完成。"
 
-#: src/gui/qt/main_window.cpp:1718
+#: src/gui/qt/main_window.cpp:1722
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr "你确定要清除所有插件里用户添加的元数据？"
 
-#: src/gui/qt/main_window.cpp:1766
+#: src/gui/qt/main_window.cpp:1770
 msgid "All user-added metadata has been cleared."
 msgstr "所有用户添加的元数据已被清除。"
 
-#: src/gui/qt/main_window.cpp:1779
+#: src/gui/qt/main_window.cpp:1783
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
 msgstr ""
 "插件元数据编辑器已打开，请先关闭编辑器，然后再尝试编辑另一个插件的元数据。"
 
-#: src/gui/qt/main_window.cpp:1843
+#: src/gui/qt/main_window.cpp:1847
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\"的元数据已被复制到剪贴板。"
 
-#: src/gui/qt/main_window.cpp:1861
+#: src/gui/qt/main_window.cpp:1865
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "插件名称\"{0}\"已被复制到剪贴板。"
 
-#: src/gui/qt/main_window.cpp:1880
+#: src/gui/qt/main_window.cpp:1884
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\"的卡片内容已被复制到剪贴板。"
 
-#: src/gui/qt/main_window.cpp:1895
+#: src/gui/qt/main_window.cpp:1899
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr "你确定要清除从\"{0}\"清除所有用户添加的元数据？"
 
-#: src/gui/qt/main_window.cpp:1935
+#: src/gui/qt/main_window.cpp:1939
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "\"{0}\"中用户添加的元数据已被清除。"
 
-#: src/gui/qt/main_window.cpp:2018
+#: src/gui/qt/main_window.cpp:2022
 msgid "Version {0} (build {1})"
 msgstr "版本 {0} (编译 {1})"
 
-#: src/gui/qt/main_window.cpp:2024
+#: src/gui/qt/main_window.cpp:2028
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
 "3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2042
+#: src/gui/qt/main_window.cpp:2046
 msgid "About LOOT"
 msgstr "关于LOOT"
 
-#: src/gui/qt/main_window.cpp:2366
+#: src/gui/qt/main_window.cpp:2370
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2514
+#: src/gui/qt/main_window.cpp:2518
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr "自动排序被取消，因为至少显示了一条错误消息。"
 
-#: src/gui/qt/main_window.cpp:2573
+#: src/gui/qt/main_window.cpp:2577
 msgid "No masterlist update was necessary."
 msgstr "主列表无需更新。"
 
-#: src/gui/qt/main_window.cpp:2593
+#: src/gui/qt/main_window.cpp:2597
 msgid "Masterlist updated to revision {0}."
 msgstr "主列表已更新到版次{0}。"
 
-#: src/gui/qt/main_window.cpp:2657
+#: src/gui/qt/main_window.cpp:2661
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2680
+#: src/gui/qt/main_window.cpp:2684
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2742
+#: src/gui/qt/main_window.cpp:2746
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "一个[新版本]({0})的LOOT发行了。"
 
-#: src/gui/qt/main_window.cpp:2759
+#: src/gui/qt/main_window.cpp:2763
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."

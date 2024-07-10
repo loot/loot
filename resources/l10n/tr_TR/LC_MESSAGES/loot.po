@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-07-03 17:17+0100\n"
+"POT-Creation-Date: 2024-07-10 17:15+0100\n"
 "PO-Revision-Date: 2024-05-29 00:59-0500\n"
 "Last-Translator: Ilker BINZET <ilker.binzet@gmail.com>\n"
 "Language-Team: Ilker BINZET - ilker.binzet@gmail.com\n"
@@ -253,7 +253,7 @@ msgstr ""
 msgid "LOOT could not unambiguously set the load order."
 msgstr "LOOT yükleme sırasını kesin olarak ayarlayamadı."
 
-#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1477
+#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1481
 msgid "Ambiguous load order detected"
 msgstr "Belirsiz yükleme sırası tespit edildi"
 
@@ -423,8 +423,8 @@ msgstr "E&klentiler"
 msgid "F&ilters"
 msgstr "F&iltreler"
 
-#: src/gui/qt/main_window.cpp:1082 src/gui/qt/main_window.cpp:1531
-#: src/gui/qt/main_window.cpp:2156
+#: src/gui/qt/main_window.cpp:1082 src/gui/qt/main_window.cpp:1535
+#: src/gui/qt/main_window.cpp:2160
 msgid "Updating and parsing masterlist…"
 msgstr "Ana liste güncelleniyor ve ayrıştırılıyor…"
 
@@ -468,7 +468,7 @@ msgstr ""
 "Meta veri düzenleyicisi açıkken veya uygulanmamış; ya da iptal edilmemiş "
 "sıralanmış yükleme sırası varken ise bazı özellikler devre dışı bırakılır."
 
-#: src/gui/qt/main_window.cpp:1209 src/gui/qt/main_window.cpp:2032
+#: src/gui/qt/main_window.cpp:1209 src/gui/qt/main_window.cpp:2036
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -498,14 +498,14 @@ msgstr ""
 "{0} 'inizi henüz uygulamadınız veya iptal etmediniz. Çıkmak istediğinizden "
 "emin misiniz?"
 
-#: src/gui/qt/main_window.cpp:1352
+#: src/gui/qt/main_window.cpp:1356
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:370
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr "Hata"
 
-#: src/gui/qt/main_window.cpp:1362
+#: src/gui/qt/main_window.cpp:1366
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:364
 #: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
@@ -515,7 +515,7 @@ msgstr ""
 "Aha, bir şeyler ters gitti! Daha fazla bilgi için LOOTDebugLog.txt dosyanızı "
 "(ana menüden ulaşabilirsiniz) kontrol edebilirsiniz."
 
-#: src/gui/qt/main_window.cpp:1409
+#: src/gui/qt/main_window.cpp:1413
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
@@ -523,11 +523,11 @@ msgstr ""
 "Eklentileri sıralama başarısız oldu. Detaylar Genel Bilgiler bölümünde "
 "sağlanabilir."
 
-#: src/gui/qt/main_window.cpp:1427
+#: src/gui/qt/main_window.cpp:1431
 msgid "Sorting made no changes to the load order."
 msgstr "Sıralama, yükleme sırasını değiştirmedi."
 
-#: src/gui/qt/main_window.cpp:1478
+#: src/gui/qt/main_window.cpp:1482
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -543,36 +543,36 @@ msgstr ""
 "Oyun menüsündeki \"Belirsiz Yükleme Sırasını Düzelt\" eylemini kullanarak "
 "yükleme sırasını LOOT'un gösterdiği şekilde belirleyebilirsiniz."
 
-#: src/gui/qt/main_window.cpp:1554
+#: src/gui/qt/main_window.cpp:1558
 msgid "Updating all masterlists…"
 msgstr "Tüm ana listeler güncelleniyor…"
 
-#: src/gui/qt/main_window.cpp:1586
+#: src/gui/qt/main_window.cpp:1590
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr "LOOT verileriniz {0} adresine yedeklendi"
 
-#: src/gui/qt/main_window.cpp:1593
+#: src/gui/qt/main_window.cpp:1597
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr "LOOT'un yedeklenecek verisi olmadığı için yedekleme oluşturulmadı."
 
-#: src/gui/qt/main_window.cpp:1637
+#: src/gui/qt/main_window.cpp:1641
 msgid "The load order has been copied to the clipboard."
 msgstr "Yükleme sırası panoya kopyalandı."
 
-#: src/gui/qt/main_window.cpp:1655
+#: src/gui/qt/main_window.cpp:1659
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "LOOT'un içeriği panoya kopyalandı."
 
-#: src/gui/qt/main_window.cpp:1667
+#: src/gui/qt/main_window.cpp:1671
 msgid "The load order displayed by LOOT has been set."
 msgstr "LOOT tarafından gösterilen yükleme sırası ayarlandı."
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1692
+#: src/gui/qt/main_window.cpp:1696
 msgid "Redate Plugins?"
 msgstr "Eklentilerin Tarihini Değiştir?"
 
-#: src/gui/qt/main_window.cpp:1694
+#: src/gui/qt/main_window.cpp:1698
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -585,11 +585,11 @@ msgstr ""
 "Special Edition'ı etkilemez). Devam etmek istiyor musunuz?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1706
+#: src/gui/qt/main_window.cpp:1710
 msgid "Plugins were successfully redated."
 msgstr "Eklentilerin tarihleri başarıyla değiştirildi."
 
-#: src/gui/qt/main_window.cpp:1718
+#: src/gui/qt/main_window.cpp:1722
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -597,11 +597,11 @@ msgstr ""
 "Tüm eklentilerden mevcut ekli kullanıcı meta verilerini temizlemek "
 "istediğinizden emin misiniz?"
 
-#: src/gui/qt/main_window.cpp:1766
+#: src/gui/qt/main_window.cpp:1770
 msgid "All user-added metadata has been cleared."
 msgstr "Tüm ekli kullanıcı meta veriler temizlendi."
 
-#: src/gui/qt/main_window.cpp:1779
+#: src/gui/qt/main_window.cpp:1783
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
@@ -609,34 +609,34 @@ msgstr ""
 "Eklenti meta veri düzenleyicisi zaten açık, başka bir eklentinin meta "
 "verisini düzenlemeye çalışmadan önce düzenleyiciyi kapatın."
 
-#: src/gui/qt/main_window.cpp:1843
+#: src/gui/qt/main_window.cpp:1847
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\" için meta verileri panoya kopyalandı."
 
-#: src/gui/qt/main_window.cpp:1861
+#: src/gui/qt/main_window.cpp:1865
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "Eklenti adı \"{0}\" panoya kopyalandı."
 
-#: src/gui/qt/main_window.cpp:1880
+#: src/gui/qt/main_window.cpp:1884
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\" için kart içeriği panoya kopyalandı."
 
-#: src/gui/qt/main_window.cpp:1895
+#: src/gui/qt/main_window.cpp:1899
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "\"{0}\" içindeki mevcut ekli kullanıcı meta verilerini temizlemek "
 "istediğinizden emin misiniz?"
 
-#: src/gui/qt/main_window.cpp:1935
+#: src/gui/qt/main_window.cpp:1939
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "\"{0}\" için ekli kullanıcı meta verileri temizlendi."
 
-#: src/gui/qt/main_window.cpp:2018
+#: src/gui/qt/main_window.cpp:2022
 msgid "Version {0} (build {1})"
 msgstr "Sürüm {0} (derleme {1})"
 
-#: src/gui/qt/main_window.cpp:2024
+#: src/gui/qt/main_window.cpp:2028
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
@@ -646,34 +646,34 @@ msgstr ""
 "Edition, Enderal Special Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, "
 "Fallout 4 ve Fallout 4 VR için yükleme sırası optimizasyonu."
 
-#: src/gui/qt/main_window.cpp:2042
+#: src/gui/qt/main_window.cpp:2046
 msgid "About LOOT"
 msgstr "LOOT Hakkında"
 
-#: src/gui/qt/main_window.cpp:2366
+#: src/gui/qt/main_window.cpp:2370
 msgid "Identifying overlapping plugins…"
 msgstr "Örtüşen eklentiler belirleniyor…"
 
-#: src/gui/qt/main_window.cpp:2514
+#: src/gui/qt/main_window.cpp:2518
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 "Otomatik sıralama iptal edildi çünkü en az bir hata mesajı görüntüleniyor."
 
-#: src/gui/qt/main_window.cpp:2573
+#: src/gui/qt/main_window.cpp:2577
 msgid "No masterlist update was necessary."
 msgstr "Ana liste güncellemesi gerekli değildi."
 
-#: src/gui/qt/main_window.cpp:2593
+#: src/gui/qt/main_window.cpp:2597
 msgid "Masterlist updated to revision {0}."
 msgstr "Ana liste {0} revizyonuna güncellendi."
 
-#: src/gui/qt/main_window.cpp:2657
+#: src/gui/qt/main_window.cpp:2661
 msgid "No masterlist updates were necessary."
 msgstr "Ana liste güncellemeleri gerekli değildi."
 
-#: src/gui/qt/main_window.cpp:2680
+#: src/gui/qt/main_window.cpp:2684
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -681,11 +681,11 @@ msgstr ""
 "Aşağıdaki oyunlar için ana listeler güncellendi:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:2742
+#: src/gui/qt/main_window.cpp:2746
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "LOOT'un [yeni bir sürümü]({0}) mevcut."
 
-#: src/gui/qt/main_window.cpp:2759
+#: src/gui/qt/main_window.cpp:2763
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
