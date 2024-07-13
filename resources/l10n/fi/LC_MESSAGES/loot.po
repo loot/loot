@@ -290,7 +290,7 @@ msgstr "&Asetukset…"
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:720
 msgid "&Update All Masterlists"
-msgstr "&Päivitä kaikki pääluettelot"
+msgstr "Päivitä &kaikki pääluettelot"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:722

@@ -316,7 +316,7 @@ msgstr "&Jeu"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:732
 msgid "&Edit Groups…"
-msgstr "&Modifier les groupes…"
+msgstr "Modifier les &groupes…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:734
