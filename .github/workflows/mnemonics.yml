@@ -1,0 +1,29 @@
+name: 'Validate translation mnemonics'
+
+on:
+  push:
+    paths: ['resources/l10n/*/LC_MESSAGES/loot.po']
+  pull_request:
+    paths: ['resources/l10n/*/LC_MESSAGES/loot.po']
+
+jobs:
+  validate:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          ./.venv/bin/activate
+          pip install -r scripts/requirements.txt
+
+      - name: Run the validation script
+        run: python scripts/validate_mnemonics.py
