@@ -1,6 +1,6 @@
 ﻿[CustomMessages]
 DeleteUserFiles=Você quer deletar suas configurações e dados de usuário?
 
-InstallingMSVCRedist=Installing Visual C++ 2019 Redistributable…
+InstallingMSVCRedist=Instalando o Redistribuível do Visual C++ 2019…
 
-DownloadMasterlists=Download and install the latest masterlists
+DownloadMasterlists=Faça o download e instale as listas mestras mais recentes
