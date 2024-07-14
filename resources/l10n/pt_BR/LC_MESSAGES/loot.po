@@ -5,15 +5,16 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2024-07-10 17:15+0100\n"
-"PO-Revision-Date: 2024-05-22 20:02+0100\n"
-"Last-Translator: Hollow_666 <watashiwadaremoinai@gmail.com>\n"
-"Language-Team: willi4mfs@outlook.com\n"
+"PO-Revision-Date: 2024-07-13 13:39+0000\n"
+"Last-Translator: Carlos Gabriel <carlos2324feitosa@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/loot/"
+"loot/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.7-dev\n"
 "X-Poedit-Basepath: .\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
@@ -66,7 +67,7 @@ msgstr "{0} encontrou {1}."
 
 #: src/gui/qt/filters_widget.cpp:247
 msgid "Show only overlapping plugins for"
-msgstr ""
+msgstr "Mostrar apenas plugins sobrepostos para"
 
 #: src/gui/qt/filters_widget.cpp:248
 msgid "Show only plugins in group"
@@ -156,7 +157,7 @@ msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:146
 msgid "Active Small Plugins"
-msgstr ""
+msgstr "Plugins Pequenos Ativos"
 
 #: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:220
 msgid "Active Light Plugins"
@@ -200,11 +201,11 @@ msgstr "Plugins Ativos"
 
 #: src/gui/qt/general_info_card.cpp:218
 msgid "Active Full Plugins"
-msgstr ""
+msgstr "Plugins Completos Ativos"
 
 #: src/gui/qt/general_info_card.cpp:219
 msgid "Active Medium Plugins"
-msgstr ""
+msgstr "Plugins Médios Ativos"
 
 #: src/gui/qt/general_info_card.cpp:221
 msgid "Dirty Plugins"
@@ -245,10 +246,14 @@ msgid ""
 "presence of one or more sTestFile properties in the game's ini files. Remove "
 "all such properties and then restart LOOT."
 msgstr ""
+"O LOOT não conseguiu definir de forma inequívoca a ordem de carregamento. "
+"Isso pode ocorrer devido à presença de uma ou mais propriedades sTestFile "
+"nos arquivos ini do jogo. Remova todas essas propriedades e reinicie o LOOT."
 
 #: src/gui/qt/main_window.cpp:78
 msgid "LOOT could not unambiguously set the load order."
 msgstr ""
+"O LOOT não conseguiu definir de forma inequívoca a ordem de carregamento."
 
 #: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1481
 msgid "Ambiguous load order detected"
@@ -446,6 +451,8 @@ msgid ""
 "CRCs are only displayed after plugins have been loaded, either by overlap "
 "filtering, or by sorting."
 msgstr ""
+"Os CRCs são exibidos somente depois que os plugins são carregados, seja por "
+"filtragem de sobreposição ou por classificação."
 
 #: src/gui/qt/main_window.cpp:1196
 msgid ""
@@ -650,7 +657,7 @@ msgstr "Sobre o LOOT"
 
 #: src/gui/qt/main_window.cpp:2370
 msgid "Identifying overlapping plugins…"
-msgstr ""
+msgstr "Identificação de plugins sobrepostos…"
 
 #: src/gui/qt/main_window.cpp:2518
 msgid ""
@@ -706,7 +713,7 @@ msgstr "Limpo, verificado pelo {0}"
 
 #: src/gui/qt/plugin_card.cpp:184
 msgid "Small Plugin"
-msgstr ""
+msgstr "Plugin Pequeno"
 
 #: src/gui/qt/plugin_card.cpp:187 src/gui/qt/plugin_card.cpp:302
 msgid "Light Plugin"
@@ -722,7 +729,7 @@ msgstr "Plugin Mestre"
 
 #: src/gui/qt/plugin_card.cpp:303
 msgid "Medium Plugin"
-msgstr ""
+msgstr "Plugin Médio"
 
 #: src/gui/qt/plugin_card.cpp:304
 msgid "Empty Plugin"
@@ -1050,6 +1057,8 @@ msgstr "Exibir caixa de diálogo quando a classificação não faz alterações"
 #: src/gui/qt/settings/general_tab.cpp:170
 msgid "Warn if the game's paths are in a case-sensitive filesystem"
 msgstr ""
+"Avisar se os caminhos do jogo estão em um sistema de arquivos sensível a "
+"maiúsculas e minúsculas"
 
 #: src/gui/qt/settings/general_tab.cpp:173
 msgid "The output is logged to the LOOTDebugLog.txt file."
@@ -1213,17 +1222,20 @@ msgstr "Este plugin é incompatível com \"{0}\", mas ambos estão presentes."
 
 #: src/gui/state/game/game.cpp:596
 msgid "small master"
-msgstr ""
+msgstr "master pequeno"
 
 #: src/gui/state/game/game.cpp:597
 msgid "light master"
-msgstr ""
+msgstr "master leve"
 
 #: src/gui/state/game/game.cpp:604
 msgid ""
 "This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
 "cause issues in-game, and sorting will fail while this plugin is installed."
 msgstr ""
+"Esse plugin é um {0} e requer o plugin non-master \"{1}\". Isso pode causar "
+"problemas no jogo, e a classificação falhará enquanto esse plugin estiver "
+"instalado."
 
 #: src/gui/state/game/game.cpp:626
 msgid ""
@@ -1240,40 +1252,51 @@ msgid ""
 "medium plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
+"Esse plugin contém registros que têm FormIDs fora do intervalo válido para "
+"um plugin médio. O uso desse plugin causará danos irreversíveis aos "
+"salvamentos de seus jogos."
 
 #: src/gui/state/game/game.cpp:657
 msgid "plugin"
-msgstr ""
+msgstr "plugin"
 
 #. translators: master as in a plugin that is
 #. loaded as if its master flag is set.
 #: src/gui/state/game/game.cpp:660
 msgid "master"
-msgstr ""
+msgstr "master"
 
 #: src/gui/state/game/game.cpp:669
 msgid ""
 "\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
 "correctly installed {2} and all its requirements."
 msgstr ""
+"\"{0}\" é um leve {1}, mas {2} parece estar faltando. Verifique se você "
+"instalou corretamente {2} e todos os seus requisitos."
 
 #: src/gui/state/game/game.cpp:682
 msgid ""
 "\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
 "will not load it."
 msgstr ""
+"\"{0}\" é um plugin .esl, mas o jogo não é compatível com esses plug-ins e "
+"não o carregará."
 
 #: src/gui/state/game/game.cpp:695
 msgid ""
 "\"{0}\" is flagged as a light {1}, but the game does not support such "
 "plugins, and will load it as a full {1}."
 msgstr ""
+"\"{0}\" é sinalizado como um {1} leve, mas o jogo não é compatível com esses "
+"plugins e o carregará como um {1} completo."
 
 #: src/gui/state/game/game.cpp:715
 msgid ""
 "This plugin is an update plugin but adds new records. Using this plugin may "
 "cause irreversible damage to your game saves."
 msgstr ""
+"Este plugin é um plugin de atualização, mas adiciona novos registros. O uso "
+"desse plugin pode causar danos irreversíveis aos salvamentos de seus jogos."
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
@@ -1287,7 +1310,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:751
 msgid "This plugin has itself as a master."
-msgstr ""
+msgstr "Esse plugin tem a si mesmo como mestre."
 
 #: src/gui/state/game/game.cpp:769
 msgid "This plugin belongs to the group \"{0}\", which does not exist."
@@ -1324,6 +1347,7 @@ msgstr "Você não organizou sua ordem de carregamento esta sessão."
 #: src/gui/state/game/game.cpp:1167
 msgid "You have {0} active full plugins but the game only supports up to {1}."
 msgstr ""
+"Você tem {0} plugins completos ativos, mas o jogo suporta apenas até {1}."
 
 #: src/gui/state/game/game.cpp:1175
 msgid "You have {0} active plugins but the game only supports up to {1}."
@@ -1340,29 +1364,32 @@ msgstr ""
 #: src/gui/state/game/game.cpp:1204
 msgid "small plugin"
 msgid_plural "small plugins"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "plugin pequeno"
+msgstr[1] "plugins pequenos"
 
 #: src/gui/state/game/game.cpp:1207
 msgid "light plugin"
 msgid_plural "light plugins"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "plugin leve"
+msgstr[1] "plugins leves"
 
 #: src/gui/state/game/game.cpp:1220
 msgid "You have {0} active {1} but the game only supports up to {2}."
-msgstr ""
+msgstr "Você tem {0} ativo {1}, mas o jogo só suporta até {2}."
 
 #: src/gui/state/game/game.cpp:1240
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
 "Deactivate a full plugin or your {1} to avoid potential issues."
 msgstr ""
+"Você tem um plugin completo e {0} {1} compartilhando o índice de ordem de "
+"carregamento FE. Desative um plugin completo ou seu {1} para evitar "
+"possíveis problemas."
 
 #: src/gui/state/game/game.cpp:1258
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
-msgstr ""
+msgstr "Você tem {0} plugins médios ativos, mas o jogo suporta apenas até {1}."
 
 #: src/gui/state/game/game.cpp:1277
 msgid ""
@@ -1370,6 +1397,9 @@ msgid ""
 "order index. Deactivate a full plugin or all your medium plugins to avoid "
 "potential issues."
 msgstr ""
+"Você tem um plugin completo e pelo menos um plugin médio compartilhando o "
+"índice de ordem de carregamento FD. Desative um plugin completo ou todos os "
+"seus plugins médios para evitar possíveis problemas."
 
 #. translators: The placeholder is for the current game's name.
 #.
