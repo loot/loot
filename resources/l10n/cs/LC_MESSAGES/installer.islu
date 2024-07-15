@@ -1,5 +1,5 @@
 ﻿[CustomMessages]
-DeleteUserFiles=Vymazat Uživatelské Soubory
+DeleteUserFiles=Vymazat Uživatelské Soubory?
 
 InstallingMSVCRedist=Installing Visual C++ 2019 Redistributable…
 
