@@ -6,7 +6,7 @@ When LOOT is run, it will attempt to detect which of the supported games are ins
 
 LOOT's initialisation can be customised using command line parameters:
 
-``--game="<game identifier>"``:
+``--game="<Game Identifier>"``:
   Set the game to run for. Case sensitive. If the supplied game identifier is recognised, the default and last game values are ignored. The game identifiers recognised by default are ``Starfield``, ``Morrowind``, ``Oblivion``, ``Skyrim``, ``Skyrim Special Edition``, ``Skyrim VR``, ``Fallout3``, ``FalloutNV``, ``Fallout4``, ``Fallout4VR``, ``Nehrim``, ``Enderal`` and ``Enderal Special Edition``. If you have multiple installs of a supported game then their identifiers will be different. The identifier values are the same as the game installs' LOOT folder names, which are visible in LOOT's Settings dialog.
 
 ``--game-path="<path>"``:
