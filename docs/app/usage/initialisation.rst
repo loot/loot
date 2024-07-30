@@ -6,13 +6,13 @@ When LOOT is run, it will attempt to detect which of the supported games are ins
 
 LOOT's initialisation can be customised using command line parameters:
 
-``--game=<game identifier>``:
-  Set the game to run for. If the supplied game identifier is recognised, the default and last game values are ignored. The game identifiers recognised by default are ``Starfield``, ``Morrowind``, ``Oblivion``, ``Skyrim``, ``Skyrim Special Edition``, ``Skyrim VR``, ``Fallout3``, ``FalloutNV``, ``Fallout4``, ``Fallout4VR``, ``Nehrim``, ``Enderal`` and ``Enderal Special Edition``. If you have multiple installs of a supported game then their identifiers will be different. The identifier values are the same as the game installs' LOOT folder names, which are visible in LOOT's Settings dialog.
+``--game="<Game Identifier>"``:
+  Set the game to run for. Case sensitive. If the supplied game identifier is recognised, the default and last game values are ignored. The game identifiers recognised by default are ``Starfield``, ``Morrowind``, ``Oblivion``, ``Skyrim``, ``Skyrim Special Edition``, ``Skyrim VR``, ``Fallout3``, ``FalloutNV``, ``Fallout4``, ``Fallout4VR``, ``Nehrim``, ``Enderal`` and ``Enderal Special Edition``. If you have multiple installs of a supported game then their identifiers will be different. The identifier values are the same as the game installs' LOOT folder names, which are visible in LOOT's Settings dialog.
 
-``--game-path=<path>``:
+``--game-path="<path>"``:
   Set the install path of the game identified by ``--game``. This replaces any existing value stored in LOOT's settings.
 
-``--loot-data-path=<path>``:
+``--loot-data-path="<path>"``:
   Set the path to use for LOOT's application data storage. If this is an empty string or not specified, LOOT defaults to ``%LOCALAPPDATA%\LOOT`` on Windows and (in order of decreasing preference) ``$XDG_DATA_HOME/LOOT`` or ``$HOME/.local/share/LOOT`` on Linux. Note that Flatpak internally overrides ``$XDG_DATA_HOME`` to be ``$HOME/.var/app/io.github.loot.loot/data``.
 
 ``--auto-sort``:
