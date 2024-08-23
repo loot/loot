@@ -146,21 +146,21 @@ modules:
       - -DCMAKE_BUILD_TYPE=Release
       - -DLIBLOOT_BUILD_TESTS=OFF
       - -DLIBLOOT_INSTALL_DOCS=OFF
-      - -DESPLUGIN_URL=/run/build/libloot/6.0.1.tar.gz
-      - -DLIBLOADORDER_URL=/run/build/libloot/17.0.1.tar.gz
+      - -DESPLUGIN_URL=/run/build/libloot/6.1.0.tar.gz
+      - -DLIBLOADORDER_URL=/run/build/libloot/18.0.0.tar.gz
       - -DLOOT_CONDITION_INTERPRETER_URL=/run/build/libloot/4.0.1.tar.gz
     sources:
       # Use the Git repository so that libloot's commit hash gets embedded in the build.
       - type: git
         url: https://github.com/loot/libloot.git
-        tag: 0.23.1
-        commit: e9321ae54438d52b7a155dceaed97efc100ee971
+        tag: 0.24.0
+        commit: cfa2835c2fc4cbd39d3784305599b2856c7c36da
       - type: file
-        url: https://github.com/Ortham/esplugin/archive/refs/tags/6.0.1.tar.gz
-        sha256: f7b5b03e5ab9f2a88e25925aa5f32f8a49502466f64313292dab86febdea2f1e
+        url: https://github.com/Ortham/esplugin/archive/refs/tags/6.1.0.tar.gz
+        sha256: 52dec796d98426e1c75c5cf3c41351c0b3431a6301137e00fcf6023f4e47b502
       - type: file
-        url: https://github.com/Ortham/libloadorder/archive/refs/tags/17.0.1.tar.gz
-        sha256: 36d90eb5cd53cbbf9d04de7ead561d69ea6aadcf3363d425a3c8370dc566c1b6
+        url: https://github.com/Ortham/libloadorder/archive/refs/tags/18.0.0.tar.gz
+        sha256: 7fc509c683239d5c271e91550638ffa02fe5ff6f607d5f2c2d54d92803597a6e
       - type: file
         url: https://github.com/loot/loot-condition-interpreter/archive/refs/tags/4.0.1.tar.gz
         sha256: 12bf0b108e4734baa3634e98cd7952a9411352539be3ec270aeee97c1b8db92f
