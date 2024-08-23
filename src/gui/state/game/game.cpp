@@ -446,6 +446,24 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
         plugin.GetName());
   }
   std::vector<SourcedMessage> messages;
+
+  const auto handleMissingMaster = [&](const std::string& master,
+                                       MessageType messageType) {
+    if (logger) {
+      logger->error("\"{}\" requires \"{}\", but it is missing.",
+                    plugin.GetName(),
+                    master);
+    }
+    messages.push_back(CreatePlainTextSourcedMessage(
+        messageType,
+        MessageSource::missingMaster,
+        fmt::format(
+            boost::locale::translate("This plugin requires \"{0}\" to be "
+                                     "installed, but it is missing.")
+                .str(),
+            master)));
+  };
+
   if (IsPluginActive(plugin.GetName())) {
     auto tags = metadata.GetTags();
     const auto hasFilterTag =
@@ -456,19 +474,7 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
     if (!hasFilterTag) {
       for (const auto& master : plugin.GetMasters()) {
         if (!FileExists(master)) {
-          if (logger) {
-            logger->error("\"{}\" requires \"{}\", but it is missing.",
-                          plugin.GetName(),
-                          master);
-          }
-          messages.push_back(CreatePlainTextSourcedMessage(
-              MessageType::error,
-              MessageSource::missingMaster,
-              fmt::format(
-                  boost::locale::translate("This plugin requires \"{0}\" to be "
-                                           "installed, but it is missing.")
-                      .str(),
-                  master)));
+          handleMissingMaster(master, MessageType::error);
         } else if (!IsPluginActive(master)) {
           if (logger) {
             logger->error("\"{}\" requires \"{}\", but it is inactive.",
@@ -566,6 +572,15 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
                            MessageSource::incompatibilityMetadata,
                            messageText});
         displayNamesWithMessages.insert(displayName);
+      }
+    }
+  } else if (settings_.Id() == GameId::tes3 ||
+             settings_.Id() == GameId::starfield) {
+    // Morrowind and Starfield require all plugins' masters to be present for
+    // sorting to work, even if the plugins are inactive.
+    for (const auto& master : plugin.GetMasters()) {
+      if (!FileExists(master)) {
+        handleMissingMaster(master, MessageType::warn);
       }
     }
   }
