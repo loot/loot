@@ -330,11 +330,13 @@ void WriteStarfieldCCCFile(const GameSettings& settings) {
     throw FileAccessError("Couldn't open Starfield CCC file.");
   }
 
-  // Write out the official plugins so that they have fixed load order positions,
-  // as otherwise LOOT might sort them into an order that would get written to
-  // plugins.txt and then overwritten on the next game load.
-  // This list is the same as what is used by Mod Organizer 2:
+  // Write out the official plugins so that they have fixed load order
+  // positions, as otherwise LOOT might sort them into an order that would get
+  // written to plugins.txt and then overwritten on the next game load. This
+  // list is the same as what is used by Mod Organizer 2:
   // <https://github.com/ModOrganizer2/modorganizer-game_bethesda/blob/master/game_starfield/src/gamestarfield.cpp#L256>
+  // with SFBGS004.esm appended (as it's missing from that list at time of
+  // writing).
   out << "Starfield.esm" << std::endl
       << "Constellation.esm" << std::endl
       << "OldMars.esm" << std::endl
@@ -342,7 +344,8 @@ void WriteStarfieldCCCFile(const GameSettings& settings) {
       << "SFBGS007.esm" << std::endl
       << "SFBGS008.esm" << std::endl
       << "SFBGS006.esm" << std::endl
-      << "SFBGS003.esm" << std::endl;
+      << "SFBGS003.esm" << std::endl
+      << "SFBGS004.esm" << std::endl;
   out.close();
 }
 
