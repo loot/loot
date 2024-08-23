@@ -54,7 +54,8 @@ enum struct MessageSource : unsigned int {
   caseSensitivePathCheck,
   selfMaster,
   lightPluginNotSupported,
-  invalidMediumPlugin
+  invalidMediumPlugin,
+  blueprintMasterMaster,
 };
 
 struct SourcedMessage {

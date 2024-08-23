@@ -735,6 +735,44 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
             "this plugin may cause irreversible damage to your game saves.")));
   }
 
+  if (settings_.Id() == GameId::starfield && !plugin.IsBlueprintPlugin()) {
+    for (const auto& masterName : plugin.GetMasters()) {
+      auto master = GetPlugin(masterName);
+      if (!master) {
+        if (logger) {
+          logger->debug(
+              "Tried to get plugin object for master \"{}\" of \"{}\" but it "
+              "was not loaded.",
+              masterName,
+              plugin.GetName());
+        }
+        continue;
+      }
+
+      if (master->IsBlueprintPlugin() && master->IsMaster()) {
+        if (logger) {
+          logger->warn(
+              "\"{}\" is not a blueprint master and requires the blueprint "
+              "master "
+              "\"{}\". This may cause issues in-game.",
+              plugin.GetName(),
+              masterName);
+        }
+
+        messages.push_back(CreatePlainTextSourcedMessage(
+            MessageType::warn,
+            MessageSource::blueprintMasterMaster,
+            fmt::format(boost::locale::translate(
+                            "This plugin is not a blueprint master and "
+                            "requires the blueprint master \"{0}\". This can "
+                            "cause issues in-game, as this plugin will always "
+                            "load before \"{0}\".")
+                            .str(),
+                        masterName)));
+      }
+    }
+  }
+
   if (plugin.GetHeaderVersion().has_value() &&
       plugin.GetHeaderVersion().value() < settings_.MinimumHeaderVersion()) {
     if (logger) {
