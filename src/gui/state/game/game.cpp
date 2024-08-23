@@ -59,6 +59,7 @@
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
+#include "loot/exception/error_categories.h"
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/undefined_group_error.h"
 
@@ -1093,6 +1094,23 @@ std::vector<std::string> Game::SortPlugins() {
         fmt::format(
             boost::locale::translate("The group \"{0}\" does not exist.").str(),
             e.GetGroupName())));
+    sortedPlugins.clear();
+  } catch (const std::system_error& e) {
+    if (logger) {
+      logger->error("Failed to sort plugins. Details: {}", e.what());
+    }
+
+    static const auto ESP_ERROR_PLUGIN_METADATA_NOT_FOUND = 14;
+    if (e.code().category() == esplugin_category() &&
+        e.code().value() == ESP_ERROR_PLUGIN_METADATA_NOT_FOUND) {
+      AppendMessage(CreatePlainTextSourcedMessage(
+          MessageType::error,
+          MessageSource::caughtException,
+          boost::locale::translate(
+              "Sorting failed because there is at least one installed plugin "
+              "that depends on at least one plugin that is not installed.")));
+    }
+
     sortedPlugins.clear();
   } catch (const std::exception& e) {
     if (logger) {
