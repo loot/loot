@@ -37,6 +37,7 @@
 #include <QtGui/QClipboard>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QGuiApplication>
+#include <QtGui/QPainter>
 #include <QtWidgets/QToolTip>
 #include <QtWidgets/QWidget>
 #include <boost/locale.hpp>
@@ -53,6 +54,9 @@ static constexpr const char* METADATA_PATH_SUFFIX = ".metadata.toml";
 static constexpr const char* METADATA_ID_KEY = "blob_sha1";
 static constexpr const char* METADATA_DATE_KEY = "update_timestamp";
 static constexpr int SHORT_HASH_LENGTH = 7;
+
+constexpr auto CARD_TOP_SHADOW_HEIGHT = 3;
+constexpr auto CARD_BOTTOM_SHADOW_HEIGHT = 3;
 
 std::filesystem::path getFileMetadataPath(std::filesystem::path filePath) {
   filePath += METADATA_PATH_SUFFIX;
@@ -82,6 +86,24 @@ void writeFileRevision(const std::filesystem::path& filePath,
   }
 
   out << table;
+}
+
+QBrush GetCardTopBorderShadowBrush() {
+  auto shadowColor = QGuiApplication::palette().color(QPalette::Shadow);
+  auto backgroundColor = QGuiApplication::palette().color(QPalette::Window);
+  auto gradient = QLinearGradient(QPointF(0, 2), QPointF(0, 26));
+  gradient.setColorAt(0, backgroundColor);
+  gradient.setColorAt(1, shadowColor);
+  return QBrush(gradient);
+}
+
+QBrush GetCardBottomBorderShadowBrush() {
+  auto shadowColor = QGuiApplication::palette().color(QPalette::Shadow);
+  auto backgroundColor = QGuiApplication::palette().color(QPalette::Window);
+  auto gradient = QLinearGradient(QPointF(0, -2), QPointF(0, 3));
+  gradient.setColorAt(0, shadowColor);
+  gradient.setColorAt(1, backgroundColor);
+  return QBrush(gradient);
 }
 
 FileRevisionSummary::FileRevisionSummary(const FileRevision& fileRevision) :
@@ -415,5 +437,28 @@ void OpenInDefaultApplication(const std::filesystem::path& path) {
     }
   }
 #endif
+}
+
+void PaintCardBorderShadows(QWidget* card, bool paintTop) {
+  QPainter painter(card);
+
+  const auto cardRect = card->rect();
+
+  if (paintTop) {
+    // Draw top border shadow.
+    painter.fillRect(0,
+                     0,
+                     cardRect.width(),
+                     CARD_TOP_SHADOW_HEIGHT,
+                     GetCardTopBorderShadowBrush());
+  }
+
+  // Draw bottom border shadow.
+  painter.translate(0, cardRect.height() - CARD_BOTTOM_SHADOW_HEIGHT);
+  painter.fillRect(0,
+                   0,
+                   cardRect.width(),
+                   CARD_BOTTOM_SHADOW_HEIGHT,
+                   GetCardBottomBorderShadowBrush());
 }
 }

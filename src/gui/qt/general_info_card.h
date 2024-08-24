@@ -61,6 +61,9 @@ public:
 
   void refreshMessages();
 
+protected:
+  void paintEvent(QPaintEvent* event);
+
 private:
   static constexpr int PLUGIN_VALUE_COLUMN = 5;
 

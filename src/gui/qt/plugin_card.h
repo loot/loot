@@ -55,6 +55,9 @@ public:
 
   void refreshMessages();
 
+protected:
+  void paintEvent(QPaintEvent* event) override;
+
 private:
   QLabel* nameLabel{new QLabel(this)};
   QLabel* crcLabel{new QLabel(this)};
