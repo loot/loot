@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-07-10 17:15+0100\n"
+"POT-Creation-Date: 2024-08-24 15:58+0100\n"
 "PO-Revision-Date: 2024-07-16 11:09+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
-"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/>"
-"\n"
+"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
+">\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1190,27 +1190,27 @@ msgstr ""
 "Играта по подразбиране с папка „{0}“ не е намерена. Опитайте да стартирате "
 "играта и след това рестартирайте LOOT."
 
-#: src/gui/state/game/game.cpp:465 src/gui/state/game/game.cpp:509
+#: src/gui/state/game/game.cpp:462 src/gui/state/game/game.cpp:519
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
 msgstr "Тази приставка изисква „{0}“ да бъде инсталирана, но тя липсва."
 
-#: src/gui/state/game/game.cpp:479
+#: src/gui/state/game/game.cpp:489
 msgid "This plugin requires \"{0}\" to be active, but it is inactive."
 msgstr "Тази приставка изисква „{0}“ да бъде активна, но тя е неактивна."
 
-#: src/gui/state/game/game.cpp:551
+#: src/gui/state/game/game.cpp:561
 msgid "This plugin is incompatible with \"{0}\", but both are present."
 msgstr "Тази приставка не е съвместима с „{0}“, но и двете са налични."
 
-#: src/gui/state/game/game.cpp:596
+#: src/gui/state/game/game.cpp:615
 msgid "small master"
 msgstr "зависима основна"
 
-#: src/gui/state/game/game.cpp:597
+#: src/gui/state/game/game.cpp:616
 msgid "light master"
 msgstr "зависима основна"
 
-#: src/gui/state/game/game.cpp:604
+#: src/gui/state/game/game.cpp:623
 msgid ""
 "This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
 "cause issues in-game, and sorting will fail while this plugin is installed."
@@ -1218,7 +1218,7 @@ msgstr ""
 "Тази приставка е {0} и се нуждае от „{1}“. Това може да причини проблеми в "
 "играта и сортирането няма да е успешно, докато тя е инсталирана."
 
-#: src/gui/state/game/game.cpp:626
+#: src/gui/state/game/game.cpp:645
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
@@ -1228,7 +1228,7 @@ msgstr ""
 "на ESL приставките. Използването на тази приставка може да причини "
 "непоправими щети на Вашите записи."
 
-#: src/gui/state/game/game.cpp:644
+#: src/gui/state/game/game.cpp:663
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for a "
 "medium plugin. Using this plugin will cause irreversible damage to your game "
@@ -1238,17 +1238,17 @@ msgstr ""
 "на междинните приставки. Използването на тази приставка може да причини "
 "непоправими щети на Вашите записи."
 
-#: src/gui/state/game/game.cpp:657
+#: src/gui/state/game/game.cpp:676
 msgid "plugin"
 msgstr "приставка"
 
 #. translators: master as in a plugin that is
 #. loaded as if its master flag is set.
-#: src/gui/state/game/game.cpp:660
+#: src/gui/state/game/game.cpp:679
 msgid "master"
 msgstr "основна"
 
-#: src/gui/state/game/game.cpp:669
+#: src/gui/state/game/game.cpp:688
 msgid ""
 "\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
 "correctly installed {2} and all its requirements."
@@ -1256,7 +1256,7 @@ msgstr ""
 "„{0}“ е зависима {1}, но „{2}“ липсва. Моля, уверете се, че сте инсталирали "
 "правилно „{2}“ и всички нейни изисквания."
 
-#: src/gui/state/game/game.cpp:682
+#: src/gui/state/game/game.cpp:701
 msgid ""
 "\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
 "will not load it."
@@ -1264,7 +1264,7 @@ msgstr ""
 "„{0}“ е .esl приставка, която не се поддържа от играта и няма да бъде "
 "заредена."
 
-#: src/gui/state/game/game.cpp:695
+#: src/gui/state/game/game.cpp:714
 msgid ""
 "\"{0}\" is flagged as a light {1}, but the game does not support such "
 "plugins, and will load it as a full {1}."
@@ -1272,7 +1272,7 @@ msgstr ""
 "„{0}“ е отбелязана като зависима {1}, която не се поддържа от играта и ще "
 "бъде заредена като обикновена {1}."
 
-#: src/gui/state/game/game.cpp:715
+#: src/gui/state/game/game.cpp:734
 msgid ""
 "This plugin is an update plugin but adds new records. Using this plugin may "
 "cause irreversible damage to your game saves."
@@ -1282,7 +1282,7 @@ msgstr ""
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/game.cpp:736
+#: src/gui/state/game/game.cpp:755
 msgid ""
 "This plugin has a header version of {0}, which is less than the game's "
 "minimum supported header version of {1}."
@@ -1290,21 +1290,21 @@ msgstr ""
 "Тази приставка има заглавка с версия {0}, която е по-ниска от минималната "
 "поддържана версия на заглавката, която е {1}."
 
-#: src/gui/state/game/game.cpp:751
+#: src/gui/state/game/game.cpp:770
 msgid "This plugin has itself as a master."
 msgstr "Тази приставка се счита за основна."
 
-#: src/gui/state/game/game.cpp:769
+#: src/gui/state/game/game.cpp:788
 msgid "This plugin belongs to the group \"{0}\", which does not exist."
 msgstr "Тази приставка принадлежи към групата „{0}“, която не съществува."
 
-#: src/gui/state/game/game.cpp:795
+#: src/gui/state/game/game.cpp:814
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
 "LOOT for the following Bash Tags: {0}."
 msgstr "Тази приставка има етикети на „Bash“, които ще променят: {0}."
 
-#: src/gui/state/game/game.cpp:929 src/gui/state/game/game.cpp:1032
+#: src/gui/state/game/game.cpp:948 src/gui/state/game/game.cpp:1051
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -1312,27 +1312,33 @@ msgstr ""
 "Зареждането на текущия ред за зареждане е неуспешно, показаната информация "
 "може да е невалидна."
 
-#: src/gui/state/game/game.cpp:1062
+#: src/gui/state/game/game.cpp:1081
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "Установено е циклично взаимодействие между „{0}“ и „{1}“: {2}"
 
-#: src/gui/state/game/game.cpp:1076
+#: src/gui/state/game/game.cpp:1095
 msgid "The group \"{0}\" does not exist."
 msgstr "Групата „{0}“ не съществува."
 
-#: src/gui/state/game/game.cpp:1115
+#: src/gui/state/game/game.cpp:1110
+msgid ""
+"Sorting failed because there is at least one installed plugin that depends "
+"on at least one plugin that is not installed."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:1151
 msgid "You have not sorted your load order this session."
 msgstr "Редът за зареждане не е сортиран по време на тази сесия."
 
-#: src/gui/state/game/game.cpp:1167
+#: src/gui/state/game/game.cpp:1203
 msgid "You have {0} active full plugins but the game only supports up to {1}."
 msgstr "Активни са {0} обикновени приставки, но играта поддържа само до {1}."
 
-#: src/gui/state/game/game.cpp:1175
+#: src/gui/state/game/game.cpp:1211
 msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr "Активни са {0} приставки, но играта поддържа само до {1}."
 
-#: src/gui/state/game/game.cpp:1197
+#: src/gui/state/game/game.cpp:1233
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
@@ -1340,23 +1346,23 @@ msgstr ""
 "Не стартирайте „Morrowind“ без MWSE, защото това може да причини сериозни "
 "щети на Вашата игра."
 
-#: src/gui/state/game/game.cpp:1204
+#: src/gui/state/game/game.cpp:1240
 msgid "small plugin"
 msgid_plural "small plugins"
 msgstr[0] "зависима приставка"
 msgstr[1] "зависими приставки"
 
-#: src/gui/state/game/game.cpp:1207
+#: src/gui/state/game/game.cpp:1243
 msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] "зависима приставка"
 msgstr[1] "зависими приставки"
 
-#: src/gui/state/game/game.cpp:1220
+#: src/gui/state/game/game.cpp:1256
 msgid "You have {0} active {1} but the game only supports up to {2}."
 msgstr "Активни са {0} {1}, но играта поддържа само до {2}."
 
-#: src/gui/state/game/game.cpp:1240
+#: src/gui/state/game/game.cpp:1276
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
 "Deactivate a full plugin or your {1} to avoid potential issues."
@@ -1365,12 +1371,12 @@ msgstr ""
 "зареждане. Изключете обикновената приставка или всички {1} за да избегнете "
 "потенциални проблеми."
 
-#: src/gui/state/game/game.cpp:1258
+#: src/gui/state/game/game.cpp:1294
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
 msgstr "Активни са {0} междинни приставки, но играта поддържа само до {1}."
 
-#: src/gui/state/game/game.cpp:1277
+#: src/gui/state/game/game.cpp:1313
 msgid ""
 "You have a full plugin and at least one medium plugin sharing the FD load "
 "order index. Deactivate a full plugin or all your medium plugins to avoid "
@@ -1382,7 +1388,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's name.
 #.
-#: src/gui/state/game/game.cpp:1290
+#: src/gui/state/game/game.cpp:1326
 msgid ""
 "{0} is installed in a case-sensitive location. This may cause issues as the "
 "game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
@@ -1395,7 +1401,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's
 #. name.
-#: src/gui/state/game/game.cpp:1321
+#: src/gui/state/game/game.cpp:1357
 msgid ""
 "{0}'s local application data is stored in a case-sensitive location. This "
 "may cause issues as the game, mods and LOOT may assume that filesystem paths "
@@ -1406,7 +1412,7 @@ msgstr ""
 "LOOT не различават главните и малките букви, както е по подразбиране в "
 "„Windows“."
 
-#: src/gui/state/game/game.cpp:1390
+#: src/gui/state/game/game.cpp:1426
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
