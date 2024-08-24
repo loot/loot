@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-08-24 15:58+0100\n"
+"POT-Creation-Date: 2024-08-24 22:08+0100\n"
 "PO-Revision-Date: 2024-05-22 20:00+0100\n"
 "Last-Translator: \n"
 "Language-Team: loot-fi@3v.fi\n"
@@ -160,84 +160,84 @@ msgstr "Hakusanaa käytetään säännöllisenä lausekkeena (regular expression
 msgid "Active Small Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:220
+#: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:226
 msgid "Active Light Plugins"
 msgstr "Aktiivisia kevytlisäosia"
 
-#: src/gui/qt/general_info_card.cpp:206
+#: src/gui/qt/general_info_card.cpp:212
 msgid "General Information"
 msgstr "Yleistietoja"
 
-#: src/gui/qt/general_info_card.cpp:208
+#: src/gui/qt/general_info_card.cpp:214
 msgid "Masterlist Revision ID"
 msgstr "Pääluettelon versionumero"
 
-#: src/gui/qt/general_info_card.cpp:209
+#: src/gui/qt/general_info_card.cpp:215
 msgid "Masterlist Update Date"
 msgstr "Pääluettelo päivitetty"
 
-#: src/gui/qt/general_info_card.cpp:210
+#: src/gui/qt/general_info_card.cpp:216
 msgid "Masterlist Prelude Revision ID"
 msgstr "Pääluettelon pohjan versio"
 
-#: src/gui/qt/general_info_card.cpp:211
+#: src/gui/qt/general_info_card.cpp:217
 msgid "Masterlist Prelude Update Date"
 msgstr "Pääluettelon pohja päivitetty"
 
-#: src/gui/qt/general_info_card.cpp:213
+#: src/gui/qt/general_info_card.cpp:219
 msgid "Warnings"
 msgstr "Varoitukset"
 
-#: src/gui/qt/general_info_card.cpp:214
+#: src/gui/qt/general_info_card.cpp:220
 msgid "Errors"
 msgstr "Virheet"
 
-#: src/gui/qt/general_info_card.cpp:215
+#: src/gui/qt/general_info_card.cpp:221
 msgid "Total Messages"
 msgstr "Ilmoituksia yhteensä"
 
-#: src/gui/qt/general_info_card.cpp:217
+#: src/gui/qt/general_info_card.cpp:223
 msgid "Active Plugins"
 msgstr "Aktiivisia lisäosia"
 
-#: src/gui/qt/general_info_card.cpp:218
+#: src/gui/qt/general_info_card.cpp:224
 msgid "Active Full Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:219
+#: src/gui/qt/general_info_card.cpp:225
 msgid "Active Medium Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:221
+#: src/gui/qt/general_info_card.cpp:227
 msgid "Dirty Plugins"
 msgstr "Siivoamattomia lisäosia"
 
-#: src/gui/qt/general_info_card.cpp:222
+#: src/gui/qt/general_info_card.cpp:228
 msgid "Total Plugins"
 msgstr "Lisäosia yhteensä"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:94
+#: src/gui/qt/helpers.cpp:116
 msgid "(edited)"
 msgstr "(muokattu)"
 
-#: src/gui/qt/helpers.cpp:209
+#: src/gui/qt/helpers.cpp:231
 msgid "N/A: No masterlist present"
 msgstr "Pääluettelo ei ole saatavilla"
 
 #. translators: N/A is an abbreviation for Not Applicable. A
 #. masterlist is a database that contains information for
 #. various mods.
-#: src/gui/qt/helpers.cpp:214
+#: src/gui/qt/helpers.cpp:236
 msgid "N/A: No masterlist prelude present"
 msgstr "Pääluettelon pohja ei ole saatavilla"
 
-#: src/gui/qt/helpers.cpp:222
+#: src/gui/qt/helpers.cpp:244
 msgid "Unknown: No revision metadata found"
 msgstr "Tuntematon: version metatietoja ei löydy"
 
-#: src/gui/qt/helpers.cpp:358
+#: src/gui/qt/helpers.cpp:380
 msgid "Invalid regular expression: {0}"
 msgstr "Virheellinen säännöllinen lauseke: {0}"
 
@@ -701,48 +701,48 @@ msgstr "Vahvistettu puhtaaksi ({0})"
 msgid "Small Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:187 src/gui/qt/plugin_card.cpp:302
+#: src/gui/qt/plugin_card.cpp:187 src/gui/qt/plugin_card.cpp:308
 msgid "Light Plugin"
 msgstr "Kevytlisäosa"
 
-#: src/gui/qt/plugin_card.cpp:300
+#: src/gui/qt/plugin_card.cpp:306
 msgid "Active Plugin"
 msgstr "Aktiivinen lisäosa"
 
-#: src/gui/qt/plugin_card.cpp:301
+#: src/gui/qt/plugin_card.cpp:307
 msgid "Master Plugin"
 msgstr "Master-lisäosa"
 
-#: src/gui/qt/plugin_card.cpp:303
+#: src/gui/qt/plugin_card.cpp:309
 msgid "Medium Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:304
+#: src/gui/qt/plugin_card.cpp:310
 msgid "Empty Plugin"
 msgstr "Tyhjä lisäosa"
 
-#: src/gui/qt/plugin_card.cpp:305
+#: src/gui/qt/plugin_card.cpp:311
 msgid "Loads Archive"
 msgstr "Sisältää arkiston"
 
-#: src/gui/qt/plugin_card.cpp:306 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:312 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr "Metatietoja muutettu"
 
-#: src/gui/qt/plugin_card.cpp:308
+#: src/gui/qt/plugin_card.cpp:314
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr "Bash-tagit"
 
-#: src/gui/qt/plugin_card.cpp:309
+#: src/gui/qt/plugin_card.cpp:315
 msgid "Current"
 msgstr "Tämänhetkinen"
 
-#: src/gui/qt/plugin_card.cpp:310 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:316 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr "Lisää"
 
-#: src/gui/qt/plugin_card.cpp:311 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:317 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr "Poista"
 
