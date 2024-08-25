@@ -4,6 +4,41 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.23.1 - 2024-08-25
+===================
+
+Added
+-----
+
+- ``SFBGS004.esm`` is now also written to ``Starfield.ccc``, after
+  ``SFBGS003.esm``.
+- A warning message is now displayed for any Morrowind or Starfield plugin that
+  is inactive and has missing masters, as LOOT is unable to sort Morrowind or
+  Starfield load orders that have missing masters.
+
+Fixed
+-----
+
+- LOOT would show an "Ambiguous load order detected" warning after Starfield was
+  updated to 1.13.61.0 (Starfield's August update), due to its addition of a new
+  official plugin (``SFBGS004.esm``).
+
+Changed
+-------
+
+- An error message is now displayed in the General Information card when sorting
+  fails due to missing masters.
+- A shadow effect has been added to the borders between cards in the main
+  window area to help visually separate different plugins' information.
+- Updated libloot to v0.23.1.
+- Updated the Czech translation.
+- Updated the Brazilian Portuguese translation.
+- Updated the Bulgarian translation.
+- Updated the Korean translation.
+- Updated the Portuguese translation.
+- Updated the Russian translation.
+- Updated the Turkish translation.
+
 0.23.0 - 2024-07-10
 ===================
 
