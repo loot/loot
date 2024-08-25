@@ -3,6 +3,7 @@
   <qresource prefix="/">
     <file>icons/loot.svg</file>
     <file>icons/crown.svg</file>
+    <file>icons/crown-blueprint.svg</file>
     <file>icons/droplet.svg</file>
     <file>icons/feather.svg</file>
     <file>icons/small.svg</file>

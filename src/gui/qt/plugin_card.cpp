@@ -83,6 +83,7 @@ PluginCard::PluginCard(QWidget* parent) : QFrame(parent) { setupUi(); }
 void PluginCard::setIcons() {
   setIcon(isActiveLabel, IconFactory::getIsActiveIcon());
   setIcon(masterFileLabel, IconFactory::getMasterFileIcon());
+  setIcon(blueprintMasterLabel, IconFactory::getBlueprintMasterIcon());
   setIcon(lightPluginLabel, IconFactory::getLightPluginIcon());
   setIcon(lightPluginLabel, IconFactory::getLightPluginIcon());
   setIcon(mediumPluginLabel, IconFactory::getMediumPluginIcon());
@@ -111,6 +112,7 @@ void PluginCard::setContent(const PluginItem& plugin,
 
   isActiveLabel->setVisible(plugin.isActive);
   masterFileLabel->setVisible(plugin.isMaster);
+  blueprintMasterLabel->setVisible(plugin.isBlueprintMaster);
   lightPluginLabel->setVisible(plugin.isLightPlugin);
   mediumPluginLabel->setVisible(plugin.isMediumPlugin);
   emptyPluginLabel->setVisible(plugin.isEmpty);
@@ -227,6 +229,7 @@ void PluginCard::setupUi() {
 
   isActiveLabel->setVisible(false);
   masterFileLabel->setVisible(false);
+  blueprintMasterLabel->setVisible(false);
   lightPluginLabel->setVisible(false);
   mediumPluginLabel->setVisible(false);
   emptyPluginLabel->setVisible(false);
@@ -276,6 +279,7 @@ void PluginCard::setupUi() {
   headerLayout->addStretch();
   headerLayout->addWidget(isActiveLabel);
   headerLayout->addWidget(masterFileLabel);
+  headerLayout->addWidget(blueprintMasterLabel);
   headerLayout->addWidget(lightPluginLabel);
   headerLayout->addWidget(mediumPluginLabel);
   headerLayout->addWidget(emptyPluginLabel);
@@ -305,6 +309,7 @@ void PluginCard::setupUi() {
 void PluginCard::translateUi() {
   isActiveLabel->setToolTip(translate("Active Plugin"));
   masterFileLabel->setToolTip(translate("Master Plugin"));
+  blueprintMasterLabel->setToolTip(translate("Blueprint Master Plugin"));
   lightPluginLabel->setToolTip(translate("Light Plugin"));
   mediumPluginLabel->setToolTip(translate("Medium Plugin"));
   emptyPluginLabel->setToolTip(translate("Empty Plugin"));

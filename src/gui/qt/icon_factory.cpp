@@ -50,6 +50,8 @@ QIcon IconFactory::getIsActiveIcon() {
 
 QIcon IconFactory::getMasterFileIcon() { return getIcon(":/icons/crown.svg"); }
 
+QIcon IconFactory::getBlueprintMasterIcon() { return getIcon(":/icons/crown-blueprint.svg"); }
+
 QIcon IconFactory::getLightPluginIcon() {
   return getIcon(":/icons/feather.svg");
 }

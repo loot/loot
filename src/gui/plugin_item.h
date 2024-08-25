@@ -58,6 +58,7 @@ struct PluginItem {
   bool isDirty{false};
   bool isEmpty{false};
   bool isMaster{false};
+  bool isBlueprintMaster{false};
   bool isLightPlugin{false};
   bool isMediumPlugin{false};
   bool loadsArchive{false};

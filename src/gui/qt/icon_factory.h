@@ -37,6 +37,7 @@ class IconFactory {
 public:
   static QIcon getIsActiveIcon();
   static QIcon getMasterFileIcon();
+  static QIcon getBlueprintMasterIcon();
   static QIcon getLightPluginIcon();
   static QIcon getSmallPluginIcon();
   static QIcon getMediumPluginIcon();

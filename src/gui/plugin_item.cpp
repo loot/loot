@@ -137,6 +137,7 @@ PluginItem::PluginItem(GameId gameId,
     isActive(isActive),
     isEmpty(plugin.IsEmpty()),
     isMaster(plugin.IsMaster()),
+    isBlueprintMaster(plugin.IsMaster() && plugin.IsBlueprintPlugin()),
     isLightPlugin(plugin.IsLightPlugin()),
     isMediumPlugin(plugin.IsMediumPlugin()),
     loadsArchive(plugin.LoadsArchive()),
@@ -364,6 +365,10 @@ std::string PluginItem::getMarkdownContent() const {
 
   if (isMaster) {
     attributes.push_back("Master Plugin");
+  }
+
+  if (isBlueprintMaster) {
+    attributes.push_back("Blueprint Master Plugin");
   }
 
   if (isLightPlugin) {

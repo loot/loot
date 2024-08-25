@@ -63,6 +63,7 @@ The plugin card's header holds the following information, some of which is only 
 - The plugin's :abbr:`CRC (Cyclic Redundancy Checksum)`, which can be used to uniquely identify it. CRCs are only displayed after they have been calculated during overlap filtering or sorting, except the the CRC of the game's main master plugin, which is never displayed.
 - The "Active Plugin" |active_plugin_icon| icon.
 - The "Master Plugin" |master_plugin_icon| icon.
+- The "Blueprint Master Plugin" |blueprint_master_plugin_icon| icon.
 - The "Light Plugin" |light_plugin_icon| icon or "Small Plugin" |small_plugin_icon| icon.
 - The "Medium Plugin" |medium_plugin_icon| icon.
 - The "Empty Plugin" |empty_plugin_icon| icon.
@@ -73,6 +74,8 @@ The plugin card's header holds the following information, some of which is only 
 .. |active_plugin_icon| image:: ../../../resources/icons/material-icons/check_black_48dp.svg
   :scale: 45%
 .. |master_plugin_icon| image:: ../../../resources/icons/crown.svg
+  :scale: 45%
+.. |blueprint_master_plugin_icon| image:: ../../../resources/icons/crown-blueprint.svg
   :scale: 45%
 .. |light_plugin_icon| image:: ../../../resources/icons/feather.svg
   :scale: 45%
