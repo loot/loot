@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-08-24 15:58+0100\n"
+"POT-Creation-Date: 2024-08-24 22:08+0100\n"
 "PO-Revision-Date: 2024-05-22 20:01+0100\n"
 "Last-Translator: kuroko\n"
 "Language-Team: \n"
@@ -155,84 +155,84 @@ msgstr "チェックすると、フィルターの文字列を正規表現とし
 msgid "Active Small Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:220
+#: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:226
 msgid "Active Light Plugins"
 msgstr "アクティブなライトプラグイン"
 
-#: src/gui/qt/general_info_card.cpp:206
+#: src/gui/qt/general_info_card.cpp:212
 msgid "General Information"
 msgstr "全体情報"
 
-#: src/gui/qt/general_info_card.cpp:208
+#: src/gui/qt/general_info_card.cpp:214
 msgid "Masterlist Revision ID"
 msgstr "マスターリストのリビジョン ID"
 
-#: src/gui/qt/general_info_card.cpp:209
+#: src/gui/qt/general_info_card.cpp:215
 msgid "Masterlist Update Date"
 msgstr "マスターリストの更新日時"
 
-#: src/gui/qt/general_info_card.cpp:210
+#: src/gui/qt/general_info_card.cpp:216
 msgid "Masterlist Prelude Revision ID"
 msgstr "前読みマスターリストのリビジョン ID"
 
-#: src/gui/qt/general_info_card.cpp:211
+#: src/gui/qt/general_info_card.cpp:217
 msgid "Masterlist Prelude Update Date"
 msgstr "前読みマスターリストの更新日時"
 
-#: src/gui/qt/general_info_card.cpp:213
+#: src/gui/qt/general_info_card.cpp:219
 msgid "Warnings"
 msgstr "警告"
 
-#: src/gui/qt/general_info_card.cpp:214
+#: src/gui/qt/general_info_card.cpp:220
 msgid "Errors"
 msgstr "エラー"
 
-#: src/gui/qt/general_info_card.cpp:215
+#: src/gui/qt/general_info_card.cpp:221
 msgid "Total Messages"
 msgstr "合計メッセージ数"
 
-#: src/gui/qt/general_info_card.cpp:217
+#: src/gui/qt/general_info_card.cpp:223
 msgid "Active Plugins"
 msgstr "アクティブなプラグイン"
 
-#: src/gui/qt/general_info_card.cpp:218
+#: src/gui/qt/general_info_card.cpp:224
 msgid "Active Full Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:219
+#: src/gui/qt/general_info_card.cpp:225
 msgid "Active Medium Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:221
+#: src/gui/qt/general_info_card.cpp:227
 msgid "Dirty Plugins"
 msgstr "Dirty プラグイン"
 
-#: src/gui/qt/general_info_card.cpp:222
+#: src/gui/qt/general_info_card.cpp:228
 msgid "Total Plugins"
 msgstr "合計プラグイン数"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:94
+#: src/gui/qt/helpers.cpp:116
 msgid "(edited)"
 msgstr "(編集有り)"
 
-#: src/gui/qt/helpers.cpp:209
+#: src/gui/qt/helpers.cpp:231
 msgid "N/A: No masterlist present"
 msgstr "利用不可: マスターリストなし"
 
 #. translators: N/A is an abbreviation for Not Applicable. A
 #. masterlist is a database that contains information for
 #. various mods.
-#: src/gui/qt/helpers.cpp:214
+#: src/gui/qt/helpers.cpp:236
 msgid "N/A: No masterlist prelude present"
 msgstr "利用不可: 前読みマスターリストなし"
 
-#: src/gui/qt/helpers.cpp:222
+#: src/gui/qt/helpers.cpp:244
 msgid "Unknown: No revision metadata found"
 msgstr "不明: リビジョン有メタデータなし"
 
-#: src/gui/qt/helpers.cpp:358
+#: src/gui/qt/helpers.cpp:380
 msgid "Invalid regular expression: {0}"
 msgstr "不正な正規表現: {0}"
 
@@ -693,48 +693,48 @@ msgstr "クリーン確認済（by {0}）"
 msgid "Small Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:187 src/gui/qt/plugin_card.cpp:302
+#: src/gui/qt/plugin_card.cpp:187 src/gui/qt/plugin_card.cpp:308
 msgid "Light Plugin"
 msgstr "ライトプラグイン"
 
-#: src/gui/qt/plugin_card.cpp:300
+#: src/gui/qt/plugin_card.cpp:306
 msgid "Active Plugin"
 msgstr "アクティブ"
 
-#: src/gui/qt/plugin_card.cpp:301
+#: src/gui/qt/plugin_card.cpp:307
 msgid "Master Plugin"
 msgstr "マスタープラグイン"
 
-#: src/gui/qt/plugin_card.cpp:303
+#: src/gui/qt/plugin_card.cpp:309
 msgid "Medium Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:304
+#: src/gui/qt/plugin_card.cpp:310
 msgid "Empty Plugin"
 msgstr "空のプラグイン"
 
-#: src/gui/qt/plugin_card.cpp:305
+#: src/gui/qt/plugin_card.cpp:311
 msgid "Loads Archive"
 msgstr "アーカイブ読み取り"
 
-#: src/gui/qt/plugin_card.cpp:306 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:312 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr "ユーザーメタデータ有り"
 
-#: src/gui/qt/plugin_card.cpp:308
+#: src/gui/qt/plugin_card.cpp:314
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr "Bash Tags"
 
-#: src/gui/qt/plugin_card.cpp:309
+#: src/gui/qt/plugin_card.cpp:315
 msgid "Current"
 msgstr "内容"
 
-#: src/gui/qt/plugin_card.cpp:310 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:316 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr "追加"
 
-#: src/gui/qt/plugin_card.cpp:311 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:317 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr "削除"
 

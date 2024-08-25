@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-08-24 15:58+0100\n"
-"PO-Revision-Date: 2024-07-16 11:09+0000\n"
+"POT-Creation-Date: 2024-08-24 22:08+0100\n"
+"PO-Revision-Date: 2024-08-24 21:43+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
 ">\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.7-dev\n"
+"X-Generator: Weblate 5.7.1-dev\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -159,84 +159,84 @@ msgstr "Тълкуване на съдържанието на филтъра к�
 msgid "Active Small Plugins"
 msgstr "Активни зависими приставки"
 
-#: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:220
+#: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:226
 msgid "Active Light Plugins"
 msgstr "Активни зависими приставки"
 
-#: src/gui/qt/general_info_card.cpp:206
+#: src/gui/qt/general_info_card.cpp:212
 msgid "General Information"
 msgstr "Обща информация"
 
-#: src/gui/qt/general_info_card.cpp:208
+#: src/gui/qt/general_info_card.cpp:214
 msgid "Masterlist Revision ID"
 msgstr "Ревизия на основния списък"
 
-#: src/gui/qt/general_info_card.cpp:209
+#: src/gui/qt/general_info_card.cpp:215
 msgid "Masterlist Update Date"
 msgstr "Дата на обновяване на основния списък"
 
-#: src/gui/qt/general_info_card.cpp:210
+#: src/gui/qt/general_info_card.cpp:216
 msgid "Masterlist Prelude Revision ID"
 msgstr "Ревизия на основния каталожен списък"
 
-#: src/gui/qt/general_info_card.cpp:211
+#: src/gui/qt/general_info_card.cpp:217
 msgid "Masterlist Prelude Update Date"
 msgstr "Дата на обновяване на основния каталожен списък"
 
-#: src/gui/qt/general_info_card.cpp:213
+#: src/gui/qt/general_info_card.cpp:219
 msgid "Warnings"
 msgstr "Предупреждения"
 
-#: src/gui/qt/general_info_card.cpp:214
+#: src/gui/qt/general_info_card.cpp:220
 msgid "Errors"
 msgstr "Грешки"
 
-#: src/gui/qt/general_info_card.cpp:215
+#: src/gui/qt/general_info_card.cpp:221
 msgid "Total Messages"
 msgstr "Общо съобщения"
 
-#: src/gui/qt/general_info_card.cpp:217
+#: src/gui/qt/general_info_card.cpp:223
 msgid "Active Plugins"
 msgstr "Активни приставки"
 
-#: src/gui/qt/general_info_card.cpp:218
+#: src/gui/qt/general_info_card.cpp:224
 msgid "Active Full Plugins"
 msgstr "Активни обикновени приставки"
 
-#: src/gui/qt/general_info_card.cpp:219
+#: src/gui/qt/general_info_card.cpp:225
 msgid "Active Medium Plugins"
 msgstr "Активни междинни приставки"
 
-#: src/gui/qt/general_info_card.cpp:221
+#: src/gui/qt/general_info_card.cpp:227
 msgid "Dirty Plugins"
 msgstr "Мръсни приставки"
 
-#: src/gui/qt/general_info_card.cpp:222
+#: src/gui/qt/general_info_card.cpp:228
 msgid "Total Plugins"
 msgstr "Общо приставки"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:94
+#: src/gui/qt/helpers.cpp:116
 msgid "(edited)"
 msgstr "(редактиран)"
 
-#: src/gui/qt/helpers.cpp:209
+#: src/gui/qt/helpers.cpp:231
 msgid "N/A: No masterlist present"
 msgstr "Внимание: Основният списък липсва"
 
 #. translators: N/A is an abbreviation for Not Applicable. A
 #. masterlist is a database that contains information for
 #. various mods.
-#: src/gui/qt/helpers.cpp:214
+#: src/gui/qt/helpers.cpp:236
 msgid "N/A: No masterlist prelude present"
 msgstr "Внимание: Основният каталожен списък липсва"
 
-#: src/gui/qt/helpers.cpp:222
+#: src/gui/qt/helpers.cpp:244
 msgid "Unknown: No revision metadata found"
 msgstr "Внимание: Ревизията на метаданните не е намерена"
 
-#: src/gui/qt/helpers.cpp:358
+#: src/gui/qt/helpers.cpp:380
 msgid "Invalid regular expression: {0}"
 msgstr "Невалиден регулярен израз: {0}"
 
@@ -709,48 +709,48 @@ msgstr "Според „{0}“, приставката е чиста"
 msgid "Small Plugin"
 msgstr "Зависима приставка"
 
-#: src/gui/qt/plugin_card.cpp:187 src/gui/qt/plugin_card.cpp:302
+#: src/gui/qt/plugin_card.cpp:187 src/gui/qt/plugin_card.cpp:308
 msgid "Light Plugin"
 msgstr "Зависима приставка"
 
-#: src/gui/qt/plugin_card.cpp:300
+#: src/gui/qt/plugin_card.cpp:306
 msgid "Active Plugin"
 msgstr "Активна приставка"
 
-#: src/gui/qt/plugin_card.cpp:301
+#: src/gui/qt/plugin_card.cpp:307
 msgid "Master Plugin"
 msgstr "Основна приставка"
 
-#: src/gui/qt/plugin_card.cpp:303
+#: src/gui/qt/plugin_card.cpp:309
 msgid "Medium Plugin"
 msgstr "Междинна приставка"
 
-#: src/gui/qt/plugin_card.cpp:304
+#: src/gui/qt/plugin_card.cpp:310
 msgid "Empty Plugin"
 msgstr "Празна приставка"
 
-#: src/gui/qt/plugin_card.cpp:305
+#: src/gui/qt/plugin_card.cpp:311
 msgid "Loads Archive"
 msgstr "Зарежда архив"
 
-#: src/gui/qt/plugin_card.cpp:306 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:312 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr "Има добавени метаданни"
 
-#: src/gui/qt/plugin_card.cpp:308
+#: src/gui/qt/plugin_card.cpp:314
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr "Етикети на „Bash“"
 
-#: src/gui/qt/plugin_card.cpp:309
+#: src/gui/qt/plugin_card.cpp:315
 msgid "Current"
 msgstr "Текущи"
 
-#: src/gui/qt/plugin_card.cpp:310 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:316 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr "Добави"
 
-#: src/gui/qt/plugin_card.cpp:311 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:317 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr "Премахни"
 
@@ -1325,6 +1325,8 @@ msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
+"Сортирането е неуспешно, защото има поне една инсталирана приставка, която е "
+"зависима от друга неинсталирана приставка."
 
 #: src/gui/state/game/game.cpp:1151
 msgid "You have not sorted your load order this session."
