@@ -71,7 +71,7 @@ To create the `installer.islu` translation file for your language, copy `resourc
 
 If your language's Inno Setup translation is unofficial, also do the following:
 
-1. Open the script at `scripts/build_installer.ps1` in a text editor of your choice.
+1. Open the script at `scripts/prepare_installer.ps1` in a text editor of your choice.
 2. Add an entry for your language's translation file to the `$unofficialLanguageFiles` array.
 3. Save your changes.
 

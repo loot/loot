@@ -2,9 +2,11 @@ $ErrorActionPreference = "Stop"
 
 $masterlistBranch = "v0.21"
 
-function DownloadLanguageFile($languageFile, $innoPath) {
+function DownloadLanguageFile($languageFile, $parentPath) {
+  New-Item -ItemType "directory" -Force $parentPath
+
   $url = 'https://raw.githubusercontent.com/jrsoftware/issrc/is-6_0_5/Files/Languages/Unofficial/' + $languageFile
-  $installPath = $innoPath + '\Languages\' + $languageFile
+  $installPath = Join-Path -Path $parentPath -ChildPath $languageFile
 
   (New-Object System.Net.WebClient).DownloadFile($url, $installPath)
 }
@@ -32,11 +34,11 @@ function WriteDownloadMetadata($filePath) {
 }
 
 function DownloadMetadataFile($repo, $lootGameFolder, $basename) {
-  $installDir = '.\build\masterlists\' + $lootGameFolder
-  mkdir -Force $installDir
+  $installDir = Join-Path -Path '.\build\masterlists\' -ChildPath $lootGameFolder
+  New-Item -ItemType "directory" -Force $installDir
 
   $url = "https://raw.githubusercontent.com/loot/$repo/$masterlistBranch/$basename.yaml"
-  $installPath = $installDir + "\$basename.yaml"
+  $installPath = Join-Path -Path $installDir -ChildPath "$basename.yaml"
 
   (New-Object System.Net.WebClient).DownloadFile($url, $installPath)
   WriteDownloadMetadata $installPath
@@ -46,7 +48,7 @@ function DownloadMasterlist($repo, $lootGameFolder) {
   DownloadMetadataFile $repo $lootGameFolder 'masterlist'
 }
 
-$innoInstallPath = 'C:\Program Files (x86)\Inno Setup 6'
+$languagesParentPath = Join-Path -Path 'build' -ChildPath 'inno'
 # Unofficial language files to download and install.
 $unofficialLanguageFiles = @(
   'Korean.isl',
@@ -56,10 +58,8 @@ $unofficialLanguageFiles = @(
 
 # Install some unofficial translation files for Inno Setup.
 foreach ($languageFile in $unofficialLanguageFiles) {
-  DownloadLanguageFile $languageFile $innoInstallPath
+  DownloadLanguageFile $languageFile $languagesParentPath
 }
-
-$env:PATH += ';' + $innoInstallPath
 
 Write-Output 'Downloading masterlists'
 DownloadMetadataFile 'prelude' 'prelude' 'prelude'
@@ -76,10 +76,3 @@ DownloadMasterlist 'falloutnv' 'FalloutNV'
 DownloadMasterlist 'fallout4' 'Fallout4'
 DownloadMasterlist 'fallout4vr' 'Fallout4VR'
 DownloadMasterlist 'starfield' 'Starfield'
-
-Write-Output "Building installer for LOOT"
-iscc scripts\installer.iss
-
-if ($LastExitCode -ne 0) {
-  throw 'Failed to build the LOOT installer'
-}

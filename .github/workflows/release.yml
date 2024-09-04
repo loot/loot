@@ -169,7 +169,10 @@ jobs:
 
       - name: Build installer
         run: |
-          scripts\build_installer.ps1
+          scripts\prepare_installer.ps1
+
+          $env:PATH += ';C:\Program Files (x86)\Inno Setup 6'
+          iscc scripts\installer.iss
 
           mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
 
