@@ -22,6 +22,14 @@
 #define SimplifiedChineseExists
 #endif
 
+#if FileExists(AddBackslash(SourcePath) + '..\build\Release\LOOT.exe')
+#define ArtifactsDir "build\Release"
+#define LiblootDll "loot.dll"
+#else
+#define ArtifactsDir "build"
+#define LiblootDll "libloot.dll"
+#endif
+
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -84,38 +92,42 @@ Name: "masterlists"; Description: "{cm:DownloadMasterlists}"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "build\Release\LOOT.exe"; \
+Source: "{#ArtifactsDir}\LOOT.exe"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\loot.dll"; \
+Source: "{#ArtifactsDir}\{#LiblootDll}"; \
 DestDir: "{app}"; Flags: ignoreversion
 
+#if FileExists(AddBackslash(SourcePath) + '..\' + AddBackslash(ArtifactsDir) + 'Qt6Core.dll')
+  
 ; Common Qt files
-Source: "build\Release\iconengines\*"; \
+Source: "{#ArtifactsDir}\iconengines\*"; \
 DestDir: "{app}\iconengines"; Flags: ignoreversion
-Source: "build\Release\imageformats\*"; \
+Source: "{#ArtifactsDir}\imageformats\*"; \
 DestDir: "{app}\imageformats"; Flags: ignoreversion
-Source: "build\Release\platforms\*"; \
+Source: "{#ArtifactsDir}\platforms\*"; \
 DestDir: "{app}\platforms"; Flags: ignoreversion
-Source: "build\Release\styles\*"; \
+Source: "{#ArtifactsDir}\styles\*"; \
 DestDir: "{app}\styles"; Flags: ignoreversion
-Source: "build\Release\translations\*"; \
+Source: "{#ArtifactsDir}\translations\*"; \
 DestDir: "{app}\translations"; Flags: ignoreversion
 
 ; Qt 6 files
-Source: "build\Release\Qt6Core.dll"; \
+Source: "{#ArtifactsDir}\Qt6Core.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\Qt6Gui.dll"; \
+Source: "{#ArtifactsDir}\Qt6Gui.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\Qt6Network.dll"; \
+Source: "{#ArtifactsDir}\Qt6Network.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\Qt6Svg.dll"; \
+Source: "{#ArtifactsDir}\Qt6Svg.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\Qt6Widgets.dll"; \
+Source: "{#ArtifactsDir}\Qt6Widgets.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\networkinformation\*"; \
+Source: "{#ArtifactsDir}\networkinformation\*"; \
 DestDir: "{app}\networkinformation"; Flags: ignoreversion
-Source: "build\Release\tls\*"; \
+Source: "{#ArtifactsDir}\tls\*"; \
 DestDir: "{app}\tls"; Flags: ignoreversion
+
+#endif
 
 Source: "build\docs\html\*"; \
 DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
