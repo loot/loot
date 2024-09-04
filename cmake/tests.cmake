@@ -176,13 +176,6 @@ else()
     target_link_libraries(loot_gui_tests PRIVATE ${ICU_TARGETS})
 endif()
 
-if(CMAKE_COMPILER_IS_GNUCXX)
-    set_target_properties(LOOT loot_gui_tests
-        PROPERTIES
-            INSTALL_RPATH "${CMAKE_INSTALL_RPATH};."
-            BUILD_WITH_INSTALL_RPATH ON)
-endif()
-
 if(MSVC)
     # Set /bigobj to allow building Debug tests
     target_compile_options(loot_gui_tests PRIVATE
@@ -227,39 +220,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
                 ${LIBLOOT_SHARED_LIBRARY}
                 "$<TARGET_FILE_DIR:loot_gui_tests>/${LIBLOOT_SHARED_LIBRARY_FILENAME}")
     endif()
-else()
-    set(LOOT_QT_TEST_RESOURCES
-        libicudata.so.73
-        libicudata.so.73.2
-        libicui18n.so.73
-        libicui18n.so.73.2
-        libicuuc.so.73
-        libicuuc.so.73.2
-        libQt6Concurrent.so.6
-        libQt6Concurrent.so.6.7.2
-        libQt6Core.so.6
-        libQt6Core.so.6.7.2
-        libQt6DBus.so.6
-        libQt6DBus.so.6.7.2
-        libQt6Gui.so.6
-        libQt6Gui.so.6.7.2
-        libQt6Network.so.6
-        libQt6Network.so.6.7.2
-        libQt6Test.so.6
-        libQt6Test.so.6.7.2
-        libQt6Widgets.so.6
-        libQt6Widgets.so.6.7.2
-        libQt6XcbQpa.so.6
-        libQt6XcbQpa.so.6.7.2
-        libQt6OpenGL.so.6
-        libQt6OpenGL.so.6.7.2)
-
-    foreach(TEST_RESOURCE ${LOOT_QT_TEST_RESOURCES})
-        add_custom_command(TARGET loot_gui_tests POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${QT_DIR}/lib/${TEST_RESOURCE}"
-                $<TARGET_FILE_DIR:loot_gui_tests>/${TEST_RESOURCE})
-    endforeach()
 endif()
 
 # Copy testing plugins

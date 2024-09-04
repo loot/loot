@@ -143,8 +143,6 @@ jobs:
 
           cmake --build . --target loot --config Release
           cmake --install . --config Release
-
-          echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LIBLOOT_INSTALL_PATH/lib" >> "$GITHUB_ENV"
         if: steps.libloot-cache.outputs.cache-hit != 'true'
 
       - name: Run CMake
@@ -158,9 +156,6 @@ jobs:
       - name: Run C++ tests
         run: |
           cd build
-
-          export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$LIBLOOT_INSTALL_PATH/lib"
-
           ./loot_gui_tests
 
   flatpak:
