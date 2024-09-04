@@ -219,6 +219,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         add_custom_command(TARGET loot_gui_tests POST_BUILD
             COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:loot_gui_tests>
             COMMENT "Running windeployqt...")
+
+        # Copy the API binary to the build directory.
+        get_filename_component(LIBLOOT_SHARED_LIBRARY_FILENAME ${LIBLOOT_SHARED_LIBRARY} NAME)
+        add_custom_command(TARGET loot_gui_tests POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                ${LIBLOOT_SHARED_LIBRARY}
+                "$<TARGET_FILE_DIR:loot_gui_tests>/${LIBLOOT_SHARED_LIBRARY_FILENAME}")
     endif()
 else()
     set(LOOT_QT_TEST_RESOURCES
@@ -255,15 +262,15 @@ else()
     endforeach()
 endif()
 
-# Copy the API binary to the build directory.
-get_filename_component(LIBLOOT_SHARED_LIBRARY_FILENAME ${LIBLOOT_SHARED_LIBRARY} NAME)
-add_custom_command(TARGET loot_gui_tests POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${LIBLOOT_SHARED_LIBRARY}
-        "$<TARGET_FILE_DIR:loot_gui_tests>/${LIBLOOT_SHARED_LIBRARY_FILENAME}")
-
 # Copy testing plugins
 add_custom_command(TARGET loot_gui_tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${testing-plugins_SOURCE_DIR}
         $<TARGET_FILE_DIR:loot_gui_tests>)
+
+##############################
+# CTest
+##############################
+
+enable_testing()
+gtest_discover_tests(loot_gui_tests DISCOVERY_TIMEOUT 10)
