@@ -487,6 +487,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
         target_link_libraries(LOOT PRIVATE tbb_static bz2)
         target_link_libraries(Qt6::Widgets INTERFACE bz2)
+        target_link_libraries(Qt6::Network INTERFACE brotlicommon)
     endif()
 else()
     set(ICU_TARGETS ICU::data ICU::uc TBB::tbb)
@@ -558,9 +559,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         add_custom_command(TARGET LOOT POST_BUILD
             COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
             COMMENT "Running windeployqt...")
-    endif()
 
-    set(DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME "loot.dll")
+        set(DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME "loot.dll")
+    else()
+        set(DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME "libloot.dll")
+    endif()
 else()
     set(DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME "libloot.so")
 endif()
