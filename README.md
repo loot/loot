@@ -79,6 +79,8 @@ Not all LOOT's features have been implemented for Linux builds. Issues labelled
 `linux` on LOOT's issue tracker cover such missing features where they can be
 implemented.
 
+Note that building the Flatpak doesn't work in an unprivileged container. This includes running the `generate_manifests.sh` script.
+
 ### CMake Variables
 
 LOOT uses the following CMake variables to set build parameters:

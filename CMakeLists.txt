@@ -48,7 +48,10 @@ configure_file("${CMAKE_SOURCE_DIR}/src/gui/version.cpp.in"
 # External Projects
 ##############################
 
-set(Boost_USE_STATIC_LIBS ON)
+# Allow use of shared Boost libs, e.g. if installed through the Linux distribution's package manager.
+if(NOT DEFINED Boost_USE_STATIC_LIBS)
+    set(Boost_USE_STATIC_LIBS ON)
+endif()
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
@@ -98,7 +101,13 @@ else()
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/bin/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
     else()
-        set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
+        # lib64 is used if the library was packaged on anything other than Debian (or a Debian-derived distro, e.g. Ubuntu)
+        # see <https://stackoverflow.com/questions/76517286/how-does-cmake-decide-to-make-a-lib-or-lib64-directory-for-installations>
+        # GitHub Actions runners use Ubuntu.
+        if(NOT DEFINED LIBLOOT_LIB_DIR)
+            set(LIBLOOT_LIB_DIR "lib")
+        endif()
+        set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/${LIBLOOT_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
     endif()
 endif()
 
