@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-08-25 11:09+0100\n"
+"POT-Creation-Date: 2024-09-14 13:22+0100\n"
 "PO-Revision-Date: 2024-08-24 21:43+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
@@ -23,11 +23,11 @@ msgstr ""
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
 msgstr "„{0}“ съдържа условие, което не може да бъде оценено. Детайли: {1}"
 
-#: src/gui/plugin_item.cpp:193
+#: src/gui/plugin_item.cpp:194
 msgid "Location"
 msgstr "Местоположение"
 
-#: src/gui/plugin_item.cpp:198
+#: src/gui/plugin_item.cpp:199
 msgid "Location {0}"
 msgstr "Местоположение {0}"
 
@@ -693,64 +693,68 @@ msgstr ""
 "Проверката за обновявания на LOOT е неуспешна! Вижте „LOOTDebugLog."
 "txt“ (през главното меню) за повече информация."
 
-#: src/gui/qt/plugin_card.cpp:159
+#: src/gui/qt/plugin_card.cpp:161
 msgid "Source:"
 msgstr "Източник:"
 
-#: src/gui/qt/plugin_card.cpp:160
+#: src/gui/qt/plugin_card.cpp:162
 msgid "Sources:"
 msgstr "Източници:"
 
-#: src/gui/qt/plugin_card.cpp:176
+#: src/gui/qt/plugin_card.cpp:178
 msgid "Verified clean by {0}"
 msgstr "Според „{0}“, приставката е чиста"
 
-#: src/gui/qt/plugin_card.cpp:184
+#: src/gui/qt/plugin_card.cpp:186
 msgid "Small Plugin"
 msgstr "Зависима приставка"
 
-#: src/gui/qt/plugin_card.cpp:187 src/gui/qt/plugin_card.cpp:308
+#: src/gui/qt/plugin_card.cpp:189 src/gui/qt/plugin_card.cpp:313
 msgid "Light Plugin"
 msgstr "Зависима приставка"
 
-#: src/gui/qt/plugin_card.cpp:306
+#: src/gui/qt/plugin_card.cpp:310
 msgid "Active Plugin"
 msgstr "Активна приставка"
 
-#: src/gui/qt/plugin_card.cpp:307
+#: src/gui/qt/plugin_card.cpp:311
 msgid "Master Plugin"
 msgstr "Основна приставка"
 
-#: src/gui/qt/plugin_card.cpp:309
+#: src/gui/qt/plugin_card.cpp:312
+msgid "Blueprint Master Plugin"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:314
 msgid "Medium Plugin"
 msgstr "Междинна приставка"
 
-#: src/gui/qt/plugin_card.cpp:310
+#: src/gui/qt/plugin_card.cpp:315
 msgid "Empty Plugin"
 msgstr "Празна приставка"
 
-#: src/gui/qt/plugin_card.cpp:311
+#: src/gui/qt/plugin_card.cpp:316
 msgid "Loads Archive"
 msgstr "Зарежда архив"
 
-#: src/gui/qt/plugin_card.cpp:312 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:317 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr "Има добавени метаданни"
 
-#: src/gui/qt/plugin_card.cpp:314
+#: src/gui/qt/plugin_card.cpp:319
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr "Етикети на „Bash“"
 
-#: src/gui/qt/plugin_card.cpp:315
+#: src/gui/qt/plugin_card.cpp:320
 msgid "Current"
 msgstr "Текущи"
 
-#: src/gui/qt/plugin_card.cpp:316 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:321 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr "Добави"
 
-#: src/gui/qt/plugin_card.cpp:317 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:322 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr "Премахни"
 
@@ -1280,9 +1284,16 @@ msgstr ""
 "Тази приставка ще добави нови записи. Използването на тази приставка може да "
 "причини непоправими щети на Вашите записи."
 
+#: src/gui/state/game/game.cpp:766
+msgid ""
+"This plugin is not a blueprint master and requires the blueprint master "
+"\"{0}\". This can cause issues in-game, as this plugin will always load "
+"before \"{0}\"."
+msgstr ""
+
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/game.cpp:755
+#: src/gui/state/game/game.cpp:793
 msgid ""
 "This plugin has a header version of {0}, which is less than the game's "
 "minimum supported header version of {1}."
@@ -1290,21 +1301,21 @@ msgstr ""
 "Тази приставка има заглавка с версия {0}, която е по-ниска от минималната "
 "поддържана версия на заглавката, която е {1}."
 
-#: src/gui/state/game/game.cpp:770
+#: src/gui/state/game/game.cpp:808
 msgid "This plugin has itself as a master."
 msgstr "Тази приставка се счита за основна."
 
-#: src/gui/state/game/game.cpp:788
+#: src/gui/state/game/game.cpp:826
 msgid "This plugin belongs to the group \"{0}\", which does not exist."
 msgstr "Тази приставка принадлежи към групата „{0}“, която не съществува."
 
-#: src/gui/state/game/game.cpp:814
+#: src/gui/state/game/game.cpp:852
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
 "LOOT for the following Bash Tags: {0}."
 msgstr "Тази приставка има етикети на „Bash“, които ще променят: {0}."
 
-#: src/gui/state/game/game.cpp:948 src/gui/state/game/game.cpp:1051
+#: src/gui/state/game/game.cpp:986 src/gui/state/game/game.cpp:1089
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -1312,15 +1323,15 @@ msgstr ""
 "Зареждането на текущия ред за зареждане е неуспешно, показаната информация "
 "може да е невалидна."
 
-#: src/gui/state/game/game.cpp:1081
+#: src/gui/state/game/game.cpp:1119
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "Установено е циклично взаимодействие между „{0}“ и „{1}“: {2}"
 
-#: src/gui/state/game/game.cpp:1095
+#: src/gui/state/game/game.cpp:1133
 msgid "The group \"{0}\" does not exist."
 msgstr "Групата „{0}“ не съществува."
 
-#: src/gui/state/game/game.cpp:1110
+#: src/gui/state/game/game.cpp:1148
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1328,19 +1339,19 @@ msgstr ""
 "Сортирането е неуспешно, защото има поне една инсталирана приставка, която е "
 "зависима от друга неинсталирана приставка."
 
-#: src/gui/state/game/game.cpp:1151
+#: src/gui/state/game/game.cpp:1189
 msgid "You have not sorted your load order this session."
 msgstr "Редът за зареждане не е сортиран по време на тази сесия."
 
-#: src/gui/state/game/game.cpp:1203
+#: src/gui/state/game/game.cpp:1241
 msgid "You have {0} active full plugins but the game only supports up to {1}."
 msgstr "Активни са {0} обикновени приставки, но играта поддържа само до {1}."
 
-#: src/gui/state/game/game.cpp:1211
+#: src/gui/state/game/game.cpp:1249
 msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr "Активни са {0} приставки, но играта поддържа само до {1}."
 
-#: src/gui/state/game/game.cpp:1233
+#: src/gui/state/game/game.cpp:1271
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
@@ -1348,23 +1359,23 @@ msgstr ""
 "Не стартирайте „Morrowind“ без MWSE, защото това може да причини сериозни "
 "щети на Вашата игра."
 
-#: src/gui/state/game/game.cpp:1240
+#: src/gui/state/game/game.cpp:1278
 msgid "small plugin"
 msgid_plural "small plugins"
 msgstr[0] "зависима приставка"
 msgstr[1] "зависими приставки"
 
-#: src/gui/state/game/game.cpp:1243
+#: src/gui/state/game/game.cpp:1281
 msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] "зависима приставка"
 msgstr[1] "зависими приставки"
 
-#: src/gui/state/game/game.cpp:1256
+#: src/gui/state/game/game.cpp:1294
 msgid "You have {0} active {1} but the game only supports up to {2}."
 msgstr "Активни са {0} {1}, но играта поддържа само до {2}."
 
-#: src/gui/state/game/game.cpp:1276
+#: src/gui/state/game/game.cpp:1314
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
 "Deactivate a full plugin or your {1} to avoid potential issues."
@@ -1373,12 +1384,12 @@ msgstr ""
 "зареждане. Изключете обикновената приставка или всички {1} за да избегнете "
 "потенциални проблеми."
 
-#: src/gui/state/game/game.cpp:1294
+#: src/gui/state/game/game.cpp:1332
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
 msgstr "Активни са {0} междинни приставки, но играта поддържа само до {1}."
 
-#: src/gui/state/game/game.cpp:1313
+#: src/gui/state/game/game.cpp:1351
 msgid ""
 "You have a full plugin and at least one medium plugin sharing the FD load "
 "order index. Deactivate a full plugin or all your medium plugins to avoid "
@@ -1390,7 +1401,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's name.
 #.
-#: src/gui/state/game/game.cpp:1326
+#: src/gui/state/game/game.cpp:1364
 msgid ""
 "{0} is installed in a case-sensitive location. This may cause issues as the "
 "game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
@@ -1403,7 +1414,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's
 #. name.
-#: src/gui/state/game/game.cpp:1357
+#: src/gui/state/game/game.cpp:1395
 msgid ""
 "{0}'s local application data is stored in a case-sensitive location. This "
 "may cause issues as the game, mods and LOOT may assume that filesystem paths "
@@ -1414,7 +1425,7 @@ msgstr ""
 "LOOT не различават главните и малките букви, както е по подразбиране в "
 "„Windows“."
 
-#: src/gui/state/game/game.cpp:1426
+#: src/gui/state/game/game.cpp:1464
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
