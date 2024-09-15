@@ -335,7 +335,7 @@ void WriteStarfieldCCCFile(const GameSettings& settings) {
   // positions, as otherwise LOOT might sort them into an order that would get
   // written to plugins.txt and then overwritten on the next game load. This
   // list is the same as what is used by Mod Organizer 2:
-  // <https://github.com/ModOrganizer2/modorganizer-game_bethesda/blob/master/game_starfield/src/gamestarfield.cpp#L256>
+  // <https://github.com/ModOrganizer2/modorganizer-game_bethesda/blob/master/src/games/starfield/src/gamestarfield.cpp#L256>
   // with SFBGS004.esm appended (as it's missing from that list at time of
   // writing).
   out << "Starfield.esm" << std::endl
