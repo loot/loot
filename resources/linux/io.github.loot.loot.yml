@@ -83,12 +83,26 @@ modules:
         url: https://github.com/marzer/tomlplusplus/archive/v3.4.0.tar.gz
         sha256: 8517f65938a4faae9ccf8ebb36631a38c1cadfb5efa85d9a72e15b9e97d25155
 
+  - name: fmt
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DFMT_DOC=OFF
+      - -DFMT_TEST=OFF
+      - -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+    sources:
+      - type: archive
+        url: https://github.com/fmtlib/fmt/archive/refs/tags/11.0.2.tar.gz
+        sha256: 6cb1e6d37bdcb756dbbe59be438790db409cdb4868c66e888d5df9f13f7c027f
+
   - name: spdlog
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DSPDLOG_BUILD_EXAMPLE=OFF
+      - -DSPDLOG_FMT_EXTERNAL=ON
     sources:
       - type: archive
         url: https://github.com/gabime/spdlog/archive/v1.14.1.tar.gz
@@ -153,8 +167,8 @@ modules:
       # Use the Git repository so that libloot's commit hash gets embedded in the build.
       - type: git
         url: https://github.com/loot/libloot.git
-        tag: 0.24.0
-        commit: cfa2835c2fc4cbd39d3784305599b2856c7c36da
+        tag: 0.24.1
+        commit: 924ee8982e01cd5d1d69a0156657529d26a5b5c9
       - type: file
         url: https://github.com/Ortham/esplugin/archive/refs/tags/6.1.0.tar.gz
         sha256: 52dec796d98426e1c75c5cf3c41351c0b3431a6301137e00fcf6023f4e47b502
