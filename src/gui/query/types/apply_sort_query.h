@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_APPLY_SORT_QUERY
 #define LOOT_GUI_QUERY_APPLY_SORT_QUERY
 
-#include <spdlog/fmt/fmt.h>
+#include <fmt/base.h>
 
 #include "gui/helpers.h"
 #include "gui/query/query.h"

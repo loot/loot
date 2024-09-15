@@ -25,7 +25,7 @@
 
 #include "gui/qt/plugin_card.h"
 
-#include <spdlog/fmt/fmt.h>
+#include <fmt/base.h>
 
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QStyle>
@@ -211,7 +211,7 @@ void PluginCard::setSearchResult(bool isSearchResult,
 
 void PluginCard::refreshMessages() { messagesWidget->refresh(); }
 
-void PluginCard::paintEvent(QPaintEvent* event) { 
+void PluginCard::paintEvent(QPaintEvent* event) {
   QFrame::paintEvent(event);
 
   PaintCardBorderShadows(this, true);

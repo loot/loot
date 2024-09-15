@@ -25,7 +25,7 @@
 
 #include "gui/plugin_item.h"
 
-#include <spdlog/fmt/fmt.h>
+#include <fmt/base.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>

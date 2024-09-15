@@ -46,8 +46,7 @@
 #include <cstdio>
 #endif
 
-#include <spdlog/fmt/fmt.h>
-#include <spdlog/fmt/ranges.h>
+#include <fmt/ranges.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>

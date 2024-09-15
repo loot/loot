@@ -25,7 +25,7 @@
 
 #include "gui/qt/plugin_editor/group_tab.h"
 
-#include <spdlog/fmt/fmt.h>
+#include <fmt/base.h>
 
 #include <QtGui/QStandardItemModel>
 #include <QtWidgets/QFormLayout>

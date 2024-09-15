@@ -46,8 +46,7 @@
 #include <windows.h>
 #endif
 
-#include <spdlog/fmt/bundled/ranges.h>
-#include <spdlog/fmt/fmt.h>
+#include <fmt/ranges.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>

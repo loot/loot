@@ -205,6 +205,13 @@ FetchContent_Declare(
     FIND_PACKAGE_ARGS)
 
 FetchContent_Declare(
+    fmt
+    URL "https://github.com/fmtlib/fmt/archive/refs/tags/11.0.2.tar.gz"
+    URL_HASH "SHA256=6cb1e6d37bdcb756dbbe59be438790db409cdb4868c66e888d5df9f13f7c027f"
+    FIND_PACKAGE_ARGS)
+
+set(SPDLOG_FMT_EXTERNAL ON)
+FetchContent_Declare(
     spdlog
     URL "https://github.com/gabime/spdlog/archive/v1.14.1.tar.gz"
     URL_HASH "SHA256=1586508029a7d0670dfcb2d97575dcdc242d3868a259742b69f100801ab4e16b"
@@ -220,7 +227,7 @@ FetchContent_Declare(
     URL ${VALVE_FILE_VDF_URL}
     URL_HASH ${VALVE_FILE_VDF_HASH})
 
-FetchContent_MakeAvailable(spdlog tomlplusplus ValveFileVDF)
+FetchContent_MakeAvailable(fmt spdlog tomlplusplus ValveFileVDF)
 
 find_package(OGDF CONFIG)
 if(NOT OGDF_FOUND)
@@ -447,6 +454,7 @@ add_executable(LOOT ${LOOT_ALL_SOURCES})
 target_link_libraries(LOOT PRIVATE
     Qt::Widgets Qt::Network Qt::Concurrent
     Boost::headers Boost::locale
+    fmt::fmt
     spdlog::spdlog_header_only
     tomlplusplus::tomlplusplus
     ValveFileVDF::ValveFileVDF)

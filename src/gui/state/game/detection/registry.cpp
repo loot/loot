@@ -30,6 +30,10 @@
 #include "gui/state/game/game_settings.h"
 #include "gui/state/logging.h"
 
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
 namespace {
 #ifdef _WIN32
 HKEY GetRegistryRootKey(const std::string& rootKey) {

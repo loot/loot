@@ -129,6 +129,7 @@ target_link_libraries(loot_gui_tests PRIVATE
     Qt::Widgets Qt::Network Qt::Concurrent Qt::Test
     Boost::headers Boost::locale
     GTest::gtest_main
+    fmt::fmt
     spdlog::spdlog_header_only
     tomlplusplus::tomlplusplus
     ValveFileVDF::ValveFileVDF)

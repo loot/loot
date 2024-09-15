@@ -25,7 +25,7 @@
 
 #include "gui/qt/groups_editor/groups_editor_dialog.h"
 
-#include <spdlog/fmt/fmt.h>
+#include <fmt/base.h>
 
 #include <QtWidgets/QCompleter>
 #include <QtWidgets/QDialogButtonBox>

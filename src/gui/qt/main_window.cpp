@@ -25,7 +25,7 @@
 
 #include "gui/qt/main_window.h"
 
-#include <spdlog/fmt/fmt.h>
+#include <fmt/base.h>
 
 #include <QtCore/QTimer>
 #include <QtGui/QCloseEvent>

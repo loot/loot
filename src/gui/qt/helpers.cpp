@@ -26,7 +26,7 @@
 #include "gui/qt/helpers.h"
 
 #include <loot/exception/file_access_error.h>
-#include <spdlog/fmt/fmt.h>
+#include <fmt/base.h>
 #include <toml++/toml.h>
 
 #include <QtCore/QCryptographicHash>

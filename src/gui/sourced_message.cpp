@@ -25,7 +25,7 @@
 
 #include "gui/sourced_message.h"
 
-#include <spdlog/fmt/fmt.h>
+#include <fmt/format.h>
 
 #include <boost/locale.hpp>
 
