@@ -25,8 +25,6 @@
 #ifndef LOOT_GUI_STATE_LOGGING
 #define LOOT_GUI_STATE_LOGGING
 
-#define SPDLOG_WCHAR_FILENAMES
-
 #ifdef _MSC_VER
 // Qt typedef's a uint type in the global namespace that spdlog shadows, just
 // disable the warning.

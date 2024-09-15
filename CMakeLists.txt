@@ -211,6 +211,9 @@ FetchContent_Declare(
     FIND_PACKAGE_ARGS)
 
 set(SPDLOG_FMT_EXTERNAL ON)
+if(WIN32)
+    set(SPDLOG_WCHAR_FILENAMES ON)
+endif()
 FetchContent_Declare(
     spdlog
     URL "https://github.com/gabime/spdlog/archive/v1.14.1.tar.gz"
@@ -455,7 +458,7 @@ target_link_libraries(LOOT PRIVATE
     Qt::Widgets Qt::Network Qt::Concurrent
     Boost::headers Boost::locale
     fmt::fmt
-    spdlog::spdlog_header_only
+    spdlog::spdlog
     tomlplusplus::tomlplusplus
     ValveFileVDF::ValveFileVDF)
 

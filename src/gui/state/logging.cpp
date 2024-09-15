@@ -141,7 +141,7 @@ void setLogPath(const std::filesystem::path& outputFile) {
 
   spdlog::drop(LOGGER_NAME);
 
-#if defined(_WIN32) && defined(SPDLOG_WCHAR_FILENAMES)
+#if defined(_WIN32)
   const auto platformFilePath = outputFile.wstring();
 #else
   const auto platformFilePath = outputFile.u8string();

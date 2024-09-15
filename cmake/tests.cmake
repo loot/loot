@@ -130,7 +130,7 @@ target_link_libraries(loot_gui_tests PRIVATE
     Boost::headers Boost::locale
     GTest::gtest_main
     fmt::fmt
-    spdlog::spdlog_header_only
+    spdlog::spdlog
     tomlplusplus::tomlplusplus
     ValveFileVDF::ValveFileVDF)
 

@@ -102,6 +102,7 @@ modules:
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DSPDLOG_BUILD_EXAMPLE=OFF
+      - -DSPDLOG_BUILD_PIC=ON
       - -DSPDLOG_FMT_EXTERNAL=ON
     sources:
       - type: archive
