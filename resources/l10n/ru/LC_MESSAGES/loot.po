@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2024-09-15 13:40+0100\n"
-"PO-Revision-Date: 2024-08-26 14:09+0000\n"
+"PO-Revision-Date: 2024-09-17 09:09+0000\n"
 "Last-Translator: xsSplater <xssplater@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.7.1-dev\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -735,7 +735,7 @@ msgstr "Мастер-плагин"
 
 #: src/gui/qt/plugin_card.cpp:312
 msgid "Blueprint Master Plugin"
-msgstr ""
+msgstr "Заготовка мастер-плагина"
 
 #: src/gui/qt/plugin_card.cpp:314
 msgid "Medium Plugin"
