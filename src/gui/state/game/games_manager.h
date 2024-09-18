@@ -26,6 +26,7 @@
 #ifndef LOOT_GUI_STATE_GAME_GAMES_MANAGER
 #define LOOT_GUI_STATE_GAME_GAMES_MANAGER
 
+#include <boost/locale.hpp>
 #include <filesystem>
 #include <mutex>
 #include <optional>
@@ -33,39 +34,55 @@
 #include <string>
 #include <vector>
 
-#include <boost/locale.hpp>
-
+#include "gui/state/game/detection.h"
 #include "gui/state/game/game.h"
-#include "gui/state/game/game_detection_error.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 
 namespace loot {
 class GamesManager {
 public:
-  GamesManager() : currentGame_(installedGames_.end()) {}
+  GamesManager() = default;
+  GamesManager(const GamesManager&) = delete;
+  GamesManager(GamesManager&&) = delete;
+  virtual ~GamesManager() = default;
+
+  GamesManager& operator=(const GamesManager&) = delete;
+  GamesManager& operator=(GamesManager&&) = delete;
 
   // Installed games have their game paths set in the returned settings.
   std::vector<GameSettings> LoadInstalledGames(
       std::vector<GameSettings> gamesSettings,
-      const std::filesystem::path& lootDataPath) {
+      const std::filesystem::path& lootDataPath,
+      const std::filesystem::path& preludePath) {
     std::lock_guard<std::recursive_mutex> guard(mutex_);
 
     auto logger = getLogger();
+    if (logger) {
+      logger->debug("Detecting installed games.");
+    }
+
+    // Detect installed games and add GameSettings objects for those that
+    // aren't already represented by the objects that already exist. Also update
+    // game paths for existing settings objects that match a found install.
+    gamesSettings = FindInstalledGames(gamesSettings);
 
     std::optional<std::string> currentGameFolder;
     if (currentGame_ != installedGames_.end()) {
-      currentGameFolder = currentGame_->FolderName();
+      currentGameFolder = currentGame_->GetSettings().FolderName();
     }
 
     bool currentGameUpdated = false;
     std::vector<gui::Game> installedGames;
     for (auto& gameSettings : gamesSettings) {
-      auto gamePath = FindGamePath(gameSettings);
-      if (!gamePath.has_value()) {
+      if (!IsInstalled(gameSettings)) {
+        if (logger) {
+          logger->info(
+              "Could not find paths for game with LOOT folder name \"{}\".",
+              gameSettings.FolderName());
+        }
         continue;
       }
-      gameSettings.SetGamePath(gamePath.value());
 
       if (currentGameFolder.has_value() &&
           currentGameFolder.value() == gameSettings.FolderName() &&
@@ -76,13 +93,12 @@ public:
         }
 
         GetCurrentGame()
+            .GetSettings()
             .SetName(gameSettings.Name())
             .SetMinimumHeaderVersion(gameSettings.MinimumHeaderVersion())
-            .SetRegistryKeys(gameSettings.RegistryKeys())
-            .SetRepoURL(gameSettings.RepoURL())
-            .SetRepoBranch(gameSettings.RepoBranch());
+            .SetMasterlistSource(gameSettings.MasterlistSource());
 
-        installedGames.push_back(GetCurrentGame());
+        installedGames.push_back(std::move(GetCurrentGame()));
         currentGameUpdated = true;
       } else {
         if (logger) {
@@ -90,20 +106,28 @@ public:
                         gameSettings.FolderName());
         }
 
-        installedGames.push_back(gui::Game(gameSettings, lootDataPath));
+        installedGames.push_back(
+            gui::Game(gameSettings, lootDataPath, preludePath));
       }
     }
-    installedGames_ = installedGames;
+    installedGames_ = std::move(installedGames);
 
     if (currentGameUpdated) {
-      SetCurrentGameWithoutInit(currentGameFolder.value());
+      SetCurrentGame(currentGameFolder.value());
     } else if (currentGameFolder.has_value()) {
       SetCurrentGame(currentGameFolder.value());
+      InitialiseGameData(GetCurrentGame());
     } else {
       currentGame_ = installedGames_.end();
     }
 
     return gamesSettings;
+  }
+
+  bool HasCurrentGame() const {
+    std::lock_guard<std::recursive_mutex> guard(mutex_);
+
+    return currentGame_ != installedGames_.end();
   }
 
   gui::Game& GetCurrentGame() {
@@ -127,8 +151,33 @@ public:
   }
 
   void SetCurrentGame(const std::string& newGameFolder) {
-    SetCurrentGameWithoutInit(newGameFolder);
-    InitialiseGameData(GetCurrentGame());
+    std::lock_guard<std::recursive_mutex> guard(mutex_);
+
+    auto logger = getLogger();
+    if (logger) {
+      logger->debug("Setting the current game to that with folder: {}",
+                    newGameFolder);
+    }
+
+    currentGame_ =
+        find_if(installedGames_.begin(),
+                installedGames_.end(),
+                [&](const gui::Game& game) {
+                  return newGameFolder == game.GetSettings().FolderName();
+                });
+
+    if (currentGame_ == installedGames_.end()) {
+      logger->error(
+          "Cannot set the current game: the game with folder \"{}\" is not "
+          "installed.",
+          newGameFolder);
+      throw GameDetectionError("The game with folder \"" + newGameFolder +
+                               "\" cannot be found.");
+    }
+
+    if (logger) {
+      logger->debug("New game is: {}", currentGame_->GetSettings().Name());
+    }
   }
 
   std::vector<std::string> GetInstalledGameFolderNames() const {
@@ -136,61 +185,49 @@ public:
 
     std::vector<std::string> installedGames;
     for (const auto& game : installedGames_) {
-      installedGames.push_back(game.FolderName());
+      installedGames.push_back(game.GetSettings().FolderName());
     }
 
     return installedGames;
   }
 
   std::optional<std::string> GetFirstInstalledGameFolderName() const {
+    std::lock_guard<std::recursive_mutex> guard(mutex_);
+
     if (!installedGames_.empty()) {
-      return installedGames_.front().FolderName();
+      return installedGames_.front().GetSettings().FolderName();
     }
 
     return std::nullopt;
   }
 
+  bool IsGameInstalled(const std::string& gameFolder) const {
+    std::lock_guard<std::recursive_mutex> guard(mutex_);
+
+    return std::any_of(installedGames_.cbegin(),
+                       installedGames_.cend(),
+                       [&](const gui::Game& game) {
+                         return gameFolder == game.GetSettings().FolderName();
+                       });
+  }
+
 private:
-  virtual std::optional<std::filesystem::path> FindGamePath(
-      const GameSettings& gameSettings) const = 0;
+  virtual std::vector<GameSettings> FindInstalledGames(
+      const std::vector<GameSettings>& gamesSettings) const = 0;
+
+  virtual bool IsInstalled(const GameSettings& gameSettings) const = 0;
+
   virtual void InitialiseGameData(gui::Game& game) = 0;
 
   static bool GameNeedsRecreating(const gui::Game& game,
                                   const GameSettings& newSettings) {
-    return game.GamePath() != newSettings.GamePath() ||
-           game.GameLocalPath() != newSettings.GameLocalPath() ||
-           game.Master() != newSettings.Master();
-  }
-
-  void SetCurrentGameWithoutInit(const std::string& newGameFolder) {
-    auto logger = getLogger();
-    if (logger) {
-      logger->debug("Setting the current game to that with folder: {}",
-                    newGameFolder);
-    }
-
-    currentGame_ = find_if(
-        installedGames_.begin(), installedGames_.end(), [&](const gui::Game& game) {
-          return newGameFolder == game.FolderName();
-        });
-
-    if (currentGame_ == installedGames_.end()) {
-      logger->error(
-          "Cannot set the current game: the game with folder \"{}\" is not "
-          "installed.",
-          newGameFolder);
-      throw GameDetectionError(
-          "Cannot set the current game: the game with folder \"" +
-          newGameFolder + "\" cannot be found. If it is installed, try running the game's launcher to register its location.");
-    }
-
-    if (logger) {
-      logger->debug("New game is: {}", currentGame_->Name());
-    }
+    return game.GetSettings().GamePath() != newSettings.GamePath() ||
+           game.GetSettings().GameLocalPath() != newSettings.GameLocalPath() ||
+           game.GetSettings().Master() != newSettings.Master();
   }
 
   std::vector<gui::Game> installedGames_;
-  std::vector<gui::Game>::iterator currentGame_;
+  std::vector<gui::Game>::iterator currentGame_{installedGames_.end()};
 
   // Mutex used to protect access to member variables.
   mutable std::recursive_mutex mutex_;

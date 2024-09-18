@@ -30,64 +30,56 @@
 #include <optional>
 #include <set>
 #include <string>
+#include <vector>
 
+#include "gui/state/game/detection/game_install.h"
 #include "loot/enum/game_type.h"
 
 namespace loot {
-constexpr inline std::string_view NEHRIM_STEAM_REGISTRY_KEY =
-    "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
-    "1014940\\InstallLocation";
+static constexpr const char* MASTERLIST_FILENAME = "masterlist.yaml";
+
+std::string GetPluginsFolderName(GameId gameId);
+
+std::string ToString(const GameId gameId);
+
+bool ShouldAllowRedating(const GameType gameType);
 
 class GameSettings {
 public:
-  GameSettings();
-  explicit GameSettings(const GameType gameType,
-                        const std::string& lootFolder = "");
+  GameSettings() = default;
+  explicit GameSettings(const GameId gameId, const std::string& lootFolder);
 
-  bool IsRepoBranchOldDefault() const;
-
-  bool operator==(
-      const GameSettings& rhs) const;  // Compares names and folder names.
-
+  GameId Id() const;
   GameType Type() const;
   std::string Name() const;  // Returns the game's name, eg. "TES IV: Oblivion".
   std::string FolderName() const;
   std::string Master() const;
   float MinimumHeaderVersion() const;
-  std::vector<std::string> RegistryKeys() const;
-  std::string RepoURL() const;
-  std::string RepoBranch() const;
+  std::string MasterlistSource() const;
   std::filesystem::path GamePath() const;
   std::filesystem::path GameLocalPath() const;
   std::filesystem::path DataPath() const;
 
+  std::string PluginsFolderName() const;
+
   GameSettings& SetName(const std::string& name);
   GameSettings& SetMaster(const std::string& masterFile);
   GameSettings& SetMinimumHeaderVersion(float minimumHeaderVersion);
-  GameSettings& SetRegistryKeys(const std::vector<std::string>& registry);
-  GameSettings& SetRepoURL(const std::string& repositoryURL);
-  GameSettings& SetRepoBranch(const std::string& repositoryBranch);
+  GameSettings& SetMasterlistSource(const std::string& source);
   GameSettings& SetGamePath(const std::filesystem::path& path);
   GameSettings& SetGameLocalPath(const std::filesystem::path& GameLocalPath);
   GameSettings& SetGameLocalFolder(const std::string& folderName);
 
-  std::optional<std::filesystem::path> FindGamePath() const;
-
 private:
-  static const std::set<std::string> oldDefaultBranches;
-
-  GameType type_;
+  GameId id_{GameId::tes4};
+  GameType type_{GameType::tes4};
   std::string name_;
   std::string masterFile_;
-  float mininumHeaderVersion_;
+  float minimumHeaderVersion_{0.0f};
 
-  std::vector<std::string> registryKeys_;
-
-  std::string pluginsFolderName_;
   std::string lootFolderName_;
 
-  std::string repositoryURL_;
-  std::string repositoryBranch_;
+  std::string masterlistSource_;
 
   std::filesystem::path gamePath_;  // Path to the game's folder.
   std::filesystem::path gameLocalPath_;

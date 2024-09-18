@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2023 Oliver Hamlet -->
+<component type="desktop-application">
+  <id>io.github.loot.loot</id>
+  <url type="homepage">https://loot.github.io</url>
+  <url type="bugtracker">https://github.com/loot/loot/issues</url>
+  <url type="faq">https://loot.github.io/docs/help/LOOT-FAQs</url>
+  <url type="help">https://loot.readthedocs.io/en/stable/</url>
+  <url type="translate">https://github.com/loot/loot/blob/master/CONTRIBUTING.md#translating-loot</url>
+  <url type="vcs-browser">https://github.com/loot/loot</url>
+  <url type="contribute">https://github.com/loot/loot/blob/master/CONTRIBUTING.md</url>
+
+  <name>LOOT</name>
+  <summary>Modding utility for Starfield and some Elder Scrolls and Fallout games</summary>
+
+  <developer id="io.github.loot">
+    <name>The LOOT Team</name>
+  </developer>
+
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+
+  <content_rating type="oars-1.1" />
+
+  <description>
+    <p>LOOT is a plugin load order optimiser for:</p>
+    <ul>
+      <li>Starfield</li>
+      <li>The Elder Scrolls III: Morrowind</li>
+      <li>The Elder Scrolls IV: Oblivion</li>
+      <li>The Elder Scrolls V: Skyrim</li>
+      <li>The Elder Scrolls V: Skyrim Special Edition (and Anniversary Edition)</li>
+      <li>The Elder Scrolls V: Skyrim VR</li>
+      <li>Fallout 3</li>
+      <li>Fallout: New Vegas</li>
+      <li>Fallout 4</li>
+      <li>Fallout 4 VR</li>
+      <li>Nehrim: At Fate's Edge</li>
+      <li>Enderal: Forgotten Stories</li>
+      <li>Enderal: Forgotten Stories (Special Edition)</li>
+    </ul>
+
+    <p>LOOT can automatically calculate a load order that satisfies all plugin dependencies and maximises each plugin's impact on your game. It can also detect many issues, and provides a large number of plugin-specific usage notes, warnings and Bash Tag suggestions for Wrye Bash.</p>
+
+    <p>While LOOT can correctly handle the vast majority of plugins without help, some plugins need additional metadata to be sorted correctly. LOOT has a masterlist of metadata for each supported game, and you can add more to customise LOOT's behaviour.</p>
+  </description>
+
+  <launchable type="desktop-id">io.github.loot.loot.desktop</launchable>
+
+  <translation type="gettext">loot</translation>
+
+  <provides>
+    <binary>LOOT</binary>
+  </provides>
+
+  <screenshots>
+    <screenshot type="default">
+      <image type="source" width="1420" height="843">https://raw.githubusercontent.com/loot/loot/5c35be0de7b6a64067144750ea6f3f781958c280/docs/images/main.linux.png</image>
+      <caption>The LOOT main window</caption>
+    </screenshot>
+    <screenshot>
+      <image type="source" width="1420" height="843">https://raw.githubusercontent.com/loot/loot/5c35be0de7b6a64067144750ea6f3f781958c280/docs/images/metadata_editor.linux.png</image>
+      <caption>The LOOT main window with plugin metadata open</caption>
+    </screenshot>
+    <screenshot>
+      <image type="source" width="1620" height="949">https://raw.githubusercontent.com/loot/loot/5c35be0de7b6a64067144750ea6f3f781958c280/docs/images/groups_editor.linux.png</image>
+      <caption>The LOOT groups editor window</caption>
+    </screenshot>
+  </screenshots>
+
+  <releases>
+    <release version="0.23.1" date="2024-08-25">
+      <description>
+        <ul>
+          <li>Fixed an "Ambiguous load order detected" warning being shown following Starfield's August update.</li>
+          <li>Other fixes and improvements.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.23.1/app/changelog.html#id1</url>
+    </release>
+    <release version="0.23.0" date="2024-07-10">
+      <description>
+        <ul>
+          <li>Re-enabled sorting for Starfield.</li>
+          <li>Added support for Starfield's medium plugin type.</li>
+          <li>Various updates to reflect changes in Starfield's behaviour.</li>
+          <li>Added a Turkish translation.</li>
+          <li>Other fixes and improvements.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.23.0/app/changelog.html#id1</url>
+    </release>
+    <release version="0.22.4" date="2024-05-17">
+      <description>
+        <ul>
+          <li>Support for Fallout 4 from the Epic Games Store.</li>
+          <li>Better handling of light plugins in Fallout 4 VR and Skyrim VR.</li>
+          <li>LOOT no longer crashes if masterlist update fails to first update the prelude.</li>
+          <li>The Flatpak application is now built from source.</li>
+          <li>Other fixes and improvements.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.22.4/app/changelog.html#id1</url>
+    </release>
+    <release version="0.22.3" date="2023-12-06">
+      <description>
+        <ul>
+          <li>Fixed error messages displayed for plugins introduced by Skyrim Special Edition v1.6.1130.0.</li>
+          <li>Fixed error messages not displayed for some types of invalid Fallout 4 plugins.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.22.3/app/changelog.html#id1</url>
+    </release>
+    <release version="0.22.2" date="2023-12-01">
+      <description>
+        <ul>
+          <li>Fixed errors encountered while parsing game ini files that contain single quote, double quote or backslash characters</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.22.2/app/changelog.html#id1</url>
+    </release>
+    <release version="0.22.1" date="2023-11-05">
+      <description>
+        <ul>
+          <li>Fixed the "Hide Creation Club plugins" filter having no effect.</li>
+          <li>Disabled sorting for Starfield. Due to the way that Starfield plugins make changes to existing data, LOOT cannot reliable detect when two plugins change the same record, so sorting may not function as intended.</li>
+          <li>The new plugin type and plugin header flag introduced by Starfield that was
+ previously referred to as the "override" plugin type and flag is now referred to as the "overlay" plugin type and flag for consistency with xEdit, Wrye Bash and Mod Organizer 2.</li>
+          <li>The "Show only conflicting plugins for" filter has been renamed to "Show only overlapping plugins for" for clarity and consistency with other LOOT functionality.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.22.1/app/changelog.html#id1</url>
+    </release>
+    <release version="0.22.0" date="2023-10-07">
+      <description>
+        <ul>
+          <li>Added support for Starfield</li>
+          <li>Fixed potential crashes during game detection and when updating all masterlists</li>
+          <li>Fixed detection Epic Games Store games installed using Heroic Games Launcher causing LOOT to use the wrong local app data paths for Skyrim Special Edition and Fallout: New Vegas.</li>
+          <li>Other fixes and improvements</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.22.0/app/changelog.html#id1</url>
+    </release>
+    <release version="0.21.0" date="2023-09-17">
+      <description>
+        <p>This is the first release to be made available on Linux.</p>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.21.0/app/changelog.html#id1</url>
+    </release>
+  </releases>
+</component>

@@ -25,20 +25,27 @@
 #ifndef LOOT_GUI_HELPERS
 #define LOOT_GUI_HELPERS
 
+#include <loot/enum/message_type.h>
+
 #include <filesystem>
+#include <optional>
+#include <vector>
+
+#include "gui/sourced_message.h"
 
 namespace loot {
-void OpenInDefaultApplication(const std::filesystem::path& file);
-
 #ifdef _WIN32
 std::wstring ToWinWide(const std::string& str);
 
 std::string FromWinWide(const std::wstring& wstr);
-
-std::string RegKeyStringValue(const std::string& rootKey,
-  const std::string& subkey,
-  const std::string& value);
 #endif
+
+std::vector<std::string> GetPreferredUILanguages();
+
+std::vector<std::filesystem::path> GetDriveRootPaths();
+
+std::optional<std::filesystem::path> FindXboxGamingRootPath(
+    const std::filesystem::path& driveRootPath);
 
 // Compare strings as if they're filenames, respecting filesystem case
 // insensitivity on Windows. Returns -1 if lhs < rhs, 0 if lhs == rhs, and 1 if
@@ -48,6 +55,10 @@ int CompareFilenames(const std::string& lhs, const std::string& rhs);
 
 std::filesystem::path getExecutableDirectory();
 
+std::filesystem::path getUserProfilePath();
+
 std::filesystem::path getLocalAppDataPath();
+
+std::string crcToString(uint32_t crc);
 }
 #endif

@@ -31,28 +31,50 @@
 #include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
-class LootState : public LootSettings, public UnappliedChangeCounter, public GamesManager, public LootPaths {
+class LootState : public UnappliedChangeCounter,
+                  public GamesManager,
+                  public LootPaths {
 public:
-  LootState(const std::filesystem::path& lootAppPath, 
+  LootState(const std::filesystem::path& lootAppPath,
             const std::filesystem::path& lootDataPath);
 
-  void init(const std::string& cmdLineGame, bool autoSort);
-  const std::vector<std::string>& getInitErrors() const;
+  void init(const std::string& cmdLineGame,
+            const std::filesystem::path& cmdLineGamePath,
+            bool autoSort);
+  void initCurrentGame();
 
-  void save(const std::filesystem::path& file);
+  const std::vector<SourcedMessage>& getInitMessages() const;
 
-  void storeGameSettings(std::vector<GameSettings> gameSettings);
+  const LootSettings& getSettings() const;
+  LootSettings& getSettings();
 
 private:
-  std::optional<std::filesystem::path> FindGamePath(const GameSettings& gameSettings) const;
-  void InitialiseGameData(gui::Game& game);
+  void createLootDataPath();
+  void loadSettings(const std::string& cmdLineGame, bool autoSort);
+  void checkSettingsFile();
+  void findXboxGamingRootPaths();
+  void createPreludeDirectory();
+  void overrideGamePath(const std::string& gameFolderName,
+                        const std::filesystem::path& gamePath);
+  void setInitialGame(const std::string& cliGameValue);
 
-  void SetInitialGame(std::string cmdLineGame);
+  // Update the given games settings with new settings for installed games that
+  // didn't have a settings object, and updating existing settings objects for
+  // games that had one without any paths configured.
+  std::vector<GameSettings> FindInstalledGames(
+      const std::vector<GameSettings>& gamesSettings) const override;
 
-  std::vector<std::string> initErrors_;
+  bool IsInstalled(const GameSettings& gameSettings) const override;
 
-  // Mutex used to protect access to member variables.
-  std::mutex mutex_;
+  void InitialiseGameData(gui::Game& game) override;
+
+  std::optional<std::string> getPreferredGameFolderName(
+      const std::string& cliGameValue) const;
+
+  std::vector<std::filesystem::path> xboxGamingRootPaths_;
+  std::vector<std::string> preferredUILanguages_;
+  std::vector<SourcedMessage> initMessages_;
+  LootSettings settings_;
 };
 }
 

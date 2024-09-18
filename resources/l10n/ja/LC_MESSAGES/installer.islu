@@ -1,0 +1,6 @@
+﻿[CustomMessages]
+DeleteUserFiles=設定とユーザーメタデータを削除しますか？
+
+InstallingMSVCRedist=Visual C++ 2019 再頒布可能パッケージをインストール中…
+
+DownloadMasterlists=最新のマスターリストをダウンロード・インストールする

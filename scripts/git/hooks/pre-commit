@@ -1,0 +1,41 @@
+#!/bin/sh
+# This is a Git pre-commit hook. Install it to `.git/hooks`.
+#
+# Run xgettext to write a new resources/l10n/template.pot, then add it to the
+# commit if more than one line in it has changed, otherwise discard any changes
+# to it.
+set -e
+
+xgettext \
+  --keyword="translate:1,1t" \
+  --keyword="translate:1,2,3t" \
+  --add-location=full \
+  --add-comments=translators: \
+  --from-code=utf-8 \
+  --package-name=LOOT \
+  --package-version=0.23.1 \
+  --copyright-holder="WrinklyNinja" \
+  --msgid-bugs-address="https://github.com/loot/loot/issues" \
+  -o resources/l10n/template.pot \
+  src/gui/*.cpp \
+  src/gui/qt/*.cpp \
+  src/gui/qt/groups_editor/*.cpp \
+  src/gui/qt/plugin_editor/*.cpp \
+  src/gui/qt/plugin_editor/models/*.cpp \
+  src/gui/qt/settings/*.cpp \
+  src/gui/qt/tasks/*.cpp \
+  src/gui/query/*.h \
+  src/gui/query/types/*.h \
+  src/gui/state/*.cpp \
+  src/gui/state/game/*.cpp
+
+sed -i 's|charset=CHARSET|charset=UTF-8|' resources/l10n/template.pot
+
+LINES_ADDED=$(git diff --numstat resources/l10n/template.pot | cut -f 1)
+LINES_REMOVED=$(git diff --numstat resources/l10n/template.pot | cut -f 2)
+
+if [ "$LINES_ADDED" = "$LINES_REMOVED" -a "$LINES_ADDED" = "1" ]; then
+  git checkout -- resources/l10n/template.pot
+else
+  git add resources/l10n/template.pot
+fi
