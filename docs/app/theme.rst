@@ -1,7 +1,11 @@
+.. _themes:
+
 ******
 Themes
 ******
 
-LOOT's user interface has CSS theming support. A dark theme is provided with LOOT: to use it, select it in the Theme dropdown in LOOT's settings dialog.
+Themes can be selected in LOOT's settings dialog. Two themes are provided with LOOT: the default theme and a dark theme.
 
-Themes are installed in the ``resources/ui/css`` directory, relative to ``LOOT.exe``. Theme CSS files must be named ``<theme name>.theme.css`` to be detected as such by LOOT. A working knowledge of CSS is required to create new themes, though the provided dark theme CSS file is commented to provide some assistance.
+If you're running LOOT on Linux with a dark system theme, then depending on your system configuration you may get better results with LOOT's default theme than with its dark theme.
+
+Additional themes may be installed in the ``themes`` directory in LOOT's application data directory (at ``%LOCALAPPDATA%\LOOT`` on Windows). A theme is defined by a single ``<theme name>.theme.qss`` Qt Style Sheet file.

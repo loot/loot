@@ -24,13 +24,81 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_HELPERS_TEST
 #define LOOT_TESTS_GUI_HELPERS_TEST
 
-#include "gui/helpers.h"
+#include <gtest/gtest.h>
 
 #include <boost/locale.hpp>
-#include <gtest/gtest.h>
+
+#include "gui/helpers.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
+TEST(GetPreferredUILanguages, shouldReturnAtLeastOneLanguage) {
+  EXPECT_FALSE(GetPreferredUILanguages().empty());
+}
+
+class FindXboxGamingRootPathTest : public CommonGameTestFixture {
+protected:
+  FindXboxGamingRootPathTest() : CommonGameTestFixture(GameId::tes3) {}
+};
+
+TEST(GetDriveRootPaths, shouldReturnNonEmptyVector) {
+  EXPECT_FALSE(GetDriveRootPaths().empty());
+}
+
+TEST_F(FindXboxGamingRootPathTest,
+       shouldReturnNulloptIfTheDotGamingRootFileDoesNotExist) {
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+}
+
+TEST_F(FindXboxGamingRootPathTest,
+       shouldReturnNulloptIfDotGamingRootIsADirectory) {
+  std::filesystem::create_directory(dataPath / ".GamingRoot");
+
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+}
+
+TEST_F(FindXboxGamingRootPathTest,
+       shouldReturnNulloptIfDotGamingRootContainsAnOddNumberOfBytes) {
+  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  out << "12345678901";
+  out.close();
+
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+}
+
+TEST_F(FindXboxGamingRootPathTest,
+       shouldReturnNulloptIfDotGamingRootIsTooShort) {
+  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  out << "12";
+  out.close();
+
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+}
+
+TEST_F(FindXboxGamingRootPathTest,
+       shouldInterpretTheNinthAndFollowingBytesAsANullTerminatedUtf16LeString) {
+  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  const char* data = "12345678t\0e\0s\0t\0 \0p\0a\0t\0h\0\0\0";
+  out.write(data, 28);
+  out.close();
+
+  const auto gamingRootPath = FindXboxGamingRootPath(dataPath);
+  const auto expectedPath = dataPath / "test path";
+
+  EXPECT_EQ(expectedPath, gamingRootPath);
+}
+
+TEST_F(FindXboxGamingRootPathTest,
+       shouldReturnNulloptIfDotGamingRootPathContainsNul) {
+  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  const char* data = "12345678t\0e\0s\0t\0\0\0p\0a\0t\0h\0\0\0";
+  out.write(data, 28);
+  out.close();
+
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+}
+
 // MSVC interprets source files in the default code page, so
 // for me u8"\xC3\x9C" != u8"\u00DC", which is a lot of fun.
 // To avoid insanity, write non-ASCII characters as \uXXXX escapes.

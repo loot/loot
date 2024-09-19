@@ -1,0 +1,274 @@
+loot--GraphView {
+    qproperty-masterColor: #4DFFFFFF;
+    qproperty-userColor: #FFFFFF;
+    qproperty-backgroundColor: #303030;
+}
+
+loot--MainWindow {
+    qproperty-normalIconColor: #4DE0E0E0;
+    qproperty-disabledIconColor: #787878;
+    qproperty-selectedIconColor: #FFFFFF;
+    qproperty-selectedSidebarPluginTextColor: #FFFFFF;
+    qproperty-unselectedSidebarPluginGroupColor: #4DE0E0E0;
+    qproperty-linkColor: #2979FF;
+}
+
+QLabel,
+QComboBox,
+QCheckBox,
+QLineEdit,
+QTextEdit,
+QPlainTextEdit,
+QSpinBox,
+QDoubleSpinBox,
+QHeaderView,
+QHeaderView::section,
+QTabWidget::pane,
+QTabWidget::pane > QFrame,
+QToolBar > QToolButton,
+QToolBox::tab,
+QMenuBar,
+QMenu,
+QDialog,
+QMessageBox,
+QTableView,
+QListView,
+QPushButton,
+QGroupBox,
+QToolButton,
+QStatusBar,
+loot--FiltersWidget,
+loot--GeneralInfoCard,
+loot--PluginCard,
+loot--SettingsDialog,
+loot--SearchDialog,
+loot--GroupsEditorDialog,
+loot--NewGameDialog,
+loot--MessagecontentEditor,
+loot--GraphView
+ {
+    color: #E0E0E0;
+    selection-color: #FFFFFF;
+    background-color: #303030;
+}
+
+QListView::item:alternate loot--GeneralInfoCard,
+QListView::item:alternate loot--PluginCard {
+    border-bottom: 1px solid #595959;
+}
+
+loot--PluginCard[isSearchResult="true"] {
+	border-left: 4px solid #1E88E5;
+}
+
+loot--PluginCard[isSearchResult="true"][isCurrentSearchResult="true"] {
+	border-left: 4px solid #1565C0;
+}
+
+QLabel[messageType="warn"] {
+	background-color: #FFE082;
+}
+
+QLabel[messageType="error"] {
+	background-color: #FF8A80;
+}
+
+QLabel#plugin-crc,
+QLabel#plugin-version {
+	margin-left: 16px;
+}
+
+QLabel#plugin-version {
+	color: #78909C;
+}
+
+QLabel#plugin-crc {
+	color: #8D6E63;
+}
+
+QLabel#tags-current {
+    color: silver;
+}
+
+QLabel#tags-add {
+    color: #4CAF50;
+}
+
+QLabel#tags-remove {
+    color: #F44336;
+}
+
+QLabel[messageType="warn"],
+QLabel[messageType="error"],
+QToolTip:active,
+QToolTip:!active {
+    color: #000000;
+}
+
+QLineEdit[placeholderText][text=""] {
+    color: #B3FFFFFF;
+}
+
+QToolBar {
+    border-top: 1px solid #a1a1a1;
+}
+
+loot--FiltersWidget > QFrame#divider {
+    background-color: #a1a1a1;
+    border: none;
+    max-height: 1px;
+}
+
+QLineEdit:active,
+QListView:active,
+QTableView:active,
+QPlainTextEdit:active {
+    selection-background-color: #0078D7;
+}
+
+QLineEdit:!active,
+QListView:!active,
+QTableView:!active,
+QPlainTextEdit:!active {
+    selection-background-color: #264259;
+}
+
+/* For some reason selection-background-color doesn't work for the list in the
+   settings dialog, so fake it with this. */
+loot--SettingsDialog > QListView::item:selected {
+    background-color: #0078D7;
+}
+
+/* For some reason selection-background-color doesn't work for the list in the
+   settings dialog, so fake it with this. */
+loot--SettingsDialog > QListView::item:selected:!focus {
+    background-color: #264259;
+}
+
+QListView:disabled,
+QLineEdit:disabled,
+QComboBox:disabled,
+QMenu:disabled,
+QMenuBar::item:disabled,
+QToolButton:disabled,
+QPushButton:disabled
+ {
+    color: #4DE0E0E0;
+    selection-background-color: #595959;
+    selection-color: #4DFFFFFF;
+}
+
+QToolBar,
+QToolBar > QToolButton,
+QSplitter,
+QSplitter::handle,
+QToolBox,
+QStatusBar,
+loot--PluginEditorWidget > QLabel,
+QMenu {
+    background-color: #212121;
+}
+
+QToolBox::tab {
+    border-left: 1px solid #a1a1a1;
+    border-top: 1px solid #a1a1a1;
+    border-right: 1px solid #303030;
+    border-bottom: 1px solid #303030;
+}
+
+QToolBox::tab:pressed {
+    border-left: 1px solid #303030;
+    border-top: 1px solid #303030;
+    border-right: 1px solid #a1a1a1;
+    border-bottom: 1px solid #a1a1a1;
+}
+
+QMenuBar::item:selected,
+QMenu:selected,
+QToolBar > QToolButton:hover,
+QPushButton:selected,
+QTabBar::tab:selected {
+    color: #FFFFFF;
+    background-color: #264259;
+}
+
+QMenuBar::item:selected:active,
+QMenu:selected:active,
+QToolBar > QToolButton:hover:active,
+QPushButton:selected:active,
+QTabBar::tab:selected:active {
+    background-color: #0078D7;
+}
+
+QMenuBar::item:selected:disabled,
+QMenu:selected:disabled,
+QToolBar > QToolButton:hover:disabled,
+QPushButton:selected:disabled,
+QTabBar::tab:selected:disabled {
+    color: #4DFFFFFF;
+}
+
+QGroupBox::title {
+    color: #FFFFFF;
+}
+
+QGroupBox::title:disabled {
+    color: #4DFFFFFF;
+}
+
+QPushButton,
+QToolBox::tab {
+    background-color: #757575;
+}
+
+QPushButton:focus {
+    border: 2px solid #0078D7;
+}
+
+QPushButton:hover {
+    border: 2px outset rgba(255, 255, 255, 0.12);
+    border: none;
+    border: 1px outset #0078D7;
+}
+
+QTabWidget::pane {
+    border: 1px solid #595959;
+}
+
+QTabBar {
+    background-color: #212121;
+}
+
+QTabBar::tab {
+    color: #E0E0E0;
+    border-top: 1px solid #595959;
+    border-right: 1px solid #595959;
+    padding: 4px 8px;
+}
+
+QTabBar::tab:first {
+    border-left: 1px solid #595959;
+}
+
+QTabBar::tab:hover:!selected {
+    background-color: #264259;
+}
+
+QTabBar::tab:!selected {
+    margin-top: 2px;
+}
+
+QLineEdit,
+QPlainTextEdit {
+    border: 1px solid #929292;
+}
+
+QLineEdit:focus:active,
+QPlainTextEdit:focus:active {
+    border: 1px solid #0078D7;
+}
+
+QLineEdit:focus:!active,
+QPlainTextEdit:focus:!active {
+    border: 1px solid #264259;
+}

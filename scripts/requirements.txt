@@ -1,0 +1,7 @@
+# Install with
+#   pipenv install -r requirements.txt
+# or
+#   pip -r requirements.txt
+
+# Requirements for validate_mnemonics.py
+polib==1.2.0

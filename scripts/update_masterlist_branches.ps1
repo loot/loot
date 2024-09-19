@@ -5,7 +5,7 @@ param (
   [string] $githubToken
 )
 
-yarn global add lomad
+npm install --global lomad
 
 Write-Output "`nUpdating masterlists' default branch to $branchName..."
 lomad -t $githubToken -a -d $branchName

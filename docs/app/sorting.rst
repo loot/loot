@@ -17,15 +17,20 @@ set of rules on a small load order looks like this:
 
 .. image:: ../images/plugin_graph.png
 
-It may seem like there are a lot of edges in that image, but a more realistic
-load order graph could contain ~ 20 times as many vertices and ~ 1000 times as
-many edges.
+It may seem like there are a lot of edges in that image, but a real load order
+graph can contain thousands of vertices and over a hundred thousand edges.
+
+To improve performance, LOOT actually sorts using two graphs: one for
+master-flagged plugins and one for the other plugins, and then appends the
+latter's sorted order to the former's sorted order to give the complete sorted
+load order. The two graphs are sorted the same way, so the information below
+applies to both, and the result is the same as if a single graph was used.
 
 Building The Plugin Graph
 =========================
 
-The plugin graph is constructed in a specific way, partly to ensure that sorting is
-stable (i.e. it doesn't give you different results every time).
+The plugin graph is constructed in a specific way, partly to ensure that sorting
+doesn't give you different results every time.
 
 Hard Rules
 ----------
@@ -35,7 +40,9 @@ plugin, going in lexicographical (like alphabetical, but extended to cover
 digits and other symbols) order:
 
 1. If the plugin has its master flag set, edges are added going from it to every
-   other plugin that does not have its master flag set.
+   other plugin that does not have its master flag set. Note that because
+   plugins are partitioned into separate graphs by their master flag, this
+   doesn't add any edges, but it's kept for completeness.
 2. If the plugin has any masters, edges are added going from each of them to
    the plugin.
 3. If the plugin has any requirements metadata, edges are added going from each
@@ -47,8 +54,8 @@ Some games, like the various versions of Skyrim and Fallout 4, hardcode the
 positions of some plugins. To take this into account when sorting, LOOT adds
 hard rules for them. For each plugin that has a hardcoded position, going from
 the first/earliest hardcoded position to the last/latest position, an edge is
-added going from that plugin to every other plugin, unless that other plugin is
-hardcoded to load in an earlier position.
+added between each consecutive plugin to enforce that order, and then edges are
+added from the last hardcoded plugin going to every non-hardcoded plugin.
 
 In the example graph image above, all the edges apart from the one between
 ``Cutting Room Floor.esp`` and ``Bashed Patch, 0.esp`` could be due to hard
@@ -96,15 +103,20 @@ Overlap Rules
 
 Overlap rules are applied after group rules, and have lower priority. They are
 also soft rules, and are ignored as necessary to avoid cyclic interactions. Two
-plugins are said to overlap if they both contain a copy of a record. They don't
-necessarily have to make any edits to the record for there to be an overlap, it
-just needs to be in both plugins.
+plugins are said to overlap if they both contain a copy of a record, or if they
+both load one or more BSAs (or BA2s for Fallout 4) and the BSAs loaded by one
+plugin contain data for a file path that is also included in the BSAs loaded by
+the other plugin. They don't necessarily have to make any edits to a record
+for there to be an overlap, it just needs to be in both plugins. Similarly, the
+assets loaded by the two plugins could be identical or completely different,
+it's only the presence of the file path that matters.
 
-If two plugins overlap, and one overrides more records than the other, then the
-rule is to load the plugin that overrides fewer records after the other plugin.
-This is done to help maximise the effect that each plugin has. If the two
-plugins override the same number of records, the overlap is ignored and no rule
-exists.
+If two plugins' records overlap, and one overrides more records than the other,
+then the rule is to load the plugin that overrides fewer records after the other
+plugin. Otherwise, if the two plugins' loaded assets overlap, the plugin that
+loads more assets loads first. This is done to help maximise the effect that
+each plugin has. If the two plugins override the same number of records and
+load the same number of assets, the overlap is ignored and no rule exists.
 
 Each pair of plugins is checked in lexicographical order for overlap, and all
 overlap rules are applied, unless adding a rule would cause a cycle.
@@ -112,15 +124,16 @@ overlap rules are applied, unless adding a rule would cause a cycle.
 Morrowind plugins that have one or more masters that are not installed have
 their total record count used in place of their override record count, as unlike
 for other games, a Morrowind plugin's override records can only be counted by
-comparing the plugin against its masters.
+comparing the plugin against its masters. Morrowind plugins also can't load
+BSAs, so they can't have overlapping assets.
 
 Tie Breaks
 ----------
 
 At this point LOOT might be ready to calculate a load order from the graph, but
-to ensure a stable sort, it needs to make sure there is only one possible path
-through the graph that visits every plugin. For example, going back to the image
-above, if there was no edge between ``Cutting Room Floor.esp`` and
+to ensure a consistent result, it needs to make sure there is only one possible
+path through the graph that visits every plugin. For example, going back to the
+image above, if there was no edge between ``Cutting Room Floor.esp`` and
 ``Bashed Patch, 0.esp``, the load order could be::
 
     Skyrim.esm
@@ -136,32 +149,37 @@ or it could be::
     Cutting Room Floor.esp
 
 as there would be no way to decide which plugin to put last. This could mean
-that LOOT's sorting would be unstable, picking a different result each time,
-which isn't good.
+that LOOT's sorting would be inconsistent, maybe picking a different result each
+time, which wouldn't be good.
 
-To avoid this, LOOT loops through each pair of plugins (again, in
-lexicographical order) and checks if there is a path (i.e. a series of edges
-added by rules) going from one to the other. If there is no path, LOOT adds a
-tie-break edge.
+To avoid this, LOOT first sorts the plugins into their current load order:
 
-The direction of the tie-break edge, i.e. which plugin loads after the other, is
-decided by a few pieces of data:
+* If both plugins have positions in the current load order, the function
+  preserves their existing relative order.
+* If one plugin has a position and the other does not, the plugin with a
+  position goes before the plugin without a position.
+* If neither plugin has a load order position, a case-insensitive
+  lexicographical comparison of their filenames without file extensions is used
+  to decide their order. If they are equal, a case-insensitive lexicographical
+  comparison of their file extensions is used.
 
-1. If one plugin has a position defined in the current load order and the other
-   plugin does not (e.g. it is newly-installed), then the latter loads after the
-   former.
-2. If both plugins have positions in the current load order, they retain their
-   existing relative order, i.e. the plugin that currently loads later still
-   loads later.
-3. If neither plugin has a position defined in the current load order, their
-   lowercased filenames are lexicographically compared, ignoring their file
-   extensions. The plugin with the filename that sorts later loads after the
-   other plugin. For example, ``A.esp`` and ``B.esp`` would load in that order.
+Once sorted, LOOT tries to add an edge between each consecutive pair of plugins,
+in an attempt to enforce the current load order.
 
-It's possible for that logic to be unable to decide how to break the tie: in
-that case, no tie-break edge is added, as another edge added between another
-pair may also break the unresolved tie. Such cases are highly unlikely to occur
-though, and pretty much have to be intentionally created.
+* If adding the edge would cause a cycle, then the LOOT loops through each
+  plugin in the existing path between the pair of plugins and pins its position
+  relative to the plugins that have already been processed, before continuing
+  with the next pair of plugins.
+* If adding the edge wouldn't cause a cycle but the first plugin of the pair has
+  already had its position pinned, then the second plugin of the pair has its
+  position pinned too.
+* Otherwise, the edge is simply added.
+
+Here's a diagram showing plugins A, B, C, D and E, with that being their current
+load order. Sorting has already added edges between (C, E) and (D, E) that
+contradict the current load order:
+
+.. image:: ../images/tie_break_pinning.svg
 
 Topological Sort
 ================

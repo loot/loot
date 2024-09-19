@@ -4,7 +4,7 @@
 Editing Plugin Groups
 *********************
 
-.. image:: ../../images/groups_editor.png
+.. image:: ../../images/groups_editor.windows.png
 
 What Are Plugin Groups?
 =======================
@@ -23,11 +23,13 @@ The Groups Editor
 
 A group must be defined before plugins can belong to it, and defining and
 editing groups is done in the Groups Editor, which can be accessed through the
-main menu.
+Game menu.
 
 The groups editor consists of an interactive graph displaying all defined groups
 and their load after metadata, and a sidebar containing input for defining new
-groups and a list of plugins in the currently selected group.
+groups, renaming the currently selected group, a list of plugins in the
+currently selected group and a dropdown combo box for adding plugins to the
+currently selected group.
 
 - Groups are displayed as circular nodes in the graph, labelled with their
   names.
@@ -48,11 +50,12 @@ masterlist-defined group A, but then group A is removed in a masterlist update.
 In that case, just open up the groups editor and link group A back into the
 graph as it was before.
 
-New load after metadata can be added by clicking on one group and dragging a
-line from the white circle that appears to another group.
+New load after metadata can be added by double-clicking on one group node and
+dragging a line from it to any other group nodes.
 
 Clicking on a group will cause any installed plugins in that group to be listed
-in the sidebar.
+in the sidebar. Right-clicking the list will display a context menu that
+contains an action to copy the listed plugin names to the clipboard.
 
 Right-clicking a load after metadata line will remove that load after metadata,
 and right-clicking a group will remove it. Masterlist metadata cannot be
@@ -60,10 +63,7 @@ removed. A group cannot be removed if any installed plugins belong to it.
 
 The graph can be zoomed in and out of using your mouse's scroll wheel.
 Left-clicking and dragging an empty space will move the whole graph, while
-left-clicking and dragging a node will move it. Multiple nodes can also be
-selected by left-clicking with the Ctrl key held down, then dragging the box
-that appears over the nodes to select. The selected nodes can then be dragged
-around together.
+left-clicking and dragging a node will move it.
 
 Rules For Using Groups
 ======================

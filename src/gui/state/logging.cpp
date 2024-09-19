@@ -28,8 +28,94 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_sinks.h>
 
+#include <boost/algorithm/string/replace.hpp>
+#include <optional>
+
+#include "gui/helpers.h"
+
+#ifdef _WIN32
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <shlobj.h>
+#endif
+
 namespace loot {
 static const char* LOGGER_NAME = "loot_logger";
+
+class CensoringFileSink : public spdlog::sinks::sink {
+public:
+  explicit CensoringFileSink(
+      const spdlog::filename_t& filename,
+      const std::vector<std::pair<std::string, std::string>>& stringsToCensor) :
+      sink(filename), stringsToCensor_(stringsToCensor) {}
+
+protected:
+  void log(const spdlog::details::log_msg& msg) {
+    if (!sink.should_log(msg.level)) {
+      // Skip potentially expensive string search / replacement.
+      return;
+    }
+
+    if (!needsCensoring(msg.payload)) {
+      // Avoid unnecessary copies.
+      sink.log(msg);
+      return;
+    }
+
+    spdlog::details::log_msg msgCopy = msg;
+
+    std::string payload(msg.payload.data(), msg.payload.size());
+
+    for (const auto& [search, replacement] : stringsToCensor_) {
+      boost::replace_all(payload, search, replacement);
+    }
+
+    msgCopy.payload = payload;
+
+    sink.log(msgCopy);
+  }
+
+  void flush() { sink.flush(); }
+
+  void set_pattern(const std::string& pattern) { sink.set_pattern(pattern); }
+
+  void set_formatter(std::unique_ptr<spdlog::formatter> sink_formatter) {
+    sink.set_formatter(std::move(sink_formatter));
+  }
+
+private:
+  spdlog::sinks::basic_file_sink_mt sink;
+  std::vector<std::pair<std::string, std::string>> stringsToCensor_;
+
+  bool needsCensoring(const spdlog::string_view_t& payload) {
+    std::string_view view(payload.data(), payload.size());
+
+    for (const auto& [search, replacement] : stringsToCensor_) {
+      if (view.find(search) != std::string_view::npos) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+};
+
+std::vector<std::pair<std::string, std::string>> getStringsToCensor() {
+  const auto userProfilePath = getUserProfilePath();
+
+#ifdef _WIN32
+  return {{userProfilePath.u8string(), "%USERPROFILE%"}};
+#else
+  return {{userProfilePath.u8string(), "$HOME"}};
+#endif
+}
 
 std::shared_ptr<spdlog::logger> getLogger() {
   auto logger = spdlog::get(LOGGER_NAME);
@@ -43,7 +129,7 @@ std::shared_ptr<spdlog::logger> getLogger() {
         logger->flush_on(spdlog::level::trace);
       }
     } catch (...) {
-        return nullptr;
+      return nullptr;
     }
   }
 
@@ -54,13 +140,16 @@ void setLogPath(const std::filesystem::path& outputFile) {
   spdlog::set_pattern("[%T.%f] [%l]: %v");
 
   spdlog::drop(LOGGER_NAME);
-#if defined(_WIN32) && defined(SPDLOG_WCHAR_FILENAMES)
-  auto logger = spdlog::basic_logger_mt(LOGGER_NAME,
-                                        outputFile.wstring());
+
+#if defined(_WIN32)
+  const auto platformFilePath = outputFile.wstring();
 #else
-  auto logger = spdlog::basic_logger_mt(LOGGER_NAME,
-                                        outputFile.u8string());
+  const auto platformFilePath = outputFile.u8string();
 #endif
+  const auto stringsToCensor = getStringsToCensor();
+
+  auto logger = spdlog::synchronous_factory::create<CensoringFileSink>(
+      LOGGER_NAME, platformFilePath, stringsToCensor);
 
   if (!logger) {
     throw std::runtime_error("Error: Could not initialise logging.");
@@ -74,7 +163,7 @@ void enableDebugLogging(bool enable) {
     if (enable) {
       logger->set_level(spdlog::level::level_enum::trace);
     } else {
-      logger->set_level(spdlog::level::level_enum::warn);
+      logger->set_level(spdlog::level::level_enum::info);
     }
   }
 }

@@ -36,76 +36,119 @@
 #include "gui/state/game/game_settings.h"
 
 namespace loot {
+std::vector<std::string> checkSettingsFile(
+    const std::filesystem::path& filePath);
+
+std::string getDefaultPreludeSource();
+
 class LootSettings {
 public:
   struct WindowPosition {
-    WindowPosition();
-
-    long top;
-    long bottom;
-    long left;
-    long right;
-    bool maximised;
+    int top{0};
+    int bottom{0};
+    int left{0};
+    int right{0};
+    bool maximised{false};
   };
 
   struct Language {
     std::string locale;
     std::string name;
-    std::optional<std::string> fontFamily;
   };
 
-  LootSettings();
+  struct Filters {
+    bool hideVersionNumbers{false};
+    bool hideCRCs{false};
+    bool hideBashTags{true};
+    bool hideLocations{true};
+    bool hideNotes{false};
+    bool hideOfficialPluginsCleaningMessages{false};
+    bool hideAllPluginMessages{false};
+    bool hideInactivePlugins{false};
+    bool hideMessagelessPlugins{false};
+    bool hideCreationClubPlugins{false};
+    bool showOnlyEmptyPlugins{false};
+  };
 
-  void load(const std::filesystem::path& file,
-            const std::filesystem::path& lootDataPath);
+  void load(const std::filesystem::path& file);
   void save(const std::filesystem::path& file);
 
-  bool shouldAutoSort() const;
+  bool isAutoSortEnabled() const;
   bool isDebugLoggingEnabled() const;
-  bool updateMasterlist() const;
+  bool isMasterlistUpdateBeforeSortEnabled() const;
   bool isLootUpdateCheckEnabled() const;
+  bool isNoSortingChangesDialogEnabled() const;
+  bool isWarnOnCaseSensitiveGamePathsEnabled() const;
   std::string getGame() const;
   std::string getLastGame() const;
   std::string getLastVersion() const;
   std::string getLanguage() const;
   std::string getTheme() const;
-  std::optional<WindowPosition> getWindowPosition() const;
+  std::string getPreludeSource() const;
+  std::optional<WindowPosition> getMainWindowPosition() const;
+  std::optional<WindowPosition> getGroupsEditorWindowPosition() const;
   const std::vector<GameSettings>& getGameSettings() const;
-  const std::map<std::string, bool>& getFilters() const;
+  const Filters& getFilters() const;
   const std::vector<Language>& getLanguages() const;
 
   void setDefaultGame(const std::string& game);
   void setLanguage(const std::string& language);
   void setTheme(const std::string& theme);
-  void setAutoSort(bool autSort);
+  void setPreludeSource(const std::string& source);
+  void enableAutoSort(bool enable);
   void enableDebugLogging(bool enable);
-  void updateMasterlist(bool update);
+  void enableMasterlistUpdateBeforeSort(bool enable);
   void enableLootUpdateCheck(bool enable);
+  void enableNoSortingChangesDialog(bool enable);
+  void enableWarnOnCaseSensitiveGamePaths(bool enable);
 
   void storeLastGame(const std::string& lastGame);
-  void storeWindowPosition(const WindowPosition& position);
+  void storeMainWindowPosition(const WindowPosition& position);
+  void storeGroupsEditorWindowPosition(const WindowPosition& position);
   void storeGameSettings(const std::vector<GameSettings>& gameSettings);
-  void storeFilterState(const std::string& filterId, bool enabled);
+  void storeFilters(const Filters& filters);
   void updateLastVersion();
 
 private:
-  bool autoSort_;
-  bool enableDebugLogging_;
-  bool updateMasterlist_;
-  bool enableLootUpdateCheck_;
-  std::string game_;
-  std::string lastGame_;
+  bool autoSort_{false};
+  bool enableDebugLogging_{false};
+  bool updateMasterlistBeforeSort_{true};
+  bool enableLootUpdateCheck_{true};
+  bool useNoSortingChangesDialog_{true};
+  bool warnOnCaseSensitiveGamePaths_{true};
+  std::string game_{"auto"};
+  std::string lastGame_{"auto"};
   std::string lastVersion_;
-  std::string language_;
-  std::string theme_;
-  std::optional<WindowPosition> windowPosition_;
+  std::string language_{"en"};
+  std::string preludeSource_{getDefaultPreludeSource()};
+  std::string theme_{"default"};
+  std::optional<WindowPosition> mainWindowPosition_;
+  std::optional<WindowPosition> groupsEditorWindowPosition_;
   std::vector<GameSettings> gameSettings_;
-  std::map<std::string, bool> filters_;
-  std::vector<Language> languages_;
+  Filters filters_;
+  std::vector<Language> languages_{
+      Language({"en", "English"}),
+      Language({"bg", "Български"}),
+      Language({"cs", "Čeština"}),
+      Language({"da", "Dansk"}),
+      Language({"de", "Deutsch"}),
+      Language({"es", "Español"}),
+      Language({"fi", "Suomi"}),
+      Language({"fr", "Français"}),
+      Language({"it", "Italiano"}),
+      Language({"ja", "日本語"}),
+      Language({"ko", "한국어"}),
+      Language({"pl", "Polski"}),
+      Language({"pt_BR", "Português do Brasil"}),
+      Language({"pt_PT", "Português de Portugal"}),
+      Language({"ru", "Русский"}),
+      Language({"sv", "Svenska"}),
+      Language({"tr_TR", "Türkçe"}),
+      Language({"uk_UA", "Українська"}),
+      Language({"zh_CN", "简体中文"}),
+  };
 
   mutable std::recursive_mutex mutex_;
-
-  void appendBaseGames();
 };
 }
 

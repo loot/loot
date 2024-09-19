@@ -1,0 +1,42 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource prefix="/">
+    <file>icons/loot.svg</file>
+    <file>icons/crown.svg</file>
+    <file>icons/crown-blueprint.svg</file>
+    <file>icons/droplet.svg</file>
+    <file>icons/feather.svg</file>
+    <file>icons/small.svg</file>
+    <file>icons/medium.svg</file>
+    <file>icons/material-icons/account_circle_black_48dp.svg</file>
+    <file>icons/material-icons/archive_black_48dp.svg</file>
+    <file>icons/material-icons/attachment_black_48dp.svg</file>
+    <file>icons/material-icons/book_black_48dp.svg</file>
+    <file>icons/material-icons/build_black_48dp.svg</file>
+    <file>icons/material-icons/check_black_48dp.svg</file>
+    <file>icons/material-icons/close_black_48dp.svg</file>
+    <file>icons/material-icons/content_copy_black_48dp.svg</file>
+    <file>icons/material-icons/create_black_48dp.svg</file>
+    <file>icons/material-icons/data_object_black_48dp.svg</file>
+    <file>icons/material-icons/delete_black_48dp.svg</file>
+    <file>icons/material-icons/file_download_black_48dp.svg</file>
+    <file>icons/material-icons/folder_black_48dp.svg</file>
+    <file>icons/material-icons/forum_black_48dp.svg</file>
+    <file>icons/material-icons/group_work_black_48dp.svg</file>
+    <file>icons/material-icons/help_black_48dp.svg</file>
+    <file>icons/material-icons/quiz_black_48dp.svg</file>
+    <file>icons/material-icons/receipt_black_48dp.svg</file>
+    <file>icons/material-icons/refresh_black_48dp.svg</file>
+    <file>icons/material-icons/save_black_48dp.svg</file>
+    <file>icons/material-icons/search_black_48dp.svg</file>
+    <file>icons/material-icons/settings_black_48dp.svg</file>
+    <file>icons/material-icons/sort_black_48dp.svg</file>
+    <file>icons/material-icons/today_black_48dp.svg</file>
+    <file>icons/material-icons/visibility_off_black_48dp.svg</file>
+  </qresource>
+  <qresource prefix="/">
+    <file>themes/default.theme.qss</file>
+    <file>themes/default-dark.theme.qss</file>
+    <file>themes/dark.theme.qss</file>
+  </qresource>
+</RCC>

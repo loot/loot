@@ -44,6 +44,7 @@ Thumbs.db
 # Other #
 #########
 
+.venv/
 .vscode/
 *.user
 *.suo
@@ -57,3 +58,4 @@ node_modules
 coverage/
 docs/Pipfile
 docs/Pipfile.lock
+!resources/icons

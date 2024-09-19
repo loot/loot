@@ -29,24 +29,18 @@
 namespace loot {
 class UnappliedChangeCounter {
 public:
-  UnappliedChangeCounter() : unappliedChangeCounter_(0) {}
+  bool HasUnappliedChanges() const { return unappliedChangeCounter_ > 0; }
 
-  bool HasUnappliedChanges() const {
-    return unappliedChangeCounter_ > 0;
-  }
+  void IncrementUnappliedChangeCounter() { ++unappliedChangeCounter_; }
 
-  void IncrementUnappliedChangeCounter() {
-    ++unappliedChangeCounter_;
-  }
-
-  void DecrementUnappliedChangeCounter()  {
+  void DecrementUnappliedChangeCounter() {
     if (unappliedChangeCounter_ > 0) {
       --unappliedChangeCounter_;
     }
   }
 
 private:
-  size_t unappliedChangeCounter_;
+  size_t unappliedChangeCounter_{0};
 };
 }
 

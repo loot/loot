@@ -24,24 +24,26 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_TEST_HELPERS
 #define LOOT_TESTS_GUI_TEST_HELPERS
 
-#include <filesystem>
-#include <string>
-
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
+#include <filesystem>
+#include <fstream>
+#include <string>
 
 namespace loot {
 namespace test {
 std::filesystem::path getTempPath() {
-  auto directoryName = u8"LOOT-" + boost::lexical_cast<std::string>(
-                                       (boost::uuids::random_generator())());
+  auto directoryName =
+      u8"LOOT-t\u00E9st-" +
+      boost::lexical_cast<std::string>((boost::uuids::random_generator())());
 
   return std::filesystem::absolute(std::filesystem::temp_directory_path() /
                                    std::filesystem::u8path(directoryName));
 }
 
 void touch(const std::filesystem::path& path) {
+  std::filesystem::create_directories(path.parent_path());
   std::ofstream out(path);
   out.close();
 }

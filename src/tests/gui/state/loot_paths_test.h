@@ -25,68 +25,83 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_STATE_LOOT_PATHS_TEST
 #define LOOT_TESTS_GUI_STATE_LOOT_PATHS_TEST
 
-#include "gui/state/loot_paths.h"
-
 #include <gtest/gtest.h>
+
+#include "gui/state/loot_paths.h"
 
 namespace loot {
 namespace test {
 TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
+#ifdef _WIN32
   LootPaths paths("app", "");
 
-  EXPECT_EQ(std::filesystem::u8path("app") / "docs",
+  EXPECT_EQ(std::filesystem::u8path("app") / "docs", paths.getReadmePath());
+#else
+  LootPaths paths("prefix/app", "");
+
+  EXPECT_EQ(std::filesystem::u8path("prefix") / "share" / "doc" / "loot",
             paths.getReadmePath());
-}
-
-TEST(LootPaths, getResourcesPathShouldUseLootAppPath) {
-  LootPaths paths("app", "");
-
-  EXPECT_EQ(std::filesystem::u8path("app") / "resources",
-            paths.getResourcesPath());
+#endif
 }
 
 TEST(LootPaths, getL10nPathShouldUseLootAppPath) {
+#ifdef _WIN32
   LootPaths paths("app", "");
 
   EXPECT_EQ(std::filesystem::u8path("app") / "resources" / "l10n",
             paths.getL10nPath());
+#else
+  LootPaths paths("prefix/app", "");
+
+  EXPECT_EQ(std::filesystem::u8path("prefix") / "share" / "locale",
+            paths.getL10nPath());
+#endif
 }
 
 TEST(LootPaths, getSettingsPathShouldUseLootDataPath) {
   LootPaths paths("", "");
 
-  EXPECT_EQ(paths.getLootDataPath() / "settings.toml",
-            paths.getSettingsPath());
+  EXPECT_EQ(paths.getLootDataPath() / "settings.toml", paths.getSettingsPath());
 }
 
 TEST(LootPaths, getLogPathShouldUseLootDataPath) {
   LootPaths paths("", "");
 
-  EXPECT_EQ(paths.getLootDataPath() / "LOOTDebugLog.txt",
-            paths.getLogPath());
+  EXPECT_EQ(paths.getLootDataPath() / "LOOTDebugLog.txt", paths.getLogPath());
 }
 
-TEST(LootPaths, constructorShouldSetAppPathToExecutableDirectoryIfGivenPathIsEmpty) {
+TEST(LootPaths, getPreludePathShouldUseLootDataPath) {
   LootPaths paths("", "");
 
+  EXPECT_EQ(paths.getLootDataPath() / "prelude" / "prelude.yaml",
+            paths.getPreludePath());
+}
+
+TEST(LootPaths,
+     constructorShouldSetAppPathToExecutableDirectoryIfGivenPathIsEmpty) {
+  LootPaths paths("", "");
+
+#ifdef _WIN32
   EXPECT_EQ(std::filesystem::current_path(),
             paths.getReadmePath().parent_path());
+#else
+  EXPECT_EQ(std::filesystem::current_path().parent_path(),
+            paths.getL10nPath().parent_path().parent_path());
+#endif
 }
 
 TEST(
     LootPaths,
-    initialiseShouldSetTheDataPathToTheLocalAppDataPathSlashLootIfGivenAnEmptyString) {
+    constructorShouldSetTheDataPathToTheLocalAppDataPathSlashLootIfGivenAnEmptyString) {
   LootPaths paths("app", "");
 
   // Can't actually know what the path should be, but we can check
   // its properties.
   EXPECT_EQ("LOOT", paths.getLootDataPath().filename());
   EXPECT_FALSE(paths.getLootDataPath().parent_path().empty());
-  EXPECT_TRUE(
-      std::filesystem::exists(paths.getLootDataPath().parent_path()));
 }
 
-TEST(LootPaths, initialiseShouldSetTheDataPathToGivenStringIfNonEmpty) {
+TEST(LootPaths, constructorShouldSetTheDataPathToGivenStringIfNonEmpty) {
   LootPaths paths("", "foo");
 
   EXPECT_EQ("foo", paths.getLootDataPath());

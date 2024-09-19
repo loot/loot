@@ -47,35 +47,35 @@
 #include "gui/state/logging.h"
 #include "loot/api.h"
 
+namespace {
+std::filesystem::path getAppPath(const std::filesystem::path& givenPath) {
+  return givenPath.empty() ? loot::getExecutableDirectory() : givenPath;
+}
+
+std::filesystem::path getDataPath(const std::filesystem::path& givenPath) {
+  return givenPath.empty() ? loot::getLocalAppDataPath() / "LOOT" : givenPath;
+}
+}
+
 namespace loot {
 LootPaths::LootPaths(const std::filesystem::path& lootAppPath,
-                     const std::filesystem::path& lootDataPath) {
-  // Set the locale to get UTF-8 conversions working correctly.
-  std::locale::global(boost::locale::generator().generate(""));
-
-  if (lootAppPath.empty()) {
-    lootAppPath_ = getExecutableDirectory();
-  } else {
-    lootAppPath_ = lootAppPath;
-  }
-
-  if (!lootDataPath.empty())
-    lootDataPath_ = lootDataPath;
-  else
-    lootDataPath_ = getLocalAppDataPath() / "LOOT";
+                     const std::filesystem::path& lootDataPath) :
+    lootDataPath_(getDataPath(lootDataPath)) {
+  const auto appPath = getAppPath(lootAppPath);
+#ifdef _WIN32
+  lootDocsPath_ = appPath / "docs";
+  lootL10nPath_ = appPath / "resources" / "l10n";
+#else
+  // On Linux, the executable is in <prefix>/bin, and the docs and
+  // translation files are in <prefix>/share.
+  lootDocsPath_ = appPath.parent_path() / "share" / "doc" / "loot";
+  lootL10nPath_ = appPath.parent_path() / "share" / "locale";
+#endif
 }
 
-std::filesystem::path LootPaths::getReadmePath() const {
-  return lootAppPath_ / "docs";
-}
+std::filesystem::path LootPaths::getReadmePath() const { return lootDocsPath_; }
 
-std::filesystem::path LootPaths::getResourcesPath() const {
-  return lootAppPath_ / "resources";
-}
-
-std::filesystem::path LootPaths::getL10nPath() const {
-  return getResourcesPath() / "l10n";
-}
+std::filesystem::path LootPaths::getL10nPath() const { return lootL10nPath_; }
 
 std::filesystem::path LootPaths::getLootDataPath() const {
   return lootDataPath_;
@@ -85,7 +85,15 @@ std::filesystem::path LootPaths::getSettingsPath() const {
   return lootDataPath_ / "settings.toml";
 }
 
+std::filesystem::path LootPaths::getThemesPath() const {
+  return lootDataPath_ / "themes";
+}
+
 std::filesystem::path LootPaths::getLogPath() const {
   return lootDataPath_ / "LOOTDebugLog.txt";
+}
+
+std::filesystem::path LootPaths::getPreludePath() const {
+  return lootDataPath_ / "prelude" / "prelude.yaml";
 }
 }

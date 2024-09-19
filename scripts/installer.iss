@@ -1,29 +1,33 @@
-﻿; LOOT installer Inno Setup script.
+; LOOT installer Inno Setup script.
 ; This file must be encoded in UTF-8 WITH a BOM for Unicode text to
 ; be displayed correctly.
 
 #define MyAppName "LOOT"
-#define MyAppVersion "0.16.1"
+#define MyAppVersion "0.23.1"
 #define MyAppPublisher "LOOT Team"
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
 
-#if FileExists(AddBackslash(CompilerPath) + 'Languages\Korean.isl')
+#define MasterlistBranch "v0.21"
+
+#if FileExists(AddBackslash(SourcePath) + '..\build\inno\Korean.isl')
 #define KoreanExists
 #endif
 
-#if FileExists(AddBackslash(CompilerPath) + 'Languages\Swedish.isl')
+#if FileExists(AddBackslash(SourcePath) + '..\build\inno\Swedish.isl')
 #define SwedishExists
 #endif
 
-#if FileExists(AddBackslash(CompilerPath) + 'Languages\ChineseSimplified.isl')
+#if FileExists(AddBackslash(SourcePath) + '..\build\inno\ChineseSimplified.isl')
 #define SimplifiedChineseExists
 #endif
 
-#if FileExists(SourcePath + '..\build\32\Release\LOOT.exe')
-#define buildir "build\32"
+#if FileExists(AddBackslash(SourcePath) + '..\build\Release\LOOT.exe')
+#define ArtifactsDir "build\Release"
+#define LiblootDll "loot.dll"
 #else
-#define buildir "build"
+#define ArtifactsDir "build"
+#define LiblootDll "libloot.dll"
 #endif
 
 [Setup]
@@ -50,71 +54,83 @@ DisableDirPage=no
 DisableReadyPage=yes
 DisableProgramGroupPage=yes
 WizardStyle=modern
+ArchitecturesAllowed=x64compatible
+ArchitecturesInstallIn64BitMode=x64compatible
+PrivilegesRequired=lowest
+PrivilegesRequiredOverridesAllowed=dialog
+UsePreviousPrivileges=yes
 
 [Languages]
-Name: "en"; MessagesFile: "compiler:Default.isl"
-Name: "bg"; MessagesFile: "compiler:Languages\Bulgarian.isl"
-Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
-Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
-Name: "de"; MessagesFile: "compiler:Languages\German.isl"
-Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
-Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
-Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
-Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
-Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
+Name: "en"; MessagesFile: "compiler:Default.isl,resources\l10n\en\LC_MESSAGES\installer.islu"
+Name: "bg"; MessagesFile: "compiler:Languages\Bulgarian.isl,resources\l10n\bg\LC_MESSAGES\installer.islu"
+Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl,resources\l10n\cs\LC_MESSAGES\installer.islu"
+Name: "da"; MessagesFile: "compiler:Languages\Danish.isl,resources\l10n\da\LC_MESSAGES\installer.islu"
+Name: "de"; MessagesFile: "compiler:Languages\German.isl,resources\l10n\de\LC_MESSAGES\installer.islu"
+Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl,resources\l10n\es\LC_MESSAGES\installer.islu"
+Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl,resources\l10n\fi\LC_MESSAGES\installer.islu"
+Name: "fr"; MessagesFile: "compiler:Languages\French.isl,resources\l10n\fr\LC_MESSAGES\installer.islu"
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl,resources\l10n\it\LC_MESSAGES\installer.islu"
+Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl,resources\l10n\ja\LC_MESSAGES\installer.islu"
 #ifdef KoreanExists
-Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl"
+Name: "ko"; MessagesFile: "build\inno\Korean.isl,resources\l10n\ko\LC_MESSAGES\installer.islu"
 #endif
-Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
-Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
+Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl,resources\l10n\pl\LC_MESSAGES\installer.islu"
+Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl,resources\l10n\pt_BR\LC_MESSAGES\installer.islu"
+Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl,resources\l10n\pt_PT\LC_MESSAGES\installer.islu"
+Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl,resources\l10n\ru\LC_MESSAGES\installer.islu"
 #ifdef SwedishExists
-Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl"
+Name: "sv"; MessagesFile: "build\inno\Swedish.isl,resources\l10n\sv\LC_MESSAGES\installer.islu"
 #endif
-Name: "uk_UA"; MessagesFile: "compiler:Languages\Ukrainian.isl"
+Name: "tr_TR"; MessagesFile: "compiler:Languages\Turkish.isl,resources\l10n\tr_TR\LC_MESSAGES\installer.islu"
+Name: "uk_UA"; MessagesFile: "compiler:Languages\Ukrainian.isl,resources\l10n\uk_UA\LC_MESSAGES\installer.islu"
 #ifdef SimplifiedChineseExists
-Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
+Name: "zh_CN"; MessagesFile: "build\inno\ChineseSimplified.isl,resources\l10n\zh_CN\LC_MESSAGES\installer.islu"
 #endif
 
 [Tasks]
+Name: "masterlists"; Description: "{cm:DownloadMasterlists}"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "{#buildir}\Release\LOOT.exe"; \
+Source: "{#ArtifactsDir}\LOOT.exe"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\loot.dll"; \
+Source: "{#ArtifactsDir}\{#LiblootDll}"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\chrome_100_percent.pak"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\chrome_200_percent.pak"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\d3dcompiler_47.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\resources.pak"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\icudtl.dat"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\chrome_elf.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\libcef.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\libEGL.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\libGLESv2.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\snapshot_blob.bin"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\v8_context_snapshot.bin"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\resources\l10n\en-US.pak"; \
-DestDir: "{app}\resources\l10n"; Flags: ignoreversion
 
-Source: "{#buildir}\docs\html\*"; \
+#if FileExists(AddBackslash(SourcePath) + '..\' + AddBackslash(ArtifactsDir) + 'Qt6Core.dll')
+  
+; Common Qt files
+Source: "{#ArtifactsDir}\iconengines\*"; \
+DestDir: "{app}\iconengines"; Flags: ignoreversion
+Source: "{#ArtifactsDir}\imageformats\*"; \
+DestDir: "{app}\imageformats"; Flags: ignoreversion
+Source: "{#ArtifactsDir}\platforms\*"; \
+DestDir: "{app}\platforms"; Flags: ignoreversion
+Source: "{#ArtifactsDir}\styles\*"; \
+DestDir: "{app}\styles"; Flags: ignoreversion
+Source: "{#ArtifactsDir}\translations\*"; \
+DestDir: "{app}\translations"; Flags: ignoreversion
+
+; Qt 6 files
+Source: "{#ArtifactsDir}\Qt6Core.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ArtifactsDir}\Qt6Gui.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ArtifactsDir}\Qt6Network.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ArtifactsDir}\Qt6Svg.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ArtifactsDir}\Qt6Widgets.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ArtifactsDir}\networkinformation\*"; \
+DestDir: "{app}\networkinformation"; Flags: ignoreversion
+Source: "{#ArtifactsDir}\tls\*"; \
+DestDir: "{app}\tls"; Flags: ignoreversion
+
+#endif
+
+Source: "build\docs\html\*"; \
 DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
-
-Source: "{#buildir}\Release\resources\ui\*"; \
-DestDir: "{app}\resources\ui"; Flags: ignoreversion recursesubdirs
 
 Source: "resources\l10n\bg\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\bg\LC_MESSAGES"; Flags: ignoreversion
@@ -146,12 +162,70 @@ Source: "resources\l10n\ru\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\ru\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\sv\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\sv\LC_MESSAGES"; Flags: ignoreversion
+Source: "resources\l10n\tr_TR\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\tr_TR\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\uk_UA\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\uk_UA\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\zh_CN\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\zh_CN\LC_MESSAGES"; Flags: ignoreversion
 
-Source: "{tmp}\vc_redist.x86.exe"; DestDir: {tmp}; Flags: deleteafterinstall external skipifsourcedoesntexist
+; Masterlists
+Source: "build\masterlists\prelude\prelude.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\prelude"; Flags: ignoreversion
+Source: "build\masterlists\prelude\prelude.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\prelude"; Flags: ignoreversion
+Source: "build\masterlists\Morrowind\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Morrowind"; Flags: ignoreversion
+Source: "build\masterlists\Morrowind\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Morrowind"; Flags: ignoreversion
+Source: "build\masterlists\Oblivion\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Oblivion"; Flags: ignoreversion
+Source: "build\masterlists\Oblivion\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Oblivion"; Flags: ignoreversion
+Source: "build\masterlists\Nehrim\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Nehrim"; Flags: ignoreversion
+Source: "build\masterlists\Nehrim\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Nehrim"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim"; Flags: ignoreversion
+Source: "build\masterlists\Enderal\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Enderal"; Flags: ignoreversion
+Source: "build\masterlists\Enderal\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Enderal"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim Special Edition\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim Special Edition\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition"; Flags: ignoreversion
+Source: "build\masterlists\Enderal Special Edition\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Enderal Special Edition"; Flags: ignoreversion
+Source: "build\masterlists\Enderal Special Edition\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Enderal Special Edition"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim VR\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim VR"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim VR\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim VR"; Flags: ignoreversion
+Source: "build\masterlists\Fallout3\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout3"; Flags: ignoreversion
+Source: "build\masterlists\Fallout3\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout3"; Flags: ignoreversion
+Source: "build\masterlists\FalloutNV\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\FalloutNV"; Flags: ignoreversion
+Source: "build\masterlists\FalloutNV\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\FalloutNV"; Flags: ignoreversion
+Source: "build\masterlists\Fallout4\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4"; Flags: ignoreversion
+Source: "build\masterlists\Fallout4\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4"; Flags: ignoreversion
+Source: "build\masterlists\Fallout4VR\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4VR"; Flags: ignoreversion
+Source: "build\masterlists\Fallout4VR\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4VR"; Flags: ignoreversion
+Source: "build\masterlists\Starfield\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Starfield"; Flags: ignoreversion
+Source: "build\masterlists\Starfield\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Starfield"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -159,66 +233,82 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2017 Redistributable...
-
-[Registry]
-; Store install path for backwards-compatibility with old NSIS install script behaviour.
-Root: HKLM; Subkey: "Software\LOOT"; ValueType: string; ValueName: "Installed Path"; ValueData: "{app}"; Flags: deletekey uninsdeletekey
+Filename: "{tmp}\vc_redist.2019.x64.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: "{cm:InstallingMSVCRedist}"
 
 [UninstallDelete]
-Type: files; Name: "{localappdata}\{#MyAppName}\";
+Type: files; Name: "{localappdata}\{#MyAppName}\LOOTDebugLog.txt";
 
-Type: files; Name: "{localappdata}\{#MyAppName}\Morrowind\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\Oblivion\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\Skyrim\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\Fallout3\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\FalloutNV\masterlist.yaml";
-Type: files; Name: "{localappdata}\{#MyAppName}\Fallout4\masterlist.yaml";
+Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\prelude";
 
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\Morrowind\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\Oblivion\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\Skyrim\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\Fallout3\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\FalloutNV\.git";
-Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\Fallout4\.git";
-
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\Morrowind";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\Oblivion";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\Skyrim";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\Fallout3";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\FalloutNV";
-Type: dirifempty; Name: "{localappdata}\{#MyAppName}\Fallout4";
+Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games";
 
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}";
 
-[CustomMessages]
-en.DeleteUserFiles=Do you want to delete your settings and user metadata?
-bg.DeleteUserFiles=Искате ли да изтриете Вашите настройки и потребителските метаданни?
-cs.DeleteUserFiles=Vymazat Uživatelské Soubory
-da.DeleteUserFiles=Ønsker du at slette dine indstillinger og bruger metadata?
-de.DeleteUserFiles=Möchten Sie Ihre Einstellungen und Benutzer-Metadaten löschen?
-es.DeleteUserFiles=¿Desea borrar sus ajustes y metadatos de usuario?
-fi.DeleteUserFiles=Haluatko poistaa asetukset ja käyttäjä metatiedot?
-fr.DeleteUserFiles=Voulez-vous supprimer vos paramètres et les métadonnées de l'utilisateur?
-it.DeleteUserFiles=Vuoi cancellare le tue impostazioni e i meta-dati utente?
-ja.DeleteUserFiles=設定とユーザーメタデータを削除しますか？
-#ifdef KoreanExists
-ko.DeleteUserFiles=당신은 당신의 설정과 사용자 메타 데이터를 삭제 하시겠습니까?
-#endif
-pl.DeleteUserFiles=Czy chcesz usunąć ustawienia i metadane użytkownika?
-pt_BR.DeleteUserFiles=Você quer deletar suas configurações e dados de usuário?
-pt_PT.DeleteUserFiles=Deseja apagar as suas configurações e metadados de utilizador?
-ru.DeleteUserFiles=Вы хотите удалить ваши настройки и метаданные пользователя?
-;#ifdef SwedishExists
-;sv.DeleteUserFiles=
-;#endif
-uk_UA.DeleteUserFiles=Чи ви хочете видалити ваші налаштування та метадані користувача?
-#ifdef SimplifiedChineseExists
-zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
-#endif
+Type: dirifempty; Name: "{app}\docs\.doctrees\app\usage";
+Type: dirifempty; Name: "{app}\docs\.doctrees\app";
+Type: dirifempty; Name: "{app}\docs\.doctrees\licenses";
+Type: dirifempty; Name: "{app}\docs\.doctrees";
+Type: dirifempty; Name: "{app}\docs\_images";
+Type: dirifempty; Name: "{app}\docs\_sources\app\usage";
+Type: dirifempty; Name: "{app}\docs\_sources\app";
+Type: dirifempty; Name: "{app}\docs\_sources\licenses";
+Type: dirifempty; Name: "{app}\docs\_sources";
+Type: dirifempty; Name: "{app}\docs\_static\css\fonts";
+Type: dirifempty; Name: "{app}\docs\_static\css";
+Type: dirifempty; Name: "{app}\docs\_static\js";
+Type: dirifempty; Name: "{app}\docs\_static";
+Type: dirifempty; Name: "{app}\docs\app\usage";
+Type: dirifempty; Name: "{app}\docs\app";
+Type: dirifempty; Name: "{app}\docs\licenses";
+Type: dirifempty; Name: "{app}\docs";
+Type: dirifempty; Name: "{app}\iconengines";
+Type: dirifempty; Name: "{app}\imageformats";
+Type: dirifempty; Name: "{app}\networkinformation";
+Type: dirifempty; Name: "{app}\platforms";
+Type: dirifempty; Name: "{app}\resources\l10n\bg\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\bg";
+Type: dirifempty; Name: "{app}\resources\l10n\cs\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\cs";
+Type: dirifempty; Name: "{app}\resources\l10n\da\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\da";
+Type: dirifempty; Name: "{app}\resources\l10n\de\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\de";
+Type: dirifempty; Name: "{app}\resources\l10n\es\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\es";
+Type: dirifempty; Name: "{app}\resources\l10n\fi\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\fi";
+Type: dirifempty; Name: "{app}\resources\l10n\fr\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\fr";
+Type: dirifempty; Name: "{app}\resources\l10n\it\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\it";
+Type: dirifempty; Name: "{app}\resources\l10n\ja\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\ja";
+Type: dirifempty; Name: "{app}\resources\l10n\ko\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\ko";
+Type: dirifempty; Name: "{app}\resources\l10n\pl\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\pl";
+Type: dirifempty; Name: "{app}\resources\l10n\pt_BR\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\pt_BR";
+Type: dirifempty; Name: "{app}\resources\l10n\pt_PT\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\pt_PT";
+Type: dirifempty; Name: "{app}\resources\l10n\ru\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\ru";
+Type: dirifempty; Name: "{app}\resources\l10n\sv\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\sv";
+Type: dirifempty; Name: "{app}\resources\l10n\uk_UA\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\uk_UA";
+Type: dirifempty; Name: "{app}\resources\l10n\zh_CN\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\zh_CN";
+Type: dirifempty; Name: "{app}\resources\l10n";
+Type: dirifempty; Name: "{app}\resources";
+Type: dirifempty; Name: "{app}\styles";
+Type: dirifempty; Name: "{app}\tls";
+Type: dirifempty; Name: "{app}\translations";
+Type: dirifempty; Name: "{app}";
 
 [Code]
 var DownloadPage: TDownloadWizardPage;
+var VC2019RedistNeedsInstall: Boolean;
 
 // Set LOOT's language in settings.toml
 procedure SetLootLanguage();
@@ -239,7 +329,7 @@ begin
       for I := 0 to GetArrayLength(Lines) - 1 do begin
         if Copy(Lines[I], 0, Length(SearchLineStart)) = SearchLineStart then begin
           Lines[I] := LanguageLine;
-          SaveStringsToUTF8File(File, Lines, False)
+          SaveStringsToUTF8FileWithoutBOM(File, Lines, False)
           Break;
         end;
       end;
@@ -263,27 +353,23 @@ begin
   // backwards-compatible key because the filename of the  uninstaller created
   // by Inno Setup can vary.
   RegKey := ExpandConstant('Software\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1');
-  if RegQueryStringValue(HKLM, RegKey, 'UninstallString', RegValue) then begin
-      Exec(RemoveQuotes(RegValue), '/VERYSILENT', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-  // Now try using the backwards-compatible Registry key, and run the NSIS
-  // uninstaller, which has a fixed filename.
+  if RegQueryStringValue(HKCU, RegKey, 'UninstallString', RegValue) then begin
+    Log('Got uninstall string from HKCU registry entry');
+    Exec(RemoveQuotes(RegValue), '/VERYSILENT', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
   end
-  else begin
-    if RegQueryStringValue(HKLM, 'Software\LOOT', 'Installed Path', RegValue) then begin
-      Exec(RegValue + '\Uninstall.exe', '/S', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-    end;
-  end;
-end;
-
-function GetHKCR: Integer;
-begin
-  if IsWin64 then
-    Result := HKEY_CLASSES_ROOT_64
+  else if RegQueryStringValue(HKLM, RegKey, 'UninstallString', RegValue) then begin
+    Log('Got uninstall string from HKLM registry entry');
+    Exec(RemoveQuotes(RegValue), '/VERYSILENT', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  end
+  else if RegQueryStringValue(HKLM, 'Software\LOOT', 'Installed Path', RegValue) then begin
+    Log('Got uninstall string from the legacy NSIS installer HKLM registry entry');
+    Exec(RegValue + '\Uninstall.exe', '/S', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  end
   else
-    Result := HKEY_CLASSES_ROOT_32
+    Log('Did not find an uninstaller for any previously-installed version of LOOT.');
 end;
 
-function VCRedistNeedsInstall: Boolean;
+function VCRedistNeedsInstall(VersionMajor, VersionMinor, VersionBld: Cardinal): Boolean;
 var
   SubKeyName: String;
   IsSuccessful: Boolean;
@@ -292,42 +378,84 @@ var
   InstalledVersionMinor: Cardinal;
   InstalledVersionBld: Cardinal;
 begin
-  SubKeyName := 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86';
+  SubKeyName := 'SOFTWARE\Microsoft\VisualStudio\' + IntToStr(VersionMajor) + '.0\VC\Runtimes\x64';
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE_32, SubKeyName, 'Installed', IsRuntimeInstalled);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Installed', IsRuntimeInstalled);
 
   if (IsSuccessful = False) or (IsRuntimeInstalled <> 1) then begin
-    Log('MSVC 14.0 x86 runtime is not installed');
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 x64 runtime is not installed');
     Result := True;
     exit;
   end;
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE_32, SubKeyName, 'Major', InstalledVersionMajor);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Major', InstalledVersionMajor);
 
-  if (IsSuccessful = False) or (InstalledVersionMajor <> 14) then begin
-    Log('MSVC 14.0 x86 runtime major version is not 14: ' + IntToStr(InstalledVersionMajor));
+  if (IsSuccessful = False) or (InstalledVersionMajor <> VersionMajor) then begin
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 x64 runtime major version is not ' + IntToStr(VersionMajor) + ': ' + IntToStr(InstalledVersionMajor));
     Result := True;
     exit;
   end;
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE_32, SubKeyName, 'Minor', InstalledVersionMinor);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Minor', InstalledVersionMinor);
 
-  if (IsSuccessful = False) or (InstalledVersionMinor < 15) then begin
-    Log('MSVC 14.0 x86 runtime major version is less than 15: ' + IntToStr(InstalledVersionMinor));
+  if (IsSuccessful = False) or (InstalledVersionMinor < VersionMinor) then begin
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 x64 runtime minor version is less than ' + IntToStr(VersionMinor) + ': ' + IntToStr(InstalledVersionMinor));
     Result := True;
     exit;
   end;
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE_32, SubKeyName, 'Bld', InstalledVersionBld);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Bld', InstalledVersionBld);
 
-  if (IsSuccessful = False) or (InstalledVersionBld < 26706) then begin
-    Log('MSVC 14.0 x86 runtime build is less than 26706: ' + IntToStr(InstalledVersionBld));
+  if (IsSuccessful = False) or (InstalledVersionBld < VersionBld) then begin
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 x64 runtime build is less than ' + IntToStr(VersionBld) + ': ' + IntToStr(InstalledVersionBld));
     Result := True
   end
   else begin
-    Log('MSVC 14.0 x86 runtime v' + IntToStr(InstalledVersionMajor) + '.' + IntToStr(InstalledVersionMinor) + '.' + IntToStr(InstalledVersionBld) + ' is installed');
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 x64 runtime v' + IntToStr(InstalledVersionMajor) + '.' + IntToStr(InstalledVersionMinor) + '.' + IntToStr(InstalledVersionBld) + ' is installed');
     Result := False;
   end;
+end;
+
+function CalculateGitBlobHash(const FilePath: String): String;
+var Buffer: AnsiString;
+var Content: AnsiString;
+begin
+    if not LoadStringFromFile(FilePath, Content) then begin
+      Log(Format('Failed to load file at %s', [FilePath]));
+      Result := ''
+    end
+    else begin
+      Buffer := 'blob ' + IntToStr(Length(Content)) + #0 + Content;
+      Result := GetSHA1OfString(Buffer);
+    end;
+end;
+
+procedure WriteDownloadMetadata(const FilePath: String);
+var
+  MetadataFilePath: String;
+  UpdateTimestamp: String;
+  BlobSHA1: String;
+  Toml: TArrayOfString;
+begin
+  // Write a <FilePath>.metadata.toml file that contains blob_sha1 and update_timestamp string fields.
+  MetadataFilePath := FilePath + '.metadata.toml';
+  UpdateTimestamp := GetDateTimeString('yyyy/mm/dd', '-', ':');
+  BlobSha1 := CalculateGitBlobHash(FilePath);
+  Toml := [
+    'blob_sha1 = "' + BlobSha1 + '"',
+    'update_timestamp = "' + UpdateTimestamp + '"'
+  ];
+  if not SaveStringsToUTF8File(MetadataFilePath, Toml, False) then begin
+    Log(Format('Failed to write file at %s', [MetadataFilePath]));
+  end;
+end;
+
+procedure InstallMetadataFile(PathSuffix: String);
+var TargetPath: String;
+begin
+  TargetPath := ExpandConstant('{localappdata}\{#MyAppName}\') + PathSuffix;
+  FileCopy(ExpandConstant('{tmp}\') + PathSuffix, TargetPath, False);
+  WriteDownloadMetadata(TargetPath);
 end;
 
 function OnDownloadProgress(const Url, FileName: String; const Progress, ProgressMax: Int64): Boolean;
@@ -339,38 +467,92 @@ end;
 
 // Query user whether their data files should be deleted on uninstall.
 procedure CurUninstallStepChanged (CurUninstallStep: TUninstallStep);
+var
+  FindRec: TFindRec;
+  GamePath: String;
+  DeleteUserFiles: Boolean;
 begin
   // Don't remove user data if the uninstall is silent.
   if UninstallSilent then
     exit;
   if CurUninstallStep = usUninstall then begin
-    if MsgBox(CustomMessage('DeleteUserFiles'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES
-    then begin
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\LOOTDebugLog.txt'));
+    DeleteUserFiles := MsgBox(CustomMessage('DeleteUserFiles'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES;
+
+    if DeleteUserFiles then begin
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\settings.toml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Morrowind\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Oblivion\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Skyrim\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Fallout3\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\FalloutNV\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Fallout4\userlist.yaml'));
+      DelTree(ExpandConstant('{localappdata}\{#MyAppName}\backups\LOOT-backup-*.zip'), False, True, False);
+      RemoveDir(ExpandConstant('{localappdata}\{#MyAppName}\backups'));
+    end;
+
+    if FindFirst(ExpandConstant('{localappdata}\{#MyAppName}\games\*'), FindRec) then begin
+      try
+        repeat begin
+          if not SameStr(FindRec.Name, '.') and not SameStr(FindRec.Name, '..') and (FindRec.Attributes and FILE_ATTRIBUTE_DIRECTORY <> 0) then begin
+            GamePath := ExpandConstant('{localappdata}\{#MyAppName}\games\') + FindRec.Name;
+            Log(Format('Deleting files from %s', [GamePath]));
+
+            DeleteFile(GamePath + '\masterlist.yaml');
+            DeleteFile(GamePath + '\masterlist.yaml.metadata.toml');
+
+            // Although LOOT no longer uses Git repositories, they may be
+            // migrated from previous versions of LOOT.
+            DelTree(GamePath + '\.git', True, True, True);
+
+            if DeleteUserFiles then begin
+              DeleteFile(GamePath + '\userlist.yaml');
+              DeleteFile(GamePath + '\group_node_positions.bin');
+              DelTree(GamePath + '\loadorder.bak.*', False, True, False);
+            end;
+
+            // Try to delete the folder now in case it's empty.
+            RemoveDir(GamePath);
+          end;
+        end
+        until not FindNext(FindRec);
+      finally
+        FindClose(FindRec);
+      end;
     end;
   end;
 end;
 
 procedure InitializeWizard;
 begin
-  if VCRedistNeedsInstall then begin
+  VC2019RedistNeedsInstall := VCRedistNeedsInstall(14, 15, 26706)
+
+  if VC2019RedistNeedsInstall then begin
     DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
+    DownloadPage.Clear;
+    DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.x64.exe', 'vc_redist.2019.x64.exe', '');
   end;
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
 begin
-        Log(Format('Current page ID: %d', [CurPageID]));
+  Log(Format('Current page ID: %d', [CurPageID]));
+  if (CurPageID = wpSelectTasks) and WizardIsTaskSelected('masterlists') then begin
+    if not Assigned(DownloadPage) then begin
+      DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
+      DownloadPage.Clear;
+    end;
+
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/prelude/{#MasterlistBranch}/prelude.yaml', 'prelude\prelude.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/morrowind/{#MasterlistBranch}/masterlist.yaml', 'games\Morrowind\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/oblivion/{#MasterlistBranch}/masterlist.yaml', 'games\Oblivion\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/oblivion/{#MasterlistBranch}/masterlist.yaml', 'games\Nehrim\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrim/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/enderal/{#MasterlistBranch}/masterlist.yaml', 'games\Enderal\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimse/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim Special Edition\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/enderal/{#MasterlistBranch}/masterlist.yaml', 'games\Enderal Special Edition\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimvr/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim VR\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout3/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout3\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/falloutnv/{#MasterlistBranch}/masterlist.yaml', 'games\FalloutNV\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout4\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4vr/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout4VR\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/starfield/{#MasterlistBranch}/masterlist.yaml', 'games\Starfield\masterlist.yaml', '');
+  end;
+
   if Assigned(DownloadPage) and (CurPageID = wpSelectTasks) then begin
-    DownloadPage.Clear;
-    DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.x86.exe', 'vc_redist.x86.exe', '');
     DownloadPage.Show;
     try
       try
@@ -394,5 +576,22 @@ begin
 
   if CurStep = ssPostInstall then begin
     SetLootLanguage();
+
+    if WizardIsTaskSelected('masterlists') then begin
+      InstallMetadataFile('prelude\prelude.yaml');
+      InstallMetadataFile('games\Morrowind\masterlist.yaml');
+      InstallMetadataFile('games\Oblivion\masterlist.yaml');
+      InstallMetadataFile('games\Nehrim\masterlist.yaml');
+      InstallMetadataFile('games\Skyrim\masterlist.yaml');
+      InstallMetadataFile('games\Enderal\masterlist.yaml');
+      InstallMetadataFile('games\Skyrim Special Edition\masterlist.yaml');
+      InstallMetadataFile('games\Enderal Special Edition\masterlist.yaml');
+      InstallMetadataFile('games\Skyrim VR\masterlist.yaml');
+      InstallMetadataFile('games\Fallout3\masterlist.yaml');
+      InstallMetadataFile('games\FalloutNV\masterlist.yaml');
+      InstallMetadataFile('games\Fallout4\masterlist.yaml');
+      InstallMetadataFile('games\Fallout4VR\masterlist.yaml');
+      InstallMetadataFile('games\Starfield\masterlist.yaml');
+    end
   end
 end;

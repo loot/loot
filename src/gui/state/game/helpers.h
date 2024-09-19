@@ -26,38 +26,58 @@
 #ifndef LOOT_GUI_STATE_GAME_HELPERS
 #define LOOT_GUI_STATE_GAME_HELPERS
 
+#include <loot/enum/game_type.h>
+#include <loot/metadata/message.h>
+#include <loot/metadata/plugin_cleaning_data.h>
+#include <loot/metadata/tag.h>
+#include <loot/vertex.h>
+
 #include <filesystem>
 #include <tuple>
 #include <vector>
 
-#include <loot/enum/game_type.h>
-#include <loot/metadata/message.h>
-#include <loot/metadata/plugin_cleaning_data.h>
-#include <loot/vertex.h>
+#include "gui/sourced_message.h"
+#include "gui/state/game/detection/game_install.h"
 
 namespace loot {
-bool ExecutableExists(const GameType& gameType,
-                      const std::filesystem::path& gamePath);
+static constexpr const char* GHOST_EXTENSION = ".ghost";
 
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory);
 
 // Escape any Markdown special characters in the input text.
-std::string EscapeMarkdownSpecialChars(std::string text);
-
-// Create a Message, escaping any Markdown special characters in the input text.
-Message PlainTextMessage(MessageType type, std::string text);
-
-Message ToMessage(const PluginCleaningData& cleaningData);
+std::string EscapeMarkdownASCIIPunctuation(const std::string& text);
 
 std::string DescribeCycle(const std::vector<Vertex>& cycle);
 
-std::vector<Message> CheckForRemovedPlugins(
-    const std::vector<std::string> pluginsBefore,
-    const std::vector<std::string> pluginsAfter);
+std::vector<SourcedMessage> CheckForRemovedPlugins(
+    const std::vector<std::filesystem::path>& pluginPathsBefore,
+    const std::vector<std::string>& pluginNamesAfter);
 
-std::tuple<std::string, std::string, std::string> SplitRegistryPath(
-  const std::string& registryPath);
+std::vector<Tag> ReadBashTagsFile(std::istream& in);
+
+std::vector<Tag> ReadBashTagsFile(const std::filesystem::path& dataPath,
+                                  const std::string& pluginName);
+
+// Return a list of tag names that are added by one source but removed by the
+// other.
+std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
+                                         const std::vector<Tag>& tags2);
+
+bool HasPluginFileExtension(const std::string& filename);
+
+std::filesystem::path ResolveGameFilePath(
+    const std::vector<std::filesystem::path>& externalDataPaths,
+    const std::filesystem::path& dataPath,
+    const std::string& filename);
+
+std::vector<std::filesystem::path> GetExternalDataPaths(
+    const GameId gameId,
+    const bool isMicrosoftStoreInstall,
+    const std::filesystem::path& dataPath,
+    const std::filesystem::path& gameLocalPath);
+
+bool IsOfficialPlugin(const GameId gameId, const std::string& pluginName);
 }
 
 #endif
