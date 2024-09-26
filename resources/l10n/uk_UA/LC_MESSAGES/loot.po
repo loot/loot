@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2024-09-15 13:40+0100\n"
-"PO-Revision-Date: 2024-09-26 00:07+0000\n"
+"PO-Revision-Date: 2024-09-26 05:16+0000\n"
 "Last-Translator: IllusiveMan196 <hamsterrv@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/>"
 "\n"
@@ -714,7 +714,7 @@ msgstr "Перевірено на чистоту в {0}"
 
 #: src/gui/qt/plugin_card.cpp:186
 msgid "Small Plugin"
-msgstr ""
+msgstr "Малий плагін"
 
 #: src/gui/qt/plugin_card.cpp:189 src/gui/qt/plugin_card.cpp:313
 msgid "Light Plugin"
@@ -730,11 +730,11 @@ msgstr "Майстер-плагін"
 
 #: src/gui/qt/plugin_card.cpp:312
 msgid "Blueprint Master Plugin"
-msgstr ""
+msgstr "Шаблон майстер-плагіну"
 
 #: src/gui/qt/plugin_card.cpp:314
 msgid "Medium Plugin"
-msgstr ""
+msgstr "Середній плагін"
 
 #: src/gui/qt/plugin_card.cpp:315
 msgid "Empty Plugin"
@@ -1221,17 +1221,19 @@ msgstr "Цей плагін несумісний з \"{0}\", але обидва
 
 #: src/gui/state/game/game.cpp:614
 msgid "small master"
-msgstr ""
+msgstr "малий майстер"
 
 #: src/gui/state/game/game.cpp:615
 msgid "light master"
-msgstr ""
+msgstr "легкий майстер"
 
 #: src/gui/state/game/game.cpp:622
 msgid ""
 "This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
 "cause issues in-game, and sorting will fail while this plugin is installed."
 msgstr ""
+"Цей плагін є {0} та потребує не майстер-плагін \"{1}\". Це може спричинити "
+"проблеми у грі та невдале сортування поки цей плагін встановлено."
 
 #: src/gui/state/game/game.cpp:644
 msgid ""
@@ -1249,6 +1251,9 @@ msgid ""
 "medium plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
+"Плагін містить записи з FormID за межами прийнятних для середнього плагіна. "
+"Використання цього плагіна може спричинити незворотні пошкодження збережень "
+"гри."
 
 #: src/gui/state/game/game.cpp:675
 msgid "plugin"
