@@ -5,16 +5,17 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2024-09-15 13:40+0100\n"
-"PO-Revision-Date: \n"
-"Last-Translator: IllusiveMan196\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2024-09-26 05:16+0000\n"
+"Last-Translator: IllusiveMan196 <hamsterrv@gmail.com>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/>"
+"\n"
 "Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.4.4\n"
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -159,7 +160,7 @@ msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:146
 msgid "Active Small Plugins"
-msgstr ""
+msgstr "Активні малі плагіни"
 
 #: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:226
 msgid "Active Light Plugins"
@@ -205,11 +206,11 @@ msgstr "Активних плагінів"
 
 #: src/gui/qt/general_info_card.cpp:224
 msgid "Active Full Plugins"
-msgstr ""
+msgstr "Активні повні плагіни"
 
 #: src/gui/qt/general_info_card.cpp:225
 msgid "Active Medium Plugins"
-msgstr ""
+msgstr "Активні середні плагіни"
 
 #: src/gui/qt/general_info_card.cpp:227
 msgid "Dirty Plugins"
@@ -713,7 +714,7 @@ msgstr "Перевірено на чистоту в {0}"
 
 #: src/gui/qt/plugin_card.cpp:186
 msgid "Small Plugin"
-msgstr ""
+msgstr "Малий плагін"
 
 #: src/gui/qt/plugin_card.cpp:189 src/gui/qt/plugin_card.cpp:313
 msgid "Light Plugin"
@@ -729,11 +730,11 @@ msgstr "Майстер-плагін"
 
 #: src/gui/qt/plugin_card.cpp:312
 msgid "Blueprint Master Plugin"
-msgstr ""
+msgstr "Шаблон майстер-плагіну"
 
 #: src/gui/qt/plugin_card.cpp:314
 msgid "Medium Plugin"
-msgstr ""
+msgstr "Середній плагін"
 
 #: src/gui/qt/plugin_card.cpp:315
 msgid "Empty Plugin"
@@ -1220,17 +1221,19 @@ msgstr "Цей плагін несумісний з \"{0}\", але обидва
 
 #: src/gui/state/game/game.cpp:614
 msgid "small master"
-msgstr ""
+msgstr "малий майстер"
 
 #: src/gui/state/game/game.cpp:615
 msgid "light master"
-msgstr ""
+msgstr "легкий майстер"
 
 #: src/gui/state/game/game.cpp:622
 msgid ""
 "This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
 "cause issues in-game, and sorting will fail while this plugin is installed."
 msgstr ""
+"Цей плагін є {0} та потребує не майстер-плагін \"{1}\". Це може спричинити "
+"проблеми у грі та невдале сортування поки цей плагін встановлено."
 
 #: src/gui/state/game/game.cpp:644
 msgid ""
@@ -1248,6 +1251,9 @@ msgid ""
 "medium plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
+"Плагін містить записи з FormID за межами прийнятних для середнього плагіна. "
+"Використання цього плагіна може спричинити незворотні пошкодження збережень "
+"гри."
 
 #: src/gui/state/game/game.cpp:675
 msgid "plugin"
