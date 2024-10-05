@@ -4,6 +4,39 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.24.0 - 2024-10-05
+===================
+
+Added
+-----
+
+- Support for Starfield's blueprint master plugin type.
+- A new icon that is displayed on the plugin cards of blueprint master plugins.
+- A warning message is now displayed for any non-blueprint-master plugin that
+  has a blueprint master plugin as one of its masters.
+
+Changed
+-------
+
+- Starfield's ``Starfield.esm``, ``ShatteredSpace.esm``, ``Constellation.esm``,
+  ``OldMars.esm``, ``SFBGS003.esm``, ``SFBGS004.esm``, ``SFBGS006.esm``,
+  ``SFBGS007.esm`` and ``SFBGS008.esm`` plugins are now treated as having
+  hardcoded load order positions, to match the behaviour of Starfield
+  v1.14.70.0.
+- Updated libloot to v0.24.3.
+- The fmt dependency that was previously bundled with the spdlog dependency has
+  been replaced by a separate dependency on fmt v11.0.2.
+- Updated the Bulgarian translation.
+- Updated the German translation.
+- Updated the Russian translation.
+- Updated the Ukrainian translation.
+
+Removed
+-------
+
+- LOOT no longer writes to
+  ``%USERPROFILE%\Documents\My Games\Starfield\Starfield.ccc``.
+
 0.23.1 - 2024-08-25
 ===================
 
