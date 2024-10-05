@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-09-15 13:40+0100\n"
+"POT-Creation-Date: 2024-10-05 17:22+0100\n"
 "PO-Revision-Date: 2024-09-17 09:09+0000\n"
 "Last-Translator: xsSplater <xssplater@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
@@ -1215,27 +1215,27 @@ msgstr ""
 "Не удалось установить исходную игру с названием папки \"{0}\". Если она "
 "установлена, попробуйте запустить её, а затем перезапустить LOOT."
 
-#: src/gui/state/game/game.cpp:461 src/gui/state/game/game.cpp:518
+#: src/gui/state/game/game.cpp:413 src/gui/state/game/game.cpp:470
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
 msgstr "Для этого плагина требуется установка \"{0}\", но он отсутствует."
 
-#: src/gui/state/game/game.cpp:488
+#: src/gui/state/game/game.cpp:440
 msgid "This plugin requires \"{0}\" to be active, but it is inactive."
 msgstr "Этот плагин требует, чтобы \"{0}\" был активен, но он неактивен."
 
-#: src/gui/state/game/game.cpp:560
+#: src/gui/state/game/game.cpp:512
 msgid "This plugin is incompatible with \"{0}\", but both are present."
 msgstr "Этот плагин несовместим с \"{0}\", но оба они присутствуют."
 
-#: src/gui/state/game/game.cpp:614
+#: src/gui/state/game/game.cpp:566
 msgid "small master"
 msgstr "малый мастер"
 
-#: src/gui/state/game/game.cpp:615
+#: src/gui/state/game/game.cpp:567
 msgid "light master"
 msgstr "легкий мастер"
 
-#: src/gui/state/game/game.cpp:622
+#: src/gui/state/game/game.cpp:574
 msgid ""
 "This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
 "cause issues in-game, and sorting will fail while this plugin is installed."
@@ -1244,7 +1244,7 @@ msgstr ""
 "подключаемого модуля \"{1}\". Это может вызвать проблемы в игре, и "
 "сортировка не будет работать, пока установлен этот плагин."
 
-#: src/gui/state/game/game.cpp:644
+#: src/gui/state/game/game.cpp:596
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
@@ -1254,7 +1254,7 @@ msgstr ""
 "пределы допустимого диапазона для плагина ESL. Использование этого плагина "
 "нанесёт необратимый ущерб вашим игровым сохранениям."
 
-#: src/gui/state/game/game.cpp:662
+#: src/gui/state/game/game.cpp:614
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for a "
 "medium plugin. Using this plugin will cause irreversible damage to your game "
@@ -1264,17 +1264,17 @@ msgstr ""
 "пределы допустимого диапазона для среднего плагина. Использование этого "
 "плагина нанесет необратимый ущерб вашим игровым сохранениям."
 
-#: src/gui/state/game/game.cpp:675
+#: src/gui/state/game/game.cpp:627
 msgid "plugin"
 msgstr "плагин"
 
 #. translators: master as in a plugin that is
 #. loaded as if its master flag is set.
-#: src/gui/state/game/game.cpp:678
+#: src/gui/state/game/game.cpp:630
 msgid "master"
 msgstr "мастер"
 
-#: src/gui/state/game/game.cpp:687
+#: src/gui/state/game/game.cpp:639
 msgid ""
 "\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
 "correctly installed {2} and all its requirements."
@@ -1282,7 +1282,7 @@ msgstr ""
 "\"{0}\" горит {1}, но {2}, похоже, отсутствует. Убедитесь, что вы правильно "
 "установили {2} и выполнили все его требования."
 
-#: src/gui/state/game/game.cpp:700
+#: src/gui/state/game/game.cpp:652
 msgid ""
 "\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
 "will not load it."
@@ -1290,7 +1290,7 @@ msgstr ""
 "\"{0}\" — это плагин .esl, но игра не поддерживает такие плагины и не "
 "загружает его."
 
-#: src/gui/state/game/game.cpp:713
+#: src/gui/state/game/game.cpp:665
 msgid ""
 "\"{0}\" is flagged as a light {1}, but the game does not support such "
 "plugins, and will load it as a full {1}."
@@ -1298,7 +1298,7 @@ msgstr ""
 "\"{0}\" помечен как легкий {1}, но игра не поддерживает такие плагины и "
 "загружает его как полный {1}."
 
-#: src/gui/state/game/game.cpp:733
+#: src/gui/state/game/game.cpp:685
 msgid ""
 "This plugin is an update plugin but adds new records. Using this plugin may "
 "cause irreversible damage to your game saves."
@@ -1307,7 +1307,7 @@ msgstr ""
 "Использование этого плагина может нанести необратимый ущерб вашим игровым "
 "сохранениям."
 
-#: src/gui/state/game/game.cpp:765
+#: src/gui/state/game/game.cpp:717
 msgid ""
 "This plugin is not a blueprint master and requires the blueprint master "
 "\"{0}\". This can cause issues in-game, as this plugin will always load "
@@ -1316,7 +1316,7 @@ msgstr ""
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/game.cpp:792
+#: src/gui/state/game/game.cpp:744
 msgid ""
 "This plugin has a header version of {0}, which is less than the game's "
 "minimum supported header version of {1}."
@@ -1324,15 +1324,15 @@ msgstr ""
 "Этот плагин имеет версию заголовка {0}, которая меньше минимально "
 "поддерживаемой версии заголовка игры {1}."
 
-#: src/gui/state/game/game.cpp:807
+#: src/gui/state/game/game.cpp:759
 msgid "This plugin has itself as a master."
 msgstr "Этот плагин является мастером."
 
-#: src/gui/state/game/game.cpp:825
+#: src/gui/state/game/game.cpp:777
 msgid "This plugin belongs to the group \"{0}\", which does not exist."
 msgstr "Этот плагин принадлежит к группе «{0}», которой не существует."
 
-#: src/gui/state/game/game.cpp:851
+#: src/gui/state/game/game.cpp:803
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
 "LOOT for the following Bash Tags: {0}."
@@ -1340,7 +1340,7 @@ msgstr ""
 "Этот плагин имеет файл BashTags, который переопределит предложения "
 "сортировки, сделанные LOOT для следующих Bash-тегов: {0}."
 
-#: src/gui/state/game/game.cpp:985 src/gui/state/game/game.cpp:1088
+#: src/gui/state/game/game.cpp:937 src/gui/state/game/game.cpp:1040
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -1348,15 +1348,15 @@ msgstr ""
 "Не удалось загрузить текущий порядок загрузки, отображаемая информация может "
 "быть неверной."
 
-#: src/gui/state/game/game.cpp:1118
+#: src/gui/state/game/game.cpp:1070
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "Между «{0}» и «{1}» обнаружено циклическое взаимодействие: {2}"
 
-#: src/gui/state/game/game.cpp:1132
+#: src/gui/state/game/game.cpp:1084
 msgid "The group \"{0}\" does not exist."
 msgstr "Группа «{0}» не существует."
 
-#: src/gui/state/game/game.cpp:1147
+#: src/gui/state/game/game.cpp:1099
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1364,20 +1364,20 @@ msgstr ""
 "Сортировка не удалась, так как есть как минимум один установленный плагин, "
 "который зависит как минимум от одного неустановленного плагина."
 
-#: src/gui/state/game/game.cpp:1188
+#: src/gui/state/game/game.cpp:1140
 msgid "You have not sorted your load order this session."
 msgstr "Вы ещё не отсортировали порядок загрузки в этом сеансе."
 
-#: src/gui/state/game/game.cpp:1240
+#: src/gui/state/game/game.cpp:1192
 msgid "You have {0} active full plugins but the game only supports up to {1}."
 msgstr ""
 "У вас есть {0} активных полных плагинов, но игра поддерживает только до {1}."
 
-#: src/gui/state/game/game.cpp:1248
+#: src/gui/state/game/game.cpp:1200
 msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr "У вас активно {0} плагинов, но игра поддерживает только {1}."
 
-#: src/gui/state/game/game.cpp:1270
+#: src/gui/state/game/game.cpp:1222
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
@@ -1385,25 +1385,25 @@ msgstr ""
 "Не запускайте Morrowind без использования MWSE, иначе это нанесёт серьёзный "
 "ущерб вашей игре."
 
-#: src/gui/state/game/game.cpp:1277
+#: src/gui/state/game/game.cpp:1229
 msgid "small plugin"
 msgid_plural "small plugins"
 msgstr[0] "небольшой плагин"
 msgstr[1] "небольших плагина"
 msgstr[2] "небольших плагинов"
 
-#: src/gui/state/game/game.cpp:1280
+#: src/gui/state/game/game.cpp:1232
 msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] "легкий плагин"
 msgstr[1] "легкие плагины"
 msgstr[2] "легкие плагины"
 
-#: src/gui/state/game/game.cpp:1293
+#: src/gui/state/game/game.cpp:1245
 msgid "You have {0} active {1} but the game only supports up to {2}."
 msgstr "У вас {0} активен {1}, но игра поддерживает только до {2}."
 
-#: src/gui/state/game/game.cpp:1313
+#: src/gui/state/game/game.cpp:1265
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
 "Deactivate a full plugin or your {1} to avoid potential issues."
@@ -1412,13 +1412,13 @@ msgstr ""
 "загрузки FE. Деактивируйте полный плагин или {1}, чтобы избежать "
 "потенциальных проблем."
 
-#: src/gui/state/game/game.cpp:1331
+#: src/gui/state/game/game.cpp:1283
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
 msgstr ""
 "У вас есть {0} активных средних плагинов, но игра поддерживает только до {1}."
 
-#: src/gui/state/game/game.cpp:1350
+#: src/gui/state/game/game.cpp:1302
 msgid ""
 "You have a full plugin and at least one medium plugin sharing the FD load "
 "order index. Deactivate a full plugin or all your medium plugins to avoid "
@@ -1430,7 +1430,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's name.
 #.
-#: src/gui/state/game/game.cpp:1363
+#: src/gui/state/game/game.cpp:1315
 msgid ""
 "{0} is installed in a case-sensitive location. This may cause issues as the "
 "game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
@@ -1443,7 +1443,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's
 #. name.
-#: src/gui/state/game/game.cpp:1394
+#: src/gui/state/game/game.cpp:1346
 msgid ""
 "{0}'s local application data is stored in a case-sensitive location. This "
 "may cause issues as the game, mods and LOOT may assume that filesystem paths "
@@ -1454,7 +1454,7 @@ msgstr ""
 "что пути к файловой системе не чувствительны к регистру, что является "
 "значением по умолчанию в Windows."
 
-#: src/gui/state/game/game.cpp:1463
+#: src/gui/state/game/game.cpp:1415
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
