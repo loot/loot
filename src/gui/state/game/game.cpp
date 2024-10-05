@@ -305,50 +305,6 @@ bool SupportsLightPlugins(const GameType gameType) {
          gameType == GameType::starfield;
 }
 
-void WriteStarfieldCCCFile(const GameSettings& settings) {
-  if (settings.Id() != GameId::starfield) {
-    return;
-  }
-
-  const auto logger = getLogger();
-
-  // Pass false for isMicrosoftStoreInstall, it doesn't matter for Starfield.
-  const auto externalDataPaths = GetExternalDataPaths(
-      settings.Id(), false, settings.DataPath(), settings.GameLocalPath());
-
-  const auto cccFilename = GetCCCFilename(settings.Type()).value();
-
-  const auto cccFilePath = externalDataPaths.at(0).parent_path() / cccFilename;
-
-  if (logger) {
-    logger->debug("Writing official plugins to CCC file at {}",
-                  cccFilePath.u8string());
-  }
-
-  std::ofstream out(cccFilePath, std::ios_base::out | std::ios_base::trunc);
-  if (out.fail()) {
-    throw FileAccessError("Couldn't open Starfield CCC file.");
-  }
-
-  // Write out the official plugins so that they have fixed load order
-  // positions, as otherwise LOOT might sort them into an order that would get
-  // written to plugins.txt and then overwritten on the next game load. This
-  // list is the same as what is used by Mod Organizer 2:
-  // <https://github.com/ModOrganizer2/modorganizer-game_bethesda/blob/master/src/games/starfield/src/gamestarfield.cpp#L256>
-  // with SFBGS004.esm appended (as it's missing from that list at time of
-  // writing).
-  out << "Starfield.esm" << std::endl
-      << "Constellation.esm" << std::endl
-      << "OldMars.esm" << std::endl
-      << "BlueprintShips-Starfield.esm" << std::endl
-      << "SFBGS007.esm" << std::endl
-      << "SFBGS008.esm" << std::endl
-      << "SFBGS006.esm" << std::endl
-      << "SFBGS003.esm" << std::endl
-      << "SFBGS004.esm" << std::endl;
-  out.close();
-}
-
 namespace gui {
 std::string GetDisplayName(const File& file) {
   if (file.GetDisplayName().empty()) {
@@ -418,10 +374,6 @@ void Game::Init() {
   gameHandle_->IdentifyMainMasterFile(settings_.Master());
 
   InitLootGameFolder(lootDataPath_, settings_);
-
-  if (settings_.Id() == GameId::starfield) {
-    WriteStarfieldCCCFile(settings_);
-  }
 }
 
 bool Game::IsInitialised() const { return gameHandle_ != nullptr; }
