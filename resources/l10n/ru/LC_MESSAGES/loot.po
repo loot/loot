@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2024-10-27 12:03+0500\n"
-"PO-Revision-Date: 2024-10-27 13:33+0500\n"
-"Last-Translator: xsSplater <xssplater@gmail.com>\n"
+"PO-Revision-Date: 2024-10-27 13:41+0500\n"
+"Last-Translator: TokcDK <tokcdk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -1285,12 +1285,16 @@ msgstr ""
 "Плагин обновления добавляет новые записи. Использование его необратимо "
 "повредит игровые сохранения."
 
+# Need "blueprint master" description here for right translation.
 #: src/gui/state/game/game.cpp:717
 msgid ""
 "This plugin is not a blueprint master and requires the blueprint master "
 "\"{0}\". This can cause issues in-game, as this plugin will always load "
 "before \"{0}\"."
 msgstr ""
+"Этот плагин не является blueprint мастером и требует blueprint мастер "
+"\"{0}\". Это может вызвать проблемы в игре, так как этот плагин всегда будет "
+"загружаться перед \"{0}\"."
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
@@ -1377,6 +1381,7 @@ msgstr[2] "легкие плагины"
 msgid "You have {0} active {1} but the game only supports up to {2}."
 msgstr "У вас {0} активен {1}, но игра поддерживает только до {2}."
 
+# Need "FE load order index" description here for right translation.
 #: src/gui/state/game/game.cpp:1265
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
