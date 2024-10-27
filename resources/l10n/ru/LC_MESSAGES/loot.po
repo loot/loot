@@ -727,7 +727,7 @@ msgstr "Мастер-плагин"
 
 #: src/gui/qt/plugin_card.cpp:312
 msgid "Blueprint Master Plugin"
-msgstr "Заготовка мастер-плагина"
+msgstr "Шаблонный мастер-плагин"
 
 #: src/gui/qt/plugin_card.cpp:314
 msgid "Medium Plugin"
@@ -1292,7 +1292,7 @@ msgid ""
 "\"{0}\". This can cause issues in-game, as this plugin will always load "
 "before \"{0}\"."
 msgstr ""
-"Этот плагин не является blueprint мастером и требует blueprint мастер "
+"Этот плагин не является шаблонным мастером и требует шаблонный мастер "
 "\"{0}\". Это может вызвать проблемы в игре, так как этот плагин всегда будет "
 "загружаться перед \"{0}\"."
 
