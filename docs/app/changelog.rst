@@ -4,6 +4,25 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.24.1 - 2024-11-07
+===================
+
+Fixed
+-----
+
+- A performance regression was introduced in v0.24.0 when interacting with the
+  load order, particularly when reading and writing very large load orders. Via
+  libloot.
+- Starfield's ``ShatteredSpace.esm`` is now placed after ``OldMars.esm``, to
+  match where it is hardcoded to load by the game. Via libloot.
+
+Changed
+-------
+
+- Updated libloot to v0.24.5.
+- Updated ValveFileVDF to v1.0.1.
+- Updated the Russian translation.
+
 0.24.0 - 2024-10-05
 ===================
 

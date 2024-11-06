@@ -69,6 +69,26 @@
   </screenshots>
 
   <releases>
+    <release version="0.24.1" date="2024-11-07">
+      <description>
+        <ul>
+          <li>Fixed a performance regression introduced in v0.24.0.</li>
+          <li>Fixed the position used for Starfield's ShatteredSpace.esm official plugin.</li>
+          <li>Other fixes and improvements.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.24.1/app/changelog.html#id1</url>
+    </release>
+    <release version="0.24.0" date="2024-10-05">
+      <description>
+        <ul>
+          <li>Added support for Starfield's blueprint master plugin type.</li>
+          <li>Updated handling of Starfield's official plugins to match the behaviour of Starfield v1.14.70.0.</li>
+          <li>Other fixes and improvements.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.24.0/app/changelog.html#id1</url>
+    </release>
     <release version="0.23.1" date="2024-08-25">
       <description>
         <ul>
