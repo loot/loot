@@ -25,6 +25,7 @@
 
 #include "gui/state/game/detection/common.h"
 
+#include <algorithm>
 #include <functional>
 
 #include "gui/helpers.h"
