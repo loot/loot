@@ -10,7 +10,7 @@ on:
 env:
   BOOST_VERSION: 1.85.0
   OGDF_VERSION: elderberry-202309
-  QT_VERSION: 6.8.0
+  QT_VERSION: 6.8.1
 
 jobs:
   # Check if the template.pot file is up to date. Run this as a separate job
