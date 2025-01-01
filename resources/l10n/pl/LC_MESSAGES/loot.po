@@ -90,11 +90,11 @@ msgstr "Użyj zwykłego wyrażenia"
 
 #: src/gui/qt/filters_widget.cpp:252
 msgid "Hide version numbers"
-msgstr "Ukryj numery wersji"
+msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:253
 msgid "Hide CRCs"
-msgstr "Ukryj CRC"
+msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:254
 msgid "Hide Bash Tags"
@@ -106,7 +106,7 @@ msgstr "Ukryj źródła"
 
 #: src/gui/qt/filters_widget.cpp:256
 msgid "Hide notes"
-msgstr "Ukryj notatki"
+msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:258
 msgid "Hide official plugins' cleaning messages"
@@ -114,7 +114,7 @@ msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:259
 msgid "Hide all plugin messages"
-msgstr "Ukryj wszystkie wiadomości wtyczek"
+msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:260
 msgid "Hide inactive plugins"
@@ -122,7 +122,7 @@ msgstr "Ukryj nieaktywne wtyczki"
 
 #: src/gui/qt/filters_widget.cpp:261
 msgid "Hide messageless plugins"
-msgstr "Ukryj wtyczki bez wiadomości"
+msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:262
 msgid "Hide Creation Club plugins"
@@ -200,7 +200,7 @@ msgstr "Błędy"
 
 #: src/gui/qt/general_info_card.cpp:221
 msgid "Total Messages"
-msgstr "Liczba wiadomości"
+msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:223
 msgid "Active Plugins"
@@ -265,7 +265,7 @@ msgstr "Wykryto niejednoznaczną kolejność ładowania"
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:705
 msgid "&Sort Plugins"
-msgstr "&Sortuj Wtyczki"
+msgstr ""
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:707
@@ -286,12 +286,12 @@ msgstr "Z&dejmij posortowanie kolejności ładowania"
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:716
 msgid "&File"
-msgstr "&Plik"
+msgstr ""
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:718
 msgid "&Settings…"
-msgstr "&Ustawienia…"
+msgstr ""
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:720
@@ -317,7 +317,7 @@ msgstr "&Wyjdź"
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:730
 msgid "&Game"
-msgstr "&Gra"
+msgstr ""
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:732
@@ -507,7 +507,7 @@ msgstr ""
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
-msgstr "Błąd"
+msgstr ""
 
 #: src/gui/qt/main_window.cpp:1366
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:364
@@ -595,7 +595,7 @@ msgstr ""
 #. translators: Notification text.
 #: src/gui/qt/main_window.cpp:1710
 msgid "Plugins were successfully redated."
-msgstr "Wtyczki zostały pomyślnie przedatowane."
+msgstr ""
 
 #: src/gui/qt/main_window.cpp:1722
 msgid ""
@@ -749,7 +749,7 @@ msgstr "Użytkownik ma metadane"
 #: src/gui/qt/plugin_card.cpp:319
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
-msgstr "Tagi Bash"
+msgstr ""
 
 #: src/gui/qt/plugin_card.cpp:320
 msgid "Current"
@@ -757,11 +757,11 @@ msgstr "Aktualny"
 
 #: src/gui/qt/plugin_card.cpp:321 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
-msgstr "Dodaj"
+msgstr ""
 
 #: src/gui/qt/plugin_card.cpp:322 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
-msgstr "Usuń"
+msgstr ""
 
 #: src/gui/qt/plugin_item_model.cpp:126
 msgid "Editor Is Open"
@@ -868,19 +868,19 @@ msgstr "Grupa"
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:188
 msgid "Load After"
-msgstr "Załaduj po"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:189
 msgid "Requirements"
-msgstr "Wymagania"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:190
 msgid "Incompatibilities"
-msgstr "Niekompatybilne"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:191
 msgid "Messages"
-msgstr "Wiadomości"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:193
 msgid "Dirty Plugin Info"
@@ -914,15 +914,15 @@ msgstr "Notki"
 #: src/gui/qt/plugin_editor/table_tabs.cpp:395
 #: src/gui/qt/plugin_editor/table_tabs.cpp:432
 msgid "Warning"
-msgstr "Ostrzeżenie"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:82
 msgid "CRC"
-msgstr "CRC"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
 msgid "ITM Count"
-msgstr "Liczba ITM"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
 msgid "Deleted References"
@@ -934,26 +934,26 @@ msgstr "Usunięte Navmeshe"
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
 msgid "Cleaning Utility"
-msgstr "Narzędzie czyszczące"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
 msgid "Detail"
-msgstr "Szczegóły"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:73
 msgid "Filename"
-msgstr "Nazwa pliku"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
 msgid "Display Name"
-msgstr "Nazwa wyświetlana"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 #: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
 #: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
 msgid "Condition"
-msgstr "Warunek"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
 msgid "URL"
@@ -963,12 +963,12 @@ msgstr "Adres URL"
 #: src/gui/qt/settings/game_tab.cpp:149
 #: src/gui/qt/settings/new_game_dialog.cpp:123
 msgid "Name"
-msgstr "Nazwa"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:69
 #: src/gui/qt/settings/general_tab.cpp:161
 msgid "Language"
-msgstr "Język"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:71
 msgid "Text"
@@ -976,19 +976,19 @@ msgstr "Text"
 
 #: src/gui/qt/plugin_editor/models/message_table_model.cpp:94
 msgid "Type"
-msgstr "Typ"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/message_table_model.cpp:96
 msgid "Content"
-msgstr "Zawartość"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/tag_table_model.cpp:63
 msgid "Add/Remove"
-msgstr "Dodaj/Usuń"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/tag_table_model.cpp:65
 msgid "Bash Tag"
-msgstr "Tag Bash"
+msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:57
 msgid "Browse…"
@@ -1018,7 +1018,7 @@ msgstr "Źródło listy głównej"
 
 #: src/gui/qt/settings/game_tab.cpp:155
 msgid "Install Path"
-msgstr "Ścieżka instalacyjna"
+msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:156
 msgid "Local AppData Path"
@@ -1026,7 +1026,7 @@ msgstr "Lokalna ścieżka AppData"
 
 #: src/gui/qt/settings/game_tab.cpp:158
 msgid "Delete game"
-msgstr "Usuń grę"
+msgstr ""
 
 #: src/gui/qt/settings/general_tab.cpp:160
 msgid "Default Game"
@@ -1080,7 +1080,7 @@ msgstr "Wykrywanie automatyczne"
 
 #: src/gui/qt/settings/new_game_dialog.cpp:121
 msgid "Add new game"
-msgstr "Dodaj grę"
+msgstr ""
 
 #: src/gui/qt/settings/new_game_dialog.cpp:127
 msgid "A name is required."
@@ -1152,7 +1152,7 @@ msgstr ""
 
 #: src/gui/state/loot_state.cpp:174
 msgid "Error: Game-specific settings could not be initialised. {0}"
-msgstr "Błąd: Nie można zainicjować ustawień gry. {0}"
+msgstr ""
 
 #: src/gui/state/loot_state.cpp:197
 msgid "Error: Could not create LOOT data directory. {0}"
@@ -1163,7 +1163,7 @@ msgstr "Błąd: Nie można utworzyć katalogu danych LOOT. {0}"
 #. detail about what went wrong.
 #: src/gui/state/loot_state.cpp:211 src/gui/state/loot_state.cpp:265
 msgid "Error: Settings parsing failed. {0}"
-msgstr "Błąd: Przetwarzanie ustawień nieudane. {0}"
+msgstr ""
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
@@ -1201,15 +1201,15 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:413 src/gui/state/game/game.cpp:470
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
-msgstr "Ta wtyczka wymaga \"{0}\", a jest niezainstalowany."
+msgstr ""
 
 #: src/gui/state/game/game.cpp:440
 msgid "This plugin requires \"{0}\" to be active, but it is inactive."
-msgstr "Ta wtyczka wymaga aktywnego \"{0}\" a jest nieaktywny."
+msgstr ""
 
 #: src/gui/state/game/game.cpp:512
 msgid "This plugin is incompatible with \"{0}\", but both are present."
-msgstr "Ta wtyczka jest niekompatybilna z \"{0}\" , a jest aktywna."
+msgstr ""
 
 #: src/gui/state/game/game.cpp:566
 msgid "small master"
