@@ -1,6 +1,6 @@
 # LOOT - Italian Translation.
 # Copyright (C) 2021 WrinklyNinja
-# This file is distributed under the same license as the LOOT package.
+# This file is distributed under the Creative Commons Zero 1.0 Universal license.
 # Griam, nicola89b, & albie, 2021.
 #
 msgid ""

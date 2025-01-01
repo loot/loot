@@ -1,5 +1,5 @@
 # LOOT - French Translation
-# This file is distributed under the same license as the LOOT package.
+# This file is distributed under the Creative Commons Zero 1.0 Universal license.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""

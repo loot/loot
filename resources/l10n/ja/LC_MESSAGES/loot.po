@@ -1,6 +1,6 @@
 # LOOT - Japanese Translation.
 # Copyright (C) 2023 WrinklyNinja
-# This file is distributed under the same license as the LOOT package.
+# This file is distributed under the Creative Commons Zero 1.0 Universal license.
 # kuroko, 2023.
 #
 msgid ""

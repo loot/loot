@@ -28,6 +28,12 @@ LOOT Documentation
 .. include:: GNU FDL v1.3.txt
   :literal:
 
+LOOT Masterlists & Translations
+===============================
+
+.. include:: CC0 1.0 Universal.txt
+  :literal:
+
 `Material Icons`_
 =================
 

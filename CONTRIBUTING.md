@@ -39,7 +39,7 @@ If you're having any trouble, feel free to ask a team member for help, such as i
 
 #### Copyright License
 
-New contributions to LOOT's translations are licensed under the [Creative Commons Zero 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) license, effectively putting them into the public domain. By contributing a translation, you agree that your contribution is covered by the same license.
+LOOT's translations are licensed under the [Creative Commons Zero 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) license, effectively putting them into the public domain. By contributing a translation, you agree that your contribution is covered by the same license.
 
 ### Adding a new translation
 
