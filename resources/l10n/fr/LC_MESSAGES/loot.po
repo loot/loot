@@ -20,7 +20,6 @@ msgstr ""
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
 msgstr ""
-"\"{0}\" contient une condition qui n'a pas pu être évaluée. Détails: {1}"
 
 #: src/gui/plugin_item.cpp:194
 msgid "Location"
@@ -76,7 +75,7 @@ msgstr "Afficher uniquement les plugins en groupe"
 
 #: src/gui/qt/filters_widget.cpp:250
 msgid "Show only plugins with cards that contain"
-msgstr "Afficher uniquement les plugins avec des cartes qui contiennent"
+msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:251 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
@@ -100,7 +99,7 @@ msgstr "Masquer les sources"
 
 #: src/gui/qt/filters_widget.cpp:256
 msgid "Hide notes"
-msgstr "Masquer les notes"
+msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:258
 msgid "Hide official plugins' cleaning messages"
@@ -112,7 +111,7 @@ msgstr "Masquer tous les messages des plugins"
 
 #: src/gui/qt/filters_widget.cpp:260
 msgid "Hide inactive plugins"
-msgstr "Masquer les plugins inactifs"
+msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:261
 msgid "Hide messageless plugins"
@@ -140,7 +139,7 @@ msgstr "Messages cachés:"
 
 #: src/gui/qt/filters_widget.cpp:269
 msgid "No plugin selected"
-msgstr "Aucun plugin sélectionné"
+msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:276
 msgid "No group selected"
@@ -148,7 +147,7 @@ msgstr "Aucun groupe sélectionné"
 
 #: src/gui/qt/filters_widget.cpp:283
 msgid "No text specified"
-msgstr "Aucun texte spécifié"
+msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:286
 msgid "If checked, interprets the content filter text as a regular expression."
@@ -166,7 +165,7 @@ msgstr "Plugins légers actifs"
 
 #: src/gui/qt/general_info_card.cpp:212
 msgid "General Information"
-msgstr "Informations générales"
+msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:214
 msgid "Masterlist Revision ID"
@@ -186,11 +185,11 @@ msgstr "Date de mise à jour du Prélude de la Masterlist"
 
 #: src/gui/qt/general_info_card.cpp:219
 msgid "Warnings"
-msgstr "Avertissements"
+msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:220
 msgid "Errors"
-msgstr "Erreurs"
+msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:221
 msgid "Total Messages"
@@ -198,7 +197,7 @@ msgstr "Messages au total"
 
 #: src/gui/qt/general_info_card.cpp:223
 msgid "Active Plugins"
-msgstr "Plugins actifs"
+msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:224
 msgid "Active Full Plugins"
@@ -210,7 +209,7 @@ msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:227
 msgid "Dirty Plugins"
-msgstr "Plugins sales"
+msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:228
 msgid "Total Plugins"
@@ -220,7 +219,7 @@ msgstr "Plugins au total"
 #. masterlist has been modified since it was downloaded.
 #: src/gui/qt/helpers.cpp:116
 msgid "(edited)"
-msgstr "(modifié)"
+msgstr ""
 
 #: src/gui/qt/helpers.cpp:231
 msgid "N/A: No masterlist present"
@@ -264,7 +263,7 @@ msgstr "&Trier les plugins"
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:707
 msgid "Update &Masterlist"
-msgstr "&Mettre à jour la Masterlist"
+msgstr ""
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:709
@@ -305,7 +304,7 @@ msgstr "&Ouvrir le dossier des données de LOOT"
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:726
 msgid "&Quit"
-msgstr "&Quitter"
+msgstr ""
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -336,7 +335,7 @@ msgstr "Co&pier le contenu"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:740
 msgid "&Refresh Content"
-msgstr "&Actualiser le contenu"
+msgstr ""
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:742
@@ -483,11 +482,11 @@ msgstr "Astuces de première utilisation"
 
 #: src/gui/qt/main_window.cpp:1259
 msgid "metadata edits"
-msgstr "modifications de métadonnées"
+msgstr ""
 
 #: src/gui/qt/main_window.cpp:1260
 msgid "sorted load order"
-msgstr "ordre de chargement trié"
+msgstr ""
 
 #: src/gui/qt/main_window.cpp:1263
 msgid ""
@@ -502,7 +501,7 @@ msgstr ""
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
-msgstr "Erreur"
+msgstr ""
 
 #: src/gui/qt/main_window.cpp:1366
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:364
@@ -713,7 +712,7 @@ msgstr "Plugin léger"
 
 #: src/gui/qt/plugin_card.cpp:310
 msgid "Active Plugin"
-msgstr "Plugins actifs"
+msgstr ""
 
 #: src/gui/qt/plugin_card.cpp:311
 msgid "Master Plugin"
@@ -729,7 +728,7 @@ msgstr ""
 
 #: src/gui/qt/plugin_card.cpp:315
 msgid "Empty Plugin"
-msgstr "Plugin vide"
+msgstr ""
 
 #: src/gui/qt/plugin_card.cpp:316
 msgid "Loads Archive"
@@ -750,7 +749,7 @@ msgstr "Actuel"
 
 #: src/gui/qt/plugin_card.cpp:321 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
-msgstr "Ajouter"
+msgstr ""
 
 #: src/gui/qt/plugin_card.cpp:322 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
@@ -758,7 +757,7 @@ msgstr "Supprimer"
 
 #: src/gui/qt/plugin_item_model.cpp:126
 msgid "Editor Is Open"
-msgstr "L'éditeur est ouvert"
+msgstr ""
 
 #: src/gui/qt/plugin_item_model.cpp:177
 msgid "Position"
@@ -863,7 +862,7 @@ msgstr "Grouper"
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:188
 msgid "Load After"
-msgstr "Charger après"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:189
 msgid "Requirements"
@@ -871,11 +870,11 @@ msgstr "Prérequis"
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:190
 msgid "Incompatibilities"
-msgstr "Incompatibilités"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:191
 msgid "Messages"
-msgstr "Messages"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:193
 msgid "Dirty Plugin Info"
@@ -887,7 +886,7 @@ msgstr "Info du plugin propre"
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
 msgid "Locations"
-msgstr "Emplacements"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:247
 msgid "This tab contains user metadata."
@@ -904,7 +903,7 @@ msgstr "Supprimer la colonne"
 #: src/gui/qt/plugin_editor/table_tabs.cpp:394
 #: src/gui/qt/plugin_editor/table_tabs.cpp:431
 msgid "Note"
-msgstr "Note"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/table_tabs.cpp:395
 #: src/gui/qt/plugin_editor/table_tabs.cpp:432
@@ -913,7 +912,7 @@ msgstr "Attention"
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:82
 msgid "CRC"
-msgstr "CRC"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
 msgid "ITM Count"
@@ -921,15 +920,15 @@ msgstr "Nombre d'ITM"
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
 msgid "Deleted References"
-msgstr "Références supprimées"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
 msgid "Deleted Navmeshes"
-msgstr "Navmeshes supprimées"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
 msgid "Cleaning Utility"
-msgstr "Utilitaire de nettoyage"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
@@ -938,7 +937,7 @@ msgstr "Détail"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:73
 msgid "Filename"
-msgstr "Nom du fichier"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
 msgid "Display Name"
@@ -948,22 +947,22 @@ msgstr "Nom d'affichage"
 #: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
 #: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
 msgid "Condition"
-msgstr "Condition"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
 msgid "URL"
-msgstr "URL"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 #: src/gui/qt/settings/game_tab.cpp:149
 #: src/gui/qt/settings/new_game_dialog.cpp:123
 msgid "Name"
-msgstr "Nom"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:69
 #: src/gui/qt/settings/general_tab.cpp:161
 msgid "Language"
-msgstr "Langue"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:71
 msgid "Text"
@@ -971,11 +970,11 @@ msgstr "Texte"
 
 #: src/gui/qt/plugin_editor/models/message_table_model.cpp:94
 msgid "Type"
-msgstr "Type"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/message_table_model.cpp:96
 msgid "Content"
-msgstr "Contenu"
+msgstr ""
 
 #: src/gui/qt/plugin_editor/models/tag_table_model.cpp:63
 msgid "Add/Remove"
@@ -992,12 +991,12 @@ msgstr "Parcourir…"
 #: src/gui/qt/settings/game_tab.cpp:150
 #: src/gui/qt/settings/new_game_dialog.cpp:124
 msgid "Base Game"
-msgstr "Jeu de base"
+msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:125
 msgid "LOOT Folder"
-msgstr "Dossier LOOT"
+msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:152
 msgid "Main Master Plugin"
@@ -1013,7 +1012,7 @@ msgstr "Source de la Masterlist"
 
 #: src/gui/qt/settings/game_tab.cpp:155
 msgid "Install Path"
-msgstr "Chemin d'installation"
+msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:156
 msgid "Local AppData Path"
@@ -1025,7 +1024,7 @@ msgstr "Supprimer le jeu"
 
 #: src/gui/qt/settings/general_tab.cpp:160
 msgid "Default Game"
-msgstr "Jeu par défaut"
+msgstr ""
 
 #: src/gui/qt/settings/general_tab.cpp:162
 msgid "Theme"
@@ -1033,7 +1032,7 @@ msgstr "Thème"
 
 #: src/gui/qt/settings/general_tab.cpp:163
 msgid "Update masterlist before sorting"
-msgstr "Mettre à jour la masterlist avant de trier"
+msgstr ""
 
 #: src/gui/qt/settings/general_tab.cpp:164
 msgid "Check for LOOT updates on startup"
@@ -1070,7 +1069,7 @@ msgstr "Le nouveau langage sera appliqué au prochain redémarrage de LOOT."
 
 #: src/gui/qt/settings/general_tab.cpp:180
 msgid "Autodetect"
-msgstr "Détection automatique"
+msgstr ""
 
 #: src/gui/qt/settings/new_game_dialog.cpp:121
 msgid "Add new game"
@@ -1078,11 +1077,11 @@ msgstr "Ajouter un nouveau jeu"
 
 #: src/gui/qt/settings/new_game_dialog.cpp:127
 msgid "A name is required."
-msgstr "Un nom est requis."
+msgstr ""
 
 #: src/gui/qt/settings/new_game_dialog.cpp:128
 msgid "A folder is required."
-msgstr "Un dossier est requis."
+msgstr ""
 
 #: src/gui/qt/settings/new_game_dialog.cpp:148
 msgid "This is not a valid Windows folder name."
@@ -1094,7 +1093,7 @@ msgstr "Un jeu avec ce fichier existe déjà."
 
 #: src/gui/qt/settings/settings_dialog.cpp:110
 msgid "Settings"
-msgstr "Paramètres"
+msgstr ""
 
 #: src/gui/qt/settings/settings_dialog.cpp:112
 msgid "General"
@@ -1123,7 +1122,7 @@ msgstr "Analyse, fusion et vérification des métadonnées…"
 
 #: src/gui/query/types/sort_plugins_query.h:54
 msgid "Sorting load order…"
-msgstr "Tri de l'ordre de chargement…"
+msgstr ""
 
 #: src/gui/state/loot_settings.cpp:670
 msgid ""
@@ -1218,7 +1217,7 @@ msgstr "Ce plugin requiert \"{0}\" comme actif, mais il ne l'est pas."
 
 #: src/gui/state/game/game.cpp:512
 msgid "This plugin is incompatible with \"{0}\", but both are present."
-msgstr "Ce plugin est incompatible avec \"{0}\", mais les deux sont présents."
+msgstr ""
 
 #: src/gui/state/game/game.cpp:566
 msgid "small master"
