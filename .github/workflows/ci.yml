@@ -8,7 +8,7 @@ on:
   pull_request:
 
 env:
-  BOOST_VERSION: 1.85.0
+  BOOST_VERSION: 1.87.0
   OGDF_VERSION: elderberry-202309
   QT_VERSION: 6.8.1
 
@@ -108,7 +108,7 @@ jobs:
 
       - name: Download & build Boost
         run: |
-          wget https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
+          wget https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.1/install_boost.py
           python install_boost.py --directory ~ --boost-version $BOOST_VERSION -a 64 -t gcc-12 locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
@@ -285,7 +285,7 @@ jobs:
 
       - name: Download & build Boost
         run: |
-          curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
+          curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.1/install_boost.py
           python install_boost.py --directory ${{ github.workspace }} --boost-version ${{ env.BOOST_VERSION }} -a 64 locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
