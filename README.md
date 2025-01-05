@@ -112,7 +112,7 @@ sphinx-build -b html docs build/docs/html
 
 If running on Linux, replace `.venv\Scripts\activate` with `.venv/bin/activate`.
 
-Alternatively, you can use Docker to avoid changing your development environment, by running `docker run -it --rm -v ${PWD}/docs:/docs/docs:ro -v ${PWD}/resources:/docs/resources:ro -v ${PWD}/build:/docs/build sphinxdoc/sphinx:7.1.2 bash` to obtain a shell that you can use to run the two commands above.
+Alternatively, you can use Docker to avoid changing your development environment, by running `docker run -it --rm -v ${PWD}/docs:/docs/docs:ro -v ${PWD}/resources:/docs/resources:ro -v ${PWD}/build:/docs/build sphinxdoc/sphinx:8.1.3 bash` to obtain a shell that you can use to run the two commands above.
 
 ## Packaging Releases
 
