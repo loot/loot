@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2024-11-06 22:36+0000\n"
-"PO-Revision-Date: 2024-07-13 13:39+0000\n"
+"POT-Creation-Date: 2025-01-01 12:39+0000\n"
+"PO-Revision-Date: 2025-01-08 02:00+0000\n"
 "Last-Translator: Carlos Gabriel <carlos2324feitosa@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/loot/"
 "loot/pt_BR/>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.7-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Poedit-Basepath: .\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
@@ -1308,6 +1308,9 @@ msgid ""
 "\"{0}\". This can cause issues in-game, as this plugin will always load "
 "before \"{0}\"."
 msgstr ""
+"Este plug-in não é um mestre de blueprint e requer o mestre de blueprint "
+"“{0}”. Isso pode causar problemas no jogo, pois esse plug-in sempre será "
+"carregado antes de “{0}”."
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
@@ -1356,6 +1359,8 @@ msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
+"A classificação falhou porque há pelo menos um plug-in instalado que depende "
+"de pelo menos um plug-in que não está instalado."
 
 #: src/gui/state/game/game.cpp:1140
 msgid "You have not sorted your load order this session."
