@@ -69,6 +69,7 @@ Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl,resourc
 Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl,resources\l10n\pt_PT\LC_MESSAGES\installer.islu"
 Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl,resources\l10n\ru\LC_MESSAGES\installer.islu"
 Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl,resources\l10n\sv\LC_MESSAGES\installer.islu"
+Name: "ta"; MessagesFile: "compiler:Languages\Tamil.isl,resources\l10n\ta\LC_MESSAGES\installer.islu"
 Name: "tr_TR"; MessagesFile: "compiler:Languages\Turkish.isl,resources\l10n\tr_TR\LC_MESSAGES\installer.islu"
 Name: "uk_UA"; MessagesFile: "compiler:Languages\Ukrainian.isl,resources\l10n\uk_UA\LC_MESSAGES\installer.islu"
 #ifdef SimplifiedChineseExists
