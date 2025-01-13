@@ -200,11 +200,9 @@ modules:
         cd ..
         python scripts/po_to_mo.py
       - |
-        for dir in ../resources/l10n/*/
+        for path in ../resources/l10n/*/LC_MESSAGES/loot.mo
         do
-          dir="${dir%*/}"
-          dir="${dir##*/}"
-          install -D "../resources/l10n/$dir/LC_MESSAGES/loot.mo" "/app/share/locale/$dir/LC_MESSAGES/loot.mo"
+          install -D "$path" "/app/share/locale/${path#../resources/l10n/}"
         done
       - sphinx-build -b html ../docs /app/share/doc/loot
     no-make-install: true
