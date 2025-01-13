@@ -58,7 +58,7 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost REQUIRED COMPONENTS locale)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    find_package(ICU 71.1 REQUIRED COMPONENTS data uc i18n)
+    find_package(ICU REQUIRED COMPONENTS data uc i18n)
     find_package(TBB REQUIRED)
 endif()
 

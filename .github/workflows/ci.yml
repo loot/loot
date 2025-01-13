@@ -101,8 +101,8 @@ jobs:
             cbindgen \
             build-essential \
             libgl1-mesa-dev \
-            libtbb-dev \
-            libicu-dev
+            libicu-dev \
+            libtbb-dev
 
       - name: Download & build Boost
         run: |
