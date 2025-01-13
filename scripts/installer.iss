@@ -10,10 +10,6 @@
 
 #define MasterlistBranch "v0.21"
 
-#if FileExists(AddBackslash(SourcePath) + '..\build\inno\Swedish.isl')
-#define SwedishExists
-#endif
-
 #if FileExists(AddBackslash(SourcePath) + '..\build\inno\ChineseSimplified.isl')
 #define SimplifiedChineseExists
 #endif
@@ -72,9 +68,7 @@ Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl,resources\l10n\pl\LC_ME
 Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl,resources\l10n\pt_BR\LC_MESSAGES\installer.islu"
 Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl,resources\l10n\pt_PT\LC_MESSAGES\installer.islu"
 Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl,resources\l10n\ru\LC_MESSAGES\installer.islu"
-#ifdef SwedishExists
-Name: "sv"; MessagesFile: "build\inno\Swedish.isl,resources\l10n\sv\LC_MESSAGES\installer.islu"
-#endif
+Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl,resources\l10n\sv\LC_MESSAGES\installer.islu"
 Name: "tr_TR"; MessagesFile: "compiler:Languages\Turkish.isl,resources\l10n\tr_TR\LC_MESSAGES\installer.islu"
 Name: "uk_UA"; MessagesFile: "compiler:Languages\Ukrainian.isl,resources\l10n\uk_UA\LC_MESSAGES\installer.islu"
 #ifdef SimplifiedChineseExists

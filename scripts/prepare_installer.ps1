@@ -51,7 +51,6 @@ function DownloadMasterlist($repo, $lootGameFolder) {
 $languagesParentPath = Join-Path -Path 'build' -ChildPath 'inno'
 # Unofficial language files to download and install.
 $unofficialLanguageFiles = @(
-  'Swedish.isl',
   'ChineseSimplified.isl'
 )
 
