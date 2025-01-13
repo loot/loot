@@ -100,7 +100,6 @@ jobs:
           sudo apt-get install -y --no-upgrade \
             cbindgen \
             build-essential \
-            g++-12 \
             libgl1-mesa-dev \
             libtbb-dev \
             libicu-dev
@@ -108,7 +107,7 @@ jobs:
       - name: Download & build Boost
         run: |
           wget https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.1/install_boost.py
-          python install_boost.py --directory ~ --boost-version $BOOST_VERSION -a 64 -t gcc-12 locale
+          python install_boost.py --directory ~ --boost-version $BOOST_VERSION -a 64 -t gcc locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download Qt
@@ -126,7 +125,6 @@ jobs:
           mkdir libloot-$LIBLOOT_VERSION/build
           cd libloot-$LIBLOOT_VERSION/build
 
-          export CXX="g++-12" CC="gcc-12"
           cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DLIBLOOT_BUILD_TESTS=OFF -DLIBLOOT_INSTALL_DOCS=OFF -DCMAKE_INSTALL_PREFIX="$LIBLOOT_INSTALL_PATH"
 
           cmake --build . --target loot --config Release
@@ -137,7 +135,6 @@ jobs:
         run: |
           mkdir build
           cd build
-          export CXX="g++-12" CC="gcc-12"
           cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }}"
           make loot_gui_tests
 
