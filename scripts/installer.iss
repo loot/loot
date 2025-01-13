@@ -10,10 +10,6 @@
 
 #define MasterlistBranch "v0.21"
 
-#if FileExists(AddBackslash(SourcePath) + '..\build\inno\Korean.isl')
-#define KoreanExists
-#endif
-
 #if FileExists(AddBackslash(SourcePath) + '..\build\inno\Swedish.isl')
 #define SwedishExists
 #endif
@@ -67,9 +63,7 @@ Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl,resources\l10n\fi\LC_M
 Name: "fr"; MessagesFile: "compiler:Languages\French.isl,resources\l10n\fr\LC_MESSAGES\installer.islu"
 Name: "it"; MessagesFile: "compiler:Languages\Italian.isl,resources\l10n\it\LC_MESSAGES\installer.islu"
 Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl,resources\l10n\ja\LC_MESSAGES\installer.islu"
-#ifdef KoreanExists
-Name: "ko"; MessagesFile: "build\inno\Korean.isl,resources\l10n\ko\LC_MESSAGES\installer.islu"
-#endif
+Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl,resources\l10n\ko\LC_MESSAGES\installer.islu"
 Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl,resources\l10n\pl\LC_MESSAGES\installer.islu"
 Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl,resources\l10n\pt_BR\LC_MESSAGES\installer.islu"
 Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl,resources\l10n\pt_PT\LC_MESSAGES\installer.islu"
