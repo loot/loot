@@ -1,0 +1,214 @@
+# LOOT - Chinese (Simplified) Translation
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: LOOT 0.22.4\n"
+"Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
+"POT-Creation-Date: 2025-01-01 12:39+0000\n"
+"PO-Revision-Date: 2025-01-10 04:00+0000\n"
+"Last-Translator: YanJun Sun <yanjun.sun@mail.ru>\n"
+"Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
+"projects/loot/loot/zh_Hans/>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.10-dev\n"
+
+#: src/gui/qt/filters_widget.cpp:258
+msgid "Hide official plugins' cleaning messages"
+msgstr "隐藏官方插件的清理讯息"
+
+#: src/gui/qt/general_info_card.cpp:146
+msgid "Active Small Plugins"
+msgstr "激活小型插件"
+
+#: src/gui/qt/general_info_card.cpp:224
+msgid "Active Full Plugins"
+msgstr "激活大型插件"
+
+#: src/gui/qt/general_info_card.cpp:225
+msgid "Active Medium Plugins"
+msgstr "激活中等插件"
+
+#: src/gui/qt/main_window.cpp:74
+msgid ""
+"LOOT could not unambiguously set the load order. This may be due to the "
+"presence of one or more sTestFile properties in the game's ini files. Remove "
+"all such properties and then restart LOOT."
+msgstr ""
+"LOOT 无法确切设置加载顺序。这可能是由游戏 INI 文件内存在一个或多个 sTestFile "
+"属性引起的。请移除所有此类属性并重启 LOOT。"
+
+#: src/gui/qt/main_window.cpp:78
+msgid "LOOT could not unambiguously set the load order."
+msgstr "LOOT 无法确切设置加载顺序。"
+
+#. translators: This string is an action in the File menu.
+#: src/gui/qt/main_window.cpp:720
+msgid "&Update All Masterlists"
+msgstr "更新所有 Masterlist(&U)"
+
+#. translators: This string is an action in the Help menu.
+#: src/gui/qt/main_window.cpp:768
+msgid "&Open FAQs"
+msgstr "打开常见问题解答(&O)"
+
+#: src/gui/qt/main_window.cpp:1558
+msgid "Updating all masterlists…"
+msgstr "正在更新所有 Masterlist…"
+
+#: src/gui/qt/main_window.cpp:2028
+msgid ""
+"Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
+"Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
+"3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+msgstr ""
+"优化 Starfield，Morrowind，Oblivion，Nehrim，Skyrim，Enderal，Skyrim Special "
+"Edition，Enderal Special Edition，Skyrim VR，Fallout 3，Fallout：New Vegas，"
+"Fallout 4 和 Fallout 4 VR 的加载顺序。"
+
+#: src/gui/qt/main_window.cpp:2370
+msgid "Identifying overlapping plugins…"
+msgstr "正在识别重叠的插件…"
+
+#: src/gui/qt/main_window.cpp:2684
+msgid ""
+"Masterlists updated for the following games:\n"
+"\n"
+msgstr ""
+"以下游戏的 Masterlist 已更新：\n"
+"\n"
+
+#: src/gui/qt/plugin_card.cpp:186
+msgid "Small Plugin"
+msgstr "小型插件"
+
+#: src/gui/qt/plugin_card.cpp:314
+msgid "Medium Plugin"
+msgstr "中型插件"
+
+#. translators: This string is an action in the Groups Editor plugin list
+#. context menu. It is currently the only entry.
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:208
+msgid "&Copy Plugin Names"
+msgstr "复制插件名称(&C)"
+
+#: src/gui/qt/groups_editor/node.cpp:247
+msgid "Only user groups can be removed!"
+msgstr "仅用户组可移除！"
+
+#: src/gui/qt/groups_editor/node.cpp:252
+msgid "A group that is not empty cannot be removed!"
+msgstr "非空组不能移除！"
+
+#: src/gui/qt/settings/general_tab.cpp:170
+msgid "Warn if the game's paths are in a case-sensitive filesystem"
+msgstr "如游戏路径是处于区分大小写的文件系统内，则发出警告"
+
+#: src/gui/qt/settings/new_game_dialog.cpp:148
+msgid "This is not a valid Windows folder name."
+msgstr "此非有效的 Windows 名称。"
+
+#: src/gui/state/loot_state.cpp:370
+msgid ""
+"No supported games were detected. Try running the launcher(s) for the "
+"supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
+"GOG Galaxy), then restarting LOOT."
+msgstr ""
+"未检测到支持的游戏。请尝试运行已安装的受支持游戏的启动器（如点击 Steam 或 "
+"GOG Galaxy 内的 游玩 按钮），然后重启 LOOT。"
+
+#: src/gui/state/loot_state.cpp:389
+msgid ""
+"The initial game with folder name \"{0}\" could not be set. If it is "
+"installed, try running its launcher then restarting LOOT."
+msgstr "无法设置文件夹名称为 \"{0}\" 的初始游戏。如其已安装，请尝试运行其启动器，"
+"然后重启 LOOT。"
+
+#: src/gui/state/game/game.cpp:574
+msgid ""
+"This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
+"cause issues in-game, and sorting will fail while this plugin is installed."
+msgstr "此插件为 {0} 且需要非主（前置）插件 \"{1}\""
+"。插件安装后，可能会引起游戏内问题，排序失败。。"
+
+#: src/gui/state/game/game.cpp:614
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for a "
+"medium plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
+msgstr "此插件包含有超出中型插件表单 ID "
+"有效范围的记录。使用此种插件会对您的游戏存档产生不可逆的损坏。"
+
+#: src/gui/state/game/game.cpp:627
+msgid "plugin"
+msgstr "插件"
+
+#: src/gui/state/game/game.cpp:639
+msgid ""
+"\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
+"correctly installed {2} and all its requirements."
+msgstr "\"{0}\" 为轻型 {1}，但似乎缺失 {2} 。请确保您已正确安装 {2} 及其所需。"
+
+#: src/gui/state/game/game.cpp:652
+msgid ""
+"\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
+"will not load it."
+msgstr "\"{0}\" 为 .esl 插件，但游戏不支持此种插件，不会加载它。"
+
+#: src/gui/state/game/game.cpp:665
+msgid ""
+"\"{0}\" is flagged as a light {1}, but the game does not support such "
+"plugins, and will load it as a full {1}."
+msgstr "\"{0}\" 标记为轻型 {1}，但游戏不支持此种插件，会将其加载为常规的 {1}。"
+
+#: src/gui/state/game/game.cpp:685
+msgid ""
+"This plugin is an update plugin but adds new records. Using this plugin may "
+"cause irreversible damage to your game saves."
+msgstr "此插件为更新的插件且添加了新记录。使用此插件可能会不可逆的损坏您的游戏存档。"
+
+#: src/gui/state/game/game.cpp:759
+msgid "This plugin has itself as a master."
+msgstr "此插件自为主（前置）插件。"
+
+#: src/gui/state/game/game.cpp:1099
+msgid ""
+"Sorting failed because there is at least one installed plugin that depends "
+"on at least one plugin that is not installed."
+msgstr "排序失败，原因为至少有一个已安装的插件其所依赖的插件未安装。"
+
+#: src/gui/state/game/game.cpp:1192
+msgid "You have {0} active full plugins but the game only supports up to {1}."
+msgstr "你已激活 {0} 个常规插件，但游戏仅支持最多 {1} 个。"
+
+#: src/gui/state/game/game.cpp:1415
+msgid ""
+"An error occurred while parsing the metadata list(s): {0}.\n"
+"\n"
+"Try updating your masterlist to resolve the error. If the error is with your "
+"user metadata, this probably happened because an update to LOOT changed its "
+"metadata syntax support. Your user metadata will have to be updated "
+"manually.\n"
+"\n"
+"To do so, use 'Open LOOT Data Folder' in LOOT's File menu to open its data "
+"folder, then open your 'userlist.yaml' file in the relevant game folder. You "
+"can then edit the metadata it contains with reference to the documentation, "
+"which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website]({1})."
+msgstr ""
+"分析元数据列表时发生错误： {0}。\n"
+"\n"
+"请尝试更新您的 Masterlist 以解决问题。如是您的用户元数据错误，这或许是因 "
+"LOOT 的更新更改了对其元数据语法的支持引起的。您的用户元数据须手动更新。\n"
+"\n"
+"要执行手动更新，请使用 LOOT 的 文件（File）→ 打开 LOOT 数据文件夹（Open LOOT "
+"Data Folder） 菜单条目以打开其数据文件夹，然后打开相应游戏文件夹内的 "
+"\"userlist.yaml \" 文件。 您可参照帮助文档（通过 LOOT "
+"主菜单打开它）编辑文件包含的元数据。\n"
+"\n"
+"您也可在 LOOT 论坛线程寻求帮助，相应链接在 [LOOT 网站]({1})。"
