@@ -144,7 +144,8 @@ private:
       Language({"ru", "Русский"}),
       Language({"sv", "Svenska"}),
       Language({"tr_TR", "Türkçe"}),
-      Language({"uk_UA", "Українська"})
+      Language({"uk_UA", "Українська"}),
+      Language({"zh_CN", "简体中文"}),
   };
 
   mutable std::recursive_mutex mutex_;
