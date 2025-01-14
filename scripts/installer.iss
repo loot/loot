@@ -14,6 +14,10 @@
 #define SwedishExists
 #endif
 
+#if FileExists(AddBackslash(SourcePath) + '..\build\inno\ChineseSimplified.isl')
+#define SimplifiedChineseExists
+#endif
+
 #if FileExists(AddBackslash(SourcePath) + '..\build\Release\LOOT.exe')
 #define ArtifactsDir "build\Release"
 #define LiblootDll "loot.dll"
@@ -73,6 +77,9 @@ Name: "sv"; MessagesFile: "build\inno\Swedish.isl,resources\l10n\sv\LC_MESSAGES\
 #endif
 Name: "tr_TR"; MessagesFile: "compiler:Languages\Turkish.isl,resources\l10n\tr_TR\LC_MESSAGES\installer.islu"
 Name: "uk_UA"; MessagesFile: "compiler:Languages\Ukrainian.isl,resources\l10n\uk_UA\LC_MESSAGES\installer.islu"
+#ifdef SimplifiedChineseExists
+Name: "zh_CN"; MessagesFile: "build\inno\ChineseSimplified.isl,resources\l10n\zh_CN\LC_MESSAGES\installer.islu"
+#endif
 
 [Tasks]
 Name: "masterlists"; Description: "{cm:DownloadMasterlists}"
@@ -153,6 +160,8 @@ Source: "resources\l10n\tr_TR\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\tr_TR\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\uk_UA\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\uk_UA\LC_MESSAGES"; Flags: ignoreversion
+Source: "resources\l10n\zh_CN\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\zh_CN\LC_MESSAGES"; Flags: ignoreversion
 
 ; Masterlists
 Source: "build\masterlists\prelude\prelude.yaml"; \
