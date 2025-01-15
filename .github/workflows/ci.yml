@@ -73,7 +73,6 @@ jobs:
         run: |
           BOOST_ROOT=~/boost_${BOOST_VERSION//./_}
           echo "root=$BOOST_ROOT" >> $GITHUB_OUTPUT
-          echo "librarydir=${BOOST_ROOT}/stage/64/lib" >> $GITHUB_OUTPUT
 
       - name: Set libloot install path
         run: echo "LIBLOOT_INSTALL_PATH=${{ github.workspace }}/libloot-${{ env.LIBLOOT_VERSION }}-install" >> $GITHUB_ENV
@@ -107,7 +106,7 @@ jobs:
       - name: Download & build Boost
         run: |
           wget https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.1/install_boost.py
-          python install_boost.py --directory ~ --boost-version $BOOST_VERSION -a 64 -t gcc locale
+          python install_boost.py --directory ~ --boost-version $BOOST_VERSION -a 64 locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download Qt
@@ -125,7 +124,7 @@ jobs:
           mkdir libloot-$LIBLOOT_VERSION/build
           cd libloot-$LIBLOOT_VERSION/build
 
-          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DLIBLOOT_BUILD_TESTS=OFF -DLIBLOOT_INSTALL_DOCS=OFF -DCMAKE_INSTALL_PREFIX="$LIBLOOT_INSTALL_PATH"
+          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DLIBLOOT_BUILD_TESTS=OFF -DLIBLOOT_INSTALL_DOCS=OFF -DCMAKE_INSTALL_PREFIX="$LIBLOOT_INSTALL_PATH"
 
           cmake --build . --target loot --config Release
           cmake --install . --config Release
@@ -135,7 +134,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }}"
+          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }}"
           make loot_gui_tests
 
       - name: Run C++ tests
@@ -238,7 +237,6 @@ jobs:
         run: |
           $BOOST_ROOT="${{ github.workspace }}/boost_" + $env:BOOST_VERSION -replace "\.", "_"
           echo "root=$BOOST_ROOT" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          echo "librarydir=${BOOST_ROOT}/stage/64/lib" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Set OGDF install path
         shell: bash
@@ -297,7 +295,7 @@ jobs:
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 16 2019" -A x64 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
+          cmake .. -G "Visual Studio 16 2019" -A x64 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
           cmake --build . --config Release
 
       - name: Run C++ tests
