@@ -26,7 +26,6 @@ along with LOOT.  If not, see
 
 #include <gtest/gtest.h>
 
-#include <boost/crc.hpp>
 #include <filesystem>
 #include <fstream>
 
@@ -82,27 +81,6 @@ protected:
     stream.seekg(startingPosition, std::ios_base::beg);
 
     return streamSize;
-  }
-
-  static uint32_t GetCrc32(const std::filesystem::path& file) {
-    std::ifstream ifile(file, std::ios::binary);
-    ifile.exceptions(std::ios_base::badbit | std::ios_base::failbit);
-
-    std::array<char, 8192> buffer{};
-    boost::crc_32_type result;
-
-    size_t bytesLeft = GetStreamSize(ifile);
-    while (bytesLeft > 0) {
-      if (bytesLeft > buffer.size())
-        ifile.read(buffer.data(), buffer.size());
-      else
-        ifile.read(buffer.data(), bytesLeft);
-
-      result.process_bytes(buffer.data(), ifile.gcount());
-      bytesLeft -= ifile.gcount();
-    }
-
-    return result.checksum();
   }
 };
 

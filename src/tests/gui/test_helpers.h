@@ -24,19 +24,26 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_TEST_HELPERS
 #define LOOT_TESTS_GUI_TEST_HELPERS
 
-#include <boost/lexical_cast.hpp>
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
 #include <filesystem>
 #include <fstream>
+#include <random>
 #include <string>
 
 namespace loot {
 namespace test {
 std::filesystem::path getTempPath() {
-  auto directoryName =
-      u8"LOOT-t\u00E9st-" +
-      boost::lexical_cast<std::string>((boost::uuids::random_generator())());
+  std::random_device randomDevice;
+  std::default_random_engine prng(randomDevice());
+  std::uniform_int_distribution dist(0x61,
+                                     0x7A);  // values of a-z in ASCII/UTF-8.
+
+  // The non-ASCII character is there to ensure test coverage of non-ASCII path
+  // handling.
+  std::string directoryName = u8"LOOT-t\u00E9st-";
+
+  for (int i = 0; i < 16; i += 1) {
+    directoryName.push_back(static_cast<char>(dist(prng)));
+  }
 
   return std::filesystem::absolute(std::filesystem::temp_directory_path() /
                                    std::filesystem::u8path(directoryName));
