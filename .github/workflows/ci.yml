@@ -121,21 +121,26 @@ jobs:
           wget https://github.com/loot/libloot/archive/$LIBLOOT_VERSION.tar.gz
           tar -xf $LIBLOOT_VERSION.tar.gz
 
-          mkdir libloot-$LIBLOOT_VERSION/build
-          cd libloot-$LIBLOOT_VERSION/build
+          LIBLOOT_BUILD_DIR="libloot-$LIBLOOT_VERSION/build"
 
-          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DLIBLOOT_BUILD_TESTS=OFF -DLIBLOOT_INSTALL_DOCS=OFF -DCMAKE_INSTALL_PREFIX="$LIBLOOT_INSTALL_PATH"
-
-          cmake --build . --target loot --config Release
-          cmake --install . --config Release
+          cmake \
+            -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} \
+            -DLIBLOOT_BUILD_TESTS=OFF \
+            -DLIBLOOT_INSTALL_DOCS=OFF \
+            -DCMAKE_INSTALL_PREFIX="$LIBLOOT_INSTALL_PATH" \
+            -B "$LIBLOOT_BUILD_DIR"
+          cmake --build "$LIBLOOT_BUILD_DIR" --target loot --config Release
+          cmake --install "$LIBLOOT_BUILD_DIR" --config Release
         if: steps.libloot-cache.outputs.cache-hit != 'true'
 
       - name: Run CMake
         run: |
-          mkdir build
-          cd build
-          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }}"
-          make loot_gui_tests
+          cmake \
+            -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} \
+            -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" \
+            -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }}" \
+            -B build
+          cmake --build build --target loot_gui_tests
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure --parallel
@@ -275,11 +280,14 @@ jobs:
           curl -sSfLO https://github.com/ogdf/ogdf/archive/refs/tags/${env:OGDF_VERSION}.zip
           Expand-Archive -Path "${env:OGDF_VERSION}.zip" -DestinationPath .
 
-          mkdir ogdf-${env:OGDF_VERSION}/build
-          cd ogdf-${env:OGDF_VERSION}/build
-          cmake .. -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="${env:OGDF_INSTALL_PATH}"
-          cmake --build . --config Release
-          cmake --install . --config Release
+          $OGDF_BUILD_DIR="ogdf-${env:OGDF_VERSION}/build"
+
+          cmake -G "Visual Studio 16 2019" `
+            -A x64 `
+            -DCMAKE_INSTALL_PREFIX="${env:OGDF_INSTALL_PATH}" `
+            -B $OGDF_BUILD_DIR
+          cmake --build $OGDF_BUILD_DIR --config Release
+          cmake --install $OGDF_BUILD_DIR --config Release
         if: steps.ogdf-cache.outputs.cache-hit != 'true'
 
       - name: Download Qt
@@ -292,9 +300,13 @@ jobs:
 
       - name: Run CMake
         run: |
-          cd build
-          cmake .. -G "Visual Studio 16 2019" -A x64 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
-          cmake --build . --config Release
+          cmake -G "Visual Studio 16 2019" `
+            -A x64 `
+            -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" `
+            -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" `
+            -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}" `
+            -B build
+          cmake --build build --config Release
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure --parallel --build-config Release

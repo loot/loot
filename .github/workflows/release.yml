@@ -103,11 +103,14 @@ jobs:
           curl -sSfLO https://github.com/ogdf/ogdf/archive/refs/tags/${env:OGDF_VERSION}.zip
           Expand-Archive -Path "${env:OGDF_VERSION}.zip" -DestinationPath .
 
-          mkdir ogdf-${env:OGDF_VERSION}/build
-          cd ogdf-${env:OGDF_VERSION}/build
-          cmake .. -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="${env:OGDF_INSTALL_PATH}"
-          cmake --build . --config Release
-          cmake --install . --config Release
+          $OGDF_BUILD_DIR="ogdf-${env:OGDF_VERSION}/build"
+
+          cmake -G "Visual Studio 16 2019" `
+            -A x64 `
+            -DCMAKE_INSTALL_PREFIX="${env:OGDF_INSTALL_PATH}" `
+            -B $OGDF_BUILD_DIR
+          cmake --build $OGDF_BUILD_DIR --config Release
+          cmake --install $OGDF_BUILD_DIR --config Release
         if: steps.ogdf-cache.outputs.cache-hit != 'true'
 
       - name: Download Qt
@@ -120,9 +123,13 @@ jobs:
 
       - name: Run CMake
         run: |
-          cd build
-          cmake .. -G "Visual Studio 16 2019" -A x64 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
-          cmake --build . --config Release
+          cmake -G "Visual Studio 16 2019" `
+            -A x64 `
+            -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" `
+            -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" `
+            -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}" `
+            -B build
+          cmake --build build --config Release
 
       - name: Install packages for building docs
         run: |
