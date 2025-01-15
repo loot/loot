@@ -124,7 +124,7 @@ jobs:
           LIBLOOT_BUILD_DIR="libloot-$LIBLOOT_VERSION/build"
 
           cmake \
-            -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} \
+            -DCMAKE_PREFIX_PATH=${{ steps.boost-metadata.outputs.root }}/stage \
             -DLIBLOOT_BUILD_TESTS=OFF \
             -DLIBLOOT_INSTALL_DOCS=OFF \
             -DCMAKE_INSTALL_PREFIX="$LIBLOOT_INSTALL_PATH" \
@@ -136,9 +136,8 @@ jobs:
       - name: Run CMake
         run: |
           cmake \
-            -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} \
             -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" \
-            -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }}" \
+            -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }};${{ steps.boost-metadata.outputs.root }}/stage" \
             -B build
           cmake --build build --target loot_gui_tests
 
@@ -302,7 +301,7 @@ jobs:
         run: |
           cmake -G "Visual Studio 16 2019" `
             -A x64 `
-            -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" `
+            -DCMAKE_PREFIX_PATH="${{ steps.boost-metadata.outputs.root }}\stage" `
             -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" `
             -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}" `
             -B build

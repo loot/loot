@@ -125,7 +125,7 @@ jobs:
         run: |
           cmake -G "Visual Studio 16 2019" `
             -A x64 `
-            -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" `
+            -DCMAKE_PREFIX_PATH="${{ steps.boost-metadata.outputs.root }}\stage" `
             -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" `
             -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}" `
             -B build
