@@ -137,10 +137,8 @@ jobs:
           cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }}"
           make loot_gui_tests
 
-      - name: Run C++ tests
-        run: |
-          cd build
-          ./loot_gui_tests
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure --parallel
 
   flatpak:
     runs-on: ubuntu-24.04
@@ -298,10 +296,8 @@ jobs:
           cmake .. -G "Visual Studio 16 2019" -A x64 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
           cmake --build . --config Release
 
-      - name: Run C++ tests
-        run: |
-          cd build/Release
-          .\loot_gui_tests.exe
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure --parallel --build-config Release
 
       - name: Install packages for building docs
         run: |
