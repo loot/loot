@@ -77,18 +77,25 @@ TEST(LootPaths, getPreludePathShouldUseLootDataPath) {
             paths.getPreludePath());
 }
 
+#ifdef _WIN32
 TEST(LootPaths,
      constructorShouldSetAppPathToExecutableDirectoryIfGivenPathIsEmpty) {
   LootPaths paths("", "");
 
-#ifdef _WIN32
+  // The current path is the build directory, not the config-specific
+  // subdirectory.
   EXPECT_EQ(std::filesystem::current_path(),
-            paths.getReadmePath().parent_path());
+            paths.getReadmePath().parent_path().parent_path());
+}
 #else
+TEST(LootPaths,
+     constructorShouldSetAppPathToExecutableParentDirectoryIfGivenPathIsEmpty) {
+  LootPaths paths("", "");
+
   EXPECT_EQ(std::filesystem::current_path().parent_path(),
             paths.getL10nPath().parent_path().parent_path());
-#endif
 }
+#endif
 
 TEST(
     LootPaths,

@@ -30,6 +30,7 @@
 #include <loot/exception/file_access_error.h>
 
 #include "gui/qt/helpers.h"
+#include "tests/gui/test_helpers.h"
 
 namespace loot {
 namespace test {
@@ -43,7 +44,7 @@ protected:
   void SetUp() override {
     std::filesystem::create_directories(rootPath_);
 
-    std::filesystem::copy_file("./Skyrim/Data/Blank.esm", filePath_);
+    std::filesystem::copy_file(getSourcePluginsPath(GameType::tes5) / "Blank.esm", filePath_);
 
     std::ofstream out(fileMetadataPath_);
     out << "blob_sha1 = \"686d51d2991e7359e636720c5cb04446257a42af\""
@@ -77,7 +78,7 @@ TEST(calculateGitBlobHash, shouldCalculateTheSameHashAsGitDoesForABlob) {
 }
 
 TEST_F(CalculateGitBlobHashTest, shouldCalculateTheSameHashForAFileAsGitDoes) {
-  auto file = std::filesystem::u8path("./Skyrim/Data/Blank.esm");
+  auto file = getSourcePluginsPath(GameType::tes5) / "Blank.esm";
   auto hash = calculateGitBlobHash(file);
 
   EXPECT_EQ("686d51d2991e7359e636720c5cb04446257a42af", hash);

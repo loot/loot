@@ -283,14 +283,7 @@ protected:
 
 private:
   std::filesystem::path getSourcePluginsPath() const {
-    switch (getGameType()) {
-      case GameType::tes3:
-        return "./Morrowind/Data Files";
-      case GameType::tes4:
-        return "./Oblivion/Data";
-      default:
-        return "./Skyrim/Data";
-    }
+    return loot::test::getSourcePluginsPath(getGameType());
   }
 
   std::string getMasterFile() const {

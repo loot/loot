@@ -29,8 +29,21 @@ along with LOOT.  If not, see
 #include <random>
 #include <string>
 
+#include "loot/enum/game_type.h"
+
 namespace loot {
 namespace test {
+std::filesystem::path getSourcePluginsPath(GameType gameType) {
+  switch (gameType) {
+    case GameType::tes3:
+      return "./testing-plugins/Morrowind/Data Files";
+    case GameType::tes4:
+      return "./testing-plugins/Oblivion/Data";
+    default:
+      return "./testing-plugins/Skyrim/Data";
+  }
+}
+
 std::filesystem::path getTempPath() {
   std::random_device randomDevice;
   std::default_random_engine prng(randomDevice());

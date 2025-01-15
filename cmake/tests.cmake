@@ -227,7 +227,7 @@ endif()
 add_custom_command(TARGET loot_gui_tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${testing-plugins_SOURCE_DIR}
-        $<TARGET_FILE_DIR:loot_gui_tests>)
+        ${CMAKE_CURRENT_BINARY_DIR}/testing-plugins)
 
 ##############################
 # CTest
