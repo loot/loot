@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-01-01 12:39+0000\n"
-"PO-Revision-Date: 2025-01-17 14:00+0000\n"
-"Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
+"PO-Revision-Date: 2025-01-19 13:00+0000\n"
+"Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
@@ -271,48 +271,48 @@ msgstr "தெளிவற்ற சுமை ஒழுங்கு கண்ட
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:705
 msgid "&Sort Plugins"
-msgstr "& செருகுநிரல்களை வரிசைப்படுத்துங்கள்"
+msgstr "&செருகுநிரல்களை வரிசைப்படுத்துங்கள்"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:707
 msgid "Update &Masterlist"
-msgstr "புதுப்பிப்பு & மாச்ட்லிச்ட்"
+msgstr "புதுப்பிப்பு &மாச்ட்லிச்ட்"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:709
 msgid "&Apply Sorted Load Order"
-msgstr "& வரிசைப்படுத்தப்பட்ட சுமை வரிசையைப் பயன்படுத்துங்கள்"
+msgstr "வரிசைப்படுத்தப்பட்ட சுமை வரிசையை&ப் பயன்படுத்துங்கள்"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:711
 msgid "&Discard Sorted Load Order"
-msgstr "& வரிசைப்படுத்தப்பட்ட சுமை வரிசையை நிராகரிக்கவும்"
+msgstr "வரிசைப்படுத்தப்பட்ட சுமை வரிசை&யை நிராகரிக்கவும்"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:716
 msgid "&File"
-msgstr "கோப்பு (&f)"
+msgstr "&கோப்பு"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:718
 msgid "&Settings…"
-msgstr "& அமைப்புகள்…"
+msgstr "&அமைப்புகள்…"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:720
 msgid "&Update All Masterlists"
-msgstr "அனைத்து மாச்டர்லிச்ட்டையும் புதுப்பிக்கவும்"
+msgstr "அ&னைத்து மாச்டர்லிச்ட்டையும் புதுப்பிக்கவும்"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:722
 msgid "&Backup LOOT Data"
-msgstr "& காப்புப்பிரதி கொள்ளை தரவு"
+msgstr "&காப்புப்பிரதி கொள்ளை தரவு"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:724
 msgid "&Open LOOT Data Folder"
-msgstr "கொள்ளை தரவு கோப்புறையைத் திறக்கவும்"
+msgstr "கொ&ள்ளை தரவு கோப்புறையைத் திறக்கவும்"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:726
@@ -323,73 +323,73 @@ msgstr "&வெளியேறு"
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:730
 msgid "&Game"
-msgstr "& விளையாட்டு"
+msgstr "&விளையாட்டு"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:732
 msgid "&Edit Groups…"
-msgstr "& குழுக்களைத் திருத்து…"
+msgstr "&குழுக்களைத் திருத்து…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:734
 msgid "Searc&h Cards…"
-msgstr "சியர்க் & எச் கார்டுகள்…"
+msgstr "சியர்க் &எச் கார்டுகள்…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:736
 msgid "Copy &Load Order"
-msgstr "நகலெடுத்து ஆர்டர்"
+msgstr "நகலெடுத்து ஆர்ட&ர்"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:738
 msgid "&Copy Content"
-msgstr "& உள்ளடக்கத்தை நகலெடுக்கவும்"
+msgstr "&உள்ளடக்கத்தை நகலெடுக்கவும்"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:740
 msgid "&Refresh Content"
-msgstr "& உள்ளடக்கத்தைப் புதுப்பிக்கவும்"
+msgstr "உ&ள்ளடக்கத்தைப் புதுப்பிக்கவும்"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:742
 msgid "Redate &Plugins…"
-msgstr "ரிட்டேட் & செருகுநிரல்கள்…"
+msgstr "ரிட்டேட் செருகு&நிரல்கள்…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:744
 msgid "&Fix Ambiguous Load Order"
-msgstr "& தெளிவற்ற சுமை வரிசையை சரிசெய்யவும்"
+msgstr "&தெளிவற்ற சுமை வரிசையை சரிசெய்யவும்"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:746
 msgid "Clear All &User Metadata…"
-msgstr "அனைத்து பயனர் மெட்டாடேட்டாவையும் அழிக்கவும்…"
+msgstr "&அனைத்து பயனர் மெட்டாடேட்டாவையும் அழிக்கவும்…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:750
 msgid "&Plugin"
-msgstr "& சொருகி"
+msgstr "&சொருகி"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:752
 msgid "Copy &Plugin Name"
-msgstr "நகல் & சொருகி பெயர்"
+msgstr "&நகல் சொருகி பெயர்"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:754
 msgid "Copy &Card Content"
-msgstr "நகலெடு & அட்டை உள்ளடக்கம்"
+msgstr "ந&கலெடு & அட்டை உள்ளடக்கம்"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:756
 msgid "Copy &Metadata"
-msgstr "நகல் & மேனிலை தரவு"
+msgstr "நகல் மேனிலை &தரவு"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:758
 msgid "&Edit Metadata…"
-msgstr "& மெட்டாடேட்டாவைத் திருத்து…"
+msgstr "&மெட்டாடேட்டாவைத் திருத்து…"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:760
@@ -400,22 +400,22 @@ msgstr "தெளிவான & பயனர் மெட்டாடேட்�
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:764
 msgid "&Help"
-msgstr "உதவி (&h)"
+msgstr "உ&தவி"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:766
 msgid "&View Documentation"
-msgstr "& ஆவணங்களைக் காண்க"
+msgstr "&ஆவணங்களைக் காண்க"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:768
 msgid "&Open FAQs"
-msgstr "& திறந்த கேள்விகள்"
+msgstr "&திறந்த கேள்விகள்"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:770
 msgid "&Join Discord Server"
-msgstr "& டிச்கார்ட் சேவையகத்தில் சேரவும்"
+msgstr "&டிச்கார்ட் சேவையகத்தில் சேரவும்"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:772
@@ -426,13 +426,13 @@ msgstr "&பற்றி"
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:777
 msgid "P&lugins"
-msgstr "பி & லுகின்ச்"
+msgstr "பி&லுகின்ச்"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:780
 msgid "F&ilters"
-msgstr "எஃப் & ஐல்டர்ச்"
+msgstr "எஃப்&ஐல்டர்ச்"
 
 #: src/gui/qt/main_window.cpp:1082 src/gui/qt/main_window.cpp:1535
 #: src/gui/qt/main_window.cpp:2160
@@ -827,7 +827,7 @@ msgstr "குழுக்கள் ஆசிரியர்"
 #. context menu. It is currently the only entry.
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:208
 msgid "&Copy Plugin Names"
-msgstr "& சொருகி பெயர்களை நகலெடுக்கவும்"
+msgstr "&சொருகி பெயர்களை நகலெடுக்கவும்"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:210
 msgid "Add plugin to group"
