@@ -12,7 +12,7 @@ In addition, the following are credited with application-related support:
 * Translations:
 
   * Bulgarian: Georgi Georgiev
-  * Chinese (Simplified): bluesky404, silentdark
+  * Chinese (Simplified): bluesky404, silentdark, YanJunSunYJS
   * Czech: ThePotatoChronicler
   * Danish: Freso, ZyPA
   * Finnish: 3ventic
@@ -27,6 +27,7 @@ In addition, the following are credited with application-related support:
   * Russian: Tokc.D.K., Kerber, IllusiveMan196, xsSplater, Aimdru
   * Spanish: Sharlikran, Artaios, Mr. Robo, Allen1351 (Ale), gallegonovato
   * Swedish: Mikael Hiort af Ornäs, simoneddeland, ddbb07
+  * Tamil: TamilNeram
   * Turkish: Ilker Binzet
   * Ukrainian: IllusiveMan196
 
