@@ -143,6 +143,7 @@ private:
       Language({"pt_PT", "Português de Portugal"}),
       Language({"ru", "Русский"}),
       Language({"sv", "Svenska"}),
+      Language({"ta", "தமிழ்"}),
       Language({"tr_TR", "Türkçe"}),
       Language({"uk_UA", "Українська"}),
       Language({"zh_CN", "简体中文"}),
