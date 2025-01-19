@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-01-01 12:39+0000\n"
-"PO-Revision-Date: 2024-09-02 10:09+0000\n"
+"PO-Revision-Date: 2025-01-19 13:00+0000\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/loot/loot/de/>\n"
 "Language: de\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -739,7 +739,7 @@ msgstr "Master Plugin"
 
 #: src/gui/qt/plugin_card.cpp:312
 msgid "Blueprint Master Plugin"
-msgstr ""
+msgstr "Blaupause Master Plugin"
 
 #: src/gui/qt/plugin_card.cpp:314
 msgid "Medium Plugin"
@@ -1328,6 +1328,9 @@ msgid ""
 "\"{0}\". This can cause issues in-game, as this plugin will always load "
 "before \"{0}\"."
 msgstr ""
+"Dieses Plugin ist kein Blaupause Master und benötigt den Blaupause Master "
+"\"{0}\". Dies kann zu Problemen im Spiel führen, da dieses Plugin immer vor "
+"\"{0}\" geladen wird."
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
