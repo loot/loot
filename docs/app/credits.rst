@@ -15,7 +15,7 @@ In addition, the following are credited with application-related support:
   * Chinese (Simplified): bluesky404, silentdark, YanJunSunYJS
   * Czech: ThePotatoChronicler
   * Danish: Freso, ZyPA
-  * Finnish: 3ventic
+  * Finnish: 3ventic, Ricky-Tigg
   * French: Kaos, cpasmoi, Sita, Zamix, Simple Shawn
   * German: lpradel, DaCoolX, Infernio, pStyl3
   * Italian: Griam, nicola89b, albie
