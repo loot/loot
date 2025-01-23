@@ -5,15 +5,15 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-01-01 12:39+0000\n"
-"PO-Revision-Date: 2024-05-22 20:00+0100\n"
-"Last-Translator: \n"
-"Language-Team: loot-fi@3v.fi\n"
+"PO-Revision-Date: 2025-01-21 14:00+0000\n"
+"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
+"Language-Team: Finnish <https://hosted.weblate.org/projects/loot/loot/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10-dev\n"
 "X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
 "X-Poedit-Basepath: ../../src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -756,7 +756,7 @@ msgstr "Muokkaus on auki"
 
 #: src/gui/qt/plugin_item_model.cpp:177
 msgid "Position"
-msgstr "Sijainti"
+msgstr "Asema"
 
 #: src/gui/qt/plugin_item_model.cpp:179
 msgid "Index"
@@ -932,7 +932,7 @@ msgstr "Tiedostonimi"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
 msgid "Display Name"
-msgstr "Nimi"
+msgstr "Näyttönimi"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 #: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
