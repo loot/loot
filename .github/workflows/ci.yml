@@ -128,7 +128,8 @@ jobs:
             -DLIBLOOT_BUILD_TESTS=OFF \
             -DLIBLOOT_INSTALL_DOCS=OFF \
             -DCMAKE_INSTALL_PREFIX="$LIBLOOT_INSTALL_PATH" \
-            -B "$LIBLOOT_BUILD_DIR"
+            -B "$LIBLOOT_BUILD_DIR" \
+            -S "libloot-$LIBLOOT_VERSION"
           cmake --build "$LIBLOOT_BUILD_DIR" --target loot --config Release
           cmake --install "$LIBLOOT_BUILD_DIR" --config Release
         if: steps.libloot-cache.outputs.cache-hit != 'true'
@@ -284,7 +285,8 @@ jobs:
           cmake -G "Visual Studio 16 2019" `
             -A x64 `
             -DCMAKE_INSTALL_PREFIX="${env:OGDF_INSTALL_PATH}" `
-            -B $OGDF_BUILD_DIR
+            -B $OGDF_BUILD_DIR `
+            -S "ogdf-${env:OGDF_VERSION}"
           cmake --build $OGDF_BUILD_DIR --config Release
           cmake --install $OGDF_BUILD_DIR --config Release
         if: steps.ogdf-cache.outputs.cache-hit != 'true'
