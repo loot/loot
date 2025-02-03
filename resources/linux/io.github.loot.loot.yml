@@ -168,8 +168,8 @@ modules:
       # Use the Git repository so that libloot's commit hash gets embedded in the build.
       - type: git
         url: https://github.com/loot/libloot.git
-        tag: 0.25.0
-        commit: 06937ffc839dd13791d2322450744c2f86af1d24
+        tag: 0.25.1
+        commit: f865167997f9b6ad34792645aca4ed3c73dfb505
       - type: file
         url: https://github.com/Ortham/esplugin/archive/refs/tags/6.1.1.tar.gz
         sha256: 8896859a6469e810c6e5430ed910fa8f8c31d39e032703b87ab090759663a240
