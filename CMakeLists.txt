@@ -219,8 +219,8 @@ FetchContent_Declare(
     FIND_PACKAGE_ARGS)
 
 if(NOT DEFINED VALVE_FILE_VDF_URL)
-    set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/refs/tags/v1.0.1.tar.gz")
-    set(VALVE_FILE_VDF_HASH "SHA256=57445663379470412126661b462191201539ddb43186a796cc9ac68e6dffa9a6")
+    set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/refs/tags/v1.1.0.tar.gz")
+    set(VALVE_FILE_VDF_HASH "SHA256=9149a6b01ca857f49f5660d608639acd579542bf862ad23e9cbf4c1e80ade55e")
 endif()
 
 FetchContent_Declare(
