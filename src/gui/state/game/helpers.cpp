@@ -25,8 +25,8 @@
 
 #include "gui/state/game/helpers.h"
 
-#include <loot/api.h>
 #include <fmt/base.h>
+#include <loot/api.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
@@ -166,24 +166,24 @@ std::string DescribeCycle(const std::vector<Vertex>& cycle) {
 }
 
 std::vector<SourcedMessage> CheckForRemovedPlugins(
-    const std::vector<std::filesystem::path>& pluginPathsBefore,
+    const std::vector<std::string>& pluginNamesBefore,
     const std::vector<std::string>& pluginNamesAfter) {
+  static constexpr size_t GHOST_EXTENSION_LENGTH =
+      std::char_traits<char>::length(GHOST_EXTENSION);
+
   // Plugin name case won't change, so can compare strings
   // without normalising case.
   std::set<std::string> pluginsSet(pluginNamesAfter.cbegin(),
                                    pluginNamesAfter.cend());
 
   std::vector<SourcedMessage> messages;
-  for (const auto& pluginPath : pluginPathsBefore) {
-    auto unghostedPluginPath = pluginPath;
-    if (boost::iequals(unghostedPluginPath.extension().u8string(),
-                       GHOST_EXTENSION)) {
-      unghostedPluginPath.replace_extension();
+  for (auto pluginName : pluginNamesBefore) {
+    if (boost::iends_with(pluginName, GHOST_EXTENSION)) {
+      pluginName =
+          pluginName.substr(0, pluginName.size() - GHOST_EXTENSION_LENGTH);
     }
 
-    const auto unghostedPluginName = unghostedPluginPath.filename().u8string();
-
-    if (pluginsSet.count(unghostedPluginName) == 0) {
+    if (pluginsSet.count(pluginName) == 0) {
       messages.push_back(CreatePlainTextSourcedMessage(
           MessageType::warn,
           MessageSource::removedPluginsCheck,
@@ -191,7 +191,7 @@ std::vector<SourcedMessage> CheckForRemovedPlugins(
               boost::locale::translate("LOOT has detected that \"{0}\" is "
                                        "invalid and is now ignoring it.")
                   .str(),
-              pluginPath.u8string())));
+              pluginName)));
     }
   }
 

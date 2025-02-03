@@ -371,7 +371,6 @@ void Game::Init() {
 
   gameHandle_ = CreateGameHandle(
       settings_.Type(), settings_.GamePath(), settings_.GameLocalPath());
-  gameHandle_->IdentifyMainMasterFile(settings_.Master());
 
   InitLootGameFolder(lootDataPath_, settings_);
 }
@@ -940,16 +939,22 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
   }
 
   const auto installedPluginPaths = GetInstalledPluginPaths();
+  gameHandle_->ClearLoadedPlugins();
   gameHandle_->LoadPlugins(installedPluginPaths, headersOnly);
 
   // Check if any plugins have been removed.
+  std::vector<std::string> installedPluginNames;
+  for (const auto& pluginPath : installedPluginPaths) {
+    installedPluginNames.push_back(pluginPath.filename().u8string());
+  }
+
   std::vector<std::string> loadedPluginNames;
   for (auto plugin : gameHandle_->GetLoadedPlugins()) {
     loadedPluginNames.push_back(plugin->GetName());
   }
 
   AppendMessages(
-      CheckForRemovedPlugins(installedPluginPaths, loadedPluginNames));
+      CheckForRemovedPlugins(installedPluginNames, loadedPluginNames));
 
   pluginsFullyLoaded_ = !headersOnly;
 
@@ -1048,14 +1053,19 @@ std::vector<std::string> Game::SortPlugins() {
     // state that has been changed by sorting.
     ClearMessages();
 
+    const auto loadOrder = gameHandle_->GetLoadOrder();
+
     std::vector<std::filesystem::path> pluginPaths;
-    for (const auto& pluginName : gameHandle_->GetLoadOrder()) {
-      pluginPaths.push_back(ResolveGameFilePath(pluginName));
+    for (const auto& pluginName : loadOrder) {
+      if (pluginName != settings_.Master()) {
+        pluginPaths.push_back(ResolveGameFilePath(pluginName));
+      }
     }
 
-    sortedPlugins = gameHandle_->SortPlugins(pluginPaths);
+    gameHandle_->LoadPlugins(pluginPaths, false);
+    sortedPlugins = gameHandle_->SortPlugins(loadOrder);
 
-    AppendMessages(CheckForRemovedPlugins(pluginPaths, sortedPlugins));
+    AppendMessages(CheckForRemovedPlugins(loadOrder, sortedPlugins));
 
     IncrementLoadOrderSortCount();
   } catch (CyclicInteractionError& e) {

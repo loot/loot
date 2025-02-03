@@ -88,12 +88,12 @@ TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeExclamationMark) {
 
 TEST(CheckForRemovedPlugins, shouldCompareFilenamesBeforeAndAfter) {
   const auto messages =
-      CheckForRemovedPlugins({"dir/test1.esp", "dir/test2.esp", "test3.esp"},
+      CheckForRemovedPlugins({"test1.esp", "test2.esp", "test3.esp"},
                              {"test1.esp", "test3.esp"});
 
   ASSERT_EQ(1, messages.size());
   EXPECT_EQ(
-      "LOOT has detected that \\\"dir\\/test2\\.esp\\\" is invalid "
+      "LOOT has detected that \\\"test2\\.esp\\\" is invalid "
       "and is now "
       "ignoring it\\.",
       messages[0].text);
