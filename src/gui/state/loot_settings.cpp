@@ -168,6 +168,7 @@ std::optional<std::string> getOldDefaultRepoUrl(GameId gameId) {
     case GameId::fo4vr:
       return "https://github.com/loot/fallout4vr.git";
     case GameId::starfield:
+    case GameId::openmw:
       return std::nullopt;
     default:
       throw std::runtime_error("Unrecognised game ID: " + ToString(gameId));
@@ -528,6 +529,8 @@ GameId mapGameId(const std::string& gameId) {
     return GameId::fo4vr;
   } else if (gameId == ToString(GameId::starfield)) {
     return GameId::starfield;
+  } else if (gameId == ToString(GameId::openmw)) {
+    return GameId::openmw;
   } else {
     throw std::runtime_error(
         "invalid value for 'gameId' key in game settings table");

@@ -69,12 +69,6 @@ std::optional<std::filesystem::path> ResolveGameFilePath(
     const std::filesystem::path& dataPath,
     const std::string& filename);
 
-std::vector<std::filesystem::path> GetExternalDataPaths(
-    const GameId gameId,
-    const bool isMicrosoftStoreInstall,
-    const std::filesystem::path& dataPath,
-    const std::filesystem::path& gameLocalPath);
-
 bool IsOfficialPlugin(const GameId gameId, const std::string& pluginName);
 }
 

@@ -60,8 +60,6 @@ public:
   std::filesystem::path GameLocalPath() const;
   std::filesystem::path DataPath() const;
 
-  std::string PluginsFolderName() const;
-
   GameSettings& SetName(const std::string& name);
   GameSettings& SetMaster(const std::string& masterFile);
   GameSettings& SetMinimumHeaderVersion(float minimumHeaderVersion);

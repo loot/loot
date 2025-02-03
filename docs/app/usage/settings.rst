@@ -57,6 +57,7 @@ Base Game
   - Fallout: New Vegas
   - Fallout 4
   - Fallout 4 VR
+  - OpenMW
 
 LOOT Folder
   The sub-folder which LOOT uses to store the game's files in. Each game must be given a unique sub-folder.

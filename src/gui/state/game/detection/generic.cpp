@@ -39,60 +39,66 @@ using loot::GameInstall;
 using loot::InstallSource;
 using loot::RegistryValue;
 
-std::optional<RegistryValue> GetRegistryValue(const GameId gameId) {
+std::vector<RegistryValue> GetRegistryValues(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
-      return RegistryValue{"HKEY_LOCAL_MACHINE",
-                           "Software\\Bethesda Softworks\\Morrowind",
-                           "Installed Path"};
+      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+                            "Software\\Bethesda Softworks\\Morrowind",
+                            "Installed Path"}};
     case GameId::tes4:
-      return RegistryValue{"HKEY_LOCAL_MACHINE",
-                           "Software\\Bethesda Softworks\\Oblivion",
-                           "Installed Path"};
+      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+                            "Software\\Bethesda Softworks\\Oblivion",
+                            "Installed Path"}};
     case GameId::nehrim:
-      return RegistryValue{
+      return {RegistryValue{
           "HKEY_LOCAL_MACHINE",
           "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim"
           " - At Fate's Edge_is1",
-          "InstallLocation"};
+          "InstallLocation"}};
     case GameId::tes5:
-      return RegistryValue{"HKEY_LOCAL_MACHINE",
-                           "Software\\Bethesda Softworks\\Skyrim",
-                           "Installed Path"};
+      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+                            "Software\\Bethesda Softworks\\Skyrim",
+                            "Installed Path"}};
     case GameId::enderal:
-      return RegistryValue{
-          "HKEY_CURRENT_USER", "SOFTWARE\\SureAI\\Enderal", "Install_Path"};
+      return {RegistryValue{
+          "HKEY_CURRENT_USER", "SOFTWARE\\SureAI\\Enderal", "Install_Path"}};
     case GameId::tes5se:
-      return RegistryValue{
-          "HKEY_LOCAL_MACHINE",
-          "Software\\Bethesda Softworks\\Skyrim Special Edition",
-          "Installed "
-          "Path"};
+      return {
+          RegistryValue{"HKEY_LOCAL_MACHINE",
+                        "Software\\Bethesda Softworks\\Skyrim Special Edition",
+                        "Installed "
+                        "Path"}};
     case GameId::enderalse:
-      return RegistryValue{
-          "HKEY_CURRENT_USER", "SOFTWARE\\SureAI\\EnderalSE", "Install_Path"};
+      return {RegistryValue{
+          "HKEY_CURRENT_USER", "SOFTWARE\\SureAI\\EnderalSE", "Install_Path"}};
     case GameId::tes5vr:
-      return RegistryValue{"HKEY_LOCAL_MACHINE",
-                           "Software\\Bethesda Softworks\\Skyrim VR",
-                           "Installed Path"};
+      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+                            "Software\\Bethesda Softworks\\Skyrim VR",
+                            "Installed Path"}};
     case GameId::fo3:
-      return RegistryValue{"HKEY_LOCAL_MACHINE",
-                           "Software\\Bethesda Softworks\\Fallout3",
-                           "Installed Path"};
+      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+                            "Software\\Bethesda Softworks\\Fallout3",
+                            "Installed Path"}};
     case GameId::fonv:
-      return RegistryValue{"HKEY_LOCAL_MACHINE",
-                           "Software\\Bethesda Softworks\\FalloutNV",
-                           "Installed Path"};
+      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+                            "Software\\Bethesda Softworks\\FalloutNV",
+                            "Installed Path"}};
     case GameId::fo4:
-      return RegistryValue{"HKEY_LOCAL_MACHINE",
-                           "Software\\Bethesda Softworks\\Fallout4",
-                           "Installed Path"};
+      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+                            "Software\\Bethesda Softworks\\Fallout4",
+                            "Installed Path"}};
     case GameId::fo4vr:
-      return RegistryValue{"HKEY_LOCAL_MACHINE",
-                           "Software\\Bethesda Softworks\\Fallout 4 VR",
-                           "Installed Path"};
+      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+                            "Software\\Bethesda Softworks\\Fallout 4 VR",
+                            "Installed Path"}};
     case GameId::starfield:
-      return std::nullopt;
+      return {};
+    case GameId::openmw:
+      return {
+          RegistryValue{
+              "HKEY_LOCAL_MACHINE", "Software\\OpenMW.org\\OpenMW 0.48.0", ""},
+          RegistryValue{
+              "HKEY_LOCAL_MACHINE", "Software\\OpenMW.org\\OpenMW 0.49.0", ""}};
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -121,6 +127,8 @@ bool IsSteamInstall(const GameId gameId,
       return std::filesystem::exists(installPath / "installscript.vdf");
     case GameId::starfield:
       return std::filesystem::exists(installPath / "steam_api64.dll");
+    case GameId::openmw:
+      return false;
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -178,13 +186,9 @@ bool IsMicrosoftInstall(const GameId gameId,
 
 std::optional<GameInstall> FindGameInstallInRegistry(
     const loot::RegistryInterface& registry,
-    const GameId gameId) {
-  const auto registryValue = GetRegistryValue(gameId);
-  if (!registryValue.has_value()) {
-    return std::nullopt;
-  }
-
-  const auto path = loot::ReadPathFromRegistry(registry, registryValue.value());
+    const GameId gameId,
+    const RegistryValue& registryValue) {
+  const auto path = loot::ReadPathFromRegistry(registry, registryValue);
 
   if (path.has_value() &&
       IsValidGamePath(gameId, GetMasterFilename(gameId), path.value())) {
@@ -204,6 +208,20 @@ std::optional<GameInstall> FindGameInstallInRegistry(
 
     return GameInstall{
         gameId, InstallSource::unknown, path.value(), std::filesystem::path()};
+  }
+
+  return std::nullopt;
+}
+
+std::optional<GameInstall> FindGameInstallInRegistry(
+    const loot::RegistryInterface& registry,
+    const GameId gameId) {
+  for (const auto& registryValue : GetRegistryValues(gameId)) {
+    const auto gameInstall =
+        FindGameInstallInRegistry(registry, gameId, registryValue);
+    if (gameInstall.has_value()) {
+      return gameInstall;
+    }
   }
 
   return std::nullopt;

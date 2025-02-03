@@ -17,6 +17,7 @@ LOOT is a plugin load order optimiser for:
 * Nehrim: At Fate's Edge
 * Enderal: Forgotten Stories
 * Enderal: Forgotten Stories (Special Edition)
+* OpenMW
 
 LOOT can automatically calculate a load order that satisfies all plugin dependencies and maximises each plugin's impact on your game. It can also detect many issues, and provides a large number of plugin-specific usage notes, warnings and Bash Tag suggestions for Wrye Bash.
 

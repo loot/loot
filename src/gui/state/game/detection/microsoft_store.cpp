@@ -87,6 +87,7 @@ bool IsOnMicrosoftStore(const GameId gameId) {
     case GameId::tes5:
     case GameId::tes5vr:
     case GameId::fo4vr:
+    case GameId::openmw:
       return false;
     default:
       throw std::logic_error("Unrecognised game type");

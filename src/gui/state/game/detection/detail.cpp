@@ -49,6 +49,7 @@ using loot::InstallSource;
 std::string GetDefaultMasterlistRepositoryName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
+    case GameId::openmw:
       return "morrowind";
     case GameId::tes4:
     case GameId::nehrim:
@@ -229,6 +230,8 @@ std::string GetDefaultLootFolderName(const GameId gameId) {
       return "Fallout4VR";
     case GameId::starfield:
       return "Starfield";
+    case GameId::openmw:
+      return "OpenMW";
     default:
       throw std::logic_error("Unrecognised game ID");
   }

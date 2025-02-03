@@ -427,7 +427,7 @@ class Steam_FindGameInstallsTest
 protected:
   Steam_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
 
-  std::string GetSteamGameId() {
+  std::optional<std::string> GetSteamGameId() {
     switch (GetParam()) {
       case GameId::tes3:
         return "22320";
@@ -455,8 +455,10 @@ protected:
         return "611660";
       case GameId::starfield:
         return "1716740";
+      case GameId::openmw:
+        return std::nullopt;
       default:
-        throw std::logic_error("Unsupported Steam game");
+        throw std::logic_error("Unrecognised game ID");
     }
   }
 };
@@ -476,11 +478,16 @@ TEST_P(Steam_FindGameInstallsTest,
 TEST_P(
     Steam_FindGameInstallsTest,
     shouldReturnAnEmptyVectorIfARegistryEntryExistsButItIsNotAValidGamePath) {
+  const auto steamGameId = GetSteamGameId();
+  if (!steamGameId.has_value()) {
+    return;
+  }
+
   TestRegistry registry;
   const auto subKey =
       "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
       "Steam App " +
-      GetSteamGameId();
+      steamGameId.value();
   registry.SetStringValue(subKey, "invalid");
 
   const auto installs = loot::steam::FindGameInstalls(registry, GetParam());
@@ -490,6 +497,11 @@ TEST_P(
 
 TEST_P(Steam_FindGameInstallsTest,
        shouldReturnANonEmptyVectorIfARegistryEntryExistsWithAValidGamePath) {
+  const auto steamGameId = GetSteamGameId();
+  if (!steamGameId.has_value()) {
+    return;
+  }
+
   auto steamGamePath = gamePath;
   if (GetParam() == GameId::nehrim) {
     // Steam's version of Nehrim puts its files in a NehrimFiles subfolder,
@@ -504,7 +516,7 @@ TEST_P(Steam_FindGameInstallsTest,
   const auto subKey =
       "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
       "Steam App " +
-      GetSteamGameId();
+      steamGameId.value();
   registry.SetStringValue(subKey, gamePath.u8string());
 
   const auto installs = loot::steam::FindGameInstalls(registry, GetParam());

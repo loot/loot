@@ -38,6 +38,7 @@
       <li>Nehrim: At Fate's Edge</li>
       <li>Enderal: Forgotten Stories</li>
       <li>Enderal: Forgotten Stories (Special Edition)</li>
+      <li>OpenMW</li>
     </ul>
 
     <p>LOOT can automatically calculate a load order that satisfies all plugin dependencies and maximises each plugin's impact on your game. It can also detect many issues, and provides a large number of plugin-specific usage notes, warnings and Bash Tag suggestions for Wrye Bash.</p>

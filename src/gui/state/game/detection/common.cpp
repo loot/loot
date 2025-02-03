@@ -59,6 +59,8 @@ std::string GetExecutableName(GameId gameId) {
       return "Fallout4VR.exe";
     case GameId::starfield:
       return "Starfield.exe";
+    case GameId::openmw:
+      return "openmw.exe";
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -87,6 +89,12 @@ std::string GetMasterFilename(const GameId gameId) {
       return "Fallout4.esm";
     case GameId::starfield:
       return "Starfield.esm";
+    case GameId::openmw:
+      // This isn't actually a master file, but it's hardcoded to load first,
+      // and the value is only used to check the game is installed and to
+      // skip fully loading this file before sorting - and omwscripts files
+      // don't get loaded anyway.
+      return "builtin.omwscripts";
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -120,6 +128,8 @@ std::string GetGameName(const GameId gameId) {
       return "Fallout 4 VR";
     case GameId::starfield:
       return "Starfield";
+    case GameId::openmw:
+      return "OpenMW";
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -143,6 +153,7 @@ bool ExecutableExists(const GameId& gameType,
     case GameId::fo3:
     case GameId::fonv:
     case GameId::starfield:
+    case GameId::openmw:
       // Don't bother checking for the games that don't share their master
       // plugin name.
       return true;

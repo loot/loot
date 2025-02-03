@@ -251,6 +251,8 @@ protected:
         return GameType::fo4vr;
       case GameId::starfield:
         return GameType::starfield;
+      case GameId::openmw:
+        return GameType::openmw;
       default:
         throw std::logic_error("Unrecognised game ID");
     }
@@ -311,6 +313,8 @@ private:
         return "Fallout4.esm";
       case GameId::starfield:
         return "Starfield.esm";
+      case GameId::openmw:
+        return "builtin.omwscripts";
       default:
         throw std::logic_error("Unrecognised game ID");
     }
@@ -319,6 +323,8 @@ private:
   std::string getPluginsFolder() const {
     if (gameId_ == GameId::tes3) {
       return "Data Files";
+    } else if (gameId_ == GameId::openmw) {
+      return "resources/vfs";
     } else {
       return "Data";
     }
@@ -393,11 +399,14 @@ private:
     const GameType gameType = getGameType();
     return gameType == GameType::tes5 || gameType == GameType::tes5se ||
            gameType == GameType::tes5vr || gameType == GameType::fo4 ||
-           gameType == GameType::fo4vr;
+           gameType == GameType::fo4vr || gameType == GameType::tes3 ||
+           gameType == GameType::openmw;
   }
 
   std::string getGameExecutable() {
     switch (getGameType()) {
+      case GameType::tes3:
+        return "Morrowind.exe";
       case GameType::tes5:
         return "TESV.exe";
       case GameType::tes5se:
@@ -408,6 +417,8 @@ private:
         return "Fallout4.exe";
       case GameType::fo4vr:
         return "Fallout4VR.exe";
+      case GameType::openmw:
+        return "openmw.exe";
       default:
         throw std::logic_error("Unexpected game type");
     }

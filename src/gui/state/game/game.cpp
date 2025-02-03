@@ -144,6 +144,7 @@ std::optional<std::filesystem::path> GetCCCFilename(const GameType gameType) {
     case GameType::fo3:
     case GameType::fonv:
     case GameType::fo4vr:
+    case GameType::openmw:
       return std::nullopt;
     case GameType::tes5se:
       return "Skyrim.ccc";
@@ -526,6 +527,7 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
       }
     }
   } else if (settings_.Id() == GameId::tes3 ||
+             settings_.Id() == GameId::openmw ||
              settings_.Id() == GameId::starfield) {
     // Morrowind and Starfield require all plugins' masters to be present for
     // sorting to work, even if the plugins are inactive.
@@ -1055,7 +1057,8 @@ std::vector<std::string> Game::SortPlugins() {
 
     std::vector<std::filesystem::path> pluginPaths;
     for (const auto& pluginName : loadOrder) {
-      if (pluginName != settings_.Master()) {
+      if (pluginName != settings_.Master() ||
+          (settings_.Id() == GameId::openmw && pluginName == "Morrowind.esm")) {
         const auto resolvedPath = ResolveGameFilePath(pluginName);
         if (resolvedPath.has_value()) {
           pluginPaths.push_back(resolvedPath.value());
@@ -1524,10 +1527,7 @@ std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
 
   // Scan external data paths first, as the game checks them before the main
   // data path.
-  for (const auto& dataPath : GetExternalDataPaths(settings_.Id(),
-                                                   isMicrosoftStoreInstall_,
-                                                   settings_.DataPath(),
-                                                   settings_.GameLocalPath())) {
+  for (const auto& dataPath : gameHandle_->GetAdditionalDataPaths()) {
     if (!std::filesystem::exists(dataPath)) {
       continue;
     }
@@ -1623,14 +1623,8 @@ bool Game::IsCreationClubPlugin(const std::string& name) const {
 
 std::optional<std::filesystem::path> Game::ResolveGameFilePath(
     const std::string& filePath) const {
-  const auto externalDataPaths =
-      GetExternalDataPaths(settings_.Id(),
-                           isMicrosoftStoreInstall_,
-                           settings_.DataPath(),
-                           settings_.GameLocalPath());
-
   return loot::ResolveGameFilePath(
-      externalDataPaths, settings_.DataPath(), filePath);
+      gameHandle_->GetAdditionalDataPaths(), settings_.DataPath(), filePath);
 }
 
 bool Game::FileExists(const std::string& filePath) const {

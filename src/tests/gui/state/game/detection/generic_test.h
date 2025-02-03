@@ -89,6 +89,8 @@ protected:
         return "Software\\Bethesda Softworks\\Fallout 4 VR";
       case GameId::starfield:
         return std::nullopt;
+      case GameId::openmw:
+        return "Software\\OpenMW.org\\OpenMW 0.48.0";
       default:
         throw std::logic_error("Unrecognised game ID");
     }
@@ -152,9 +154,13 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifySteamSiblingGame) {
   const auto gameInstalls =
       loot::generic::FindGameInstalls(TestRegistry(), gameId);
 
+  const auto expectedSource = GetParam() == GameId::openmw
+                                  ? InstallSource::unknown
+                                  : InstallSource::steam;
+
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
-  EXPECT_EQ(InstallSource::steam, gameInstalls[0].source);
+  EXPECT_EQ(expectedSource, gameInstalls[0].source);
   EXPECT_EQ(std::filesystem::current_path().parent_path(),
             gameInstalls[0].installPath);
   EXPECT_EQ("", gameInstalls[0].localPath);
@@ -174,7 +180,8 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogSiblingGame) {
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
-  } else if (GetParam() == GameId::enderal || GetParam() == GameId::starfield) {
+  } else if (GetParam() == GameId::enderal || GetParam() == GameId::starfield ||
+             GetParam() == GameId::openmw) {
     expectedSource = InstallSource::unknown;
   }
 
@@ -219,7 +226,7 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyEpicSiblingGame) {
 
 TEST_P(Generic_FindGameInstallsTest, shouldIdentifyMsStoreSiblingGame) {
   if (GetParam() == GameId::tes5se || GetParam() == GameId::fo4 ||
-      GetParam() == GameId::starfield) {
+      GetParam() == GameId::starfield || GetParam() == GameId::openmw) {
     touch(gamePath / "appxmanifest.xml");
   } else {
     touch(gamePath.parent_path() / "appxmanifest.xml");
@@ -234,7 +241,7 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyMsStoreSiblingGame) {
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
   } else if (GetParam() == GameId::nehrim || GetParam() == GameId::enderal ||
-             GetParam() == GameId::enderalse) {
+             GetParam() == GameId::enderalse || GetParam() == GameId::openmw) {
     expectedSource = InstallSource::unknown;
   }
 
@@ -317,9 +324,13 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifySteamRegistryGame) {
   if (GetParam() == GameId::starfield) {
     ASSERT_TRUE(gameInstalls.empty());
   } else {
+    const auto expectedSource = GetParam() == GameId::openmw
+                                    ? InstallSource::unknown
+                                    : InstallSource::steam;
+
     ASSERT_EQ(1, gameInstalls.size());
     EXPECT_EQ(GetParam(), gameInstalls[0].gameId);
-    EXPECT_EQ(InstallSource::steam, gameInstalls[0].source);
+    EXPECT_EQ(expectedSource, gameInstalls[0].source);
     EXPECT_EQ(gamePath, gameInstalls[0].installPath);
     EXPECT_EQ("", gameInstalls[0].localPath);
   }
@@ -346,7 +357,7 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogRegistryGame) {
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
-  } else if (GetParam() == GameId::enderal) {
+  } else if (GetParam() == GameId::enderal || GetParam() == GameId::openmw) {
     expectedSource = InstallSource::unknown;
   }
 
@@ -424,9 +435,13 @@ TEST_P(DetectGameInstallTest, shouldDetectASteamInstall) {
 
   const auto install = generic::DetectGameInstall(GetSettings());
 
+  const auto expectedSource = GetParam() == GameId::openmw
+                                  ? InstallSource::unknown
+                                  : InstallSource::steam;
+
   ASSERT_TRUE(install.has_value());
   EXPECT_EQ(GetParam(), install.value().gameId);
-  EXPECT_EQ(InstallSource::steam, install.value().source);
+  EXPECT_EQ(expectedSource, install.value().source);
   EXPECT_EQ(gamePath, install.value().installPath);
   EXPECT_EQ("", install.value().localPath);
 }
@@ -443,7 +458,8 @@ TEST_P(DetectGameInstallTest, shouldDetectAGogInstall) {
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
-  } else if (GetParam() == GameId::enderal || GetParam() == GameId::starfield) {
+  } else if (GetParam() == GameId::enderal || GetParam() == GameId::starfield ||
+             GetParam() == GameId::openmw) {
     expectedSource = InstallSource::unknown;
   }
 
@@ -496,7 +512,7 @@ TEST_P(DetectGameInstallTest, shouldDetectAMicrosoftInstall) {
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
   } else if (GetParam() == GameId::nehrim || GetParam() == GameId::enderal ||
-             GetParam() == GameId::enderalse) {
+             GetParam() == GameId::enderalse || GetParam() == GameId::openmw) {
     expectedSource = InstallSource::unknown;
   }
 

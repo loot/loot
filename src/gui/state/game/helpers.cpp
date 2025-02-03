@@ -310,7 +310,10 @@ std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
 bool HasPluginFileExtension(const std::string& filename) {
   return boost::iends_with(filename, ".esp") ||
          boost::iends_with(filename, ".esm") ||
-         boost::iends_with(filename, ".esl");
+         boost::iends_with(filename, ".esl") ||
+         boost::iends_with(filename, ".omwaddon") ||
+         boost::iends_with(filename, ".omwgame") ||
+         boost::iends_with(filename, ".omwscripts");
 }
 
 std::optional<std::filesystem::path> ResolveGameFilePath(
@@ -327,29 +330,6 @@ std::optional<std::filesystem::path> ResolveGameFilePath(
   }
 
   return GetPathThatExists(dataPath / filePath);
-}
-
-std::vector<std::filesystem::path> GetExternalDataPaths(
-    const GameId gameId,
-    const bool isMicrosoftStoreInstall,
-    const std::filesystem::path& dataPath,
-    const std::filesystem::path& gameLocalPath) {
-  if (gameId == GameId::fo4 && isMicrosoftStoreInstall) {
-    return {dataPath / MS_FO4_AUTOMATRON_DATA_PATH,
-            dataPath / MS_FO4_NUKA_WORLD_DATA_PATH,
-            dataPath / MS_FO4_WASTELAND_DATA_PATH,
-            dataPath / MS_FO4_TEXTURE_PACK_DATA_PATH,
-            dataPath / MS_FO4_VAULT_TEC_DATA_PATH,
-            dataPath / MS_FO4_FAR_HARBOR_DATA_PATH,
-            dataPath / MS_FO4_CONTRAPTIONS_DATA_PATH};
-  }
-
-  if (gameId == GameId::starfield) {
-    return {GetUserDocumentsPath(gameLocalPath) / "My Games" / "Starfield" /
-            "Data"};
-  }
-
-  return {};
 }
 
 // Taken from
@@ -639,6 +619,7 @@ bool IsOfficialPlugin(const GameId gameId, const std::string& pluginName) {
 
   switch (gameId) {
     case GameId::tes3:
+    case GameId::openmw:
       return std::find(TES3_OFFICIAL_PLUGINS.begin(),
                        TES3_OFFICIAL_PLUGINS.end(),
                        lowercased) != TES3_OFFICIAL_PLUGINS.end();

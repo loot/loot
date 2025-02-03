@@ -71,6 +71,8 @@ GameType GetGameType(const GameId gameId) {
       return GameType::fo4vr;
     case GameId::starfield:
       return GameType::starfield;
+    case GameId::openmw:
+      return GameType::openmw;
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -79,6 +81,7 @@ GameType GetGameType(const GameId gameId) {
 float GetMinimumHeaderVersion(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
+    case GameId::openmw:
       return MORROWIND_MINIMUM_HEADER_VERSION;
     case GameId::tes4:
     case GameId::nehrim:
@@ -123,6 +126,8 @@ std::string GetPluginsFolderName(GameId gameId) {
     case GameId::fo4vr:
     case GameId::starfield:
       return "Data";
+    case GameId::openmw:
+      return "resources/vfs";
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -156,6 +161,8 @@ std::string ToString(const GameId gameId) {
       return "Fallout4VR";
     case GameId::starfield:
       return "Starfield";
+    case GameId::openmw:
+      return "OpenMW";
     default:
       throw std::logic_error("Unrecognised game ID");
   }

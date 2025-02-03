@@ -75,8 +75,10 @@ std::vector<std::string> GetSteamGameIds(const GameId gameId) {
       return {"611660"};
     case GameId::starfield:
       return {"1716740"};
+    case GameId::openmw:
+      return {};
     default:
-      throw std::logic_error("Unsupported Steam game");
+      throw std::logic_error("Unrecognised game ID");
   }
 }
 
@@ -108,7 +110,7 @@ std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
     case GameId::starfield:
       return "Starfield";
     default:
-      throw std::logic_error("Unrecognised game ID");
+      throw std::logic_error("Unsupported Steam game");
   }
 }
 
