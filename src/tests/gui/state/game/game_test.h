@@ -62,7 +62,7 @@ protected:
       loadOrderBackupFile3("loadorder.bak.3"),
       defaultGameSettings(GameSettings(GetParam(), u8"non\u00C1sciiFolder")
                               .SetMinimumHeaderVersion(0.0f)
-                              .SetGamePath(dataPath.parent_path())
+                              .SetGamePath(gamePath)
                               .SetGameLocalPath(localPath)) {
     // Do some preliminary locale / UTF-8 support setup, as GetMessages()
     // indirectly calls boost::locale::to_lower().
@@ -79,11 +79,11 @@ protected:
   std::optional<std::filesystem::path> GetCCCPath() {
     switch (GetParam()) {
       case GameId::tes5se:
-        return dataPath.parent_path() / "Skyrim.ccc";
+        return gamePath / "Skyrim.ccc";
       case GameId::fo4:
-        return dataPath.parent_path() / "Fallout4.ccc";
+        return gamePath / "Fallout4.ccc";
       case GameId::starfield:
-        return dataPath.parent_path() / "Starfield.ccc";
+        return gamePath / "Starfield.ccc";
       default:
         return std::nullopt;
     }
@@ -148,8 +148,7 @@ TEST_P(GameTest, initShouldThrowIfGamePathWasNotGiven) {
 #ifndef _WIN32
 TEST_P(GameTest,
        initShouldNotThrowOnLinuxIfLocalPathWasNotGivenAndGameIsMorrowind) {
-  auto settings =
-      GameSettings(GetParam(), "folder").SetGamePath(dataPath.parent_path());
+  auto settings = GameSettings(GetParam(), "folder").SetGamePath(gamePath);
   Game game(settings, lootDataPath, "");
 
   if (GetParam() == GameId::tes3) {
@@ -160,8 +159,7 @@ TEST_P(GameTest,
 }
 #else
 TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathWasNotGiven) {
-  auto settings =
-      GameSettings(GetParam(), "folder").SetGamePath(dataPath.parent_path());
+  auto settings = GameSettings(GetParam(), "folder").SetGamePath(gamePath);
   Game game(settings, lootDataPath, "");
   EXPECT_NO_THROW(game.Init());
 }
@@ -696,9 +694,9 @@ TEST_P(GameTest, checkInstallValidityShouldResolveExternalPluginPaths) {
     return;
   }
 
-  loot::test::touch(dataPath.parent_path() / "appxmanifest.xml");
+  loot::test::touch(gamePath / "appxmanifest.xml");
   const auto dlcPluginName = "DLCCoast.esm";
-  const auto dlcDataPath = dataPath.parent_path().parent_path().parent_path() /
+  const auto dlcDataPath = gamePath.parent_path().parent_path() /
                            "Fallout 4- Far Harbor (PC)" / "Content" / "Data";
   std::filesystem::create_directories(dlcDataPath);
   loot::test::touch(dlcDataPath / dlcPluginName);
@@ -972,9 +970,9 @@ TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsAtExternalPaths) {
     return;
   }
 
-  loot::test::touch(dataPath.parent_path() / "appxmanifest.xml");
+  loot::test::touch(gamePath / "appxmanifest.xml");
   const auto dlcPluginName = "DLCCoast.esm";
-  const auto dlcDataPath = dataPath.parent_path().parent_path().parent_path() /
+  const auto dlcDataPath = gamePath.parent_path().parent_path() /
                            "Fallout 4- Far Harbor (PC)" / "Content" / "Data";
   std::filesystem::create_directories(dlcDataPath);
   std::filesystem::copy(dataPath / blankEsm, dlcDataPath / dlcPluginName);
@@ -1228,9 +1226,9 @@ TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
     return;
   }
 
-  loot::test::touch(dataPath.parent_path() / "appxmanifest.xml");
+  loot::test::touch(gamePath / "appxmanifest.xml");
   const auto dlcPluginName = "DLCCoast.esm";
-  const auto dlcDataPath = dataPath.parent_path().parent_path().parent_path() /
+  const auto dlcDataPath = gamePath.parent_path().parent_path() /
                            "Fallout 4- Far Harbor (PC)" / "Content" / "Data";
   std::filesystem::create_directories(dlcDataPath);
   std::filesystem::copy(dataPath / blankEsm, dlcDataPath / dlcPluginName);

@@ -80,7 +80,7 @@ TEST_P(GOG_FindGameInstallsTest,
   const auto gogGameIds = gog::GetGogGameIds(GetParam());
   if (!gogGameIds.empty()) {
     const auto subKey = "Software\\GOG.com\\Games\\" + gogGameIds[0];
-    registry.SetStringValue(subKey, dataPath.parent_path().u8string());
+    registry.SetStringValue(subKey, gamePath.u8string());
   }
 
   const auto installs = gog::FindGameInstalls(registry, GetParam());
@@ -91,7 +91,7 @@ TEST_P(GOG_FindGameInstallsTest,
     ASSERT_EQ(1, installs.size());
     EXPECT_EQ(GetParam(), installs[0].gameId);
     EXPECT_EQ(InstallSource::gog, installs[0].source);
-    EXPECT_EQ(dataPath.parent_path(), installs[0].installPath);
+    EXPECT_EQ(gamePath, installs[0].installPath);
     EXPECT_EQ("", installs[0].localPath);
   }
 }

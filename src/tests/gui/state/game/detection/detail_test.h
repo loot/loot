@@ -83,12 +83,12 @@ class FindGameInstallsTest : public CommonGameTestFixture {
 protected:
   FindGameInstallsTest() :
       CommonGameTestFixture(GameId::tes5se),
-      epicManifestsPath(dataPath.parent_path().parent_path() / "Manifests"),
-      xboxGamingRootPath(dataPath.parent_path().parent_path() / "xbox"),
-      genericInstallPath(dataPath.parent_path()),
-      steamInstallPath(dataPath.parent_path().parent_path() / "steam"),
-      gogInstallPath(dataPath.parent_path().parent_path() / "gog"),
-      epicInstallPath(dataPath.parent_path().parent_path() / "epic"),
+      epicManifestsPath(gamePath.parent_path() / "Manifests"),
+      xboxGamingRootPath(gamePath.parent_path() / "xbox"),
+      genericInstallPath(gamePath),
+      steamInstallPath(gamePath.parent_path() / "steam"),
+      gogInstallPath(gamePath.parent_path() / "gog"),
+      epicInstallPath(gamePath.parent_path() / "epic"),
       msInstallPath(xboxGamingRootPath /
                     "The Elder Scrolls V- Skyrim Special Edition (PC)" /
                     "Content") {
@@ -146,9 +146,8 @@ private:
   void CopyInstall(const std::filesystem::path& destination) {
     std::filesystem::create_directories(destination.parent_path());
 
-    std::filesystem::copy(dataPath.parent_path(),
-                          destination,
-                          std::filesystem::copy_options::recursive);
+    std::filesystem::copy(
+        gamePath, destination, std::filesystem::copy_options::recursive);
   }
 };
 

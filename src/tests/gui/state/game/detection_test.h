@@ -43,9 +43,8 @@ protected:
 INSTANTIATE_TEST_SUITE_P(, IsInstalledTest, ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(IsInstalledTest, shouldSupportNonAsciiGameMasters) {
-  const auto settings = GameSettings(GetParam(), "")
-                            .SetMaster(nonAsciiEsp)
-                            .SetGamePath(dataPath.parent_path());
+  const auto settings =
+      GameSettings(GetParam(), "").SetMaster(nonAsciiEsp).SetGamePath(gamePath);
   EXPECT_TRUE(IsInstalled(settings));
 }
 
@@ -58,7 +57,7 @@ protected:
 
     initialCurrentPath = std::filesystem::current_path();
 
-    const auto lootPath = dataPath.parent_path() / "LOOT";
+    const auto lootPath = gamePath / "LOOT";
 
     // Change the current path into a game subfolder.
     std::filesystem::create_directory(lootPath);

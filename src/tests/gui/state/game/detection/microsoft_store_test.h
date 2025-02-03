@@ -68,15 +68,15 @@ protected:
     std::vector<std::filesystem::path> gamesPaths;
 
     for (const auto& gameFolder : gameFolders) {
-      const auto gamePath = xboxGamingRootPath /
-                            "The Elder Scrolls IV- Oblivion (PC)" / "Content" /
-                            gameFolder;
-      std::filesystem::create_directories(gamePath.parent_path());
-      std::filesystem::copy(dataPath.parent_path(),
-                            gamePath,
+      const auto localisedGamePath = xboxGamingRootPath /
+                                     "The Elder Scrolls IV- Oblivion (PC)" /
+                                     "Content" / gameFolder;
+      std::filesystem::create_directories(localisedGamePath.parent_path());
+      std::filesystem::copy(gamePath,
+                            localisedGamePath,
                             std::filesystem::copy_options::recursive);
 
-      gamesPaths.push_back(gamePath);
+      gamesPaths.push_back(localisedGamePath);
     }
 
     return gamesPaths;
@@ -114,12 +114,11 @@ INSTANTIATE_TEST_SUITE_P(,
                                            GameId::fo4));
 
 TEST_P(Microsoft_FindGameInstallsTest, shouldFindNewMSGamePathIfPresent) {
-  const auto xboxGamingRootPath = dataPath.parent_path().parent_path();
-  const auto gamePath = GetGamePath(xboxGamingRootPath);
-  std::filesystem::create_directories(gamePath.parent_path());
-  std::filesystem::copy(dataPath.parent_path(),
-                        gamePath,
-                        std::filesystem::copy_options::recursive);
+  const auto xboxGamingRootPath = gamePath.parent_path();
+  const auto xboxGamePath = GetGamePath(xboxGamingRootPath);
+  std::filesystem::create_directories(xboxGamePath.parent_path());
+  std::filesystem::copy(
+      gamePath, xboxGamePath, std::filesystem::copy_options::recursive);
 
   const auto gameId = GetParam();
   const auto gameInstalls =
@@ -128,7 +127,7 @@ TEST_P(Microsoft_FindGameInstallsTest, shouldFindNewMSGamePathIfPresent) {
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
   EXPECT_EQ(InstallSource::microsoft, gameInstalls[0].source);
-  EXPECT_EQ(gamePath, gameInstalls[0].installPath);
+  EXPECT_EQ(xboxGamePath, gameInstalls[0].installPath);
   EXPECT_EQ("", gameInstalls[0].localPath);
 }
 
@@ -138,7 +137,7 @@ TEST_P(Microsoft_FindGameInstallsTest,
     return;
   }
 
-  const auto xboxGamingRootPath = dataPath.parent_path().parent_path();
+  const auto xboxGamingRootPath = gamePath.parent_path();
 
   const auto gamesPaths = SetUpLocalisedGamePaths(
       xboxGamingRootPath, {"Oblivion GOTY Spanish", "Oblivion GOTY Italian"});
@@ -160,7 +159,7 @@ TEST_P(Microsoft_FindGameInstallsTest,
     return;
   }
 
-  const auto xboxGamingRootPath = dataPath.parent_path().parent_path();
+  const auto xboxGamingRootPath = gamePath.parent_path();
 
   const auto gamesPaths = SetUpLocalisedGamePaths(
       xboxGamingRootPath, {"Oblivion GOTY Spanish", "Oblivion GOTY Italian"});
@@ -182,7 +181,7 @@ TEST_P(Microsoft_FindGameInstallsTest,
     return;
   }
 
-  const auto xboxGamingRootPath = dataPath.parent_path().parent_path();
+  const auto xboxGamingRootPath = gamePath.parent_path();
 
   const auto gamesPaths = SetUpLocalisedGamePaths(
       xboxGamingRootPath, {"Oblivion GOTY English", "Oblivion GOTY Spanish"});

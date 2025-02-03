@@ -46,29 +46,26 @@ class Epic_FindGameInstallsTest : public CommonGameTestFixture,
 protected:
   Epic_FindGameInstallsTest() :
       CommonGameTestFixture(GetParam()),
-      epicManifestsPath(dataPath.parent_path().parent_path() / "Manifests") {
-    std::filesystem::create_directory(epicManifestsPath);
-
+      epicManifestsPath(gamePath.parent_path() / "Manifests") {
     const std::string appName = GetAppName(GetParam());
 
     if (GetParam() == GameId::fo3) {
       // FO3 has localised subdirectories.
-      gamePath = dataPath.parent_path().parent_path() / "game2";
+      const auto movedGamePath = gamePath.parent_path() / "game2";
+      std::filesystem::rename(gamePath, movedGamePath);
+      std::filesystem::create_directories(gamePath);
 
       const std::vector<std::string> folders{"Fallout 3 GOTY English",
                                              "Fallout 3 GOTY French"};
       for (const auto& folder : folders) {
         const auto localisedInstall = gamePath / folder;
-        std::filesystem::create_directories(localisedInstall.parent_path());
-        std::filesystem::copy(dataPath.parent_path(),
+        std::filesystem::copy(movedGamePath,
                               localisedInstall,
                               std::filesystem::copy_options::recursive);
       }
-
-    } else {
-      gamePath = dataPath.parent_path();
     }
 
+    std::filesystem::create_directory(epicManifestsPath);
     std::ofstream out(epicManifestsPath / "manifest.item");
     out << "{\"AppName\": \"" + appName + "\", \"InstallLocation\": \"" +
                boost::replace_all_copy(gamePath.u8string(), "\\", "\\\\") +
@@ -80,7 +77,6 @@ protected:
   }
 
   std::filesystem::path epicManifestsPath;
-  std::filesystem::path gamePath;
 
   TestRegistry registry;
 

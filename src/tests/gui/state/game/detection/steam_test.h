@@ -490,14 +490,14 @@ TEST_P(
 
 TEST_P(Steam_FindGameInstallsTest,
        shouldReturnANonEmptyVectorIfARegistryEntryExistsWithAValidGamePath) {
-  auto gamePath = dataPath.parent_path();
+  auto steamGamePath = gamePath;
   if (GetParam() == GameId::nehrim) {
     // Steam's version of Nehrim puts its files in a NehrimFiles subfolder,
     // so move them there.
     std::filesystem::create_directory(gamePath / "NehrimFiles");
     std::filesystem::copy(dataPath,
                           gamePath / "NehrimFiles" / dataPath.filename());
-    gamePath /= "NehrimFiles";
+    steamGamePath /= "NehrimFiles";
   }
 
   TestRegistry registry;
@@ -505,14 +505,14 @@ TEST_P(Steam_FindGameInstallsTest,
       "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
       "Steam App " +
       GetSteamGameId();
-  registry.SetStringValue(subKey, dataPath.parent_path().u8string());
+  registry.SetStringValue(subKey, gamePath.u8string());
 
   const auto installs = loot::steam::FindGameInstalls(registry, GetParam());
 
   ASSERT_EQ(1, installs.size());
   EXPECT_EQ(GetParam(), installs[0].gameId);
   EXPECT_EQ(InstallSource::steam, installs[0].source);
-  EXPECT_EQ(gamePath, installs[0].installPath);
+  EXPECT_EQ(steamGamePath, installs[0].installPath);
   EXPECT_EQ("", installs[0].localPath);
 }
 }

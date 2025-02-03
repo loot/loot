@@ -341,13 +341,13 @@ TEST_F(LootSettingsTest,
        loadingShouldMapOblivonTypeToNehrimIfInstallPathIsANehrimInstall) {
   using std::endl;
 
-  touch(dataPath.parent_path() / "NehrimLauncher.exe");
+  touch(gamePath / "NehrimLauncher.exe");
 
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "type = \"Oblivion\"" << endl
       << "folder = \"\"" << endl
-      << "path = \"" << escapePath(dataPath.parent_path()) << "\"" << endl;
+      << "path = \"" << escapePath(gamePath) << "\"" << endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -423,13 +423,13 @@ TEST_F(LootSettingsTest,
        loadingShouldMapSkyrimTypeToEnderalIfInstallPathIsAnEnderalInstall) {
   using std::endl;
 
-  touch(dataPath.parent_path() / "Enderal Launcher.exe");
+  touch(gamePath / "Enderal Launcher.exe");
 
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "type = \"Skyrim\"" << endl
       << "folder = \"\"" << endl
-      << "path = \"" << escapePath(dataPath.parent_path()) << "\"" << endl;
+      << "path = \"" << escapePath(gamePath) << "\"" << endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -526,17 +526,17 @@ TEST_F(LootSettingsTest,
        loadingShouldMapSkyrimSETypeToEnderalSEIfInstallPathIsAnEnderalInstall) {
   using std::endl;
 
-  touch(dataPath.parent_path() / "Enderal Launcher.exe");
+  touch(gamePath / "Enderal Launcher.exe");
 
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "type = \"SkyrimSE\"" << endl
       << "folder = \"\"" << endl
-      << "path = \"" << escapePath(dataPath.parent_path()) << "\"" << endl
+      << "path = \"" << escapePath(gamePath) << "\"" << endl
       << "[[games]]" << endl
       << "type = \"Skyrim Special Edition\"" << endl
       << "folder = \"\"" << endl
-      << "path = \"" << escapePath(dataPath.parent_path()) << "\"" << endl;
+      << "path = \"" << escapePath(gamePath) << "\"" << endl;
   out.close();
 
   settings_.load(settingsFile_);

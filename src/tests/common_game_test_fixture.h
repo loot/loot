@@ -55,7 +55,8 @@ protected:
       gameId_(gameId),
       rootTestPath(getTempPath()),
       missingPath(rootTestPath / "missing"),
-      dataPath(rootTestPath / "games" / "game" / getPluginsFolder()),
+      gamePath(rootTestPath / "games" / "game"),
+      dataPath(gamePath / getPluginsFolder()),
       localPath(rootTestPath / "local" / "game"),
       lootDataPath(rootTestPath / "local" / "LOOT"),
       masterFile(getMasterFile()),
@@ -92,8 +93,8 @@ protected:
     ASSERT_TRUE(exists(lootDataPath));
 
     if (isExecutableNeeded()) {
-      touch(dataPath.parent_path() / getGameExecutable());
-      ASSERT_TRUE(exists(dataPath.parent_path() / getGameExecutable()));
+      touch(gamePath / getGameExecutable());
+      ASSERT_TRUE(exists(gamePath / getGameExecutable()));
     }
 
     auto sourcePluginsPath = getSourcePluginsPath();
@@ -261,6 +262,7 @@ private:
 
 protected:
   const std::filesystem::path missingPath;
+  const std::filesystem::path gamePath;
   const std::filesystem::path dataPath;
   const std::filesystem::path localPath;
   const std::filesystem::path lootDataPath;
@@ -337,7 +339,7 @@ private:
       const std::vector<std::pair<std::string, bool>>& loadOrder) const {
     using std::filesystem::u8path;
     if (getGameType() == GameType::tes3) {
-      std::ofstream out(dataPath.parent_path() / "Morrowind.ini");
+      std::ofstream out(gamePath / "Morrowind.ini");
       for (const auto& plugin : loadOrder) {
         if (plugin.second) {
           out << "GameFile0="
