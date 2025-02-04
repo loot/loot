@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-02-03 19:24+0000\n"
+"POT-Creation-Date: 2025-02-04 20:06+0000\n"
 "PO-Revision-Date: 2025-01-08 02:00+0000\n"
 "Last-Translator: Carlos Gabriel <carlos2324feitosa@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/loot/"
@@ -1338,7 +1338,7 @@ msgstr ""
 "Este plugin possui um arquivo BashTags que substituirá as sugestões feitas "
 "pelo LOOT para as seguintes Bash Tags: {0}."
 
-#: src/gui/state/game/game.cpp:936 src/gui/state/game/game.cpp:1045
+#: src/gui/state/game/game.cpp:934 src/gui/state/game/game.cpp:1043
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -1346,15 +1346,15 @@ msgstr ""
 "Falha ao criar a atual ordem de carregamento, a informação mostrada pode "
 "estar incorreta."
 
-#: src/gui/state/game/game.cpp:1080
+#: src/gui/state/game/game.cpp:1081
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "Interação cíclica detectada entre \"{0}\" e \"{1}\": {2}"
 
-#: src/gui/state/game/game.cpp:1094
+#: src/gui/state/game/game.cpp:1095
 msgid "The group \"{0}\" does not exist."
 msgstr "O grupo \"{0}\" não existe."
 
-#: src/gui/state/game/game.cpp:1109
+#: src/gui/state/game/game.cpp:1110
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1362,20 +1362,20 @@ msgstr ""
 "A classificação falhou porque há pelo menos um plug-in instalado que depende "
 "de pelo menos um plug-in que não está instalado."
 
-#: src/gui/state/game/game.cpp:1150
+#: src/gui/state/game/game.cpp:1151
 msgid "You have not sorted your load order this session."
 msgstr "Você não organizou sua ordem de carregamento esta sessão."
 
-#: src/gui/state/game/game.cpp:1202
+#: src/gui/state/game/game.cpp:1203
 msgid "You have {0} active full plugins but the game only supports up to {1}."
 msgstr ""
 "Você tem {0} plugins completos ativos, mas o jogo suporta apenas até {1}."
 
-#: src/gui/state/game/game.cpp:1210
+#: src/gui/state/game/game.cpp:1211
 msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr "Você tem {0} plugins ativos, mas o jogo suporta apenas até {1}."
 
-#: src/gui/state/game/game.cpp:1232
+#: src/gui/state/game/game.cpp:1233
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
@@ -1383,23 +1383,23 @@ msgstr ""
 "Não inicie o Morrowind sem o uso do MWSE ou isso causará danos graves ao seu "
 "jogo."
 
-#: src/gui/state/game/game.cpp:1239
+#: src/gui/state/game/game.cpp:1240
 msgid "small plugin"
 msgid_plural "small plugins"
 msgstr[0] "plugin pequeno"
 msgstr[1] "plugins pequenos"
 
-#: src/gui/state/game/game.cpp:1242
+#: src/gui/state/game/game.cpp:1243
 msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] "plugin leve"
 msgstr[1] "plugins leves"
 
-#: src/gui/state/game/game.cpp:1255
+#: src/gui/state/game/game.cpp:1256
 msgid "You have {0} active {1} but the game only supports up to {2}."
 msgstr "Você tem {0} ativo {1}, mas o jogo só suporta até {2}."
 
-#: src/gui/state/game/game.cpp:1275
+#: src/gui/state/game/game.cpp:1276
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
 "Deactivate a full plugin or your {1} to avoid potential issues."
@@ -1408,12 +1408,12 @@ msgstr ""
 "carregamento FE. Desative um plugin completo ou seu {1} para evitar "
 "possíveis problemas."
 
-#: src/gui/state/game/game.cpp:1293
+#: src/gui/state/game/game.cpp:1294
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
 msgstr "Você tem {0} plugins médios ativos, mas o jogo suporta apenas até {1}."
 
-#: src/gui/state/game/game.cpp:1312
+#: src/gui/state/game/game.cpp:1313
 msgid ""
 "You have a full plugin and at least one medium plugin sharing the FD load "
 "order index. Deactivate a full plugin or all your medium plugins to avoid "
@@ -1425,7 +1425,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's name.
 #.
-#: src/gui/state/game/game.cpp:1325
+#: src/gui/state/game/game.cpp:1326
 msgid ""
 "{0} is installed in a case-sensitive location. This may cause issues as the "
 "game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
@@ -1438,7 +1438,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's
 #. name.
-#: src/gui/state/game/game.cpp:1356
+#: src/gui/state/game/game.cpp:1357
 msgid ""
 "{0}'s local application data is stored in a case-sensitive location. This "
 "may cause issues as the game, mods and LOOT may assume that filesystem paths "
@@ -1448,7 +1448,7 @@ msgstr ""
 "Isso pode causar problemas, pois o jogo, mods e LOOT podem assumir que os "
 "caminhos do sistema não fazem essa diferenciação, que é o padrão no Windows."
 
-#: src/gui/state/game/game.cpp:1425
+#: src/gui/state/game/game.cpp:1426
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1479,7 +1479,7 @@ msgstr ""
 "Você também pode buscar suporte no tópico do fórum do LOOT, no link [LOOT's "
 "website]({1})."
 
-#: src/gui/state/game/helpers.cpp:191
+#: src/gui/state/game/helpers.cpp:209
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "O LOOT detectou que \"{0}\" é inválido e vai ignorá-lo."
 
