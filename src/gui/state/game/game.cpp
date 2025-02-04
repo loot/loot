@@ -833,28 +833,26 @@ void Game::RedatePlugins() {
         std::filesystem::file_time_type::clock::time_point::min();
     for (const auto& pluginName : loadorder) {
       auto filepath = ResolveGameFilePath(pluginName);
-      if (!fs::exists(filepath)) {
-        filepath += GHOST_EXTENSION;
-        if (!fs::exists(filepath)) {
-          continue;
-        }
+      if (!filepath.has_value()) {
+        continue;
       }
 
-      const auto thisTime = fs::last_write_time(filepath);
+      const auto thisTime = fs::last_write_time(filepath.value());
       if (thisTime >= lastTime) {
         lastTime = thisTime;
 
         if (logger) {
           logger->trace("No need to redate \"{}\".",
-                        filepath.filename().u8string());
+                        filepath.value().filename().u8string());
         }
       } else {
         lastTime += REDATE_TIMESTAMP_INTERVAL;
-        fs::last_write_time(filepath,
+        fs::last_write_time(filepath.value(),
                             lastTime);  // Space timestamps by a minute.
 
         if (logger) {
-          logger->info("Redated \"{}\"", filepath.filename().u8string());
+          logger->info("Redated \"{}\"",
+                       filepath.value().filename().u8string());
         }
       }
     }
@@ -1058,7 +1056,10 @@ std::vector<std::string> Game::SortPlugins() {
     std::vector<std::filesystem::path> pluginPaths;
     for (const auto& pluginName : loadOrder) {
       if (pluginName != settings_.Master()) {
-        pluginPaths.push_back(ResolveGameFilePath(pluginName));
+        const auto resolvedPath = ResolveGameFilePath(pluginName);
+        if (resolvedPath.has_value()) {
+          pluginPaths.push_back(resolvedPath.value());
+        }
       }
     }
 
@@ -1620,7 +1621,7 @@ bool Game::IsCreationClubPlugin(const std::string& name) const {
   return creationClubPlugins_.count(Filename(name)) != 0;
 }
 
-std::filesystem::path Game::ResolveGameFilePath(
+std::optional<std::filesystem::path> Game::ResolveGameFilePath(
     const std::string& filePath) const {
   const auto externalDataPaths =
       GetExternalDataPaths(settings_.Id(),
@@ -1633,20 +1634,7 @@ std::filesystem::path Game::ResolveGameFilePath(
 }
 
 bool Game::FileExists(const std::string& filePath) const {
-  // OK to call this for non-plugin files too.
-  auto resolvedPath = ResolveGameFilePath(filePath);
-
-  if (std::filesystem::exists(resolvedPath)) {
-    return true;
-  }
-
-  if (HasPluginFileExtension(filePath)) {
-    resolvedPath += GHOST_EXTENSION;
-
-    return std::filesystem::exists(resolvedPath);
-  }
-
-  return false;
+  return ResolveGameFilePath(filePath).has_value();
 }
 }
 }

@@ -46,6 +46,8 @@
 #endif
 
 namespace {
+constexpr const char* GHOST_EXTENSION = ".ghost";
+
 constexpr const char* MS_FO4_AUTOMATRON_DATA_PATH =
     "../../../Fallout 4- Automatron (PC)/Content/Data";
 constexpr const char* MS_FO4_CONTRAPTIONS_DATA_PATH =
@@ -80,6 +82,24 @@ std::filesystem::path GetUserDocumentsPath(
   return gameLocalPath.parent_path().parent_path().parent_path() / "Documents";
 #endif
 }
+
+std::optional<std::filesystem::path> GetPathThatExists(
+    std::filesystem::path&& path) {
+  if (std::filesystem::exists(path)) {
+    return path;
+  }
+
+  if (loot::HasPluginFileExtension(path.filename().u8string())) {
+    path += GHOST_EXTENSION;
+
+    if (std::filesystem::exists(path)) {
+      return path;
+    }
+  }
+
+  return std::nullopt;
+}
+
 }
 
 namespace loot {
@@ -293,30 +313,20 @@ bool HasPluginFileExtension(const std::string& filename) {
          boost::iends_with(filename, ".esl");
 }
 
-std::filesystem::path ResolveGameFilePath(
+std::optional<std::filesystem::path> ResolveGameFilePath(
     const std::vector<std::filesystem::path>& externalDataPaths,
     const std::filesystem::path& dataPath,
     const std::string& filename) {
   const auto filePath = std::filesystem::u8path(filename);
 
   for (const auto& externalDataPath : externalDataPaths) {
-    const auto path = externalDataPath / filePath;
-    if (std::filesystem::exists(path)) {
-      return path;
-    }
-
-    if (HasPluginFileExtension(filename)) {
-      auto ghostedPath = path;
-      ghostedPath += GHOST_EXTENSION;
-
-      if (std::filesystem::exists(ghostedPath)) {
-        // Intentionally return the unghosted path.
-        return path;
-      }
+    const auto externalPath = GetPathThatExists(externalDataPath / filePath);
+    if (externalPath.has_value()) {
+      return externalPath;
     }
   }
 
-  return dataPath / filePath;
+  return GetPathThatExists(dataPath / filePath);
 }
 
 std::vector<std::filesystem::path> GetExternalDataPaths(

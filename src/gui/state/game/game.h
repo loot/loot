@@ -153,7 +153,7 @@ private:
   std::filesystem::path GetLOOTGamePath() const;
   std::vector<std::filesystem::path> GetInstalledPluginPaths() const;
   void AppendMessages(std::vector<SourcedMessage> messages);
-  std::filesystem::path ResolveGameFilePath(
+  std::optional<std::filesystem::path> ResolveGameFilePath(
       const std::string& pluginName) const;
   bool FileExists(const std::string& file) const;
 

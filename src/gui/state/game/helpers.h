@@ -40,8 +40,6 @@
 #include "gui/state/game/detection/game_install.h"
 
 namespace loot {
-static constexpr const char* GHOST_EXTENSION = ".ghost";
-
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory);
 
@@ -66,7 +64,7 @@ std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
 
 bool HasPluginFileExtension(const std::string& filename);
 
-std::filesystem::path ResolveGameFilePath(
+std::optional<std::filesystem::path> ResolveGameFilePath(
     const std::vector<std::filesystem::path>& externalDataPaths,
     const std::filesystem::path& dataPath,
     const std::string& filename);

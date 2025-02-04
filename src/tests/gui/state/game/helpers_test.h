@@ -87,9 +87,8 @@ TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeExclamationMark) {
 }
 
 TEST(CheckForRemovedPlugins, shouldCompareFilenamesBeforeAndAfter) {
-  const auto messages =
-      CheckForRemovedPlugins({"test1.esp", "test2.esp", "test3.esp"},
-                             {"test1.esp", "test3.esp"});
+  const auto messages = CheckForRemovedPlugins(
+      {"test1.esp", "test2.esp", "test3.esp"}, {"test1.esp", "test3.esp"});
 
   ASSERT_EQ(1, messages.size());
   EXPECT_EQ(
@@ -179,33 +178,62 @@ protected:
 
 TEST_F(ResolveGameFilePathTest,
        shouldReturnFilenameInExternalDataPathIfItExistsThere) {
-  const auto filename = "external.esp";
-  const auto filePath = localPath / filename;
+  const auto filePath = localPath / blankEsm;
   std::filesystem::copy(dataPath / blankEsm, filePath);
 
-  const auto pluginPath = ResolveGameFilePath({localPath}, dataPath, filename);
+  const auto pluginPath = ResolveGameFilePath({localPath}, dataPath, blankEsm);
+
+  EXPECT_EQ(filePath, pluginPath);
+}
+
+TEST_F(ResolveGameFilePathTest, shouldCheckExternalDataPathsInOrder) {
+  const auto filePath = localPath / blankEsm;
+  std::filesystem::copy(dataPath / blankEsm, filePath);
+
+  const auto otherDataPath = localPath.parent_path() / "other";
+  std::filesystem::create_directories(otherDataPath);
+  std::filesystem::copy(dataPath / blankEsm, otherDataPath / blankEsm);
+
+  const auto pluginPath =
+      ResolveGameFilePath({localPath, otherDataPath}, dataPath, blankEsm);
 
   EXPECT_EQ(filePath, pluginPath);
 }
 
 TEST_F(
     ResolveGameFilePathTest,
-    shouldReturnPluginNameInExternalDataPathIfItExistsAsAGhostedPluginThere) {
+    shouldReturnGhostedPluginNameInExternalDataPathIfItExistsAsAGhostedPluginThere) {
   const std::string filename = "external.esp";
-  std::filesystem::copy(dataPath / blankEsm, localPath / (filename + ".ghost"));
+  const auto ghostedFilename = filename + ".ghost";
+  std::filesystem::copy(dataPath / blankEsm, localPath / ghostedFilename);
 
   const auto pluginPath = ResolveGameFilePath({localPath}, dataPath, filename);
 
-  EXPECT_EQ(localPath / filename, pluginPath);
+  EXPECT_EQ(localPath / ghostedFilename, pluginPath);
+}
+
+TEST_F(ResolveGameFilePathTest,
+       shouldReturnFilenameInDataPathIfTheFileOnlyExistsThere) {
+  const auto pluginPath = ResolveGameFilePath({localPath}, dataPath, blankEsm);
+
+  EXPECT_EQ(dataPath / blankEsm, pluginPath);
 }
 
 TEST_F(
     ResolveGameFilePathTest,
-    shouldReturnFilenameInDataPathIfTheFileDoesNotExistInAnExternalDataPath) {
-  const auto filename = "test.esp";
-  const auto pluginPath = ResolveGameFilePath({localPath}, dataPath, filename);
+    shouldReturnGhostedFilenameInDataPathIfTheFileOnlyExistsThereAsAGhostedPlugin) {
+  const auto pluginPath =
+      ResolveGameFilePath({localPath}, dataPath, blankMasterDependentEsm);
 
-  EXPECT_EQ(dataPath / filename, pluginPath);
+  EXPECT_EQ(dataPath / (blankMasterDependentEsm + ".ghost"), pluginPath);
+}
+
+TEST_F(ResolveGameFilePathTest,
+       shouldReturnNulloptIfTheFileDoesNotExistInAnyOfTheDataPaths) {
+  const auto pluginPath =
+      ResolveGameFilePath({localPath}, dataPath, "missing.esp");
+
+  EXPECT_FALSE(pluginPath.has_value());
 }
 
 TEST(GetExternalDataPaths,
