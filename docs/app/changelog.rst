@@ -4,6 +4,65 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.25.0 - Unreleased
+===================
+
+Added
+-----
+
+- Support for OpenMW. OpenMW differs from other games in a few ways:
+
+  - Master-flagged plugins are not forced to load before other plugins.
+  - There can be more than 255 plugins active at the same time (up to
+    2147483646 active plugins).
+  - It's not possible to persist changes to the load order positions of inactive
+    plugins, so if you apply a sorted load order and then reload LOOT or view
+    the load order in another application you may not see the load order that
+    you applied.
+  - LOOT does not support ghosted plugins for OpenMW.
+  - The Registry keys that LOOT uses to detect OpenMW installs on Windows are
+    version-specific, and LOOT is only aware of OpenMW 0.48.0 and 0.49.0 (the
+    latter is unreleased at time of writing). Other versions of OpenMW may be
+    compatible, but LOOT will not automatically detect their install paths.
+
+- A Tamil translation by TamilNeram.
+
+Fixed
+-----
+
+- Several cases where plugin group memberships would cause cyclic interaction
+  errors during sorting. Via libloot.
+
+Changed
+-------
+
+- The application of plugin groups as part of the sorting process has been
+  overhauled. As well as fixing several known bugs, the new approach avoids
+  causing cyclic interaction errors, handles groups more consistently and is
+  easier to understand. As a result of these changes, sorting may now give
+  different results compared to v0.24.1 and earlier. Via libloot.
+- Sorting performance has significantly improved, particularly for larger load
+  orders and load orders with more groups: over 2x 0.24.1's performance has been
+  observed. Via libloot.
+- When building LOOT from source for Linux, the build process no longer falls
+  back to downloading a precompiled libloot release if libloot is not found.
+- Updated Boost to v1.87.0.
+- Updated fmt to v11.1.3.
+- Updated libloot to v0.25.0.
+- Updated minizip-ng to v4.0.8.
+- Updated Qt to v6.8.2.
+- Updated spdlog to v1.15.1.
+- Updated TBB to v2022.0.0.
+- Updated ValveFileVDF to v1.1.0.
+- LOOT's translations are now licensed under the Creative Commons Zero 1.0
+  license. Some Chinese, French, and Polish translations have been removed as
+  their authors did not respond to requests to relicense their contributions.
+- LOOT's installer now uses official Korean and Swedish Inno Setup translations.
+- Updated the Brazilian Portuguese translation.
+- Updated the Chinese translation.
+- Updated the Finnish translation.
+- Updated the German translation.
+
 0.24.1 - 2024-11-07
 ===================
 
