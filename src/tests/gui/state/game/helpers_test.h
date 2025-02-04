@@ -221,7 +221,11 @@ TEST_P(
   const auto pluginPath =
       ResolveGameFilePath(GetParam(), {localPath}, dataPath, filename);
 
-  EXPECT_EQ(localPath / ghostedFilename, pluginPath);
+  if (GetParam() == GameId::openmw) {
+    EXPECT_FALSE(pluginPath.has_value());
+  } else {
+    EXPECT_EQ(localPath / ghostedFilename, pluginPath);
+  }
 }
 
 TEST_P(ResolveGameFilePathTest,
@@ -238,7 +242,11 @@ TEST_P(
   const auto pluginPath = ResolveGameFilePath(
       GetParam(), {localPath}, dataPath, blankMasterDependentEsm);
 
-  EXPECT_EQ(dataPath / (blankMasterDependentEsm + ".ghost"), pluginPath);
+  if (GetParam() == GameId::openmw) {
+    EXPECT_FALSE(pluginPath.has_value());
+  } else {
+    EXPECT_EQ(dataPath / (blankMasterDependentEsm + ".ghost"), pluginPath);
+  }
 }
 
 TEST_P(ResolveGameFilePathTest,

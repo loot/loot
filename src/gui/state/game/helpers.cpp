@@ -46,6 +46,8 @@
 #endif
 
 namespace {
+using loot::GameId;
+
 constexpr const char* GHOST_EXTENSION = ".ghost";
 
 constexpr const char* MS_FO4_AUTOMATRON_DATA_PATH =
@@ -84,12 +86,14 @@ std::filesystem::path GetUserDocumentsPath(
 }
 
 std::optional<std::filesystem::path> GetPathThatExists(
+    GameId gameId,
     std::filesystem::path&& path) {
   if (std::filesystem::exists(path)) {
     return path;
   }
 
-  if (loot::HasPluginFileExtension(path.filename().u8string())) {
+  if (gameId != GameId::openmw &&
+      loot::HasPluginFileExtension(path.filename().u8string())) {
     path += GHOST_EXTENSION;
 
     if (std::filesystem::exists(path)) {
@@ -102,11 +106,12 @@ std::optional<std::filesystem::path> GetPathThatExists(
 
 template<typename I>
 std::optional<std::filesystem::path> ResolveGameFilePath(
+    GameId gameId,
     const std::filesystem::path& filePath,
     const I begin,
     const I end) {
   for (auto it = begin; it != end; ++it) {
-    const auto path = GetPathThatExists(*it / filePath);
+    const auto path = GetPathThatExists(gameId, *it / filePath);
     if (path.has_value()) {
       return path;
     }
@@ -339,10 +344,12 @@ std::optional<std::filesystem::path> ResolveGameFilePath(
 
   const auto externalPath =
       gameId == GameId::openmw
-          ? ::ResolveGameFilePath(filePath,
+          ? ::ResolveGameFilePath(gameId,
+                                  filePath,
                                   externalDataPaths.rbegin(),
                                   externalDataPaths.rend())
-          : ::ResolveGameFilePath(filePath,
+          : ::ResolveGameFilePath(gameId,
+                                  filePath,
                                   externalDataPaths.begin(),
                                   externalDataPaths.end());
 
@@ -350,7 +357,7 @@ std::optional<std::filesystem::path> ResolveGameFilePath(
     return externalPath;
   }
 
-  return GetPathThatExists(dataPath / filePath);
+  return GetPathThatExists(gameId, dataPath / filePath);
 }
 
 // Taken from
