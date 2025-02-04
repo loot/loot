@@ -1170,6 +1170,7 @@ std::vector<SourcedMessage> Game::GetMessages(
   }
 
   static constexpr size_t MWSE_SAFE_MAX_ACTIVE_FULL_PLUGINS = 1023;
+  static constexpr size_t OPENMW_SAFE_MAX_ACTIVE_FULL_PLUGINS = 2147483646;
   static constexpr size_t SAFE_MAX_ACTIVE_FULL_PLUGINS = 255;
   static constexpr size_t SAFE_MAX_ACTIVE_MEDIUM_PLUGINS = 255;
   static constexpr size_t SAFE_MAX_ACTIVE_LIGHT_PLUGINS = 4096;
@@ -1181,7 +1182,9 @@ std::vector<SourcedMessage> Game::GetMessages(
 
   auto safeMaxActiveFullPlugins = SAFE_MAX_ACTIVE_FULL_PLUGINS;
 
-  if (isMWSEInstalled) {
+  if (settings_.Id() == GameId::openmw) {
+    safeMaxActiveFullPlugins = OPENMW_SAFE_MAX_ACTIVE_FULL_PLUGINS;
+  } else if (isMWSEInstalled) {
     if (logger) {
       logger->info(
           "MWSE is installed, which raises the safe maximum number of active "
