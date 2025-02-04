@@ -1530,25 +1530,38 @@ std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
 
   // Scan external data paths first, as the game checks them before the main
   // data path.
-  for (const auto& dataPath : gameHandle_->GetAdditionalDataPaths()) {
-    if (!std::filesystem::exists(dataPath)) {
-      continue;
-    }
-
-    if (logger) {
-      logger->trace("Scanning for plugins in {}", dataPath.u8string());
-    }
-
-    for (fs::directory_iterator it(dataPath); it != fs::directory_iterator();
-         ++it) {
-      if (fs::is_regular_file(it->status())) {
-        const auto filename = Filename(it->path().filename().u8string());
-        if (foundPlugins.count(filename) == 0) {
-          maybePlugins.push_back(it->path());
-          foundPlugins.insert(filename);
+  const auto processExternalDataPath =
+      [&](const std::filesystem::path& dataPath) {
+        if (!std::filesystem::exists(dataPath)) {
+          return;
         }
-      }
-    }
+
+        if (logger) {
+          logger->trace("Scanning for plugins in {}", dataPath.u8string());
+        }
+
+        for (fs::directory_iterator it(dataPath);
+             it != fs::directory_iterator();
+             ++it) {
+          if (fs::is_regular_file(it->status())) {
+            const auto filename = Filename(it->path().filename().u8string());
+            if (foundPlugins.count(filename) == 0) {
+              maybePlugins.push_back(it->path());
+              foundPlugins.insert(filename);
+            }
+          }
+        }
+      };
+
+  const auto additionalDataPaths = gameHandle_->GetAdditionalDataPaths();
+  if (settings_.Id() == GameId::openmw) {
+    std::for_each(additionalDataPaths.rbegin(),
+                  additionalDataPaths.rend(),
+                  processExternalDataPath);
+  } else {
+    std::for_each(additionalDataPaths.begin(),
+                  additionalDataPaths.end(),
+                  processExternalDataPath);
   }
 
   if (logger) {
@@ -1626,8 +1639,10 @@ bool Game::IsCreationClubPlugin(const std::string& name) const {
 
 std::optional<std::filesystem::path> Game::ResolveGameFilePath(
     const std::string& filePath) const {
-  return loot::ResolveGameFilePath(
-      gameHandle_->GetAdditionalDataPaths(), settings_.DataPath(), filePath);
+  return loot::ResolveGameFilePath(settings_.Id(),
+                                   gameHandle_->GetAdditionalDataPaths(),
+                                   settings_.DataPath(),
+                                   filePath);
 }
 
 bool Game::FileExists(const std::string& filePath) const {

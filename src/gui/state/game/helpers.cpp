@@ -100,6 +100,20 @@ std::optional<std::filesystem::path> GetPathThatExists(
   return std::nullopt;
 }
 
+template<typename I>
+std::optional<std::filesystem::path> ResolveGameFilePath(
+    const std::filesystem::path& filePath,
+    const I begin,
+    const I end) {
+  for (auto it = begin; it != end; ++it) {
+    const auto path = GetPathThatExists(*it / filePath);
+    if (path.has_value()) {
+      return path;
+    }
+  }
+
+  return std::nullopt;
+}
 }
 
 namespace loot {
@@ -317,16 +331,23 @@ bool HasPluginFileExtension(const std::string& filename) {
 }
 
 std::optional<std::filesystem::path> ResolveGameFilePath(
+    GameId gameId,
     const std::vector<std::filesystem::path>& externalDataPaths,
     const std::filesystem::path& dataPath,
     const std::string& filename) {
   const auto filePath = std::filesystem::u8path(filename);
 
-  for (const auto& externalDataPath : externalDataPaths) {
-    const auto externalPath = GetPathThatExists(externalDataPath / filePath);
-    if (externalPath.has_value()) {
-      return externalPath;
-    }
+  const auto externalPath =
+      gameId == GameId::openmw
+          ? ::ResolveGameFilePath(filePath,
+                                  externalDataPaths.rbegin(),
+                                  externalDataPaths.rend())
+          : ::ResolveGameFilePath(filePath,
+                                  externalDataPaths.begin(),
+                                  externalDataPaths.end());
+
+  if (externalPath.has_value()) {
+    return externalPath;
   }
 
   return GetPathThatExists(dataPath / filePath);

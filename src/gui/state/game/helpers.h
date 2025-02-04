@@ -65,6 +65,7 @@ std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
 bool HasPluginFileExtension(const std::string& filename);
 
 std::optional<std::filesystem::path> ResolveGameFilePath(
+    GameId gameId,
     const std::vector<std::filesystem::path>& externalDataPaths,
     const std::filesystem::path& dataPath,
     const std::string& filename);
