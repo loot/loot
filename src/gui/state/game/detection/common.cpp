@@ -26,6 +26,7 @@
 #include "gui/state/game/detection/common.h"
 
 #include <algorithm>
+#include <boost/algorithm/string.hpp>
 #include <functional>
 
 #include "gui/helpers.h"
@@ -33,7 +34,8 @@
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 
-namespace loot {
+namespace {
+using loot::GameId;
 std::string GetExecutableName(GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
@@ -60,12 +62,56 @@ std::string GetExecutableName(GameId gameId) {
     case GameId::starfield:
       return "Starfield.exe";
     case GameId::openmw:
+#ifdef _WIN32
       return "openmw.exe";
+#else
+      return "openmw";
+#endif
     default:
       throw std::logic_error("Unrecognised game ID");
   }
 }
 
+std::filesystem::path GetOpenMWDataPath(
+    const std::filesystem::path& gamePath) {
+#ifndef _WIN32
+  if (gamePath == "/usr/games") {
+    // Ubuntu, Debian
+    return "/usr/share/games/openmw/resources/vfs";
+  } else if (gamePath == "/run/host/usr/games") {
+    // Ubuntu, Debian from inside a Flatpak sandbox
+    return "/run/host/usr/share/games/openmw/resources/vfs";
+  } else if (gamePath == "/usr/bin") {
+    const auto path = "/usr/share/games/openmw/resources/vfs";
+    if (std::filesystem::exists(path)) {
+      // Arch
+      return path;
+    }
+
+    // OpenSUSE
+    return "/usr/share/openmw/resources/vfs";
+  } else if (gamePath == "/run/host/usr/bin") {
+    const auto path = "/run/host/usr/share/games/openmw/resources/vfs";
+    if (std::filesystem::exists(path)) {
+      // Arch from inside a Flatpak sandbox
+      return path;
+    }
+
+    // OpenSUSE from inside a Flatpak sandbox
+    return "/run/host/usr/share/openmw/resources/vfs";
+  } else if (boost::ends_with(
+                 gamePath.u8string(),
+                 "/app/org.openmw.OpenMW/current/active/files/bin")) {
+    // Flatpak
+    return gamePath / "../share/games/openmw/resources/vfs";
+  }
+#endif
+
+  return gamePath / "resources" / "vfs";
+}
+}
+
+namespace loot {
 std::string GetMasterFilename(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
@@ -145,6 +191,10 @@ bool ExecutableExists(const GameId& gameType,
     case GameId::tes5vr:
     case GameId::fo4:
     case GameId::fo4vr:
+    case GameId::openmw:
+      // OpenMW's executable is checked because the game paths /usr/bin and
+      // /usr/games may have the same data path, leading to two installs being
+      // recorded when there's actually only one.
       return std::filesystem::exists(
           gamePath / std::filesystem::u8path(GetExecutableName(gameType)));
     case GameId::tes3:
@@ -153,10 +203,34 @@ bool ExecutableExists(const GameId& gameType,
     case GameId::fo3:
     case GameId::fonv:
     case GameId::starfield:
-    case GameId::openmw:
       // Don't bother checking for the games that don't share their master
       // plugin name.
       return true;
+    default:
+      throw std::logic_error("Unrecognised game ID");
+  }
+}
+
+std::filesystem::path GetDataPath(const GameId gameId,
+                                  const std::filesystem::path& gamePath) {
+  switch (gameId) {
+    case GameId::tes3:
+      return gamePath / "Data Files";
+    case GameId::tes4:
+    case GameId::nehrim:
+    case GameId::tes5:
+    case GameId::enderal:
+    case GameId::tes5se:
+    case GameId::enderalse:
+    case GameId::tes5vr:
+    case GameId::fo3:
+    case GameId::fonv:
+    case GameId::fo4:
+    case GameId::fo4vr:
+    case GameId::starfield:
+      return gamePath / "Data";
+    case GameId::openmw: 
+      return GetOpenMWDataPath(gamePath);
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -166,7 +240,7 @@ bool IsValidGamePath(const GameId gameId,
                      const std::string& masterFilename,
                      const std::filesystem::path& pathToCheck) {
   return !pathToCheck.empty() &&
-         std::filesystem::exists(pathToCheck / GetPluginsFolderName(gameId) /
+         std::filesystem::exists(GetDataPath(gameId, pathToCheck) /
                                  std::filesystem::u8path(masterFilename)) &&
          ExecutableExists(gameId, pathToCheck);
 }

@@ -418,7 +418,11 @@ private:
       case GameType::fo4vr:
         return "Fallout4VR.exe";
       case GameType::openmw:
+#ifdef _WIN32
         return "openmw.exe";
+#else
+        return "openmw";
+#endif
       default:
         throw std::logic_error("Unexpected game type");
     }

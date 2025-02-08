@@ -27,6 +27,7 @@
 
 #include <loot/enum/game_type.h>
 
+#include "gui/helpers.h"
 #include "gui/state/game/detection/common.h"
 #include "gui/state/game/detection/game_install.h"
 #include "gui/state/game/detection/gog.h"
@@ -257,6 +258,39 @@ std::optional<GameInstall> FindSiblingGameInstall(const GameId gameId) {
   return GameInstall{
       gameId, InstallSource::unknown, path, std::filesystem::path()};
 }
+
+#ifndef _WIN32
+std::vector<GameInstall> FindOpenMWLinuxInstalls() {
+  static std::array<std::filesystem::path, 6> openmwPaths = {
+      // Ubuntu, Debian
+      "/usr/games",
+      // Ubuntu, Debian from inside a Flatpak sandbox
+      "/run/host/usr/games",
+      // Arch, OpenSUSE
+      "/usr/bin",
+      // Arch, OpenSUSE from inside a Flatpak sandbox
+      "/run/host/usr/bin",
+      // System Flatpak
+      "/var/lib/flatpak/app/org.openmw.OpenMW/current/active/files/bin",
+      // User Flatpak
+      loot::getUserProfilePath() /
+          ".local/share/flatpak/app/org.openmw.OpenMW/current/active/"
+          "files/bin"};
+
+  std::vector<GameInstall> installs;
+  const auto masterFilename = loot::GetMasterFilename(GameId::openmw);
+  for (const auto& path : openmwPaths) {
+    if (loot::IsValidGamePath(GameId::openmw, masterFilename, path)) {
+      installs.push_back(GameInstall{GameId::openmw,
+                                     InstallSource::unknown,
+                                     path,
+                                     std::filesystem::path()});
+    }
+  }
+
+  return installs;
+}
+#endif
 }
 
 namespace loot::generic {
@@ -284,6 +318,10 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
                     GetGameName(gameId),
                     e.what());
     }
+  }
+#else
+  if (gameId == GameId::openmw) {
+    FindOpenMWLinuxInstalls();
   }
 #endif
 

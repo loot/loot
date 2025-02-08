@@ -38,8 +38,6 @@
 namespace loot {
 static constexpr const char* MASTERLIST_FILENAME = "masterlist.yaml";
 
-std::string GetPluginsFolderName(GameId gameId);
-
 std::string ToString(const GameId gameId);
 
 bool ShouldAllowRedating(const GameType gameType);

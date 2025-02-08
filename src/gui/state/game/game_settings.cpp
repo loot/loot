@@ -109,30 +109,6 @@ float GetMinimumHeaderVersion(const GameId gameId) {
 }
 
 namespace loot {
-std::string GetPluginsFolderName(GameId gameId) {
-  switch (gameId) {
-    case GameId::tes3:
-      return "Data Files";
-    case GameId::tes4:
-    case GameId::nehrim:
-    case GameId::tes5:
-    case GameId::enderal:
-    case GameId::tes5se:
-    case GameId::enderalse:
-    case GameId::tes5vr:
-    case GameId::fo3:
-    case GameId::fonv:
-    case GameId::fo4:
-    case GameId::fo4vr:
-    case GameId::starfield:
-      return "Data";
-    case GameId::openmw:
-      return "resources/vfs";
-    default:
-      throw std::logic_error("Unrecognised game ID");
-  }
-}
-
 std::string ToString(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
@@ -204,7 +180,7 @@ std::filesystem::path GameSettings::GameLocalPath() const {
 }
 
 std::filesystem::path GameSettings::DataPath() const {
-  return gamePath_ / GetPluginsFolderName(id_);
+  return GetDataPath(id_, gamePath_);
 }
 
 GameSettings& GameSettings::SetName(const std::string& name) {

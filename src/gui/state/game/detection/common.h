@@ -60,6 +60,9 @@ std::string GetGameName(const GameId gameId);
 
 std::string GetMasterFilename(const GameId gameId);
 
+std::filesystem::path GetDataPath(const GameId gameId,
+                                  const std::filesystem::path& gamePath);
+
 bool IsValidGamePath(const GameId gameId,
                      const std::string& masterFilename,
                      const std::filesystem::path& pathToCheck);

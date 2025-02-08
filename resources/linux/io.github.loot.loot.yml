@@ -15,6 +15,7 @@ finish-args:
   # Steam package default library paths.
   - --filesystem=xdg-data/Steam/steamapps/common
   - --filesystem=xdg-data/Steam/steamapps/compatdata
+  - --filesystem=~/.steam/steam/steamapps/common
   # Steam Flatpak data.
   - --filesystem=~/.var/app/com.valvesoftware.Steam/.local/share/Steam:ro
   # Steam Flatpak default library paths.
@@ -28,6 +29,25 @@ finish-args:
   - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic:ro
   # Heroic Games Launcher default games install path.
   - --filesystem=~/Games/Heroic
+  # OpenMW's Ubuntu, Debian, Arch and OpenSUSE packages install its global
+  # config files under /etc/openmw.
+  - --filesystem=host-etc:ro
+  # OpenMW's Ubuntu, Debian, Arch and OpenSUSE packages install its global data
+  # and executable files under /usr.
+  - --filesystem=host-os:ro
+  # OpenMW user config for Ubuntu, Debian, Arch and OpenSUSE packages
+  - --filesystem=xdg-config/openmw/openmw.cfg
+  # OpenMW user data for Ubuntu, Debian, Arch and OpenSUSE packages
+  - --filesystem=xdg-data/openmw:ro
+  # OpenMW system Flatpak install path
+  - --filesystem=/var/lib/flatpak/app/org.openmw.OpenMW:ro
+  # OpenMW user Flatpak install path
+  - --filesystem=~/.local/share/flatpak/app/org.openmw.OpenMW:ro
+  # OpenMW Flatpak user config
+  - --filesystem=~/.var/app/org.openmw.OpenMW/config/openmw/openmw.cfg
+  # OpenMW Flatpak user data
+  - --filesystem=~/.var/app/org.openmw.OpenMW/data/openmw:ro
+
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
 modules:
@@ -162,20 +182,20 @@ modules:
       - -DLIBLOOT_BUILD_TESTS=OFF
       - -DLIBLOOT_INSTALL_DOCS=OFF
       - -DESPLUGIN_URL=/run/build/libloot/6.1.1.tar.gz
-      - -DLIBLOADORDER_URL=/run/build/libloot/18.2.1.tar.gz
+      - -DLIBLOADORDER_URL=/run/build/libloot/18.2.2.tar.gz
       - -DLOOT_CONDITION_INTERPRETER_URL=/run/build/libloot/5.0.0.tar.gz
     sources:
       # Use the Git repository so that libloot's commit hash gets embedded in the build.
       - type: git
         url: https://github.com/loot/libloot.git
-        tag: 0.25.1
-        commit: f865167997f9b6ad34792645aca4ed3c73dfb505
+        tag: 0.25.2
+        commit: a49075aaa9cac7dfaa1317d0251debb8b73cc75c
       - type: file
         url: https://github.com/Ortham/esplugin/archive/refs/tags/6.1.1.tar.gz
         sha256: 8896859a6469e810c6e5430ed910fa8f8c31d39e032703b87ab090759663a240
       - type: file
-        url: https://github.com/Ortham/libloadorder/archive/refs/tags/18.2.1.tar.gz
-        sha256: b453e28493aef9bdc7578ca3aa19c390cab44e6e411a44df879de7e617177066
+        url: https://github.com/Ortham/libloadorder/archive/refs/tags/18.2.2.tar.gz
+        sha256: 5e4c12e91180abbf201be70b3073fce791bdee2d70f33f89b35942446d3b5782
       - type: file
         url: https://github.com/loot/loot-condition-interpreter/archive/refs/tags/5.0.0.tar.gz
         sha256: 5cf58a5e30d62fec84985ea28bc52c7913007241dc5690369231a2f893620d8c
