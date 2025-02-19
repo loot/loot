@@ -248,7 +248,12 @@ void setWindowPosition(QWidget& window,
 }
 
 MainWindow::MainWindow(LootState& state, QWidget* parent) :
-    QMainWindow(parent), state(state) {
+    QMainWindow(parent),
+    state(state),
+    // Don't load default-dark when Qt is using the windowsvista style, as that
+    // ignores the system color scheme. This needs to be recorded now as the
+    // style name will change when a stylesheet is set.
+    allowDefaultDarkTheme(qApp->style()->name() != "windowsvista") {
   qRegisterMetaType<QueryResult>("QueryResult");
   qRegisterMetaType<std::string>("std::string");
 
@@ -344,10 +349,9 @@ void MainWindow::applyTheme() {
   }
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-  // Don't load default-dark when Qt is using the windowsvista style,
-  // as that ignores the system color scheme.
-  if (loadingDefault && qApp->style()->name() != "windowsvista" &&
-      QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark) {
+  const auto colorScheme = QGuiApplication::styleHints()->colorScheme();
+  if (loadingDefault && allowDefaultDarkTheme &&
+      colorScheme == Qt::ColorScheme::Dark) {
     // Load the default-dark theme instead as it gives better results.
     if (logger) {
       logger->debug(
