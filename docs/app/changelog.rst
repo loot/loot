@@ -30,6 +30,10 @@ Added
 Fixed
 -----
 
+- The groups editor graph's background was white when using the dark theme.
+- Low contrast text in the group editor's graph when using the dark theme.
+- Switching from the dark theme back to the default theme would not correctly
+  apply the default theme on Windows until LOOT was relaunched.
 - Several cases where plugin group memberships would cause cyclic interaction
   errors during sorting. Via libloot.
 
@@ -48,7 +52,7 @@ Changed
   back to downloading a precompiled libloot release if libloot is not found.
 - Updated Boost to v1.87.0.
 - Updated fmt to v11.1.3.
-- Updated libloot to v0.25.0.
+- Updated libloot to v0.25.3.
 - Updated minizip-ng to v4.0.8.
 - Updated Qt to v6.8.2.
 - Updated spdlog to v1.15.1.
