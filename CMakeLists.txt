@@ -249,6 +249,9 @@ if(NOT OGDF_FOUND)
         set(OGDF_HASH "SHA256=a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436")
     endif()
 
+    # git apply does not accept an absolute path as the --directory value.
+    cmake_path(RELATIVE_PATH CMAKE_CURRENT_BINARY_DIR OUTPUT_VARIABLE RELATIVE_BINARY_DIR)
+
     # Use ExternalProject for OGDF as otherwise there's no way to stop it from
     # creating and building loads of unnecessary targets.
     ExternalProject_Add(OGDF
@@ -257,6 +260,9 @@ if(NOT OGDF_FOUND)
         CMAKE_ARGS
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        PATCH_COMMAND git apply -v
+            --directory=${RELATIVE_BINARY_DIR}/external/src/OGDF
+            ${CMAKE_SOURCE_DIR}/cmake/ogdf-chrono.patch
         BUILD_COMMAND ${OGDF_BUILD_COMMAND}
         INSTALL_COMMAND "")
     ExternalProject_Get_Property(OGDF SOURCE_DIR BINARY_DIR)

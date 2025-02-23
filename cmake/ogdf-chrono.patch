@@ -1,0 +1,9 @@
+diff --git a/src/ogdf/cluster/HananiTutteCPlanarity.cpp b/src/ogdf/cluster/HananiTutteCPlanarity.cpp
+--- a/src/ogdf/cluster/HananiTutteCPlanarity.cpp
++++ b/src/ogdf/cluster/HananiTutteCPlanarity.cpp
+@@ -38,4 +38,5 @@
+ #include <ogdf/cluster/HananiTutteCPlanarity.h>
+
++#include <chrono>
+ #include <map>
+ #include <unordered_map>
