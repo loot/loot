@@ -183,7 +183,7 @@ modules:
       - -DLIBLOOT_INSTALL_DOCS=OFF
       - -DESPLUGIN_URL=/run/build/libloot/6.1.1.tar.gz
       - -DLIBLOADORDER_URL=/run/build/libloot/18.2.2.tar.gz
-      - -DLOOT_CONDITION_INTERPRETER_URL=/run/build/libloot/5.0.0.tar.gz
+      - -DLOOT_CONDITION_INTERPRETER_URL=/run/build/libloot/5.2.0.tar.gz
     sources:
       # Use the Git repository so that libloot's commit hash gets embedded in the build.
       - type: git
@@ -197,8 +197,8 @@ modules:
         url: https://github.com/Ortham/libloadorder/archive/refs/tags/18.2.2.tar.gz
         sha256: 5e4c12e91180abbf201be70b3073fce791bdee2d70f33f89b35942446d3b5782
       - type: file
-        url: https://github.com/loot/loot-condition-interpreter/archive/refs/tags/5.0.0.tar.gz
-        sha256: 5cf58a5e30d62fec84985ea28bc52c7913007241dc5690369231a2f893620d8c
+        url: https://github.com/loot/loot-condition-interpreter/archive/refs/tags/5.2.0.tar.gz
+        sha256: 48db9d1022c65c6ea53b5febbbb8a45d089ac8e8773f8e14b069387fab80948d
       # Generated using scripts/generate_manifests.sh
       - ../../build/flatpak-manifests/esplugin.json
       - ../../build/flatpak-manifests/libloadorder.json
