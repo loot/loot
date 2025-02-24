@@ -4,7 +4,7 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.25.0 - Unreleased
+0.25.0 - 2025-02-24
 ===================
 
 Added

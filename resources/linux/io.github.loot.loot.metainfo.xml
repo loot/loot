@@ -70,6 +70,16 @@
   </screenshots>
 
   <releases>
+    <release version="0.25.0" date="2025-02-24">
+      <description>
+        <ul>
+          <li>Added support for OpenMW.</li>
+          <li>Overhauled how group metadata is used during sorting.</li>
+          <li>Other fixes and improvements.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.25.0/app/changelog.html#id1</url>
+    </release>
     <release version="0.24.1" date="2024-11-07">
       <description>
         <ul>
