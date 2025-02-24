@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-02-19 22:02+0000\n"
-"PO-Revision-Date: 2024-05-22 20:04+0100\n"
-"Last-Translator: Mikael Hiort af Ornäs <mikael.hafo@hotmail.com>\n"
-"Language-Team: Svenska\n"
+"PO-Revision-Date: 2025-02-24 21:17+0000\n"
+"Last-Translator: tygyh <jonis9898@hotmail.com>\n"
+"Language-Team: Swedish <https://hosted.weblate.org/projects/loot/loot/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10.2-dev\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -25,17 +25,18 @@ msgstr ""
 
 #: src/gui/plugin_item.cpp:194
 msgid "Location"
-msgstr ""
+msgstr "Plats"
 
 #: src/gui/plugin_item.cpp:199
+#, fuzzy
 msgid "Location {0}"
-msgstr ""
+msgstr "Plats {0}"
 
 #: src/gui/sourced_message.cpp:80
 msgid "{0} ITM record"
 msgid_plural "{0} ITM records"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} ITM-post"
+msgstr[1] "{0} ITM-poster"
 
 #: src/gui/sourced_message.cpp:86
 msgid "{0} deleted reference"
