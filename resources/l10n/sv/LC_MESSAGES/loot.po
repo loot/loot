@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-02-19 22:02+0000\n"
-"PO-Revision-Date: 2024-05-22 20:04+0100\n"
-"Last-Translator: Mikael Hiort af Ornäs <mikael.hafo@hotmail.com>\n"
-"Language-Team: Svenska\n"
+"POT-Creation-Date: 2025-02-24 20:50+0000\n"
+"PO-Revision-Date: 2025-02-25 17:21+0000\n"
+"Last-Translator: tygyh <jonis9898@hotmail.com>\n"
+"Language-Team: Swedish <https://hosted.weblate.org/projects/loot/loot/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10.2-dev\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -25,47 +25,47 @@ msgstr ""
 
 #: src/gui/plugin_item.cpp:194
 msgid "Location"
-msgstr ""
+msgstr "Plats"
 
 #: src/gui/plugin_item.cpp:199
 msgid "Location {0}"
-msgstr ""
+msgstr "Plats {0}"
 
 #: src/gui/sourced_message.cpp:80
 msgid "{0} ITM record"
 msgid_plural "{0} ITM records"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} ITM-post"
+msgstr[1] "{0} ITM-poster"
 
 #: src/gui/sourced_message.cpp:86
 msgid "{0} deleted reference"
 msgid_plural "{0} deleted references"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} raderad referens"
+msgstr[1] "{0} raderade referenser"
 
 #: src/gui/sourced_message.cpp:92
 msgid "{0} deleted navmesh"
 msgid_plural "{0} deleted navmeshes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} raderat navigeringsnät"
+msgstr[1] "{0} raderade navigeringsnät"
 
 #: src/gui/sourced_message.cpp:102
 msgid "{0} found {1}, {2} and {3}."
-msgstr ""
+msgstr "{0} hittade {1}, {2} och {3}."
 
 #: src/gui/sourced_message.cpp:110
 msgid "{0} found dirty edits."
-msgstr ""
+msgstr "{0} hittade smutsiga redigeringar."
 
 #: src/gui/sourced_message.cpp:115 src/gui/sourced_message.cpp:122
 #: src/gui/sourced_message.cpp:129
 msgid "{0} found {1} and {2}."
-msgstr ""
+msgstr "{0} hittade {1} och {2}."
 
 #: src/gui/sourced_message.cpp:134 src/gui/sourced_message.cpp:138
 #: src/gui/sourced_message.cpp:142
 msgid "{0} found {1}."
-msgstr ""
+msgstr "{0} hittade {1}."
 
 #: src/gui/qt/filters_widget.cpp:247
 msgid "Show only overlapping plugins for"
