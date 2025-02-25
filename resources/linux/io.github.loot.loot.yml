@@ -171,7 +171,7 @@ modules:
       - ../../build/flatpak-manifests/cbindgen.json
 
   - name: libloot
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     builddir: true
     build-options:
       append-path: /usr/lib/sdk/rust-stable/bin
