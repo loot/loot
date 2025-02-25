@@ -191,6 +191,14 @@ jobs:
       - name: Generate Flatpak dependency manifests
         run: ./scripts/generate_manifests.sh
 
+      - name: Lint the AppStream MetaInfo
+        run: |
+          flatpak install flathub -y org.flatpak.Builder
+
+          flatpak run --command=flatpak-builder-lint org.flatpak.Builder \
+            manifest resources/linux/io.github.loot.loot.yml \
+            --exceptions
+
       - name: Build Flatpak package
         id: build-flatpak
         run: |
@@ -199,6 +207,13 @@ jobs:
           ./scripts/build_flatpak.sh "$PACKAGE_FILENAME"
 
           echo "filename=$PACKAGE_FILENAME" >> $GITHUB_OUTPUT
+
+      - name: Lint the Flatpak package repo
+        run: |
+          flatpak run --command=flatpak-builder-lint org.flatpak.Builder \
+            repo build/flatpak-repo \
+            --exceptions \
+            --user-exceptions resources/linux/flatpak-builder-lint-exceptions.json
 
       - name: Import GPG key
         run: echo -n "${{ secrets.GPG_SIGNING_KEY }}" | gpg --import
