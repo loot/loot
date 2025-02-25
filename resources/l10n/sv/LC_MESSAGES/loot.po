@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-02-24 20:50+0000\n"
-"PO-Revision-Date: 2025-02-24 21:17+0000\n"
+"PO-Revision-Date: 2025-02-25 17:21+0000\n"
 "Last-Translator: tygyh <jonis9898@hotmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/loot/loot/sv/>\n"
 "Language: sv\n"
@@ -28,7 +28,6 @@ msgid "Location"
 msgstr "Plats"
 
 #: src/gui/plugin_item.cpp:199
-#, fuzzy
 msgid "Location {0}"
 msgstr "Plats {0}"
 
@@ -41,32 +40,32 @@ msgstr[1] "{0} ITM-poster"
 #: src/gui/sourced_message.cpp:86
 msgid "{0} deleted reference"
 msgid_plural "{0} deleted references"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} raderad referens"
+msgstr[1] "{0} raderade referenser"
 
 #: src/gui/sourced_message.cpp:92
 msgid "{0} deleted navmesh"
 msgid_plural "{0} deleted navmeshes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} raderat navigeringsnät"
+msgstr[1] "{0} raderade navigeringsnät"
 
 #: src/gui/sourced_message.cpp:102
 msgid "{0} found {1}, {2} and {3}."
-msgstr ""
+msgstr "{0} hittade {1}, {2} och {3}."
 
 #: src/gui/sourced_message.cpp:110
 msgid "{0} found dirty edits."
-msgstr ""
+msgstr "{0} hittade smutsiga redigeringar."
 
 #: src/gui/sourced_message.cpp:115 src/gui/sourced_message.cpp:122
 #: src/gui/sourced_message.cpp:129
 msgid "{0} found {1} and {2}."
-msgstr ""
+msgstr "{0} hittade {1} och {2}."
 
 #: src/gui/sourced_message.cpp:134 src/gui/sourced_message.cpp:138
 #: src/gui/sourced_message.cpp:142
 msgid "{0} found {1}."
-msgstr ""
+msgstr "{0} hittade {1}."
 
 #: src/gui/qt/filters_widget.cpp:247
 msgid "Show only overlapping plugins for"
