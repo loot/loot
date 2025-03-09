@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-02-24 20:50+0000\n"
-"PO-Revision-Date: 2025-01-10 04:00+0000\n"
-"Last-Translator: YanJun Sun <yanjun.sun@mail.ru>\n"
+"PO-Revision-Date: 2025-03-09 01:54+0000\n"
+"Last-Translator: core Dcy <j7ox_5f@163.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/loot/loot/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -14,15 +14,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.10.3-dev\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
-msgstr ""
+msgstr "\"{0}\" 包含无法评估的条件. 详情: {1}"
 
 #: src/gui/plugin_item.cpp:194
 msgid "Location"
-msgstr ""
+msgstr "位置"
 
 #: src/gui/plugin_item.cpp:199
 msgid "Location {0}"
@@ -49,7 +49,7 @@ msgstr ""
 
 #: src/gui/sourced_message.cpp:110
 msgid "{0} found dirty edits."
-msgstr ""
+msgstr "{0} 发现脏编辑."
 
 #: src/gui/sourced_message.cpp:115 src/gui/sourced_message.cpp:122
 #: src/gui/sourced_message.cpp:129
@@ -79,7 +79,7 @@ msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:252
 msgid "Hide version numbers"
-msgstr ""
+msgstr "隐藏版本号"
 
 #: src/gui/qt/filters_widget.cpp:253
 msgid "Hide CRCs"
@@ -91,11 +91,11 @@ msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:255
 msgid "Hide Sources"
-msgstr ""
+msgstr "隐藏源"
 
 #: src/gui/qt/filters_widget.cpp:256
 msgid "Hide notes"
-msgstr ""
+msgstr "隐藏注释"
 
 #: src/gui/qt/filters_widget.cpp:258
 msgid "Hide official plugins' cleaning messages"
@@ -103,19 +103,19 @@ msgstr "隐藏官方插件的清理讯息"
 
 #: src/gui/qt/filters_widget.cpp:259
 msgid "Hide all plugin messages"
-msgstr ""
+msgstr "隐藏所有插件信息"
 
 #: src/gui/qt/filters_widget.cpp:260
 msgid "Hide inactive plugins"
-msgstr ""
+msgstr "隐藏非活动插件"
 
 #: src/gui/qt/filters_widget.cpp:261
 msgid "Hide messageless plugins"
-msgstr ""
+msgstr "隐藏无消息插件"
 
 #: src/gui/qt/filters_widget.cpp:262
 msgid "Hide Creation Club plugins"
-msgstr ""
+msgstr "隐藏 Creation Club 插件"
 
 #: src/gui/qt/filters_widget.cpp:263
 msgid "Show only empty plugins"
@@ -123,11 +123,11 @@ msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:265
 msgid "Show only warnings and errors"
-msgstr ""
+msgstr "仅显示警告和错误"
 
 #: src/gui/qt/filters_widget.cpp:266
 msgid "Hidden plugins:"
-msgstr ""
+msgstr "已隐藏插件:"
 
 #: src/gui/qt/filters_widget.cpp:267
 msgid "Hidden messages:"
@@ -135,19 +135,19 @@ msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:269
 msgid "No plugin selected"
-msgstr ""
+msgstr "未选择插件"
 
 #: src/gui/qt/filters_widget.cpp:276
 msgid "No group selected"
-msgstr ""
+msgstr "未选择组"
 
 #: src/gui/qt/filters_widget.cpp:283
 msgid "No text specified"
-msgstr ""
+msgstr "未指定文本"
 
 #: src/gui/qt/filters_widget.cpp:286
 msgid "If checked, interprets the content filter text as a regular expression."
-msgstr ""
+msgstr "如果选中，则将内容筛选文本解释为正则表达式。"
 
 #: src/gui/qt/general_info_card.cpp:146
 msgid "Active Small Plugins"
@@ -179,11 +179,11 @@ msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:219
 msgid "Warnings"
-msgstr ""
+msgstr "警告"
 
 #: src/gui/qt/general_info_card.cpp:220
 msgid "Errors"
-msgstr ""
+msgstr "错误"
 
 #: src/gui/qt/general_info_card.cpp:221
 msgid "Total Messages"
@@ -254,33 +254,33 @@ msgstr ""
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:709
 msgid "&Sort Plugins"
-msgstr ""
+msgstr "&排序插件"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:711
 msgid "Update &Masterlist"
-msgstr ""
+msgstr "更新主列表"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:713
 msgid "&Apply Sorted Load Order"
-msgstr ""
+msgstr "应用已排序加载顺序"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:715
 msgid "&Discard Sorted Load Order"
-msgstr ""
+msgstr "放弃已排序加载顺序"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:720
 msgid "&File"
-msgstr ""
+msgstr "档案"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:722
 msgid "&Settings…"
-msgstr ""
+msgstr "设置"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:724
@@ -290,28 +290,28 @@ msgstr "更新所有 Masterlist(&U)"
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:726
 msgid "&Backup LOOT Data"
-msgstr ""
+msgstr "备份 LOOT 数据"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:728
 msgid "&Open LOOT Data Folder"
-msgstr ""
+msgstr "打开 LOOT 数据文件夹"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:730
 msgid "&Quit"
-msgstr ""
+msgstr "退出"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:734
 msgid "&Game"
-msgstr ""
+msgstr "游戏"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:736
 msgid "&Edit Groups…"
-msgstr ""
+msgstr "编辑组"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:738
@@ -321,7 +321,7 @@ msgstr ""
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:740
 msgid "Copy &Load Order"
-msgstr ""
+msgstr "复制加载顺序"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:742
@@ -331,7 +331,7 @@ msgstr ""
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:744
 msgid "&Refresh Content"
-msgstr ""
+msgstr "刷新内容"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:746
@@ -341,18 +341,18 @@ msgstr ""
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:748
 msgid "&Fix Ambiguous Load Order"
-msgstr ""
+msgstr "修复不明确的加载顺序"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:750
 msgid "Clear All &User Metadata…"
-msgstr ""
+msgstr "清除所有用户元数据"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:754
 msgid "&Plugin"
-msgstr ""
+msgstr "插件"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:756
@@ -1165,9 +1165,8 @@ msgstr ""
 msgid ""
 "This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
 "cause issues in-game, and sorting will fail while this plugin is installed."
-msgstr ""
-"此插件为 {0} 且需要非主（前置）插件 \"{1}\"。插件安装后，可能会引起游戏内问"
-"题，排序失败。。"
+msgstr "此插件为 {0} 且需要非主（前置）插件 \"{1}\""
+"。插件安装后，可能会引起游戏内问题，排序失败。"
 
 #: src/gui/state/game/game.cpp:597
 msgid ""
