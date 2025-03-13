@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-02-24 20:50+0000\n"
-"PO-Revision-Date: 2025-02-25 17:21+0000\n"
+"PO-Revision-Date: 2025-03-13 12:18+0000\n"
 "Last-Translator: tygyh <jonis9898@hotmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/loot/loot/sv/>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.2-dev\n"
+"X-Generator: Weblate 5.10.3\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -69,7 +69,7 @@ msgstr "{0} hittade {1}."
 
 #: src/gui/qt/filters_widget.cpp:247
 msgid "Show only overlapping plugins for"
-msgstr ""
+msgstr "Visa endast överlappande plugins för"
 
 #: src/gui/qt/filters_widget.cpp:248
 msgid "Show only plugins in group"
