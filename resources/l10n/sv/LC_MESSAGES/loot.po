@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-02-24 20:50+0000\n"
-"PO-Revision-Date: 2025-03-13 12:18+0000\n"
+"PO-Revision-Date: 2025-03-14 01:55+0000\n"
 "Last-Translator: tygyh <jonis9898@hotmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/loot/loot/sv/>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.3\n"
+"X-Generator: Weblate 5.11-dev\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -97,7 +97,7 @@ msgstr "Dölj bashtaggar"
 
 #: src/gui/qt/filters_widget.cpp:255
 msgid "Hide Sources"
-msgstr ""
+msgstr "Dölj Källor"
 
 #: src/gui/qt/filters_widget.cpp:256
 msgid "Hide notes"
@@ -121,15 +121,15 @@ msgstr "Dölj insticksmoduler som saknar meddelanden"
 
 #: src/gui/qt/filters_widget.cpp:262
 msgid "Hide Creation Club plugins"
-msgstr ""
+msgstr "Dölj plugins från Creation Club"
 
 #: src/gui/qt/filters_widget.cpp:263
 msgid "Show only empty plugins"
-msgstr ""
+msgstr "Visa endast tomma plugins"
 
 #: src/gui/qt/filters_widget.cpp:265
 msgid "Show only warnings and errors"
-msgstr ""
+msgstr "Visa endast varningar och fel"
 
 #: src/gui/qt/filters_widget.cpp:266
 msgid "Hidden plugins:"
@@ -145,7 +145,7 @@ msgstr "Inga insticksmoduler har markerats"
 
 #: src/gui/qt/filters_widget.cpp:276
 msgid "No group selected"
-msgstr ""
+msgstr "Ingen grupp vald"
 
 #: src/gui/qt/filters_widget.cpp:283
 msgid "No text specified"
@@ -154,14 +154,16 @@ msgstr "Ingen text har angivits"
 #: src/gui/qt/filters_widget.cpp:286
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr ""
+"Om denna är ikryssad, tolkas filtertexten för innehåll som ett reguljärt "
+"uttryck."
 
 #: src/gui/qt/general_info_card.cpp:146
 msgid "Active Small Plugins"
-msgstr ""
+msgstr "Aktiva små plugins"
 
 #: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:226
 msgid "Active Light Plugins"
-msgstr ""
+msgstr "Aktiva ljusplugins"
 
 #: src/gui/qt/general_info_card.cpp:212
 msgid "General Information"
