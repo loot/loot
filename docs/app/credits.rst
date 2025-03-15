@@ -12,7 +12,7 @@ In addition, the following are credited with application-related support:
 * Translations:
 
   * Bulgarian: Georgi Georgiev
-  * Chinese (Simplified): bluesky404, silentdark, YanJunSunYJS
+  * Chinese (Simplified): bluesky404, silentdark, YanJunSunYJS, Dcycore
   * Czech: ThePotatoChronicler
   * Danish: Freso, ZyPA
   * Finnish: 3ventic, Ricky-Tigg
@@ -26,7 +26,7 @@ In addition, the following are credited with application-related support:
   * Portuguese (Brazil): Kassane, zDasF1xer, Kyo-- (Carlos Gabriel), Hollow_666
   * Russian: Tokc.D.K., Kerber, IllusiveMan196, xsSplater, Aimdru
   * Spanish: Sharlikran, Artaios, Mr. Robo, Allen1351 (Ale), gallegonovato
-  * Swedish: Mikael Hiort af Ornäs, simoneddeland, ddbb07
+  * Swedish: Mikael Hiort af Ornäs, simoneddeland, ddbb07, tygyh
   * Tamil: TamilNeram
   * Turkish: Ilker Binzet
   * Ukrainian: IllusiveMan196
