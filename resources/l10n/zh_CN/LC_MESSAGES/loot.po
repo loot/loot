@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-02-24 20:50+0000\n"
-"PO-Revision-Date: 2025-03-09 01:54+0000\n"
+"PO-Revision-Date: 2025-03-14 22:42+0000\n"
 "Last-Translator: core Dcy <j7ox_5f@163.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/loot/loot/zh_Hans/>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.10.3-dev\n"
+"X-Generator: Weblate 5.11-dev\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -26,26 +26,26 @@ msgstr "位置"
 
 #: src/gui/plugin_item.cpp:199
 msgid "Location {0}"
-msgstr ""
+msgstr "位置 {0}"
 
 #: src/gui/sourced_message.cpp:80
 msgid "{0} ITM record"
 msgid_plural "{0} ITM records"
-msgstr[0] ""
+msgstr[0] "{0} ITM记录"
 
 #: src/gui/sourced_message.cpp:86
 msgid "{0} deleted reference"
 msgid_plural "{0} deleted references"
-msgstr[0] ""
+msgstr[0] "{0} 已删除的引用"
 
 #: src/gui/sourced_message.cpp:92
 msgid "{0} deleted navmesh"
 msgid_plural "{0} deleted navmeshes"
-msgstr[0] ""
+msgstr[0] "{0}被删除的导航网格"
 
 #: src/gui/sourced_message.cpp:102
 msgid "{0} found {1}, {2} and {3}."
-msgstr ""
+msgstr "{0}发现{1}，{2}和{3}."
 
 #: src/gui/sourced_message.cpp:110
 msgid "{0} found dirty edits."
@@ -54,28 +54,28 @@ msgstr "{0} 发现脏编辑."
 #: src/gui/sourced_message.cpp:115 src/gui/sourced_message.cpp:122
 #: src/gui/sourced_message.cpp:129
 msgid "{0} found {1} and {2}."
-msgstr ""
+msgstr "{0}发现{1}和{2}."
 
 #: src/gui/sourced_message.cpp:134 src/gui/sourced_message.cpp:138
 #: src/gui/sourced_message.cpp:142
 msgid "{0} found {1}."
-msgstr ""
+msgstr "{0}发现{1}."
 
 #: src/gui/qt/filters_widget.cpp:247
 msgid "Show only overlapping plugins for"
-msgstr ""
+msgstr "仅显示与...冲突/重叠的插件"
 
 #: src/gui/qt/filters_widget.cpp:248
 msgid "Show only plugins in group"
-msgstr ""
+msgstr "仅显示组中的插件"
 
 #: src/gui/qt/filters_widget.cpp:250
 msgid "Show only plugins with cards that contain"
-msgstr ""
+msgstr "仅显示卡片中包含...的插件"
 
 #: src/gui/qt/filters_widget.cpp:251 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
-msgstr ""
+msgstr "使用正则表达式"
 
 #: src/gui/qt/filters_widget.cpp:252
 msgid "Hide version numbers"
@@ -83,7 +83,7 @@ msgstr "隐藏版本号"
 
 #: src/gui/qt/filters_widget.cpp:253
 msgid "Hide CRCs"
-msgstr ""
+msgstr "隐藏 CRCs"
 
 #: src/gui/qt/filters_widget.cpp:254
 msgid "Hide Bash Tags"
@@ -119,7 +119,7 @@ msgstr "隐藏 Creation Club 插件"
 
 #: src/gui/qt/filters_widget.cpp:263
 msgid "Show only empty plugins"
-msgstr ""
+msgstr "仅显示空插件"
 
 #: src/gui/qt/filters_widget.cpp:265
 msgid "Show only warnings and errors"
@@ -131,7 +131,7 @@ msgstr "已隐藏插件:"
 
 #: src/gui/qt/filters_widget.cpp:267
 msgid "Hidden messages:"
-msgstr ""
+msgstr "隐藏的信息："
 
 #: src/gui/qt/filters_widget.cpp:269
 msgid "No plugin selected"
@@ -159,15 +159,15 @@ msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:212
 msgid "General Information"
-msgstr ""
+msgstr "一般信息"
 
 #: src/gui/qt/general_info_card.cpp:214
 msgid "Masterlist Revision ID"
-msgstr ""
+msgstr "主列表修订ID"
 
 #: src/gui/qt/general_info_card.cpp:215
 msgid "Masterlist Update Date"
-msgstr ""
+msgstr "主列表更新日期"
 
 #: src/gui/qt/general_info_card.cpp:216
 msgid "Masterlist Prelude Revision ID"
@@ -187,11 +187,11 @@ msgstr "错误"
 
 #: src/gui/qt/general_info_card.cpp:221
 msgid "Total Messages"
-msgstr ""
+msgstr "信息总数"
 
 #: src/gui/qt/general_info_card.cpp:223
 msgid "Active Plugins"
-msgstr ""
+msgstr "激活插件"
 
 #: src/gui/qt/general_info_card.cpp:224
 msgid "Active Full Plugins"
@@ -203,21 +203,21 @@ msgstr "激活中等插件"
 
 #: src/gui/qt/general_info_card.cpp:227
 msgid "Dirty Plugins"
-msgstr ""
+msgstr "脏插件"
 
 #: src/gui/qt/general_info_card.cpp:228
 msgid "Total Plugins"
-msgstr ""
+msgstr "全部插件"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
 #: src/gui/qt/helpers.cpp:116
 msgid "(edited)"
-msgstr ""
+msgstr "(已被编辑)"
 
 #: src/gui/qt/helpers.cpp:231
 msgid "N/A: No masterlist present"
-msgstr ""
+msgstr "N/A:不存在主列表"
 
 #. translators: N/A is an abbreviation for Not Applicable. A
 #. masterlist is a database that contains information for
@@ -228,11 +228,11 @@ msgstr ""
 
 #: src/gui/qt/helpers.cpp:244
 msgid "Unknown: No revision metadata found"
-msgstr ""
+msgstr "未知：未找到修订元数据"
 
 #: src/gui/qt/helpers.cpp:380
 msgid "Invalid regular expression: {0}"
-msgstr ""
+msgstr "正则表达式无效：{0}"
 
 #: src/gui/qt/main_window.cpp:74
 msgid ""
@@ -357,7 +357,7 @@ msgstr "插件"
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:756
 msgid "Copy &Plugin Name"
-msgstr ""
+msgstr "复制插件名字"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:758
