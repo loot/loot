@@ -4,6 +4,23 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.25.1 - 2025-03-15
+===================
+
+Fixed
+-----
+
+- The changes to groups handling during sorting that were introduced in v0.25.0 included an optimisation that skipped processing groups that had already been processed, but it prematurely skipped groups when the defined groups included one that loaded directly after more than one other group. Via libloot.
+- The loot-condition-interpreter version used in the Flatpak build. This was included in the v0.25.0 release on Flathub but not in the upstream code tagged as 0.25.0.
+
+Changed
+-------
+
+- Updated libloot to v0.25.4.
+- Updated the Chinese translation.
+- Updated the Swedish translation.
+- Use cmake-ninja for libloot in Flatpak build. This was included in the v0.25.0 release on Flathub but not in the upstream code tagged as 0.25.0.
+
 0.25.0 - 2025-02-24
 ===================
 
