@@ -70,6 +70,15 @@
   </screenshots>
 
   <releases>
+    <release version="0.25.1" date="2025-03-15">
+      <description>
+        <ul>
+          <li>Fixed a sorting bug that would cause some group memberships to be ignored.</li>
+          <li>Updated the Chinese and Swedish translations.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.25.1/app/changelog.html#id1</url>
+    </release>
     <release version="0.25.0" date="2025-02-24">
       <description>
         <ul>
