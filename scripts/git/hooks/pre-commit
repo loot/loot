@@ -13,7 +13,7 @@ xgettext \
   --add-comments=translators: \
   --from-code=utf-8 \
   --package-name=LOOT \
-  --package-version=0.25.1 \
+  --package-version=0.25.2 \
   --copyright-holder="WrinklyNinja" \
   --msgid-bugs-address="https://github.com/loot/loot/issues" \
   -o resources/l10n/template.pot \
