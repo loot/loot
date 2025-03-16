@@ -70,6 +70,14 @@
   </screenshots>
 
   <releases>
+    <release version="0.25.2" date="2025-03-16">
+      <description>
+        <ul>
+          <li>Fixed loading plugins for Morrowind, OpenMW and Starfield.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.25.2/app/changelog.html#id1</url>
+    </release>
     <release version="0.25.1" date="2025-03-15">
       <description>
         <ul>
