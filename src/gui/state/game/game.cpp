@@ -156,6 +156,12 @@ std::optional<std::filesystem::path> GetCCCFilename(const GameType gameType) {
       throw std::logic_error("Unrecognised game type");
   }
 }
+
+bool containsFilterTag(const std::vector<loot::Tag>& tags) {
+  return std::any_of(tags.cbegin(), tags.cend(), [](const loot::Tag& tag) {
+    return tag.GetName() == "Filter";
+  });
+}
 }
 
 namespace loot {
@@ -417,11 +423,8 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
   };
 
   if (IsPluginActive(plugin.GetName())) {
-    auto tags = metadata.GetTags();
-    const auto hasFilterTag =
-        std::any_of(tags.cbegin(), tags.cend(), [&](const Tag& tag) {
-          return tag.GetName() == "Filter";
-        });
+    const auto hasFilterTag = containsFilterTag(plugin.GetBashTags()) ||
+                              containsFilterTag(metadata.GetTags());
 
     if (!hasFilterTag) {
       for (const auto& master : plugin.GetMasters()) {
