@@ -219,8 +219,8 @@ FetchContent_Declare(
     FIND_PACKAGE_ARGS)
 
 if(NOT DEFINED VALVE_FILE_VDF_URL)
-    set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/refs/tags/v1.1.0.tar.gz")
-    set(VALVE_FILE_VDF_HASH "SHA256=9149a6b01ca857f49f5660d608639acd579542bf862ad23e9cbf4c1e80ade55e")
+    set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/refs/tags/v1.1.1.tar.gz")
+    set(VALVE_FILE_VDF_HASH "SHA256=de16a199c535c3b49f2aa0bd17e3154e02b32fa7b0949053ba6d981f8c32197f")
 endif()
 
 FetchContent_Declare(
@@ -260,9 +260,9 @@ if(NOT OGDF_FOUND)
         CMAKE_ARGS
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        PATCH_COMMAND git apply -v
-            --directory=${RELATIVE_BINARY_DIR}/external/src/OGDF
-            ${CMAKE_SOURCE_DIR}/cmake/ogdf-chrono.patch
+        #PATCH_COMMAND git apply -v
+        #    --directory=${RELATIVE_BINARY_DIR}/external/src/OGDF
+        #    ${CMAKE_SOURCE_DIR}/cmake/ogdf-chrono.patch
         BUILD_COMMAND ${OGDF_BUILD_COMMAND}
         INSTALL_COMMAND "")
     ExternalProject_Get_Property(OGDF SOURCE_DIR BINARY_DIR)
