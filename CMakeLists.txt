@@ -342,6 +342,7 @@ set(LOOT_SRC_GUI_CPP_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/games_manager.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/group_node_positions.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/logging.cpp"
