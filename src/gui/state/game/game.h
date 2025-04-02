@@ -131,6 +131,7 @@ public:
   void LoadMetadata();
   std::vector<std::string> GetKnownBashTags() const;
 
+  std::vector<Group> GetGroups() const;
   std::vector<Group> GetMasterlistGroups() const;
   std::vector<Group> GetUserGroups() const;
 
@@ -151,12 +152,13 @@ public:
 
   std::string GetLoadOrderAsTextTable() const;
 
+  bool FileExists(const std::string& file) const;
+
 private:
   std::filesystem::path GetLOOTGamePath() const;
   std::vector<std::filesystem::path> GetInstalledPluginPaths() const;
   std::optional<std::filesystem::path> ResolveGameFilePath(
       const std::string& pluginName) const;
-  bool FileExists(const std::string& file) const;
 
   void AppendMessages(std::vector<SourcedMessage> messages);
 

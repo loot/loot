@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.25.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-02 17:49+0100\n"
+"POT-Creation-Date: 2025-04-02 22:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -260,216 +260,216 @@ msgstr ""
 msgid "LOOT could not unambiguously set the load order."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1485
+#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1474
 msgid "Ambiguous load order detected"
 msgstr ""
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:709
+#: src/gui/qt/main_window.cpp:698
 msgid "&Sort Plugins"
 msgstr ""
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:711
+#: src/gui/qt/main_window.cpp:700
 msgid "Update &Masterlist"
 msgstr ""
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:713
+#: src/gui/qt/main_window.cpp:702
 msgid "&Apply Sorted Load Order"
 msgstr ""
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:715
+#: src/gui/qt/main_window.cpp:704
 msgid "&Discard Sorted Load Order"
 msgstr ""
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:720
+#: src/gui/qt/main_window.cpp:709
 msgid "&File"
 msgstr ""
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:722
+#: src/gui/qt/main_window.cpp:711
 msgid "&Settings…"
 msgstr ""
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:724
+#: src/gui/qt/main_window.cpp:713
 msgid "&Update All Masterlists"
 msgstr ""
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:726
+#: src/gui/qt/main_window.cpp:715
 msgid "&Backup LOOT Data"
 msgstr ""
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:728
+#: src/gui/qt/main_window.cpp:717
 msgid "&Open LOOT Data Folder"
 msgstr ""
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:730
+#: src/gui/qt/main_window.cpp:719
 msgid "&Quit"
 msgstr ""
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:734
+#: src/gui/qt/main_window.cpp:723
 msgid "&Game"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:736
+#: src/gui/qt/main_window.cpp:725
 msgid "&Edit Groups…"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:738
+#: src/gui/qt/main_window.cpp:727
 msgid "Searc&h Cards…"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:740
+#: src/gui/qt/main_window.cpp:729
 msgid "Copy &Load Order"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:742
+#: src/gui/qt/main_window.cpp:731
 msgid "&Copy Content"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:744
+#: src/gui/qt/main_window.cpp:733
 msgid "&Refresh Content"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:746
+#: src/gui/qt/main_window.cpp:735
 msgid "Redate &Plugins…"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:748
+#: src/gui/qt/main_window.cpp:737
 msgid "&Fix Ambiguous Load Order"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:750
+#: src/gui/qt/main_window.cpp:739
 msgid "Clear All &User Metadata…"
 msgstr ""
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:754
+#: src/gui/qt/main_window.cpp:743
 msgid "&Plugin"
 msgstr ""
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:756
+#: src/gui/qt/main_window.cpp:745
 msgid "Copy &Plugin Name"
 msgstr ""
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:758
+#: src/gui/qt/main_window.cpp:747
 msgid "Copy &Card Content"
 msgstr ""
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:760
+#: src/gui/qt/main_window.cpp:749
 msgid "Copy &Metadata"
 msgstr ""
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:762
+#: src/gui/qt/main_window.cpp:751
 msgid "&Edit Metadata…"
 msgstr ""
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:764
+#: src/gui/qt/main_window.cpp:753
 msgid "Clear &User Metadata…"
 msgstr ""
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:768
+#: src/gui/qt/main_window.cpp:757
 msgid "&Help"
 msgstr ""
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:770
+#: src/gui/qt/main_window.cpp:759
 msgid "&View Documentation"
 msgstr ""
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:772
+#: src/gui/qt/main_window.cpp:761
 msgid "&Open FAQs"
 msgstr ""
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:774
+#: src/gui/qt/main_window.cpp:763
 msgid "&Join Discord Server"
 msgstr ""
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:776
+#: src/gui/qt/main_window.cpp:765
 msgid "&About"
 msgstr ""
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:781
+#: src/gui/qt/main_window.cpp:770
 msgid "P&lugins"
 msgstr ""
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:784
+#: src/gui/qt/main_window.cpp:773
 msgid "F&ilters"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1086 src/gui/qt/main_window.cpp:1539
-#: src/gui/qt/main_window.cpp:2163
+#: src/gui/qt/main_window.cpp:1075 src/gui/qt/main_window.cpp:1528
+#: src/gui/qt/main_window.cpp:2152
 msgid "Updating and parsing masterlist…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1174
+#: src/gui/qt/main_window.cpp:1163
 #, c++-format
 msgid ""
 "This appears to be the first time you have run LOOT v{0}. Your current LOOT "
 "data has been backed up to: {1}"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1182
+#: src/gui/qt/main_window.cpp:1171
 #, c++-format
 msgid "This appears to be the first time you have run LOOT v{0}."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1189
+#: src/gui/qt/main_window.cpp:1178
 msgid "Here are some tips to help you get started with the interface."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1194
+#: src/gui/qt/main_window.cpp:1183
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by overlap "
 "filtering, or by sorting."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1200
+#: src/gui/qt/main_window.cpp:1189
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1206
+#: src/gui/qt/main_window.cpp:1195
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1213 src/gui/qt/main_window.cpp:2039
+#: src/gui/qt/main_window.cpp:1202 src/gui/qt/main_window.cpp:2028
 #, c++-format
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
@@ -477,33 +477,33 @@ msgid ""
 "using {0}."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1228
+#: src/gui/qt/main_window.cpp:1217
 msgid "First-Time Tips"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1263
+#: src/gui/qt/main_window.cpp:1252
 msgid "metadata edits"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1264
+#: src/gui/qt/main_window.cpp:1253
 msgid "sorted load order"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1267
+#: src/gui/qt/main_window.cpp:1256
 #, c++-format
 msgid ""
 "You have not yet applied or cancelled your {0}. Are you sure you want to "
 "quit?"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1360
+#: src/gui/qt/main_window.cpp:1349
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:370
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1370
+#: src/gui/qt/main_window.cpp:1359
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:364
 #: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
@@ -511,17 +511,17 @@ msgid ""
 "get to it through the main menu) for more information."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1417
+#: src/gui/qt/main_window.cpp:1406
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1435
+#: src/gui/qt/main_window.cpp:1424
 msgid "Sorting made no changes to the load order."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1486
+#: src/gui/qt/main_window.cpp:1475
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -531,37 +531,37 @@ msgid ""
 "unambiguously set the load order to what is displayed by LOOT."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1562
+#: src/gui/qt/main_window.cpp:1551
 msgid "Updating all masterlists…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1594
+#: src/gui/qt/main_window.cpp:1583
 #, c++-format
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1601
+#: src/gui/qt/main_window.cpp:1590
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1644
+#: src/gui/qt/main_window.cpp:1633
 msgid "The load order has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1662
+#: src/gui/qt/main_window.cpp:1651
 msgid "LOOT's content has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1674
+#: src/gui/qt/main_window.cpp:1663
 msgid "The load order displayed by LOOT has been set."
 msgstr ""
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1699
+#: src/gui/qt/main_window.cpp:1688
 msgid "Redate Plugins?"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1701
+#: src/gui/qt/main_window.cpp:1690
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -570,103 +570,103 @@ msgid ""
 msgstr ""
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1713
+#: src/gui/qt/main_window.cpp:1702
 msgid "Plugins were successfully redated."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1725
+#: src/gui/qt/main_window.cpp:1714
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1773
+#: src/gui/qt/main_window.cpp:1762
 msgid "All user-added metadata has been cleared."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1786
+#: src/gui/qt/main_window.cpp:1775
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1850
+#: src/gui/qt/main_window.cpp:1839
 #, c++-format
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1868
+#: src/gui/qt/main_window.cpp:1857
 #, c++-format
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1887
+#: src/gui/qt/main_window.cpp:1876
 #, c++-format
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1902
+#: src/gui/qt/main_window.cpp:1891
 #, c++-format
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1942
+#: src/gui/qt/main_window.cpp:1931
 #, c++-format
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2025
+#: src/gui/qt/main_window.cpp:2014
 #, c++-format
 msgid "Version {0} (build {1})"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2031
+#: src/gui/qt/main_window.cpp:2020
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
 "3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2049
+#: src/gui/qt/main_window.cpp:2038
 msgid "About LOOT"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2373
+#: src/gui/qt/main_window.cpp:2362
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2521
+#: src/gui/qt/main_window.cpp:2510
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2580
+#: src/gui/qt/main_window.cpp:2569
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2600
+#: src/gui/qt/main_window.cpp:2589
 #, c++-format
 msgid "Masterlist updated to revision {0}."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2664
+#: src/gui/qt/main_window.cpp:2653
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2687
+#: src/gui/qt/main_window.cpp:2676
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2749
+#: src/gui/qt/main_window.cpp:2738
 #, c++-format
 msgid "A [new release]({0}) of LOOT is available."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2766
+#: src/gui/qt/main_window.cpp:2755
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -1167,214 +1167,27 @@ msgid ""
 "installed, try running its launcher then restarting LOOT."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:263 src/gui/state/game/game.cpp:290
-#, c++-format
-msgid "This plugin requires \"{0}\" to be installed, but it is missing."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:281
-#, c++-format
-msgid "This plugin requires \"{0}\" to be active, but it is inactive."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:308
-#, c++-format
-msgid "This plugin is incompatible with \"{0}\", but both are present."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:337
-msgid "small master"
-msgstr ""
-
-#: src/gui/state/game/game.cpp:338
-msgid "light master"
-msgstr ""
-
-#: src/gui/state/game/game.cpp:345
-#, c++-format
-msgid ""
-"This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
-"cause issues in-game, and sorting will fail while this plugin is installed."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:367
-msgid ""
-"This plugin contains records that have FormIDs outside the valid range for "
-"an ESL plugin. Using this plugin will cause irreversible damage to your game "
-"saves."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:386
-msgid ""
-"This plugin contains records that have FormIDs outside the valid range for a "
-"medium plugin. Using this plugin will cause irreversible damage to your game "
-"saves."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:404
-msgid ""
-"This plugin is an update plugin but adds new records. Using this plugin may "
-"cause irreversible damage to your game saves."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:420
-msgid "plugin"
-msgstr ""
-
-#. translators: master as in a plugin that is
-#. loaded as if its master flag is set.
-#: src/gui/state/game/game.cpp:423
-msgid "master"
-msgstr ""
-
-#: src/gui/state/game/game.cpp:433
-#, c++-format
-msgid ""
-"\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
-"correctly installed {2} and all its requirements."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:448
-#, c++-format
-msgid ""
-"\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
-"will not load it."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:462
-#, c++-format
-msgid ""
-"\"{0}\" is flagged as a light {1}, but the game does not support such "
-"plugins, and will load it as a full {1}."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:484
-#, c++-format
-msgid ""
-"This plugin is not a blueprint master and requires the blueprint master "
-"\"{0}\". This can cause issues in-game, as this plugin will always load "
-"before \"{0}\"."
-msgstr ""
-
-#. translators: A header is the part of a file that stores data
-#. like file name and version.
-#: src/gui/state/game/game.cpp:511
-#, c++-format
-msgid ""
-"This plugin has a header version of {0}, which is less than the game's "
-"minimum supported header version of {1}."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:527
-msgid "This plugin has itself as a master."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:534
-#, c++-format
-msgid "This plugin belongs to the group \"{0}\", which does not exist."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:559
-#, c++-format
-msgid ""
-"This plugin has a BashTags file that will override the suggestions made by "
-"LOOT for the following Bash Tags: {0}."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:687
+#: src/gui/state/game/game.cpp:215
 #, c++-format
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:705
+#: src/gui/state/game/game.cpp:233
 #, c++-format
 msgid "The group \"{0}\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:746
-#, c++-format
-msgid "You have {0} active full plugins but the game only supports up to {1}."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:756
-#, c++-format
-msgid "You have {0} active plugins but the game only supports up to {1}."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:779
-msgid ""
-"Do not launch Morrowind without the use of MWSE or it will cause severe "
-"damage to your game."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:797
-#, c++-format
-msgid "You have {0} active {1} but the game only supports up to {2}."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:819
-#, c++-format
-msgid ""
-"You have a full plugin and {0} {1} sharing the FE load order index. "
-"Deactivate a full plugin or your {1} to avoid potential issues."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:841
-#, c++-format
-msgid ""
-"You have {0} active medium plugins but the game only supports up to {1}."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:861
-msgid ""
-"You have a full plugin and at least one medium plugin sharing the FD load "
-"order index. Deactivate a full plugin or all your medium plugins to avoid "
-"potential issues."
-msgstr ""
-
-#. translators: The placeholder is for the current game's name.
-#.
-#: src/gui/state/game/game.cpp:874
-#, c++-format
-msgid ""
-"{0} is installed in a case-sensitive location. This may cause issues as the "
-"game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
-"which is the default on Windows."
-msgstr ""
-
-#. translators: The placeholder is for the current game's
-#. name.
-#: src/gui/state/game/game.cpp:891
-#, c++-format
-msgid ""
-"{0}'s local application data is stored in a case-sensitive location. This "
-"may cause issues as the game, mods and LOOT may assume that filesystem paths "
-"are not case-sensitive, which is the default on Windows."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:921
-msgid "small plugin"
-msgid_plural "small plugins"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/gui/state/game/game.cpp:924
-msgid "light plugin"
-msgid_plural "light plugins"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/gui/state/game/game.cpp:1615
+#: src/gui/state/game/game.cpp:821
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1652
+#: src/gui/state/game/game.cpp:858
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1759
+#: src/gui/state/game/game.cpp:936
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
@@ -1393,7 +1206,7 @@ msgid ""
 "[LOOT's website]({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1934
+#: src/gui/state/game/game.cpp:1115
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -1403,3 +1216,190 @@ msgstr ""
 #, c++-format
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""
+
+#: src/gui/state/game/validation.cpp:77 src/gui/state/game/validation.cpp:104
+#, c++-format
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:95
+#, c++-format
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:122
+#, c++-format
+msgid "This plugin is incompatible with \"{0}\", but both are present."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:151
+msgid "small master"
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:152
+msgid "light master"
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:159
+#, c++-format
+msgid ""
+"This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
+"cause issues in-game, and sorting will fail while this plugin is installed."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:181
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for "
+"an ESL plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:200
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for a "
+"medium plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:218
+msgid ""
+"This plugin is an update plugin but adds new records. Using this plugin may "
+"cause irreversible damage to your game saves."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:234
+msgid "plugin"
+msgstr ""
+
+#. translators: master as in a plugin that is
+#. loaded as if its master flag is set.
+#: src/gui/state/game/validation.cpp:237
+msgid "master"
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:247
+#, c++-format
+msgid ""
+"\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
+"correctly installed {2} and all its requirements."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:262
+#, c++-format
+msgid ""
+"\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
+"will not load it."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:276
+#, c++-format
+msgid ""
+"\"{0}\" is flagged as a light {1}, but the game does not support such "
+"plugins, and will load it as a full {1}."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:298
+#, c++-format
+msgid ""
+"This plugin is not a blueprint master and requires the blueprint master "
+"\"{0}\". This can cause issues in-game, as this plugin will always load "
+"before \"{0}\"."
+msgstr ""
+
+#. translators: A header is the part of a file that stores data
+#. like file name and version.
+#: src/gui/state/game/validation.cpp:325
+#, c++-format
+msgid ""
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:341
+msgid "This plugin has itself as a master."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:348
+#, c++-format
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:373
+#, c++-format
+msgid ""
+"This plugin has a BashTags file that will override the suggestions made by "
+"LOOT for the following Bash Tags: {0}."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:532
+#, c++-format
+msgid "You have {0} active full plugins but the game only supports up to {1}."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:542
+#, c++-format
+msgid "You have {0} active plugins but the game only supports up to {1}."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:565
+msgid ""
+"Do not launch Morrowind without the use of MWSE or it will cause severe "
+"damage to your game."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:583
+#, c++-format
+msgid "You have {0} active {1} but the game only supports up to {2}."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:605
+#, c++-format
+msgid ""
+"You have a full plugin and {0} {1} sharing the FE load order index. "
+"Deactivate a full plugin or your {1} to avoid potential issues."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:627
+#, c++-format
+msgid ""
+"You have {0} active medium plugins but the game only supports up to {1}."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:647
+msgid ""
+"You have a full plugin and at least one medium plugin sharing the FD load "
+"order index. Deactivate a full plugin or all your medium plugins to avoid "
+"potential issues."
+msgstr ""
+
+#. translators: The placeholder is for the current game's name.
+#.
+#: src/gui/state/game/validation.cpp:660
+#, c++-format
+msgid ""
+"{0} is installed in a case-sensitive location. This may cause issues as the "
+"game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
+"which is the default on Windows."
+msgstr ""
+
+#. translators: The placeholder is for the current game's
+#. name.
+#: src/gui/state/game/validation.cpp:677
+#, c++-format
+msgid ""
+"{0}'s local application data is stored in a case-sensitive location. This "
+"may cause issues as the game, mods and LOOT may assume that filesystem paths "
+"are not case-sensitive, which is the default on Windows."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:814
+msgid "small plugin"
+msgid_plural "small plugins"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/gui/state/game/validation.cpp:817
+msgid "light plugin"
+msgid_plural "light plugins"
+msgstr[0] ""
+msgstr[1] ""
