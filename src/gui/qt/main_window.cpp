@@ -83,24 +83,13 @@ void showAmbiguousLoadOrderSetWarning(QWidget* parent, const LootState& state) {
 }
 
 namespace loot {
-std::vector<std::string> GetGroupNames(
-    const std::vector<Group>& masterlistGroups,
-    const std::vector<Group>& userGroups) {
-  std::set<std::string> groupNames;
-
-  for (const auto& group : masterlistGroups) {
-    groupNames.insert(group.GetName());
-  }
-
-  for (const auto& group : userGroups) {
-    groupNames.insert(group.GetName());
-  }
-
-  return std::vector<std::string>(groupNames.begin(), groupNames.end());
-}
-
 std::vector<std::string> GetGroupNames(const gui::Game& game) {
-  return GetGroupNames(game.GetMasterlistGroups(), game.GetUserGroups());
+  std::vector<std::string> groupNames;
+  for (const auto& group : game.GetGroups()) {
+    groupNames.push_back(group.GetName());
+  }
+
+  return groupNames;
 }
 
 bool hasLoadOrderChanged(const std::vector<std::string>& oldLoadOrder,
