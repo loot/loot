@@ -149,13 +149,18 @@ public:
   void ClearAllUserMetadata();
   void SaveUserMetadata();
 
+  std::string GetLoadOrderAsTextTable() const;
+
 private:
   std::filesystem::path GetLOOTGamePath() const;
   std::vector<std::filesystem::path> GetInstalledPluginPaths() const;
-  void AppendMessages(std::vector<SourcedMessage> messages);
   std::optional<std::filesystem::path> ResolveGameFilePath(
       const std::string& pluginName) const;
   bool FileExists(const std::string& file) const;
+
+  void AppendMessages(std::vector<SourcedMessage> messages);
+
+  void LoadCurrentLoadOrderState();
 
   GameSettings settings_;
   std::unique_ptr<GameInterface> gameHandle_;
@@ -172,11 +177,15 @@ private:
 };
 }
 
-std::string GetLoadOrderAsTextTable(const gui::Game& game,
-                                    const std::vector<std::string>& plugins);
-
 std::string GetMetadataAsBBCodeYaml(const gui::Game& game,
                                     const std::string& pluginName);
+
+typedef std::tuple<const PluginInterface* const, std::optional<short>, bool>
+                                    LoadOrderTuple;
+
+std::vector<LoadOrderTuple> MapToLoadOrderTuples(
+    const gui::Game& game,
+    const std::vector<std::string>& loadOrder);
 
 template<typename T>
 std::vector<T> MapFromLoadOrderData(
@@ -184,52 +193,7 @@ std::vector<T> MapFromLoadOrderData(
     const std::vector<std::string>& loadOrder,
     const std::function<
         T(const PluginInterface* const, std::optional<short>, bool)>& mapper) {
-  typedef std::tuple<const PluginInterface* const, std::optional<short>, bool>
-      LoadOrderTuple;
-
-  std::vector<LoadOrderTuple> data;
-  data.reserve(loadOrder.size());
-
-  short numberOfActiveLightPlugins = 0;
-  short numberOfActiveMediumPlugins = 0;
-  short numberOfActiveFullPlugins = 0;
-
-  // First get all the necessary data to call the mapper, as this is fast.
-  for (const auto& pluginName : loadOrder) {
-    const auto plugin = game.GetPlugin(pluginName);
-    if (!plugin) {
-      continue;
-    }
-
-    const auto isLight = plugin->IsLightPlugin();
-    const auto isMedium = plugin->IsMediumPlugin();
-    const auto isActive = game.IsPluginActive(pluginName);
-
-    short numberOfActivePlugins;
-    if (isLight) {
-      numberOfActivePlugins = numberOfActiveLightPlugins;
-    } else if (isMedium) {
-      numberOfActivePlugins = numberOfActiveMediumPlugins;
-    } else {
-      numberOfActivePlugins = numberOfActiveFullPlugins;
-    }
-
-    const auto activeLoadOrderIndex = isActive
-                                          ? std::optional(numberOfActivePlugins)
-                                          : std::nullopt;
-
-    data.push_back(std::make_tuple(plugin, activeLoadOrderIndex, isActive));
-
-    if (isActive) {
-      if (isLight) {
-        ++numberOfActiveLightPlugins;
-      } else if (isMedium) {
-        ++numberOfActiveMediumPlugins;
-      } else {
-        ++numberOfActiveFullPlugins;
-      }
-    }
-  }
+  const auto data = MapToLoadOrderTuples(game, loadOrder);
 
   // Now perform the mapping in a second loop that can be parallelised
   // (because sometimes the mapper is slow).

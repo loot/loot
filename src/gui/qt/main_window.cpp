@@ -1636,8 +1636,7 @@ void MainWindow::on_actionSearch_triggered() { searchDialog->show(); }
 
 void MainWindow::on_actionCopyLoadOrder_triggered() {
   try {
-    const auto text = GetLoadOrderAsTextTable(
-        state.GetCurrentGame(), state.GetCurrentGame().GetLoadOrder());
+    const auto text = state.GetCurrentGame().GetLoadOrderAsTextTable();
 
     CopyToClipboard(text);
 
