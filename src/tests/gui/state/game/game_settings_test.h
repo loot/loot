@@ -31,15 +31,16 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
-class ShouldAllowRedatingTest : public ::testing::TestWithParam<GameType> {};
+class ShouldAllowRedatingTest : public ::testing::TestWithParam<GameId> {};
 
 INSTANTIATE_TEST_SUITE_P(,
                          ShouldAllowRedatingTest,
-                         ::testing::ValuesIn(ALL_GAME_TYPES));
+                         ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(ShouldAllowRedatingTest, shouldReturnTrueForOnlySkyrimAndSkyrimSE) {
   const auto result = ShouldAllowRedating(GetParam());
-  if (GetParam() == GameType::tes5 || GetParam() == GameType::tes5se) {
+  if (GetParam() == GameId::tes5 || GetParam() == GameId::enderal ||
+      GetParam() == GameId::tes5se || GetParam() == GameId::enderalse) {
     EXPECT_TRUE(result);
   } else {
     EXPECT_FALSE(result);
@@ -72,7 +73,6 @@ TEST_P(
     GameSettingsTest,
     defaultConstructorShouldInitialiseIdToTes4AndAllOtherSettingsToEmptyStrings) {
   EXPECT_EQ(GameId::tes4, settings_.Id());
-  EXPECT_EQ(GameType::tes4, settings_.Type());
   EXPECT_EQ("", settings_.Name());
   EXPECT_EQ("", settings_.FolderName());
   EXPECT_EQ("", settings_.Master());
@@ -88,7 +88,6 @@ TEST_P(GameSettingsTest,
   settings_ = GameSettings(GetParam(), folder);
 
   EXPECT_EQ(GetParam(), settings_.Id());
-  EXPECT_EQ(getGameType(), settings_.Type());
   EXPECT_EQ(folder, settings_.FolderName());
 
   // Repo branch changes between LOOT versions, so don't check an exact value.

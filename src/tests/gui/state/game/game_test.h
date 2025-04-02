@@ -123,7 +123,6 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   Game game(settings, lootDataPath, "");
 
   EXPECT_EQ(settings.Id(), game.GetSettings().Id());
-  EXPECT_EQ(settings.Type(), game.GetSettings().Type());
   EXPECT_EQ(settings.Name(), game.GetSettings().Name());
   EXPECT_EQ(settings.FolderName(), game.GetSettings().FolderName());
   EXPECT_EQ(settings.Master(), game.GetSettings().Master());
@@ -1010,10 +1009,10 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
 TEST_P(GameTest,
        supportsLightPluginsShouldReturnTrueForSkyrimVRIfSKSEPluginIsInstalled) {
   Game game = CreateInitialisedGame();
-  const auto gameType = game.GetSettings().Type();
+  const auto gameId = game.GetSettings().Id();
 
-  if (gameType == GameType::tes5se || gameType == GameType::fo4 ||
-      gameType == GameType::starfield) {
+  if (gameId == GameId::tes5se || gameId == GameId::fo4 ||
+      gameId == GameId::starfield) {
     EXPECT_TRUE(game.SupportsLightPlugins());
   } else {
     EXPECT_FALSE(game.SupportsLightPlugins());
@@ -1022,8 +1021,8 @@ TEST_P(GameTest,
   loot::test::touch(dataPath / "SKSE" / "Plugins" / "skyrimvresl.dll");
   game.LoadAllInstalledPlugins(true);
 
-  if (gameType == GameType::tes5se || gameType == GameType::tes5vr ||
-      gameType == GameType::fo4 || gameType == GameType::starfield) {
+  if (gameId == GameId::tes5se || gameId == GameId::tes5vr ||
+      gameId == GameId::fo4 || gameId == GameId::starfield) {
     EXPECT_TRUE(game.SupportsLightPlugins());
   } else {
     EXPECT_FALSE(game.SupportsLightPlugins());

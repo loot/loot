@@ -29,15 +29,16 @@ along with LOOT.  If not, see
 #include <random>
 #include <string>
 
-#include "loot/enum/game_type.h"
+#include "gui/state/game/detection/game_install.h"
 
 namespace loot {
 namespace test {
-std::filesystem::path getSourcePluginsPath(GameType gameType) {
+std::filesystem::path getSourcePluginsPath(GameId gameType) {
   switch (gameType) {
-    case GameType::tes3:
+    case GameId::tes3:
       return "./testing-plugins/Morrowind/Data Files";
-    case GameType::tes4:
+    case GameId::tes4:
+    case GameId::nehrim:
       return "./testing-plugins/Oblivion/Data";
     default:
       return "./testing-plugins/Skyrim/Data";

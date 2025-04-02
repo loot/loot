@@ -40,7 +40,7 @@ static constexpr const char* MASTERLIST_FILENAME = "masterlist.yaml";
 
 std::string ToString(const GameId gameId);
 
-bool ShouldAllowRedating(const GameType gameType);
+bool ShouldAllowRedating(const GameId gameId);
 
 class GameSettings {
 public:
@@ -48,7 +48,6 @@ public:
   explicit GameSettings(const GameId gameId, const std::string& lootFolder);
 
   GameId Id() const;
-  GameType Type() const;
   std::string Name() const;  // Returns the game's name, eg. "TES IV: Oblivion".
   std::string FolderName() const;
   std::string Master() const;
@@ -68,7 +67,6 @@ public:
 
 private:
   GameId id_{GameId::tes4};
-  GameType type_{GameType::tes4};
   std::string name_;
   std::string masterFile_;
   float minimumHeaderVersion_{0.0f};
@@ -77,7 +75,7 @@ private:
 
   std::string masterlistSource_;
 
-  std::filesystem::path gamePath_;  // Path to the game's folder.
+  std::filesystem::path gamePath_;
   std::filesystem::path gameLocalPath_;
 };
 }

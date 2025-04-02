@@ -39,16 +39,6 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
-static const std::array<GameType, 9> ALL_GAME_TYPES = {GameType::tes3,
-                                                       GameType::tes4,
-                                                       GameType::tes5,
-                                                       GameType::tes5se,
-                                                       GameType::tes5vr,
-                                                       GameType::fo3,
-                                                       GameType::fonv,
-                                                       GameType::fo4,
-                                                       GameType::fo4vr};
-
 class CommonGameTestFixture : public ::testing::Test {
 protected:
   CommonGameTestFixture(const GameId gameId) :
@@ -172,7 +162,7 @@ protected:
 
   std::vector<std::string> getLoadOrder() {
     std::vector<std::string> actual;
-    if (isLoadOrderTimestampBased(getGameType())) {
+    if (isLoadOrderTimestampBased(gameId_)) {
       std::map<std::filesystem::file_time_type, std::string> loadOrder;
       for (std::filesystem::directory_iterator it(dataPath);
            it != std::filesystem::directory_iterator();
@@ -188,7 +178,7 @@ protected:
         }
       }
       for (const auto& plugin : loadOrder) actual.push_back(plugin.second);
-    } else if (getGameType() == GameType::tes5) {
+    } else if (gameId_ == GameId::tes5 || gameId_ == GameId::enderal) {
       std::ifstream in(localPath / "loadorder.txt");
       while (in) {
         std::string line;
@@ -226,38 +216,6 @@ protected:
     });
   }
 
-  GameType getGameType() const {
-    switch (gameId_) {
-      case GameId::tes3:
-        return GameType::tes3;
-      case GameId::tes4:
-      case GameId::nehrim:
-        return GameType::tes4;
-      case GameId::tes5:
-      case GameId::enderal:
-        return GameType::tes5;
-      case GameId::tes5se:
-      case GameId::enderalse:
-        return GameType::tes5se;
-      case GameId::tes5vr:
-        return GameType::tes5vr;
-      case GameId::fo3:
-        return GameType::fo3;
-      case GameId::fonv:
-        return GameType::fonv;
-      case GameId::fo4:
-        return GameType::fo4;
-      case GameId::fo4vr:
-        return GameType::fo4vr;
-      case GameId::starfield:
-        return GameType::starfield;
-      case GameId::openmw:
-        return GameType::openmw;
-      default:
-        throw std::logic_error("Unrecognised game ID");
-    }
-  }
-
 private:
   GameId gameId_;
   const std::filesystem::path rootTestPath;
@@ -287,7 +245,7 @@ protected:
 
 private:
   std::filesystem::path getSourcePluginsPath() const {
-    return loot::test::getSourcePluginsPath(getGameType());
+    return loot::test::getSourcePluginsPath(gameId_);
   }
 
   std::string getMasterFile() const {
@@ -331,10 +289,12 @@ private:
   }
 
   inline uint32_t getBlankEsmCrc() const {
-    switch (getGameType()) {
-      case GameType::tes3:
+    switch (gameId_) {
+      case GameId::tes3:
+      case GameId::openmw:
         return 0x790DC6FB;
-      case GameType::tes4:
+      case GameId::tes4:
+      case GameId::nehrim:
         return 0x374E2A6F;
       default:
         return 0x6A1273DC;
@@ -344,7 +304,7 @@ private:
   void setLoadOrder(
       const std::vector<std::pair<std::string, bool>>& loadOrder) const {
     using std::filesystem::u8path;
-    if (getGameType() == GameType::tes3) {
+    if (gameId_ == GameId::tes3) {
       std::ofstream out(gamePath / "Morrowind.ini");
       for (const auto& plugin : loadOrder) {
         if (plugin.second) {
@@ -356,10 +316,9 @@ private:
     } else {
       std::ofstream out(localPath / "Plugins.txt");
       for (const auto& plugin : loadOrder) {
-        if (getGameType() == GameType::fo4 ||
-            getGameType() == GameType::fo4vr ||
-            getGameType() == GameType::tes5se ||
-            getGameType() == GameType::tes5vr) {
+        if (gameId_ == GameId::fo4 || gameId_ == GameId::fo4vr ||
+            gameId_ == GameId::tes5se || gameId_ == GameId::enderalse ||
+            gameId_ == GameId::tes5vr) {
           if (plugin.second)
             out << '*';
         } else if (!plugin.second)
@@ -370,7 +329,7 @@ private:
       }
     }
 
-    if (isLoadOrderTimestampBased(getGameType())) {
+    if (isLoadOrderTimestampBased(gameId_)) {
       std::filesystem::file_time_type modificationTime =
           std::filesystem::file_time_type::clock::now();
       for (const auto& plugin : loadOrder) {
@@ -384,40 +343,44 @@ private:
         modificationTime += std::chrono::seconds(60);
         ;
       }
-    } else if (getGameType() == GameType::tes5) {
+    } else if (gameId_ == GameId::tes5 || gameId_ == GameId::enderal) {
       std::ofstream out(localPath / "loadorder.txt");
       for (const auto& plugin : loadOrder) out << plugin.first << std::endl;
     }
   }
 
-  inline static bool isLoadOrderTimestampBased(GameType gameType) {
-    return gameType == GameType::tes3 || gameType == GameType::tes4 ||
-           gameType == GameType::fo3 || gameType == GameType::fonv;
+  inline static bool isLoadOrderTimestampBased(GameId gameId) {
+    return gameId == GameId::tes3 || gameId == GameId::tes4 ||
+           gameId == GameId::nehrim || gameId == GameId::fo3 ||
+           gameId == GameId::fonv;
   }
 
   bool isExecutableNeeded() {
-    const GameType gameType = getGameType();
-    return gameType == GameType::tes5 || gameType == GameType::tes5se ||
-           gameType == GameType::tes5vr || gameType == GameType::fo4 ||
-           gameType == GameType::fo4vr || gameType == GameType::tes3 ||
-           gameType == GameType::openmw;
+    return gameId_ == GameId::tes5 || gameId_ == GameId::enderal ||
+           gameId_ == GameId::tes5se || gameId_ == GameId::enderalse ||
+           gameId_ == GameId::tes5vr || gameId_ == GameId::fo4 ||
+           gameId_ == GameId::fo4vr || gameId_ == GameId::tes3 ||
+           gameId_ == GameId::openmw;
   }
 
   std::string getGameExecutable() {
-    switch (getGameType()) {
-      case GameType::tes3:
+    switch (gameId_) {
+      case GameId::tes3:
         return "Morrowind.exe";
-      case GameType::tes5:
+      case GameId::tes5:
+      case GameId::enderal:
         return "TESV.exe";
-      case GameType::tes5se:
+        return "TESV.exe";
+      case GameId::tes5se:
+      case GameId::enderalse:
         return "SkyrimSE.exe";
-      case GameType::tes5vr:
+      case GameId::tes5vr:
         return "SkyrimVR.exe";
-      case GameType::fo4:
+      case GameId::fo4:
         return "Fallout4.exe";
-      case GameType::fo4vr:
+      case GameId::fo4vr:
         return "Fallout4VR.exe";
-      case GameType::openmw:
+      case GameId::openmw:
 #ifdef _WIN32
         return "openmw.exe";
 #else
