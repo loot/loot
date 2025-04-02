@@ -821,7 +821,7 @@ void MainWindow::enableGameActions() {
   actionSearch->setEnabled(true);
 
   const auto enableRedatePlugins =
-      ShouldAllowRedating(state.GetCurrentGame().GetSettings().Type());
+      ShouldAllowRedating(state.GetCurrentGame().GetSettings().Id());
   actionRedatePlugins->setEnabled(enableRedatePlugins);
 
   actionFixAmbiguousLoadOrder->setEnabled(false);

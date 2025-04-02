@@ -36,7 +36,6 @@
 
 namespace {
 using loot::GameId;
-using loot::GameType;
 
 static constexpr float MORROWIND_MINIMUM_HEADER_VERSION = 1.2f;
 static constexpr float OBLIVION_MINIMUM_HEADER_VERSION = 0.8f;
@@ -45,38 +44,6 @@ static constexpr float SKYRIM_SE_MINIMUM_HEADER_VERSION = 1.7f;
 static constexpr float FONV_MINIMUM_HEADER_VERSION = 1.32f;
 static constexpr float FO4_MINIMUM_HEADER_VERSION = 0.95f;
 static constexpr float STARFIELD_MINIMUM_HEADER_VERSION = 0.96f;
-
-GameType GetGameType(const GameId gameId) {
-  switch (gameId) {
-    case GameId::tes3:
-      return GameType::tes3;
-    case GameId::tes4:
-    case GameId::nehrim:
-      return GameType::tes4;
-    case GameId::tes5:
-    case GameId::enderal:
-      return GameType::tes5;
-    case GameId::tes5se:
-    case GameId::enderalse:
-      return GameType::tes5se;
-    case GameId::tes5vr:
-      return GameType::tes5vr;
-    case GameId::fo3:
-      return GameType::fo3;
-    case GameId::fonv:
-      return GameType::fonv;
-    case GameId::fo4:
-      return GameType::fo4;
-    case GameId::fo4vr:
-      return GameType::fo4vr;
-    case GameId::starfield:
-      return GameType::starfield;
-    case GameId::openmw:
-      return GameType::openmw;
-    default:
-      throw std::logic_error("Unrecognised game ID");
-  }
-}
 
 float GetMinimumHeaderVersion(const GameId gameId) {
   switch (gameId) {
@@ -144,13 +111,13 @@ std::string ToString(const GameId gameId) {
   }
 }
 
-bool ShouldAllowRedating(const GameType gameType) {
-  return gameType == GameType::tes5 || gameType == GameType::tes5se;
+bool ShouldAllowRedating(const GameId gameId) {
+  return gameId == GameId::tes5 || gameId == GameId::enderal ||
+         gameId == GameId::tes5se || gameId == GameId::enderalse;
 }
 
 GameSettings::GameSettings(const GameId gameId, const std::string& lootFolder) :
     id_(gameId),
-    type_(GetGameType(gameId)),
     name_(GetGameName(gameId)),
     masterFile_(GetMasterFilename(gameId)),
     minimumHeaderVersion_(GetMinimumHeaderVersion(gameId)),
@@ -158,8 +125,6 @@ GameSettings::GameSettings(const GameId gameId, const std::string& lootFolder) :
     masterlistSource_(GetDefaultMasterlistUrl(gameId)) {}
 
 GameId GameSettings::Id() const { return id_; }
-
-GameType GameSettings::Type() const { return type_; }
 
 std::string GameSettings::Name() const { return name_; }
 

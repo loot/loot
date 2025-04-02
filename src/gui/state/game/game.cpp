@@ -69,6 +69,7 @@ using std::filesystem::u8path;
 namespace fs = std::filesystem;
 
 namespace {
+using loot::GameId;
 using loot::GameType;
 
 struct Counters {
@@ -76,6 +77,38 @@ struct Counters {
   size_t activeLightPlugins = 0;
   size_t activeMediumPlugins = 0;
 };
+
+GameType GetGameType(const GameId gameId) {
+  switch (gameId) {
+    case GameId::tes3:
+      return GameType::tes3;
+    case GameId::tes4:
+    case GameId::nehrim:
+      return GameType::tes4;
+    case GameId::tes5:
+    case GameId::enderal:
+      return GameType::tes5;
+    case GameId::tes5se:
+    case GameId::enderalse:
+      return GameType::tes5se;
+    case GameId::tes5vr:
+      return GameType::tes5vr;
+    case GameId::fo3:
+      return GameType::fo3;
+    case GameId::fonv:
+      return GameType::fonv;
+    case GameId::fo4:
+      return GameType::fo4;
+    case GameId::fo4vr:
+      return GameType::fo4vr;
+    case GameId::starfield:
+      return GameType::starfield;
+    case GameId::openmw:
+      return GameType::openmw;
+    default:
+      throw std::logic_error("Unrecognised game ID");
+  }
+}
 
 std::filesystem::path GetLOOTGamePath(const std::filesystem::path& lootDataPath,
                                       const std::string& folderName) {
@@ -135,25 +168,28 @@ void CopyMasterlistFromDefaultGameFolder(
   }
 }
 
-std::optional<std::filesystem::path> GetCCCFilename(const GameType gameType) {
-  switch (gameType) {
-    case GameType::tes3:
-    case GameType::tes4:
-    case GameType::tes5:
-    case GameType::tes5vr:
-    case GameType::fo3:
-    case GameType::fonv:
-    case GameType::fo4vr:
-    case GameType::openmw:
+std::optional<std::filesystem::path> GetCCCFilename(const GameId gameId) {
+  switch (gameId) {
+    case GameId::tes3:
+    case GameId::tes4:
+    case GameId::nehrim:
+    case GameId::tes5:
+    case GameId::enderal:
+    case GameId::tes5vr:
+    case GameId::fo3:
+    case GameId::fonv:
+    case GameId::fo4vr:
+    case GameId::openmw:
       return std::nullopt;
-    case GameType::tes5se:
+    case GameId::tes5se:
+    case GameId::enderalse:
       return "Skyrim.ccc";
-    case GameType::fo4:
+    case GameId::fo4:
       return "Fallout4.ccc";
-    case GameType::starfield:
+    case GameId::starfield:
       return "Starfield.ccc";
     default:
-      throw std::logic_error("Unrecognised game type");
+      throw std::logic_error("Unrecognised game ID");
   }
 }
 
@@ -161,6 +197,27 @@ bool containsFilterTag(const std::vector<loot::Tag>& tags) {
   return std::any_of(tags.cbegin(), tags.cend(), [](const loot::Tag& tag) {
     return tag.GetName() == "Filter";
   });
+}
+
+// This overload does not support checking based on the installed game.
+bool SupportsLightPlugins(const GameId gameId) {
+  return gameId == GameId::tes5se || gameId == GameId::enderalse ||
+         gameId == GameId::fo4 || gameId == GameId::starfield;
+}
+
+bool SupportsLightPlugins(const loot::gui::Game& game) {
+  const auto gameId = game.GetSettings().Id();
+  if (gameId == GameId::tes5vr) {
+    // Light plugins are not supported unless an SKSEVR plugin is used.
+    // This assumes that the plugin's dependencies are also installed and that
+    // the game is launched with SKSEVR. The dependencies are intentionally
+    // not checked to allow them to change over time without breaking this
+    // check.
+    return std::filesystem::exists(game.GetSettings().DataPath() / "SKSE" /
+                                   "Plugins" / "skyrimvresl.dll");
+  }
+
+  return SupportsLightPlugins(gameId);
 }
 }
 
@@ -290,28 +347,6 @@ std::string GetMetadataAsBBCodeYaml(const gui::Game& game,
   return "[spoiler][code]\n" + metadata.AsYaml() + "\n[/code][/spoiler]";
 }
 
-bool SupportsLightPlugins(const gui::Game& game) {
-  const auto gameType = game.GetSettings().Type();
-  if (gameType == GameType::tes5vr) {
-    // Light plugins are not supported unless an SKSEVR plugin is used.
-    // This assumes that the plugin's dependencies are also installed and that
-    // the game is launched with SKSEVR. The dependencies are intentionally
-    // not checked to allow them to change over time without breaking this
-    // check.
-    return std::filesystem::exists(game.GetSettings().DataPath() / "SKSE" /
-                                   "Plugins" / "skyrimvresl.dll");
-  }
-
-  return gameType == GameType::tes5se || gameType == GameType::fo4 ||
-         gameType == GameType::starfield;
-}
-
-// This overload does not support checking based on the installed game.
-bool SupportsLightPlugins(const GameType gameType) {
-  return gameType == GameType::tes5se || gameType == GameType::fo4 ||
-         gameType == GameType::starfield;
-}
-
 namespace gui {
 std::string GetDisplayName(const File& file) {
   if (file.GetDisplayName().empty()) {
@@ -329,7 +364,7 @@ Game::Game(const GameSettings& gameSettings,
     preludePath_(preludePath),
     isMicrosoftStoreInstall_(
         generic::IsMicrosoftInstall(settings_.Id(), settings_.GamePath())),
-    supportsLightPlugins_(loot::SupportsLightPlugins(settings_.Type())) {}
+    supportsLightPlugins_(::SupportsLightPlugins(settings_.Id())) {}
 
 Game::Game(Game&& game) {
   settings_ = std::move(game.settings_);
@@ -374,10 +409,11 @@ void Game::Init() {
   messages_.clear();
   loadOrderSortCount_ = 0;
   pluginsFullyLoaded_ = false;
-  supportsLightPlugins_ = loot::SupportsLightPlugins(*this);
+  supportsLightPlugins_ = ::SupportsLightPlugins(*this);
 
-  gameHandle_ = CreateGameHandle(
-      settings_.Type(), settings_.GamePath(), settings_.GameLocalPath());
+  gameHandle_ = CreateGameHandle(GetGameType(settings_.Id()),
+                                 settings_.GamePath(),
+                                 settings_.GameLocalPath());
 
   InitLootGameFolder(lootDataPath_, settings_);
 }
@@ -632,7 +668,7 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
                                 /* translators: master as in a plugin that is
                                    loaded as if its master flag is set. */
                                 : boost::locale::translate("master");
-    if (settings_.Type() == GameType::tes5vr) {
+    if (settings_.Id() == GameId::tes5vr) {
       messages.push_back(SourcedMessage{
           MessageType::error,
           MessageSource::lightPluginNotSupported,
@@ -822,7 +858,7 @@ std::vector<SourcedMessage> Game::CheckInstallValidity(
 void Game::RedatePlugins() {
   auto logger = getLogger();
 
-  if (!ShouldAllowRedating(settings_.Type())) {
+  if (!ShouldAllowRedating(settings_.Id())) {
     if (logger) {
       logger->warn("Cannot redate plugins for game {}.", settings_.Name());
     }
@@ -876,7 +912,7 @@ void Game::LoadCreationClubPluginNames() {
     return;
   }
 
-  const auto cccFilename = GetCCCFilename(settings_.Type());
+  const auto cccFilename = GetCCCFilename(settings_.Id());
 
   if (!cccFilename.has_value()) {
     if (logger) {
@@ -961,7 +997,7 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
 
   pluginsFullyLoaded_ = !headersOnly;
 
-  supportsLightPlugins_ = loot::SupportsLightPlugins(*this);
+  supportsLightPlugins_ = ::SupportsLightPlugins(*this);
 }
 
 bool Game::ArePluginsFullyLoaded() const { return pluginsFullyLoaded_; }
