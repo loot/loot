@@ -47,6 +47,16 @@ TEST_P(ShouldAllowRedatingTest, shouldReturnTrueForOnlySkyrimAndSkyrimSE) {
   }
 }
 
+class GetDefaultMasterlistUrlTest : public ::testing::TestWithParam<GameId> {};
+
+INSTANTIATE_TEST_SUITE_P(,
+                         GetDefaultMasterlistUrlTest,
+                         ::testing::ValuesIn(ALL_GAME_IDS));
+
+TEST_P(GetDefaultMasterlistUrlTest, shouldNotThrowForAnyValidGameId) {
+  EXPECT_NO_THROW(GetDefaultMasterlistUrl(GetParam()));
+}
+
 class GameSettingsTest : public CommonGameTestFixture,
                          public testing::WithParamInterface<GameId> {
 protected:

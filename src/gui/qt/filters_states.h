@@ -32,7 +32,7 @@
 #include <string>
 #include <variant>
 
-#include "gui/state/game/detection/game_install.h"
+#include "gui/state/game/game_id.h"
 
 namespace loot {
 struct CardContentFiltersState {

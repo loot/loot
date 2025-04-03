@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.25.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-02 22:43+0100\n"
+"POT-Creation-Date: 2025-04-03 18:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1099,14 +1099,14 @@ msgstr ""
 msgid "Sorting load order…"
 msgstr ""
 
-#: src/gui/state/loot_settings.cpp:673
+#: src/gui/state/loot_settings.cpp:672
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
 "File menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_settings.cpp:696
+#: src/gui/state/loot_settings.cpp:695
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "

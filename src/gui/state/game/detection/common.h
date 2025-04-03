@@ -33,7 +33,7 @@
 #include <optional>
 #include <vector>
 
-#include "gui/state/game/detection/game_install.h"
+#include "gui/state/game/game_id.h"
 
 namespace loot {
 static const std::array<GameId, 14> ALL_GAME_IDS = {GameId::tes3,

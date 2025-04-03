@@ -29,7 +29,7 @@ along with LOOT.  If not, see
 #include <random>
 #include <string>
 
-#include "gui/state/game/detection/game_install.h"
+#include "gui/state/game/game_id.h"
 
 namespace loot {
 namespace test {
