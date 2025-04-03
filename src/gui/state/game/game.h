@@ -65,6 +65,21 @@ std::filesystem::path GetMasterlistPath(
 void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
                         const GameSettings& settings);
 
+// The Creation Club has been replaced, but while it was active it was
+// available for Skyrim SE and Fallout 4.
+bool HadCreationClub(GameId gameId);
+
+class CreationClubPlugins {
+public:
+  void Load(GameId gameId, const std::filesystem::path& gamePath);
+
+  bool IsCreationClubPlugin(const std::string& name) const;
+
+private:
+  // Use Filename to benefit from libloot's case-insensitive comparisons.
+  std::set<Filename> creationClubPlugins_;
+};
+
 namespace gui {
 class Game {
 public:
@@ -81,6 +96,9 @@ public:
   const GameSettings& GetSettings() const;
   GameSettings& GetSettings();
 
+  const CreationClubPlugins& GetCreationClubPlugins() const;
+  CreationClubPlugins& GetCreationClubPlugins();
+
   void Init();
   bool IsInitialised() const;
 
@@ -92,10 +110,6 @@ public:
       const std::string& language) const;
 
   void RedatePlugins();  // Change timestamps to match load order (Skyrim only).
-
-  void LoadCreationClubPluginNames();
-  bool HadCreationClub() const;
-  bool IsCreationClubPlugin(const std::string& name) const;
 
   void LoadAllInstalledPlugins(
       bool headersOnly);  // Loads all installed plugins.
@@ -165,6 +179,7 @@ private:
   void LoadCurrentLoadOrderState();
 
   GameSettings settings_;
+  CreationClubPlugins creationClubPlugins_;
   std::unique_ptr<GameInterface> gameHandle_;
   std::vector<SourcedMessage> messages_;
   std::filesystem::path lootDataPath_;
@@ -173,9 +188,6 @@ private:
   bool pluginsFullyLoaded_{false};
   bool isMicrosoftStoreInstall_{false};
   bool supportsLightPlugins_{false};
-
-  // Use Filename to benefit from libloot's case-insensitive comparisons.
-  std::set<Filename> creationClubPlugins_;
 };
 }
 
