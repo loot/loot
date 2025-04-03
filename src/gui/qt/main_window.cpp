@@ -1097,7 +1097,7 @@ void MainWindow::sortPlugins(bool isAutoSort) {
 
   std::unique_ptr<Query> sortPluginsQuery =
       std::make_unique<SortPluginsQuery>(state.GetCurrentGame(),
-                                         state,
+                                         state.GetUnappliedChangeCount(),
                                          state.getSettings().getLanguage(),
                                          sendProgressUpdate);
 
@@ -1247,7 +1247,7 @@ PluginItem MainWindow::getSelectedPlugin() const {
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
-  if (state.HasUnappliedChanges()) {
+  if (state.GetUnappliedChangeCount().IsNonZero()) {
     auto changeType = pluginEditorWidget->isVisible()
                           ? boost::locale::translate("metadata edits")
                           : boost::locale::translate("sorted load order");
@@ -1418,7 +1418,7 @@ bool MainWindow::handlePluginsSorted(QueryResult result) {
   if (loadOrderHasChanged) {
     enterSortingState();
   } else {
-    state.DecrementUnappliedChangeCounter();
+    state.GetUnappliedChangeCount().Decrement();
 
     const auto message =
         translate("Sorting made no changes to the load order.");
@@ -1789,7 +1789,7 @@ void MainWindow::on_actionEditMetadata_triggered() {
 
     pluginEditorWidget->show();
 
-    state.IncrementUnappliedChangeCounter();
+    state.GetUnappliedChangeCount().Increment();
 
     // Refresh the sidebar items so that all their groups are displayed.
     pluginItemModel->setEditorPluginName(selectedPluginName);
@@ -2086,8 +2086,9 @@ void MainWindow::on_actionApplySort_triggered() {
   try {
     auto sortedPluginNames = pluginItemModel->getPluginNames();
 
-    auto query =
-        ApplySortQuery<>(state.GetCurrentGame(), state, sortedPluginNames);
+    auto query = ApplySortQuery(state.GetCurrentGame(),
+                                state.GetUnappliedChangeCount(),
+                                sortedPluginNames);
 
     try {
       query.executeLogic();
@@ -2109,7 +2110,8 @@ void MainWindow::on_actionApplySort_triggered() {
 
 void MainWindow::on_actionDiscardSort_triggered() {
   try {
-    auto query = CancelSortQuery(state.GetCurrentGame(), state);
+    auto query = CancelSortQuery(state.GetCurrentGame(),
+                                 state.GetUnappliedChangeCount());
 
     auto result = query.executeLogic();
 
@@ -2326,7 +2328,7 @@ void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {
 
     refreshPluginRawData(pluginName);
 
-    state.DecrementUnappliedChangeCounter();
+    state.GetUnappliedChangeCount().Decrement();
 
     exitEditingState();
   } catch (const std::exception& e) {
@@ -2335,7 +2337,7 @@ void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {
 }
 
 void MainWindow::on_pluginEditorWidget_rejected() {
-  state.DecrementUnappliedChangeCounter();
+  state.GetUnappliedChangeCount().Decrement();
 
   pluginItemModel->setEditorPluginName(std::nullopt);
 

@@ -23,24 +23,26 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_STATE_UNAPPLIED_CHANGE_COUNTER
-#define LOOT_GUI_STATE_UNAPPLIED_CHANGE_COUNTER
+#ifndef LOOT_GUI_STATE_CHANGE_COUNT
+#define LOOT_GUI_STATE_CHANGE_COUNT
+
+#include <cstddef>
 
 namespace loot {
-class UnappliedChangeCounter {
+class ChangeCount {
 public:
-  bool HasUnappliedChanges() const { return unappliedChangeCounter_ > 0; }
+  bool IsNonZero() const { return count > 0; }
 
-  void IncrementUnappliedChangeCounter() { ++unappliedChangeCounter_; }
+  void Increment() { ++count; }
 
-  void DecrementUnappliedChangeCounter() {
-    if (unappliedChangeCounter_ > 0) {
-      --unappliedChangeCounter_;
+  void Decrement() {
+    if (count > 0) {
+      --count;
     }
   }
 
 private:
-  size_t unappliedChangeCounter_{0};
+  size_t count{0};
 };
 }
 

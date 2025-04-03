@@ -29,6 +29,7 @@ set(LOOT_SRC_TESTS_GUI_CPP_FILES
 "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.cpp")
 
 set(LOOT_SRC_TESTS_GUI_H_FILES
+"${CMAKE_SOURCE_DIR}/src/tests/gui/state/change_count_test.h"
 "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/common_test.h"
 "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/detail_test.h"
 "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/epic_games_store_test.h"
@@ -46,7 +47,6 @@ set(LOOT_SRC_TESTS_GUI_H_FILES
 "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/helpers_test.h"
 "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
 "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/unapplied_change_counter_test.h"
 "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/helpers_test.h"
 "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.h"
 "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/tasks_test.h"
@@ -100,6 +100,7 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
     "${CMAKE_SOURCE_DIR}/src/gui/sourced_message.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/helpers.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/change_count.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/common.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/detail.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/epic_games_store.h"
@@ -120,8 +121,7 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/validation.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/unapplied_change_counter.h")
+    "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h")
 
 ##############################
 # Define Targets

@@ -34,8 +34,8 @@ along with LOOT.  If not, see
 namespace loot {
 class CancelSortQuery : public Query {
 public:
-  CancelSortQuery(gui::Game& game, UnappliedChangeCounter& counter) :
-      game_(game), counter_(counter) {}
+  CancelSortQuery(gui::Game& game, ChangeCount& counter) :
+      game_(&game), counter_(&counter) {}
 
   QueryResult executeLogic() override {
     auto logger = getLogger();
@@ -43,8 +43,8 @@ public:
       logger->trace("User has rejected sorted load order, discarding it.");
     }
 
-    counter_.DecrementUnappliedChangeCounter();
-    game_.DecrementLoadOrderSortCount();
+    counter_->Decrement();
+    game_->DecrementLoadOrderSortCount();
 
     const std::function<std::pair<std::string, std::optional<short>>(
         const PluginInterface* const, std::optional<short>, bool)>
@@ -54,12 +54,12 @@ public:
           return std::make_pair(plugin->GetName(), loadOrderIndex);
         };
 
-    return MapFromLoadOrderData(game_, game_.GetLoadOrder(), mapper);
+    return MapFromLoadOrderData(*game_, game_->GetLoadOrder(), mapper);
   }
 
 private:
-  gui::Game& game_;
-  UnappliedChangeCounter& counter_;
+  gui::Game* game_;
+  ChangeCount* counter_;
 };
 }
 

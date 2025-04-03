@@ -32,13 +32,12 @@ along with LOOT.  If not, see
 #include "gui/query/query.h"
 
 namespace loot {
-template<typename G = gui::Game>
 class ApplySortQuery : public Query {
 public:
-  ApplySortQuery(G& game,
-                 UnappliedChangeCounter& counter,
+  ApplySortQuery(gui::Game& game,
+                 ChangeCount& counter,
                  const std::vector<std::string>& plugins) :
-      game_(game), counter_(counter), plugins_(plugins) {}
+      game_(&game), counter_(&counter), plugins_(plugins) {}
 
   QueryResult executeLogic() override {
     auto logger = getLogger();
@@ -46,8 +45,8 @@ public:
       logger->trace("User has accepted sorted load order, applying it.");
     }
     try {
-      game_.SetLoadOrder(plugins_);
-      counter_.DecrementUnappliedChangeCounter();
+      game_->SetLoadOrder(plugins_);
+      counter_->Decrement();
     } catch (...) {
       useSortingErrorMessage = true;
       throw;
@@ -58,19 +57,19 @@ public:
 
   std::string getErrorMessage() const override {
     if (useSortingErrorMessage) {
-      return getSortingErrorMessage(game_);
+      return getSortingErrorMessage(*game_);
     }
 
     return Query::getErrorMessage();
   }
 
 private:
-  G& game_;
-  UnappliedChangeCounter& counter_;
+  gui::Game* game_;
+  ChangeCount* counter_;
   const std::vector<std::string> plugins_;
   bool useSortingErrorMessage{false};
 
-  std::string getSortingErrorMessage(const G& game) const {
+  std::string getSortingErrorMessage(const gui::Game& game) const {
     return fmt::format(
         boost::locale::translate(
             "Oh no, something went wrong! This is usually because \"{0}\" "

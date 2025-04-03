@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.25.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-03 20:52+0100\n"
+"POT-Creation-Date: 2025-04-03 21:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -431,7 +431,7 @@ msgid "F&ilters"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1075 src/gui/qt/main_window.cpp:1528
-#: src/gui/qt/main_window.cpp:2152
+#: src/gui/qt/main_window.cpp:2154
 msgid "Updating and parsing masterlist…"
 msgstr ""
 
@@ -632,41 +632,41 @@ msgstr ""
 msgid "About LOOT"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2362
+#: src/gui/qt/main_window.cpp:2364
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2510
+#: src/gui/qt/main_window.cpp:2512
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2569
+#: src/gui/qt/main_window.cpp:2571
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2589
+#: src/gui/qt/main_window.cpp:2591
 #, c++-format
 msgid "Masterlist updated to revision {0}."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2653
+#: src/gui/qt/main_window.cpp:2655
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2676
+#: src/gui/qt/main_window.cpp:2678
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2738
+#: src/gui/qt/main_window.cpp:2740
 #, c++-format
 msgid "A [new release]({0}) of LOOT is available."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2755
+#: src/gui/qt/main_window.cpp:2757
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -1083,7 +1083,7 @@ msgstr ""
 msgid "Add new game…"
 msgstr ""
 
-#: src/gui/query/types/apply_sort_query.h:76
+#: src/gui/query/types/apply_sort_query.h:75
 msgid ""
 "Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -1118,7 +1118,7 @@ msgstr ""
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:197
+#: src/gui/state/loot_state.cpp:201
 #, c++-format
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr ""
@@ -1126,41 +1126,41 @@ msgstr ""
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:211 src/gui/state/loot_state.cpp:265
+#: src/gui/state/loot_state.cpp:215 src/gui/state/loot_state.cpp:269
 #, c++-format
 msgid "Error: Settings parsing failed. {0}"
 msgstr ""
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:220
+#: src/gui/state/loot_state.cpp:224
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:306
+#: src/gui/state/loot_state.cpp:310
 #, c++-format
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr ""
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:323
+#: src/gui/state/loot_state.cpp:327
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:336
+#: src/gui/state/loot_state.cpp:340
 #, c++-format
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:370
+#: src/gui/state/loot_state.cpp:374
 msgid ""
 "No supported games were detected. Try running the launcher(s) for the "
 "supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
 "GOG Galaxy), then restarting LOOT."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:389
+#: src/gui/state/loot_state.cpp:393
 #, c++-format
 msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "
@@ -1177,7 +1177,17 @@ msgstr ""
 msgid "The group \"{0}\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:570
+#: src/gui/state/game/game.cpp:831
+msgid ""
+"Sorting failed because there is at least one installed plugin that depends "
+"on at least one plugin that is not installed."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:862
+msgid "You have not sorted your load order this session."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:940
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
@@ -1196,17 +1206,7 @@ msgid ""
 "[LOOT's website]({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:970
-msgid ""
-"Sorting failed because there is at least one installed plugin that depends "
-"on at least one plugin that is not installed."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:1007
-msgid "You have not sorted your load order this session."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:1127
+#: src/gui/state/game/game.cpp:1115
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

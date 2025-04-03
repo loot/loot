@@ -409,6 +409,7 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/get_overlapping_plugins_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/get_game_data_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/sort_plugins_query.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/change_count.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/common.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/detail.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/epic_games_store.h"
@@ -430,7 +431,6 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/unapplied_change_counter.h"
     "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
     "${CMAKE_SOURCE_DIR}/src/gui/version.h")
 

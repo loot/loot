@@ -29,19 +29,19 @@ along with LOOT.  If not, see
 #include <boost/locale.hpp>
 
 #include "gui/query/query.h"
+#include "gui/state/change_count.h"
 #include "gui/state/game/game.h"
-#include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
 class SortPluginsQuery : public Query {
 public:
   SortPluginsQuery(gui::Game& game,
-                   UnappliedChangeCounter& counter,
+                   ChangeCount& unappliedChangeCount,
                    std::string language,
                    std::function<void(std::string)> sendProgressUpdate) :
-      game_(game),
+      game_(&game),
       language_(language),
-      counter_(counter),
+      unappliedChangeCount_(&unappliedChangeCount),
       sendProgressUpdate_(sendProgressUpdate) {}
 
   QueryResult executeLogic() override {
@@ -52,13 +52,14 @@ public:
 
     // Sort plugins into their load order.
     sendProgressUpdate_(boost::locale::translate("Sorting load order…"));
-    std::vector<std::string> plugins = game_.SortPlugins();
+    std::vector<std::string> plugins = game_->SortPlugins();
 
     auto result = getResult(plugins);
 
     // plugins will be empty if there was a sorting error.
-    if (!plugins.empty())
-      counter_.IncrementUnappliedChangeCounter();
+    if (!plugins.empty()) {
+      unappliedChangeCount_->Increment();
+    }
 
     if (logger) {
       logger->info("Sorting operation complete.");
@@ -69,12 +70,12 @@ public:
 
 private:
   std::vector<PluginItem> getResult(const std::vector<std::string>& plugins) {
-    return GetPluginItems(plugins, game_, language_);
+    return GetPluginItems(plugins, *game_, language_);
   }
 
-  gui::Game& game_;
+  gui::Game* game_;
   std::string language_;
-  UnappliedChangeCounter& counter_;
+  ChangeCount* unappliedChangeCount_;
   const std::function<void(std::string)> sendProgressUpdate_;
 };
 }

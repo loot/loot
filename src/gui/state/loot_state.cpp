@@ -185,6 +185,10 @@ const LootSettings& LootState::getSettings() const { return settings_; }
 
 LootSettings& LootState::getSettings() { return settings_; }
 
+ChangeCount& LootState::GetUnappliedChangeCount() {
+  return unappliedChangeCount_;
+}
+
 void LootState::createLootDataPath() {
   if (fs::exists(LootPaths::getLootDataPath())) {
     return;
