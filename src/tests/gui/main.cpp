@@ -42,6 +42,7 @@
 #include "tests/gui/qt/helpers_test.h"
 #include "tests/gui/qt/tasks/tasks_test.h"
 #include "tests/gui/sourced_message_test.h"
+#include "tests/gui/state/change_count_test.h"
 #include "tests/gui/state/game/detection/common_test.h"
 #include "tests/gui/state/game/detection/detail_test.h"
 #include "tests/gui/state/game/detection/epic_games_store_test.h"
@@ -58,7 +59,6 @@
 #include "tests/gui/state/game/helpers_test.h"
 #include "tests/gui/state/loot_paths_test.h"
 #include "tests/gui/state/loot_settings_test.h"
-#include "tests/gui/state/unapplied_change_counter_test.h"
 
 int main(int argc, char **argv) {
   // Set the logger to use a null sink.

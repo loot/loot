@@ -26,13 +26,12 @@
 #ifndef LOOT_GUI_STATE_LOOT_STATE
 #define LOOT_GUI_STATE_LOOT_STATE
 
+#include "gui/state/change_count.h"
 #include "gui/state/game/games_manager.h"
 #include "gui/state/loot_settings.h"
-#include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
-class LootState : public UnappliedChangeCounter,
-                  public GamesManager,
+class LootState : public GamesManager,
                   public LootPaths {
 public:
   LootState(const std::filesystem::path& lootAppPath,
@@ -47,6 +46,8 @@ public:
 
   const LootSettings& getSettings() const;
   LootSettings& getSettings();
+
+  ChangeCount& GetUnappliedChangeCount();
 
 private:
   void createLootDataPath();
@@ -75,6 +76,7 @@ private:
   std::vector<std::string> preferredUILanguages_;
   std::vector<SourcedMessage> initMessages_;
   LootSettings settings_;
+  ChangeCount unappliedChangeCount_;
 };
 }
 
