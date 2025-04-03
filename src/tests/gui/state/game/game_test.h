@@ -1248,7 +1248,7 @@ TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
 TEST_P(GameTest,
        incrementLoadOrderSortCountShouldSupressTheDefaultCachedMessage) {
   Game game = CreateInitialisedGame();
-  game.IncrementLoadOrderSortCount();
+  game.GetSortCount().Increment();
 
   const auto messages =
       game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
@@ -1261,8 +1261,8 @@ TEST_P(GameTest,
   Game game = CreateInitialisedGame();
   auto expectedMessages =
       game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
-  game.IncrementLoadOrderSortCount();
-  game.DecrementLoadOrderSortCount();
+  game.GetSortCount().Increment();
+  game.GetSortCount().Decrement();
 
   EXPECT_EQ(expectedMessages,
             game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false));
@@ -1274,7 +1274,7 @@ TEST_P(
   Game game = CreateInitialisedGame();
   auto expectedMessages =
       game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
-  game.DecrementLoadOrderSortCount();
+  game.GetSortCount().Decrement();
 
   EXPECT_EQ(expectedMessages,
             game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false));
@@ -1284,9 +1284,9 @@ TEST_P(
     GameTest,
     decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
   Game game = CreateInitialisedGame();
-  game.IncrementLoadOrderSortCount();
-  game.IncrementLoadOrderSortCount();
-  game.DecrementLoadOrderSortCount();
+  game.GetSortCount().Increment();
+  game.GetSortCount().Increment();
+  game.GetSortCount().Decrement();
 
   const auto messages =
       game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);

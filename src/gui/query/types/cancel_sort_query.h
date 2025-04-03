@@ -44,7 +44,7 @@ public:
     }
 
     counter_->Decrement();
-    game_->DecrementLoadOrderSortCount();
+    game_->GetSortCount().Decrement();
 
     const std::function<std::pair<std::string, std::optional<short>>(
         const PluginInterface* const, std::optional<short>, bool)>
