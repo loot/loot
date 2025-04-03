@@ -32,9 +32,51 @@ along with LOOT.  If not, see
 #include "tests/common_game_test_fixture.h"
 #include "tests/gui/test_helpers.h"
 
-namespace loot {
-namespace gui {
-namespace test {
+namespace loot::test {
+class CreationClubPluginsTest : public CommonGameTestFixture {
+protected:
+  CreationClubPluginsTest() : CommonGameTestFixture(GameId::tes5se) {}
+
+  std::string ccPluginName{"ccPlugin.esp"};
+  std::filesystem::path cccPath{gamePath / "Skyrim.ccc"};
+};
+
+TEST_F(CreationClubPluginsTest,
+       loadShouldClearCCPluginSetIfCCCFileDoesNotExist) {
+  std::ofstream out(cccPath);
+  out << ccPluginName;
+  out.close();
+
+  CreationClubPlugins ccPlugins;
+
+  ccPlugins.Load(GameId::tes5se, gamePath);
+
+  EXPECT_TRUE(ccPlugins.IsCreationClubPlugin(ccPluginName));
+
+  ccPlugins.Load(GameId::tes5se, gamePath);
+
+  std::filesystem::remove(cccPath);
+
+  ccPlugins.Load(GameId::tes5se, gamePath);
+
+  EXPECT_FALSE(ccPlugins.IsCreationClubPlugin(ccPluginName));
+}
+
+TEST_F(CreationClubPluginsTest,
+       loadShouldTrimCRLFLineEndingsFromCCCFileLines) {
+  CreationClubPlugins ccPlugins;
+
+  std::ofstream out(cccPath, std::ios::out | std::ios::binary);
+  out << ccPluginName << "\r\n";
+  out.close();
+
+  ccPlugins.Load(GameId::tes5se, gamePath);
+
+  EXPECT_TRUE(ccPlugins.IsCreationClubPlugin(ccPluginName));
+}
+}
+
+namespace loot::gui::test {
 class GameTest : public loot::test::CommonGameTestFixture,
                  public testing::WithParamInterface<GameId> {
 protected:
@@ -865,56 +907,6 @@ TEST_P(
   }
 }
 
-TEST_P(GameTest,
-       loadCreationClubPluginNamesShouldClearCCPluginSetIfCCCFileDoesNotExist) {
-  if (GetParam() != GameId::tes5se && GetParam() != GameId::fo4 &&
-      GetParam() != GameId::starfield) {
-    return;
-  }
-
-  Game game = CreateInitialisedGame();
-
-  const auto pluginName = "ccPlugin.esp";
-
-  const auto cccPath = GetCCCPath().value();
-  std::ofstream out(cccPath);
-  out << pluginName;
-  out.close();
-
-  game.LoadCreationClubPluginNames();
-
-  EXPECT_TRUE(game.IsCreationClubPlugin(pluginName));
-
-  game.LoadCreationClubPluginNames();
-
-  std::filesystem::remove(cccPath);
-
-  game.LoadCreationClubPluginNames();
-
-  EXPECT_FALSE(game.IsCreationClubPlugin(pluginName));
-}
-
-TEST_P(GameTest,
-       loadCreationClubPluginNamesShouldTrimCRLFLineEndingsFromCCCFileLines) {
-  if (GetParam() != GameId::tes5se && GetParam() != GameId::fo4 &&
-      GetParam() != GameId::starfield) {
-    return;
-  }
-
-  Game game = CreateInitialisedGame();
-
-  const auto pluginName = "ccPlugin.esp";
-
-  const auto cccPath = GetCCCPath().value();
-  std::ofstream out(cccPath, std::ios::out | std::ios::binary);
-  out << pluginName << "\r\n";
-  out.close();
-
-  game.LoadCreationClubPluginNames();
-
-  EXPECT_TRUE(game.IsCreationClubPlugin(pluginName));
-}
-
 TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
@@ -1366,8 +1358,6 @@ TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
 
   EXPECT_EQ(previousSize - messages.size(),
             game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false).size());
-}
-}
 }
 }
 

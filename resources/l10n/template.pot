@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.25.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-03 18:20+0100\n"
+"POT-Creation-Date: 2025-04-03 20:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,11 +23,11 @@ msgstr ""
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
 msgstr ""
 
-#: src/gui/plugin_item.cpp:194
+#: src/gui/plugin_item.cpp:195
 msgid "Location"
 msgstr ""
 
-#: src/gui/plugin_item.cpp:199
+#: src/gui/plugin_item.cpp:200
 #, c++-format
 msgid "Location {0}"
 msgstr ""
@@ -1177,17 +1177,7 @@ msgstr ""
 msgid "The group \"{0}\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:821
-msgid ""
-"Sorting failed because there is at least one installed plugin that depends "
-"on at least one plugin that is not installed."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:858
-msgid "You have not sorted your load order this session."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:936
+#: src/gui/state/game/game.cpp:570
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
@@ -1206,7 +1196,17 @@ msgid ""
 "[LOOT's website]({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1115
+#: src/gui/state/game/game.cpp:970
+msgid ""
+"Sorting failed because there is at least one installed plugin that depends "
+"on at least one plugin that is not installed."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:1007
+msgid "You have not sorted your load order this session."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:1127
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

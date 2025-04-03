@@ -471,6 +471,55 @@ std::vector<LoadOrderTuple> MapToLoadOrderTuples(
   return data;
 }
 
+bool HadCreationClub(GameId gameId) {
+  return gameId == GameId::tes5se || gameId == GameId::fo4;
+}
+
+void CreationClubPlugins::Load(GameId gameId,
+                               const std::filesystem::path& gamePath) {
+  const auto logger = getLogger();
+
+  creationClubPlugins_.clear();
+
+  if (!HadCreationClub(gameId)) {
+    if (logger) {
+      logger->debug(
+          "The current game was not part of the Creation Club while it was "
+          "active, skipping loading Creation Club plugin names.");
+    }
+    return;
+  }
+
+  const auto cccFilename = GetCCCFilename(gameId);
+
+  if (!cccFilename.has_value()) {
+    if (logger) {
+      logger->debug(
+          "The current game does not have a CCC file, the Creation Club filter "
+          "will have no effect.");
+    }
+    return;
+  }
+
+  const auto cccFilePath = gamePath / cccFilename.value();
+
+  if (!fs::exists(cccFilePath)) {
+    if (logger) {
+      logger->debug(
+          "The CCC file at {} does not exist, the Creation Club filter "
+          "will have no effect.",
+          cccFilePath.u8string());
+    }
+    return;
+  }
+
+  creationClubPlugins_ = ReadFilenamesInFile(cccFilePath);
+}
+
+bool CreationClubPlugins::IsCreationClubPlugin(const std::string& name) const {
+  return creationClubPlugins_.count(Filename(name)) != 0;
+}
+
 namespace gui {
 Game::Game(const GameSettings& gameSettings,
            const std::filesystem::path& lootDataPath,
@@ -484,6 +533,7 @@ Game::Game(const GameSettings& gameSettings,
 
 Game::Game(Game&& game) {
   settings_ = std::move(game.settings_);
+  creationClubPlugins_ = std::move(game.creationClubPlugins_);
   gameHandle_ = std::move(game.gameHandle_);
   messages_ = std::move(game.messages_);
   lootDataPath_ = std::move(game.lootDataPath_);
@@ -497,6 +547,7 @@ Game::Game(Game&& game) {
 Game& Game::operator=(Game&& game) {
   if (&game != this) {
     settings_ = std::move(game.settings_);
+    creationClubPlugins_ = std::move(game.creationClubPlugins_);
     gameHandle_ = std::move(game.gameHandle_);
     messages_ = std::move(game.messages_);
     lootDataPath_ = std::move(game.lootDataPath_);
@@ -513,6 +564,14 @@ Game& Game::operator=(Game&& game) {
 const GameSettings& Game::GetSettings() const { return settings_; }
 
 GameSettings& Game::GetSettings() { return settings_; }
+
+const CreationClubPlugins& Game::GetCreationClubPlugins() const {
+  return creationClubPlugins_;
+}
+
+CreationClubPlugins& Game::GetCreationClubPlugins() {
+  return creationClubPlugins_;
+}
 
 void Game::Init() {
   auto logger = getLogger();
@@ -594,52 +653,6 @@ void Game::RedatePlugins() {
       }
     }
   }
-}
-
-void Game::LoadCreationClubPluginNames() {
-  const auto logger = getLogger();
-
-  creationClubPlugins_.clear();
-
-  if (!HadCreationClub()) {
-    if (logger) {
-      logger->debug(
-          "The current game was not part of the Creation Club while it was "
-          "active, skipping loading Creation Club plugin names.");
-    }
-    return;
-  }
-
-  const auto cccFilename = GetCCCFilename(settings_.Id());
-
-  if (!cccFilename.has_value()) {
-    if (logger) {
-      logger->debug(
-          "The current game does not have a CCC file, the Creation Club filter "
-          "will have no effect.");
-    }
-    return;
-  }
-
-  const auto cccFilePath = settings_.GamePath() / cccFilename.value();
-
-  if (!fs::exists(cccFilePath)) {
-    if (logger) {
-      logger->debug(
-          "The CCC file at {} does not exist, the Creation Club filter "
-          "will have no effect.",
-          cccFilePath.u8string());
-    }
-    return;
-  }
-
-  creationClubPlugins_ = ReadFilenamesInFile(cccFilePath);
-}
-
-bool Game::HadCreationClub() const {
-  // The Creation Club has been replaced, but while it was active it was
-  // available for Skyrim SE and Fallout 4.
-  return settings_.Id() == GameId::tes5se || settings_.Id() == GameId::fo4;
 }
 
 void Game::LoadAllInstalledPlugins(bool headersOnly) {
@@ -1079,10 +1092,6 @@ void Game::AppendMessages(std::vector<SourcedMessage> messages) {
   for (auto& message : messages) {
     AppendMessage(message);
   }
-}
-
-bool Game::IsCreationClubPlugin(const std::string& name) const {
-  return creationClubPlugins_.count(Filename(name)) != 0;
 }
 
 std::optional<std::filesystem::path> Game::ResolveGameFilePath(

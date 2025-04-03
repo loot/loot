@@ -43,8 +43,8 @@ public:
       sendProgressUpdate_(sendProgressUpdate) {}
 
   QueryResult executeLogic() override {
-    sendProgressUpdate_(boost::locale::translate(
-        "Parsing, merging and evaluating metadata…"));
+    sendProgressUpdate_(
+        boost::locale::translate("Parsing, merging and evaluating metadata…"));
 
     /* If the game's plugins object is empty, this is the first time loading
        the game data, so also load the metadata lists. */
@@ -77,7 +77,8 @@ public:
 
     threads.push_back(std::thread([&]() {
       try {
-        game_.LoadCreationClubPluginNames();
+        game_.GetCreationClubPlugins().Load(game_.GetSettings().Id(),
+                                            game_.GetSettings().GamePath());
       } catch (...) {
         if (exceptionPointer == nullptr) {
           exceptionPointer = std::current_exception();

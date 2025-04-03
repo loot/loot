@@ -141,7 +141,8 @@ PluginItem::PluginItem(GameId gameId,
     isLightPlugin(plugin.IsLightPlugin()),
     isMediumPlugin(plugin.IsMediumPlugin()),
     loadsArchive(plugin.LoadsArchive()),
-    isCreationClubPlugin(game.IsCreationClubPlugin(plugin.GetName())) {
+    isCreationClubPlugin(
+        game.GetCreationClubPlugins().IsCreationClubPlugin(plugin.GetName())) {
   auto userMetadata = game.GetUserMetadata(plugin.GetName());
   if (userMetadata.has_value()) {
     hasUserMetadata =
