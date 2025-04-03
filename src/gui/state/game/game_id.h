@@ -4,7 +4,7 @@
     Morrowind, Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR,
     Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR.
 
-    Copyright (C) 2021    Oliver Hamlet
+    Copyright (C) 2012 WrinklyNinja
 
     This file is part of LOOT.
 
@@ -21,29 +21,35 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
-    */
+*/
 
-#ifndef LOOT_GUI_QT_GENERAL_INFO
-#define LOOT_GUI_QT_GENERAL_INFO
+#ifndef LOOT_GUI_STATE_GAME_GAME_ID
+#define LOOT_GUI_STATE_GAME_GAME_ID
 
-#include <loot/enum/game_type.h>
-
-#include <QtCore/QMetaType>
-
-#include "gui/qt/helpers.h"
-#include "gui/sourced_message.h"
+#include <string>
+#include <cstdint>
 
 namespace loot {
-struct GeneralInformation {
-  bool gameSupportsLightPlugins{false};
-  bool gameSupportsMediumPlugins{false};
-  FileRevisionSummary masterlistRevision;
-  FileRevisionSummary preludeRevision;
-  std::vector<SourcedMessage> generalMessages;
-
-  std::string getMarkdownContent() const;
+enum struct GameId : uint8_t {
+  tes3,
+  tes4,
+  nehrim,
+  tes5,
+  enderal,
+  tes5se,
+  enderalse,
+  tes5vr,
+  fo3,
+  fonv,
+  fo4,
+  fo4vr,
+  starfield,
+  openmw,
 };
+
+std::string ToString(const GameId gameId);
+
+bool ShouldAllowRedating(const GameId gameId);
 }
 
-Q_DECLARE_METATYPE(loot::GeneralInformation);
 #endif

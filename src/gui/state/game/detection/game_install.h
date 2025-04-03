@@ -28,24 +28,9 @@
 
 #include <filesystem>
 
-namespace loot {
-enum struct GameId : uint8_t {
-  tes3,
-  tes4,
-  nehrim,
-  tes5,
-  enderal,
-  tes5se,
-  enderalse,
-  tes5vr,
-  fo3,
-  fonv,
-  fo4,
-  fo4vr,
-  starfield,
-  openmw,
-};
+#include "gui/state/game/game_id.h"
 
+namespace loot {
 enum struct InstallSource : uint8_t { steam, gog, epic, microsoft, unknown };
 
 struct GameInstall {

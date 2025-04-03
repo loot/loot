@@ -26,8 +26,6 @@
 #ifndef LOOT_GUI_STATE_GAME_DETECTION_REGISTRY
 #define LOOT_GUI_STATE_GAME_DETECTION_REGISTRY
 
-#include <gui/state/game/detection/game_install.h>
-
 #include <filesystem>
 #include <optional>
 #include <string>

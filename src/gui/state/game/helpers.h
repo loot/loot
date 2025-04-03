@@ -37,7 +37,7 @@
 #include <vector>
 
 #include "gui/sourced_message.h"
-#include "gui/state/game/detection/game_install.h"
+#include "gui/state/game/game_id.h"
 
 namespace loot {
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,

@@ -36,8 +36,6 @@
 #include <filesystem>
 #include <vector>
 
-#include "gui/state/game/helpers.h"
-
 namespace loot {
 enum class FileType { Masterlist, MasterlistPrelude };
 

@@ -33,7 +33,7 @@ along with LOOT.  If not, see
 #include <fstream>
 #include <map>
 
-#include "gui/state/game/detection/game_install.h"
+#include "gui/state/game/game_id.h"
 #include "loot/enum/game_type.h"
 #include "tests/gui/test_helpers.h"
 

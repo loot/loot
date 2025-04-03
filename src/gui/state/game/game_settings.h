@@ -32,15 +32,15 @@
 #include <string>
 #include <vector>
 
-#include "gui/state/game/detection/game_install.h"
-#include "loot/enum/game_type.h"
+#include "gui/state/game/game_id.h"
 
 namespace loot {
 static constexpr const char* MASTERLIST_FILENAME = "masterlist.yaml";
+static constexpr const char* DEFAULT_MASTERLIST_BRANCH = "v0.21";
 
-std::string ToString(const GameId gameId);
+std::string GetDefaultMasterlistUrl(const std::string& repositoryName);
 
-bool ShouldAllowRedating(const GameId gameId);
+std::string GetDefaultMasterlistUrl(const GameId gameId);
 
 class GameSettings {
 public:

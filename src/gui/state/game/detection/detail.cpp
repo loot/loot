@@ -46,38 +46,6 @@ using loot::getLogger;
 using loot::GetSourceDescription;
 using loot::InstallSource;
 
-std::string GetDefaultMasterlistRepositoryName(const GameId gameId) {
-  switch (gameId) {
-    case GameId::tes3:
-    case GameId::openmw:
-      return "morrowind";
-    case GameId::tes4:
-    case GameId::nehrim:
-      return "oblivion";
-    case GameId::tes5:
-      return "skyrim";
-    case GameId::enderal:
-    case GameId::enderalse:
-      return "enderal";
-    case GameId::tes5se:
-      return "skyrimse";
-    case GameId::tes5vr:
-      return "skyrimvr";
-    case GameId::fo3:
-      return "fallout3";
-    case GameId::fonv:
-      return "falloutnv";
-    case GameId::fo4:
-      return "fallout4";
-    case GameId::fo4vr:
-      return "fallout4vr";
-    case GameId::starfield:
-      return "starfield";
-    default:
-      throw std::logic_error("Unrecognised game type");
-  }
-}
-
 // Unfortunately std::filesystem::equivalent() requires paths to exist and
 // throws otherwise. This function first compares the paths as strings, and then
 // falls back to calling std::filesystem::equivalent(), catching exceptions and
@@ -235,17 +203,6 @@ std::string GetDefaultLootFolderName(const GameId gameId) {
     default:
       throw std::logic_error("Unrecognised game ID");
   }
-}
-
-std::string GetDefaultMasterlistUrl(const std::string& repositoryName) {
-  return std::string("https://raw.githubusercontent.com/loot/") +
-         repositoryName + "/" + DEFAULT_MASTERLIST_BRANCH + "/masterlist.yaml";
-}
-
-std::string GetDefaultMasterlistUrl(const GameId gameId) {
-  const auto repoName = GetDefaultMasterlistRepositoryName(gameId);
-
-  return GetDefaultMasterlistUrl(repoName);
 }
 
 std::string GetSourceDescription(const InstallSource source) {
