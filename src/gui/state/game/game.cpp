@@ -527,8 +527,6 @@ Game::Game(const GameSettings& gameSettings,
     settings_(gameSettings),
     lootDataPath_(lootDataPath),
     preludePath_(preludePath),
-    isMicrosoftStoreInstall_(
-        generic::IsMicrosoftInstall(settings_.Id(), settings_.GamePath())),
     supportsLightPlugins_(::SupportsLightPlugins(settings_.Id())) {}
 
 Game::Game(Game&& game) {
@@ -538,9 +536,8 @@ Game::Game(Game&& game) {
   messages_ = std::move(game.messages_);
   lootDataPath_ = std::move(game.lootDataPath_);
   preludePath_ = std::move(game.preludePath_);
-  loadOrderSortCount_ = std::move(game.loadOrderSortCount_);
+  sortCount_ = std::move(game.sortCount_);
   pluginsFullyLoaded_ = std::move(game.pluginsFullyLoaded_);
-  isMicrosoftStoreInstall_ = std::move(game.isMicrosoftStoreInstall_);
   supportsLightPlugins_ = std::move(game.supportsLightPlugins_);
 }
 
@@ -552,9 +549,8 @@ Game& Game::operator=(Game&& game) {
     messages_ = std::move(game.messages_);
     lootDataPath_ = std::move(game.lootDataPath_);
     preludePath_ = std::move(game.preludePath_);
-    loadOrderSortCount_ = std::move(game.loadOrderSortCount_);
+    sortCount_ = std::move(game.sortCount_);
     pluginsFullyLoaded_ = std::move(game.pluginsFullyLoaded_);
-    isMicrosoftStoreInstall_ = std::move(game.isMicrosoftStoreInstall_);
     supportsLightPlugins_ = std::move(game.supportsLightPlugins_);
   }
 
@@ -582,7 +578,7 @@ void Game::Init() {
 
   // Reset data that is dependent on the libloot game handle.
   messages_.clear();
-  loadOrderSortCount_ = 0;
+  sortCount_.Reset();
   pluginsFullyLoaded_ = false;
   supportsLightPlugins_ = ::SupportsLightPlugins(*this);
 
@@ -811,7 +807,7 @@ std::vector<std::string> Game::SortPlugins() {
 
     AppendMessages(CheckForRemovedPlugins(loadOrder, sortedPlugins));
 
-    IncrementLoadOrderSortCount();
+    sortCount_.Increment();
 
     return sortedPlugins;
   } catch (CyclicInteractionError& e) {
@@ -845,13 +841,7 @@ std::vector<std::string> Game::SortPlugins() {
   return {};
 }
 
-void Game::IncrementLoadOrderSortCount() { ++loadOrderSortCount_; }
-
-void Game::DecrementLoadOrderSortCount() {
-  if (loadOrderSortCount_ > 0) {
-    --loadOrderSortCount_;
-  }
-}
+ChangeCount& Game::GetSortCount() { return sortCount_; }
 
 std::vector<SourcedMessage> Game::GetMessages(
     const std::string& language,
@@ -863,7 +853,7 @@ std::vector<SourcedMessage> Game::GetMessages(
 
   output.insert(end(output), begin(messages_), end(messages_));
 
-  if (loadOrderSortCount_ == 0) {
+  if (sortCount_.IsZero()) {
     output.push_back(CreatePlainTextSourcedMessage(
         MessageType::warn,
         MessageSource::unsortedLoadOrderCheck,

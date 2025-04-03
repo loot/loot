@@ -53,6 +53,7 @@
 #endif
 
 #include "gui/sourced_message.h"
+#include "gui/state/change_count.h"
 #include "gui/state/game/game_settings.h"
 #include "gui/state/logging.h"
 #include "loot/api.h"
@@ -134,8 +135,7 @@ public:
   bool IsLoadOrderAmbiguous() const;
 
   std::vector<std::string> SortPlugins();
-  void IncrementLoadOrderSortCount();
-  void DecrementLoadOrderSortCount();
+  ChangeCount& GetSortCount();
 
   std::vector<SourcedMessage> GetMessages(const std::string& language,
                                           bool warnOnCaseSensitivePaths) const;
@@ -184,9 +184,8 @@ private:
   std::vector<SourcedMessage> messages_;
   std::filesystem::path lootDataPath_;
   std::filesystem::path preludePath_;
-  unsigned short loadOrderSortCount_{0};
+  ChangeCount sortCount_;
   bool pluginsFullyLoaded_{false};
-  bool isMicrosoftStoreInstall_{false};
   bool supportsLightPlugins_{false};
 };
 }

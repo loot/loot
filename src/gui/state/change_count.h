@@ -31,7 +31,8 @@
 namespace loot {
 class ChangeCount {
 public:
-  bool IsNonZero() const { return count > 0; }
+  bool IsZero() const { return count == 0; }
+  bool IsNonZero() const { return !IsZero(); }
 
   void Increment() { ++count; }
 
@@ -40,6 +41,8 @@ public:
       --count;
     }
   }
+
+  void Reset() { count = 0; }
 
 private:
   size_t count{0};
