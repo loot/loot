@@ -75,12 +75,12 @@ SourcedMessage CreatePlainTextSourcedMessage(const MessageType type,
 std::string MessagesAsMarkdown(const std::vector<SourcedMessage>& messages);
 
 SourcedMessage ToSourcedMessage(const PluginCleaningData& cleaningData,
-                                const std::string& language);
+                                std::string_view language);
 
 std::vector<SourcedMessage> ToSourcedMessages(
     const std::vector<Message>& messages,
     const MessageSource source,
-    const std::string& language);
+    std::string_view language);
 }
 
 #endif

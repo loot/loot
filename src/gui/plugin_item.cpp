@@ -174,7 +174,7 @@ PluginItem::PluginItem(GameId gameId,
   }
 
   for (const auto& tag : plugin.GetBashTags()) {
-    currentTags.push_back(tag.GetName());
+    currentTags.push_back(tag);
   }
 
   for (const auto& tag : evaluatedMetadata.GetTags()) {
@@ -191,7 +191,7 @@ PluginItem::PluginItem(GameId gameId,
   // don't appear in the UI.
   if (locations.size() == 1 && locations[0].GetName().empty()) {
     locations[0] =
-        Location(locations[0].GetURL(), boost::locale::translate("Location"));
+        Location(locations[0].GetURL(), boost::locale::translate("Location").str());
   } else if (locations.size() > 1) {
     for (size_t i = 0; i < locations.size(); i += 1) {
       if (locations[i].GetName().empty()) {
@@ -459,8 +459,8 @@ std::vector<PluginItem> GetPluginItems(
     const gui::Game& game,
     const std::string& language) {
   const std::function<PluginItem(
-      const PluginInterface* const, std::optional<short>, bool)>
-      mapper = [&](const PluginInterface* const plugin,
+      std::shared_ptr<const PluginInterface>, std::optional<short>, bool)>
+      mapper = [&](std::shared_ptr<const PluginInterface> plugin,
                    std::optional<short> loadOrderIndex,
                    bool isActive) {
         return PluginItem(game.GetSettings().Id(),

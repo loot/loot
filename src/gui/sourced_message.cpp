@@ -72,7 +72,7 @@ std::string MessagesAsMarkdown(const std::vector<SourcedMessage>& messages) {
 }
 
 SourcedMessage ToSourcedMessage(const PluginCleaningData& cleaningData,
-                                const std::string& language) {
+                                const std::string_view language) {
   using boost::locale::translate;
   using fmt::format;
 
@@ -157,7 +157,7 @@ SourcedMessage ToSourcedMessage(const PluginCleaningData& cleaningData,
 std::vector<SourcedMessage> ToSourcedMessages(
     const std::vector<Message>& messages,
     const MessageSource source,
-    const std::string& language) {
+    std::string_view language) {
   std::vector<SourcedMessage> pluginMessages;
 
   for (const auto& message : messages) {

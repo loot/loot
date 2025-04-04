@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.25.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-18 22:28+0100\n"
+"POT-Creation-Date: 2025-04-19 22:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -912,22 +912,26 @@ msgid "Cleaning Utility"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 msgid "Detail"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:73
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
 msgid "Filename"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
 msgid "Display Name"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
 #: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
 #: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
 msgid "Condition"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
+msgid "Constraint"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
@@ -1182,17 +1186,17 @@ msgstr ""
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:843
+#: src/gui/state/game/game.cpp:844
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:874
+#: src/gui/state/game/game.cpp:875
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:952
+#: src/gui/state/game/game.cpp:947
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
@@ -1211,7 +1215,7 @@ msgid ""
 "[LOOT's website]({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1127
+#: src/gui/state/game/game.cpp:1131
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -1341,41 +1345,41 @@ msgid ""
 "LOOT for the following Bash Tags: {0}."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:556
+#: src/gui/state/game/validation.cpp:561
 #, c++-format
 msgid "You have {0} active full plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:566
+#: src/gui/state/game/validation.cpp:571
 #, c++-format
 msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:589
+#: src/gui/state/game/validation.cpp:594
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:607
+#: src/gui/state/game/validation.cpp:612
 #, c++-format
 msgid "You have {0} active {1} but the game only supports up to {2}."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:629
+#: src/gui/state/game/validation.cpp:634
 #, c++-format
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
 "Deactivate a full plugin or your {1} to avoid potential issues."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:651
+#: src/gui/state/game/validation.cpp:656
 #, c++-format
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:671
+#: src/gui/state/game/validation.cpp:676
 msgid ""
 "You have a full plugin and at least one medium plugin sharing the FD load "
 "order index. Deactivate a full plugin or all your medium plugins to avoid "
@@ -1384,7 +1388,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's name.
 #.
-#: src/gui/state/game/validation.cpp:684
+#: src/gui/state/game/validation.cpp:689
 #, c++-format
 msgid ""
 "{0} is installed in a case-sensitive location. This may cause issues as the "
@@ -1394,7 +1398,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's
 #. name.
-#: src/gui/state/game/validation.cpp:701
+#: src/gui/state/game/validation.cpp:706
 #, c++-format
 msgid ""
 "{0}'s local application data is stored in a case-sensitive location. This "
@@ -1402,13 +1406,13 @@ msgid ""
 "are not case-sensitive, which is the default on Windows."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:838
+#: src/gui/state/game/validation.cpp:847
 msgid "small plugin"
 msgid_plural "small plugins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/validation.cpp:841
+#: src/gui/state/game/validation.cpp:850
 msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] ""

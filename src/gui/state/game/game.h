@@ -103,8 +103,9 @@ public:
   void Init();
   bool IsInitialised() const;
 
-  const PluginInterface* GetPlugin(const std::string& name) const;
-  std::vector<const PluginInterface*> GetPlugins() const;
+  std::shared_ptr<const PluginInterface> GetPlugin(
+      const std::string& name) const;
+  std::vector<std::shared_ptr<const PluginInterface>> GetPlugins() const;
   std::vector<SourcedMessage> CheckInstallValidity(
       const PluginInterface& plugin,
       const PluginMetadata& metadata,
@@ -137,7 +138,7 @@ public:
   std::vector<std::string> SortPlugins();
   ChangeCount& GetSortCount();
 
-  std::vector<SourcedMessage> GetMessages(const std::string& language,
+  std::vector<SourcedMessage> GetMessages(std::string_view language,
                                           bool warnOnCaseSensitivePaths) const;
   void AppendMessage(const SourcedMessage& message);
   void ClearMessages();
@@ -157,6 +158,8 @@ public:
       bool evaluateConditions = false) const;
   std::optional<PluginMetadata> GetNonUserMetadata(
       const PluginInterface& plugin) const;
+
+  bool EvaluateConstraint(const File& file) const;
 
   void SetUserGroups(const std::vector<Group>& groups);
   void AddUserMetadata(const PluginMetadata& metadata);
@@ -193,7 +196,8 @@ private:
 std::string GetMetadataAsBBCodeYaml(const gui::Game& game,
                                     const std::string& pluginName);
 
-typedef std::tuple<const PluginInterface* const, std::optional<short>, bool>
+typedef std::
+    tuple<std::shared_ptr<const PluginInterface>, std::optional<short>, bool>
                                     LoadOrderTuple;
 
 std::vector<LoadOrderTuple> MapToLoadOrderTuples(
@@ -205,7 +209,7 @@ std::vector<T> MapFromLoadOrderData(
     const gui::Game& game,
     const std::vector<std::string>& loadOrder,
     const std::function<
-        T(const PluginInterface* const, std::optional<short>, bool)>& mapper) {
+        T(std::shared_ptr<const PluginInterface>, std::optional<short>, bool)>& mapper) {
   const auto data = MapToLoadOrderTuples(game, loadOrder);
 
   // Now perform the mapping in a second loop that can be parallelised

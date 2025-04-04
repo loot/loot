@@ -64,7 +64,7 @@ loot::SourcedMessage CreateInitErrorMessage(const std::string& text) {
 }
 
 namespace loot {
-void apiLogCallback(LogLevel level, const char* message) {
+void apiLogCallback(LogLevel level, std::string_view message) {
   auto logger = getLogger();
   if (!logger) {
     return;
