@@ -31,8 +31,7 @@
 #include "gui/state/loot_settings.h"
 
 namespace loot {
-class LootState : public GamesManager,
-                  public LootPaths {
+class LootState : public GamesManager {
 public:
   LootState(const std::filesystem::path& lootAppPath,
             const std::filesystem::path& lootDataPath);
@@ -48,6 +47,8 @@ public:
   LootSettings& getSettings();
 
   ChangeCount& GetUnappliedChangeCount();
+
+  const LootPaths& GetPaths() const;
 
 private:
   void createLootDataPath();
@@ -72,6 +73,7 @@ private:
   std::optional<std::string> getPreferredGameFolderName(
       const std::string& cliGameValue) const;
 
+  LootPaths paths_;
   std::vector<std::filesystem::path> xboxGamingRootPaths_;
   std::vector<std::string> preferredUILanguages_;
   std::vector<SourcedMessage> initMessages_;

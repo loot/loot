@@ -99,7 +99,7 @@ void apiLogCallback(LogLevel level, const char* message) {
 
 LootState::LootState(const std::filesystem::path& lootAppPath,
                      const std::filesystem::path& lootDataPath) :
-    LootPaths(lootAppPath, lootDataPath) {
+    paths_(LootPaths(lootAppPath, lootDataPath)) {
   // Do some preliminary locale / UTF-8 support setup.
   boost::locale::generator gen;
   std::locale::global(gen("en.UTF-8"));
@@ -108,8 +108,8 @@ LootState::LootState(const std::filesystem::path& lootAppPath,
   createLootDataPath();
 
   // Initialise logging.
-  fs::remove(LootPaths::getLogPath());
-  setLogPath(LootPaths::getLogPath());
+  fs::remove(paths_.getLogPath());
+  setLogPath(paths_.getLogPath());
   SetLoggingCallback(apiLogCallback);
 
   // Enable debug logging before settings are loaded to capture as much
@@ -148,8 +148,8 @@ void LootState::init(const std::string& cmdLineGame,
 
   // Detect installed games.
   const auto gameSettings = LoadInstalledGames(settings_.getGameSettings(),
-                                               LootPaths::getLootDataPath(),
-                                               LootPaths::getPreludePath());
+                                               paths_.getLootDataPath(),
+                                               paths_.getPreludePath());
 
   settings_.storeGameSettings(gameSettings);
 
@@ -189,13 +189,15 @@ ChangeCount& LootState::GetUnappliedChangeCount() {
   return unappliedChangeCount_;
 }
 
+const LootPaths& LootState::GetPaths() const { return paths_; }
+
 void LootState::createLootDataPath() {
-  if (fs::exists(LootPaths::getLootDataPath())) {
+  if (fs::exists(paths_.getLootDataPath())) {
     return;
   }
 
   try {
-    fs::create_directory(LootPaths::getLootDataPath());
+    fs::create_directory(paths_.getLootDataPath());
   } catch (const exception& e) {
     initMessages_.push_back(CreateInitErrorMessage(format(
         translate("Error: Could not create LOOT data directory. {0}").str(),
@@ -204,9 +206,9 @@ void LootState::createLootDataPath() {
 }
 
 void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
-  if (fs::exists(LootPaths::getSettingsPath())) {
+  if (fs::exists(paths_.getSettingsPath())) {
     try {
-      settings_.load(LootPaths::getSettingsPath());
+      settings_.load(paths_.getSettingsPath());
     } catch (const exception& e) {
       initMessages_.push_back(CreateInitErrorMessage(format(
           /* translators: This error is displayed when LOOT is unable to
@@ -233,7 +235,7 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
   // Now that settings have been loaded, set the locale again to handle
   // translations.
   if (settings_.getLanguage() != MessageContent::DEFAULT_LANGUAGE) {
-    const auto l10nPath = LootPaths::getL10nPath().u8string();
+    const auto l10nPath = paths_.getL10nPath().u8string();
     const auto logger = getLogger();
     if (logger) {
       logger->debug("Initialising language settings.");
@@ -251,12 +253,12 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
 }
 
 void LootState::checkSettingsFile() {
-  if (!fs::exists(LootPaths::getSettingsPath())) {
+  if (!fs::exists(paths_.getSettingsPath())) {
     return;
   }
 
   try {
-    const auto warnings = loot::checkSettingsFile(LootPaths::getSettingsPath());
+    const auto warnings = loot::checkSettingsFile(paths_.getSettingsPath());
     for (const auto& warning : warnings) {
       initMessages_.push_back(CreatePlainTextSourcedMessage(
           MessageType::warn, MessageSource::init, warning));
@@ -301,7 +303,7 @@ void LootState::findXboxGamingRootPaths() {
 }
 
 void LootState::createPreludeDirectory() {
-  auto preludeDir = LootPaths::getPreludePath().parent_path();
+  auto preludeDir = paths_.getPreludePath().parent_path();
   if (!fs::exists(preludeDir)) {
     try {
       fs::create_directory(preludeDir);

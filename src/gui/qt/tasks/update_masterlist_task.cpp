@@ -30,7 +30,7 @@
 namespace loot {
 UpdatePreludeTask::UpdatePreludeTask(const LootState &state) :
     preludeSource(state.getSettings().getPreludeSource()),
-    preludePath(state.getPreludePath()) {}
+    preludePath(state.GetPaths().getPreludePath()) {}
 
 void UpdatePreludeTask::execute() {
   try {
