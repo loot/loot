@@ -42,7 +42,8 @@
 namespace loot {
 class GamesManager {
 public:
-  GamesManager() = default;
+  GamesManager(const std::filesystem::path& lootDataPath,
+               const std::filesystem::path& preludePath);
   GamesManager(const GamesManager&) = delete;
   GamesManager(GamesManager&&) = delete;
   virtual ~GamesManager() = default;
@@ -52,9 +53,7 @@ public:
 
   // Installed games have their game paths set in the returned settings.
   std::vector<GameSettings> LoadInstalledGames(
-      std::vector<GameSettings> gamesSettings,
-      const std::filesystem::path& lootDataPath,
-      const std::filesystem::path& preludePath);
+      std::vector<GameSettings> gamesSettings);
 
   bool HasCurrentGame() const;
 
@@ -78,6 +77,8 @@ private:
 
   virtual void InitialiseGameData(gui::Game& game) = 0;
 
+  std::filesystem::path lootDataPath_;
+  std::filesystem::path preludePath_;
   std::vector<gui::Game> installedGames_;
   std::vector<gui::Game>::iterator currentGame_{installedGames_.end()};
 

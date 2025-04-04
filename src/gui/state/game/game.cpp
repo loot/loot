@@ -179,25 +179,20 @@ std::optional<std::filesystem::path> GetCCCFilename(const GameId gameId) {
   }
 }
 
-// This overload does not support checking based on the installed game.
-bool SupportsLightPlugins(const GameId gameId) {
-  return gameId == GameId::tes5se || gameId == GameId::enderalse ||
-         gameId == GameId::fo4 || gameId == GameId::starfield;
-}
-
-bool SupportsLightPlugins(const loot::gui::Game& game) {
-  const auto gameId = game.GetSettings().Id();
+bool SupportsLightPlugins(GameId gameId,
+                          const std::filesystem::path& dataPath) {
   if (gameId == GameId::tes5vr) {
     // Light plugins are not supported unless an SKSEVR plugin is used.
     // This assumes that the plugin's dependencies are also installed and that
     // the game is launched with SKSEVR. The dependencies are intentionally
     // not checked to allow them to change over time without breaking this
     // check.
-    return std::filesystem::exists(game.GetSettings().DataPath() / "SKSE" /
-                                   "Plugins" / "skyrimvresl.dll");
+    return std::filesystem::exists(dataPath / "SKSE" / "Plugins" /
+                                   "skyrimvresl.dll");
   }
 
-  return SupportsLightPlugins(gameId);
+  return gameId == GameId::tes5se || gameId == GameId::enderalse ||
+         gameId == GameId::fo4 || gameId == GameId::starfield;
 }
 
 SourcedMessage CreateSortingCyclicInteractionErrorMessage(
@@ -527,7 +522,8 @@ Game::Game(const GameSettings& gameSettings,
     settings_(gameSettings),
     lootDataPath_(lootDataPath),
     preludePath_(preludePath),
-    supportsLightPlugins_(::SupportsLightPlugins(settings_.Id())) {}
+    supportsLightPlugins_(
+        ::SupportsLightPlugins(settings_.Id(), settings_.DataPath())) {}
 
 Game::Game(Game&& game) {
   settings_ = std::move(game.settings_);
@@ -580,7 +576,8 @@ void Game::Init() {
   messages_.clear();
   sortCount_.Reset();
   pluginsFullyLoaded_ = false;
-  supportsLightPlugins_ = ::SupportsLightPlugins(*this);
+  supportsLightPlugins_ =
+      ::SupportsLightPlugins(settings_.Id(), settings_.DataPath());
 
   gameHandle_ = CreateGameHandle(GetGameType(settings_.Id()),
                                  settings_.GamePath(),
@@ -674,7 +671,8 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
 
   pluginsFullyLoaded_ = !headersOnly;
 
-  supportsLightPlugins_ = ::SupportsLightPlugins(*this);
+  supportsLightPlugins_ =
+      ::SupportsLightPlugins(settings_.Id(), settings_.DataPath());
 }
 
 bool Game::ArePluginsFullyLoaded() const { return pluginsFullyLoaded_; }

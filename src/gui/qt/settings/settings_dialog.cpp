@@ -63,8 +63,7 @@ void SettingsDialog::recordInputValues(LootState& state) {
     gameSettings.push_back(gameTab->getGameSettings());
   }
 
-  gameSettings = state.LoadInstalledGames(
-      gameSettings, state.GetPaths().getLootDataPath(), state.GetPaths().getPreludePath());
+  gameSettings = state.LoadInstalledGames(gameSettings);
 
   state.getSettings().storeGameSettings(gameSettings);
 }
