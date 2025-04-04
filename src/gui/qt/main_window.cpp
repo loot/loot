@@ -263,7 +263,7 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
 void MainWindow::initialise() {
   try {
-    themes = findThemes(state.getThemesPath());
+    themes = findThemes(state.GetPaths().getThemesPath());
 
     if (state.getSettings().getLastVersion() != gui::Version::string()) {
       showFirstRunDialog();
@@ -323,11 +323,11 @@ void MainWindow::applyTheme() {
   // Apply theme.
   bool loadingDefault = state.getSettings().getTheme() == "default";
 
-  auto styleSheet = loot::loadStyleSheet(state.getThemesPath(),
+  auto styleSheet = loot::loadStyleSheet(state.GetPaths().getThemesPath(),
                                          state.getSettings().getTheme());
   if (!styleSheet.has_value()) {
     // Fall back to the default theme.
-    styleSheet = loot::loadStyleSheet(state.getThemesPath(), "default");
+    styleSheet = loot::loadStyleSheet(state.GetPaths().getThemesPath(), "default");
     loadingDefault = true;
   }
 
@@ -347,7 +347,7 @@ void MainWindow::applyTheme() {
           "Loading default-dark theme instead of the default theme as a dark "
           "colour scheme has been detected");
     }
-    styleSheet = loot::loadStyleSheet(state.getThemesPath(), "default-dark");
+    styleSheet = loot::loadStyleSheet(state.GetPaths().getThemesPath(), "default-dark");
   }
 #endif
 
@@ -925,7 +925,7 @@ void MainWindow::updateCounts(
 }
 
 void MainWindow::updateGeneralInformation() {
-  const auto preludeInfo = getFileRevisionSummary(state.getPreludePath(),
+  const auto preludeInfo = getFileRevisionSummary(state.GetPaths().getPreludePath(),
                                                   FileType::MasterlistPrelude);
   auto initMessages = state.getInitMessages();
 
@@ -1307,7 +1307,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 
   try {
     state.getSettings().updateLastVersion();
-    state.getSettings().save(state.getSettingsPath());
+    state.getSettings().save(state.GetPaths().getSettingsPath());
   } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
@@ -1447,8 +1447,8 @@ std::optional<std::filesystem::path> MainWindow::createBackup() {
       "LOOT-backup-" +
       QDateTime::currentDateTime().toString("yyyyMMddThhmmss").toStdString();
 
-  auto sourceDir = state.getLootDataPath();
-  auto destDir = state.getLootDataPath() / "backups" / backupBasename;
+  auto sourceDir = state.GetPaths().getLootDataPath();
+  auto destDir = state.GetPaths().getLootDataPath() / "backups" / backupBasename;
 
   loot::createBackup(sourceDir, destDir);
 
@@ -1528,7 +1528,7 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
     handleProgressUpdate(translate("Updating and parsing masterlist…"));
 
     const auto preludeSource = state.getSettings().getPreludeSource();
-    const auto preludePath = state.getPreludePath();
+    const auto preludePath = state.GetPaths().getPreludePath();
 
     std::vector<Task*> tasks;
 
@@ -1538,12 +1538,12 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
 
     for (const auto& settings : state.getSettings().getGameSettings()) {
       // Masterlist update assumes that the game folder exists, so ensure that.
-      InitLootGameFolder(state.getLootDataPath(), settings);
+      InitLootGameFolder(state.GetPaths().getLootDataPath(), settings);
 
       const auto task = new UpdateMasterlistTask(
           settings.FolderName(),
           settings.MasterlistSource(),
-          GetMasterlistPath(state.getLootDataPath(), settings));
+          GetMasterlistPath(state.GetPaths().getLootDataPath(), settings));
 
       tasks.push_back(task);
     }
@@ -1945,7 +1945,7 @@ void MainWindow::on_actionViewDocs_triggered() {
       logger->trace("Opening LOOT's readme.");
     }
 
-    const auto readmePath = state.getReadmePath();
+    const auto readmePath = state.GetPaths().getReadmePath();
     const auto canonicalPath =
         std::filesystem::canonical(readmePath / "index.html");
     const auto canonicalReadmePath = std::filesystem::canonical(readmePath);
@@ -1984,7 +1984,7 @@ void MainWindow::on_actionOpenLOOTDataFolder_triggered() {
       logger->trace("Opening LOOT's local appdata folder.");
     }
 
-    OpenInDefaultApplication(state.getLogPath().parent_path());
+    OpenInDefaultApplication(state.GetPaths().getLogPath().parent_path());
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2385,7 +2385,7 @@ void MainWindow::on_settingsDialog_accepted() {
     const auto currentTheme = state.getSettings().getTheme();
     settingsDialog->recordInputValues(state);
 
-    state.getSettings().save(state.getSettingsPath());
+    state.getSettings().save(state.GetPaths().getSettingsPath());
 
     // Update the games dropdown in case names have changed.
     refreshGamesDropdown();
