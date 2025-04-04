@@ -47,8 +47,8 @@ public:
     game_->GetSortCount().Decrement();
 
     const std::function<std::pair<std::string, std::optional<short>>(
-        const PluginInterface* const, std::optional<short>, bool)>
-        mapper = [](const PluginInterface* const plugin,
+        std::shared_ptr<const PluginInterface>, std::optional<short>, bool)>
+        mapper = [](std::shared_ptr<const PluginInterface> plugin,
                     std::optional<short> loadOrderIndex,
                     bool) {
           return std::make_pair(plugin->GetName(), loadOrderIndex);

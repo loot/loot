@@ -49,7 +49,7 @@ void GroupTab::initialiseInputs(const std::vector<std::string>& groups,
     groupComboBox->addItem(QString::fromStdString(group));
   }
 
-  nonUserGroupName = nonUserGroup.value_or(Group::DEFAULT_NAME);
+  nonUserGroupName = nonUserGroup.value_or(std::string(Group::DEFAULT_NAME));
 
   const auto currentGroupName = userGroup.value_or(nonUserGroupName);
 

@@ -589,11 +589,12 @@ void Game::Init() {
 
 bool Game::IsInitialised() const { return gameHandle_ != nullptr; }
 
-const PluginInterface* Game::GetPlugin(const std::string& name) const {
+std::shared_ptr<const PluginInterface> Game::GetPlugin(
+    const std::string& name) const {
   return gameHandle_->GetPlugin(name);
 }
 
-std::vector<const PluginInterface*> Game::GetPlugins() const {
+std::vector<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
   return gameHandle_->GetLoadedPlugins();
 }
 
@@ -843,7 +844,7 @@ std::vector<std::string> Game::SortPlugins() {
 ChangeCount& Game::GetSortCount() { return sortCount_; }
 
 std::vector<SourcedMessage> Game::GetMessages(
-    const std::string& language,
+    std::string_view language,
     bool warnOnCaseSensitivePaths) const {
   std::vector<SourcedMessage> output(
       ToSourcedMessages(gameHandle_->GetDatabase().GetGeneralMessages(true),
@@ -894,37 +895,31 @@ void Game::ClearMessages() { messages_.clear(); }
 void Game::LoadMetadata() {
   auto logger = getLogger();
 
-  std::filesystem::path masterlistPreludePath;
-  std::filesystem::path masterlistPath;
-  std::filesystem::path userlistPath;
-
-  if (std::filesystem::exists(preludePath_)) {
-    if (logger) {
-      logger->debug("Preparing to parse masterlist prelude.");
-    }
-    masterlistPreludePath = preludePath_;
-  }
-
-  if (std::filesystem::exists(MasterlistPath())) {
-    if (logger) {
-      logger->debug("Preparing to parse masterlist.");
-    }
-    masterlistPath = MasterlistPath();
-  }
-
-  if (std::filesystem::exists(UserlistPath())) {
-    if (logger) {
-      logger->debug("Preparing to parse userlist.");
-    }
-    userlistPath = UserlistPath();
-  }
-
   if (logger) {
     logger->debug("Parsing metadata list(s).");
   }
   try {
-    gameHandle_->GetDatabase().LoadLists(
-        masterlistPath, userlistPath, masterlistPreludePath);
+    if (std::filesystem::exists(MasterlistPath())) {
+      if (std::filesystem::exists(preludePath_)) {
+        if (logger) {
+          logger->debug("Parsing the prelude and masterlist.");
+        }
+        gameHandle_->GetDatabase().LoadMasterlistWithPrelude(MasterlistPath(),
+                                                             preludePath_);
+      } else {
+        if (logger) {
+          logger->debug("Parsing the masterlist.");
+        }
+        gameHandle_->GetDatabase().LoadMasterlist(MasterlistPath());
+      }
+    }
+
+    if (std::filesystem::exists(UserlistPath())) {
+      if (logger) {
+        logger->debug("Parsing the userlist.");
+      }
+      gameHandle_->GetDatabase().LoadUserlist(UserlistPath());
+    }
   } catch (const std::exception& e) {
     if (logger) {
       logger->error("An error occurred while parsing the metadata list(s): {}",
@@ -979,14 +974,19 @@ std::optional<PluginMetadata> Game::GetMasterlistMetadata(
 
 std::optional<PluginMetadata> Game::GetNonUserMetadata(
     const PluginInterface& plugin) const {
-  auto fileBashTags = plugin.GetBashTags();
+  const auto fileBashTagNames = plugin.GetBashTags();
   auto masterlistMetadata = GetMasterlistMetadata(plugin.GetName());
 
-  if (fileBashTags.empty()) {
+  if (fileBashTagNames.empty()) {
     return masterlistMetadata;
   }
 
   PluginMetadata metadata(plugin.GetName());
+
+  std::vector<Tag> fileBashTags;
+  for (const auto& tag : fileBashTagNames) {
+    fileBashTags.push_back(Tag(tag));
+  }
   metadata.SetTags(fileBashTags);
 
   if (masterlistMetadata.has_value()) {
@@ -995,6 +995,10 @@ std::optional<PluginMetadata> Game::GetNonUserMetadata(
   }
 
   return metadata;
+}
+
+bool Game::EvaluateConstraint(const File& file) const {
+  return gameHandle_->GetDatabase().Evaluate(file.GetConstraint());
 }
 
 std::optional<PluginMetadata> Game::GetUserMetadata(

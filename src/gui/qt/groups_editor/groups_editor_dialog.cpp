@@ -254,7 +254,7 @@ bool GroupsEditorDialog::hasUnsavedChanges() {
   // The old groups may contain the default group with no load afters,
   // so add it to the new groups if it's not there.
   const auto defaultGroupName = Group().GetName();
-  auto it = newGroups.find(Group::DEFAULT_NAME);
+  auto it = newGroups.find(std::string(Group::DEFAULT_NAME));
   if (it == newGroups.end()) {
     newGroups.emplace(Group::DEFAULT_NAME, std::set<std::string>());
   }
@@ -331,7 +331,7 @@ const std::string GroupsEditorDialog::getPluginGroup(
   auto newPluginGroupIt = newPluginGroups.find(pluginItem.name);
 
   return newPluginGroupIt == newPluginGroups.end()
-             ? pluginItem.group.value_or(Group::DEFAULT_NAME)
+             ? pluginItem.group.value_or(std::string(Group::DEFAULT_NAME))
              : newPluginGroupIt->second;
 }
 

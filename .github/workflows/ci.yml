@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     env:
-      LIBLOOT_VERSION: 0.25.5
+      LIBLOOT_VERSION: ab867706a05998be25c71f100be8670e57cf99f9
 
     steps:
       - uses: actions/checkout@v4
@@ -314,6 +314,17 @@ jobs:
           aqt install-qt windows desktop ${env:QT_VERSION} win64_msvc2022_64
           echo "root=${{ github.workspace }}/${env:QT_VERSION}/msvc2022_64" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
+      - name: Download libloot snapshot build artifact
+        shell: bash
+        run: |
+          curl -sSfL \
+            -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            -H 'Accept: application/vnd.github.v3+json' \
+            -o 'libloot.zip' \
+            https://api.github.com/repos/loot/libloot/actions/artifacts/2885863722/zip
+          unzip libloot.zip
+          echo "LIBLOOT_URL=${{ github.workspace }}/$(ls -1 libloot-*.7z)" >> $GITHUB_ENV
+
       - name: Run CMake
         run: |
           cmake -G "Visual Studio 16 2019" `
@@ -321,6 +332,7 @@ jobs:
             -DCMAKE_PREFIX_PATH="${{ steps.boost-metadata.outputs.root }}\stage" `
             -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" `
             -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}" `
+            -DLIBLOOT_URL="${{ env.LIBLOOT_URL }}" `
             -B build
           cmake --build build --config Release
 
