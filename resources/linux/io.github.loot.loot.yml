@@ -182,23 +182,23 @@ modules:
       - -DLIBLOOT_BUILD_TESTS=OFF
       - -DLIBLOOT_INSTALL_DOCS=OFF
       - -DESPLUGIN_URL=/run/build/libloot/6.1.1.tar.gz
-      - -DLIBLOADORDER_URL=/run/build/libloot/18.2.2.tar.gz
-      - -DLOOT_CONDITION_INTERPRETER_URL=/run/build/libloot/5.2.0.tar.gz
+      - -DLIBLOADORDER_URL=/run/build/libloot/18.3.0.tar.gz
+      - -DLOOT_CONDITION_INTERPRETER_URL=/run/build/libloot/5.3.0.tar.gz
     sources:
       # Use the Git repository so that libloot's commit hash gets embedded in the build.
       - type: git
         url: https://github.com/loot/libloot.git
-        tag: 0.25.5
-        commit: 2d96ba13d9edd19702cd694d089a51f9e969d3d2
+        # tag: 0.25.5
+        commit: ab867706a05998be25c71f100be8670e57cf99f9
       - type: file
         url: https://github.com/Ortham/esplugin/archive/refs/tags/6.1.1.tar.gz
         sha256: 8896859a6469e810c6e5430ed910fa8f8c31d39e032703b87ab090759663a240
       - type: file
-        url: https://github.com/Ortham/libloadorder/archive/refs/tags/18.2.2.tar.gz
-        sha256: 5e4c12e91180abbf201be70b3073fce791bdee2d70f33f89b35942446d3b5782
+        url: https://github.com/Ortham/libloadorder/archive/refs/tags/18.3.0.tar.gz
+        sha256: dab66a9a688042a7640a578070ed32851cf7be9cbd424151706e068d011e40df
       - type: file
-        url: https://github.com/loot/loot-condition-interpreter/archive/refs/tags/5.2.0.tar.gz
-        sha256: 48db9d1022c65c6ea53b5febbbb8a45d089ac8e8773f8e14b069387fab80948d
+        url: https://github.com/loot/loot-condition-interpreter/archive/refs/tags/5.3.0.tar.gz
+        sha256: 4da6921871a3854dd8523392866df1da971ad5258d1337bf583446cae94d1738
       # Generated using scripts/generate_manifests.sh
       - ../../build/flatpak-manifests/esplugin.json
       - ../../build/flatpak-manifests/libloadorder.json

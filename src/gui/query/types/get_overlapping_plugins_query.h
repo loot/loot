@@ -63,8 +63,8 @@ private:
     }
 
     const std::function<std::pair<PluginItem, bool>(
-        const PluginInterface* const, std::optional<short>, bool)>
-        mapper = [&](const PluginInterface* const otherPlugin,
+        std::shared_ptr<const PluginInterface>, std::optional<short>, bool)>
+        mapper = [&](std::shared_ptr<const PluginInterface> otherPlugin,
                      std::optional<short> loadOrderIndex,
                      bool isActive) {
           const auto pluginItem = PluginItem(game_.GetSettings().Id(),

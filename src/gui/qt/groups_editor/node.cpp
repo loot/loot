@@ -329,7 +329,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
 QColor Node::getNodeColor() const {
   static const QString DEFAULT_GROUP_NAME_QT =
-      QString::fromStdString(Group::DEFAULT_NAME);
+      QString::fromStdString(std::string(Group::DEFAULT_NAME));
 
   if (textItem->text() == DEFAULT_GROUP_NAME_QT) {
     return QColor("orange");

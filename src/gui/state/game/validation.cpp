@@ -406,7 +406,7 @@ void ValidateFiles(
     const PluginInterface& plugin,
     const std::string& language,
     std::string_view logMessage,
-    std::function<bool(const std::string&)> isInvalid,
+    std::function<bool(const loot::File&)> isInvalid,
     std::function<SourcedMessage(const loot::File&, const std::string&)>
         createMessage) {
   const auto logger = getLogger();
@@ -414,13 +414,12 @@ void ValidateFiles(
   std::unordered_set<std::string> displayNamesWithMessages;
 
   for (const auto& file : files) {
-    auto fileName = std::string(file.GetName());
-    if (isInvalid(fileName)) {
+    if (isInvalid(file)) {
       if (logger) {
         logger->error(
             logMessage,
             plugin.GetName(),
-            fileName,
+            std::string(file.GetName()),
             SelectMessageContent(file.GetDetail(),
                                  loot::MessageContent::DEFAULT_LANGUAGE)
                 .value_or(loot::MessageContent())
@@ -443,6 +442,12 @@ void ValidateFiles(
 bool ContainsFilterTag(const std::vector<loot::Tag>& tags) {
   return std::any_of(tags.cbegin(), tags.cend(), [](const loot::Tag& tag) {
     return tag.GetName() == "Filter";
+  });
+}
+
+bool ContainsFilterTag(const std::vector<std::string>& tags) {
+  return std::any_of(tags.cbegin(), tags.cend(), [](const std::string& tag) {
+    return tag == "Filter";
   });
 }
 
@@ -742,7 +747,10 @@ std::vector<SourcedMessage> CheckInstallValidity(const gui::Game& game,
         plugin,
         language,
         "\"{}\" requires \"{}\", but it is missing. {}",
-        [&game](auto filename) { return !game.FileExists(filename); },
+        [&game](auto file) {
+          return !(game.FileExists(std::string(file.GetName())) &&
+                   game.EvaluateConstraint(file));
+        },
         CreateMissingRequirementMessage);
 
     ValidateFiles(
@@ -751,7 +759,8 @@ std::vector<SourcedMessage> CheckInstallValidity(const gui::Game& game,
         plugin,
         language,
         "\"{}\" is incompatible with \"{}\", but both are present. {}",
-        [&game](auto filename) {
+        [&game](auto file) {
+          const auto filename = std::string(file.GetName());
           return game.FileExists(filename) &&
                  (!HasPluginFileExtension(filename) ||
                   game.IsPluginActive(filename));
