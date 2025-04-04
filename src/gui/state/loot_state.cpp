@@ -97,9 +97,9 @@ void apiLogCallback(LogLevel level, const char* message) {
   }
 }
 
-LootState::LootState(const std::filesystem::path& lootAppPath,
-                     const std::filesystem::path& lootDataPath) :
-    paths_(LootPaths(lootAppPath, lootDataPath)) {
+LootState::LootState(LootPaths&& paths) :
+    GamesManager(paths.getLootDataPath(), paths.getPreludePath()),
+    paths_(paths) {
   // Do some preliminary locale / UTF-8 support setup.
   boost::locale::generator gen;
   std::locale::global(gen("en.UTF-8"));
@@ -147,9 +147,7 @@ void LootState::init(const std::string& cmdLineGame,
   //-----------------------------------
 
   // Detect installed games.
-  const auto gameSettings = LoadInstalledGames(settings_.getGameSettings(),
-                                               paths_.getLootDataPath(),
-                                               paths_.getPreludePath());
+  const auto gameSettings = LoadInstalledGames(settings_.getGameSettings());
 
   settings_.storeGameSettings(gameSettings);
 

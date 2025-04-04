@@ -35,10 +35,12 @@ bool GameNeedsRecreating(const loot::gui::Game& game,
 }
 
 namespace loot {
+GamesManager::GamesManager(const std::filesystem::path& lootDataPath,
+                           const std::filesystem::path& preludePath) :
+    lootDataPath_(lootDataPath), preludePath_(preludePath) {}
+
 std::vector<GameSettings> GamesManager::LoadInstalledGames(
-    std::vector<GameSettings> gamesSettings,
-    const std::filesystem::path& lootDataPath,
-    const std::filesystem::path& preludePath) {
+    std::vector<GameSettings> gamesSettings) {
   std::lock_guard<std::recursive_mutex> guard(mutex_);
 
   auto logger = getLogger();
@@ -90,7 +92,7 @@ std::vector<GameSettings> GamesManager::LoadInstalledGames(
       }
 
       installedGames.push_back(
-          gui::Game(gameSettings, lootDataPath, preludePath));
+          gui::Game(gameSettings, lootDataPath_, preludePath_));
     }
   }
   installedGames_ = std::move(installedGames);

@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
       std::filesystem::u8path(parser.value("game-path").toStdString());
   auto autoSort = parser.isSet("auto-sort");
 
-  loot::LootState state("", lootDataPath);
+  loot::LootState state(loot::LootPaths("", lootDataPath));
 
   logRuntimeEnvironment();
 

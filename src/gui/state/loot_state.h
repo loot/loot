@@ -33,8 +33,7 @@
 namespace loot {
 class LootState : public GamesManager {
 public:
-  LootState(const std::filesystem::path& lootAppPath,
-            const std::filesystem::path& lootDataPath);
+  LootState(LootPaths&& paths);
 
   void init(const std::string& cmdLineGame,
             const std::filesystem::path& cmdLineGamePath,
