@@ -420,6 +420,7 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/microsoft_store.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/registry.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/steam.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_id.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.h"
