@@ -54,6 +54,7 @@ public:
   static constexpr int DISPLAY_NAME_COLUMN = 1;
   static constexpr int DETAIL_COLUMN = 2;
   static constexpr int CONDITION_COLUMN = 3;
+  static constexpr int CONSTRAINT_COLUMN = 4;
 
 private:
   const std::string& language;
