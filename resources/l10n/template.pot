@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.25.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-05 09:30+0100\n"
+"POT-Creation-Date: 2025-04-05 09:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -912,22 +912,26 @@ msgid "Cleaning Utility"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 msgid "Detail"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:73
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
 msgid "Filename"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
 msgid "Display Name"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
 #: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
 #: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
 msgid "Condition"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
+msgid "Constraint"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
