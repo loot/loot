@@ -51,6 +51,14 @@ void UpdateInstalledGamesSettings(
     const std::vector<std::filesystem::path>& heroicConfigPaths,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages);
+
+// Detect installed games and add GameSettings objects for those that
+// aren't already represented by the objects that already exist. Also update
+// game paths for existing settings objects that match a found install.
+std::vector<GameSettings> FindInstalledGames(
+    const std::vector<GameSettings>& gamesSettings,
+    const std::vector<std::filesystem::path>& xboxGamingRootPaths_,
+    const std::vector<std::string>& preferredUILanguages_);
 }
 
 #endif

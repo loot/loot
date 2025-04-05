@@ -51,9 +51,8 @@ public:
   GamesManager& operator=(const GamesManager&) = delete;
   GamesManager& operator=(GamesManager&&) = delete;
 
-  // Installed games have their game paths set in the returned settings.
-  std::vector<GameSettings> LoadInstalledGames(
-      std::vector<GameSettings> gamesSettings);
+  // Updates or recreates the current game as necessary.
+  void SetInstalledGames(const std::vector<GameSettings>& gamesSettings);
 
   bool HasCurrentGame() const;
 
@@ -70,9 +69,6 @@ public:
   bool IsGameInstalled(const std::string& gameFolder) const;
 
 private:
-  virtual std::vector<GameSettings> FindInstalledGames(
-      const std::vector<GameSettings>& gamesSettings) const = 0;
-
   virtual bool IsInstalled(const GameSettings& gameSettings) const = 0;
 
   virtual void InitialiseGameData(gui::Game& game) = 0;

@@ -25,9 +25,12 @@
 
 #include "gui/state/game/detection.h"
 
+#include <algorithm>
+
 #include "gui/helpers.h"
 #include "gui/state/game/detection/common.h"
 #include "gui/state/game/detection/detail.h"
+#include "gui/state/game/detection/heroic.h"
 #include "gui/state/logging.h"
 
 using std::filesystem::u8path;
@@ -66,5 +69,27 @@ void UpdateInstalledGamesSettings(
       CountGameInstalls(configuredInstalls, newGameInstalls);
 
   AppendNewGamesSettings(gamesSettings, gameSourceCounts, newGameInstalls);
+}
+
+std::vector<GameSettings> FindInstalledGames(
+    const std::vector<GameSettings>& gamesSettings,
+    const std::vector<std::filesystem::path>& xboxGamingRootPaths_,
+    const std::vector<std::string>& preferredUILanguages_) {
+  const auto heroicConfigPaths = heroic::GetHeroicGamesLauncherConfigPaths();
+
+  auto gamesSettingsToUpdate = gamesSettings;
+  UpdateInstalledGamesSettings(gamesSettingsToUpdate,
+                               Registry(),
+                               heroicConfigPaths,
+                               xboxGamingRootPaths_,
+                               preferredUILanguages_);
+
+  std::sort(gamesSettingsToUpdate.begin(),
+            gamesSettingsToUpdate.end(),
+            [](const GameSettings& lhs, const GameSettings& rhs) {
+              return lhs.Name() < rhs.Name();
+            });
+
+  return gamesSettingsToUpdate;
 }
 }

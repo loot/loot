@@ -175,6 +175,16 @@ void LootState::initCurrentGame() {
   }
 }
 
+std::vector<GameSettings> LootState::LoadInstalledGames(
+    const std::vector<GameSettings>& gamesSettings) {
+  auto allGamesSettings = FindInstalledGames(
+      gamesSettings, xboxGamingRootPaths_, preferredUILanguages_);
+
+  SetInstalledGames(allGamesSettings);
+
+  return allGamesSettings;
+}
+
 const std::vector<SourcedMessage>& LootState::getInitMessages() const {
   return initMessages_;
 }
@@ -395,26 +405,6 @@ void LootState::setInitialGame(const std::string& cliGameValue) {
             .str(),
         gameFolderName.value())));
   }
-}
-
-std::vector<GameSettings> LootState::FindInstalledGames(
-    const std::vector<GameSettings>& gamesSettings) const {
-  const auto heroicConfigPaths = heroic::GetHeroicGamesLauncherConfigPaths();
-
-  auto gamesSettingsToUpdate = gamesSettings;
-  UpdateInstalledGamesSettings(gamesSettingsToUpdate,
-                               Registry(),
-                               heroicConfigPaths,
-                               xboxGamingRootPaths_,
-                               preferredUILanguages_);
-
-  std::sort(gamesSettingsToUpdate.begin(),
-            gamesSettingsToUpdate.end(),
-            [](const GameSettings& lhs, const GameSettings& rhs) {
-              return lhs.Name() < rhs.Name();
-            });
-
-  return gamesSettingsToUpdate;
 }
 
 bool LootState::IsInstalled(const GameSettings& gameSettings) const {

@@ -39,19 +39,14 @@ GamesManager::GamesManager(const std::filesystem::path& lootDataPath,
                            const std::filesystem::path& preludePath) :
     lootDataPath_(lootDataPath), preludePath_(preludePath) {}
 
-std::vector<GameSettings> GamesManager::LoadInstalledGames(
-    std::vector<GameSettings> gamesSettings) {
+void GamesManager::SetInstalledGames(
+    const std::vector<GameSettings>& gamesSettings) {
   std::lock_guard<std::recursive_mutex> guard(mutex_);
 
   auto logger = getLogger();
   if (logger) {
     logger->debug("Detecting installed games.");
   }
-
-  // Detect installed games and add GameSettings objects for those that
-  // aren't already represented by the objects that already exist. Also update
-  // game paths for existing settings objects that match a found install.
-  gamesSettings = FindInstalledGames(gamesSettings);
 
   std::optional<std::string> currentGameFolder;
   if (currentGame_ != installedGames_.end()) {
@@ -60,7 +55,7 @@ std::vector<GameSettings> GamesManager::LoadInstalledGames(
 
   bool currentGameUpdated = false;
   std::vector<gui::Game> installedGames;
-  for (auto& gameSettings : gamesSettings) {
+  for (const auto& gameSettings : gamesSettings) {
     if (!IsInstalled(gameSettings)) {
       if (logger) {
         logger->info(
@@ -105,8 +100,6 @@ std::vector<GameSettings> GamesManager::LoadInstalledGames(
   } else {
     currentGame_ = installedGames_.end();
   }
-
-  return gamesSettings;
 }
 
 bool GamesManager::HasCurrentGame() const {

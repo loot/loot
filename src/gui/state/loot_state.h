@@ -40,6 +40,9 @@ public:
             bool autoSort);
   void initCurrentGame();
 
+  std::vector<GameSettings> LoadInstalledGames(
+      const std::vector<GameSettings>& gamesSettings);
+
   const std::vector<SourcedMessage>& getInitMessages() const;
 
   const LootSettings& getSettings() const;
@@ -58,12 +61,6 @@ private:
   void overrideGamePath(const std::string& gameFolderName,
                         const std::filesystem::path& gamePath);
   void setInitialGame(const std::string& cliGameValue);
-
-  // Update the given games settings with new settings for installed games that
-  // didn't have a settings object, and updating existing settings objects for
-  // games that had one without any paths configured.
-  std::vector<GameSettings> FindInstalledGames(
-      const std::vector<GameSettings>& gamesSettings) const override;
 
   bool IsInstalled(const GameSettings& gameSettings) const override;
 
