@@ -40,7 +40,7 @@ FileTableModel::FileTableModel(QObject* parent,
 int FileTableModel::columnCount(const QModelIndex&) const {
   static constexpr int COLUMN_COUNT =
       std::max(
-          {NAME_COLUMN, DISPLAY_NAME_COLUMN, DETAIL_COLUMN, CONDITION_COLUMN}) +
+          {NAME_COLUMN, DISPLAY_NAME_COLUMN, DETAIL_COLUMN, CONDITION_COLUMN, CONSTRAINT_COLUMN}) +
       1;
   return COLUMN_COUNT;
 }
@@ -62,6 +62,8 @@ QVariant FileTableModel::data(const File& element, int column, int role) const {
     }
     case CONDITION_COLUMN:
       return QVariant(QString::fromStdString(element.GetCondition()));
+    case CONSTRAINT_COLUMN:
+      return QVariant(QString::fromStdString(element.GetConstraint()));
     default:
       return QVariant();
   }
@@ -77,6 +79,8 @@ QVariant FileTableModel::headerText(int section) const {
       return QVariant(translate("Detail"));
     case CONDITION_COLUMN:
       return QVariant(translate("Condition"));
+    case CONSTRAINT_COLUMN:
+      return QVariant(translate("Constraint"));
     default:
       return QVariant();
   }
@@ -103,22 +107,34 @@ void FileTableModel::setData(File& element, int column, const QVariant& value) {
     element = File(value.toString().toStdString(),
                    element.GetDisplayName(),
                    element.GetCondition(),
-                   element.GetDetail());
+                   element.GetDetail(),
+        element.GetConstraint());
   } else if (column == DISPLAY_NAME_COLUMN) {
     element = File(std::string(element.GetName()),
                    value.toString().toStdString(),
                    element.GetCondition(),
-                   element.GetDetail());
+                   element.GetDetail(),
+                   element.GetConstraint());
   } else if (column == DETAIL_COLUMN) {
     element = File(std::string(element.GetName()),
                    element.GetDisplayName(),
                    element.GetCondition(),
-                   value.value<std::vector<MessageContent>>());
-  } else {
+                   value.value<std::vector<MessageContent>>(),
+                   element.GetConstraint());
+  } else if (column == CONDITION_COLUMN) {
     element = File(std::string(element.GetName()),
                    element.GetDisplayName(),
                    value.toString().toStdString(),
-                   element.GetDetail());
+                   element.GetDetail(),
+                   element.GetConstraint());
+  } else if (column == CONSTRAINT_COLUMN) {
+    element = File(std::string(element.GetName()),
+                   element.GetDisplayName(),
+                   element.GetCondition(),
+                   element.GetDetail(),
+                   value.toString().toStdString());
+  } else {
+    throw std::logic_error("Unrecognised column index");
   }
 }
 
