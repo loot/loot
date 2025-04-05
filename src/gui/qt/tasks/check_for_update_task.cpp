@@ -26,6 +26,7 @@
 #include "gui/qt/tasks/check_for_update_task.h"
 
 #include <QtCore/QJsonDocument>
+#include <QtCore/QJsonValue>
 #include <boost/algorithm/string.hpp>
 
 #include "gui/qt/helpers.h"
