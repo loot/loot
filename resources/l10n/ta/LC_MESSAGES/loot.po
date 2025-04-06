@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-03-26 17:45+0000\n"
+"POT-Creation-Date: 2025-04-06 22:52+0100\n"
 "PO-Revision-Date: 2025-01-19 13:00+0000\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
@@ -22,11 +22,11 @@ msgstr ""
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
 msgstr "\"{0}\" மதிப்பிட முடியாத ஒரு நிபந்தனையைக் கொண்டுள்ளது. விவரங்கள்: {1}"
 
-#: src/gui/plugin_item.cpp:194
+#: src/gui/plugin_item.cpp:195
 msgid "Location"
 msgstr "இடம்"
 
-#: src/gui/plugin_item.cpp:199
+#: src/gui/plugin_item.cpp:200
 msgid "Location {0}"
 msgstr "இடம் {0}"
 
@@ -253,182 +253,182 @@ msgstr ""
 msgid "LOOT could not unambiguously set the load order."
 msgstr "கொள்ளை தெளிவாக சுமை வரிசையை அமைக்க முடியவில்லை."
 
-#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1485
+#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1474
 msgid "Ambiguous load order detected"
 msgstr "தெளிவற்ற சுமை ஒழுங்கு கண்டறியப்பட்டது"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:709
+#: src/gui/qt/main_window.cpp:698
 msgid "&Sort Plugins"
 msgstr "&செருகுநிரல்களை வரிசைப்படுத்துங்கள்"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:711
+#: src/gui/qt/main_window.cpp:700
 msgid "Update &Masterlist"
 msgstr "புதுப்பிப்பு &மாச்ட்லிச்ட்"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:713
+#: src/gui/qt/main_window.cpp:702
 msgid "&Apply Sorted Load Order"
 msgstr "வரிசைப்படுத்தப்பட்ட சுமை வரிசையை&ப் பயன்படுத்துங்கள்"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:715
+#: src/gui/qt/main_window.cpp:704
 msgid "&Discard Sorted Load Order"
 msgstr "வரிசைப்படுத்தப்பட்ட சுமை வரிசை&யை நிராகரிக்கவும்"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:720
+#: src/gui/qt/main_window.cpp:709
 msgid "&File"
 msgstr "&கோப்பு"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:722
+#: src/gui/qt/main_window.cpp:711
 msgid "&Settings…"
 msgstr "&அமைப்புகள்…"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:724
+#: src/gui/qt/main_window.cpp:713
 msgid "&Update All Masterlists"
 msgstr "அ&னைத்து மாச்டர்லிச்ட்டையும் புதுப்பிக்கவும்"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:726
+#: src/gui/qt/main_window.cpp:715
 msgid "&Backup LOOT Data"
 msgstr "&காப்புப்பிரதி கொள்ளை தரவு"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:728
+#: src/gui/qt/main_window.cpp:717
 msgid "&Open LOOT Data Folder"
 msgstr "கொ&ள்ளை தரவு கோப்புறையைத் திறக்கவும்"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:730
+#: src/gui/qt/main_window.cpp:719
 msgid "&Quit"
 msgstr "&வெளியேறு"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:734
+#: src/gui/qt/main_window.cpp:723
 msgid "&Game"
 msgstr "&விளையாட்டு"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:736
+#: src/gui/qt/main_window.cpp:725
 msgid "&Edit Groups…"
 msgstr "&குழுக்களைத் திருத்து…"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:738
+#: src/gui/qt/main_window.cpp:727
 msgid "Searc&h Cards…"
 msgstr "சியர்க் &எச் கார்டுகள்…"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:740
+#: src/gui/qt/main_window.cpp:729
 msgid "Copy &Load Order"
 msgstr "நகலெடுத்து ஆர்ட&ர்"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:742
+#: src/gui/qt/main_window.cpp:731
 msgid "&Copy Content"
 msgstr "&உள்ளடக்கத்தை நகலெடுக்கவும்"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:744
+#: src/gui/qt/main_window.cpp:733
 msgid "&Refresh Content"
 msgstr "உ&ள்ளடக்கத்தைப் புதுப்பிக்கவும்"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:746
+#: src/gui/qt/main_window.cpp:735
 msgid "Redate &Plugins…"
 msgstr "ரிட்டேட் செருகு&நிரல்கள்…"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:748
+#: src/gui/qt/main_window.cpp:737
 msgid "&Fix Ambiguous Load Order"
 msgstr "&தெளிவற்ற சுமை வரிசையை சரிசெய்யவும்"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:750
+#: src/gui/qt/main_window.cpp:739
 msgid "Clear All &User Metadata…"
 msgstr "&அனைத்து பயனர் மெட்டாடேட்டாவையும் அழிக்கவும்…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:754
+#: src/gui/qt/main_window.cpp:743
 msgid "&Plugin"
 msgstr "&சொருகி"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:756
+#: src/gui/qt/main_window.cpp:745
 msgid "Copy &Plugin Name"
 msgstr "&நகல் சொருகி பெயர்"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:758
+#: src/gui/qt/main_window.cpp:747
 msgid "Copy &Card Content"
 msgstr "ந&கலெடு & அட்டை உள்ளடக்கம்"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:760
+#: src/gui/qt/main_window.cpp:749
 msgid "Copy &Metadata"
 msgstr "நகல் மேனிலை &தரவு"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:762
+#: src/gui/qt/main_window.cpp:751
 msgid "&Edit Metadata…"
 msgstr "&மெட்டாடேட்டாவைத் திருத்து…"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:764
+#: src/gui/qt/main_window.cpp:753
 msgid "Clear &User Metadata…"
 msgstr "தெளிவான & பயனர் மெட்டாடேட்டா…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:768
+#: src/gui/qt/main_window.cpp:757
 msgid "&Help"
 msgstr "உ&தவி"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:770
+#: src/gui/qt/main_window.cpp:759
 msgid "&View Documentation"
 msgstr "&ஆவணங்களைக் காண்க"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:772
+#: src/gui/qt/main_window.cpp:761
 msgid "&Open FAQs"
 msgstr "&திறந்த கேள்விகள்"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:774
+#: src/gui/qt/main_window.cpp:763
 msgid "&Join Discord Server"
 msgstr "&டிச்கார்ட் சேவையகத்தில் சேரவும்"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:776
+#: src/gui/qt/main_window.cpp:765
 msgid "&About"
 msgstr "&பற்றி"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:781
+#: src/gui/qt/main_window.cpp:770
 msgid "P&lugins"
 msgstr "பி&லுகின்ச்"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:784
+#: src/gui/qt/main_window.cpp:773
 msgid "F&ilters"
 msgstr "எஃப்&ஐல்டர்ச்"
 
-#: src/gui/qt/main_window.cpp:1086 src/gui/qt/main_window.cpp:1539
-#: src/gui/qt/main_window.cpp:2164
+#: src/gui/qt/main_window.cpp:1075 src/gui/qt/main_window.cpp:1528
+#: src/gui/qt/main_window.cpp:2154
 msgid "Updating and parsing masterlist…"
 msgstr "மாச்டர்லிச்ட்டைப் புதுப்பித்தல் மற்றும் பாகுபடுத்துதல்…"
 
-#: src/gui/qt/main_window.cpp:1174
+#: src/gui/qt/main_window.cpp:1163
 msgid ""
 "This appears to be the first time you have run LOOT v{0}. Your current LOOT "
 "data has been backed up to: {1}"
@@ -436,15 +436,15 @@ msgstr ""
 "நீங்கள் கொள்ளை v {0} ஐ இயக்குவது இதுவே முதல் முறை என்று தோன்றுகிறது. உங்கள் தற்போதைய "
 "கொள்ளை தரவு பின்வாங்கப்பட்டுள்ளது: {1}"
 
-#: src/gui/qt/main_window.cpp:1182
+#: src/gui/qt/main_window.cpp:1171
 msgid "This appears to be the first time you have run LOOT v{0}."
 msgstr "நீங்கள் கொள்ளை v {0} ஐ இயக்குவது இதுவே முதல் முறை என்று தோன்றுகிறது."
 
-#: src/gui/qt/main_window.cpp:1189
+#: src/gui/qt/main_window.cpp:1178
 msgid "Here are some tips to help you get started with the interface."
 msgstr "இடைமுகத்துடன் தொடங்க உங்களுக்கு உதவும் சில குறிப்புகள் இங்கே."
 
-#: src/gui/qt/main_window.cpp:1194
+#: src/gui/qt/main_window.cpp:1183
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by overlap "
 "filtering, or by sorting."
@@ -452,7 +452,7 @@ msgstr ""
 "ஒன்றுடன் ஒன்று வடிகட்டுதல் அல்லது வரிசைப்படுத்துவதன் மூலம் செருகுநிரல்கள் ஏற்றப்பட்ட பின்னரே "
 "சி.ஆர்.சி கள் காட்டப்படும்."
 
-#: src/gui/qt/main_window.cpp:1200
+#: src/gui/qt/main_window.cpp:1189
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
@@ -460,7 +460,7 @@ msgstr ""
 "செருகுநிரல்களை இழுத்து பக்கப்பட்டியில் இருந்து மேனிலை தரவு எடிட்டரின் \"சுமை\", "
 "\"தேவைகள்\" மற்றும் \"பொருந்தாத தன்மை\" அட்டவணையில் இறக்கலாம்."
 
-#: src/gui/qt/main_window.cpp:1206
+#: src/gui/qt/main_window.cpp:1195
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
@@ -468,7 +468,7 @@ msgstr ""
 "மேனிலை தரவு எடிட்டர் திறந்திருக்கும் போது சில நற்பொருத்தங்கள் முடக்கப்பட்டுள்ளன, அல்லது "
 "ஒரு வரிசைப்படுத்தப்பட்ட சுமை வரிசை பயன்படுத்தப்படவில்லை அல்லது நிராகரிக்கப்படவில்லை."
 
-#: src/gui/qt/main_window.cpp:1213 src/gui/qt/main_window.cpp:2040
+#: src/gui/qt/main_window.cpp:1202 src/gui/qt/main_window.cpp:2028
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -477,19 +477,19 @@ msgstr ""
 "கொள்ளை இலவசம், ஆனால் உங்கள் பாராட்டுகளை கொஞ்சம் பணத்துடன் காட்ட விரும்பினால், {0} below "
 "ஐப் பயன்படுத்தி சுருக்கமான சுருக்கமான சுருக்கம் செய்யப்படலாம்."
 
-#: src/gui/qt/main_window.cpp:1228
+#: src/gui/qt/main_window.cpp:1217
 msgid "First-Time Tips"
 msgstr "முதல் முறையாக உதவிக்குறிப்புகள்"
 
-#: src/gui/qt/main_window.cpp:1263
+#: src/gui/qt/main_window.cpp:1252
 msgid "metadata edits"
 msgstr "மேனிலை தரவு திருத்தங்கள்"
 
-#: src/gui/qt/main_window.cpp:1264
+#: src/gui/qt/main_window.cpp:1253
 msgid "sorted load order"
 msgstr "வரிசைப்படுத்தப்பட்ட சுமை வரிசை"
 
-#: src/gui/qt/main_window.cpp:1267
+#: src/gui/qt/main_window.cpp:1256
 msgid ""
 "You have not yet applied or cancelled your {0}. Are you sure you want to "
 "quit?"
@@ -497,14 +497,14 @@ msgstr ""
 "உங்கள் {0} நீங்கள் இன்னும் விண்ணப்பிக்கவில்லை அல்லது ரத்து செய்யவில்லை. நீங்கள் நிச்சயமாக "
 "வெளியேற விரும்புகிறீர்களா?"
 
-#: src/gui/qt/main_window.cpp:1360
+#: src/gui/qt/main_window.cpp:1349
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:370
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr "பிழை"
 
-#: src/gui/qt/main_window.cpp:1370
+#: src/gui/qt/main_window.cpp:1359
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:364
 #: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
@@ -514,18 +514,18 @@ msgstr ""
 "ஓ, ஏதோ தவறு நடந்தது! மேலும் தகவலுக்கு உங்கள் lootdebuglog.txt (பிரதான பட்டியல் மூலம் "
 "நீங்கள் அதைப் பெறலாம்) சரிபார்க்கலாம்."
 
-#: src/gui/qt/main_window.cpp:1417
+#: src/gui/qt/main_window.cpp:1406
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
 msgstr ""
 "செருகுநிரல்களை வரிசைப்படுத்துவதில் தோல்வி. விவரங்கள் பொது செய்தி பிரிவில் வழங்கப்படலாம்."
 
-#: src/gui/qt/main_window.cpp:1435
+#: src/gui/qt/main_window.cpp:1424
 msgid "Sorting made no changes to the load order."
 msgstr "வரிசையாக்கம் சுமை வரிசையில் எந்த மாற்றங்களையும் செய்யவில்லை."
 
-#: src/gui/qt/main_window.cpp:1486
+#: src/gui/qt/main_window.cpp:1475
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -540,37 +540,37 @@ msgstr ""
 " கொள்ளை மூலம் காண்பிக்கப்படுவதற்கு சுமை வரிசையை தெளிவாக அமைக்க விளையாட்டு பட்டியலில் "
 "\"தெளிவற்ற சுமை வரிசையை சரிசெய்யவும்\" செயலைப் பயன்படுத்தலாம்."
 
-#: src/gui/qt/main_window.cpp:1562
+#: src/gui/qt/main_window.cpp:1551
 msgid "Updating all masterlists…"
 msgstr "அனைத்து மாச்டர்லிச்ட்டையும் புதுப்பித்தல்…"
 
-#: src/gui/qt/main_window.cpp:1594
+#: src/gui/qt/main_window.cpp:1583
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr "உங்கள் கொள்ளை தரவு பின்வாங்கப்பட்டுள்ளது: {0}"
 
-#: src/gui/qt/main_window.cpp:1601
+#: src/gui/qt/main_window.cpp:1590
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr ""
 "கொள்ளைக்கு காப்புப்பிரதிக்கு தரவு இல்லாததால் எந்த காப்புப்பிரதியும் உருவாக்கப்படவில்லை."
 
-#: src/gui/qt/main_window.cpp:1645
+#: src/gui/qt/main_window.cpp:1633
 msgid "The load order has been copied to the clipboard."
 msgstr "சுமை ஆர்டர் இடைநிலைப்பலகைக்கு நகலெடுக்கப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:1663
+#: src/gui/qt/main_window.cpp:1651
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "கொள்ளையின் உள்ளடக்கம் இடைநிலைப்பலகைக்கு நகலெடுக்கப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:1675
+#: src/gui/qt/main_window.cpp:1663
 msgid "The load order displayed by LOOT has been set."
 msgstr "கொள்ளை காட்டும் சுமை ஆர்டர் அமைக்கப்பட்டுள்ளது."
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1700
+#: src/gui/qt/main_window.cpp:1688
 msgid "Redate Plugins?"
 msgstr "செருகுநிரல்கள் விளையாடியதா?"
 
-#: src/gui/qt/main_window.cpp:1702
+#: src/gui/qt/main_window.cpp:1690
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -583,11 +583,11 @@ msgstr ""
 "பாதிக்காது). நீங்கள் தொடர விரும்புகிறீர்களா?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1714
+#: src/gui/qt/main_window.cpp:1702
 msgid "Plugins were successfully redated."
 msgstr "செருகுநிரல்கள் வெற்றிகரமாக அகற்றப்பட்டன."
 
-#: src/gui/qt/main_window.cpp:1726
+#: src/gui/qt/main_window.cpp:1714
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -595,11 +595,11 @@ msgstr ""
 "அனைத்து செருகுநிரல்களிலிருந்தும் தற்போதுள்ள அனைத்து பயனர் கூட்டப்பட்ட மெட்டாடேட்டாவையும் "
 "அழிக்க விரும்புகிறீர்களா?"
 
-#: src/gui/qt/main_window.cpp:1774
+#: src/gui/qt/main_window.cpp:1762
 msgid "All user-added metadata has been cleared."
 msgstr "அனைத்து பயனர் கூட்டப்பட்ட மேனிலை தரவு அழிக்கப்பட்டுவிட்டது."
 
-#: src/gui/qt/main_window.cpp:1787
+#: src/gui/qt/main_window.cpp:1775
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
@@ -607,34 +607,34 @@ msgstr ""
 "சொருகி மேனிலை தரவு எடிட்டர் ஏற்கனவே திறந்திருக்கும், மற்றொரு சொருகி மெட்டாடேட்டாவைத் "
 "திருத்த முயற்சிக்கும் முன் முதலில் எடிட்டரை மூடு."
 
-#: src/gui/qt/main_window.cpp:1851
+#: src/gui/qt/main_window.cpp:1839
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\" க்கான மேனிலை தரவு இடைநிலைப்பலகைக்கு நகலெடுக்கப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:1869
+#: src/gui/qt/main_window.cpp:1857
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "சொருகி பெயர் \"{0}\" கிளிப்போர்டில் நகலெடுக்கப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:1888
+#: src/gui/qt/main_window.cpp:1876
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\" க்கான அட்டை உள்ளடக்கம் கிளிப்போர்டில் நகலெடுக்கப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:1903
+#: src/gui/qt/main_window.cpp:1891
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "\"{0}\" இலிருந்து தற்போதுள்ள அனைத்து பயனர் சேர்க்கப்பட்ட மெட்டாடேட்டாவையும் அழிக்க "
 "விரும்புகிறீர்களா?"
 
-#: src/gui/qt/main_window.cpp:1943
+#: src/gui/qt/main_window.cpp:1931
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "\"{0}\" க்கான பயனர் சேர்க்கப்பட்ட மேனிலை தரவு அழிக்கப்பட்டது."
 
-#: src/gui/qt/main_window.cpp:2026
+#: src/gui/qt/main_window.cpp:2014
 msgid "Version {0} (build {1})"
 msgstr "பதிப்பு {0} (உருவாக்கு {1})"
 
-#: src/gui/qt/main_window.cpp:2032
+#: src/gui/qt/main_window.cpp:2020
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
@@ -644,33 +644,33 @@ msgstr ""
 "ச்பெசல் எடிசன், ச்கைரிம் வி.ஆர், பல்லவுட் 3, பொழிவு: நியூ வேகாச், பல்லவுட் 4 மற்றும் "
 "பொழிவு 4 வி.ஆர்."
 
-#: src/gui/qt/main_window.cpp:2050
+#: src/gui/qt/main_window.cpp:2038
 msgid "About LOOT"
 msgstr "கொள்ளை பற்றி"
 
-#: src/gui/qt/main_window.cpp:2374
+#: src/gui/qt/main_window.cpp:2364
 msgid "Identifying overlapping plugins…"
 msgstr "ஒன்றுடன் ஒன்று செருகுநிரல்களை அடையாளம் காணுதல்…"
 
-#: src/gui/qt/main_window.cpp:2522
+#: src/gui/qt/main_window.cpp:2512
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr "குறைந்தது ஒரு பிழை செய்தி காண்பிக்கப்படுவதால் ஆட்டோ-சார்ட் ரத்து செய்யப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:2581
+#: src/gui/qt/main_window.cpp:2571
 msgid "No masterlist update was necessary."
 msgstr "மாச்டர்லிச்ட் புதுப்பிப்பு தேவையில்லை."
 
-#: src/gui/qt/main_window.cpp:2601
+#: src/gui/qt/main_window.cpp:2591
 msgid "Masterlist updated to revision {0}."
 msgstr "மாச்டர்லிச்ட் திருத்தம் {0} பெறுநர் க்கு புதுப்பிக்கப்பட்டது."
 
-#: src/gui/qt/main_window.cpp:2665
+#: src/gui/qt/main_window.cpp:2655
 msgid "No masterlist updates were necessary."
 msgstr "மாச்டர்லிச்ட் புதுப்பிப்புகள் தேவையில்லை."
 
-#: src/gui/qt/main_window.cpp:2688
+#: src/gui/qt/main_window.cpp:2678
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -678,11 +678,11 @@ msgstr ""
 "பின்வரும் விளையாட்டுகளுக்கு மாச்ட்லிச்ட்கள் புதுப்பிக்கப்பட்டன:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:2750
+#: src/gui/qt/main_window.cpp:2740
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "கொள்ளை ஒரு [புதிய வெளியீடு]({0}) கிடைக்கிறது."
 
-#: src/gui/qt/main_window.cpp:2767
+#: src/gui/qt/main_window.cpp:2757
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -1086,19 +1086,19 @@ msgstr "இது சரியான சாளரங்கள் கோப்ப
 msgid "A game with this folder already exists."
 msgstr "இந்த கோப்புறையுடன் ஒரு விளையாட்டு ஏற்கனவே உள்ளது."
 
-#: src/gui/qt/settings/settings_dialog.cpp:110
+#: src/gui/qt/settings/settings_dialog.cpp:109
 msgid "Settings"
 msgstr "அமைப்புகள்"
 
-#: src/gui/qt/settings/settings_dialog.cpp:112
+#: src/gui/qt/settings/settings_dialog.cpp:111
 msgid "General"
 msgstr "பொது"
 
-#: src/gui/qt/settings/settings_dialog.cpp:114
+#: src/gui/qt/settings/settings_dialog.cpp:113
 msgid "Add new game…"
 msgstr "புதிய விளையாட்டைச் சேர்க்கவும்…"
 
-#: src/gui/query/types/apply_sort_query.h:76
+#: src/gui/query/types/apply_sort_query.h:75
 msgid ""
 "Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -1117,7 +1117,7 @@ msgstr "மெட்டாடேட்டாவை பாகுபடுத்�
 msgid "Sorting load order…"
 msgstr "சுமை வரிசையை வரிசைப்படுத்துதல்…"
 
-#: src/gui/state/loot_settings.cpp:673
+#: src/gui/state/loot_settings.cpp:672
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
@@ -1127,7 +1127,7 @@ msgstr ""
 "முடியவில்லை! மேலும் தகவலுக்கு உங்கள் lootdebuglog.txt (கோப்பு பட்டியல் மூலம் அதைப் "
 "பெறலாம்) சரிபார்க்கலாம்."
 
-#: src/gui/state/loot_settings.cpp:696
+#: src/gui/state/loot_settings.cpp:695
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
@@ -1136,43 +1136,43 @@ msgstr ""
 "உங்கள் மாச்டர்லிச்ட் களஞ்சிய முகவரி மற்றும் கிளை அமைப்புகளை இடம்பெயர முடியவில்லை! மேலும் "
 "தகவலுக்கு உங்கள் lootdebuglog.txt (கோப்பு பட்டியல் மூலம் அதைப் பெறலாம்) சரிபார்க்கலாம்."
 
-#: src/gui/state/loot_state.cpp:174
+#: src/gui/state/loot_state.cpp:172
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr "பிழை: விளையாட்டு-குறிப்பிட்ட அமைப்புகளைத் தொடங்க முடியவில்லை. {0}"
 
-#: src/gui/state/loot_state.cpp:197
+#: src/gui/state/loot_state.cpp:211
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr "பிழை: கொள்ளை தரவு கோப்பகத்தை உருவாக்க முடியவில்லை. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:211 src/gui/state/loot_state.cpp:265
+#: src/gui/state/loot_state.cpp:225 src/gui/state/loot_state.cpp:279
 msgid "Error: Settings parsing failed. {0}"
 msgstr "பிழை: பாகுபடுத்தும் அமைப்புகள் தோல்வியடைந்தன. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:220
+#: src/gui/state/loot_state.cpp:234
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr "பிழை:-அட்-சார்ட் அனுப்பப்பட்டது, ஆனால் இல்லை-விளையாட்டு அளவுரு வழங்கப்பட்டது."
 
-#: src/gui/state/loot_state.cpp:306
+#: src/gui/state/loot_state.cpp:320
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr "பிழை: கொள்ளை முன்னோடி கோப்பகத்தை உருவாக்க முடியவில்லை. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:323
+#: src/gui/state/loot_state.cpp:337
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 "பிழை:-விளையாட்டு-பாதை அனுப்பப்பட்டது, ஆனால் இல்லை-விளையாட்டு அளவுரு வழங்கப்பட்டது."
 
-#: src/gui/state/loot_state.cpp:336
+#: src/gui/state/loot_state.cpp:350
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr "பிழை: விளையாட்டு பாதையை மீறுவதில் தோல்வி, விளையாட்டு {0} அங்கீகரிக்கப்படவில்லை."
 
-#: src/gui/state/loot_state.cpp:370
+#: src/gui/state/loot_state.cpp:384
 msgid ""
 "No supported games were detected. Try running the launcher(s) for the "
 "supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
@@ -1182,7 +1182,7 @@ msgstr ""
 "(கள்) (எ.கா. நீராவி அல்லது கோக் கேலக்சியில் \"பிளே\" ஐ அழுத்தவும்), பின்னர் கொள்ளையை "
 "மறுதொடக்கம் செய்ய முயற்சிக்கவும்."
 
-#: src/gui/state/loot_state.cpp:389
+#: src/gui/state/loot_state.cpp:403
 msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "
 "installed, try running its launcher then restarting LOOT."
@@ -1190,148 +1190,15 @@ msgstr ""
 "கோப்புறை பெயர் \"{0}\" கொண்ட ஆரம்ப விளையாட்டை அமைக்க முடியவில்லை. இது நிறுவப்பட்டால், "
 "அதன் துவக்கத்தை இயக்க முயற்சிக்கவும், பின்னர் கொள்ளையை மறுதொடக்கம் செய்யவும்."
 
-#: src/gui/state/game/game.cpp:419 src/gui/state/game/game.cpp:473
-msgid "This plugin requires \"{0}\" to be installed, but it is missing."
-msgstr "இந்த சொருகி நிறுவ \"{0}\" தேவைப்படுகிறது, ஆனால் அது காணவில்லை."
-
-#: src/gui/state/game/game.cpp:443
-msgid "This plugin requires \"{0}\" to be active, but it is inactive."
-msgstr "இந்த சொருகி செயலில் இருக்க \"{0}\" தேவைப்படுகிறது, ஆனால் அது செயலற்றது."
-
-#: src/gui/state/game/game.cpp:515
-msgid "This plugin is incompatible with \"{0}\", but both are present."
-msgstr "இந்த சொருகி \"{0}\" உடன் பொருந்தாது, ஆனால் இரண்டும் உள்ளன."
-
-#: src/gui/state/game/game.cpp:570
-msgid "small master"
-msgstr "சிறிய மாச்டர்"
-
-#: src/gui/state/game/game.cpp:571
-msgid "light master"
-msgstr "ஒளி மாச்டர்"
-
-#: src/gui/state/game/game.cpp:578
-msgid ""
-"This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
-"cause issues in-game, and sorting will fail while this plugin is installed."
-msgstr ""
-"இந்த சொருகி ஒரு {0} மற்றும் மாச்டர் அல்லாத சொருகி \"{1}\" தேவைப்படுகிறது. இது "
-"விளையாட்டில் சிக்கல்களை ஏற்படுத்தும், மேலும் இந்த சொருகி நிறுவப்பட்டிருக்கும் போது "
-"வரிசையாக்கம் தோல்வியடையும்."
-
-#: src/gui/state/game/game.cpp:600
-msgid ""
-"This plugin contains records that have FormIDs outside the valid range for "
-"an ESL plugin. Using this plugin will cause irreversible damage to your game "
-"saves."
-msgstr ""
-"இந்த சொருகி ஒரு ஈ.எச்.எல் சொருகி சரியான வரம்பிற்கு வெளியே ஃபார்மிட்களைக் கொண்ட "
-"பதிவுகளைக் கொண்டுள்ளது. இந்த சொருகி பயன்படுத்துவது உங்கள் விளையாட்டு சேமிப்புகளுக்கு "
-"மாற்ற முடியாத சேதத்தை ஏற்படுத்தும்."
-
-#: src/gui/state/game/game.cpp:618
-msgid ""
-"This plugin contains records that have FormIDs outside the valid range for a "
-"medium plugin. Using this plugin will cause irreversible damage to your game "
-"saves."
-msgstr ""
-"இந்த சொருகி ஒரு நடுத்தர சொருகி சரியான வரம்பிற்கு வெளியே ஃபார்மிட்களைக் கொண்ட "
-"பதிவுகளைக் கொண்டுள்ளது. இந்த சொருகி பயன்படுத்துவது உங்கள் விளையாட்டு சேமிப்புகளுக்கு "
-"மாற்ற முடியாத சேதத்தை ஏற்படுத்தும்."
-
-#: src/gui/state/game/game.cpp:631
-msgid "plugin"
-msgstr "சொருகு"
-
-#. translators: master as in a plugin that is
-#. loaded as if its master flag is set.
-#: src/gui/state/game/game.cpp:634
-msgid "master"
-msgstr "மாச்டர்"
-
-#: src/gui/state/game/game.cpp:643
-msgid ""
-"\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
-"correctly installed {2} and all its requirements."
-msgstr ""
-"\"{0}\" என்பது ஒரு ஒளி {1}, ஆனால் {2} காணவில்லை என்று தெரிகிறது. தயவுசெய்து நீங்கள் "
-"சரியாக நிறுவப்பட்டுள்ளீர்கள் {2} மற்றும் அதன் அனைத்து தேவைகளையும் உறுதிப்படுத்தவும்."
-
-#: src/gui/state/game/game.cpp:656
-msgid ""
-"\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
-"will not load it."
-msgstr ""
-"\"{0}\" என்பது ஒரு .esl சொருகி, ஆனால் விளையாட்டு அத்தகைய செருகுநிரல்களை "
-"ஆதரிக்கவில்லை, அதை ஏற்றாது."
-
-#: src/gui/state/game/game.cpp:669
-msgid ""
-"\"{0}\" is flagged as a light {1}, but the game does not support such "
-"plugins, and will load it as a full {1}."
-msgstr ""
-"\"{0}\" ஒரு ஒளி {1} அச் ஆக கொடியிடப்படுகிறது, ஆனால் விளையாட்டு அத்தகைய "
-"செருகுநிரல்களை ஆதரிக்காது, மேலும் அதை முழு {1} with ஆக ஏற்றும்."
-
-#: src/gui/state/game/game.cpp:689
-msgid ""
-"This plugin is an update plugin but adds new records. Using this plugin may "
-"cause irreversible damage to your game saves."
-msgstr ""
-"இந்த சொருகி ஒரு புதுப்பிப்பு சொருகி ஆனால் புதிய பதிவுகளைச் சேர்க்கிறது. இந்த சொருகி "
-"பயன்படுத்துவது உங்கள் விளையாட்டு சேமிப்புகளுக்கு மாற்ற முடியாத சேதத்தை ஏற்படுத்தக்கூடும்."
-
-#: src/gui/state/game/game.cpp:721
-msgid ""
-"This plugin is not a blueprint master and requires the blueprint master "
-"\"{0}\". This can cause issues in-game, as this plugin will always load "
-"before \"{0}\"."
-msgstr ""
-"இந்த சொருகி ஒரு புளூபிரிண்ட் மாச்டர் அல்ல, மேலும் புளூபிரிண்ட் மாச்டர் \"{0}\" "
-"தேவைப்படுகிறது. இது விளையாட்டில் சிக்கல்களை ஏற்படுத்தும், ஏனெனில் இந்த சொருகி எப்போதும் "
-"\"{0}\" க்கு முன் ஏற்றப்படும்."
-
-#. translators: A header is the part of a file that stores data
-#. like file name and version.
-#: src/gui/state/game/game.cpp:748
-msgid ""
-"This plugin has a header version of {0}, which is less than the game's "
-"minimum supported header version of {1}."
-msgstr ""
-"இந்த சொருகி {0} of இன் தலைப்பு பதிப்பைக் கொண்டுள்ளது, இது விளையாட்டின் குறைந்தபட்ச உதவி "
-"தலைப்பு பதிப்பை {1} of ஐ விட குறைவாக உள்ளது."
-
-#: src/gui/state/game/game.cpp:763
-msgid "This plugin has itself as a master."
-msgstr "இந்த சொருகி ஒரு மாச்டராக உள்ளது."
-
-#: src/gui/state/game/game.cpp:781
-msgid "This plugin belongs to the group \"{0}\", which does not exist."
-msgstr "இந்த சொருகி \"{0}\" குழுவிற்கு சொந்தமானது, அது இல்லை."
-
-#: src/gui/state/game/game.cpp:807
-msgid ""
-"This plugin has a BashTags file that will override the suggestions made by "
-"LOOT for the following Bash Tags: {0}."
-msgstr ""
-"இந்த சொருகி ஒரு பாச்டாக்ச் கோப்பைக் கொண்டுள்ளது, இது பின்வரும் பாச் குறிச்சொற்களுக்கான "
-"கொள்ளை மூலம் செய்யப்பட்ட பரிந்துரைகளை மேலெழுதும்: {0}."
-
-#: src/gui/state/game/game.cpp:939 src/gui/state/game/game.cpp:1048
-msgid ""
-"Failed to load the current load order, information displayed may be "
-"incorrect."
-msgstr "தற்போதைய சுமை வரிசையை ஏற்றுவதில் தோல்வி, காட்டப்படும் தகவல்கள் தவறாக இருக்கலாம்."
-
-#: src/gui/state/game/game.cpp:1087
+#: src/gui/state/game/game.cpp:210
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "\"{0}\" மற்றும் \"{1}\" க்கு இடையில் கண்டறியப்பட்ட சுழற்சி தொடர்பு: {2}"
 
-#: src/gui/state/game/game.cpp:1101
+#: src/gui/state/game/game.cpp:228
 msgid "The group \"{0}\" does not exist."
 msgstr "\"{0}\" குழு இல்லை."
 
-#: src/gui/state/game/game.cpp:1116
+#: src/gui/state/game/game.cpp:828
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1339,98 +1206,11 @@ msgstr ""
 "வரிசையாக்கம் தோல்வியடைந்தது, ஏனெனில் நிறுவப்படாத ஒரு சொருகியையாவது சார்ந்துள்ளது "
 "குறைந்தது ஒரு நிறுவப்பட்ட சொருகி உள்ளது."
 
-#: src/gui/state/game/game.cpp:1157
+#: src/gui/state/game/game.cpp:859
 msgid "You have not sorted your load order this session."
 msgstr "இந்த அமர்வில் உங்கள் சுமை வரிசையை நீங்கள் வரிசைப்படுத்தவில்லை."
 
-#: src/gui/state/game/game.cpp:1212
-msgid "You have {0} active full plugins but the game only supports up to {1}."
-msgstr ""
-"உங்களிடம் {0} செயலில் முழு செருகுநிரல்கள் உள்ளன, ஆனால் விளையாட்டு {1} bood வரை "
-"மட்டுமே ஆதரிக்கிறது."
-
-#: src/gui/state/game/game.cpp:1220
-msgid "You have {0} active plugins but the game only supports up to {1}."
-msgstr ""
-"உங்களிடம் {0} செயலில் உள்ள செருகுநிரல்கள் உள்ளன, ஆனால் விளையாட்டு {1} பெறுநர் வரை "
-"மட்டுமே ஆதரிக்கிறது."
-
-#: src/gui/state/game/game.cpp:1242
-msgid ""
-"Do not launch Morrowind without the use of MWSE or it will cause severe "
-"damage to your game."
-msgstr ""
-"MWSE ஐப் பயன்படுத்தாமல் மோரோயிண்டைத் தொடங்க வேண்டாம் அல்லது அது உங்கள் விளையாட்டுக்கு "
-"கடுமையான சேதத்தை ஏற்படுத்தும்."
-
-#: src/gui/state/game/game.cpp:1249
-msgid "small plugin"
-msgid_plural "small plugins"
-msgstr[0] "சிறிய சொருகி"
-msgstr[1] "சிறிய செருகுநிரல்கள்"
-
-#: src/gui/state/game/game.cpp:1252
-msgid "light plugin"
-msgid_plural "light plugins"
-msgstr[0] "ஒளி சொருகி"
-msgstr[1] "ஒளி செருகுநிரல்கள்"
-
-#: src/gui/state/game/game.cpp:1265
-msgid "You have {0} active {1} but the game only supports up to {2}."
-msgstr ""
-"உங்களிடம் {0} செயலில் {1} உள்ளது, ஆனால் விளையாட்டு {2} பெறுநர் வரை மட்டுமே "
-"ஆதரிக்கிறது."
-
-#: src/gui/state/game/game.cpp:1285
-msgid ""
-"You have a full plugin and {0} {1} sharing the FE load order index. "
-"Deactivate a full plugin or your {1} to avoid potential issues."
-msgstr ""
-"உங்களிடம் முழு சொருகி மற்றும் {0} {1} fe Fe சுமை ஆர்டர் குறியீட்டைப் பகிர்கிறது. "
-"சாத்தியமான சிக்கல்களைத் தவிர்க்க முழு சொருகி அல்லது உங்கள் {1} full ஐ செயலிழக்கச் "
-"செய்யுங்கள்."
-
-#: src/gui/state/game/game.cpp:1303
-msgid ""
-"You have {0} active medium plugins but the game only supports up to {1}."
-msgstr ""
-"உங்களிடம் {0} செயலில் உள்ள நடுத்தர செருகுநிரல்கள் உள்ளன, ஆனால் விளையாட்டு {1} பெறுநர் "
-"வரை மட்டுமே ஆதரிக்கிறது."
-
-#: src/gui/state/game/game.cpp:1322
-msgid ""
-"You have a full plugin and at least one medium plugin sharing the FD load "
-"order index. Deactivate a full plugin or all your medium plugins to avoid "
-"potential issues."
-msgstr ""
-"உங்களிடம் முழு சொருகி மற்றும் குறைந்தபட்சம் ஒரு நடுத்தர சொருகி FD சுமை ஆர்டர் "
-"குறியீட்டைப் பகிர்கிறது. சாத்தியமான சிக்கல்களைத் தவிர்க்க முழு சொருகி அல்லது உங்கள் "
-"அனைத்து நடுத்தர செருகுநிரல்களையும் செயலிழக்கச் செய்யுங்கள்."
-
-#. translators: The placeholder is for the current game's name.
-#.
-#: src/gui/state/game/game.cpp:1335
-msgid ""
-"{0} is installed in a case-sensitive location. This may cause issues as the "
-"game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
-"which is the default on Windows."
-msgstr ""
-"{0} வழக்கு-உணர்திறன் இடத்தில் நிறுவப்பட்டுள்ளது. விளையாட்டு, மோட்ச் மற்றும் கொள்ளை ஆகியவை "
-"கோப்பு முறைமை பாதைகள் வழக்கு உணர்திறன் இல்லை என்று கருதலாம், இது விண்டோசின் இயல்புநிலை."
-
-#. translators: The placeholder is for the current game's
-#. name.
-#: src/gui/state/game/game.cpp:1366
-msgid ""
-"{0}'s local application data is stored in a case-sensitive location. This "
-"may cause issues as the game, mods and LOOT may assume that filesystem paths "
-"are not case-sensitive, which is the default on Windows."
-msgstr ""
-"{0} of இன் உள்ளக பயன்பாட்டு தரவு வழக்கு-உணர்திறன் இடத்தில் சேமிக்கப்படுகிறது. "
-"விளையாட்டு, மோட்ச் மற்றும் கொள்ளை ஆகியவை கோப்பு முறைமை பாதைகள் வழக்கு உணர்திறன் இல்லை "
-"என்று கருதலாம், இது விண்டோசின் இயல்புநிலை."
-
-#: src/gui/state/game/game.cpp:1435
+#: src/gui/state/game/game.cpp:937
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1462,6 +1242,226 @@ msgstr ""
 " [கொள்ளையின் வலைத்தளத்தின்]({1}) உடன் இணைக்கப்பட்டுள்ள கொள்ளையின் மன்ற நூலிலும் நீங்கள் "
 "ஆதரவைப் பெறலாம்."
 
+#: src/gui/state/game/game.cpp:1112
+msgid ""
+"Failed to load the current load order, information displayed may be "
+"incorrect."
+msgstr "தற்போதைய சுமை வரிசையை ஏற்றுவதில் தோல்வி, காட்டப்படும் தகவல்கள் தவறாக இருக்கலாம்."
+
 #: src/gui/state/game/helpers.cpp:230
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "\"{0}\" தவறானது, இப்போது அதைப் புறக்கணிக்கிறது என்று கொள்ளை கண்டறிந்துள்ளது."
+
+#: src/gui/state/game/validation.cpp:77 src/gui/state/game/validation.cpp:104
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr "இந்த சொருகி நிறுவ \"{0}\" தேவைப்படுகிறது, ஆனால் அது காணவில்லை."
+
+#: src/gui/state/game/validation.cpp:95
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr "இந்த சொருகி செயலில் இருக்க \"{0}\" தேவைப்படுகிறது, ஆனால் அது செயலற்றது."
+
+#: src/gui/state/game/validation.cpp:122
+msgid "This plugin is incompatible with \"{0}\", but both are present."
+msgstr "இந்த சொருகி \"{0}\" உடன் பொருந்தாது, ஆனால் இரண்டும் உள்ளன."
+
+#: src/gui/state/game/validation.cpp:151
+msgid "small master"
+msgstr "சிறிய மாச்டர்"
+
+#: src/gui/state/game/validation.cpp:152
+msgid "light master"
+msgstr "ஒளி மாச்டர்"
+
+#: src/gui/state/game/validation.cpp:159
+msgid ""
+"This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
+"cause issues in-game, and sorting will fail while this plugin is installed."
+msgstr ""
+"இந்த சொருகி ஒரு {0} மற்றும் மாச்டர் அல்லாத சொருகி \"{1}\" தேவைப்படுகிறது. இது "
+"விளையாட்டில் சிக்கல்களை ஏற்படுத்தும், மேலும் இந்த சொருகி நிறுவப்பட்டிருக்கும் போது "
+"வரிசையாக்கம் தோல்வியடையும்."
+
+#: src/gui/state/game/validation.cpp:181
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for "
+"an ESL plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
+msgstr ""
+"இந்த சொருகி ஒரு ஈ.எச்.எல் சொருகி சரியான வரம்பிற்கு வெளியே ஃபார்மிட்களைக் கொண்ட "
+"பதிவுகளைக் கொண்டுள்ளது. இந்த சொருகி பயன்படுத்துவது உங்கள் விளையாட்டு சேமிப்புகளுக்கு "
+"மாற்ற முடியாத சேதத்தை ஏற்படுத்தும்."
+
+#: src/gui/state/game/validation.cpp:200
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for a "
+"medium plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
+msgstr ""
+"இந்த சொருகி ஒரு நடுத்தர சொருகி சரியான வரம்பிற்கு வெளியே ஃபார்மிட்களைக் கொண்ட "
+"பதிவுகளைக் கொண்டுள்ளது. இந்த சொருகி பயன்படுத்துவது உங்கள் விளையாட்டு சேமிப்புகளுக்கு "
+"மாற்ற முடியாத சேதத்தை ஏற்படுத்தும்."
+
+#: src/gui/state/game/validation.cpp:218
+msgid ""
+"This plugin is an update plugin but adds new records. Using this plugin may "
+"cause irreversible damage to your game saves."
+msgstr ""
+"இந்த சொருகி ஒரு புதுப்பிப்பு சொருகி ஆனால் புதிய பதிவுகளைச் சேர்க்கிறது. இந்த சொருகி "
+"பயன்படுத்துவது உங்கள் விளையாட்டு சேமிப்புகளுக்கு மாற்ற முடியாத சேதத்தை ஏற்படுத்தக்கூடும்."
+
+#: src/gui/state/game/validation.cpp:234
+msgid "plugin"
+msgstr "சொருகு"
+
+#. translators: master as in a plugin that is
+#. loaded as if its master flag is set.
+#: src/gui/state/game/validation.cpp:237
+msgid "master"
+msgstr "மாச்டர்"
+
+#: src/gui/state/game/validation.cpp:247
+msgid ""
+"\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
+"correctly installed {2} and all its requirements."
+msgstr ""
+"\"{0}\" என்பது ஒரு ஒளி {1}, ஆனால் {2} காணவில்லை என்று தெரிகிறது. தயவுசெய்து நீங்கள் "
+"சரியாக நிறுவப்பட்டுள்ளீர்கள் {2} மற்றும் அதன் அனைத்து தேவைகளையும் உறுதிப்படுத்தவும்."
+
+#: src/gui/state/game/validation.cpp:262
+msgid ""
+"\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
+"will not load it."
+msgstr ""
+"\"{0}\" என்பது ஒரு .esl சொருகி, ஆனால் விளையாட்டு அத்தகைய செருகுநிரல்களை "
+"ஆதரிக்கவில்லை, அதை ஏற்றாது."
+
+#: src/gui/state/game/validation.cpp:276
+msgid ""
+"\"{0}\" is flagged as a light {1}, but the game does not support such "
+"plugins, and will load it as a full {1}."
+msgstr ""
+"\"{0}\" ஒரு ஒளி {1} அச் ஆக கொடியிடப்படுகிறது, ஆனால் விளையாட்டு அத்தகைய "
+"செருகுநிரல்களை ஆதரிக்காது, மேலும் அதை முழு {1} with ஆக ஏற்றும்."
+
+#: src/gui/state/game/validation.cpp:298
+msgid ""
+"This plugin is not a blueprint master and requires the blueprint master "
+"\"{0}\". This can cause issues in-game, as this plugin will always load "
+"before \"{0}\"."
+msgstr ""
+"இந்த சொருகி ஒரு புளூபிரிண்ட் மாச்டர் அல்ல, மேலும் புளூபிரிண்ட் மாச்டர் \"{0}\" "
+"தேவைப்படுகிறது. இது விளையாட்டில் சிக்கல்களை ஏற்படுத்தும், ஏனெனில் இந்த சொருகி எப்போதும் "
+"\"{0}\" க்கு முன் ஏற்றப்படும்."
+
+#. translators: A header is the part of a file that stores data
+#. like file name and version.
+#: src/gui/state/game/validation.cpp:325
+msgid ""
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
+msgstr ""
+"இந்த சொருகி {0} of இன் தலைப்பு பதிப்பைக் கொண்டுள்ளது, இது விளையாட்டின் குறைந்தபட்ச உதவி "
+"தலைப்பு பதிப்பை {1} of ஐ விட குறைவாக உள்ளது."
+
+#: src/gui/state/game/validation.cpp:341
+msgid "This plugin has itself as a master."
+msgstr "இந்த சொருகி ஒரு மாச்டராக உள்ளது."
+
+#: src/gui/state/game/validation.cpp:348
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
+msgstr "இந்த சொருகி \"{0}\" குழுவிற்கு சொந்தமானது, அது இல்லை."
+
+#: src/gui/state/game/validation.cpp:373
+msgid ""
+"This plugin has a BashTags file that will override the suggestions made by "
+"LOOT for the following Bash Tags: {0}."
+msgstr ""
+"இந்த சொருகி ஒரு பாச்டாக்ச் கோப்பைக் கொண்டுள்ளது, இது பின்வரும் பாச் குறிச்சொற்களுக்கான "
+"கொள்ளை மூலம் செய்யப்பட்ட பரிந்துரைகளை மேலெழுதும்: {0}."
+
+#: src/gui/state/game/validation.cpp:532
+msgid "You have {0} active full plugins but the game only supports up to {1}."
+msgstr ""
+"உங்களிடம் {0} செயலில் முழு செருகுநிரல்கள் உள்ளன, ஆனால் விளையாட்டு {1} bood வரை "
+"மட்டுமே ஆதரிக்கிறது."
+
+#: src/gui/state/game/validation.cpp:542
+msgid "You have {0} active plugins but the game only supports up to {1}."
+msgstr ""
+"உங்களிடம் {0} செயலில் உள்ள செருகுநிரல்கள் உள்ளன, ஆனால் விளையாட்டு {1} பெறுநர் வரை "
+"மட்டுமே ஆதரிக்கிறது."
+
+#: src/gui/state/game/validation.cpp:565
+msgid ""
+"Do not launch Morrowind without the use of MWSE or it will cause severe "
+"damage to your game."
+msgstr ""
+"MWSE ஐப் பயன்படுத்தாமல் மோரோயிண்டைத் தொடங்க வேண்டாம் அல்லது அது உங்கள் விளையாட்டுக்கு "
+"கடுமையான சேதத்தை ஏற்படுத்தும்."
+
+#: src/gui/state/game/validation.cpp:583
+msgid "You have {0} active {1} but the game only supports up to {2}."
+msgstr ""
+"உங்களிடம் {0} செயலில் {1} உள்ளது, ஆனால் விளையாட்டு {2} பெறுநர் வரை மட்டுமே "
+"ஆதரிக்கிறது."
+
+#: src/gui/state/game/validation.cpp:605
+msgid ""
+"You have a full plugin and {0} {1} sharing the FE load order index. "
+"Deactivate a full plugin or your {1} to avoid potential issues."
+msgstr ""
+"உங்களிடம் முழு சொருகி மற்றும் {0} {1} fe Fe சுமை ஆர்டர் குறியீட்டைப் பகிர்கிறது. "
+"சாத்தியமான சிக்கல்களைத் தவிர்க்க முழு சொருகி அல்லது உங்கள் {1} full ஐ செயலிழக்கச் "
+"செய்யுங்கள்."
+
+#: src/gui/state/game/validation.cpp:627
+msgid ""
+"You have {0} active medium plugins but the game only supports up to {1}."
+msgstr ""
+"உங்களிடம் {0} செயலில் உள்ள நடுத்தர செருகுநிரல்கள் உள்ளன, ஆனால் விளையாட்டு {1} பெறுநர் "
+"வரை மட்டுமே ஆதரிக்கிறது."
+
+#: src/gui/state/game/validation.cpp:647
+msgid ""
+"You have a full plugin and at least one medium plugin sharing the FD load "
+"order index. Deactivate a full plugin or all your medium plugins to avoid "
+"potential issues."
+msgstr ""
+"உங்களிடம் முழு சொருகி மற்றும் குறைந்தபட்சம் ஒரு நடுத்தர சொருகி FD சுமை ஆர்டர் "
+"குறியீட்டைப் பகிர்கிறது. சாத்தியமான சிக்கல்களைத் தவிர்க்க முழு சொருகி அல்லது உங்கள் "
+"அனைத்து நடுத்தர செருகுநிரல்களையும் செயலிழக்கச் செய்யுங்கள்."
+
+#. translators: The placeholder is for the current game's name.
+#.
+#: src/gui/state/game/validation.cpp:660
+msgid ""
+"{0} is installed in a case-sensitive location. This may cause issues as the "
+"game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
+"which is the default on Windows."
+msgstr ""
+"{0} வழக்கு-உணர்திறன் இடத்தில் நிறுவப்பட்டுள்ளது. விளையாட்டு, மோட்ச் மற்றும் கொள்ளை ஆகியவை "
+"கோப்பு முறைமை பாதைகள் வழக்கு உணர்திறன் இல்லை என்று கருதலாம், இது விண்டோசின் இயல்புநிலை."
+
+#. translators: The placeholder is for the current game's
+#. name.
+#: src/gui/state/game/validation.cpp:677
+msgid ""
+"{0}'s local application data is stored in a case-sensitive location. This "
+"may cause issues as the game, mods and LOOT may assume that filesystem paths "
+"are not case-sensitive, which is the default on Windows."
+msgstr ""
+"{0} of இன் உள்ளக பயன்பாட்டு தரவு வழக்கு-உணர்திறன் இடத்தில் சேமிக்கப்படுகிறது. "
+"விளையாட்டு, மோட்ச் மற்றும் கொள்ளை ஆகியவை கோப்பு முறைமை பாதைகள் வழக்கு உணர்திறன் இல்லை "
+"என்று கருதலாம், இது விண்டோசின் இயல்புநிலை."
+
+#: src/gui/state/game/validation.cpp:814
+msgid "small plugin"
+msgid_plural "small plugins"
+msgstr[0] "சிறிய சொருகி"
+msgstr[1] "சிறிய செருகுநிரல்கள்"
+
+#: src/gui/state/game/validation.cpp:817
+msgid "light plugin"
+msgid_plural "light plugins"
+msgstr[0] "ஒளி சொருகி"
+msgstr[1] "ஒளி செருகுநிரல்கள்"
