@@ -45,12 +45,17 @@ constexpr size_t MWSE_SAFE_MAX_ACTIVE_FULL_PLUGINS = 1023;
 constexpr size_t SAFE_MAX_ACTIVE_MEDIUM_PLUGINS = 255;
 constexpr size_t SAFE_MAX_ACTIVE_LIGHT_PLUGINS = 4096;
 
+std::string EscapeFileName(const loot::File& file) {
+  return loot::EscapeMarkdownASCIIPunctuation(std::string(file.GetName()));
+}
+
 std::string GetDisplayName(const loot::File& file) {
-  if (file.GetDisplayName().empty()) {
-    return loot::EscapeMarkdownASCIIPunctuation(std::string(file.GetName()));
+  auto displayName = file.GetDisplayName();
+  if (displayName.empty()) {
+    return EscapeFileName(file);
   }
 
-  return file.GetDisplayName();
+  return displayName;
 }
 
 bool IsGroupDefined(std::string_view groupName,
@@ -100,11 +105,21 @@ SourcedMessage CreateInactiveMasterMessage(const PluginInterface& plugin,
 
 SourcedMessage CreateMissingRequirementMessage(const loot::File& requirement,
                                                const std::string& language) {
-  auto localisedText =
-      fmt::format(boost::locale::translate("This plugin requires \"{0}\" to be "
-                                           "installed, but it is missing.")
-                      .str(),
-                  GetDisplayName(requirement));
+  std::string localisedText;
+  const auto displayName = requirement.GetDisplayName();
+  if (displayName.empty()) {
+    localisedText = fmt::format(
+        boost::locale::translate(
+            "This plugin requires \"{0}\" to be installed, but it is missing.")
+            .str(),
+        EscapeFileName(requirement));
+  } else {
+    localisedText = fmt::format(
+        boost::locale::translate(
+            "This plugin requires {0} to be installed, but it is missing.")
+            .str(),
+        displayName);
+  }
   auto detailContent = SelectMessageContent(requirement.GetDetail(), language);
   auto messageText = detailContent.has_value()
                          ? localisedText + " " + detailContent.value().GetText()
@@ -117,12 +132,21 @@ SourcedMessage CreateMissingRequirementMessage(const loot::File& requirement,
 SourcedMessage CreatePresentIncompatibilityMessage(
     const loot::File& incompatibility,
     const std::string& language) {
-  auto localisedText =
-      fmt::format(boost::locale::translate(
-                      "This plugin is incompatible with \"{0}\", but both "
-                      "are present.")
-                      .str(),
-                  GetDisplayName(incompatibility));
+  std::string localisedText;
+  const auto displayName = incompatibility.GetDisplayName();
+  if (displayName.empty()) {
+    localisedText = fmt::format(
+        boost::locale::translate(
+            "This plugin is incompatible with \"{0}\", but both are present.")
+            .str(),
+        EscapeFileName(incompatibility));
+  } else {
+    localisedText = fmt::format(
+        boost::locale::translate(
+            "This plugin is incompatible with {0}, but both are present.")
+            .str(),
+        displayName);
+  }
   auto detailContent =
       SelectMessageContent(incompatibility.GetDetail(), language);
   auto messageText = detailContent.has_value()

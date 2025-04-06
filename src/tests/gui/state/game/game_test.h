@@ -406,7 +406,7 @@ TEST_P(
       std::vector<SourcedMessage>({
           SourcedMessage{MessageType::error,
                          MessageSource::requirementMetadata,
-                         "This plugin requires \"foo\" to be installed, but it "
+                         "This plugin requires foo to be installed, but it "
                          "is missing."},
       }),
       messages);
@@ -431,7 +431,7 @@ TEST_P(
       std::vector<SourcedMessage>({
           SourcedMessage{MessageType::error,
                          MessageSource::requirementMetadata,
-                         "This plugin requires \"foo\" to be installed, but it "
+                         "This plugin requires foo to be installed, but it "
                          "is missing."},
       }),
       messages);
@@ -506,7 +506,7 @@ TEST_P(
       std::vector<SourcedMessage>({
           SourcedMessage{MessageType::error,
                          MessageSource::incompatibilityMetadata,
-                         "This plugin is incompatible with \"foo\", but both "
+                         "This plugin is incompatible with foo, but both "
                          "are present."},
       }),
       messages);
@@ -534,7 +534,7 @@ TEST_P(
       std::vector<SourcedMessage>({
           SourcedMessage{MessageType::error,
                          MessageSource::incompatibilityMetadata,
-                         "This plugin is incompatible with \"test file\", but "
+                         "This plugin is incompatible with test file, but "
                          "both are present."},
       }),
       messages);
