@@ -288,7 +288,7 @@ jobs:
         run: |
           curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.1/install_boost.py
           python install_boost.py --directory ${{ github.workspace }} --boost-version ${{ env.BOOST_VERSION }} -a 64 locale
-        if: steps.boost-cache.outputs.cache-hit != 'true'
+        # if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download and build OGDF
         run: |
@@ -306,7 +306,7 @@ jobs:
             -S "ogdf-${env:OGDF_VERSION}"
           cmake --build $OGDF_BUILD_DIR --config Release
           cmake --install $OGDF_BUILD_DIR --config Release
-        if: steps.ogdf-cache.outputs.cache-hit != 'true'
+        # if: steps.ogdf-cache.outputs.cache-hit != 'true'
 
       - name: Download Qt
         id: qt-metadata
