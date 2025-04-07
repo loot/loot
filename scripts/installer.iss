@@ -222,7 +222,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{tmp}\vc_redist.2019.x64.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: "{cm:InstallingMSVCRedist}"
+Filename: "{tmp}\vc_redist.2022.x64.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: "{cm:InstallingMSVCRedist}"
 
 [UninstallDelete]
 Type: files; Name: "{localappdata}\{#MyAppName}\LOOTDebugLog.txt";
@@ -297,7 +297,6 @@ Type: dirifempty; Name: "{app}";
 
 [Code]
 var DownloadPage: TDownloadWizardPage;
-var VC2019RedistNeedsInstall: Boolean;
 
 // Set LOOT's language in settings.toml
 procedure SetLootLanguage();
@@ -507,12 +506,10 @@ end;
 
 procedure InitializeWizard;
 begin
-  VC2019RedistNeedsInstall := VCRedistNeedsInstall(14, 15, 26706)
-
-  if VC2019RedistNeedsInstall then begin
+  if VCRedistNeedsInstall(14, 42, 34438) then begin
     DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
     DownloadPage.Clear;
-    DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.x64.exe', 'vc_redist.2019.x64.exe', '');
+    DownloadPage.Add('https://aka.ms/vs/17/release/vc_redist.x64.exe', 'vc_redist.2022.x64.exe', '');
   end;
 end;
 

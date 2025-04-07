@@ -35,7 +35,7 @@ jobs:
 
             ## Windows
 
-            LOOT requires a 64-bit version of Windows 10 (1809) or later and the [MSVC 2019 x64 redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe).
+            LOOT requires a 64-bit version of Windows 10 (1809) or later and the [MSVC 2022 x64 redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe).
 
             The `.exe` installer will automatically download and install the redistributable if you don't already have it installed.
 
@@ -46,7 +46,7 @@ jobs:
             LOOT requires a 64-bit version of Linux, and can be installed from [Flathub](https://flathub.org/apps/io.github.loot.loot).
 
   windows:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: create_release
 
     steps:
@@ -105,7 +105,7 @@ jobs:
 
           $OGDF_BUILD_DIR="ogdf-${env:OGDF_VERSION}/build"
 
-          cmake -G "Visual Studio 16 2019" `
+          cmake -G "Visual Studio 17 2022" `
             -A x64 `
             -DCMAKE_INSTALL_PREFIX="${env:OGDF_INSTALL_PATH}" `
             -B $OGDF_BUILD_DIR `
@@ -124,7 +124,7 @@ jobs:
 
       - name: Run CMake
         run: |
-          cmake -G "Visual Studio 16 2019" `
+          cmake -G "Visual Studio 17 2022" `
             -A x64 `
             -DCMAKE_PREFIX_PATH="${{ steps.boost-metadata.outputs.root }}\stage" `
             -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" `

@@ -233,7 +233,7 @@ jobs:
         if: github.event_name == 'push'
 
   windows:
-    runs-on: windows-2019
+    runs-on: windows-2022
 
     steps:
       - uses: actions/checkout@v4
@@ -297,7 +297,9 @@ jobs:
 
           $OGDF_BUILD_DIR="ogdf-${env:OGDF_VERSION}/build"
 
-          cmake -G "Visual Studio 16 2019" `
+          git apply -v --directory=ogdf-${env:OGDF_VERSION} cmake/ogdf-chrono.patch
+
+          cmake -G "Visual Studio 17 2022" `
             -A x64 `
             -DCMAKE_INSTALL_PREFIX="${env:OGDF_INSTALL_PATH}" `
             -B $OGDF_BUILD_DIR `
@@ -316,7 +318,7 @@ jobs:
 
       - name: Run CMake
         run: |
-          cmake -G "Visual Studio 16 2019" `
+          cmake -G "Visual Studio 17 2022" `
             -A x64 `
             -DCMAKE_PREFIX_PATH="${{ steps.boost-metadata.outputs.root }}\stage" `
             -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" `
