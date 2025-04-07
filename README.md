@@ -59,7 +59,7 @@ flatpak install flathub org.kde.KStyle.Adwaita//6.8
 
 Refer to `.github/workflows/release.yml` for the build process.
 
-The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gettext, Git, Inno Setup 6, Python, Visual Studio 2019 and 7-zip are already installed.
+The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gettext, Git, Inno Setup 6, Python, Visual Studio 2022 and 7-zip are already installed.
 
 vslavik's [precompiled Gettext binaries](https://github.com/vslavik/gettext-tools-windows/releases/download/v0.22.5/gettext-tools-windows-0.22.5.zip) are probably the easiest way to get an up-to-date version of Gettext on Windows.
 
