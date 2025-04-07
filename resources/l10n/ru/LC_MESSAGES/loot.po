@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-06 22:52+0100\n"
+"POT-Creation-Date: 2025-04-06 23:11+0100\n"
 "PO-Revision-Date: 2024-10-27 13:41+0500\n"
 "Last-Translator: TokcDK <tokcdk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
@@ -1258,27 +1258,35 @@ msgstr "Не удалось загрузить порядок загрузки, 
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT обнаружил неработающий «{0}» и игнорирует его."
 
-#: src/gui/state/game/validation.cpp:77 src/gui/state/game/validation.cpp:104
+#: src/gui/state/game/validation.cpp:82 src/gui/state/game/validation.cpp:113
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
 msgstr "Для этого плагина требуется установка \"{0}\", но он отсутствует."
 
-#: src/gui/state/game/validation.cpp:95
+#: src/gui/state/game/validation.cpp:100
 msgid "This plugin requires \"{0}\" to be active, but it is inactive."
 msgstr "Этот плагин требует, чтобы \"{0}\" был активен, но он неактивен."
 
-#: src/gui/state/game/validation.cpp:122
+#: src/gui/state/game/validation.cpp:119
+msgid "This plugin requires {0} to be installed, but it is missing."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:140
 msgid "This plugin is incompatible with \"{0}\", but both are present."
 msgstr "Этот плагин несовместим с \"{0}\", но оба они присутствуют."
 
-#: src/gui/state/game/validation.cpp:151
+#: src/gui/state/game/validation.cpp:146
+msgid "This plugin is incompatible with {0}, but both are present."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:175
 msgid "small master"
 msgstr "малый мастер"
 
-#: src/gui/state/game/validation.cpp:152
+#: src/gui/state/game/validation.cpp:176
 msgid "light master"
 msgstr "легкий мастер"
 
-#: src/gui/state/game/validation.cpp:159
+#: src/gui/state/game/validation.cpp:183
 msgid ""
 "This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
 "cause issues in-game, and sorting will fail while this plugin is installed."
@@ -1286,7 +1294,7 @@ msgstr ""
 "Плагин {0} требует плагин \"{1}\" без флага мастер. Это может вызвать "
 "проблемы в игре, и сортировка не будет работать."
 
-#: src/gui/state/game/validation.cpp:181
+#: src/gui/state/game/validation.cpp:205
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
@@ -1295,7 +1303,7 @@ msgstr ""
 "Плагин содержит FormID за пределами диапазона ESL. Использование его "
 "необратимо повредит игровые сохранения."
 
-#: src/gui/state/game/validation.cpp:200
+#: src/gui/state/game/validation.cpp:224
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for a "
 "medium plugin. Using this plugin will cause irreversible damage to your game "
@@ -1304,7 +1312,7 @@ msgstr ""
 "Плагин содержит FormID за пределами диапазона обычного плагина. "
 "Использование его необратимо повредит игровые сохранения."
 
-#: src/gui/state/game/validation.cpp:218
+#: src/gui/state/game/validation.cpp:242
 msgid ""
 "This plugin is an update plugin but adds new records. Using this plugin may "
 "cause irreversible damage to your game saves."
@@ -1312,17 +1320,17 @@ msgstr ""
 "Плагин обновления добавляет новые записи. Использование его необратимо "
 "повредит игровые сохранения."
 
-#: src/gui/state/game/validation.cpp:234
+#: src/gui/state/game/validation.cpp:258
 msgid "plugin"
 msgstr "плагин"
 
 #. translators: master as in a plugin that is
 #. loaded as if its master flag is set.
-#: src/gui/state/game/validation.cpp:237
+#: src/gui/state/game/validation.cpp:261
 msgid "master"
 msgstr "мастер"
 
-#: src/gui/state/game/validation.cpp:247
+#: src/gui/state/game/validation.cpp:271
 msgid ""
 "\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
 "correctly installed {2} and all its requirements."
@@ -1330,7 +1338,7 @@ msgstr ""
 "\"{0}\" - легкий {1}, но {2}, отсутствует. Убедитесь, что верно установили "
 "{2} и выполнили все его требования."
 
-#: src/gui/state/game/validation.cpp:262
+#: src/gui/state/game/validation.cpp:286
 msgid ""
 "\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
 "will not load it."
@@ -1338,7 +1346,7 @@ msgstr ""
 "\"{0}\" - это .esl плагин, но игра не поддерживает такие плагины и не "
 "загружает его."
 
-#: src/gui/state/game/validation.cpp:276
+#: src/gui/state/game/validation.cpp:300
 msgid ""
 "\"{0}\" is flagged as a light {1}, but the game does not support such "
 "plugins, and will load it as a full {1}."
@@ -1347,7 +1355,7 @@ msgstr ""
 "загружает его как обычный {1}."
 
 # Need "blueprint master" description here for right translation.
-#: src/gui/state/game/validation.cpp:298
+#: src/gui/state/game/validation.cpp:322
 msgid ""
 "This plugin is not a blueprint master and requires the blueprint master "
 "\"{0}\". This can cause issues in-game, as this plugin will always load "
@@ -1359,38 +1367,38 @@ msgstr ""
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/validation.cpp:325
+#: src/gui/state/game/validation.cpp:349
 msgid ""
 "This plugin has a header version of {0}, which is less than the game's "
 "minimum supported header version of {1}."
 msgstr ""
 "Плагин имеет заголовок в{0} меньше минимально поддерживаемой игрой {1}."
 
-#: src/gui/state/game/validation.cpp:341
+#: src/gui/state/game/validation.cpp:365
 msgid "This plugin has itself as a master."
 msgstr "Плагин является мастером."
 
-#: src/gui/state/game/validation.cpp:348
+#: src/gui/state/game/validation.cpp:372
 msgid "This plugin belongs to the group \"{0}\", which does not exist."
 msgstr "Плагин принадлежит к группе «{0}», которой не существует."
 
-#: src/gui/state/game/validation.cpp:373
+#: src/gui/state/game/validation.cpp:397
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
 "LOOT for the following Bash Tags: {0}."
 msgstr ""
 "Плагин содержит файл BashTags и переопределит сортировку LOOT для тегов: {0}"
 
-#: src/gui/state/game/validation.cpp:532
+#: src/gui/state/game/validation.cpp:556
 msgid "You have {0} active full plugins but the game only supports up to {1}."
 msgstr ""
 "У вас есть {0} активных полных плагинов, но игра поддерживает только до {1}."
 
-#: src/gui/state/game/validation.cpp:542
+#: src/gui/state/game/validation.cpp:566
 msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr "У вас активно {0} плагинов, но игра поддерживает только {1}."
 
-#: src/gui/state/game/validation.cpp:565
+#: src/gui/state/game/validation.cpp:589
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
@@ -1398,12 +1406,12 @@ msgstr ""
 "Не запускайте Morrowind без использования MWSE, иначе это нанесёт серьёзный "
 "ущерб вашей игре."
 
-#: src/gui/state/game/validation.cpp:583
+#: src/gui/state/game/validation.cpp:607
 msgid "You have {0} active {1} but the game only supports up to {2}."
 msgstr "У вас {0} активен {1}, но игра поддерживает только до {2}."
 
 # Need "FE load order index" description here for right translation.
-#: src/gui/state/game/validation.cpp:605
+#: src/gui/state/game/validation.cpp:629
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
 "Deactivate a full plugin or your {1} to avoid potential issues."
@@ -1411,13 +1419,13 @@ msgstr ""
 "У вас есть обычный плагин и {0} {1} использующие индекс загрузки FE. "
 "Отключите один из них для избежания проблем."
 
-#: src/gui/state/game/validation.cpp:627
+#: src/gui/state/game/validation.cpp:651
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
 msgstr ""
 "У вас есть {0} активных средних плагинов, но игра поддерживает только до {1}."
 
-#: src/gui/state/game/validation.cpp:647
+#: src/gui/state/game/validation.cpp:671
 msgid ""
 "You have a full plugin and at least one medium plugin sharing the FD load "
 "order index. Deactivate a full plugin or all your medium plugins to avoid "
@@ -1428,7 +1436,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's name.
 #.
-#: src/gui/state/game/validation.cpp:660
+#: src/gui/state/game/validation.cpp:684
 msgid ""
 "{0} is installed in a case-sensitive location. This may cause issues as the "
 "game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
@@ -1440,7 +1448,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's
 #. name.
-#: src/gui/state/game/validation.cpp:677
+#: src/gui/state/game/validation.cpp:701
 msgid ""
 "{0}'s local application data is stored in a case-sensitive location. This "
 "may cause issues as the game, mods and LOOT may assume that filesystem paths "
@@ -1450,14 +1458,14 @@ msgstr ""
 "системой, что может вызвать проблемы, так как игра, моды и LOOT ожидают "
 "нечувствительности к регистру (как в Windows)."
 
-#: src/gui/state/game/validation.cpp:814
+#: src/gui/state/game/validation.cpp:838
 msgid "small plugin"
 msgid_plural "small plugins"
 msgstr[0] "небольшой плагин"
 msgstr[1] "небольших плагина"
 msgstr[2] "небольших плагинов"
 
-#: src/gui/state/game/validation.cpp:817
+#: src/gui/state/game/validation.cpp:841
 msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] "легкий плагин"
