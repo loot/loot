@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-04-06 23:11+0100\n"
-"PO-Revision-Date: 2024-09-17 09:09+0000\n"
+"PO-Revision-Date: 2025-04-09 06:03+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
-"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
-">\n"
+"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/>"
+"\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 5.11-dev\n"
 
 #: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -1267,7 +1267,7 @@ msgstr "Тази приставка изисква „{0}“ да бъде ак�
 
 #: src/gui/state/game/validation.cpp:119
 msgid "This plugin requires {0} to be installed, but it is missing."
-msgstr ""
+msgstr "Тази приставка изисква {0} да бъде инсталирана, но тя липсва."
 
 #: src/gui/state/game/validation.cpp:140
 msgid "This plugin is incompatible with \"{0}\", but both are present."
@@ -1275,7 +1275,7 @@ msgstr "Тази приставка не е съвместима с „{0}“, �
 
 #: src/gui/state/game/validation.cpp:146
 msgid "This plugin is incompatible with {0}, but both are present."
-msgstr ""
+msgstr "Тази приставка не е съвместима с {0}, но и двете са налични."
 
 #: src/gui/state/game/validation.cpp:175
 msgid "small master"
