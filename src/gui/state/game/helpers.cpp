@@ -204,7 +204,7 @@ std::string DescribeCycle(const std::vector<Vertex>& cycle) {
   return text;
 }
 
-std::vector<SourcedMessage> CheckForRemovedPlugins(
+std::vector<std::string> CheckForRemovedPlugins(
     const std::vector<std::string>& pluginNamesBefore,
     const std::vector<std::string>& pluginNamesAfter) {
   static constexpr size_t GHOST_EXTENSION_LENGTH =
@@ -215,7 +215,7 @@ std::vector<SourcedMessage> CheckForRemovedPlugins(
   std::set<std::string> pluginsSet(pluginNamesAfter.cbegin(),
                                    pluginNamesAfter.cend());
 
-  std::vector<SourcedMessage> messages;
+  std::vector<std::string> removedPlugins;
   for (auto pluginName : pluginNamesBefore) {
     if (boost::iends_with(pluginName, GHOST_EXTENSION)) {
       pluginName =
@@ -223,18 +223,11 @@ std::vector<SourcedMessage> CheckForRemovedPlugins(
     }
 
     if (pluginsSet.count(pluginName) == 0) {
-      messages.push_back(CreatePlainTextSourcedMessage(
-          MessageType::warn,
-          MessageSource::removedPluginsCheck,
-          fmt::format(
-              boost::locale::translate("LOOT has detected that \"{0}\" is "
-                                       "invalid and is now ignoring it.")
-                  .str(),
-              pluginName)));
+      removedPlugins.push_back(pluginName);
     }
   }
 
-  return messages;
+  return removedPlugins;
 }
 
 std::vector<Tag> ReadBashTagsFile(std::istream& in) {

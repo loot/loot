@@ -48,7 +48,7 @@ std::string EscapeMarkdownASCIIPunctuation(const std::string& text);
 
 std::string DescribeCycle(const std::vector<Vertex>& cycle);
 
-std::vector<SourcedMessage> CheckForRemovedPlugins(
+std::vector<std::string> CheckForRemovedPlugins(
     const std::vector<std::string>& pluginNamesBefore,
     const std::vector<std::string>& pluginNamesAfter);
 

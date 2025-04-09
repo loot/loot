@@ -266,10 +266,26 @@ void LootState::checkSettingsFile() {
   }
 
   try {
-    const auto warnings = loot::checkSettingsFile(paths_.getSettingsPath());
-    for (const auto& warning : warnings) {
+    const auto result = loot::checkSettingsFile(paths_.getSettingsPath());
+
+    if (result.preludeMigrationFailed) {
       initMessages_.push_back(CreatePlainTextSourcedMessage(
-          MessageType::warn, MessageSource::init, warning));
+          MessageType::warn,
+          MessageSource::init,
+          boost::locale::translate(
+              "Your masterlist prelude repository URL and branch settings "
+              "could not be migrated! You can check your LOOTDebugLog.txt (you "
+              "can get to it through the File menu) for more information.")));
+    }
+
+    if (result.masterlistMigrationFailed) {
+      initMessages_.push_back(CreatePlainTextSourcedMessage(
+          MessageType::warn,
+          MessageSource::init,
+          boost::locale::translate(
+              "Your masterlist repository URL and branch settings could not be "
+              "migrated! You can check your LOOTDebugLog.txt (you can get to "
+              "it through the File menu) for more information.")));
     }
   } catch (const exception& e) {
     initMessages_.push_back(CreateInitErrorMessage(format(

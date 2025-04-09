@@ -325,6 +325,23 @@ std::vector<std::filesystem::path> FilterForPlugins(
 
   return filePaths;
 }
+
+std::vector<SourcedMessage> CreateMessagesForRemovedPlugins(
+    const std::vector<std::string>& removedPlugins) {
+  std::vector<SourcedMessage> messages;
+  for (const auto& removedPlugin : removedPlugins) {
+    messages.push_back(CreatePlainTextSourcedMessage(
+        MessageType::warn,
+        MessageSource::removedPluginsCheck,
+        fmt::format(
+            boost::locale::translate("LOOT has detected that \"{0}\" is "
+                                     "invalid and is now ignoring it.")
+                .str(),
+            removedPlugin)));
+  }
+
+  return messages;
+}
 }
 
 namespace loot {
@@ -666,8 +683,8 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
     loadedPluginNames.push_back(plugin->GetName());
   }
 
-  AppendMessages(
-      CheckForRemovedPlugins(installedPluginNames, loadedPluginNames));
+  AppendMessages(CreateMessagesForRemovedPlugins(
+      CheckForRemovedPlugins(installedPluginNames, loadedPluginNames)));
 
   pluginsFullyLoaded_ = !headersOnly;
 
@@ -803,7 +820,8 @@ std::vector<std::string> Game::SortPlugins() {
     gameHandle_->LoadPlugins(pluginPaths, false);
     auto sortedPlugins = gameHandle_->SortPlugins(loadOrder);
 
-    AppendMessages(CheckForRemovedPlugins(loadOrder, sortedPlugins));
+    AppendMessages(CreateMessagesForRemovedPlugins(
+        CheckForRemovedPlugins(loadOrder, sortedPlugins)));
 
     sortCount_.Increment();
 

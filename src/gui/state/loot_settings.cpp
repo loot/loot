@@ -648,9 +648,9 @@ GameSettings convertGameTable(const toml::table& table) {
   return game;
 }
 
-std::vector<std::string> checkSettingsFile(
+CheckSettingsResult checkSettingsFile(
     const std::filesystem::path& filePath) {
-  std::vector<std::string> warningMessages;
+  CheckSettingsResult result;
 
   // Don't use toml::parse_file() as it just uses a std stream,
   // which don't support UTF-8 paths on Windows.
@@ -668,10 +668,7 @@ std::vector<std::string> checkSettingsFile(
   if (preludeUrl || preludeBranch) {
     auto migratedSource = migratePreludeRepoSettings(preludeUrl, preludeBranch);
     if (!migratedSource.has_value()) {
-      warningMessages.push_back(boost::locale::translate(
-          "Your masterlist prelude repository URL and branch settings could "
-          "not be migrated! You can check your LOOTDebugLog.txt (you can get "
-          "to it through the File menu) for more information."));
+      result.preludeMigrationFailed = true;
     }
   }
 
@@ -691,16 +688,13 @@ std::vector<std::string> checkSettingsFile(
         auto migratedSource =
             migrateMasterlistRepoSettings(gameId, url, branch);
         if (!migratedSource.has_value()) {
-          warningMessages.push_back(boost::locale::translate(
-              "Your masterlist repository URL and branch settings could not be "
-              "migrated! You can check your LOOTDebugLog.txt (you can get to "
-              "it through the File menu) for more information."));
+          result.masterlistMigrationFailed = true;
         }
       }
     }
   }
 
-  return warningMessages;
+  return result;
 }
 
 std::string getDefaultPreludeSource() {

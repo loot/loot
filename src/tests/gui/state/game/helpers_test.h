@@ -87,15 +87,10 @@ TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeExclamationMark) {
 }
 
 TEST(CheckForRemovedPlugins, shouldCompareFilenamesBeforeAndAfter) {
-  const auto messages = CheckForRemovedPlugins(
+  const auto plugins = CheckForRemovedPlugins(
       {"test1.esp", "test2.esp", "test3.esp"}, {"test1.esp", "test3.esp"});
 
-  ASSERT_EQ(1, messages.size());
-  EXPECT_EQ(
-      "LOOT has detected that \\\"test2\\.esp\\\" is invalid "
-      "and is now "
-      "ignoring it\\.",
-      messages[0].text);
+  EXPECT_EQ(std::vector<std::string>{"test2.esp"}, plugins);
 }
 
 TEST(ReadBashTagsFile, shouldCorrectlyReadTheExampleFileContent) {
