@@ -35,6 +35,21 @@
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 
+namespace {
+loot::SourcedMessage CreateEvalFailedMessage(std::string_view pluginName,
+                                             std::string_view what) {
+  return loot::CreatePlainTextSourcedMessage(
+      loot::MessageType::error,
+      loot::MessageSource::caughtException,
+      fmt::format(boost::locale::translate(
+                      "\"{0}\" contains a condition that could not be "
+                      "evaluated. Details: {1}")
+                      .str(),
+                  pluginName,
+                  what));
+}
+}
+
 namespace loot {
 std::variant<std::optional<PluginMetadata>, SourcedMessage>
 evaluateMasterlistMetadata(const gui::Game& game,
@@ -51,15 +66,7 @@ evaluateMasterlistMetadata(const gui::Game& game,
           e.what());
     }
 
-    return CreatePlainTextSourcedMessage(
-        MessageType::error,
-        MessageSource::caughtException,
-        fmt::format(boost::locale::translate(
-                        "\"{0}\" contains a condition that could not be "
-                        "evaluated. Details: {1}")
-                        .str(),
-                    pluginName,
-                    e.what()));
+    return CreateEvalFailedMessage(pluginName, e.what());
   }
 }
 
@@ -77,15 +84,7 @@ evaluateUserlistMetadata(const gui::Game& game, const std::string& pluginName) {
           e.what());
     }
 
-    return CreatePlainTextSourcedMessage(
-        MessageType::error,
-        MessageSource::caughtException,
-        fmt::format(boost::locale::translate(
-                        "\"{0}\" contains a condition that could not be "
-                        "evaluated. Details: {1}")
-                        .str(),
-                    pluginName,
-                    e.what()));
+    return CreateEvalFailedMessage(pluginName, e.what());
   }
 }
 
