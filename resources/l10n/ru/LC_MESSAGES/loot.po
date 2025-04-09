@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-06 23:11+0100\n"
+"POT-Creation-Date: 2025-04-09 17:27+0100\n"
 "PO-Revision-Date: 2025-04-09 06:03+0000\n"
 "Last-Translator: xsSplater <xssplater@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Weblate 5.11-dev\n"
 
-#: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
+#: src/gui/plugin_item.cpp:45
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
 msgstr "\"{0}\" содержит условие, которое не удалось проверить. Детали: {1}"
 
-#: src/gui/plugin_item.cpp:195
+#: src/gui/plugin_item.cpp:194
 msgid "Location"
 msgstr "Местоположение"
 
-#: src/gui/plugin_item.cpp:200
+#: src/gui/plugin_item.cpp:199
 msgid "Location {0}"
 msgstr "Местоположение {0}"
 
@@ -1124,24 +1124,6 @@ msgstr "Обработка, объединение и оценка метада�
 msgid "Sorting load order…"
 msgstr "Сортировка порядка загрузки…"
 
-#: src/gui/state/loot_settings.cpp:672
-msgid ""
-"Your masterlist prelude repository URL and branch settings could not be "
-"migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
-"File menu) for more information."
-msgstr ""
-"Не удалось перенести ссылку на мастерлист prelude репозитория и настройки "
-"ветки! Смотрите LOOTDebugLog.txt (доступ через меню «Файл») для информации."
-
-#: src/gui/state/loot_settings.cpp:695
-msgid ""
-"Your masterlist repository URL and branch settings could not be migrated! "
-"You can check your LOOTDebugLog.txt (you can get to it through the File "
-"menu) for more information."
-msgstr ""
-"Не удалось перенести ссылку на репозиторий мастерлиста и настройки ветки! "
-"Смотрите LOOTDebugLog.txt (доступ через меню «Файл») для информации."
-
 #: src/gui/state/loot_state.cpp:172
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr "Ошибка: не удалось инициализировать игровые настройки. {0}"
@@ -1153,7 +1135,7 @@ msgstr "Ошибка: не удалось создать каталог данн
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:225 src/gui/state/loot_state.cpp:279
+#: src/gui/state/loot_state.cpp:225 src/gui/state/loot_state.cpp:295
 msgid "Error: Settings parsing failed. {0}"
 msgstr "Ошибка: не удалось обработать настройки. {0}"
 
@@ -1164,22 +1146,40 @@ msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 "Ошибка: указан параметр «--auto-sort», но не был указан параметр «--game»."
 
-#: src/gui/state/loot_state.cpp:320
+#: src/gui/state/loot_state.cpp:276
+msgid ""
+"Your masterlist prelude repository URL and branch settings could not be "
+"migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
+"File menu) for more information."
+msgstr ""
+"Не удалось перенести ссылку на мастерлист prelude репозитория и настройки "
+"ветки! Смотрите LOOTDebugLog.txt (доступ через меню «Файл») для информации."
+
+#: src/gui/state/loot_state.cpp:286
+msgid ""
+"Your masterlist repository URL and branch settings could not be migrated! "
+"You can check your LOOTDebugLog.txt (you can get to it through the File "
+"menu) for more information."
+msgstr ""
+"Не удалось перенести ссылку на репозиторий мастерлиста и настройки ветки! "
+"Смотрите LOOTDebugLog.txt (доступ через меню «Файл») для информации."
+
+#: src/gui/state/loot_state.cpp:336
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr "Ошибка: не удалось создать каталог прелюдии LOOT. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:337
+#: src/gui/state/loot_state.cpp:353
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 "Ошибка: параметр «--game-path» прошёл, но параметр «--game» не был указан."
 
-#: src/gui/state/loot_state.cpp:350
+#: src/gui/state/loot_state.cpp:366
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr "Ошибка: не удалось переопределить путь к игре, игра {0} не распознана."
 
-#: src/gui/state/loot_state.cpp:384
+#: src/gui/state/loot_state.cpp:400
 msgid ""
 "No supported games were detected. Try running the launcher(s) for the "
 "supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
@@ -1189,7 +1189,7 @@ msgstr ""
 "поддерживаемых игр (т.е. нажать «Играть» в Steam или GOG Galaxy), затем "
 "перезапустите LOOT."
 
-#: src/gui/state/loot_state.cpp:403
+#: src/gui/state/loot_state.cpp:419
 msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "
 "installed, try running its launcher then restarting LOOT."
@@ -1205,7 +1205,11 @@ msgstr "Между «{0}» и «{1}» обнаружено циклическо�
 msgid "The group \"{0}\" does not exist."
 msgstr "Группа «{0}» не существует."
 
-#: src/gui/state/game/game.cpp:828
+#: src/gui/state/game/game.cpp:337
+msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
+msgstr "LOOT обнаружил неработающий «{0}» и игнорирует его."
+
+#: src/gui/state/game/game.cpp:846
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1213,11 +1217,11 @@ msgstr ""
 "Сортировка не удалась, есть минимум один установленный плагин, зависящий "
 "минимум от одного неустановленного."
 
-#: src/gui/state/game/game.cpp:859
+#: src/gui/state/game/game.cpp:877
 msgid "You have not sorted your load order this session."
 msgstr "Вы ещё не отсортировали порядок загрузки в этом сеансе."
 
-#: src/gui/state/game/game.cpp:937
+#: src/gui/state/game/game.cpp:955
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1248,15 +1252,11 @@ msgstr ""
 "\n"
 "Также можно обратиться за поддержкой на форум [веб-сайта LOOT]({1})."
 
-#: src/gui/state/game/game.cpp:1112
+#: src/gui/state/game/game.cpp:1130
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr "Не удалось загрузить порядок загрузки, информация может быть неверной."
-
-#: src/gui/state/game/helpers.cpp:230
-msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
-msgstr "LOOT обнаружил неработающий «{0}» и игнорирует его."
 
 #: src/gui/state/game/validation.cpp:82 src/gui/state/game/validation.cpp:113
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
