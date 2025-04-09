@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-03-26 17:45+0000\n"
-"PO-Revision-Date: 2024-09-17 09:09+0000\n"
+"POT-Creation-Date: 2025-04-09 17:27+0100\n"
+"PO-Revision-Date: 2025-04-09 06:03+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
 ">\n"
@@ -17,9 +17,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 5.11-dev\n"
 
-#: src/gui/plugin_item.cpp:58 src/gui/plugin_item.cpp:84
+#: src/gui/plugin_item.cpp:45
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
 msgstr "„{0}“ съдържа условие, което не може да бъде оценено. Детайли: {1}"
 
@@ -254,182 +254,182 @@ msgstr ""
 msgid "LOOT could not unambiguously set the load order."
 msgstr "LOOT не промени реда за зареждане."
 
-#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1485
+#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1474
 msgid "Ambiguous load order detected"
 msgstr "Редът за зареждане е неточен"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:709
+#: src/gui/qt/main_window.cpp:698
 msgid "&Sort Plugins"
 msgstr "Сортира&й приставките"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:711
+#: src/gui/qt/main_window.cpp:700
 msgid "Update &Masterlist"
 msgstr "Обнови основни&я списък"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:713
+#: src/gui/qt/main_window.cpp:702
 msgid "&Apply Sorted Load Order"
 msgstr "При&ложи реда за зареждане"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:715
+#: src/gui/qt/main_window.cpp:704
 msgid "&Discard Sorted Load Order"
 msgstr "Отм&ени реда за зареждане"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:720
+#: src/gui/qt/main_window.cpp:709
 msgid "&File"
 msgstr "&Файл"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:722
+#: src/gui/qt/main_window.cpp:711
 msgid "&Settings…"
 msgstr "&Настройки…"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:724
+#: src/gui/qt/main_window.cpp:713
 msgid "&Update All Masterlists"
 msgstr "&Обнови всички основни списъци"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:726
+#: src/gui/qt/main_window.cpp:715
 msgid "&Backup LOOT Data"
 msgstr "&Съхрани данните на LOOT"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:728
+#: src/gui/qt/main_window.cpp:717
 msgid "&Open LOOT Data Folder"
 msgstr "&Папка с данни на LOOT"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:730
+#: src/gui/qt/main_window.cpp:719
 msgid "&Quit"
 msgstr "&Изход"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:734
+#: src/gui/qt/main_window.cpp:723
 msgid "&Game"
 msgstr "&Игра"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:736
+#: src/gui/qt/main_window.cpp:725
 msgid "&Edit Groups…"
 msgstr "&Редактирай групите…"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:738
+#: src/gui/qt/main_window.cpp:727
 msgid "Searc&h Cards…"
 msgstr "&Търси в съдържанието…"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:740
+#: src/gui/qt/main_window.cpp:729
 msgid "Copy &Load Order"
 msgstr "Копирай реда за &зареждане"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:742
+#: src/gui/qt/main_window.cpp:731
 msgid "&Copy Content"
 msgstr "Копирай &съдържанието"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:744
+#: src/gui/qt/main_window.cpp:733
 msgid "&Refresh Content"
 msgstr "&Опресни съдържанието"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:746
+#: src/gui/qt/main_window.cpp:735
 msgid "Redate &Plugins…"
 msgstr "Промени &датата на приставките…"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:748
+#: src/gui/qt/main_window.cpp:737
 msgid "&Fix Ambiguous Load Order"
 msgstr "&Поправи реда за зареждане"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:750
+#: src/gui/qt/main_window.cpp:739
 msgid "Clear All &User Metadata…"
 msgstr "&Изчисти всички добавени метаданни…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:754
+#: src/gui/qt/main_window.cpp:743
 msgid "&Plugin"
 msgstr "&Приставка"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:756
+#: src/gui/qt/main_window.cpp:745
 msgid "Copy &Plugin Name"
 msgstr "Копирай името на &приставката"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:758
+#: src/gui/qt/main_window.cpp:747
 msgid "Copy &Card Content"
 msgstr "Копирай &съдържанието"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:760
+#: src/gui/qt/main_window.cpp:749
 msgid "Copy &Metadata"
 msgstr "Копирай &метаданните"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:762
+#: src/gui/qt/main_window.cpp:751
 msgid "&Edit Metadata…"
 msgstr "&Редактирай метаданните…"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:764
+#: src/gui/qt/main_window.cpp:753
 msgid "Clear &User Metadata…"
 msgstr "&Изчисти добавените метаданни…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:768
+#: src/gui/qt/main_window.cpp:757
 msgid "&Help"
 msgstr "Помо&щ"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:770
+#: src/gui/qt/main_window.cpp:759
 msgid "&View Documentation"
 msgstr "&Виж документацията"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:772
+#: src/gui/qt/main_window.cpp:761
 msgid "&Open FAQs"
 msgstr "Отвори &ЧЗВ"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:774
+#: src/gui/qt/main_window.cpp:763
 msgid "&Join Discord Server"
 msgstr "&Присъединете се към „Discord“"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:776
+#: src/gui/qt/main_window.cpp:765
 msgid "&About"
 msgstr "&Относно"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:781
+#: src/gui/qt/main_window.cpp:770
 msgid "P&lugins"
 msgstr "П&риставки"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:784
+#: src/gui/qt/main_window.cpp:773
 msgid "F&ilters"
 msgstr "Фи&лтри"
 
-#: src/gui/qt/main_window.cpp:1086 src/gui/qt/main_window.cpp:1539
-#: src/gui/qt/main_window.cpp:2164
+#: src/gui/qt/main_window.cpp:1075 src/gui/qt/main_window.cpp:1528
+#: src/gui/qt/main_window.cpp:2154
 msgid "Updating and parsing masterlist…"
 msgstr "Обновяване и разбор на основния списък…"
 
-#: src/gui/qt/main_window.cpp:1174
+#: src/gui/qt/main_window.cpp:1163
 msgid ""
 "This appears to be the first time you have run LOOT v{0}. Your current LOOT "
 "data has been backed up to: {1}"
@@ -437,15 +437,15 @@ msgstr ""
 "Изглежда това е първото стартиране на LOOT {0}. Текущите данни на LOOT са "
 "съхранени в: {1}"
 
-#: src/gui/qt/main_window.cpp:1182
+#: src/gui/qt/main_window.cpp:1171
 msgid "This appears to be the first time you have run LOOT v{0}."
 msgstr "Изглежда това е първото стартиране на LOOT {0}."
 
-#: src/gui/qt/main_window.cpp:1189
+#: src/gui/qt/main_window.cpp:1178
 msgid "Here are some tips to help you get started with the interface."
 msgstr "Ето няколко съвета, които ще са Ви от полза."
 
-#: src/gui/qt/main_window.cpp:1194
+#: src/gui/qt/main_window.cpp:1183
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by overlap "
 "filtering, or by sorting."
@@ -453,7 +453,7 @@ msgstr ""
 "CRC се показва само след като приставките бъдат заредени с филтри за "
 "застъпване или сортиране."
 
-#: src/gui/qt/main_window.cpp:1200
+#: src/gui/qt/main_window.cpp:1189
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
@@ -462,7 +462,7 @@ msgstr ""
 "таблиците на редактора на метаданните: „Зареди след“, „Изисквания“ и "
 "„Несъвместимости“."
 
-#: src/gui/qt/main_window.cpp:1206
+#: src/gui/qt/main_window.cpp:1195
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
@@ -470,7 +470,7 @@ msgstr ""
 "Някои функции са изключени, докато редакторът на метаданните е отворен или "
 "докато има сортиран ред за зареждане, който не е приложен или отхвърлен."
 
-#: src/gui/qt/main_window.cpp:1213 src/gui/qt/main_window.cpp:2040
+#: src/gui/qt/main_window.cpp:1202 src/gui/qt/main_window.cpp:2028
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -479,19 +479,19 @@ msgstr ""
 "LOOT е безплатен, но ако искате да направите дарение, може да подкрепите "
 "WrinklyNinja (създател и главен разработчик на LOOT) чрез {0}."
 
-#: src/gui/qt/main_window.cpp:1228
+#: src/gui/qt/main_window.cpp:1217
 msgid "First-Time Tips"
 msgstr "Начални съвети"
 
-#: src/gui/qt/main_window.cpp:1263
+#: src/gui/qt/main_window.cpp:1252
 msgid "metadata edits"
 msgstr "редакциите на метаданни"
 
-#: src/gui/qt/main_window.cpp:1264
+#: src/gui/qt/main_window.cpp:1253
 msgid "sorted load order"
 msgstr "сортирания ред за зареждане"
 
-#: src/gui/qt/main_window.cpp:1267
+#: src/gui/qt/main_window.cpp:1256
 msgid ""
 "You have not yet applied or cancelled your {0}. Are you sure you want to "
 "quit?"
@@ -499,14 +499,14 @@ msgstr ""
 "Все още не сте приложили или отказали {0}. Сигурни ли сте, че искате да "
 "излезете?"
 
-#: src/gui/qt/main_window.cpp:1360
+#: src/gui/qt/main_window.cpp:1349
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:370
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr "Грешка"
 
-#: src/gui/qt/main_window.cpp:1370
+#: src/gui/qt/main_window.cpp:1359
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:364
 #: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
@@ -516,7 +516,7 @@ msgstr ""
 "Нещо се обърка! Вижте „LOOTDebugLog.txt“ (през главното меню) за повече "
 "информация."
 
-#: src/gui/qt/main_window.cpp:1417
+#: src/gui/qt/main_window.cpp:1406
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
@@ -524,11 +524,11 @@ msgstr ""
 "Сортирането на приставките е неуспешно. За повече подробности, вижте раздела "
 "„Обща информация“."
 
-#: src/gui/qt/main_window.cpp:1435
+#: src/gui/qt/main_window.cpp:1424
 msgid "Sorting made no changes to the load order."
 msgstr "Сортирането не промени реда за зареждане."
 
-#: src/gui/qt/main_window.cpp:1486
+#: src/gui/qt/main_window.cpp:1475
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -543,36 +543,36 @@ msgstr ""
 "Изберете „Поправи реда за зареждане“ в падащото меню „Игра“ за да използвате "
 "текущия ред за зареждане."
 
-#: src/gui/qt/main_window.cpp:1562
+#: src/gui/qt/main_window.cpp:1551
 msgid "Updating all masterlists…"
 msgstr "Обновяване на всички основни списъци…"
 
-#: src/gui/qt/main_window.cpp:1594
+#: src/gui/qt/main_window.cpp:1583
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr "Данните на LOOT са съхранени в: {0}"
 
-#: src/gui/qt/main_window.cpp:1601
+#: src/gui/qt/main_window.cpp:1590
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr "В момента, LOOT няма данни за съхранение."
 
-#: src/gui/qt/main_window.cpp:1645
+#: src/gui/qt/main_window.cpp:1633
 msgid "The load order has been copied to the clipboard."
 msgstr "Редът за зареждане беше копиран в клипборда."
 
-#: src/gui/qt/main_window.cpp:1663
+#: src/gui/qt/main_window.cpp:1651
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "Съдържанието на LOOT беше копирано в клипборда."
 
-#: src/gui/qt/main_window.cpp:1675
+#: src/gui/qt/main_window.cpp:1663
 msgid "The load order displayed by LOOT has been set."
 msgstr "Редът за зареждане е зададен."
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1700
+#: src/gui/qt/main_window.cpp:1688
 msgid "Redate Plugins?"
 msgstr "Промени датата на приставките?"
 
-#: src/gui/qt/main_window.cpp:1702
+#: src/gui/qt/main_window.cpp:1690
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -585,11 +585,11 @@ msgstr ""
 "ли да продължите?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1714
+#: src/gui/qt/main_window.cpp:1702
 msgid "Plugins were successfully redated."
 msgstr "Датата на приставките беше променена успешно."
 
-#: src/gui/qt/main_window.cpp:1726
+#: src/gui/qt/main_window.cpp:1714
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -597,11 +597,11 @@ msgstr ""
 "Сигурни ли сте, че искате да изчистите съществуващите добавени метаданни от "
 "всички приставки?"
 
-#: src/gui/qt/main_window.cpp:1774
+#: src/gui/qt/main_window.cpp:1762
 msgid "All user-added metadata has been cleared."
 msgstr "Всички добавени метаданни бяха изчистени."
 
-#: src/gui/qt/main_window.cpp:1787
+#: src/gui/qt/main_window.cpp:1775
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
@@ -609,34 +609,34 @@ msgstr ""
 "Трябва да затворите редактора на метаданните, преди да редактирате "
 "метаданните на друга приставка."
 
-#: src/gui/qt/main_window.cpp:1851
+#: src/gui/qt/main_window.cpp:1839
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "Метаданните на „{0}“ бяха копирани в клипборда."
 
-#: src/gui/qt/main_window.cpp:1869
+#: src/gui/qt/main_window.cpp:1857
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "Името на приставката „{0}“ е копирано в клипборда."
 
-#: src/gui/qt/main_window.cpp:1888
+#: src/gui/qt/main_window.cpp:1876
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "Съдържанието на „{0}“ е копирано в клипборда."
 
-#: src/gui/qt/main_window.cpp:1903
+#: src/gui/qt/main_window.cpp:1891
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "Сигурни ли сте, че искате да изчистите съществуващите добавени метаданни от "
 "„{0}“?"
 
-#: src/gui/qt/main_window.cpp:1943
+#: src/gui/qt/main_window.cpp:1931
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "Добавените метаданни на „{0}“ бяха изчистени."
 
-#: src/gui/qt/main_window.cpp:2026
+#: src/gui/qt/main_window.cpp:2014
 msgid "Version {0} (build {1})"
 msgstr "Версия {0} (Компилация {1})"
 
-#: src/gui/qt/main_window.cpp:2032
+#: src/gui/qt/main_window.cpp:2020
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
@@ -646,34 +646,34 @@ msgstr ""
 "„Nehrim“, „Skyrim“, „Enderal“, „Skyrim SE“, „Enderal SE“, „Skyrim VR“, "
 "„Fallout 3“, „Fallout: NV“, „Fallout 4“ и „Fallout 4 VR“."
 
-#: src/gui/qt/main_window.cpp:2050
+#: src/gui/qt/main_window.cpp:2038
 msgid "About LOOT"
 msgstr "За LOOT"
 
-#: src/gui/qt/main_window.cpp:2374
+#: src/gui/qt/main_window.cpp:2364
 msgid "Identifying overlapping plugins…"
 msgstr "Откриване на застъпените приставки…"
 
-#: src/gui/qt/main_window.cpp:2522
+#: src/gui/qt/main_window.cpp:2512
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 "Автоматичното сортиране е прекратено, поради поне едно съобщение за грешка."
 
-#: src/gui/qt/main_window.cpp:2581
+#: src/gui/qt/main_window.cpp:2571
 msgid "No masterlist update was necessary."
 msgstr "Не беше необходимо обновяване на основния списък."
 
-#: src/gui/qt/main_window.cpp:2601
+#: src/gui/qt/main_window.cpp:2591
 msgid "Masterlist updated to revision {0}."
 msgstr "Основният списък е обновен до ревизия {0}."
 
-#: src/gui/qt/main_window.cpp:2665
+#: src/gui/qt/main_window.cpp:2655
 msgid "No masterlist updates were necessary."
 msgstr "Не беше необходимо обновяване на основните списъци."
 
-#: src/gui/qt/main_window.cpp:2688
+#: src/gui/qt/main_window.cpp:2678
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -681,11 +681,11 @@ msgstr ""
 "Основните списъци на следните игри са обновени:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:2750
+#: src/gui/qt/main_window.cpp:2740
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "Налична е [нова версия]({0}) на LOOT."
 
-#: src/gui/qt/main_window.cpp:2767
+#: src/gui/qt/main_window.cpp:2757
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -1090,19 +1090,19 @@ msgstr "Това не е валидно име на папка."
 msgid "A game with this folder already exists."
 msgstr "Игра с тази папка вече съществува."
 
-#: src/gui/qt/settings/settings_dialog.cpp:110
+#: src/gui/qt/settings/settings_dialog.cpp:109
 msgid "Settings"
 msgstr "Настройки"
 
-#: src/gui/qt/settings/settings_dialog.cpp:112
+#: src/gui/qt/settings/settings_dialog.cpp:111
 msgid "General"
 msgstr "Общи"
 
-#: src/gui/qt/settings/settings_dialog.cpp:114
+#: src/gui/qt/settings/settings_dialog.cpp:113
 msgid "Add new game…"
 msgstr "Добави нова игра…"
 
-#: src/gui/query/types/apply_sort_query.h:76
+#: src/gui/query/types/apply_sort_query.h:75
 msgid ""
 "Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -1121,7 +1121,28 @@ msgstr "Анализиране, обединяване и оценяване н�
 msgid "Sorting load order…"
 msgstr "Сортиране на реда за зареждане…"
 
-#: src/gui/state/loot_settings.cpp:673
+#: src/gui/state/loot_state.cpp:172
+msgid "Error: Game-specific settings could not be initialised. {0}"
+msgstr "Грешка: Настройките на играта не могат да бъдат инициализирани. {0}"
+
+#: src/gui/state/loot_state.cpp:211
+msgid "Error: Could not create LOOT data directory. {0}"
+msgstr "Грешка: Папката с данните на LOOT не може да бъде създадена. {0}"
+
+#. translators: This error is displayed when LOOT is unable to
+#. load its own settings file. The placeholder is for additional
+#. detail about what went wrong.
+#: src/gui/state/loot_state.cpp:225 src/gui/state/loot_state.cpp:295
+msgid "Error: Settings parsing failed. {0}"
+msgstr "Грешка: Разборът на настройките е неуспешен. {0}"
+
+#. translators: --auto-sort and --game are command-line arguments and
+#. shouldn't be translated.
+#: src/gui/state/loot_state.cpp:234
+msgid "Error: --auto-sort was passed but no --game parameter was provided."
+msgstr "Грешка: Параметърът --auto-sort е отчетен, но --game не е намерен."
+
+#: src/gui/state/loot_state.cpp:276
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
@@ -1131,7 +1152,7 @@ msgstr ""
 "могат да бъдат преместени! Вижте „LOOTDebugLog.txt“ (през главното меню) за "
 "повече информация."
 
-#: src/gui/state/loot_settings.cpp:696
+#: src/gui/state/loot_state.cpp:286
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
@@ -1141,42 +1162,21 @@ msgstr ""
 "бъдат преместени! Вижте „LOOTDebugLog.txt“ (през главното меню) за повече "
 "информация."
 
-#: src/gui/state/loot_state.cpp:174
-msgid "Error: Game-specific settings could not be initialised. {0}"
-msgstr "Грешка: Настройките на играта не могат да бъдат инициализирани. {0}"
-
-#: src/gui/state/loot_state.cpp:197
-msgid "Error: Could not create LOOT data directory. {0}"
-msgstr "Грешка: Папката с данните на LOOT не може да бъде създадена. {0}"
-
-#. translators: This error is displayed when LOOT is unable to
-#. load its own settings file. The placeholder is for additional
-#. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:211 src/gui/state/loot_state.cpp:265
-msgid "Error: Settings parsing failed. {0}"
-msgstr "Грешка: Разборът на настройките е неуспешен. {0}"
-
-#. translators: --auto-sort and --game are command-line arguments and
-#. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:220
-msgid "Error: --auto-sort was passed but no --game parameter was provided."
-msgstr "Грешка: Параметърът --auto-sort е отчетен, но --game не е намерен."
-
-#: src/gui/state/loot_state.cpp:306
+#: src/gui/state/loot_state.cpp:336
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr "Грешка: Папката на каталога на LOOT не може да бъде създадена. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:323
+#: src/gui/state/loot_state.cpp:353
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr "Грешка: Параметърът --game-path е отчетен, но --game не е намерен."
 
-#: src/gui/state/loot_state.cpp:336
+#: src/gui/state/loot_state.cpp:366
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr "Грешка: Местоположението на играта „{0}“ не е разпознато."
 
-#: src/gui/state/loot_state.cpp:370
+#: src/gui/state/loot_state.cpp:400
 msgid ""
 "No supported games were detected. Try running the launcher(s) for the "
 "supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
@@ -1186,7 +1186,7 @@ msgstr ""
 "инсталирали (натиснете „Пускане“ в „Steam“ или „GOG Galaxy“), след това "
 "рестартирайте LOOT."
 
-#: src/gui/state/loot_state.cpp:389
+#: src/gui/state/loot_state.cpp:419
 msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "
 "installed, try running its launcher then restarting LOOT."
@@ -1194,147 +1194,19 @@ msgstr ""
 "Играта по подразбиране с папка „{0}“ не е намерена. Опитайте да стартирате "
 "играта и след това рестартирайте LOOT."
 
-#: src/gui/state/game/game.cpp:419 src/gui/state/game/game.cpp:473
-msgid "This plugin requires \"{0}\" to be installed, but it is missing."
-msgstr "Тази приставка изисква „{0}“ да бъде инсталирана, но тя липсва."
-
-#: src/gui/state/game/game.cpp:443
-msgid "This plugin requires \"{0}\" to be active, but it is inactive."
-msgstr "Тази приставка изисква „{0}“ да бъде активна, но тя е неактивна."
-
-#: src/gui/state/game/game.cpp:515
-msgid "This plugin is incompatible with \"{0}\", but both are present."
-msgstr "Тази приставка не е съвместима с „{0}“, но и двете са налични."
-
-#: src/gui/state/game/game.cpp:570
-msgid "small master"
-msgstr "малка основна"
-
-#: src/gui/state/game/game.cpp:571
-msgid "light master"
-msgstr "лека основна"
-
-#: src/gui/state/game/game.cpp:578
-msgid ""
-"This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
-"cause issues in-game, and sorting will fail while this plugin is installed."
-msgstr ""
-"Тази приставка е {0} и се нуждае от „{1}“. Това може да причини проблеми в "
-"играта и сортирането няма да е успешно, докато тя е инсталирана."
-
-#: src/gui/state/game/game.cpp:600
-msgid ""
-"This plugin contains records that have FormIDs outside the valid range for "
-"an ESL plugin. Using this plugin will cause irreversible damage to your game "
-"saves."
-msgstr ""
-"Тази приставка съдържа записи, които имат „FormID“, извън валидния диапазон "
-"на ESL приставките. Използването на тази приставка може да причини "
-"непоправими щети на Вашите записи."
-
-#: src/gui/state/game/game.cpp:618
-msgid ""
-"This plugin contains records that have FormIDs outside the valid range for a "
-"medium plugin. Using this plugin will cause irreversible damage to your game "
-"saves."
-msgstr ""
-"Тази приставка съдържа записи, които имат „FormID“, извън валидния диапазон "
-"на междинните приставки. Използването на тази приставка може да причини "
-"непоправими щети на Вашите записи."
-
-#: src/gui/state/game/game.cpp:631
-msgid "plugin"
-msgstr "приставка"
-
-#. translators: master as in a plugin that is
-#. loaded as if its master flag is set.
-#: src/gui/state/game/game.cpp:634
-msgid "master"
-msgstr "основна"
-
-#: src/gui/state/game/game.cpp:643
-msgid ""
-"\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
-"correctly installed {2} and all its requirements."
-msgstr ""
-"„{0}“ е лека {1}, но „{2}“ липсва. Моля, уверете се, че сте инсталирали "
-"правилно „{2}“ и всички нейни изисквания."
-
-#: src/gui/state/game/game.cpp:656
-msgid ""
-"\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
-"will not load it."
-msgstr ""
-"„{0}“ е .esl приставка, която не се поддържа от играта и няма да бъде "
-"заредена."
-
-#: src/gui/state/game/game.cpp:669
-msgid ""
-"\"{0}\" is flagged as a light {1}, but the game does not support such "
-"plugins, and will load it as a full {1}."
-msgstr ""
-"„{0}“ е отбелязана като лека {1}, която не се поддържа от играта и ще бъде "
-"заредена като обикновена {1}."
-
-#: src/gui/state/game/game.cpp:689
-msgid ""
-"This plugin is an update plugin but adds new records. Using this plugin may "
-"cause irreversible damage to your game saves."
-msgstr ""
-"Тази приставка ще добави нови записи. Използването на тази приставка може да "
-"причини непоправими щети на Вашите записи."
-
-#: src/gui/state/game/game.cpp:721
-msgid ""
-"This plugin is not a blueprint master and requires the blueprint master "
-"\"{0}\". This can cause issues in-game, as this plugin will always load "
-"before \"{0}\"."
-msgstr ""
-"Тази приставка не е основна чертожна и се нуждае от „{0}“. Това може да "
-"причини проблеми в играта, защото приставката винаги ще се зарежда преди "
-"„{0}“."
-
-#. translators: A header is the part of a file that stores data
-#. like file name and version.
-#: src/gui/state/game/game.cpp:748
-msgid ""
-"This plugin has a header version of {0}, which is less than the game's "
-"minimum supported header version of {1}."
-msgstr ""
-"Тази приставка има заглавка с версия {0}, която е по-ниска от минималната "
-"поддържана версия на заглавката, която е {1}."
-
-#: src/gui/state/game/game.cpp:763
-msgid "This plugin has itself as a master."
-msgstr "Тази приставка се счита за основна."
-
-#: src/gui/state/game/game.cpp:781
-msgid "This plugin belongs to the group \"{0}\", which does not exist."
-msgstr "Тази приставка принадлежи към групата „{0}“, която не съществува."
-
-#: src/gui/state/game/game.cpp:807
-msgid ""
-"This plugin has a BashTags file that will override the suggestions made by "
-"LOOT for the following Bash Tags: {0}."
-msgstr "Тази приставка има етикети на „Bash“, които ще променят: {0}."
-
-#: src/gui/state/game/game.cpp:939 src/gui/state/game/game.cpp:1048
-msgid ""
-"Failed to load the current load order, information displayed may be "
-"incorrect."
-msgstr ""
-"Зареждането на текущия ред за зареждане е неуспешно, показаната информация "
-"може да е невалидна."
-
-#: src/gui/state/game/game.cpp:1087
+#: src/gui/state/game/game.cpp:210
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "Установено е циклично взаимодействие между „{0}“ и „{1}“: {2}"
 
-#: src/gui/state/game/game.cpp:1101
+#: src/gui/state/game/game.cpp:228
 msgid "The group \"{0}\" does not exist."
 msgstr "Групата „{0}“ не съществува."
 
-#: src/gui/state/game/game.cpp:1116
+#: src/gui/state/game/game.cpp:337
+msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
+msgstr "LOOT установи, че „{0}“ е невалиден и ще бъде игнориран."
+
+#: src/gui/state/game/game.cpp:846
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1342,93 +1214,11 @@ msgstr ""
 "Сортирането е неуспешно, защото има поне една инсталирана приставка, която е "
 "зависима от друга неинсталирана приставка."
 
-#: src/gui/state/game/game.cpp:1157
+#: src/gui/state/game/game.cpp:877
 msgid "You have not sorted your load order this session."
 msgstr "Редът за зареждане не е сортиран по време на тази сесия."
 
-#: src/gui/state/game/game.cpp:1212
-msgid "You have {0} active full plugins but the game only supports up to {1}."
-msgstr "Активни са {0} обикновени приставки, но играта поддържа само до {1}."
-
-#: src/gui/state/game/game.cpp:1220
-msgid "You have {0} active plugins but the game only supports up to {1}."
-msgstr "Активни са {0} приставки, но играта поддържа само до {1}."
-
-#: src/gui/state/game/game.cpp:1242
-msgid ""
-"Do not launch Morrowind without the use of MWSE or it will cause severe "
-"damage to your game."
-msgstr ""
-"Не стартирайте „Morrowind“ без MWSE, защото това може да причини сериозни "
-"щети на Вашата игра."
-
-#: src/gui/state/game/game.cpp:1249
-msgid "small plugin"
-msgid_plural "small plugins"
-msgstr[0] "малка приставка"
-msgstr[1] "малки приставки"
-
-#: src/gui/state/game/game.cpp:1252
-msgid "light plugin"
-msgid_plural "light plugins"
-msgstr[0] "лека приставка"
-msgstr[1] "леки приставки"
-
-#: src/gui/state/game/game.cpp:1265
-msgid "You have {0} active {1} but the game only supports up to {2}."
-msgstr "Активни са {0} {1}, но играта поддържа само до {2}."
-
-#: src/gui/state/game/game.cpp:1285
-msgid ""
-"You have a full plugin and {0} {1} sharing the FE load order index. "
-"Deactivate a full plugin or your {1} to avoid potential issues."
-msgstr ""
-"Имате обикновена приставка и {0} {1}, споделящи индекса FE на реда за "
-"зареждане. Изключете обикновената приставка или всички {1} за да избегнете "
-"потенциални проблеми."
-
-#: src/gui/state/game/game.cpp:1303
-msgid ""
-"You have {0} active medium plugins but the game only supports up to {1}."
-msgstr "Активни са {0} междинни приставки, но играта поддържа само до {1}."
-
-#: src/gui/state/game/game.cpp:1322
-msgid ""
-"You have a full plugin and at least one medium plugin sharing the FD load "
-"order index. Deactivate a full plugin or all your medium plugins to avoid "
-"potential issues."
-msgstr ""
-"Имате обикновена приставка и поне една междинна, споделящи индекса FD на "
-"реда за зареждане. Изключете обикновената приставка или всички междинни за "
-"да избегнете потенциални проблеми."
-
-#. translators: The placeholder is for the current game's name.
-#.
-#: src/gui/state/game/game.cpp:1335
-msgid ""
-"{0} is installed in a case-sensitive location. This may cause issues as the "
-"game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
-"which is the default on Windows."
-msgstr ""
-"„{0}“ е инсталирана в местоположение, което различава главните и малките "
-"букви. Това може да създаде потенциални проблеми, защото играта, модовете и "
-"LOOT не различават главните и малките букви, както е по подразбиране в "
-"„Windows“."
-
-#. translators: The placeholder is for the current game's
-#. name.
-#: src/gui/state/game/game.cpp:1366
-msgid ""
-"{0}'s local application data is stored in a case-sensitive location. This "
-"may cause issues as the game, mods and LOOT may assume that filesystem paths "
-"are not case-sensitive, which is the default on Windows."
-msgstr ""
-"Местоположението на програмните данни на „{0}“ различава главните и малките "
-"букви. Това може да създаде потенциални проблеми, защото играта, модовете и "
-"LOOT не различават главните и малките букви, както е по подразбиране в "
-"„Windows“."
-
-#: src/gui/state/game/game.cpp:1435
+#: src/gui/state/game/game.cpp:955
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1459,6 +1249,224 @@ msgstr ""
 "\n"
 "Ако имате въпроси, посетете форума на LOOT от [тук]({1})."
 
-#: src/gui/state/game/helpers.cpp:230
-msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
-msgstr "LOOT установи, че „{0}“ е невалиден и ще бъде игнориран."
+#: src/gui/state/game/game.cpp:1130
+msgid ""
+"Failed to load the current load order, information displayed may be "
+"incorrect."
+msgstr ""
+"Зареждането на текущия ред за зареждане е неуспешно, показаната информация "
+"може да е невалидна."
+
+#: src/gui/state/game/validation.cpp:82 src/gui/state/game/validation.cpp:113
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr "Тази приставка изисква „{0}“ да бъде инсталирана, но тя липсва."
+
+#: src/gui/state/game/validation.cpp:100
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr "Тази приставка изисква „{0}“ да бъде активна, но тя е неактивна."
+
+#: src/gui/state/game/validation.cpp:119
+msgid "This plugin requires {0} to be installed, but it is missing."
+msgstr "Тази приставка изисква {0} да бъде инсталирана, но тя липсва."
+
+#: src/gui/state/game/validation.cpp:140
+msgid "This plugin is incompatible with \"{0}\", but both are present."
+msgstr "Тази приставка не е съвместима с „{0}“, но и двете са налични."
+
+#: src/gui/state/game/validation.cpp:146
+msgid "This plugin is incompatible with {0}, but both are present."
+msgstr "Тази приставка не е съвместима с {0}, но и двете са налични."
+
+#: src/gui/state/game/validation.cpp:175
+msgid "small master"
+msgstr "малка основна"
+
+#: src/gui/state/game/validation.cpp:176
+msgid "light master"
+msgstr "лека основна"
+
+#: src/gui/state/game/validation.cpp:183
+msgid ""
+"This plugin is a {0} and requires the non-master plugin \"{1}\". This can "
+"cause issues in-game, and sorting will fail while this plugin is installed."
+msgstr ""
+"Тази приставка е {0} и се нуждае от „{1}“. Това може да причини проблеми в "
+"играта и сортирането няма да е успешно, докато тя е инсталирана."
+
+#: src/gui/state/game/validation.cpp:205
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for "
+"an ESL plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
+msgstr ""
+"Тази приставка съдържа записи, които имат „FormID“, извън валидния диапазон "
+"на ESL приставките. Използването на тази приставка може да причини "
+"непоправими щети на Вашите записи."
+
+#: src/gui/state/game/validation.cpp:224
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for a "
+"medium plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
+msgstr ""
+"Тази приставка съдържа записи, които имат „FormID“, извън валидния диапазон "
+"на междинните приставки. Използването на тази приставка може да причини "
+"непоправими щети на Вашите записи."
+
+#: src/gui/state/game/validation.cpp:242
+msgid ""
+"This plugin is an update plugin but adds new records. Using this plugin may "
+"cause irreversible damage to your game saves."
+msgstr ""
+"Тази приставка ще добави нови записи. Използването на тази приставка може да "
+"причини непоправими щети на Вашите записи."
+
+#: src/gui/state/game/validation.cpp:258
+msgid "plugin"
+msgstr "приставка"
+
+#. translators: master as in a plugin that is
+#. loaded as if its master flag is set.
+#: src/gui/state/game/validation.cpp:261
+msgid "master"
+msgstr "основна"
+
+#: src/gui/state/game/validation.cpp:271
+msgid ""
+"\"{0}\" is a light {1}, but {2} seems to be missing. Please ensure you have "
+"correctly installed {2} and all its requirements."
+msgstr ""
+"„{0}“ е лека {1}, но „{2}“ липсва. Моля, уверете се, че сте инсталирали "
+"правилно „{2}“ и всички нейни изисквания."
+
+#: src/gui/state/game/validation.cpp:286
+msgid ""
+"\"{0}\" is a .esl plugin, but the game does not support such plugins, and "
+"will not load it."
+msgstr ""
+"„{0}“ е .esl приставка, която не се поддържа от играта и няма да бъде "
+"заредена."
+
+#: src/gui/state/game/validation.cpp:300
+msgid ""
+"\"{0}\" is flagged as a light {1}, but the game does not support such "
+"plugins, and will load it as a full {1}."
+msgstr ""
+"„{0}“ е отбелязана като лека {1}, която не се поддържа от играта и ще бъде "
+"заредена като обикновена {1}."
+
+#: src/gui/state/game/validation.cpp:322
+msgid ""
+"This plugin is not a blueprint master and requires the blueprint master "
+"\"{0}\". This can cause issues in-game, as this plugin will always load "
+"before \"{0}\"."
+msgstr ""
+"Тази приставка не е основна чертожна и се нуждае от „{0}“. Това може да "
+"причини проблеми в играта, защото приставката винаги ще се зарежда преди "
+"„{0}“."
+
+#. translators: A header is the part of a file that stores data
+#. like file name and version.
+#: src/gui/state/game/validation.cpp:349
+msgid ""
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
+msgstr ""
+"Тази приставка има заглавка с версия {0}, която е по-ниска от минималната "
+"поддържана версия на заглавката, която е {1}."
+
+#: src/gui/state/game/validation.cpp:365
+msgid "This plugin has itself as a master."
+msgstr "Тази приставка се счита за основна."
+
+#: src/gui/state/game/validation.cpp:372
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
+msgstr "Тази приставка принадлежи към групата „{0}“, която не съществува."
+
+#: src/gui/state/game/validation.cpp:397
+msgid ""
+"This plugin has a BashTags file that will override the suggestions made by "
+"LOOT for the following Bash Tags: {0}."
+msgstr "Тази приставка има етикети на „Bash“, които ще променят: {0}."
+
+#: src/gui/state/game/validation.cpp:556
+msgid "You have {0} active full plugins but the game only supports up to {1}."
+msgstr "Активни са {0} обикновени приставки, но играта поддържа само до {1}."
+
+#: src/gui/state/game/validation.cpp:566
+msgid "You have {0} active plugins but the game only supports up to {1}."
+msgstr "Активни са {0} приставки, но играта поддържа само до {1}."
+
+#: src/gui/state/game/validation.cpp:589
+msgid ""
+"Do not launch Morrowind without the use of MWSE or it will cause severe "
+"damage to your game."
+msgstr ""
+"Не стартирайте „Morrowind“ без MWSE, защото това може да причини сериозни "
+"щети на Вашата игра."
+
+#: src/gui/state/game/validation.cpp:607
+msgid "You have {0} active {1} but the game only supports up to {2}."
+msgstr "Активни са {0} {1}, но играта поддържа само до {2}."
+
+#: src/gui/state/game/validation.cpp:629
+msgid ""
+"You have a full plugin and {0} {1} sharing the FE load order index. "
+"Deactivate a full plugin or your {1} to avoid potential issues."
+msgstr ""
+"Имате обикновена приставка и {0} {1}, споделящи индекса FE на реда за "
+"зареждане. Изключете обикновената приставка или всички {1} за да избегнете "
+"потенциални проблеми."
+
+#: src/gui/state/game/validation.cpp:651
+msgid ""
+"You have {0} active medium plugins but the game only supports up to {1}."
+msgstr "Активни са {0} междинни приставки, но играта поддържа само до {1}."
+
+#: src/gui/state/game/validation.cpp:671
+msgid ""
+"You have a full plugin and at least one medium plugin sharing the FD load "
+"order index. Deactivate a full plugin or all your medium plugins to avoid "
+"potential issues."
+msgstr ""
+"Имате обикновена приставка и поне една междинна, споделящи индекса FD на "
+"реда за зареждане. Изключете обикновената приставка или всички междинни за "
+"да избегнете потенциални проблеми."
+
+#. translators: The placeholder is for the current game's name.
+#.
+#: src/gui/state/game/validation.cpp:684
+msgid ""
+"{0} is installed in a case-sensitive location. This may cause issues as the "
+"game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
+"which is the default on Windows."
+msgstr ""
+"„{0}“ е инсталирана в местоположение, което различава главните и малките "
+"букви. Това може да създаде потенциални проблеми, защото играта, модовете и "
+"LOOT не различават главните и малките букви, както е по подразбиране в "
+"„Windows“."
+
+#. translators: The placeholder is for the current game's
+#. name.
+#: src/gui/state/game/validation.cpp:701
+msgid ""
+"{0}'s local application data is stored in a case-sensitive location. This "
+"may cause issues as the game, mods and LOOT may assume that filesystem paths "
+"are not case-sensitive, which is the default on Windows."
+msgstr ""
+"Местоположението на програмните данни на „{0}“ различава главните и малките "
+"букви. Това може да създаде потенциални проблеми, защото играта, модовете и "
+"LOOT не различават главните и малките букви, както е по подразбиране в "
+"„Windows“."
+
+#: src/gui/state/game/validation.cpp:838
+msgid "small plugin"
+msgid_plural "small plugins"
+msgstr[0] "малка приставка"
+msgstr[1] "малки приставки"
+
+#: src/gui/state/game/validation.cpp:841
+msgid "light plugin"
+msgid_plural "light plugins"
+msgstr[0] "лека приставка"
+msgstr[1] "леки приставки"
