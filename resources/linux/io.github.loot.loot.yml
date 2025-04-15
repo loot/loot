@@ -9,7 +9,6 @@ finish-args:
   - --share=network
   - --socket=fallback-x11
   - --socket=wayland
-  - --socket=pulseaudio
   # Steam package data.
   - --filesystem=xdg-data/Steam:ro
   # Steam package default library paths.
