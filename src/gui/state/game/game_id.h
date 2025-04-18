@@ -28,6 +28,7 @@
 
 #include <string>
 #include <cstdint>
+#include <filesystem>
 
 namespace loot {
 enum struct GameId : uint8_t {
@@ -50,6 +51,15 @@ enum struct GameId : uint8_t {
 std::string ToString(const GameId gameId);
 
 bool ShouldAllowRedating(const GameId gameId);
+
+std::string GetGameName(const GameId gameId);
+
+std::string GetMasterFilename(const GameId gameId);
+
+std::string GetDefaultLootFolderName(const GameId gameId);
+
+std::filesystem::path GetDataPath(const GameId gameId,
+                                  const std::filesystem::path& gamePath);
 }
 
 #endif

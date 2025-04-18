@@ -170,41 +170,6 @@ void IncrementGameSourceCount(
 }
 
 namespace loot {
-std::string GetDefaultLootFolderName(const GameId gameId) {
-  switch (gameId) {
-    case GameId::tes3:
-      return "Morrowind";
-    case GameId::tes4:
-      return "Oblivion";
-    case GameId::nehrim:
-      return "Nehrim";
-    case GameId::tes5:
-      return "Skyrim";
-    case GameId::enderal:
-      return "Enderal";
-    case GameId::tes5se:
-      return "Skyrim Special Edition";
-    case GameId::enderalse:
-      return "Enderal Special Edition";
-    case GameId::tes5vr:
-      return "Skyrim VR";
-    case GameId::fo3:
-      return "Fallout3";
-    case GameId::fonv:
-      return "FalloutNV";
-    case GameId::fo4:
-      return "Fallout4";
-    case GameId::fo4vr:
-      return "Fallout4VR";
-    case GameId::starfield:
-      return "Starfield";
-    case GameId::openmw:
-      return "OpenMW";
-    default:
-      throw std::logic_error("Unrecognised game ID");
-  }
-}
-
 std::string GetSourceDescription(const InstallSource source) {
   switch (source) {
     case InstallSource::steam:

@@ -29,7 +29,6 @@
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
-#include "gui/state/game/detection/common.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 

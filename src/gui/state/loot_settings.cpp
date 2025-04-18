@@ -32,7 +32,6 @@
 #include <fstream>
 #include <regex>
 
-#include "gui/state/game/detection/common.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 #include "gui/version.h"
