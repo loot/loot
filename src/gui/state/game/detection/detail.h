@@ -80,6 +80,19 @@ void AppendNewGamesSettings(
     const std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>&
         gameSourceCounts,
     const std::vector<GameInstall>& newGameInstalls);
+
+// Filter the given game installs so that they do not contain any installs
+// that already have settings objects, then create new settings objects for
+// the remaining installs, with unique game names and folder names. Also update
+// paths in any matching existing settings objects. Returns
+// the settings objects (that may have been updated), plus the new settings
+// objects.
+void UpdateInstalledGamesSettings(
+    std::vector<GameSettings>& gamesSettings,
+    const RegistryInterface& registry,
+    const std::vector<std::filesystem::path>& heroicConfigPaths,
+    const std::vector<std::filesystem::path>& xboxGamingRootPaths,
+    const std::vector<std::string>& preferredUILanguages);
 }
 
 #endif

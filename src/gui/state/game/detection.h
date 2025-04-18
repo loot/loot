@@ -30,7 +30,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include "gui/state/game/detection/registry.h"
 #include "gui/state/game/game_settings.h"
 
 namespace loot {
@@ -44,13 +43,6 @@ public:
 };
 
 bool IsInstalled(const GameSettings& settings);
-
-void UpdateInstalledGamesSettings(
-    std::vector<GameSettings>& gamesSettings,
-    const RegistryInterface& registry,
-    const std::vector<std::filesystem::path>& heroicConfigPaths,
-    const std::vector<std::filesystem::path>& xboxGamingRootPaths,
-    const std::vector<std::string>& preferredUILanguages);
 
 // Detect installed games and add GameSettings objects for those that
 // aren't already represented by the objects that already exist. Also update

@@ -490,6 +490,47 @@ TEST(AppendNewGamesSettings,
   EXPECT_EQ("Morrowind (2)", gamesSettings[2].FolderName());
   EXPECT_EQ("TES III: Morrowind (2)", gamesSettings[2].Name());
 }
+
+class UpdateInstalledGamesSettingsTest : public CommonGameTestFixture {
+protected:
+  UpdateInstalledGamesSettingsTest() : CommonGameTestFixture(GameId::tes3) {}
+
+  void SetUp() override {
+    CommonGameTestFixture::SetUp();
+
+    initialCurrentPath = std::filesystem::current_path();
+
+    const auto lootPath = gamePath / "LOOT";
+
+    // Change the current path into a game subfolder.
+    std::filesystem::create_directory(lootPath);
+    std::filesystem::current_path(lootPath);
+  }
+
+  void TearDown() override {
+    // Restore the previous current path.
+    std::filesystem::current_path(initialCurrentPath);
+
+    CommonGameTestFixture::TearDown();
+  }
+
+private:
+  std::filesystem::path initialCurrentPath;
+};
+
+#ifdef _WIN32
+TEST_F(UpdateInstalledGamesSettingsTest,
+       shouldReturnSettingsForGameInParentOfCurrentDirectory) {
+  std::vector<GameSettings> gamesSettings;
+  UpdateInstalledGamesSettings(gamesSettings, TestRegistry(), {}, {}, {});
+
+  ASSERT_EQ(1, gamesSettings.size());
+  EXPECT_EQ(GameId::tes3, gamesSettings[0].Id());
+  EXPECT_EQ(std::filesystem::current_path().parent_path(),
+            gamesSettings[0].GamePath());
+  EXPECT_EQ("", gamesSettings[0].GameLocalPath());
+}
+#endif
 }
 
 #endif

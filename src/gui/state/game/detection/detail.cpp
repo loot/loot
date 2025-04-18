@@ -432,4 +432,24 @@ void AppendNewGamesSettings(
     folderNames.push_back(folderName);
   }
 }
+
+void UpdateInstalledGamesSettings(
+    std::vector<GameSettings>& gamesSettings,
+    const RegistryInterface& registry,
+    const std::vector<std::filesystem::path>& heroicConfigPaths,
+    const std::vector<std::filesystem::path>& xboxGamingRootPaths,
+    const std::vector<std::string>& preferredUILanguages) {
+  const auto gameInstalls = FindGameInstalls(
+      registry, heroicConfigPaths, xboxGamingRootPaths, preferredUILanguages);
+
+  const auto newGameInstalls =
+      UpdateMatchingSettings(gamesSettings, gameInstalls, ArePathsEquivalent);
+
+  const auto configuredInstalls = DetectConfiguredInstalls(gamesSettings);
+
+  const auto gameSourceCounts =
+      CountGameInstalls(configuredInstalls, newGameInstalls);
+
+  AppendNewGamesSettings(gamesSettings, gameSourceCounts, newGameInstalls);
+}
 }

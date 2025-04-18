@@ -45,32 +45,6 @@ bool IsInstalled(const GameSettings& settings) {
   return IsValidGamePath(settings.Id(), settings.Master(), settings.GamePath());
 }
 
-// Filter the given game installs so that they do not contain any installs
-// that already have settings objects, then create new settings objects for
-// the remaining installs, with unique game names and folder names. Also update
-// paths in any matching existing settings objects. Returns
-// the settings objects (that may have been updated), plus the new settings
-// objects.
-void UpdateInstalledGamesSettings(
-    std::vector<GameSettings>& gamesSettings,
-    const RegistryInterface& registry,
-    const std::vector<std::filesystem::path>& heroicConfigPaths,
-    const std::vector<std::filesystem::path>& xboxGamingRootPaths,
-    const std::vector<std::string>& preferredUILanguages) {
-  const auto gameInstalls = FindGameInstalls(
-      registry, heroicConfigPaths, xboxGamingRootPaths, preferredUILanguages);
-
-  const auto newGameInstalls =
-      UpdateMatchingSettings(gamesSettings, gameInstalls, ArePathsEquivalent);
-
-  const auto configuredInstalls = DetectConfiguredInstalls(gamesSettings);
-
-  const auto gameSourceCounts =
-      CountGameInstalls(configuredInstalls, newGameInstalls);
-
-  AppendNewGamesSettings(gamesSettings, gameSourceCounts, newGameInstalls);
-}
-
 std::vector<GameSettings> FindInstalledGames(
     const std::vector<GameSettings>& gamesSettings,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths_,
