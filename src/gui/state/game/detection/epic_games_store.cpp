@@ -135,7 +135,7 @@ std::optional<std::filesystem::path> GetEgsManifestsPath(
     const loot::RegistryInterface& registry) {
   // Try using Registry key first.
   const auto appDataPath =
-      registry.GetStringValue({"HKEY_LOCAL_MACHINE",
+      registry.GetStringValue({loot::RegistryRootKey::LOCAL_MACHINE,
                                "Software\\Epic Games\\EpicGamesLauncher",
                                "AppDataPath"});
 

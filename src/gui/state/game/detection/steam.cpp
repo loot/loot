@@ -135,7 +135,7 @@ std::vector<loot::RegistryValue> GetRegistryValues(const GameId gameId) {
   std::vector<loot::RegistryValue> registryValues;
   for (const auto& steamGameId : steamGameIds) {
     registryValues.push_back(
-        {"HKEY_LOCAL_MACHINE",
+        {loot::RegistryRootKey::LOCAL_MACHINE,
          "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
          "Steam App " +
              steamGameId,
@@ -294,8 +294,10 @@ std::vector<std::filesystem::path> GetSteamInstallPaths(
     const RegistryInterface& registry) {
   try {
 #ifdef _WIN32
-    const auto pathString = registry.GetStringValue(RegistryValue{
-        "HKEY_LOCAL_MACHINE", "Software\\Valve\\Steam", "InstallPath"});
+    const auto pathString = registry.GetStringValue(
+        RegistryValue{loot::RegistryRootKey::LOCAL_MACHINE,
+                      "Software\\Valve\\Steam",
+                      "InstallPath"});
 
     if (pathString.has_value()) {
       return {std::filesystem::u8path(pathString.value())};

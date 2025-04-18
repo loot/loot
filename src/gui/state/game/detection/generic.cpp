@@ -38,68 +38,72 @@ namespace {
 using loot::GameId;
 using loot::GameInstall;
 using loot::InstallSource;
+using loot::RegistryRootKey;
 using loot::RegistryValue;
 
 std::vector<RegistryValue> GetRegistryValues(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
-      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+      return {RegistryValue{RegistryRootKey::LOCAL_MACHINE,
                             "Software\\Bethesda Softworks\\Morrowind",
                             "Installed Path"}};
     case GameId::tes4:
-      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+      return {RegistryValue{RegistryRootKey::LOCAL_MACHINE,
                             "Software\\Bethesda Softworks\\Oblivion",
                             "Installed Path"}};
     case GameId::nehrim:
       return {RegistryValue{
-          "HKEY_LOCAL_MACHINE",
+          RegistryRootKey::LOCAL_MACHINE,
           "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim"
           " - At Fate's Edge_is1",
           "InstallLocation"}};
     case GameId::tes5:
-      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+      return {RegistryValue{RegistryRootKey::LOCAL_MACHINE,
                             "Software\\Bethesda Softworks\\Skyrim",
                             "Installed Path"}};
     case GameId::enderal:
-      return {RegistryValue{
-          "HKEY_CURRENT_USER", "SOFTWARE\\SureAI\\Enderal", "Install_Path"}};
+      return {RegistryValue{RegistryRootKey::CURRENT_USER,
+                            "SOFTWARE\\SureAI\\Enderal",
+                            "Install_Path"}};
     case GameId::tes5se:
       return {
-          RegistryValue{"HKEY_LOCAL_MACHINE",
+          RegistryValue{RegistryRootKey::LOCAL_MACHINE,
                         "Software\\Bethesda Softworks\\Skyrim Special Edition",
                         "Installed "
                         "Path"}};
     case GameId::enderalse:
-      return {RegistryValue{
-          "HKEY_CURRENT_USER", "SOFTWARE\\SureAI\\EnderalSE", "Install_Path"}};
+      return {RegistryValue{RegistryRootKey::CURRENT_USER,
+                            "SOFTWARE\\SureAI\\EnderalSE",
+                            "Install_Path"}};
     case GameId::tes5vr:
-      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+      return {RegistryValue{RegistryRootKey::LOCAL_MACHINE,
                             "Software\\Bethesda Softworks\\Skyrim VR",
                             "Installed Path"}};
     case GameId::fo3:
-      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+      return {RegistryValue{RegistryRootKey::LOCAL_MACHINE,
                             "Software\\Bethesda Softworks\\Fallout3",
                             "Installed Path"}};
     case GameId::fonv:
-      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+      return {RegistryValue{RegistryRootKey::LOCAL_MACHINE,
                             "Software\\Bethesda Softworks\\FalloutNV",
                             "Installed Path"}};
     case GameId::fo4:
-      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+      return {RegistryValue{RegistryRootKey::LOCAL_MACHINE,
                             "Software\\Bethesda Softworks\\Fallout4",
                             "Installed Path"}};
     case GameId::fo4vr:
-      return {RegistryValue{"HKEY_LOCAL_MACHINE",
+      return {RegistryValue{RegistryRootKey::LOCAL_MACHINE,
                             "Software\\Bethesda Softworks\\Fallout 4 VR",
                             "Installed Path"}};
     case GameId::starfield:
       return {};
     case GameId::openmw:
-      return {
-          RegistryValue{
-              "HKEY_LOCAL_MACHINE", "Software\\OpenMW.org\\OpenMW 0.48.0", ""},
-          RegistryValue{
-              "HKEY_LOCAL_MACHINE", "Software\\OpenMW.org\\OpenMW 0.49.0", ""}};
+      return {RegistryValue{RegistryRootKey::LOCAL_MACHINE,
+                            "Software\\OpenMW.org\\OpenMW 0.48.0",
+                            ""},
+              RegistryValue{RegistryRootKey::LOCAL_MACHINE,
+                            "Software\\OpenMW.org\\OpenMW 0.49.0",
+                            ""}};
     default:
       throw std::logic_error("Unrecognised game ID");
   }

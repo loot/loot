@@ -32,8 +32,12 @@
 #include <vector>
 
 namespace loot {
+enum struct RegistryRootKey { CURRENT_USER, LOCAL_MACHINE };
+
+std::string format_as(RegistryRootKey rootKey);
+
 struct RegistryValue {
-  std::string rootKey;
+  RegistryRootKey rootKey;
   std::string subKey;
   std::string valueName;
 };

@@ -35,25 +35,32 @@
 #endif
 
 namespace {
+using loot::RegistryRootKey;
+
 #ifdef _WIN32
-HKEY GetRegistryRootKey(const std::string& rootKey) {
-  if (rootKey == "HKEY_CLASSES_ROOT")
-    return HKEY_CLASSES_ROOT;
-  else if (rootKey == "HKEY_CURRENT_CONFIG")
-    return HKEY_CURRENT_CONFIG;
-  else if (rootKey == "HKEY_CURRENT_USER")
+HKEY GetRegistryRootKey(const RegistryRootKey rootKey) {
+  if (rootKey == RegistryRootKey::CURRENT_USER) {
     return HKEY_CURRENT_USER;
-  else if (rootKey == "HKEY_LOCAL_MACHINE")
+  } else if (rootKey == RegistryRootKey::LOCAL_MACHINE) {
     return HKEY_LOCAL_MACHINE;
-  else if (rootKey == "HKEY_USERS")
-    return HKEY_USERS;
-  else
+  } else {
     throw std::invalid_argument("Invalid registry key given.");
+  }
 }
 #endif
 }
 
 namespace loot {
+std::string format_as(RegistryRootKey rootKey) {
+  if (rootKey == RegistryRootKey::CURRENT_USER) {
+    return "HKEY_CURRENT_USER";
+  } else if (rootKey == RegistryRootKey::LOCAL_MACHINE) {
+    return "HKEY_LOCAL_MACHINE";
+  } else {
+    throw std::invalid_argument("Invalid registry key given.");
+  }
+}
+
 std::optional<std::string> Registry::GetStringValue(
     const RegistryValue& value) const {
 #ifdef _WIN32

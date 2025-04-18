@@ -29,16 +29,18 @@
 #include "gui/state/logging.h"
 
 namespace {
+using loot::RegistryRootKey;
+
 std::vector<loot::RegistryValue> GetRegistryValues(const loot::GameId gameId) {
   const auto gogGameIds = loot::gog::GetGogGameIds(gameId);
 
   std::vector<loot::RegistryValue> registryValues;
   for (const auto& gogGameId : gogGameIds) {
-    registryValues.push_back({"HKEY_LOCAL_MACHINE",
+    registryValues.push_back({RegistryRootKey::LOCAL_MACHINE,
                               "Software\\GOG.com\\Games\\" + gogGameId,
                               "path"});
     registryValues.push_back(
-        {"HKEY_LOCAL_MACHINE",
+        {RegistryRootKey::LOCAL_MACHINE,
          "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\" +
              gogGameId + "_is1",
          "InstallLocation"});
