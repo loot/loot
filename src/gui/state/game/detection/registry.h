@@ -44,18 +44,11 @@ public:
 
   virtual std::optional<std::string> GetStringValue(
       const RegistryValue& value) const = 0;
-
-  virtual std::vector<std::string> GetSubKeys(
-      const std::string& rootKey,
-      const std::string& subKey) const = 0;
 };
 
 class Registry : public RegistryInterface {
   std::optional<std::string> GetStringValue(
       const RegistryValue& value) const override;
-
-  std::vector<std::string> GetSubKeys(const std::string& rootKey,
-                                      const std::string& subKey) const override;
 };
 
 std::optional<std::filesystem::path> ReadPathFromRegistry(

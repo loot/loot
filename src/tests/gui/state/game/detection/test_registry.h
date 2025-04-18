@@ -45,17 +45,6 @@ public:
     return std::nullopt;
   }
 
-  std::vector<std::string> GetSubKeys(
-      const std::string&,
-      const std::string& subKey) const override {
-    const auto it = subKeys_.find(subKey);
-    if (it != subKeys_.end()) {
-      return it->second;
-    }
-
-    return {};
-  }
-
   void SetStringValue(const std::string& subKey, const std::string& value) {
     stringValues_[subKey] = value;
   }
