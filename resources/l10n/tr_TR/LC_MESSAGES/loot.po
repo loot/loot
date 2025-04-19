@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-09 17:27+0100\n"
+"POT-Creation-Date: 2025-04-18 22:28+0100\n"
 "PO-Revision-Date: 2024-05-29 00:59-0500\n"
 "Last-Translator: Ilker BINZET <ilker.binzet@gmail.com>\n"
 "Language-Team: Ilker BINZET - ilker.binzet@gmail.com\n"
@@ -1124,28 +1124,28 @@ msgstr "Meta verileri ayrıştırılıyor, birleştiriliyor ve değerlendiriliyo
 msgid "Sorting load order…"
 msgstr "Yükleme sırası, sıralanıyor…"
 
-#: src/gui/state/loot_state.cpp:172
+#: src/gui/state/loot_state.cpp:170
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr "Hata: Oyuna özgü ayarlar başlatılamadı. {0}"
 
-#: src/gui/state/loot_state.cpp:211
+#: src/gui/state/loot_state.cpp:209
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr "Hata: LOOT veri dizini oluşturulamadı. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:225 src/gui/state/loot_state.cpp:295
+#: src/gui/state/loot_state.cpp:223 src/gui/state/loot_state.cpp:293
 msgid "Error: Settings parsing failed. {0}"
 msgstr "Hata: Ayarlar ayrıştırılamadı. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:234
+#: src/gui/state/loot_state.cpp:232
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr "Hata: --auto-sort iletildi ancak --game parametresi sağlanamadı."
 
-#: src/gui/state/loot_state.cpp:276
+#: src/gui/state/loot_state.cpp:274
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
@@ -1155,7 +1155,7 @@ msgstr ""
 "bilgi için LOOTDebugLog.txt dosyanızı kontrol edebilirsiniz (Dosya "
 "menüsünden ulaşabilirsiniz)."
 
-#: src/gui/state/loot_state.cpp:286
+#: src/gui/state/loot_state.cpp:284
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
@@ -1165,21 +1165,21 @@ msgstr ""
 "fazla bilgi için LOOTDebugLog.txt dosyanızı kontrol edebilirsiniz (Dosya "
 "menüsünden ulaşabilirsiniz)."
 
-#: src/gui/state/loot_state.cpp:336
+#: src/gui/state/loot_state.cpp:334
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr "Hata: LOOT başlangıç dizini oluşturulamadı. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:353
+#: src/gui/state/loot_state.cpp:351
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr "Hata: --game-path geçildi ancak --game parametresi sağlanamadı."
 
-#: src/gui/state/loot_state.cpp:366
+#: src/gui/state/loot_state.cpp:364
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr "Hata: oyun yolu geçersiz kılınamadı, {0} oyunu tanınamadı."
 
-#: src/gui/state/loot_state.cpp:400
+#: src/gui/state/loot_state.cpp:398
 msgid ""
 "No supported games were detected. Try running the launcher(s) for the "
 "supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
@@ -1189,7 +1189,7 @@ msgstr ""
 "başlatıcı(lar)ını çalıştırmayı deneyin (örneğin Steam veya GOG Galaxy'de "
 "\"Play \"e basın), ardından LOOT'u yeniden başlatın."
 
-#: src/gui/state/loot_state.cpp:419
+#: src/gui/state/loot_state.cpp:417
 msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "
 "installed, try running its launcher then restarting LOOT."
@@ -1197,31 +1197,31 @@ msgstr ""
 "Klasör adı \"{0}\" olan başlangıç oyunu ayarlanamadı. Eğer yüklüyse, "
 "başlatıcısını çalıştırmayı ve ardından LOOT'u yeniden başlatmayı deneyin."
 
-#: src/gui/state/game/game.cpp:210
+#: src/gui/state/game/game.cpp:207
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "\"{0}\" ve \"{1}\" arasında döngüsel etkileşim tespit edildi: {2}"
 
-#: src/gui/state/game/game.cpp:228
+#: src/gui/state/game/game.cpp:225
 msgid "The group \"{0}\" does not exist."
 msgstr "\"{0}\" grubu mevcut değil."
 
-#: src/gui/state/game/game.cpp:337
+#: src/gui/state/game/game.cpp:334
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""
 "LOOT \"{0}\" ifadesinin geçersiz olduğunu tespit etti ve şimdi bunu yok "
 "sayıyor."
 
-#: src/gui/state/game/game.cpp:846
+#: src/gui/state/game/game.cpp:843
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:877
+#: src/gui/state/game/game.cpp:874
 msgid "You have not sorted your load order this session."
 msgstr "Bu oturumda yükleme sıranızı belirlemediniz."
 
-#: src/gui/state/game/game.cpp:955
+#: src/gui/state/game/game.cpp:952
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1254,7 +1254,7 @@ msgstr ""
 "Ayrıca [LOOT'un web sitesinde]({1}) bağlantısı bulunan LOOT'un forum "
 "başlığından da destek alabilirsiniz."
 
-#: src/gui/state/game/game.cpp:1130
+#: src/gui/state/game/game.cpp:1127
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

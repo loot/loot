@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-09 17:27+0100\n"
+"POT-Creation-Date: 2025-04-18 22:28+0100\n"
 "PO-Revision-Date: 2025-01-19 13:00+0000\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
@@ -1117,28 +1117,28 @@ msgstr "மெட்டாடேட்டாவை பாகுபடுத்�
 msgid "Sorting load order…"
 msgstr "சுமை வரிசையை வரிசைப்படுத்துதல்…"
 
-#: src/gui/state/loot_state.cpp:172
+#: src/gui/state/loot_state.cpp:170
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr "பிழை: விளையாட்டு-குறிப்பிட்ட அமைப்புகளைத் தொடங்க முடியவில்லை. {0}"
 
-#: src/gui/state/loot_state.cpp:211
+#: src/gui/state/loot_state.cpp:209
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr "பிழை: கொள்ளை தரவு கோப்பகத்தை உருவாக்க முடியவில்லை. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:225 src/gui/state/loot_state.cpp:295
+#: src/gui/state/loot_state.cpp:223 src/gui/state/loot_state.cpp:293
 msgid "Error: Settings parsing failed. {0}"
 msgstr "பிழை: பாகுபடுத்தும் அமைப்புகள் தோல்வியடைந்தன. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:234
+#: src/gui/state/loot_state.cpp:232
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr "பிழை:-அட்-சார்ட் அனுப்பப்பட்டது, ஆனால் இல்லை-விளையாட்டு அளவுரு வழங்கப்பட்டது."
 
-#: src/gui/state/loot_state.cpp:276
+#: src/gui/state/loot_state.cpp:274
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
@@ -1148,7 +1148,7 @@ msgstr ""
 "முடியவில்லை! மேலும் தகவலுக்கு உங்கள் lootdebuglog.txt (கோப்பு பட்டியல் மூலம் அதைப் "
 "பெறலாம்) சரிபார்க்கலாம்."
 
-#: src/gui/state/loot_state.cpp:286
+#: src/gui/state/loot_state.cpp:284
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
@@ -1157,22 +1157,22 @@ msgstr ""
 "உங்கள் மாச்டர்லிச்ட் களஞ்சிய முகவரி மற்றும் கிளை அமைப்புகளை இடம்பெயர முடியவில்லை! மேலும் "
 "தகவலுக்கு உங்கள் lootdebuglog.txt (கோப்பு பட்டியல் மூலம் அதைப் பெறலாம்) சரிபார்க்கலாம்."
 
-#: src/gui/state/loot_state.cpp:336
+#: src/gui/state/loot_state.cpp:334
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr "பிழை: கொள்ளை முன்னோடி கோப்பகத்தை உருவாக்க முடியவில்லை. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:353
+#: src/gui/state/loot_state.cpp:351
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 "பிழை:-விளையாட்டு-பாதை அனுப்பப்பட்டது, ஆனால் இல்லை-விளையாட்டு அளவுரு வழங்கப்பட்டது."
 
-#: src/gui/state/loot_state.cpp:366
+#: src/gui/state/loot_state.cpp:364
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr "பிழை: விளையாட்டு பாதையை மீறுவதில் தோல்வி, விளையாட்டு {0} அங்கீகரிக்கப்படவில்லை."
 
-#: src/gui/state/loot_state.cpp:400
+#: src/gui/state/loot_state.cpp:398
 msgid ""
 "No supported games were detected. Try running the launcher(s) for the "
 "supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
@@ -1182,7 +1182,7 @@ msgstr ""
 "(கள்) (எ.கா. நீராவி அல்லது கோக் கேலக்சியில் \"பிளே\" ஐ அழுத்தவும்), பின்னர் கொள்ளையை "
 "மறுதொடக்கம் செய்ய முயற்சிக்கவும்."
 
-#: src/gui/state/loot_state.cpp:419
+#: src/gui/state/loot_state.cpp:417
 msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "
 "installed, try running its launcher then restarting LOOT."
@@ -1190,19 +1190,19 @@ msgstr ""
 "கோப்புறை பெயர் \"{0}\" கொண்ட ஆரம்ப விளையாட்டை அமைக்க முடியவில்லை. இது நிறுவப்பட்டால், "
 "அதன் துவக்கத்தை இயக்க முயற்சிக்கவும், பின்னர் கொள்ளையை மறுதொடக்கம் செய்யவும்."
 
-#: src/gui/state/game/game.cpp:210
+#: src/gui/state/game/game.cpp:207
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "\"{0}\" மற்றும் \"{1}\" க்கு இடையில் கண்டறியப்பட்ட சுழற்சி தொடர்பு: {2}"
 
-#: src/gui/state/game/game.cpp:228
+#: src/gui/state/game/game.cpp:225
 msgid "The group \"{0}\" does not exist."
 msgstr "\"{0}\" குழு இல்லை."
 
-#: src/gui/state/game/game.cpp:337
+#: src/gui/state/game/game.cpp:334
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "\"{0}\" தவறானது, இப்போது அதைப் புறக்கணிக்கிறது என்று கொள்ளை கண்டறிந்துள்ளது."
 
-#: src/gui/state/game/game.cpp:846
+#: src/gui/state/game/game.cpp:843
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1210,11 +1210,11 @@ msgstr ""
 "வரிசையாக்கம் தோல்வியடைந்தது, ஏனெனில் நிறுவப்படாத ஒரு சொருகியையாவது சார்ந்துள்ளது "
 "குறைந்தது ஒரு நிறுவப்பட்ட சொருகி உள்ளது."
 
-#: src/gui/state/game/game.cpp:877
+#: src/gui/state/game/game.cpp:874
 msgid "You have not sorted your load order this session."
 msgstr "இந்த அமர்வில் உங்கள் சுமை வரிசையை நீங்கள் வரிசைப்படுத்தவில்லை."
 
-#: src/gui/state/game/game.cpp:955
+#: src/gui/state/game/game.cpp:952
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1246,7 +1246,7 @@ msgstr ""
 " [கொள்ளையின் வலைத்தளத்தின்]({1}) உடன் இணைக்கப்பட்டுள்ள கொள்ளையின் மன்ற நூலிலும் நீங்கள் "
 "ஆதரவைப் பெறலாம்."
 
-#: src/gui/state/game/game.cpp:1130
+#: src/gui/state/game/game.cpp:1127
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

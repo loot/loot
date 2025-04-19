@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-09 17:27+0100\n"
+"POT-Creation-Date: 2025-04-18 22:28+0100\n"
 "PO-Revision-Date: 2024-05-22 20:02+0100\n"
 "Last-Translator: SteamB23 <steamb23@gmail.com>\n"
 "Language-Team: SteamB23 <steamb23@gmail.com>\n"
@@ -1096,92 +1096,92 @@ msgstr "플러그인 메타데이터를 파싱, 병합 및 평가 중…"
 msgid "Sorting load order…"
 msgstr "로드 순서 정렬 중…"
 
-#: src/gui/state/loot_state.cpp:172
+#: src/gui/state/loot_state.cpp:170
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr "오류: 게임별 설정을 초기화 할 수 없습니다. {0}"
 
-#: src/gui/state/loot_state.cpp:211
+#: src/gui/state/loot_state.cpp:209
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr ""
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:225 src/gui/state/loot_state.cpp:295
+#: src/gui/state/loot_state.cpp:223 src/gui/state/loot_state.cpp:293
 msgid "Error: Settings parsing failed. {0}"
 msgstr "오류: 설정의 구문 분석을 하지 못했습니다. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:234
+#: src/gui/state/loot_state.cpp:232
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 "오류: --auto-sort가 전달되었지만 --game 매개 변수가 제공되지 않았습니다."
 
-#: src/gui/state/loot_state.cpp:276
+#: src/gui/state/loot_state.cpp:274
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
 "File menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:286
+#: src/gui/state/loot_state.cpp:284
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
 "menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:336
+#: src/gui/state/loot_state.cpp:334
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr ""
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:353
+#: src/gui/state/loot_state.cpp:351
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:366
+#: src/gui/state/loot_state.cpp:364
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:400
+#: src/gui/state/loot_state.cpp:398
 msgid ""
 "No supported games were detected. Try running the launcher(s) for the "
 "supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
 "GOG Galaxy), then restarting LOOT."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:419
+#: src/gui/state/loot_state.cpp:417
 msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "
 "installed, try running its launcher then restarting LOOT."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:210
+#: src/gui/state/game/game.cpp:207
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "\"{0}\"와 \"{1}\"플러그인 사이의 순환 참조가 감지됨 : {2}"
 
-#: src/gui/state/game/game.cpp:228
+#: src/gui/state/game/game.cpp:225
 msgid "The group \"{0}\" does not exist."
 msgstr "\"{0}\" 그룹이 존재하지 않습니다."
 
-#: src/gui/state/game/game.cpp:337
+#: src/gui/state/game/game.cpp:334
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT에서 {0}가 유효하지 않음을 감지하여 현재 무시하고 있습니다."
 
-#: src/gui/state/game/game.cpp:846
+#: src/gui/state/game/game.cpp:843
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:877
+#: src/gui/state/game/game.cpp:874
 msgid "You have not sorted your load order this session."
 msgstr "이 세션에서 로드 순서를 정렬하지 않았습니다."
 
-#: src/gui/state/game/game.cpp:955
+#: src/gui/state/game/game.cpp:952
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1199,7 +1199,7 @@ msgid ""
 "[LOOT's website]({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1130
+#: src/gui/state/game/game.cpp:1127
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
