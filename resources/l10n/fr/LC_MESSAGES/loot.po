@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-09 17:27+0100\n"
+"POT-Creation-Date: 2025-04-19 22:39+0100\n"
 "PO-Revision-Date: 2024-05-22 20:01+0100\n"
 "Last-Translator: Simple Shawn\n"
 "Language-Team: \n"
@@ -931,22 +931,26 @@ msgid "Cleaning Utility"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 msgid "Detail"
 msgstr "Détail"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:73
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
 msgid "Filename"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
 msgid "Display Name"
 msgstr "Nom d'affichage"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
 #: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
 #: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
 msgid "Condition"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
+msgid "Constraint"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
@@ -1124,32 +1128,32 @@ msgstr "Analyse, fusion et vérification des métadonnées…"
 msgid "Sorting load order…"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:172
+#: src/gui/state/loot_state.cpp:170
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr ""
 "Erreur : Les paramètres spécifiques au jeu n’ont pas pu être initialisées. "
 "{0}"
 
-#: src/gui/state/loot_state.cpp:211
+#: src/gui/state/loot_state.cpp:209
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr "Erreur : Impossible de créer le répertoire des données de LOOT. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:225 src/gui/state/loot_state.cpp:295
+#: src/gui/state/loot_state.cpp:223 src/gui/state/loot_state.cpp:293
 msgid "Error: Settings parsing failed. {0}"
 msgstr "Erreur : Échec de l’analyse des paramètres. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:234
+#: src/gui/state/loot_state.cpp:232
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 "Erreur: L' --auto-sort a réussi mais aucun paramètre de --game n'a été "
 "transmis."
 
-#: src/gui/state/loot_state.cpp:276
+#: src/gui/state/loot_state.cpp:274
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
@@ -1159,7 +1163,7 @@ msgstr ""
 "n'a pas pu être migré! Veuillez vérifier votre LOOTDebugLog.txt (auquel vous "
 "pouvez accéder depuis le menu principal) pour plus d'informations."
 
-#: src/gui/state/loot_state.cpp:286
+#: src/gui/state/loot_state.cpp:284
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
@@ -1169,25 +1173,25 @@ msgstr ""
 "migré! Veuillez vérifier votre LOOTDebugLog.txt (auquel vous pouvez accéder "
 "depuis le menu principal) pour plus d'informations."
 
-#: src/gui/state/loot_state.cpp:336
+#: src/gui/state/loot_state.cpp:334
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr "Erreur : Impossible de créer le répertoire du prélude de LOOT. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:353
+#: src/gui/state/loot_state.cpp:351
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 "Erreur : Le --game-path a été transmis mais aucun paramètre de --game n’a "
 "été fourni."
 
-#: src/gui/state/loot_state.cpp:366
+#: src/gui/state/loot_state.cpp:364
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr ""
 "Erreur : N’a pas réussi à remplacer le chemin du jeu, le {0} du jeu n’a pas "
 "été reconnu."
 
-#: src/gui/state/loot_state.cpp:400
+#: src/gui/state/loot_state.cpp:398
 msgid ""
 "No supported games were detected. Try running the launcher(s) for the "
 "supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
@@ -1197,7 +1201,7 @@ msgstr ""
 "launcher(s) pour le(s) jeu(x) pris en charge que vous avez installé(s) (ex: "
 "appuyez sur \"Jouer\" sur Steam ou GOG Galaxy), puis redémarrez LOOT."
 
-#: src/gui/state/loot_state.cpp:419
+#: src/gui/state/loot_state.cpp:417
 msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "
 "installed, try running its launcher then restarting LOOT."
@@ -1206,29 +1210,29 @@ msgstr ""
 "place. S'il est installé, essayez de lancer son launcher puis redémarrez "
 "LOOT."
 
-#: src/gui/state/game/game.cpp:210
+#: src/gui/state/game/game.cpp:207
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "Interaction cyclique détectée entre \"{0}\" et \"{1}\": {2}"
 
-#: src/gui/state/game/game.cpp:228
+#: src/gui/state/game/game.cpp:225
 msgid "The group \"{0}\" does not exist."
 msgstr "Le groupe \"{0}\" n'existe pas."
 
-#: src/gui/state/game/game.cpp:337
+#: src/gui/state/game/game.cpp:334
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT a détecté que \"{0}\" est invalide et l'ignorera à présent."
 
-#: src/gui/state/game/game.cpp:846
+#: src/gui/state/game/game.cpp:844
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:877
+#: src/gui/state/game/game.cpp:875
 msgid "You have not sorted your load order this session."
 msgstr "Vous n'avez pas trié votre ordre de chargement cette session."
 
-#: src/gui/state/game/game.cpp:955
+#: src/gui/state/game/game.cpp:947
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1246,7 +1250,7 @@ msgid ""
 "[LOOT's website]({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1130
+#: src/gui/state/game/game.cpp:1131
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -1373,16 +1377,16 @@ msgstr ""
 "Ce plugin a un fichier BashTags qui outrepassera la suggestion faite par "
 "LOOT pour les Bash Tags suivants: {0}."
 
-#: src/gui/state/game/validation.cpp:556
+#: src/gui/state/game/validation.cpp:561
 msgid "You have {0} active full plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:566
+#: src/gui/state/game/validation.cpp:571
 msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr ""
 "Vous avez {0} plugins actifs, mais le jeu n'en supporte que {1} au maximum."
 
-#: src/gui/state/game/validation.cpp:589
+#: src/gui/state/game/validation.cpp:594
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
@@ -1390,22 +1394,22 @@ msgstr ""
 "Ne lancez pas Morrowind sans l'aide de MWSE, ou cela va causer des dommages "
 "sévères à votre jeu."
 
-#: src/gui/state/game/validation.cpp:607
+#: src/gui/state/game/validation.cpp:612
 msgid "You have {0} active {1} but the game only supports up to {2}."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:629
+#: src/gui/state/game/validation.cpp:634
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
 "Deactivate a full plugin or your {1} to avoid potential issues."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:651
+#: src/gui/state/game/validation.cpp:656
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:671
+#: src/gui/state/game/validation.cpp:676
 msgid ""
 "You have a full plugin and at least one medium plugin sharing the FD load "
 "order index. Deactivate a full plugin or all your medium plugins to avoid "
@@ -1414,7 +1418,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's name.
 #.
-#: src/gui/state/game/validation.cpp:684
+#: src/gui/state/game/validation.cpp:689
 msgid ""
 "{0} is installed in a case-sensitive location. This may cause issues as the "
 "game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
@@ -1427,7 +1431,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's
 #. name.
-#: src/gui/state/game/validation.cpp:701
+#: src/gui/state/game/validation.cpp:706
 msgid ""
 "{0}'s local application data is stored in a case-sensitive location. This "
 "may cause issues as the game, mods and LOOT may assume that filesystem paths "
@@ -1439,13 +1443,13 @@ msgstr ""
 "système ne sont pas sensibles à la casse, étant le cas par défaut sous "
 "Windows."
 
-#: src/gui/state/game/validation.cpp:838
+#: src/gui/state/game/validation.cpp:847
 msgid "small plugin"
 msgid_plural "small plugins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/validation.cpp:841
+#: src/gui/state/game/validation.cpp:850
 msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] ""
