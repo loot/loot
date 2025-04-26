@@ -150,11 +150,7 @@ else()
 
     target_include_directories(loot_gui_tests SYSTEM PRIVATE ${LIBLOOT_INCLUDE_DIRS})
 
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_STATIC_LIBRARY})
-    else()
-        target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_SHARED_LIBRARY})
-    endif()
+    target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_LINKER_FILE})
 endif()
 
 if(ZLIB_FOUND)
@@ -220,11 +216,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
             COMMENT "Running windeployqt...")
 
         # Copy the API binary to the build directory.
-        get_filename_component(LIBLOOT_SHARED_LIBRARY_FILENAME ${LIBLOOT_SHARED_LIBRARY} NAME)
         add_custom_command(TARGET loot_gui_tests POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                ${LIBLOOT_SHARED_LIBRARY}
-                "$<TARGET_FILE_DIR:loot_gui_tests>/${LIBLOOT_SHARED_LIBRARY_FILENAME}")
+                ${LIBLOOT_TARGET_FILE}
+                "$<TARGET_FILE_DIR:loot_gui_tests>/$<PATH:GET_FILENAME,${LIBLOOT_TARGET_FILE}>")
     endif()
 endif()
 

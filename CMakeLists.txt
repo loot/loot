@@ -71,7 +71,8 @@ endif()
 find_package(libloot CONFIG)
 if(libloot_FOUND)
     get_target_property(LIBLOOT_INCLUDE_DIRS libloot::loot INTERFACE_INCLUDE_DIRECTORIES)
-    set(LIBLOOT_SHARED_LIBRARY $<TARGET_LINKER_FILE:libloot::loot>)
+    set(LIBLOOT_LINKER_FILE $<TARGET_LINKER_FILE:libloot::loot>)
+    set(LIBLOOT_TARGET_FILE $<TARGET_FILE:libloot::loot>)
 else()
     if(NOT DEFINED LIBLOOT_URL)
         set(LIBLOOT_URL "https://github.com/loot/libloot-rs/archive/misc.tar.gz")
@@ -95,12 +96,12 @@ else()
 
     set(LIBLOOT_INCLUDE_DIRS "${SOURCE_DIR}/cxx/include")
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-        set(LIBLOOT_STATIC_LIBRARY "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot.dll${CMAKE_STATIC_LIBRARY_SUFFIX}")
+        set(LIBLOOT_LINKER_FILE "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot.dll${CMAKE_STATIC_LIBRARY_SUFFIX}")
     else()
-        set(LIBLOOT_STATIC_LIBRARY "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
+        set(LIBLOOT_LINKER_FILE "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
     endif()
 
-    set(LIBLOOT_SHARED_LIBRARY "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    set(LIBLOOT_TARGET_FILE "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
 endif()
 
 
@@ -476,11 +477,7 @@ else()
 
     target_include_directories(LOOT SYSTEM PRIVATE ${LIBLOOT_INCLUDE_DIRS})
 
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        target_link_libraries(LOOT PRIVATE ${LIBLOOT_STATIC_LIBRARY})
-    else()
-        target_link_libraries(LOOT PRIVATE ${LIBLOOT_SHARED_LIBRARY})
-    endif()
+    target_link_libraries(LOOT PRIVATE ${LIBLOOT_LINKER_FILE})
 endif()
 
 if(ZLIB_FOUND)
@@ -576,27 +573,18 @@ endif()
 
 set(QT_DIR ${Qt6_DIR}/../../..)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-        # Copy Qt binaries and resources.
-        add_custom_command(TARGET LOOT POST_BUILD
-            COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
-            COMMENT "Running windeployqt...")
-
-        set(DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME "loot.dll")
-    else()
-        set(DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME "libloot.dll")
-    endif()
-else()
-    set(DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME "libloot.so")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    # Copy Qt binaries and resources.
+    add_custom_command(TARGET LOOT POST_BUILD
+        COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
+        COMMENT "Running windeployqt...")
 endif()
 
 # Copy the API binary to the build directory.
-get_filename_component(LIBLOOT_SHARED_LIBRARY_FILENAME ${LIBLOOT_SHARED_LIBRARY} NAME)
 add_custom_command(TARGET LOOT POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-       ${LIBLOOT_SHARED_LIBRARY}
-       "$<TARGET_FILE_DIR:LOOT>/${DESTINATION_LIBLOOT_SHARED_LIBRARY_FILENAME}")
+       ${LIBLOOT_TARGET_FILE}
+       "$<TARGET_FILE_DIR:LOOT>/$<PATH:GET_FILENAME,${LIBLOOT_TARGET_FILE}>")
 
 if(LOOT_BUILD_TESTS)
     include("cmake/tests.cmake")
