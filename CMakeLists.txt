@@ -60,9 +60,6 @@ find_package(Boost REQUIRED COMPONENTS locale CONFIG)
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(ICU REQUIRED COMPONENTS data uc i18n)
     find_package(TBB REQUIRED)
-    find_package(libloot REQUIRED CONFIG)
-else()
-    find_package(libloot CONFIG)
 endif()
 
 find_package(Qt6 6.4 COMPONENTS Widgets Network Concurrent REQUIRED)
@@ -77,8 +74,8 @@ if(libloot_FOUND)
     set(LIBLOOT_SHARED_LIBRARY $<TARGET_LINKER_FILE:libloot::loot>)
 else()
     if(NOT DEFINED LIBLOOT_URL)
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.26.0/libloot-0.26.0-win64.7z")
-        set(LIBLOOT_HASH "SHA256=f4c1ad5af850b23d808e0cd19b365f21835cc9a3c40003fd24b859ad1c7ba626")
+        set(LIBLOOT_URL "https://github.com/loot/libloot-rs/archive/misc.tar.gz")
+        set(LIBLOOT_HASH "SHA256=b1c3a4bc03b848fc4676d6325b08f5c903ef9347732555587e8301c83dc97e80")
     else()
         file(TO_CMAKE_PATH "${LIBLOOT_URL}" LIBLOOT_URL)
     endif()
@@ -86,27 +83,24 @@ else()
     ExternalProject_Add(libloot
         URL ${LIBLOOT_URL}
         URL_HASH ${LIBLOOT_HASH}
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND ""
+        CMAKE_ARGS
+            -DLIBLOOT_BUILD_TESTS=OFF
+            -DLIBLOOT_INSTALL_DOCS=OFF
+            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        SOURCE_SUBDIR "cxx"
+        BUILD_IN_SOURCE TRUE
         INSTALL_COMMAND "")
-    ExternalProject_Get_Property(libloot SOURCE_DIR)
-    set(LIBLOOT_INCLUDE_DIRS "${SOURCE_DIR}/include")
+    ExternalProject_Get_Property(libloot SOURCE_DIR BINARY_DIR)
+
+    set(LIBLOOT_INCLUDE_DIRS "${SOURCE_DIR}/cxx/include")
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-        set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}loot.dll${CMAKE_STATIC_LIBRARY_SUFFIX}")
+        set(LIBLOOT_STATIC_LIBRARY "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot.dll${CMAKE_STATIC_LIBRARY_SUFFIX}")
     else()
-        set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
+        set(LIBLOOT_STATIC_LIBRARY "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
     endif()
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/bin/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
-    else()
-        # lib64 is used if the library was packaged on anything other than Debian (or a Debian-derived distro, e.g. Ubuntu)
-        # see <https://stackoverflow.com/questions/76517286/how-does-cmake-decide-to-make-a-lib-or-lib64-directory-for-installations>
-        # GitHub Actions runners use Ubuntu.
-        if(NOT DEFINED LIBLOOT_LIB_DIR)
-            set(LIBLOOT_LIB_DIR "lib")
-        endif()
-        set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/${LIBLOOT_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
-    endif()
+
+    set(LIBLOOT_SHARED_LIBRARY "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
 endif()
 
 

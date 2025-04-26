@@ -50,9 +50,6 @@ jobs:
   linux:
     runs-on: ubuntu-24.04
 
-    env:
-      LIBLOOT_VERSION: 0.26.0
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -74,9 +71,6 @@ jobs:
           BOOST_ROOT=~/boost_${BOOST_VERSION//./_}
           echo "root=$BOOST_ROOT" >> $GITHUB_OUTPUT
 
-      - name: Set libloot install path
-        run: echo "LIBLOOT_INSTALL_PATH=${{ github.workspace }}/libloot-${{ env.LIBLOOT_VERSION }}-install" >> $GITHUB_ENV
-
       - name: Boost cache
         id: boost-cache
         uses: actions/cache@v4
@@ -86,18 +80,10 @@ jobs:
             ${{ steps.boost-metadata.outputs.root }}/stage
           key: ${{ runner.os }}-Boost-${{ env.BOOST_VERSION }}
 
-      - name: libloot cache
-        id: libloot-cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.LIBLOOT_INSTALL_PATH }}
-          key: ${{ runner.os }}-libloot-${{ env.LIBLOOT_VERSION }}
-
       - name: Install C++ dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-upgrade \
-            cbindgen \
             build-essential \
             libgl1-mesa-dev \
             libicu-dev \
@@ -116,29 +102,11 @@ jobs:
           aqt install-qt linux desktop $QT_VERSION linux_gcc_64
           echo "root=${{ github.workspace }}/$QT_VERSION/gcc_64" >> $GITHUB_OUTPUT
 
-      - name: Download and build libloot
-        run: |
-          wget https://github.com/loot/libloot/archive/$LIBLOOT_VERSION.tar.gz
-          tar -xf $LIBLOOT_VERSION.tar.gz
-
-          LIBLOOT_BUILD_DIR="libloot-$LIBLOOT_VERSION/build"
-
-          cmake \
-            -DCMAKE_PREFIX_PATH=${{ steps.boost-metadata.outputs.root }}/stage \
-            -DLIBLOOT_BUILD_TESTS=OFF \
-            -DLIBLOOT_INSTALL_DOCS=OFF \
-            -DCMAKE_INSTALL_PREFIX="$LIBLOOT_INSTALL_PATH" \
-            -B "$LIBLOOT_BUILD_DIR" \
-            -S "libloot-$LIBLOOT_VERSION"
-          cmake --build "$LIBLOOT_BUILD_DIR" --target loot --config Release
-          cmake --install "$LIBLOOT_BUILD_DIR" --config Release
-        if: steps.libloot-cache.outputs.cache-hit != 'true'
-
       - name: Run CMake
         run: |
           cmake \
             -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" \
-            -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }};${{ steps.boost-metadata.outputs.root }}/stage" \
+            -DCMAKE_PREFIX_PATH="${{ steps.boost-metadata.outputs.root }}/stage" \
             -B build
           cmake --build build --target loot_gui_tests
 
