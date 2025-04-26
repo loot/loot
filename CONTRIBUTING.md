@@ -154,9 +154,11 @@ Some strings to be translated may contain special characters. Different types of
 
 ## Depending on libloot snapshot builds
 
-It's occasionally useful to build LOOT using different version of libloot, e.g. when integrating unreleased libloot changes. Since LOOT builds libloot from source, you just need to:
+It's occasionally useful to build LOOT using different version of libloot, e.g. when integrating unreleased libloot changes. Since LOOT builds libloot from source, for local builds you just need to pass `-DLIBLOOT_URL=<path to source archive>` when running `cmake`.
 
-- Update the default values for `LIBLOOT_URL` and `LIBLOOT_HASH` in `CMakeLists.txt` to be the download URL of a libloot source archive and that archive's SHA-256 hash respectively.
+To use a different version of libloot in CI builds:
+
+- change the value of the `LIBLOOT_VERSION` environment variable in `.github/workflows/CI.yml` to be the relevant commit hash.
 - Update the `url` and `sha256` values for the `type: archive` source for libloot in `resources/linux/io.github.loot.loot.yml`, and also update the value of `LIBLOOT_REVISION` to be the short ID for the libloot commit that you're building.
 
 ## Code Style
