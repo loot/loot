@@ -83,7 +83,7 @@ LOOT uses the following CMake variables to set build parameters:
 
 Parameter | Values | Default |Description
 ----------|--------|---------|-----------
-`LIBLOOT_URL` | A URL | A GitHub release archive URL | The URL to get the libloot release archive from. By default, this is the URL of a libloot release archive hosted on GitHub. Specifying this is useful if you want to link to a libloot that was built and packaged locally.
+`LIBLOOT_URL` | A URL | A GitHub source archive URL | The URL to get the libloot source code from. By default, this is the URL of a libloot archive hosted on GitHub. Specifying this is useful if you want to build using a local copy of libloot's source code.
 `LOOT_BUILD_TESTS` | `ON`, `OFF` | `ON` | Whether or not to build LOOT's tests.
 `LOOT_RUN_CLANG_TIDY` | `ON`, `OFF` | `OFF` | Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator.
 `MINIZIP_NG_URL` | A URL | A release archive URL | The URL to get a source archive from.
