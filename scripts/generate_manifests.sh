@@ -45,7 +45,4 @@ flatpak --user install -y flathub "$RUNTIME"
 echo "Generating manifest for docs..."
 ./flatpak-pip-generator --runtime="$RUNTIME" --requirements-file ../../docs/requirements.txt --output docs --cleanup=all
 
-generate_cargo_manifest cbindgen
-generate_cargo_manifest esplugin
-generate_cargo_manifest libloadorder
-generate_cargo_manifest loot-condition-interpreter
+generate_cargo_manifest libloot-rs
