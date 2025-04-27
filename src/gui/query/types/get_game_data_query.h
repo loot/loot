@@ -53,7 +53,7 @@ public:
     std::exception_ptr exceptionPointer;
     std::vector<std::thread> threads;
 
-    //threads.push_back(std::thread([&]() {
+    threads.push_back(std::thread([&]() {
       try {
         game_.LoadAllInstalledPlugins(true);
       } catch (...) {
@@ -61,10 +61,10 @@ public:
           exceptionPointer = std::current_exception();
         }
       }
-    //}));
+    }));
 
     if (isFirstLoad) {
-      //threads.push_back(std::thread([&]() {
+      threads.push_back(std::thread([&]() {
         try {
           game_.LoadMetadata();
         } catch (...) {
@@ -72,10 +72,10 @@ public:
             exceptionPointer = std::current_exception();
           }
         }
-      //}));
+      }));
     }
 
-    //threads.push_back(std::thread([&]() {
+    threads.push_back(std::thread([&]() {
       try {
         game_.GetCreationClubPlugins().Load(game_.GetSettings().Id(),
                                             game_.GetSettings().GamePath());
@@ -84,7 +84,7 @@ public:
           exceptionPointer = std::current_exception();
         }
       }
-    //}));
+    }));
 
     for (auto& thread : threads) {
       if (thread.joinable()) {
