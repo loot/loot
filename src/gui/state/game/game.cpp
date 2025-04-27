@@ -102,6 +102,8 @@ GameType GetGameType(const GameId gameId) {
       return GameType::starfield;
     case GameId::openmw:
       return GameType::openmw;
+    case GameId::oblivionRemastered:
+      return GameType::oblivionRemastered;
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -163,6 +165,7 @@ std::optional<std::filesystem::path> GetCCCFilename(const GameId gameId) {
     case GameId::fonv:
     case GameId::fo4vr:
     case GameId::openmw:
+    case GameId::oblivionRemastered:
       return std::nullopt;
     case GameId::tes5se:
     case GameId::enderalse:

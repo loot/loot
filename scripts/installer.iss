@@ -171,6 +171,10 @@ Source: "build\masterlists\Oblivion\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Oblivion"; Flags: ignoreversion
 Source: "build\masterlists\Oblivion\masterlist.yaml.metadata.toml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Oblivion"; Flags: ignoreversion
+Source: "build\masterlists\Oblivion\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Oblivion Remastered"; Flags: ignoreversion
+Source: "build\masterlists\Oblivion\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Oblivion Remastered"; Flags: ignoreversion
 Source: "build\masterlists\Nehrim\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Nehrim"; Flags: ignoreversion
 Source: "build\masterlists\Nehrim\masterlist.yaml.metadata.toml"; \
@@ -525,6 +529,7 @@ begin
     DownloadPage.Add('https://raw.githubusercontent.com/loot/prelude/{#MasterlistBranch}/prelude.yaml', 'prelude\prelude.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/morrowind/{#MasterlistBranch}/masterlist.yaml', 'games\Morrowind\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/oblivion/{#MasterlistBranch}/masterlist.yaml', 'games\Oblivion\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/oblivion/{#MasterlistBranch}/masterlist.yaml', 'games\Oblivion Remastered\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/oblivion/{#MasterlistBranch}/masterlist.yaml', 'games\Nehrim\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrim/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/enderal/{#MasterlistBranch}/masterlist.yaml', 'games\Enderal\masterlist.yaml', '');
@@ -567,6 +572,7 @@ begin
       InstallMetadataFile('prelude\prelude.yaml');
       InstallMetadataFile('games\Morrowind\masterlist.yaml');
       InstallMetadataFile('games\Oblivion\masterlist.yaml');
+      InstallMetadataFile('games\Oblivion Remastered\masterlist.yaml');
       InstallMetadataFile('games\Nehrim\masterlist.yaml');
       InstallMetadataFile('games\Skyrim\masterlist.yaml');
       InstallMetadataFile('games\Enderal\masterlist.yaml');

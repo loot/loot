@@ -50,6 +50,7 @@ float GetMinimumHeaderVersion(const GameId gameId) {
       return MORROWIND_MINIMUM_HEADER_VERSION;
     case GameId::tes4:
     case GameId::nehrim:
+    case GameId::oblivionRemastered:
       return OBLIVION_MINIMUM_HEADER_VERSION;
     case GameId::tes5:
     case GameId::enderal:
@@ -79,6 +80,7 @@ std::string GetDefaultMasterlistRepositoryName(const GameId gameId) {
       return "morrowind";
     case GameId::tes4:
     case GameId::nehrim:
+    case GameId::oblivionRemastered:
       return "oblivion";
     case GameId::tes5:
       return "skyrim";

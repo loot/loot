@@ -82,6 +82,7 @@ std::optional<std::string> GetEgsAppName(GameId gameId) {
     case GameId::fo4vr:
     case GameId::starfield:
     case GameId::openmw:
+    case GameId::oblivionRemastered:
       return std::nullopt;
     default:
       throw std::logic_error("Unrecognised game type");

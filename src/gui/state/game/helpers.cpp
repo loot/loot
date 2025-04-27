@@ -635,6 +635,23 @@ static constexpr std::array<const char*, 4> STARFIELD_OFFICIAL_PLUGINS = {
     "constellation.esm",
     "oldmars.esm"};
 
+static constexpr std::array<const char*, 15>
+    OBLIVION_REMASTERED_OFFICIAL_PLUGINS = {"altardeluxe.esp",
+                                            "altarespmain.esp",
+                                            "altargymnavigation.esp",
+                                            "dlcbattlehorncastle.esp",
+                                            "dlcfrostcrag.esp",
+                                            "dlchorsearmor.esp",
+                                            "dlcmehrunesrazor.esp",
+                                            "dlcorrery.esp",
+                                            "dlcshiveringisles.esp",
+                                            "dlcspelltomes.esp",
+                                            "dlcthievesden.esp",
+                                            "dlcvilelair.esp",
+                                            "knights.esp",
+                                            "tamrielleveledregion.esp",
+                                            "oblivion.esm"};
+
 bool IsOfficialPlugin(const GameId gameId, const std::string& pluginName) {
   const auto lowercased = boost::locale::to_lower(pluginName);
 
@@ -692,6 +709,12 @@ bool IsOfficialPlugin(const GameId gameId, const std::string& pluginName) {
       return std::find(STARFIELD_OFFICIAL_PLUGINS.begin(),
                        STARFIELD_OFFICIAL_PLUGINS.end(),
                        lowercased) != STARFIELD_OFFICIAL_PLUGINS.end();
+    case GameId::oblivionRemastered:
+      // TODO: Add the oblivon plugins plus the new ones.
+      return std::find(OBLIVION_REMASTERED_OFFICIAL_PLUGINS.begin(),
+                       OBLIVION_REMASTERED_OFFICIAL_PLUGINS.end(),
+                       lowercased) !=
+             OBLIVION_REMASTERED_OFFICIAL_PLUGINS.end();
     default:
       throw std::logic_error("Unrecognised game type");
   }

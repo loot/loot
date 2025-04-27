@@ -96,6 +96,7 @@ std::vector<RegistryValue> GetRegistryValues(const GameId gameId) {
                             "Software\\Bethesda Softworks\\Fallout 4 VR",
                             "Installed Path"}};
     case GameId::starfield:
+    case GameId::oblivionRemastered:
       return {};
     case GameId::openmw:
       return {RegistryValue{RegistryRootKey::LOCAL_MACHINE,
@@ -134,6 +135,10 @@ bool IsSteamInstall(const GameId gameId,
       return std::filesystem::exists(installPath / "steam_api64.dll");
     case GameId::openmw:
       return false;
+    case GameId::oblivionRemastered:
+      return std::filesystem::exists(installPath / "Engine" / "Binaries" /
+                                     "ThirdParty" / "Steamworks" / "Steamv153" /
+                                     "Win64" / "steam_api64.dll");
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -183,6 +188,7 @@ bool IsMicrosoftInstall(const GameId gameId,
     case GameId::tes5se:
     case GameId::fo4:
     case GameId::starfield:
+    case GameId::oblivionRemastered:
       return std::filesystem::exists(installPath / "appxmanifest.xml");
     default:
       return false;

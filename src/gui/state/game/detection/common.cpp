@@ -67,6 +67,11 @@ std::string GetExecutableName(GameId gameId) {
 #else
       return "openmw";
 #endif
+    case GameId::oblivionRemastered:
+      // This is the Steam version's executable, for the Game Pass version it's
+      // OblivionRemastered/Binaries/WinGDK/OblivionRemastered-WinGDK-Shipping.exe
+      return "OblivionRemastered/Binaries/Win64/"
+             "OblivionRemastered-Win64-Shipping.exe";
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -96,6 +101,7 @@ bool ExecutableExists(const GameId& gameType,
     case GameId::fo3:
     case GameId::fonv:
     case GameId::starfield:
+    case GameId::oblivionRemastered:
       // Don't bother checking for the games that don't share their master
       // plugin name.
       return true;

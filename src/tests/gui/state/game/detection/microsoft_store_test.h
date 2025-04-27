@@ -57,6 +57,9 @@ protected:
                "Content" / "Fallout New Vegas English";
       case GameId::fo4:
         return xboxGamingRootPath / "Fallout 4 (PC)" / "Content";
+      case GameId::oblivionRemastered:
+        return xboxGamingRootPath /
+               "The Elder Scrolls IV- Oblivion Remastered" / "Content";
       default:
         throw std::runtime_error("Unsupported Microsoft Store game");
     }
@@ -81,25 +84,6 @@ protected:
 
     return gamesPaths;
   }
-
-  std::string GetPackageName() const {
-    switch (GetParam()) {
-      case GameId::tes3:
-        return "BethesdaSoftworks.TESMorrowind-PC_3275kfvn8vcwc";
-      case GameId::tes4:
-        return "BethesdaSoftworks.TESOblivion-PC_3275kfvn8vcwc";
-      case GameId::tes5se:
-        return "BethesdaSoftworks.SkyrimSE-PC_3275kfvn8vcwc";
-      case GameId::fo3:
-        return "BethesdaSoftworks.Fallout3_3275kfvn8vcwc";
-      case GameId::fonv:
-        return "BethesdaSoftworks.FalloutNewVegas_3275kfvn8vcwc";
-      case GameId::fo4:
-        return "BethesdaSoftworks.Fallout4-PC_3275kfvn8vcwc";
-      default:
-        throw std::logic_error("Unexpected game ID");
-    }
-  }
 };
 
 // Pass an empty first argument, as it's a prefix for the test instantiation,
@@ -111,7 +95,8 @@ INSTANTIATE_TEST_SUITE_P(,
                                            GameId::tes5se,
                                            GameId::fo3,
                                            GameId::fonv,
-                                           GameId::fo4));
+                                           GameId::fo4,
+                                           GameId::oblivionRemastered));
 
 TEST_P(Microsoft_FindGameInstallsTest, shouldFindNewMSGamePathIfPresent) {
   const auto xboxGamingRootPath = gamePath.parent_path();

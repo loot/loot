@@ -98,6 +98,8 @@ std::string ToString(const GameId gameId) {
       return "Starfield";
     case GameId::openmw:
       return "OpenMW";
+    case GameId::oblivionRemastered:
+      return "Oblivion Remastered";
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -105,13 +107,15 @@ std::string ToString(const GameId gameId) {
 
 bool ShouldAllowRedating(const GameId gameId) {
   return gameId == GameId::tes5 || gameId == GameId::enderal ||
-         gameId == GameId::tes5se || gameId == GameId::enderalse;
+         gameId == GameId::tes5se || gameId == GameId::enderalse ||
+         gameId == GameId::oblivionRemastered;
 }
 std::string GetMasterFilename(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
       return "Morrowind.esm";
     case GameId::tes4:
+    case GameId::oblivionRemastered:
       return "Oblivion.esm";
     case GameId::nehrim:
       return "Nehrim.esm";
@@ -171,6 +175,8 @@ std::string GetGameName(const GameId gameId) {
       return "Starfield";
     case GameId::openmw:
       return "OpenMW";
+    case GameId::oblivionRemastered:
+      return "TES IV: Oblivion Remastered";
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -206,6 +212,8 @@ std::string GetDefaultLootFolderName(const GameId gameId) {
       return "Starfield";
     case GameId::openmw:
       return "OpenMW";
+    case GameId::oblivionRemastered:
+      return "Oblivion Remastered";
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -231,6 +239,9 @@ std::filesystem::path GetDataPath(const GameId gameId,
       return gamePath / "Data";
     case GameId::openmw:
       return GetOpenMWDataPath(gamePath);
+    case GameId::oblivionRemastered:
+      return gamePath / "OblivionRemastered" / "Content" / "Dev" / "ObvData" /
+             "Data";
     default:
       throw std::logic_error("Unrecognised game ID");
   }

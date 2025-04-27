@@ -50,6 +50,7 @@ Base Game
   - Starfield
   - TES III: Morrowind
   - TES IV: Oblivion
+  - TES IV: Oblivion Remastered
   - TES V: Skyrim
   - TES V: Skyrim Special Edition
   - TES V: Skyrim VR

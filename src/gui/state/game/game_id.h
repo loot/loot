@@ -26,9 +26,9 @@
 #ifndef LOOT_GUI_STATE_GAME_GAME_ID
 #define LOOT_GUI_STATE_GAME_GAME_ID
 
-#include <string>
 #include <cstdint>
 #include <filesystem>
+#include <string>
 
 namespace loot {
 enum struct GameId : uint8_t {
@@ -46,6 +46,7 @@ enum struct GameId : uint8_t {
   fo4vr,
   starfield,
   openmw,
+  oblivionRemastered,
 };
 
 std::string ToString(const GameId gameId);

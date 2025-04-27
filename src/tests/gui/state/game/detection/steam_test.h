@@ -457,6 +457,8 @@ protected:
         return "1716740";
       case GameId::openmw:
         return std::nullopt;
+      case GameId::oblivionRemastered:
+        return "2623190";
       default:
         throw std::logic_error("Unrecognised game ID");
     }

@@ -77,6 +77,8 @@ std::vector<std::string> GetSteamGameIds(const GameId gameId) {
       return {"1716740"};
     case GameId::openmw:
       return {};
+    case GameId::oblivionRemastered:
+      return {"2623190"};
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -85,6 +87,7 @@ std::vector<std::string> GetSteamGameIds(const GameId gameId) {
 std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
+    case GameId::oblivionRemastered:
       return std::nullopt;
     case GameId::tes4:
     case GameId::nehrim:

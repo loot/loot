@@ -178,8 +178,11 @@ protected:
         }
       }
       for (const auto& plugin : loadOrder) actual.push_back(plugin.second);
-    } else if (gameId_ == GameId::tes5 || gameId_ == GameId::enderal) {
-      std::ifstream in(localPath / "loadorder.txt");
+    } else if (gameId_ == GameId::tes5 || gameId_ == GameId::enderal ||
+               gameId_ == GameId::oblivionRemastered) {
+      const auto& parentPath =
+          gameId_ == GameId::oblivionRemastered ? dataPath : localPath;
+      std::ifstream in(parentPath / "loadorder.txt");
       while (in) {
         std::string line;
         std::getline(in, line);
@@ -253,6 +256,7 @@ private:
       case GameId::tes3:
         return "Morrowind.esm";
       case GameId::tes4:
+      case GameId::oblivionRemastered:
         return "Oblivion.esm";
       case GameId::nehrim:
         return "Nehrim.esm";
@@ -283,6 +287,8 @@ private:
       return "Data Files";
     } else if (gameId_ == GameId::openmw) {
       return "resources/vfs";
+    } else if (gameId_ == GameId::oblivionRemastered) {
+      return "OblivionRemastered/Content/Dev/ObvData/Data";
     } else {
       return "Data";
     }
@@ -295,6 +301,7 @@ private:
         return 0x790DC6FB;
       case GameId::tes4:
       case GameId::nehrim:
+      case GameId::oblivionRemastered:
         return 0x374E2A6F;
       default:
         return 0x6A1273DC;
@@ -314,7 +321,9 @@ private:
         }
       }
     } else {
-      std::ofstream out(localPath / "Plugins.txt");
+      const auto& parentPath =
+          gameId_ == GameId::oblivionRemastered ? dataPath : localPath;
+      std::ofstream out(parentPath / "Plugins.txt");
       for (const auto& plugin : loadOrder) {
         if (gameId_ == GameId::fo4 || gameId_ == GameId::fo4vr ||
             gameId_ == GameId::tes5se || gameId_ == GameId::enderalse ||
@@ -343,8 +352,11 @@ private:
         modificationTime += std::chrono::seconds(60);
         ;
       }
-    } else if (gameId_ == GameId::tes5 || gameId_ == GameId::enderal) {
-      std::ofstream out(localPath / "loadorder.txt");
+    } else if (gameId_ == GameId::tes5 || gameId_ == GameId::enderal ||
+               gameId_ == GameId::oblivionRemastered) {
+      const auto& parentPath =
+          gameId_ == GameId::oblivionRemastered ? dataPath : localPath;
+      std::ofstream out(parentPath / "loadorder.txt");
       for (const auto& plugin : loadOrder) out << plugin.first << std::endl;
     }
   }

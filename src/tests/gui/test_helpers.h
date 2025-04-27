@@ -39,6 +39,7 @@ std::filesystem::path getSourcePluginsPath(GameId gameType) {
       return "./testing-plugins/Morrowind/Data Files";
     case GameId::tes4:
     case GameId::nehrim:
+    case GameId::oblivionRemastered:
       return "./testing-plugins/Oblivion/Data";
     default:
       return "./testing-plugins/Skyrim/Data";

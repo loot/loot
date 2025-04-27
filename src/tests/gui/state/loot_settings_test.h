@@ -245,12 +245,21 @@ TEST_F(LootSettingsTest, loadingShouldMapGameIds) {
       << "folder = \"\"" << endl
       << "[[games]]" << endl
       << "gameId = \"Fallout4VR\"" << endl
+      << "folder = \"\"" << endl
+      << "[[games]]" << endl
+      << "gameId = \"Starfield\"" << endl
+      << "folder = \"\"" << endl
+      << "[[games]]" << endl
+      << "gameId = \"OpenMW\"" << endl
+      << "folder = \"\"" << endl
+      << "[[games]]" << endl
+      << "gameId = \"Oblivion Remastered\"" << endl
       << "folder = \"\"" << endl;
   out.close();
 
   settings_.load(settingsFile_);
 
-  ASSERT_EQ(12, settings_.getGameSettings().size());
+  ASSERT_EQ(15, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::tes3, settings_.getGameSettings()[0].Id());
   EXPECT_EQ(GameId::tes4, settings_.getGameSettings()[1].Id());
   EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[2].Id());
@@ -263,6 +272,9 @@ TEST_F(LootSettingsTest, loadingShouldMapGameIds) {
   EXPECT_EQ(GameId::fonv, settings_.getGameSettings()[9].Id());
   EXPECT_EQ(GameId::fo4, settings_.getGameSettings()[10].Id());
   EXPECT_EQ(GameId::fo4vr, settings_.getGameSettings()[11].Id());
+  EXPECT_EQ(GameId::starfield, settings_.getGameSettings()[12].Id());
+  EXPECT_EQ(GameId::openmw, settings_.getGameSettings()[13].Id());
+  EXPECT_EQ(GameId::oblivionRemastered, settings_.getGameSettings()[14].Id());
 }
 
 TEST_F(LootSettingsTest, loadingShouldSkipGameIfGameIdAndTypeAreNotPresent) {

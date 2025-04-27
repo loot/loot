@@ -88,6 +88,7 @@ protected:
       case GameId::fo4vr:
         return "Software\\Bethesda Softworks\\Fallout 4 VR";
       case GameId::starfield:
+      case GameId::oblivionRemastered:
         return std::nullopt;
       case GameId::openmw:
         return "Software\\OpenMW.org\\OpenMW 0.48.0";
@@ -103,6 +104,9 @@ protected:
       touch(gamePath / "steam_api.dll");
     } else if (GetParam() == GameId::starfield) {
       touch(gamePath / "steam_api64.dll");
+    } else if (GetParam() == GameId::oblivionRemastered) {
+      touch(gamePath / "Engine" / "Binaries" / "ThirdParty" / "Steamworks" /
+            "Steamv153" / "Win64" / "steam_api64.dll");
     } else {
       touch(gamePath / "installscript.vdf");
     }
@@ -181,7 +185,8 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogSiblingGame) {
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
   } else if (GetParam() == GameId::enderal || GetParam() == GameId::starfield ||
-             GetParam() == GameId::openmw) {
+             GetParam() == GameId::openmw ||
+             GetParam() == GameId::oblivionRemastered) {
     expectedSource = InstallSource::unknown;
   }
 
@@ -241,7 +246,8 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyMsStoreSiblingGame) {
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
   } else if (GetParam() == GameId::nehrim || GetParam() == GameId::enderal ||
-             GetParam() == GameId::enderalse || GetParam() == GameId::openmw) {
+             GetParam() == GameId::enderalse || GetParam() == GameId::openmw ||
+             GetParam() == GameId::oblivionRemastered) {
     expectedSource = InstallSource::unknown;
   }
 
@@ -281,7 +287,8 @@ TEST_P(Generic_FindGameInstallsTest, shouldFindGameUsingGenericRegistryValue) {
     expectedSource = InstallSource::steam;
   }
 
-  if (GetParam() == GameId::starfield) {
+  if (GetParam() == GameId::starfield ||
+      GetParam() == GameId::oblivionRemastered) {
     ASSERT_TRUE(gameInstalls.empty());
   } else {
     ASSERT_EQ(1, gameInstalls.size());
@@ -321,7 +328,8 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifySteamRegistryGame) {
   const auto gameInstalls =
       loot::generic::FindGameInstalls(registry, GetParam());
 
-  if (GetParam() == GameId::starfield) {
+  if (GetParam() == GameId::starfield ||
+      GetParam() == GameId::oblivionRemastered) {
     ASSERT_TRUE(gameInstalls.empty());
   } else {
     const auto expectedSource = GetParam() == GameId::openmw
@@ -361,7 +369,8 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogRegistryGame) {
     expectedSource = InstallSource::unknown;
   }
 
-  if (GetParam() == GameId::starfield) {
+  if (GetParam() == GameId::starfield ||
+      GetParam() == GameId::oblivionRemastered) {
     ASSERT_TRUE(gameInstalls.empty());
   } else {
     ASSERT_EQ(1, gameInstalls.size());
@@ -427,10 +436,13 @@ TEST_P(DetectGameInstallTest, shouldDetectASteamInstall) {
     touch(gamePath / "steam_autocloud.vdf");
   } else if (GetParam() == GameId::nehrim) {
     touch(gamePath / "steam_api.dll");
-  } else if (GetParam() != GameId::starfield) {
-    touch(gamePath / "installscript.vdf");
-  } else {
+  } else if (GetParam() == GameId::starfield) {
     touch(gamePath / "steam_api64.dll");
+  } else if (GetParam() == GameId::oblivionRemastered) {
+    touch(gamePath / "Engine" / "Binaries" / "ThirdParty" / "Steamworks" /
+          "Steamv153" / "Win64" / "steam_api64.dll");
+  } else {
+    touch(gamePath / "installscript.vdf");
   }
 
   const auto install = generic::DetectGameInstall(GetSettings());
@@ -459,7 +471,8 @@ TEST_P(DetectGameInstallTest, shouldDetectAGogInstall) {
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
   } else if (GetParam() == GameId::enderal || GetParam() == GameId::starfield ||
-             GetParam() == GameId::openmw) {
+             GetParam() == GameId::openmw ||
+             GetParam() == GameId::oblivionRemastered) {
     expectedSource = InstallSource::unknown;
   }
 
@@ -499,7 +512,8 @@ TEST_P(DetectGameInstallTest, shouldDetectAnEpicInstall) {
 
 TEST_P(DetectGameInstallTest, shouldDetectAMicrosoftInstall) {
   if (GetParam() == GameId::tes5se || GetParam() == GameId::fo4 ||
-      GetParam() == GameId::starfield) {
+      GetParam() == GameId::starfield ||
+      GetParam() == GameId::oblivionRemastered) {
     touch(gamePath / "appxmanifest.xml");
   } else {
     touch(gamePath.parent_path() / "appxmanifest.xml");

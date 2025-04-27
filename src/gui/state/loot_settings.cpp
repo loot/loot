@@ -147,6 +147,7 @@ std::optional<std::string> getOldDefaultRepoUrl(GameId gameId) {
       return "https://github.com/loot/morrowind.git";
     case GameId::tes4:
     case GameId::nehrim:
+    case GameId::oblivionRemastered:
       return "https://github.com/loot/oblivion.git";
     case GameId::tes5:
       return "https://github.com/loot/skyrim.git";
@@ -558,6 +559,8 @@ GameId mapGameId(const std::string& gameId) {
     return GameId::starfield;
   } else if (gameId == ToString(GameId::openmw)) {
     return GameId::openmw;
+  } else if (gameId == ToString(GameId::oblivionRemastered)) {
+    return GameId::oblivionRemastered;
   } else {
     throw std::runtime_error(
         "invalid value for 'gameId' key in game settings table");

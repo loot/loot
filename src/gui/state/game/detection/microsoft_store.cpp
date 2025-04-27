@@ -62,6 +62,7 @@ std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
     case GameId::tes5se:
     case GameId::fo4:
     case GameId::starfield:
+    case GameId::oblivionRemastered:
       // There's only one path, it could be for any language that
       // the game supports, so just use en (the choice doesn't
       // matter).
@@ -80,6 +81,7 @@ bool IsOnMicrosoftStore(const GameId gameId) {
     case GameId::fonv:
     case GameId::fo4:
     case GameId::starfield:
+    case GameId::oblivionRemastered:
       return true;
     case GameId::nehrim:
     case GameId::enderal:
@@ -117,6 +119,9 @@ std::filesystem::path GetGameContentPath(
       return xboxGamingRootPath / "Fallout 4 (PC)" / "Content";
     case GameId::starfield:
       return xboxGamingRootPath / "Starfield" / "Content";
+    case GameId::oblivionRemastered:
+      return xboxGamingRootPath / "The Elder Scrolls IV- Oblivion Remastered" /
+             "Content";
     default:
       throw std::logic_error("Unsupported Microsoft Store game");
   }

@@ -40,7 +40,8 @@ INSTANTIATE_TEST_SUITE_P(,
 TEST_P(ShouldAllowRedatingTest, shouldReturnTrueForOnlySkyrimAndSkyrimSE) {
   const auto result = ShouldAllowRedating(GetParam());
   if (GetParam() == GameId::tes5 || GetParam() == GameId::enderal ||
-      GetParam() == GameId::tes5se || GetParam() == GameId::enderalse) {
+      GetParam() == GameId::tes5se || GetParam() == GameId::enderalse ||
+      GetParam() == GameId::oblivionRemastered) {
     EXPECT_TRUE(result);
   } else {
     EXPECT_FALSE(result);
@@ -183,6 +184,15 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/skyrimse/v0.21/"
+          "masterlist.yaml",
+          settings_.MasterlistSource());
+      break;
+    case GameId::oblivionRemastered:
+      EXPECT_EQ("TES IV: Oblivion Remastered", settings_.Name());
+      EXPECT_EQ("Oblivion.esm", settings_.Master());
+      EXPECT_EQ(0.8f, settings_.MinimumHeaderVersion());
+      EXPECT_EQ(
+          "https://raw.githubusercontent.com/loot/oblivion/v0.21/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
