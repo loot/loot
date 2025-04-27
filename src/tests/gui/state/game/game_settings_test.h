@@ -137,7 +137,7 @@ TEST_P(GameSettingsTest,
       // TODO: Get the real value off someone who owns Fallout 4 VR.
       EXPECT_EQ(0.95f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/fallout4vr/v0.21/"
+          "https://raw.githubusercontent.com/loot/fallout4/v0.21/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -182,7 +182,7 @@ TEST_P(GameSettingsTest,
       // TODO: Get the real value off someone who owns Skyrim VR.
       EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/skyrimvr/v0.21/"
+          "https://raw.githubusercontent.com/loot/skyrimse/v0.21/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;

@@ -942,6 +942,26 @@ TEST_F(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
+TEST_F(LootSettingsTest, loadingTomlShouldUpdateSkyrimVrSourceFromOldDefaultSource) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Skyrim VR\"" << endl
+      << "folder = \"Skyrim VR\"" << endl
+      << "masterlistSource = "
+         "\"https://raw.githubusercontent.com/loot/skyrimvr/v0.21/"
+         "masterlist.yaml\""
+      << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/skyrimse/v0.21/masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
 TEST_F(LootSettingsTest,
        loadingTomlShouldUpdateSkyrimVrRepoUrlFromOldDefaultRepoUrl) {
   using std::endl;
@@ -957,7 +977,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/skyrimvr/foo/masterlist.yaml";
+      "https://raw.githubusercontent.com/loot/skyrimse/foo/masterlist.yaml";
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
@@ -981,6 +1001,27 @@ TEST_F(LootSettingsTest,
 }
 
 TEST_F(LootSettingsTest,
+       loadingTomlShouldUpdateFallout4VrSourceFromOldDefaultSource) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Fallout4VR\"" << endl
+      << "folder = \"Fallout4VR\"" << endl
+      << "masterlistSource = "
+         "\"https://raw.githubusercontent.com/loot/fallout4vr/v0.21/"
+         "masterlist.yaml\""
+      << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/fallout4/v0.21/masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_F(LootSettingsTest,
        loadingTomlShouldUpdateFallout4VrRepoUrlFromOldDefaultRepoUrl) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -995,7 +1036,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/fallout4vr/foo/masterlist.yaml";
+      "https://raw.githubusercontent.com/loot/fallout4/foo/masterlist.yaml";
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 

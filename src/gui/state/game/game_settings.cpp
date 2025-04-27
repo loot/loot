@@ -86,17 +86,15 @@ std::string GetDefaultMasterlistRepositoryName(const GameId gameId) {
     case GameId::enderalse:
       return "enderal";
     case GameId::tes5se:
-      return "skyrimse";
     case GameId::tes5vr:
-      return "skyrimvr";
+      return "skyrimse";
     case GameId::fo3:
       return "fallout3";
     case GameId::fonv:
       return "falloutnv";
     case GameId::fo4:
-      return "fallout4";
     case GameId::fo4vr:
-      return "fallout4vr";
+      return "fallout4";
     case GameId::starfield:
       return "starfield";
     default:

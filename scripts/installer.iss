@@ -191,9 +191,9 @@ Source: "build\masterlists\Enderal Special Edition\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Enderal Special Edition"; Flags: ignoreversion
 Source: "build\masterlists\Enderal Special Edition\masterlist.yaml.metadata.toml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Enderal Special Edition"; Flags: ignoreversion
-Source: "build\masterlists\Skyrim VR\masterlist.yaml"; \
+Source: "build\masterlists\Skyrim Special Edition\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Skyrim VR"; Flags: ignoreversion
-Source: "build\masterlists\Skyrim VR\masterlist.yaml.metadata.toml"; \
+Source: "build\masterlists\Skyrim Special Edition\masterlist.yaml.metadata.toml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Skyrim VR"; Flags: ignoreversion
 Source: "build\masterlists\Fallout3\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Fallout3"; Flags: ignoreversion
@@ -207,9 +207,9 @@ Source: "build\masterlists\Fallout4\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Fallout4"; Flags: ignoreversion
 Source: "build\masterlists\Fallout4\masterlist.yaml.metadata.toml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Fallout4"; Flags: ignoreversion
-Source: "build\masterlists\Fallout4VR\masterlist.yaml"; \
+Source: "build\masterlists\Fallout4\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Fallout4VR"; Flags: ignoreversion
-Source: "build\masterlists\Fallout4VR\masterlist.yaml.metadata.toml"; \
+Source: "build\masterlists\Fallout4\masterlist.yaml.metadata.toml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Fallout4VR"; Flags: ignoreversion
 Source: "build\masterlists\Starfield\masterlist.yaml"; \
 DestDir: "{localappdata}\{#MyAppName}\games\Starfield"; Flags: ignoreversion
@@ -530,11 +530,11 @@ begin
     DownloadPage.Add('https://raw.githubusercontent.com/loot/enderal/{#MasterlistBranch}/masterlist.yaml', 'games\Enderal\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimse/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim Special Edition\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/enderal/{#MasterlistBranch}/masterlist.yaml', 'games\Enderal Special Edition\masterlist.yaml', '');
-    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimvr/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim VR\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimse/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim VR\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout3/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout3\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/falloutnv/{#MasterlistBranch}/masterlist.yaml', 'games\FalloutNV\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout4\masterlist.yaml', '');
-    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4vr/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout4VR\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout4VR\masterlist.yaml', '');
     DownloadPage.Add('https://raw.githubusercontent.com/loot/starfield/{#MasterlistBranch}/masterlist.yaml', 'games\Starfield\masterlist.yaml', '');
   end;
 

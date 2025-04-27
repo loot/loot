@@ -229,7 +229,7 @@ std::optional<std::string> migrateMasterlistRepoSettings(GameId gameId,
   if (gameId == GameId::tes5vr &&
       url == "https://github.com/loot/skyrimse.git") {
     // Switch to the VR-specific repository (introduced for LOOT v0.17.0).
-    auto newUrl = "https://github.com/loot/skyrimvr.git";
+    auto newUrl = "https://github.com/loot/skyrimse.git";
     if (logger) {
       logger->info(
           "Updating masterlist repository URL from {} to {}", url, newUrl);
@@ -240,7 +240,7 @@ std::optional<std::string> migrateMasterlistRepoSettings(GameId gameId,
   if (gameId == GameId::fo4vr &&
       url == "https://github.com/loot/fallout4.git") {
     // Switch to the VR-specific repository (introduced for LOOT v0.17.0).
-    auto newUrl = "https://github.com/loot/fallout4vr.git";
+    auto newUrl = "https://github.com/loot/fallout4.git";
     if (logger) {
       logger->info(
           "Updating masterlist repository URL from {} to {}", url, newUrl);
@@ -444,6 +444,35 @@ std::optional<std::string> migratePreludeRepoSettings(
   return migratedSource;
 }
 
+std::optional<std::string> migrateMasterlistSource(std::string_view source,
+                                                   std::string_view repo,
+                                                   std::string_view branch) {
+  const auto url = fmt::format(
+      "https://raw.githubusercontent.com/loot/{}/{}/masterlist.yaml",
+      repo,
+      branch);
+
+  if (source == url) {
+    std::string newRepo = std::string(repo);
+    if (repo == "skyrimvr") {
+      newRepo = "skyrimse";
+    } else if (repo == "fallout4vr") {
+      newRepo = "fallout4";
+    }
+    const auto newSource = GetDefaultMasterlistUrl(newRepo);
+
+    const auto logger = getLogger();
+    if (logger) {
+      logger->info(
+          "Migrating masterlist source from {} to {}", source, newSource);
+    }
+
+    return newSource;
+  }
+
+  return std::nullopt;
+}
+
 std::string migrateMasterlistSource(const std::string& source) {
   static const std::vector<std::string> officialMasterlistRepos = {"morrowind",
                                                                    "oblivion",
@@ -459,21 +488,21 @@ std::string migrateMasterlistSource(const std::string& source) {
 
   for (const auto& repo : officialMasterlistRepos) {
     for (const auto& branch : oldDefaultBranches) {
-      const auto url = "https://raw.githubusercontent.com/loot/" + repo + "/" +
-                       branch + "/masterlist.yaml";
-
-      if (source == url) {
-        const auto newSource = GetDefaultMasterlistUrl(repo);
-
-        const auto logger = getLogger();
-        if (logger) {
-          logger->info(
-              "Migrating masterlist source from {} to {}", source, newSource);
-        }
-
-        return newSource;
+      auto migrated = migrateMasterlistSource(source, repo, branch);
+      if (migrated.has_value()) {
+        return migrated.value();
       }
     }
+  }
+
+  auto migrated = migrateMasterlistSource(source, "skyrimvr", "v0.21");
+  if (migrated.has_value()) {
+    return migrated.value();
+  }
+
+  migrated = migrateMasterlistSource(source, "fallout4vr", "v0.21");
+  if (migrated.has_value()) {
+    return migrated.value();
   }
 
   return source;
@@ -647,8 +676,7 @@ GameSettings convertGameTable(const toml::table& table) {
   return game;
 }
 
-CheckSettingsResult checkSettingsFile(
-    const std::filesystem::path& filePath) {
+CheckSettingsResult checkSettingsFile(const std::filesystem::path& filePath) {
   CheckSettingsResult result;
 
   // Don't use toml::parse_file() as it just uses a std stream,
