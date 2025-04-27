@@ -150,8 +150,8 @@ modules:
       - install -D /run/build/cbindgen/target/release/cbindgen /app/bin/cbindgen
     sources:
       - type: archive
-        url: https://github.com/mozilla/cbindgen/archive/0.26.0.tar.gz
-        sha256: b45e1a64875b615702a86ac3084ef69ae32926241cd2b687a30c12474be15105
+        url: https://github.com/mozilla/cbindgen/archive/0.28.0.tar.gz
+        sha256: 620d569c431f8c15b69e1455695cf4be44c11678cc08b25a35b312109baf1980
       # Generated using scripts/generate_manifests.sh
       - ../../build/flatpak-manifests/cbindgen.json
 
@@ -166,25 +166,25 @@ modules:
       - -DCMAKE_BUILD_TYPE=Release
       - -DLIBLOOT_BUILD_TESTS=OFF
       - -DLIBLOOT_INSTALL_DOCS=OFF
-      - -DESPLUGIN_URL=/run/build/libloot/6.1.2.tar.gz
-      - -DLIBLOADORDER_URL=/run/build/libloot/18.3.0.tar.gz
-      - -DLOOT_CONDITION_INTERPRETER_URL=/run/build/libloot/5.3.0.tar.gz
+      - -DESPLUGIN_URL=/run/build/libloot/6.1.3.tar.gz
+      - -DLIBLOADORDER_URL=/run/build/libloot/18.4.0.tar.gz
+      - -DLOOT_CONDITION_INTERPRETER_URL=/run/build/libloot/5.3.2.tar.gz
       - -DFETCHCONTENT_SOURCE_DIR_YAML-CPP=/run/build/libloot/yaml-cpp
     sources:
       # Use the Git repository so that libloot's commit hash gets embedded in the build.
       - type: git
         url: https://github.com/loot/libloot.git
-        tag: 0.26.0
-        commit: 7bbf55cbb79c31cb41d048f9ab07f35e9438f058
+        tag: 0.26.1
+        commit: 070822f37f48625683d2296214cce61c4e575a70
       - type: file
-        url: https://github.com/Ortham/esplugin/archive/refs/tags/6.1.2.tar.gz
-        sha256: 94ed03488197d69aa81fd871302cb0b437ee17c8eac59ec2139d7150294fb7af
+        url: https://github.com/Ortham/esplugin/archive/refs/tags/6.1.3.tar.gz
+        sha256: d11373b9108036e8d8453ff77000ae2961f9d1243c99c42dd732dad0c83d8618
       - type: file
-        url: https://github.com/Ortham/libloadorder/archive/refs/tags/18.3.0.tar.gz
-        sha256: dab66a9a688042a7640a578070ed32851cf7be9cbd424151706e068d011e40df
+        url: https://github.com/Ortham/libloadorder/archive/refs/tags/18.4.0.tar.gz
+        sha256: c83f1f48829e013f2634041b62fed8c4957fb7469a401250b3793953ed3c3d2c
       - type: file
-        url: https://github.com/loot/loot-condition-interpreter/archive/refs/tags/5.3.0.tar.gz
-        sha256: 4da6921871a3854dd8523392866df1da971ad5258d1337bf583446cae94d1738
+        url: https://github.com/loot/loot-condition-interpreter/archive/refs/tags/5.3.2.tar.gz
+        sha256: 11a2c62898f6450cdae6db607c63fd7898f62bf67d4874b7ceed3d3693331af3
       - type: archive
         url: https://github.com/loot/yaml-cpp/archive/0.8.0+merge-key-support.3.tar.gz
         sha256: e2067f1ab8f658aeb8a8795fd0e06a753b4150b9352cae047280e659078dd44f
