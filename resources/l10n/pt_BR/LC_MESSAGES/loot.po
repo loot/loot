@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-04-19 22:39+0100\n"
-"PO-Revision-Date: 2025-01-08 02:00+0000\n"
+"PO-Revision-Date: 2025-04-29 02:01+0000\n"
 "Last-Translator: Carlos Gabriel <carlos2324feitosa@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/loot/"
 "loot/pt_BR/>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.12-dev\n"
 "X-Poedit-Basepath: .\n"
 
 #: src/gui/plugin_item.cpp:45
@@ -729,7 +729,7 @@ msgstr "Plugin Mestre"
 
 #: src/gui/qt/plugin_card.cpp:312
 msgid "Blueprint Master Plugin"
-msgstr ""
+msgstr "Plugin Mestre Blueprint"
 
 #: src/gui/qt/plugin_card.cpp:314
 msgid "Medium Plugin"
@@ -959,7 +959,7 @@ msgstr "Condição"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
 msgid "Constraint"
-msgstr ""
+msgstr "Restrição"
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
 msgid "URL"
@@ -1289,7 +1289,7 @@ msgstr "Este plugin requer que o \"{0}\" esteja ativo, mas está inativo."
 
 #: src/gui/state/game/validation.cpp:119
 msgid "This plugin requires {0} to be installed, but it is missing."
-msgstr ""
+msgstr "Esse plug-in requer a instalação de {0}, mas ele está ausente."
 
 #: src/gui/state/game/validation.cpp:140
 msgid "This plugin is incompatible with \"{0}\", but both are present."
@@ -1297,7 +1297,7 @@ msgstr "Este plugin é incompatível com \"{0}\", mas ambos estão presentes."
 
 #: src/gui/state/game/validation.cpp:146
 msgid "This plugin is incompatible with {0}, but both are present."
-msgstr ""
+msgstr "Esse plug-in é incompatível com {0}, mas ambos estão presentes."
 
 #: src/gui/state/game/validation.cpp:175
 msgid "small master"
