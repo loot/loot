@@ -4,6 +4,63 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.26.0 - 2025-05-02
+===================
+
+Added
+-----
+
+- Support for TES IV: Oblivion Remastered.
+
+  - Oblivion Remastered uses a similar load order system to Skyrim (not Skyrim
+    Special Edition), so LOOT will similarly read and write a ``loadorder.txt``
+    in the same directory as ``Plugins.txt``.
+
+  - Like OpenMW, Oblivion Remastered does not force master plugins to load
+    before other plugins: all plugins are treated as non-masters.
+
+- The tables in the plugin metadata editor's Load After, Requirements and
+  Incompatibilities tabs have gained a Constraint column as part of supporting
+  v0.26 of the metadata syntax.
+
+Fixed
+-----
+
+- Plugin validity checks did not consider filter patches' embedded Bash Tags, so
+  LOOT would incorrectly display errors about missing masters for them.
+- A crash could occur when creating a game handle for an OpenMW install that
+  does not define any user config paths. An error now occurs instead. Via
+  libloot.
+- The ``description_contains()`` metadata condition function did not read the
+  description field of OpenMW plugins. Via libloot.
+
+Changed
+-------
+
+- Official LOOT releases now require the MSVC 2022 redistributable, which LOOT's
+  installer will automatically download and install if necessary.
+- Skyrim VR and Fallout 4 VR now default to the same masterlist sources as
+  Skyrim SE and Fallout 4 respectively, as their masterlists have been merged.
+- LOOT now supports v0.26 of the metadata syntax.
+- Updated fmt to v11.1.14.
+- Updated libloot to v0.26.1.
+- Updated Qt to v6.9.0.
+- Updated spdlog to v1.15.2.
+- Updated ValveFileVDF to v1.1.1.
+- Updated the Bulgarian translation.
+- Updated the German translation.
+- Updated the Portuguese translation.
+- Updated the Russian translation.
+
+Removed
+-------
+
+- File metadata display names are no longer quoted in messages.
+- Paths in condition strings are no longer restricted to staying within the
+  directory tree that starts one level above the game’s main plugins directory
+  (usually the ``Data`` directory). Via libloot.
+- The audio permission from LOOT's Flatpak manifest, as it was unused.
+
 0.25.2 - 2025-03-16
 ===================
 

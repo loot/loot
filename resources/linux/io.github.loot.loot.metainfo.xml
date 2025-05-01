@@ -71,6 +71,16 @@
   </screenshots>
 
   <releases>
+    <release version="0.26.0" date="2025-05-02">
+      <description>
+        <ul>
+          <li>Add support for TES IV: Oblivion Remastered.</li>
+          <li>LOOT now supports v0.26 of the metadata syntax.</li>
+          <li>Other fixes and improvements.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.26.0/app/changelog.html#id1</url>
+    </release>
     <release version="0.25.2" date="2025-03-16">
       <description>
         <ul>
