@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$masterlistBranch = "v0.21"
+$masterlistBranch = "v0.26"
 
 function DownloadLanguageFile($languageFile, $parentPath) {
   New-Item -ItemType "directory" -Force $parentPath

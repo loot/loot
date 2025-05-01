@@ -135,7 +135,8 @@ static const std::set<std::string> oldDefaultBranches({"master",
                                                        "v0.14",
                                                        "v0.15",
                                                        "v0.17",
-                                                       "v0.18"});
+                                                       "v0.18",
+                                                       "v0.21"});
 
 static const std::regex GITHUB_REPO_URL_REGEX =
     std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",
@@ -496,12 +497,14 @@ std::string migrateMasterlistSource(const std::string& source) {
     }
   }
 
-  auto migrated = migrateMasterlistSource(source, "skyrimvr", "v0.21");
+  auto migrated =
+      migrateMasterlistSource(source, "skyrimvr", DEFAULT_MASTERLIST_BRANCH);
   if (migrated.has_value()) {
     return migrated.value();
   }
 
-  migrated = migrateMasterlistSource(source, "fallout4vr", "v0.21");
+  migrated =
+      migrateMasterlistSource(source, "fallout4vr", DEFAULT_MASTERLIST_BRANCH);
   if (migrated.has_value()) {
     return migrated.value();
   }

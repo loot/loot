@@ -8,7 +8,7 @@
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
 
-#define MasterlistBranch "v0.21"
+#define MasterlistBranch "v0.26"
 
 #if FileExists(AddBackslash(SourcePath) + '..\build\inno\ChineseSimplified.isl')
 #define SimplifiedChineseExists
