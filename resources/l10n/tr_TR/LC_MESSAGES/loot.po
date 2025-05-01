@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-19 22:39+0100\n"
+"POT-Creation-Date: 2025-04-27 10:49+0100\n"
 "PO-Revision-Date: 2024-05-29 00:59-0500\n"
 "Last-Translator: Ilker BINZET <ilker.binzet@gmail.com>\n"
 "Language-Team: Ilker BINZET - ilker.binzet@gmail.com\n"
@@ -1201,31 +1201,31 @@ msgstr ""
 "Klasör adı \"{0}\" olan başlangıç oyunu ayarlanamadı. Eğer yüklüyse, "
 "başlatıcısını çalıştırmayı ve ardından LOOT'u yeniden başlatmayı deneyin."
 
-#: src/gui/state/game/game.cpp:207
+#: src/gui/state/game/game.cpp:210
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "\"{0}\" ve \"{1}\" arasında döngüsel etkileşim tespit edildi: {2}"
 
-#: src/gui/state/game/game.cpp:225
+#: src/gui/state/game/game.cpp:228
 msgid "The group \"{0}\" does not exist."
 msgstr "\"{0}\" grubu mevcut değil."
 
-#: src/gui/state/game/game.cpp:334
+#: src/gui/state/game/game.cpp:337
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""
 "LOOT \"{0}\" ifadesinin geçersiz olduğunu tespit etti ve şimdi bunu yok "
 "sayıyor."
 
-#: src/gui/state/game/game.cpp:844
+#: src/gui/state/game/game.cpp:847
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:875
+#: src/gui/state/game/game.cpp:878
 msgid "You have not sorted your load order this session."
 msgstr "Bu oturumda yükleme sıranızı belirlemediniz."
 
-#: src/gui/state/game/game.cpp:947
+#: src/gui/state/game/game.cpp:950
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1258,7 +1258,7 @@ msgstr ""
 "Ayrıca [LOOT'un web sitesinde]({1}) bağlantısı bulunan LOOT'un forum "
 "başlığından da destek alabilirsiniz."
 
-#: src/gui/state/game/game.cpp:1131
+#: src/gui/state/game/game.cpp:1134
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
