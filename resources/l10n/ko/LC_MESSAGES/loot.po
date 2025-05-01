@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-04-19 22:39+0100\n"
+"POT-Creation-Date: 2025-04-27 10:49+0100\n"
 "PO-Revision-Date: 2024-05-22 20:02+0100\n"
 "Last-Translator: SteamB23 <steamb23@gmail.com>\n"
 "Language-Team: SteamB23 <steamb23@gmail.com>\n"
@@ -1163,29 +1163,29 @@ msgid ""
 "installed, try running its launcher then restarting LOOT."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:207
+#: src/gui/state/game/game.cpp:210
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "\"{0}\"와 \"{1}\"플러그인 사이의 순환 참조가 감지됨 : {2}"
 
-#: src/gui/state/game/game.cpp:225
+#: src/gui/state/game/game.cpp:228
 msgid "The group \"{0}\" does not exist."
 msgstr "\"{0}\" 그룹이 존재하지 않습니다."
 
-#: src/gui/state/game/game.cpp:334
+#: src/gui/state/game/game.cpp:337
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT에서 {0}가 유효하지 않음을 감지하여 현재 무시하고 있습니다."
 
-#: src/gui/state/game/game.cpp:844
+#: src/gui/state/game/game.cpp:847
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:875
+#: src/gui/state/game/game.cpp:878
 msgid "You have not sorted your load order this session."
 msgstr "이 세션에서 로드 순서를 정렬하지 않았습니다."
 
-#: src/gui/state/game/game.cpp:947
+#: src/gui/state/game/game.cpp:950
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1203,7 +1203,7 @@ msgid ""
 "[LOOT's website]({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1131
+#: src/gui/state/game/game.cpp:1134
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
