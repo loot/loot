@@ -161,20 +161,16 @@ QColor getDefaultColor(const GraphView &graphView, bool isUserMetadata) {
   // that means that overlapping shapes using this color will appear lighter,
   // which we don't want. Use the alpha channel and the background color
   // to work out what the equivalent opaque color is and use that instead.
-  const auto alpha = MAX_ALPHA - color.alpha();
-  if (alpha == 0) {
+  if (color.alpha() == MAX_ALPHA) {
     return color;
   }
 
-  const auto backgroundColor = graphView.getBackgroundColor();
+  const auto bg = graphView.getBackgroundColor();
+  const auto alpha = color.alphaF();
 
-  const auto red = backgroundColor.red() +
-                   (color.red() - backgroundColor.red()) * alpha / MAX_ALPHA;
-  const auto green =
-      backgroundColor.green() +
-      (color.green() - backgroundColor.green()) * alpha / MAX_ALPHA;
-  const auto blue = backgroundColor.blue() +
-                    (color.blue() - backgroundColor.blue()) * alpha / MAX_ALPHA;
+  const auto red = bg.red() + (color.red() - bg.red()) * alpha;
+  const auto green = bg.green() + (color.green() - bg.green()) * alpha;
+  const auto blue = bg.blue() + (color.blue() - bg.blue()) * alpha;
 
   return QColor(red, green, blue);
 }
