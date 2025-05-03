@@ -70,6 +70,8 @@ private:
 QPolygonF createLineWithArrow(QPointF startPos, QPointF endPos);
 
 QColor getDefaultColor(const GraphView &graphView, bool isUserMetadata);
+
+QColor toOpaqueColor(const QColor &color, const QColor &backgroundColor);
 }
 
 #endif

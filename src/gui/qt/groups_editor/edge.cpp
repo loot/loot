@@ -152,10 +152,14 @@ QPolygonF createLineWithArrow(QPointF startPos, QPointF endPos) {
 }
 
 QColor getDefaultColor(const GraphView &graphView, bool isUserMetadata) {
-  static constexpr int MAX_ALPHA = 255;
-
   const auto color =
       isUserMetadata ? graphView.getUserColor() : graphView.getMasterColor();
+
+  return toOpaqueColor(color, graphView.getBackgroundColor());
+}
+
+QColor toOpaqueColor(const QColor &color, const QColor &backgroundColor) {
+  static constexpr int MAX_ALPHA = 255;
 
   // The color may use the alpha channel to appear darken its RGB color, but
   // that means that overlapping shapes using this color will appear lighter,
@@ -165,7 +169,7 @@ QColor getDefaultColor(const GraphView &graphView, bool isUserMetadata) {
     return color;
   }
 
-  const auto bg = graphView.getBackgroundColor();
+  const auto& bg = backgroundColor;
   const auto alpha = color.alphaF();
 
   const auto red = bg.red() + (color.red() - bg.red()) * alpha;

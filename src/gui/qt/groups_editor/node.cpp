@@ -53,11 +53,13 @@ NodeLabel::NodeLabel(const GraphView &graphView,
 void NodeLabel::paint(QPainter *painter,
                       const QStyleOptionGraphicsItem *option,
                       QWidget *widget) {
-  const auto backgroundColor =
+  const auto& windowBackgroundColor =
+      QGuiApplication::palette().color(QPalette::Active, QPalette::Window);
+  const auto viewBackgroundColor =
       qobject_cast<GraphView *>(scene()->parent())->getBackgroundColor();
 
   painter->setPen(Qt::NoPen);
-  painter->setBrush(backgroundColor);
+  painter->setBrush(toOpaqueColor(viewBackgroundColor, windowBackgroundColor));
   painter->drawRect(boundingRect());
 
   QGraphicsSimpleTextItem::paint(painter, option, widget);
