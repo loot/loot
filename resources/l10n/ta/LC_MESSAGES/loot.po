@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-01 22:43+0100\n"
+"POT-Creation-Date: 2025-05-03 09:57+0100\n"
 "PO-Revision-Date: 2025-01-19 13:00+0000\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
@@ -954,7 +954,7 @@ msgid "URL"
 msgstr "முகவரி"
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
-#: src/gui/qt/settings/game_tab.cpp:150
+#: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:123
 msgid "Name"
 msgstr "பெயர்"
@@ -988,37 +988,37 @@ msgstr "பாச் நாள்"
 msgid "Browse…"
 msgstr "உலாவுக…"
 
-#: src/gui/qt/settings/game_tab.cpp:151
+#: src/gui/qt/settings/game_tab.cpp:152
 #: src/gui/qt/settings/new_game_dialog.cpp:124
 msgid "Base Game"
 msgstr "காரம் Game"
 
-#: src/gui/qt/settings/game_tab.cpp:152
+#: src/gui/qt/settings/game_tab.cpp:153
 #: src/gui/qt/settings/new_game_dialog.cpp:125
 msgid "LOOT Folder"
 msgstr "கொள்ளை கோப்புறை"
 
-#: src/gui/qt/settings/game_tab.cpp:153
+#: src/gui/qt/settings/game_tab.cpp:154
 msgid "Main Master Plugin"
 msgstr "முதன்மை முதன்மை சொருகி"
 
-#: src/gui/qt/settings/game_tab.cpp:154
+#: src/gui/qt/settings/game_tab.cpp:155
 msgid "Minimum Header Version"
 msgstr "குறைந்தபட்ச தலைப்பு பதிப்பு"
 
-#: src/gui/qt/settings/game_tab.cpp:155
+#: src/gui/qt/settings/game_tab.cpp:156
 msgid "Masterlist Source"
 msgstr "மாச்டர்லிச்ட் மூல"
 
-#: src/gui/qt/settings/game_tab.cpp:156
+#: src/gui/qt/settings/game_tab.cpp:157
 msgid "Install Path"
 msgstr "பாதையை நிறுவவும்"
 
-#: src/gui/qt/settings/game_tab.cpp:157
+#: src/gui/qt/settings/game_tab.cpp:158
 msgid "Local AppData Path"
 msgstr "உள்ளக AppData பாதை"
 
-#: src/gui/qt/settings/game_tab.cpp:159
+#: src/gui/qt/settings/game_tab.cpp:160
 msgid "Delete game"
 msgstr "விளையாட்டை நீக்கு"
 

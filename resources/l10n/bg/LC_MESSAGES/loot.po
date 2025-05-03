@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-01 22:43+0100\n"
+"POT-Creation-Date: 2025-05-03 09:57+0100\n"
 "PO-Revision-Date: 2025-04-21 06:07+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
@@ -957,7 +957,7 @@ msgid "URL"
 msgstr "Връзка"
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
-#: src/gui/qt/settings/game_tab.cpp:150
+#: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:123
 msgid "Name"
 msgstr "Име"
@@ -991,37 +991,37 @@ msgstr "Етикет на „Bash“"
 msgid "Browse…"
 msgstr "Търси…"
 
-#: src/gui/qt/settings/game_tab.cpp:151
+#: src/gui/qt/settings/game_tab.cpp:152
 #: src/gui/qt/settings/new_game_dialog.cpp:124
 msgid "Base Game"
 msgstr "Игра"
 
-#: src/gui/qt/settings/game_tab.cpp:152
+#: src/gui/qt/settings/game_tab.cpp:153
 #: src/gui/qt/settings/new_game_dialog.cpp:125
 msgid "LOOT Folder"
 msgstr "Папка на LOOT"
 
-#: src/gui/qt/settings/game_tab.cpp:153
+#: src/gui/qt/settings/game_tab.cpp:154
 msgid "Main Master Plugin"
 msgstr "Главна основна приставка"
 
-#: src/gui/qt/settings/game_tab.cpp:154
+#: src/gui/qt/settings/game_tab.cpp:155
 msgid "Minimum Header Version"
 msgstr "Минимална версия на заглавката"
 
-#: src/gui/qt/settings/game_tab.cpp:155
+#: src/gui/qt/settings/game_tab.cpp:156
 msgid "Masterlist Source"
 msgstr "Източник на основния списък"
 
-#: src/gui/qt/settings/game_tab.cpp:156
+#: src/gui/qt/settings/game_tab.cpp:157
 msgid "Install Path"
 msgstr "Местоположение на играта"
 
-#: src/gui/qt/settings/game_tab.cpp:157
+#: src/gui/qt/settings/game_tab.cpp:158
 msgid "Local AppData Path"
 msgstr "Местоположение на програмните данни"
 
-#: src/gui/qt/settings/game_tab.cpp:159
+#: src/gui/qt/settings/game_tab.cpp:160
 msgid "Delete game"
 msgstr "Изтрий играта"
 
