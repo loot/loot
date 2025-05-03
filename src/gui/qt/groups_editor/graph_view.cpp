@@ -99,13 +99,15 @@ GraphView::GraphView(QWidget *parent) :
   QGraphicsScene *scene = new QGraphicsScene(this);
   scene->setItemIndexMethod(QGraphicsScene::BspTreeIndex);
   setScene(scene);
-  setCacheMode(CacheBackground);
   setDragMode(QGraphicsView::ScrollHandDrag);
   setViewportUpdateMode(BoundingRectViewportUpdate);
   setRenderHint(QPainter::Antialiasing);
   setTransformationAnchor(AnchorUnderMouse);
   scale(INITIAL_SCALING_FACTOR, INITIAL_SCALING_FACTOR);
   setMinimumSize(MIN_VIEW_SIZE, MIN_VIEW_SIZE);
+
+  // This is needed to set the correct background colour on Windows 11.
+  setBackgroundBrush(QBrush(backgroundColor));
 }
 
 void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
@@ -303,6 +305,11 @@ QColor GraphView::getMasterColor() const { return masterColor; }
 QColor GraphView::getUserColor() const { return userColor; }
 
 QColor GraphView::getBackgroundColor() const { return backgroundColor; }
+
+void GraphView::setBackgroundColor(QColor color) {
+  backgroundColor = color;
+  setBackgroundBrush(QBrush(backgroundColor));
+}
 
 #if QT_CONFIG(wheelevent)
 void GraphView::wheelEvent(QWheelEvent *event) {

@@ -41,7 +41,7 @@ class GraphView : public QGraphicsView {
   Q_PROPERTY(QColor masterColor MEMBER masterColor READ getMasterColor)
   Q_PROPERTY(QColor userColor MEMBER userColor READ getUserColor)
   Q_PROPERTY(
-      QColor backgroundColor MEMBER backgroundColor READ getBackgroundColor)
+      QColor backgroundColor READ getBackgroundColor WRITE setBackgroundColor)
 
 public:
   explicit GraphView(QWidget *parent = nullptr);
@@ -69,6 +69,8 @@ public:
   QColor getMasterColor() const;
   QColor getUserColor() const;
   QColor getBackgroundColor() const;
+
+  void setBackgroundColor(QColor color);
 
 signals:
   void groupRemoved(const QString name);
