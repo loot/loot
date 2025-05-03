@@ -47,6 +47,19 @@ QLabel#plugin-crc {
     color: #795548;
 }
 
+loot--PluginCard QGroupBox {
+    border: 1px solid palette(mid);
+    margin-top: 1ex; /* leave space at the top for the title */
+    padding-top: 8px;
+}
+
+loot--PluginCard QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 8px;
+    top: -2px;
+}
+
 QLabel#tags-current {
     color: silver;
 }
