@@ -31,8 +31,6 @@ Fixed
 - A crash could occur when creating a game handle for an OpenMW install that
   does not define any user config paths. An error now occurs instead. Via
   libloot.
-- The ``description_contains()`` metadata condition function did not read the
-  description field of OpenMW plugins. Via libloot.
 
 Changed
 -------
