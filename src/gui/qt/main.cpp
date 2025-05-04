@@ -82,13 +82,6 @@ void logRuntimeEnvironment() {
     logger->info("Available Qt styles: {}", fmt::join(styles, ", "));
   }
 }
-
-bool isRunningOnWindows11() {
-  return QOperatingSystemVersion::currentType() ==
-             QOperatingSystemVersion::OSType::Windows &&
-         QOperatingSystemVersion::current() >=
-             QOperatingSystemVersion::Windows11;
-}
 }
 
 int main(int argc, char* argv[]) {
@@ -107,15 +100,14 @@ int main(int argc, char* argv[]) {
   loot::ApplicationMutexGuard mutexGuard;
 
 #ifdef _WIN32
-  // The default style on Windows 11 is the windows11 style, and it looks
-  // worse than the windowsvista style, so use that instead.
+  // The default style on Windows 10 is light-only, and while the
+  // default style on Windows 11 does adapt to system theme, its light
+  // variant looks terrible.
   // This is set before a QApplication instance is created so that the
   // -style CLI argument can be used to set a different style.
-  if (isRunningOnWindows11()) {
-    auto overrideDefaultStyle = QStyleFactory::create("windowsvista");
-    if (overrideDefaultStyle) {
-      QApplication::setStyle(overrideDefaultStyle);
-    }
+  auto overrideDefaultStyle = QStyleFactory::create("fusion");
+  if (overrideDefaultStyle) {
+    QApplication::setStyle(overrideDefaultStyle);
   }
 #endif
 
