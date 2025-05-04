@@ -101,10 +101,11 @@ int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
 
 #ifdef _WIN32
-  // The windows11 style looks worse than the windowsvista style but is the
-  // default on Windows 11 (only), so override it if it's set.
-  if (QApplication::style()->name() == "windows11") {
-    QApplication::setStyle(QStyleFactory::create("windowsvista"));
+  // The windowsvista and windows11 styles do not reflect the system colour
+  // scheme, so LOOT's dark theme won't work correctly with them.
+  if (QApplication::style()->name() == "windowsvista" ||
+      QApplication::style()->name() == "windows11") {
+    QApplication::setStyle(QStyleFactory::create("fusion"));
   }
 #endif
 
