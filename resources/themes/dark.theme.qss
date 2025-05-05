@@ -1,7 +1,7 @@
 loot--GraphView {
     qproperty-masterColor: #6E6E6E;
     qproperty-userColor: #FFFFFF;
-    qproperty-backgroundColor: #303030;
+    qproperty-backgroundColor: #212121;
 }
 
 loot--MainWindow {
