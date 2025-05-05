@@ -23,6 +23,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
+#include <fmt/ranges.h>
+
 #include <QtCore/QCommandLineOption>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QLibraryInfo>
@@ -72,6 +74,12 @@ void logRuntimeEnvironment() {
     if (isRunningThroughModOrganiser()) {
       logger->info("LOOT is being run through Mod Organiser.");
     }
+
+    std::vector<std::string> styles;
+    for (const auto& style : QStyleFactory::keys()) {
+      styles.push_back(style.toStdString());
+    }
+    logger->info("Available Qt styles: {}", fmt::join(styles, ", "));
   }
 }
 
