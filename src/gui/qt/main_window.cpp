@@ -2780,14 +2780,12 @@ void MainWindow::handleIconColorChanged() {
 
   setIcons();
 
-  sidebarPluginsView->reset();
 
   const auto cardDelegate =
       qobject_cast<CardDelegate*>(pluginCardsView->itemDelegate());
 
   if (cardDelegate) {
     cardDelegate->setIcons();
-    pluginCardsView->reset();
   }
 }
 
@@ -2799,7 +2797,6 @@ void MainWindow::handleSidebarTextColorChanged() {
   if (sidebarDelegate) {
     sidebarDelegate->setColors(selectedSidebarPluginTextColor,
                                unselectedSidebarPluginGroupColor);
-    sidebarPluginsView->reset();
   }
 }
 
@@ -2813,7 +2810,6 @@ void MainWindow::handleLinkColorChanged() {
 
   if (cardDelegate) {
     cardDelegate->refreshMessages();
-    pluginCardsView->reset();
   }
 }
 
