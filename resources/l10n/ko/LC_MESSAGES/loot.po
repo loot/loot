@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-03 09:57+0100\n"
+"POT-Creation-Date: 2025-05-03 21:35+0100\n"
 "PO-Revision-Date: 2024-05-22 20:02+0100\n"
 "Last-Translator: SteamB23 <steamb23@gmail.com>\n"
 "Language-Team: SteamB23 <steamb23@gmail.com>\n"
@@ -817,11 +817,11 @@ msgstr "{0}의 플러그인"
 msgid "Group already exists!"
 msgstr "그룹이 이미 존재함!"
 
-#: src/gui/qt/groups_editor/node.cpp:247
+#: src/gui/qt/groups_editor/node.cpp:249
 msgid "Only user groups can be removed!"
 msgstr ""
 
-#: src/gui/qt/groups_editor/node.cpp:252
+#: src/gui/qt/groups_editor/node.cpp:254
 msgid "A group that is not empty cannot be removed!"
 msgstr ""
 

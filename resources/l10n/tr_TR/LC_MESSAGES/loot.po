@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-03 09:57+0100\n"
+"POT-Creation-Date: 2025-05-03 21:35+0100\n"
 "PO-Revision-Date: 2024-05-29 00:59-0500\n"
 "Last-Translator: Ilker BINZET <ilker.binzet@gmail.com>\n"
 "Language-Team: Ilker BINZET - ilker.binzet@gmail.com\n"
@@ -845,11 +845,11 @@ msgstr "{0} içindeki eklentiler"
 msgid "Group already exists!"
 msgstr "Grup zaten var!"
 
-#: src/gui/qt/groups_editor/node.cpp:247
+#: src/gui/qt/groups_editor/node.cpp:249
 msgid "Only user groups can be removed!"
 msgstr "Sadece kullanıcı grupları kaldırılabilir!"
 
-#: src/gui/qt/groups_editor/node.cpp:252
+#: src/gui/qt/groups_editor/node.cpp:254
 msgid "A group that is not empty cannot be removed!"
 msgstr "Boş olmayan bir grup kaldırılamaz!"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-03 09:57+0100\n"
+"POT-Creation-Date: 2025-05-03 21:35+0100\n"
 "PO-Revision-Date: 2024-05-22 20:01+0100\n"
 "Last-Translator: Simple Shawn\n"
 "Language-Team: \n"
@@ -843,11 +843,11 @@ msgstr "Plugins dans {0}"
 msgid "Group already exists!"
 msgstr "Ce groupe existe déjà!"
 
-#: src/gui/qt/groups_editor/node.cpp:247
+#: src/gui/qt/groups_editor/node.cpp:249
 msgid "Only user groups can be removed!"
 msgstr "Seuls les groupes de l'utilisateur peuvent être supprimés!"
 
-#: src/gui/qt/groups_editor/node.cpp:252
+#: src/gui/qt/groups_editor/node.cpp:254
 msgid "A group that is not empty cannot be removed!"
 msgstr "Un groupe qui n'est pas vide ne peut être supprimé!"
 
