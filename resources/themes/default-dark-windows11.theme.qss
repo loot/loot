@@ -1,0 +1,80 @@
+/* This is a variation of the default theme that's suitable for a dark palette
+  on Windows when using the windows11 Qt style. */
+loot--GraphView {
+    qproperty-masterColor: #979797;
+    qproperty-userColor: palette(text);
+    qproperty-backgroundColor: palette(base);
+}
+
+loot--MainWindow {
+    qproperty-normalIconColor: #E0E0E0;
+    qproperty-disabledIconColor: #787878;
+    qproperty-selectedIconColor: palette(highlighted-text);
+    qproperty-selectedSidebarPluginTextColor: #FFFFFF;
+    qproperty-unselectedSidebarPluginGroupColor: #E0E0E0;
+    /* The link color is different from the non-Windows default-dark theme
+       because when the color scheme is dark on Windows the default link
+       color is the system accent color, which may not provide enough
+       contrast. */
+    qproperty-linkColor: #94BBFF;
+}
+
+loot--Card {
+    qproperty-shadowNearColor: palette(shadow);
+    qproperty-shadowFarColor: palette(window);
+}
+
+loot--GeneralInfoCard,
+loot--PluginCard {
+	background-color: palette(base);
+}
+
+QListView#pluginCardsView {
+    background-color: palette(window);
+}
+
+QListView::item:alternate loot--GeneralInfoCard,
+QListView::item:alternate loot--PluginCard {
+	border-bottom: 1px solid palette(mid);
+}
+
+loot--PluginCard[isSearchResult="true"] {
+	border-left: 4px solid #1976E1;
+}
+
+loot--PluginCard[isSearchResult="true"][isCurrentSearchResult="true"] {
+	border-left: 4px solid #B7D8F6;
+}
+
+QLabel[messageType="warn"] {
+    color: #FFE082;
+}
+
+QLabel[messageType="error"] {
+    color: #FFA3A3;
+}
+
+QLabel#plugin-crc,
+QLabel#plugin-version {
+	margin-left: 16px;
+}
+
+QLabel#plugin-version {
+	color: #ADBCC2;
+}
+
+QLabel#plugin-crc {
+	color: #C8B5B1;
+}
+
+QLabel#tags-current {
+    color: #BDBDBD;
+}
+
+QLabel#tags-add {
+    color: #86CA8A;
+}
+
+QLabel#tags-remove {
+    color: #FFA3A3;
+}
