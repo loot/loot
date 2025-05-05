@@ -246,8 +246,8 @@ if(NOT OGDF_FOUND)
     endif()
 
     if(NOT DEFINED OGDF_URL)
-        set(OGDF_URL "https://ogdf.uos.de/wp-content/uploads/2023/09/ogdf.v2023.09.zip")
-        set(OGDF_HASH "SHA256=a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436")
+        set(OGDF_URL "https://github.com/ogdf/ogdf/archive/b99a0615cff39ce3f358afde84b678fdb1545158.zip")
+        set(OGDF_HASH "SHA256=43e7a8fe9a16d17f8e8d620c2437b20769309d7de60d1624f132106176999b40")
     endif()
 
     # git apply does not accept an absolute path as the --directory value.
@@ -261,9 +261,9 @@ if(NOT OGDF_FOUND)
         CMAKE_ARGS
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        PATCH_COMMAND git apply -v
-            --directory=${RELATIVE_BINARY_DIR}/external/src/OGDF
-            ${CMAKE_SOURCE_DIR}/cmake/ogdf-chrono.patch
+        #PATCH_COMMAND git apply -v
+        #    --directory=${RELATIVE_BINARY_DIR}/external/src/OGDF
+        #    ${CMAKE_SOURCE_DIR}/cmake/ogdf-chrono.patch
         BUILD_COMMAND ${OGDF_BUILD_COMMAND}
         INSTALL_COMMAND "")
     ExternalProject_Get_Property(OGDF SOURCE_DIR BINARY_DIR)
