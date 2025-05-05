@@ -1,16 +1,16 @@
 loot--GraphView {
-    qproperty-masterColor: #6E6E6E;
+    qproperty-masterColor: #979797;
     qproperty-userColor: #FFFFFF;
     qproperty-backgroundColor: #212121;
 }
 
 loot--MainWindow {
     qproperty-normalIconColor: #E0E0E0;
-    qproperty-disabledIconColor: #787878;
+    qproperty-disabledIconColor: #797979;
     qproperty-selectedIconColor: #FFFFFF;
     qproperty-selectedSidebarPluginTextColor: #FFFFFF;
     qproperty-unselectedSidebarPluginGroupColor: #E0E0E0;
-    qproperty-linkColor: #2979FF;
+    qproperty-linkColor: #99BEFF;
 }
 
 loot--Card {
@@ -63,19 +63,19 @@ QListView::item:alternate loot--PluginCard {
 }
 
 loot--PluginCard[isSearchResult="true"] {
-	border-left: 4px solid #1E88E5;
+	border-left: 4px solid #1979E6;
 }
 
 loot--PluginCard[isSearchResult="true"][isCurrentSearchResult="true"] {
-	border-left: 4px solid #1565C0;
+	border-left: 4px solid #C8DDF9;
 }
 
 QLabel[messageType="warn"] {
-	background-color: #FFE082;
+	color: #FFE082;
 }
 
 QLabel[messageType="error"] {
-	background-color: #FF8A80;
+	color: #FFA69E;
 }
 
 QLabel#plugin-crc,
@@ -84,27 +84,25 @@ QLabel#plugin-version {
 }
 
 QLabel#plugin-version {
-	color: #78909C;
+	color: #B3C1C6;
 }
 
 QLabel#plugin-crc {
-	color: #8D6E63;
+	color: #CCBBB7;
 }
 
 QLabel#tags-current {
-    color: silver;
+    color: #BDBDBD;
 }
 
 QLabel#tags-add {
-    color: #4CAF50;
+    color: #8ECD92;
 }
 
 QLabel#tags-remove {
-    color: #F44336;
+    color: #FFA8A8;
 }
 
-QLabel[messageType="warn"],
-QLabel[messageType="error"],
 QToolTip:active,
 QToolTip:!active {
     color: #000000;
@@ -158,9 +156,9 @@ QMenuBar::item:disabled,
 QToolButton:disabled,
 QPushButton:disabled
  {
-    color: #656565;
+    color: #979797;
     selection-background-color: #595959;
-    selection-color: #6E6E6E;
+    selection-color: #FFFFFF;
 }
 
 QToolBar,
@@ -210,7 +208,7 @@ QMenu:selected:disabled,
 QToolBar > QToolButton:hover:disabled,
 QPushButton:selected:disabled,
 QTabBar::tab:selected:disabled {
-    color: #6E6E6E;
+    color: #979797;
 }
 
 QGroupBox::title {
@@ -218,7 +216,7 @@ QGroupBox::title {
 }
 
 QGroupBox::title:disabled {
-    color: #6E6E6E;
+    color: #979797;
 }
 
 QPushButton,
