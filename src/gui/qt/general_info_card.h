@@ -32,11 +32,12 @@
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
 
+#include "gui/qt/card.h"
 #include "gui/qt/helpers.h"
 #include "gui/qt/messages_widget.h"
 
 namespace loot {
-class GeneralInfoCard : public QFrame {
+class GeneralInfoCard : public Card {
   Q_OBJECT
 public:
   explicit GeneralInfoCard(QWidget* parent);
@@ -60,9 +61,6 @@ public:
   void setShowSeparateMediumPluginCount(bool showCount);
 
   void refreshMessages();
-
-protected:
-  void paintEvent(QPaintEvent* event);
 
 private:
   static constexpr int PLUGIN_VALUE_COLUMN = 5;

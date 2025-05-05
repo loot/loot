@@ -30,7 +30,7 @@
 #include "gui/qt/helpers.h"
 
 namespace loot {
-GeneralInfoCard::GeneralInfoCard(QWidget* parent) : QFrame(parent) {
+GeneralInfoCard::GeneralInfoCard(QWidget* parent) : Card(parent, false) {
   setupUi();
 }
 
@@ -149,12 +149,6 @@ void GeneralInfoCard::updatePluginRowsAndColumns() {
 }
 
 void GeneralInfoCard::refreshMessages() { messagesWidget->refresh(); }
-
-void GeneralInfoCard::paintEvent(QPaintEvent* event) {
-  QFrame::paintEvent(event);
-
-  PaintCardBorderShadows(this, false);
-}
 
 void GeneralInfoCard::setupUi() {
   static constexpr int TABLE_COLUMN_SPACING = 16;

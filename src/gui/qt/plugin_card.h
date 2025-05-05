@@ -30,6 +30,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QWidget>
 
+#include "gui/qt/card.h"
 #include "gui/plugin_item.h"
 #include "gui/qt/filters_states.h"
 #include "gui/qt/messages_widget.h"
@@ -41,7 +42,7 @@ std::vector<SourcedMessage> filterMessages(
     const PluginItem& plugin,
     const CardContentFiltersState& filters);
 
-class PluginCard : public QFrame {
+class PluginCard : public Card {
   Q_OBJECT
 public:
   explicit PluginCard(QWidget* parent);
@@ -54,9 +55,6 @@ public:
   void setSearchResult(bool isSearchResult, bool isCurrentSearchResult);
 
   void refreshMessages();
-
-protected:
-  void paintEvent(QPaintEvent* event) override;
 
 private:
   QLabel* nameLabel{new QLabel(this)};

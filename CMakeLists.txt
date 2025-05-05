@@ -289,6 +289,7 @@ endif()
 set(LOOT_SRC_GUI_CPP_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/backup.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/card.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/card_delegate.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/counters.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/filters_widget.cpp"
@@ -358,6 +359,7 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/application_mutex.h"
     "${CMAKE_SOURCE_DIR}/src/gui/backup.h"
     "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/card.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/card_delegate.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/counters.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/filters_states.h"

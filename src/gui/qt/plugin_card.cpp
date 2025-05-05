@@ -78,7 +78,7 @@ std::vector<SourcedMessage> filterMessages(
   return filteredMessages;
 }
 
-PluginCard::PluginCard(QWidget* parent) : QFrame(parent) { setupUi(); }
+PluginCard::PluginCard(QWidget* parent) : Card(parent, true) { setupUi(); }
 
 void PluginCard::setIcons() {
   setIcon(isActiveLabel, IconFactory::getIsActiveIcon());
@@ -210,12 +210,6 @@ void PluginCard::setSearchResult(bool isSearchResult,
 }
 
 void PluginCard::refreshMessages() { messagesWidget->refresh(); }
-
-void PluginCard::paintEvent(QPaintEvent* event) {
-  QFrame::paintEvent(event);
-
-  PaintCardBorderShadows(this, true);
-}
 
 void PluginCard::setupUi() {
   crcLabel->setObjectName("plugin-crc");

@@ -14,6 +14,11 @@ loot--MainWindow {
     qproperty-linkColor: #2979FF;
 }
 
+loot--Card {
+    qproperty-shadowNearColor: palette(shadow);
+    qproperty-shadowFarColor: palette(window);
+}
+
 loot--GeneralInfoCard,
 loot--PluginCard {
 	background-color: palette(base);
