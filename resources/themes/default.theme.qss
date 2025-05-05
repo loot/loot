@@ -1,15 +1,15 @@
 loot--GraphView {
-    qproperty-masterColor: #787878;
+    qproperty-masterColor: #767676;
     qproperty-userColor: palette(text);
     qproperty-backgroundColor: palette(base);
 }
 
 loot--MainWindow {
     qproperty-normalIconColor: #787878;
-    qproperty-disabledIconColor: #A8A8A8;
+    qproperty-disabledIconColor: #949494;
     qproperty-selectedIconColor: palette(highlighted-text);
     qproperty-selectedSidebarPluginTextColor: #FFFFFF;
-    qproperty-unselectedSidebarPluginGroupColor: #787878;
+    qproperty-unselectedSidebarPluginGroupColor: #595959;
     qproperty-linkColor: #0000FF;
 }
 
@@ -24,19 +24,19 @@ loot--PluginCard {
 }
 
 loot--PluginCard[isSearchResult="true"] {
-    border-left: 4px solid #64B5F6;
+    border-left: 4px solid #2B99F3;
 }
 
 loot--PluginCard[isSearchResult="true"][isCurrentSearchResult="true"] {
-    border-left: 4px solid #3F51B5;
+    border-left: 4px solid #32408F;
 }
 
 QLabel[messageType="warn"] {
-    background-color: #FFE082;
+    background-color: #FFE79E;
 }
 
 QLabel[messageType="error"] {
-    background-color: #FF8A80;
+    background-color: #FF9999;
 }
 
 QLabel#plugin-crc,
@@ -45,11 +45,11 @@ QLabel#plugin-version {
 }
 
 QLabel#plugin-version {
-    color: #607D8B;
+    color: #455D63;
 }
 
 QLabel#plugin-crc {
-    color: #795548;
+    color: #735045;
 }
 
 loot--PluginCard QGroupBox {
@@ -66,13 +66,13 @@ loot--PluginCard QGroupBox::title {
 }
 
 QLabel#tags-current {
-    color: silver;
+    color: #595959;
 }
 
 QLabel#tags-add {
-    color: #4CAF50;
+    color: #006600;
 }
 
 QLabel#tags-remove {
-    color: #F44336;
+    color: #B30000;
 }
