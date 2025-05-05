@@ -24,6 +24,10 @@ loot--PluginCard {
 	background-color: palette(base);
 }
 
+QListView#pluginCardsView {
+    background-color: palette(window);
+}
+
 QListView::item:alternate loot--GeneralInfoCard,
 QListView::item:alternate loot--PluginCard {
 	border-bottom: 1px solid palette(mid);

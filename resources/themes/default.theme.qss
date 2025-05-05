@@ -31,6 +31,10 @@ loot--PluginCard[isSearchResult="true"][isCurrentSearchResult="true"] {
     border-left: 4px solid #32408F;
 }
 
+QListView#pluginCardsView {
+    background-color: palette(window);
+}
+
 QLabel[messageType="warn"] {
     background-color: #FFE79E;
 }

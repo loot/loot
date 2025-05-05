@@ -57,6 +57,10 @@ loot--GraphView
     background-color: #303030;
 }
 
+QListView#pluginCardsView {
+    background-color: #212121;
+}
+
 QListView::item:alternate loot--GeneralInfoCard,
 QListView::item:alternate loot--PluginCard {
     border-bottom: 1px solid #595959;
