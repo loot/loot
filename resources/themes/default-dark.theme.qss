@@ -1,16 +1,16 @@
 /* This is a variation of the default theme that's suitable for a dark palette. */
 loot--GraphView {
-    qproperty-masterColor: #4DFFFFFF;
+    qproperty-masterColor: #979797;
     qproperty-userColor: palette(text);
     qproperty-backgroundColor: palette(base);
 }
 
 loot--MainWindow {
-    qproperty-normalIconColor: #4DE0E0E0;
+    qproperty-normalIconColor: #E0E0E0;
     qproperty-disabledIconColor: #787878;
     qproperty-selectedIconColor: palette(highlighted-text);
     qproperty-selectedSidebarPluginTextColor: #FFFFFF;
-    qproperty-unselectedSidebarPluginGroupColor: #4DE0E0E0;
+    qproperty-unselectedSidebarPluginGroupColor: #E0E0E0;
     qproperty-linkColor: #2979FF;
 }
 
@@ -30,21 +30,19 @@ QListView::item:alternate loot--PluginCard {
 }
 
 loot--PluginCard[isSearchResult="true"] {
-	border-left: 4px solid #1E88E5;
+	border-left: 4px solid #1668C5;
 }
 
 loot--PluginCard[isSearchResult="true"][isCurrentSearchResult="true"] {
-	border-left: 4px solid #1565C0;
+	border-left: 4px solid #93C5F1;
 }
 
 QLabel[messageType="warn"] {
-	background-color: #FFE082;
-    color: #000000;
+    color: #FFE082;
 }
 
 QLabel[messageType="error"] {
-	background-color: #FF8A80;
-    color: #000000;
+    color: #FF8585;
 }
 
 QLabel#plugin-crc,
@@ -53,21 +51,21 @@ QLabel#plugin-version {
 }
 
 QLabel#plugin-version {
-	color: #78909C;
+	color: #98AAB3;
 }
 
 QLabel#plugin-crc {
-	color: #8D6E63;
+	color: #BCA39F;
 }
 
 QLabel#tags-current {
-    color: silver;
+    color: #A7A7A7;
 }
 
 QLabel#tags-add {
-    color: #4CAF50;
+    color: #63BB67;
 }
 
 QLabel#tags-remove {
-    color: #F44336;
+    color: #FF8585;
 }
