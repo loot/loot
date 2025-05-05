@@ -1,15 +1,15 @@
 loot--GraphView {
-    qproperty-masterColor: #4DFFFFFF;
+    qproperty-masterColor: #6E6E6E;
     qproperty-userColor: #FFFFFF;
     qproperty-backgroundColor: #303030;
 }
 
 loot--MainWindow {
-    qproperty-normalIconColor: #4DE0E0E0;
+    qproperty-normalIconColor: #E0E0E0;
     qproperty-disabledIconColor: #787878;
     qproperty-selectedIconColor: #FFFFFF;
     qproperty-selectedSidebarPluginTextColor: #FFFFFF;
-    qproperty-unselectedSidebarPluginGroupColor: #4DE0E0E0;
+    qproperty-unselectedSidebarPluginGroupColor: #E0E0E0;
     qproperty-linkColor: #2979FF;
 }
 
@@ -106,7 +106,7 @@ QToolTip:!active {
 }
 
 QLineEdit[placeholderText][text=""] {
-    color: #B3FFFFFF;
+    color: #C1C1C1;
 }
 
 QToolBar {
@@ -153,9 +153,9 @@ QMenuBar::item:disabled,
 QToolButton:disabled,
 QPushButton:disabled
  {
-    color: #4DE0E0E0;
+    color: #656565;
     selection-background-color: #595959;
-    selection-color: #4DFFFFFF;
+    selection-color: #6E6E6E;
 }
 
 QToolBar,
@@ -205,7 +205,7 @@ QMenu:selected:disabled,
 QToolBar > QToolButton:hover:disabled,
 QPushButton:selected:disabled,
 QTabBar::tab:selected:disabled {
-    color: #4DFFFFFF;
+    color: #6E6E6E;
 }
 
 QGroupBox::title {
@@ -213,7 +213,7 @@ QGroupBox::title {
 }
 
 QGroupBox::title:disabled {
-    color: #4DFFFFFF;
+    color: #6E6E6E;
 }
 
 QPushButton,
