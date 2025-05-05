@@ -1,0 +1,87 @@
+loot--GraphView {
+    qproperty-masterColor: #979797;
+    qproperty-userColor: palette(text);
+    qproperty-backgroundColor: palette(base);
+}
+
+loot--MainWindow {
+    qproperty-normalIconColor: #E0E0E0;
+    qproperty-disabledIconColor: #787878;
+    qproperty-selectedIconColor: palette(highlighted-text);
+    qproperty-selectedSidebarPluginTextColor: #FFFFFF;
+    qproperty-unselectedSidebarPluginGroupColor: #E0E0E0;
+    qproperty-linkColor: palette(link);
+}
+
+loot--Card {
+    qproperty-shadowNearColor: palette(shadow);
+    qproperty-shadowFarColor: palette(window);
+}
+
+loot--GeneralInfoCard,
+loot--PluginCard {
+	background-color: palette(base);
+}
+
+QListView#pluginCardsView {
+    background-color: palette(window);
+}
+
+QListView::item:alternate loot--GeneralInfoCard,
+QListView::item:alternate loot--PluginCard {
+	border-bottom: 1px solid palette(mid);
+}
+
+loot--PluginCard[isSearchResult="true"] {
+	border-left: 4px solid #1668C5;
+}
+
+loot--PluginCard[isSearchResult="true"][isCurrentSearchResult="true"] {
+	border-left: 4px solid #93C5F1;
+}
+
+QLabel[messageType="warn"] {
+    color: #FFE082;
+}
+
+QLabel[messageType="error"] {
+    color: #FF8585;
+}
+
+QLabel#plugin-crc,
+QLabel#plugin-version {
+	margin-left: 16px;
+}
+
+QLabel#plugin-version {
+	color: #98AAB3;
+}
+
+QLabel#plugin-crc {
+	color: #BCA39F;
+}
+
+QLabel#tags-current {
+    color: #A7A7A7;
+}
+
+QLabel#tags-add {
+    color: #63BB67;
+}
+
+QLabel#tags-remove {
+    color: #FF8585;
+}
+
+/* On Windows the checkbox's background colour uses the system accent colour by
+   default, which is misleading (especially if the checkbox is unchecked) and
+   looks bad. */
+QCheckBox::indicator:unchecked {
+    background-color: palette(base);
+    border: 1px solid black;
+}
+
+QCheckBox::indicator:unchecked:pressed {
+    background-color: palette(midlight);
+    border: 1px solid black;
+}

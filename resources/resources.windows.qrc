@@ -3,4 +3,7 @@
     <qresource>
         <file alias="/icon.ico">../build/icon/icon.ico</file>
     </qresource>
+    <qresource prefix="/">
+        <file>themes/default-dark-windows.theme.qss</file>
+    </qresource>
 </RCC>

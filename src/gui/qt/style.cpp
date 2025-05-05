@@ -55,6 +55,16 @@ std::optional<QString> loadStyleSheet(const std::filesystem::path& themesPath,
   // built-in resources, then fall back to the default theme (which itself
   // will load from filesystem then built-in resources).
 
+#ifdef _WIN32
+  // Try loading a Windows-specific variant of the stylesheet.
+  if (!boost::ends_with(themeName, "-windows")) {
+    auto stylesheet = loadStyleSheet(themesPath, themeName + "-windows");
+    if (stylesheet.has_value()) {
+      return stylesheet;
+    }
+  }
+#endif
+
   const auto logger = getLogger();
   if (logger) {
     logger->debug("Loading style sheet for the \"{}\" theme...", themeName);
