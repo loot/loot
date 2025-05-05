@@ -29,6 +29,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QTranslator>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QStyleFactory>
 
 #include "gui/application_mutex.h"
 #include "gui/qt/main_window.h"
@@ -90,6 +91,14 @@ int main(int argc, char* argv[]) {
   loot::ApplicationMutexGuard mutexGuard;
 
   QApplication app(argc, argv);
+
+#ifdef _WIN32
+  // The windows11 style looks worse than the windowsvista style but is the
+  // default on Windows 11 (only), so override it if it's set.
+  if (QApplication::style()->name() == "windows11") {
+    QApplication::setStyle(QStyleFactory::create("windowsvista"));
+  }
+#endif
 
   QCommandLineParser parser;
   parser.addHelpOption();
