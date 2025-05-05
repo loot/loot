@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-03 09:57+0100\n"
+"POT-Creation-Date: 2025-05-03 21:35+0100\n"
 "PO-Revision-Date: 2025-01-19 13:00+0000\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
@@ -839,11 +839,11 @@ msgstr "{0} in இல் செருகுநிரல்கள்"
 msgid "Group already exists!"
 msgstr "குழு ஏற்கனவே உள்ளது!"
 
-#: src/gui/qt/groups_editor/node.cpp:247
+#: src/gui/qt/groups_editor/node.cpp:249
 msgid "Only user groups can be removed!"
 msgstr "பயனர் குழுக்களை மட்டுமே அகற்ற முடியும்!"
 
-#: src/gui/qt/groups_editor/node.cpp:252
+#: src/gui/qt/groups_editor/node.cpp:254
 msgid "A group that is not empty cannot be removed!"
 msgstr "காலியாக இல்லாத ஒரு குழுவை அகற்ற முடியாது!"
 

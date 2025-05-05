@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-03 09:57+0100\n"
+"POT-Creation-Date: 2025-05-03 21:35+0100\n"
 "PO-Revision-Date: 2025-01-21 14:00+0000\n"
 "Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/loot/loot/fi/>\n"
@@ -834,11 +834,11 @@ msgstr "Lisäosat ryhmässä {0}"
 msgid "Group already exists!"
 msgstr "Ryhmä on jo olemassa!"
 
-#: src/gui/qt/groups_editor/node.cpp:247
+#: src/gui/qt/groups_editor/node.cpp:249
 msgid "Only user groups can be removed!"
 msgstr "Vain käyttäjän ryhmät voidaan poistaa!"
 
-#: src/gui/qt/groups_editor/node.cpp:252
+#: src/gui/qt/groups_editor/node.cpp:254
 msgid "A group that is not empty cannot be removed!"
 msgstr "Vain tyhjät ryhmät voidaan poistaa!"
 
