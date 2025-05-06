@@ -92,7 +92,8 @@ std::optional<QString> loadStyleSheet(const std::filesystem::path& themesPath,
 }
 
 std::vector<std::string> findThemes(const std::filesystem::path& themesPath) {
-  std::set<std::string> themes({"default", "dark"});
+  std::set<std::string> themes(
+      {"default", "default-light", "default-dark", "dark"});
 
   if (!std::filesystem::is_directory(themesPath)) {
     return {themes.begin(), themes.end()};
@@ -118,23 +119,19 @@ std::vector<std::string> findThemes(const std::filesystem::path& themesPath) {
     const auto themeFullName =
         filename.substr(0, filename.size() - QSS_SUFFIX_LENGTH);
 
-    constexpr std::string_view LIGHT_SUFFIX = "-light";
-    constexpr std::string_view DARK_SUFFIX = "-dark";
-
     std::string themeName;
-    if (boost::ends_with(themeFullName, LIGHT_SUFFIX)) {
-      themeName =
-          themeFullName.substr(0, themeFullName.size() - LIGHT_SUFFIX.size());
-    } else if (boost::ends_with(themeFullName, DARK_SUFFIX)) {
-      themeName =
-          themeFullName.substr(0, themeFullName.size() - DARK_SUFFIX.size());
+    if (boost::ends_with(themeFullName, LIGHT_THEME_SUFFIX)) {
+      themeName = themeFullName.substr(
+          0, themeFullName.size() - LIGHT_THEME_SUFFIX.size());
+    } else if (boost::ends_with(themeFullName, DARK_THEME_SUFFIX)) {
+      themeName = themeFullName.substr(
+          0, themeFullName.size() - DARK_THEME_SUFFIX.size());
     } else {
       themeName = themeFullName;
     }
 
-    if (themes.count(themeName) == 0) {
-      themes.insert(themeName);
-    }
+    themes.insert(themeFullName);
+    themes.insert(themeName);
   }
 
   return {themes.begin(), themes.end()};

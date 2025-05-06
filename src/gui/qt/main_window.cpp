@@ -331,6 +331,20 @@ void MainWindow::applyTheme() {
 
   std::optional<QString> styleSheet;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+  if (boost::ends_with(theme, "-dark")) {
+    if (logger) {
+      logger->debug("Setting color scheme to dark");
+    }
+
+    QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Dark);
+  } else if (boost::ends_with(theme, "-light")) {
+    if (logger) {
+      logger->debug("Setting color scheme to light");
+    }
+
+    QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Light);
+  }
+
   const auto colorScheme = QGuiApplication::styleHints()->colorScheme();
   if (useSystemColourScheme && colorScheme == Qt::ColorScheme::Dark) {
     if (!boost::ends_with(theme, "-dark")) {

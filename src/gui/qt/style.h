@@ -33,9 +33,11 @@
 #include <vector>
 
 namespace loot {
-std::optional<QString> loadStyleSheet(
-    const std::filesystem::path& themesPath,
-    const std::string& themeName);
+constexpr std::string_view DARK_THEME_SUFFIX = "-dark";
+constexpr std::string_view LIGHT_THEME_SUFFIX = "-light";
+
+std::optional<QString> loadStyleSheet(const std::filesystem::path& themesPath,
+                                      const std::string& themeName);
 
 std::vector<std::string> findThemes(const std::filesystem::path& themesPath);
 }

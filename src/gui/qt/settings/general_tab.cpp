@@ -25,12 +25,36 @@
 
 #include "gui/qt/settings/general_tab.h"
 
+#include <fmt/format.h>
+
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QToolTip>
 #include <QtWidgets/QVBoxLayout>
+#include <boost/algorithm/string.hpp>
+#include <boost/locale.hpp>
 
 #include "gui/qt/helpers.h"
+#include "gui/qt/style.h"
+
+namespace {
+using loot::DARK_THEME_SUFFIX;
+using loot::LIGHT_THEME_SUFFIX;
+
+std::string getThemeLabel(const std::string& theme) {
+  if (boost::ends_with(theme, DARK_THEME_SUFFIX)) {
+    const auto name = theme.substr(0, theme.size() - DARK_THEME_SUFFIX.size());
+    return fmt::format(boost::locale::translate("{0} (Dark)").str(), name);
+  }
+
+  if (boost::ends_with(theme, LIGHT_THEME_SUFFIX)) {
+    const auto name = theme.substr(0, theme.size() - LIGHT_THEME_SUFFIX.size());
+    return fmt::format(boost::locale::translate("{0} (Light)").str(), name);
+  }
+
+  return theme;
+}
+}
 
 namespace loot {
 GeneralTab::GeneralTab(QWidget* parent) : QFrame(parent, Qt::Dialog) {
@@ -73,7 +97,9 @@ void GeneralTab::initialiseInputs(const LootSettings& settings,
 
   for (const auto& theme : themes) {
     auto qtTheme = QString::fromStdString(theme);
-    themeComboBox->addItem(qtTheme, QVariant(qtTheme));
+    auto label = getThemeLabel(theme);
+
+    themeComboBox->addItem(QString::fromStdString(label), QVariant(qtTheme));
   }
 
   auto themeIndex = themeComboBox->findData(
@@ -174,8 +200,8 @@ void GeneralTab::translateUi() {
 
   preludeSourceInput->setToolTip(translate("A prelude source is required."));
 
-  descriptionLabel->setText(translate(
-      "Language changes will be applied after LOOT is restarted."));
+  descriptionLabel->setText(
+      translate("Language changes will be applied after LOOT is restarted."));
 
   defaultGameComboBox->setItemText(0, translate("Autodetect"));
 }
