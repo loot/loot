@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-03 21:35+0100\n"
+"POT-Creation-Date: 2025-05-05 14:53+0100\n"
 "PO-Revision-Date: 2025-04-21 06:07+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
@@ -159,84 +159,84 @@ msgstr "Тълкуване на съдържанието на филтъра к�
 msgid "Active Small Plugins"
 msgstr "Активни малки приставки"
 
-#: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:226
+#: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:220
 msgid "Active Light Plugins"
 msgstr "Активни леки приставки"
 
-#: src/gui/qt/general_info_card.cpp:212
+#: src/gui/qt/general_info_card.cpp:206
 msgid "General Information"
 msgstr "Обща информация"
 
-#: src/gui/qt/general_info_card.cpp:214
+#: src/gui/qt/general_info_card.cpp:208
 msgid "Masterlist Revision ID"
 msgstr "Ревизия на основния списък"
 
-#: src/gui/qt/general_info_card.cpp:215
+#: src/gui/qt/general_info_card.cpp:209
 msgid "Masterlist Update Date"
 msgstr "Дата на обновяване на основния списък"
 
-#: src/gui/qt/general_info_card.cpp:216
+#: src/gui/qt/general_info_card.cpp:210
 msgid "Masterlist Prelude Revision ID"
 msgstr "Ревизия на основния каталожен списък"
 
-#: src/gui/qt/general_info_card.cpp:217
+#: src/gui/qt/general_info_card.cpp:211
 msgid "Masterlist Prelude Update Date"
 msgstr "Дата на обновяване на основния каталожен списък"
 
-#: src/gui/qt/general_info_card.cpp:219
+#: src/gui/qt/general_info_card.cpp:213
 msgid "Warnings"
 msgstr "Предупреждения"
 
-#: src/gui/qt/general_info_card.cpp:220
+#: src/gui/qt/general_info_card.cpp:214
 msgid "Errors"
 msgstr "Грешки"
 
-#: src/gui/qt/general_info_card.cpp:221
+#: src/gui/qt/general_info_card.cpp:215
 msgid "Total Messages"
 msgstr "Общо съобщения"
 
-#: src/gui/qt/general_info_card.cpp:223
+#: src/gui/qt/general_info_card.cpp:217
 msgid "Active Plugins"
 msgstr "Активни приставки"
 
-#: src/gui/qt/general_info_card.cpp:224
+#: src/gui/qt/general_info_card.cpp:218
 msgid "Active Full Plugins"
 msgstr "Активни обикновени приставки"
 
-#: src/gui/qt/general_info_card.cpp:225
+#: src/gui/qt/general_info_card.cpp:219
 msgid "Active Medium Plugins"
 msgstr "Активни междинни приставки"
 
-#: src/gui/qt/general_info_card.cpp:227
+#: src/gui/qt/general_info_card.cpp:221
 msgid "Dirty Plugins"
 msgstr "Мръсни приставки"
 
-#: src/gui/qt/general_info_card.cpp:228
+#: src/gui/qt/general_info_card.cpp:222
 msgid "Total Plugins"
 msgstr "Общо приставки"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:116
+#: src/gui/qt/helpers.cpp:95
 msgid "(edited)"
 msgstr "(редактиран)"
 
-#: src/gui/qt/helpers.cpp:231
+#: src/gui/qt/helpers.cpp:210
 msgid "N/A: No masterlist present"
 msgstr "Внимание: Основният списък липсва"
 
 #. translators: N/A is an abbreviation for Not Applicable. A
 #. masterlist is a database that contains information for
 #. various mods.
-#: src/gui/qt/helpers.cpp:236
+#: src/gui/qt/helpers.cpp:215
 msgid "N/A: No masterlist prelude present"
 msgstr "Внимание: Основният каталожен списък липсва"
 
-#: src/gui/qt/helpers.cpp:244
+#: src/gui/qt/helpers.cpp:223
 msgid "Unknown: No revision metadata found"
 msgstr "Внимание: Ревизията на метаданните не е намерена"
 
-#: src/gui/qt/helpers.cpp:380
+#: src/gui/qt/helpers.cpp:359
 msgid "Invalid regular expression: {0}"
 msgstr "Невалиден регулярен израз: {0}"
 
@@ -709,52 +709,52 @@ msgstr "Според „{0}“, приставката е чиста"
 msgid "Small Plugin"
 msgstr "Малка приставка"
 
-#: src/gui/qt/plugin_card.cpp:189 src/gui/qt/plugin_card.cpp:313
+#: src/gui/qt/plugin_card.cpp:189 src/gui/qt/plugin_card.cpp:307
 msgid "Light Plugin"
 msgstr "Лека приставка"
 
-#: src/gui/qt/plugin_card.cpp:310
+#: src/gui/qt/plugin_card.cpp:304
 msgid "Active Plugin"
 msgstr "Активна приставка"
 
-#: src/gui/qt/plugin_card.cpp:311
+#: src/gui/qt/plugin_card.cpp:305
 msgid "Master Plugin"
 msgstr "Основна приставка"
 
-#: src/gui/qt/plugin_card.cpp:312
+#: src/gui/qt/plugin_card.cpp:306
 msgid "Blueprint Master Plugin"
 msgstr "Основна чертожна приставка"
 
-#: src/gui/qt/plugin_card.cpp:314
+#: src/gui/qt/plugin_card.cpp:308
 msgid "Medium Plugin"
 msgstr "Междинна приставка"
 
-#: src/gui/qt/plugin_card.cpp:315
+#: src/gui/qt/plugin_card.cpp:309
 msgid "Empty Plugin"
 msgstr "Празна приставка"
 
-#: src/gui/qt/plugin_card.cpp:316
+#: src/gui/qt/plugin_card.cpp:310
 msgid "Loads Archive"
 msgstr "Зарежда архив"
 
-#: src/gui/qt/plugin_card.cpp:317 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:311 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr "Има добавени метаданни"
 
-#: src/gui/qt/plugin_card.cpp:319
+#: src/gui/qt/plugin_card.cpp:313
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr "Етикети на „Bash“"
 
-#: src/gui/qt/plugin_card.cpp:320
+#: src/gui/qt/plugin_card.cpp:314
 msgid "Current"
 msgstr "Текущи"
 
-#: src/gui/qt/plugin_card.cpp:321 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:315 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr "Добави"
 
-#: src/gui/qt/plugin_card.cpp:322 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:316 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr "Премахни"
 
