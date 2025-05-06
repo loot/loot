@@ -68,7 +68,7 @@ std::optional<QString> loadStyleSheet(const std::filesystem::path& themesPath,
   }
 
   if (logger) {
-    logger->warn(
+    logger->debug(
         "Failed to find the style sheet for the \"{}\" theme in the "
         "filesystem, attempting to load from built-in resources...",
         themeName);
