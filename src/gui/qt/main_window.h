@@ -175,7 +175,7 @@ private:
   QColor linkColor;
 
   std::vector<std::string> themes;
-  bool allowDefaultDarkTheme{false};
+  bool useSystemColourScheme{false};
 
   void setupUi();
   void setupMenuBar();

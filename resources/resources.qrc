@@ -35,7 +35,7 @@
     <file>icons/material-icons/visibility_off_black_48dp.svg</file>
   </qresource>
   <qresource prefix="/">
-    <file>themes/default.theme.qss</file>
+    <file>themes/default-light.theme.qss</file>
     <file>themes/default-dark.theme.qss</file>
     <file>themes/dark.theme.qss</file>
   </qresource>

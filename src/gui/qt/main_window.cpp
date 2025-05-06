@@ -242,7 +242,7 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
     // Don't load default-dark when Qt is using the windowsvista style, as that
     // ignores the system color scheme. This needs to be recorded now as the
     // style name will change when a stylesheet is set.
-    allowDefaultDarkTheme(qApp->style()->name() != "windowsvista") {
+    useSystemColourScheme(qApp->style()->name() != "windowsvista") {
   qRegisterMetaType<QueryResult>("QueryResult");
   qRegisterMetaType<std::string>("std::string");
 
@@ -320,16 +320,8 @@ void MainWindow::initialise() {
 }
 
 void MainWindow::applyTheme() {
-  // Apply theme.
-  bool loadingDefault = state.getSettings().getTheme() == "default";
-
-  auto styleSheet = loot::loadStyleSheet(state.GetPaths().getThemesPath(),
-                                         state.getSettings().getTheme());
-  if (!styleSheet.has_value()) {
-    // Fall back to the default theme.
-    styleSheet = loot::loadStyleSheet(state.GetPaths().getThemesPath(), "default");
-    loadingDefault = true;
-  }
+  const auto themesPath = state.GetPaths().getThemesPath();
+  const auto theme = state.getSettings().getTheme();
 
   const auto logger = getLogger();
   if (logger) {
@@ -337,19 +329,26 @@ void MainWindow::applyTheme() {
                   qApp->style()->name().toStdString());
   }
 
+  std::optional<QString> styleSheet;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   const auto colorScheme = QGuiApplication::styleHints()->colorScheme();
-  if (loadingDefault && allowDefaultDarkTheme &&
-      colorScheme == Qt::ColorScheme::Dark) {
-    // Load the default-dark theme instead as it gives better results.
-    if (logger) {
-      logger->debug(
-          "Loading default-dark theme instead of the default theme as a dark "
-          "colour scheme has been detected");
+  if (useSystemColourScheme && colorScheme == Qt::ColorScheme::Dark) {
+    if (!boost::ends_with(theme, "-dark")) {
+      styleSheet = loot::loadStyleSheet(themesPath, theme + "-dark");
     }
-    styleSheet = loot::loadStyleSheet(state.GetPaths().getThemesPath(), "default-dark");
+  } else if (!boost::ends_with(theme, "-light")) {
+    styleSheet = loot::loadStyleSheet(themesPath, theme + "-light");
   }
 #endif
+
+  if (!styleSheet.has_value()) {
+    styleSheet = loot::loadStyleSheet(themesPath, theme);
+  }
+
+  if (!styleSheet.has_value()) {
+    // Fall back to the default light theme.
+    styleSheet = loot::loadStyleSheet(themesPath, "default-light");
+  }
 
   if (styleSheet.has_value()) {
     qApp->setStyleSheet(styleSheet.value());
@@ -925,8 +924,8 @@ void MainWindow::updateCounts(
 }
 
 void MainWindow::updateGeneralInformation() {
-  const auto preludeInfo = getFileRevisionSummary(state.GetPaths().getPreludePath(),
-                                                  FileType::MasterlistPrelude);
+  const auto preludeInfo = getFileRevisionSummary(
+      state.GetPaths().getPreludePath(), FileType::MasterlistPrelude);
   auto initMessages = state.getInitMessages();
 
   if (!state.HasCurrentGame()) {
@@ -1448,7 +1447,8 @@ std::optional<std::filesystem::path> MainWindow::createBackup() {
       QDateTime::currentDateTime().toString("yyyyMMddThhmmss").toStdString();
 
   auto sourceDir = state.GetPaths().getLootDataPath();
-  auto destDir = state.GetPaths().getLootDataPath() / "backups" / backupBasename;
+  auto destDir =
+      state.GetPaths().getLootDataPath() / "backups" / backupBasename;
 
   loot::createBackup(sourceDir, destDir);
 
@@ -2779,7 +2779,6 @@ void MainWindow::handleIconColorChanged() {
       normalIconColor, disabledIconColor, selectedIconColor);
 
   setIcons();
-
 
   const auto cardDelegate =
       qobject_cast<CardDelegate*>(pluginCardsView->itemDelegate());
