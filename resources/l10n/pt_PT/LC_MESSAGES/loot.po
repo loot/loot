@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-03 21:35+0100\n"
+"POT-Creation-Date: 2025-05-05 14:53+0100\n"
 "PO-Revision-Date: 2025-04-09 06:03+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese (Portugal) <https://hosted.weblate.org/projects/"
@@ -161,85 +161,85 @@ msgstr ""
 msgid "Active Small Plugins"
 msgstr "Plugins Pequenos Ativos"
 
-#: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:226
+#: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:220
 msgid "Active Light Plugins"
 msgstr "Plugins de luz ativos"
 
-#: src/gui/qt/general_info_card.cpp:212
+#: src/gui/qt/general_info_card.cpp:206
 msgid "General Information"
 msgstr "Informação Geral"
 
-#: src/gui/qt/general_info_card.cpp:214
+#: src/gui/qt/general_info_card.cpp:208
 msgid "Masterlist Revision ID"
 msgstr "ID de revisão da lista mestra"
 
-#: src/gui/qt/general_info_card.cpp:215
+#: src/gui/qt/general_info_card.cpp:209
 msgid "Masterlist Update Date"
 msgstr "Data de atualização da lista mestra"
 
-#: src/gui/qt/general_info_card.cpp:216
+#: src/gui/qt/general_info_card.cpp:210
 msgid "Masterlist Prelude Revision ID"
 msgstr "ID da revisão do prelúdio da lista mestre"
 
-#: src/gui/qt/general_info_card.cpp:217
+#: src/gui/qt/general_info_card.cpp:211
 msgid "Masterlist Prelude Update Date"
 msgstr "Data de atualização do prelúdio da lista mestre"
 
-#: src/gui/qt/general_info_card.cpp:219
+#: src/gui/qt/general_info_card.cpp:213
 msgid "Warnings"
 msgstr "Avisos"
 
-#: src/gui/qt/general_info_card.cpp:220
+#: src/gui/qt/general_info_card.cpp:214
 msgid "Errors"
 msgstr "Erros"
 
-#: src/gui/qt/general_info_card.cpp:221
+#: src/gui/qt/general_info_card.cpp:215
 msgid "Total Messages"
 msgstr "Total de Mensagens"
 
-#: src/gui/qt/general_info_card.cpp:223
+#: src/gui/qt/general_info_card.cpp:217
 msgid "Active Plugins"
 msgstr "Plugins Ativos"
 
-#: src/gui/qt/general_info_card.cpp:224
+#: src/gui/qt/general_info_card.cpp:218
 msgid "Active Full Plugins"
 msgstr "Plugins Completos Ativos"
 
-#: src/gui/qt/general_info_card.cpp:225
+#: src/gui/qt/general_info_card.cpp:219
 msgid "Active Medium Plugins"
 msgstr "Plugins Médios Ativos"
 
-#: src/gui/qt/general_info_card.cpp:227
+#: src/gui/qt/general_info_card.cpp:221
 msgid "Dirty Plugins"
 msgstr "Plugins Sujos"
 
-#: src/gui/qt/general_info_card.cpp:228
+#: src/gui/qt/general_info_card.cpp:222
 msgid "Total Plugins"
 msgstr "Total de Plugins"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:116
+#: src/gui/qt/helpers.cpp:95
 msgid "(edited)"
 msgstr "(editado)"
 
 # N/A (Not Available) doesn't have a short universal translation to portuguese. I could an abbreviation "Não Disp." or "N/D", but I believe it would confuse some users. Mostly the latter one.
-#: src/gui/qt/helpers.cpp:231
+#: src/gui/qt/helpers.cpp:210
 msgid "N/A: No masterlist present"
 msgstr "Não disponível: A Lista-mestre não está presente"
 
 #. translators: N/A is an abbreviation for Not Applicable. A
 #. masterlist is a database that contains information for
 #. various mods.
-#: src/gui/qt/helpers.cpp:236
+#: src/gui/qt/helpers.cpp:215
 msgid "N/A: No masterlist prelude present"
 msgstr "N/A: Sem presença do prelúdio da lista mestre"
 
-#: src/gui/qt/helpers.cpp:244
+#: src/gui/qt/helpers.cpp:223
 msgid "Unknown: No revision metadata found"
 msgstr "Desconhecido: Nenhum metadados de revisão encontrado"
 
-#: src/gui/qt/helpers.cpp:380
+#: src/gui/qt/helpers.cpp:359
 msgid "Invalid regular expression: {0}"
 msgstr "Expressão inválida regular: {0}"
 
@@ -726,52 +726,52 @@ msgstr "Verificado como limpo por {0}"
 msgid "Small Plugin"
 msgstr "Plugin Pequeno"
 
-#: src/gui/qt/plugin_card.cpp:189 src/gui/qt/plugin_card.cpp:313
+#: src/gui/qt/plugin_card.cpp:189 src/gui/qt/plugin_card.cpp:307
 msgid "Light Plugin"
 msgstr "Plugin Light"
 
-#: src/gui/qt/plugin_card.cpp:310
+#: src/gui/qt/plugin_card.cpp:304
 msgid "Active Plugin"
 msgstr "Plugin Ativo"
 
-#: src/gui/qt/plugin_card.cpp:311
+#: src/gui/qt/plugin_card.cpp:305
 msgid "Master Plugin"
 msgstr "Plugin Mestre"
 
-#: src/gui/qt/plugin_card.cpp:312
+#: src/gui/qt/plugin_card.cpp:306
 msgid "Blueprint Master Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:314
+#: src/gui/qt/plugin_card.cpp:308
 msgid "Medium Plugin"
 msgstr "Plugin Médio"
 
-#: src/gui/qt/plugin_card.cpp:315
+#: src/gui/qt/plugin_card.cpp:309
 msgid "Empty Plugin"
 msgstr "Plugin Vazio"
 
-#: src/gui/qt/plugin_card.cpp:316
+#: src/gui/qt/plugin_card.cpp:310
 msgid "Loads Archive"
 msgstr "Carrega Arquivo"
 
-#: src/gui/qt/plugin_card.cpp:317 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:311 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr "Tem Metadados de Utilizador"
 
-#: src/gui/qt/plugin_card.cpp:319
+#: src/gui/qt/plugin_card.cpp:313
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr "Etiquetas Bash"
 
-#: src/gui/qt/plugin_card.cpp:320
+#: src/gui/qt/plugin_card.cpp:314
 msgid "Current"
 msgstr "Atual"
 
-#: src/gui/qt/plugin_card.cpp:321 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:315 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr "Adicionar"
 
-#: src/gui/qt/plugin_card.cpp:322 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:316 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr "Remover"
 
