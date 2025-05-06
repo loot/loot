@@ -1,7 +1,7 @@
 loot--GraphView {
     qproperty-masterColor: #979797;
     qproperty-userColor: #FFFFFF;
-    qproperty-backgroundColor: #212121;
+    qproperty-backgroundColor: #2D2D2D;
 }
 
 loot--MainWindow {
@@ -15,27 +15,22 @@ loot--MainWindow {
 
 loot--Card {
     qproperty-shadowNearColor: #000000;
-    qproperty-shadowFarColor: #212121;
+    qproperty-shadowFarColor: #1E1E1E;
 }
 
 QLabel,
-QComboBox,
 QCheckBox,
 QLineEdit,
 QTextEdit,
 QPlainTextEdit,
 QSpinBox,
 QDoubleSpinBox,
-QHeaderView,
-QHeaderView::section,
 QTabWidget::pane,
 QTabWidget::pane > QFrame,
 QToolBar > QToolButton,
 QToolBox::tab,
 QMenuBar,
 QMenu,
-QDialog,
-QMessageBox,
 QTableView,
 QListView,
 QPushButton,
@@ -54,16 +49,28 @@ loot--GraphView
  {
     color: #E0E0E0;
     selection-color: #FFFFFF;
-    background-color: #303030;
+    background-color: #2D2D2D;
 }
 
+QDialog,
+QDialog > QLabel,
+QMessageBox,
+QMessageBox QLabel,
+loot--GameTab > QLabel,
+loot--GeneralTab > QLabel,
+loot--GeneralTab > QCheckBox,
 QListView#pluginCardsView {
-    background-color: #212121;
+    color: #E0E0E0;
+    background-color: #1E1E1E;
 }
 
-QListView::item:alternate loot--GeneralInfoCard,
-QListView::item:alternate loot--PluginCard {
-    border-bottom: 1px solid #595959;
+QMenu,
+QPushButton,
+QToolBox::tab,
+QComboBox,
+QHeaderView::section {
+    color: #E0E0E0;
+    background-color: #3C3C3C;
 }
 
 loot--PluginCard[isSearchResult="true"] {
@@ -117,11 +124,11 @@ QLineEdit[placeholderText][text=""] {
 }
 
 QToolBar {
-    border-top: 1px solid #a1a1a1;
+    border-top: 1px groove #787878;
 }
 
-loot--FiltersWidget > QFrame#divider {
-    background-color: #a1a1a1;
+QFrame#divider {
+    background-color: #787878;
     border: none;
     max-height: 1px;
 }
@@ -169,25 +176,25 @@ QToolBar,
 QToolBar > QToolButton,
 QSplitter,
 QSplitter::handle,
+QTabBar,
 QToolBox,
 QStatusBar,
-loot--PluginEditorWidget > QLabel,
-QMenu {
-    background-color: #212121;
+loot--PluginEditorWidget > QLabel {
+    background-color: #1E1E1E;
 }
 
 QToolBox::tab {
-    border-left: 1px solid #a1a1a1;
-    border-top: 1px solid #a1a1a1;
-    border-right: 1px solid #303030;
-    border-bottom: 1px solid #303030;
+    border-left: 1px solid #787878;
+    border-top: 1px solid #787878;
+    border-right: 1px solid #3C3C3C;
+    border-bottom: 1px solid #3C3C3C;
 }
 
 QToolBox::tab:pressed {
-    border-left: 1px solid #303030;
-    border-top: 1px solid #303030;
-    border-right: 1px solid #a1a1a1;
-    border-bottom: 1px solid #a1a1a1;
+    border-left: 1px solid #3C3C3C;
+    border-top: 1px solid #3C3C3C;
+    border-right: 1px solid #787878;
+    border-bottom: 1px solid #787878;
 }
 
 QMenuBar::item:selected,
@@ -211,21 +218,37 @@ QMenuBar::item:selected:disabled,
 QMenu:selected:disabled,
 QToolBar > QToolButton:hover:disabled,
 QPushButton:selected:disabled,
-QTabBar::tab:selected:disabled {
-    color: #979797;
-}
-
-QGroupBox::title {
-    color: #FFFFFF;
-}
-
+QTabBar::tab:selected:disabled,
 QGroupBox::title:disabled {
     color: #979797;
 }
 
-QPushButton,
-QToolBox::tab {
-    background-color: #757575;
+#pluginCardsView {
+    border-top: 1px inset #000000;
+    border-left: 1px inset #000000;
+}
+
+loot--PluginCard QGroupBox {
+    border: 1px solid #787878;
+    margin-top: 1ex; /* leave space at the top for the title */
+    padding-top: 8px;
+}
+
+loot--PluginCard QGroupBox::title {
+    color: #FFFFFF;
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 8px;
+    top: -2px;
+}
+
+
+QPushButton {
+    padding: 4px 8px;
+    border-top: 1px outset #595959;
+    border-left: 1px outset #595959;
+    border-right: 1px outset #000000;
+    border-bottom: 1px outset #000000;
 }
 
 QPushButton:focus {
@@ -233,17 +256,12 @@ QPushButton:focus {
 }
 
 QPushButton:hover {
-    border: 2px outset rgba(255, 255, 255, 0.12);
     border: none;
     border: 1px outset #0078D7;
 }
 
 QTabWidget::pane {
     border: 1px solid #595959;
-}
-
-QTabBar {
-    background-color: #212121;
 }
 
 QTabBar::tab {
@@ -265,16 +283,25 @@ QTabBar::tab:!selected {
     margin-top: 2px;
 }
 
+#sidebarPluginsView,
+loot--FiltersWidget,
+loot--GraphView,
+QDoubleSpinBox,
 QLineEdit,
 QPlainTextEdit {
-    border: 1px solid #929292;
+    border-top: 1px inset #000000;
+    border-left: 1px inset #000000;
+    border-right: 1px inset #595959;
+    border-bottom: 1px inset #595959;
 }
 
+QDoubleSpinBox:focus:active,
 QLineEdit:focus:active,
 QPlainTextEdit:focus:active {
     border: 1px solid #0078D7;
 }
 
+QDoubleSpinBox:focus:!active,
 QLineEdit:focus:!active,
 QPlainTextEdit:focus:!active {
     border: 1px solid #264259;
