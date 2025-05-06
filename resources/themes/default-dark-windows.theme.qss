@@ -33,11 +33,11 @@ QListView::item:alternate loot--PluginCard {
 }
 
 loot--PluginCard[isSearchResult="true"] {
-	border-left: 4px solid #1668C5;
+	border-left: 4px solid #1976E1;
 }
 
 loot--PluginCard[isSearchResult="true"][isCurrentSearchResult="true"] {
-	border-left: 4px solid #93C5F1;
+	border-left: 4px solid #B7D8F6;
 }
 
 QLabel[messageType="warn"] {
@@ -45,7 +45,7 @@ QLabel[messageType="warn"] {
 }
 
 QLabel[messageType="error"] {
-    color: #FF8585;
+    color: #FFA3A3;
 }
 
 QLabel#plugin-crc,
@@ -54,23 +54,23 @@ QLabel#plugin-version {
 }
 
 QLabel#plugin-version {
-	color: #98AAB3;
+	color: #ADBCC2;
 }
 
 QLabel#plugin-crc {
-	color: #BCA39F;
+	color: #C8B5B1;
 }
 
 QLabel#tags-current {
-    color: #A7A7A7;
+    color: #BDBDBD;
 }
 
 QLabel#tags-add {
-    color: #63BB67;
+    color: #86CA8A;
 }
 
 QLabel#tags-remove {
-    color: #FF8585;
+    color: #FFA3A3;
 }
 
 /* On Windows the checkbox's background colour uses the system accent colour by
