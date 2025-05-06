@@ -10,7 +10,7 @@ loot--MainWindow {
     qproperty-selectedIconColor: palette(highlighted-text);
     qproperty-selectedSidebarPluginTextColor: #FFFFFF;
     qproperty-unselectedSidebarPluginGroupColor: #E0E0E0;
-    qproperty-linkColor: palette(link);
+    qproperty-linkColor: #94BBFF;
 }
 
 loot--Card {
