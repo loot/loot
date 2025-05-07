@@ -48,12 +48,6 @@ Snapshot builds are also provided as single-file Flatpak bundles, which can be i
 flatpak --user install ~/Downloads/loot.flatpak
 ```
 
-You may also want to install the Adwaita theme:
-
-```
-flatpak install flathub org.kde.KStyle.Adwaita//6.9
-```
-
 ## Building LOOT
 
 ### Windows
