@@ -80,6 +80,17 @@ void showAmbiguousLoadOrderSetWarning(QWidget* parent, const LootState& state) {
   QMessageBox::warning(
       parent, translate("Ambiguous load order detected"), message);
 }
+
+bool isColorSchemeDark() {
+  // The value of Qt::ColorScheme isn't reflected by the palette colors when
+  // using the windowsvista style or when running in a Flatpak in a GNOME Linux
+  // desktop, so check the palette colors instead.
+  const auto palette = QGuiApplication::palette();
+  const auto window = palette.window().color().lightness();
+  const auto windowText = palette.windowText().color().lightness();
+
+  return window < windowText;
+}
 }
 
 namespace loot {
@@ -237,12 +248,7 @@ void setWindowPosition(QWidget& window,
 }
 
 MainWindow::MainWindow(LootState& state, QWidget* parent) :
-    QMainWindow(parent),
-    state(state),
-    // Don't load default-dark when Qt is using the windowsvista style, as that
-    // ignores the system color scheme. This needs to be recorded now as the
-    // style name will change when a stylesheet is set.
-    useSystemColourScheme(qApp->style()->name() != "windowsvista") {
+    QMainWindow(parent), state(state) {
   qRegisterMetaType<QueryResult>("QueryResult");
   qRegisterMetaType<std::string>("std::string");
 
@@ -325,8 +331,27 @@ void MainWindow::applyTheme() {
 
   const auto logger = getLogger();
   if (logger) {
-    logger->debug("Current style name is {}",
+    logger->debug("The current style name is {}",
                   qApp->style()->name().toStdString());
+
+    const auto colorScheme = QGuiApplication::styleHints()->colorScheme();
+    std::string description;
+    if (colorScheme == Qt::ColorScheme::Unknown) {
+      description = "unknown";
+    } else if (colorScheme == Qt::ColorScheme::Light) {
+      description = "light";
+    } else if (colorScheme == Qt::ColorScheme::Dark) {
+      description = "dark";
+    } else {
+      description = std::to_string(static_cast<int>(colorScheme));
+    }
+    logger->info("The system color scheme is {}", description);
+
+    if (isColorSchemeDark()) {
+      logger->debug("The detected color scheme is dark");
+    } else {
+      logger->debug("The detected color scheme is light");
+    }
   }
 
   std::optional<QString> styleSheet;
@@ -345,13 +370,20 @@ void MainWindow::applyTheme() {
     QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Light);
   }
 
-  const auto colorScheme = QGuiApplication::styleHints()->colorScheme();
-  if (useSystemColourScheme && colorScheme == Qt::ColorScheme::Dark) {
+  if (isColorSchemeDark()) {
+    if (logger) {
+      logger->debug("The detected color scheme is dark");
+    }
     if (!boost::ends_with(theme, "-dark")) {
       styleSheet = loot::loadStyleSheet(themesPath, theme + "-dark");
     }
-  } else if (!boost::ends_with(theme, "-light")) {
-    styleSheet = loot::loadStyleSheet(themesPath, theme + "-light");
+  } else {
+    if (logger) {
+      logger->debug("The detected color scheme is light");
+    }
+    if (!boost::ends_with(theme, "-light")) {
+      styleSheet = loot::loadStyleSheet(themesPath, theme + "-light");
+    }
   }
 #endif
 
@@ -2828,21 +2860,6 @@ void MainWindow::handleLinkColorChanged() {
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
 void MainWindow::handleColorSchemeChanged(Qt::ColorScheme colorScheme) {
-  const auto logger = getLogger();
-  if (logger) {
-    std::string description;
-    if (colorScheme == Qt::ColorScheme::Unknown) {
-      description = "unknown";
-    } else if (colorScheme == Qt::ColorScheme::Light) {
-      description = "light";
-    } else if (colorScheme == Qt::ColorScheme::Dark) {
-      description = "dark";
-    } else {
-      description = std::to_string(static_cast<int>(colorScheme));
-    }
-    logger->info("The system color scheme is now {}", description);
-  }
-
   applyTheme();
 }
 #endif
