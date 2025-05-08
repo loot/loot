@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-05-06 21:50+0100\n"
-"PO-Revision-Date: 2025-04-21 06:07+0000\n"
+"PO-Revision-Date: 2025-05-08 23:01+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
-"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
-">\n"
+"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/>"
+"\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11.1-dev\n"
+"X-Generator: Weblate 5.12-dev\n"
 
 #: src/gui/plugin_item.cpp:45
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -1027,11 +1027,11 @@ msgstr "Изтрий играта"
 
 #: src/gui/qt/settings/general_tab.cpp:47
 msgid "{0} (Dark)"
-msgstr ""
+msgstr "{0} (тъмна)"
 
 #: src/gui/qt/settings/general_tab.cpp:52
 msgid "{0} (Light)"
-msgstr ""
+msgstr "{0} (светла)"
 
 #: src/gui/qt/settings/general_tab.cpp:186
 msgid "Default Game"
