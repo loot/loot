@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-05-06 21:50+0100\n"
-"PO-Revision-Date: 2025-04-26 08:01+0000\n"
+"PO-Revision-Date: 2025-05-08 23:01+0000\n"
 "Last-Translator: xsSplater <xssplater@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
 "Language: ru\n"
@@ -1031,11 +1031,11 @@ msgstr "Удалить игру"
 
 #: src/gui/qt/settings/general_tab.cpp:47
 msgid "{0} (Dark)"
-msgstr ""
+msgstr "{0} (Тёмная)"
 
 #: src/gui/qt/settings/general_tab.cpp:52
 msgid "{0} (Light)"
-msgstr ""
+msgstr "{0} (Светлая)"
 
 #: src/gui/qt/settings/general_tab.cpp:186
 msgid "Default Game"
