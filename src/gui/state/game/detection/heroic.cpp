@@ -121,6 +121,17 @@ std::filesystem::path GetUserConfigPath() {
 }
 
 QJsonObject ReadJsonObjectFromFile(const std::filesystem::path& path) {
+  if (!std::filesystem::exists(path)) {
+    // No point trying to read it, this silences a QIODevice::read error that Qt
+    // prints to stdout.
+    return {};
+  }
+
+  const auto logger = getLogger();
+  if (logger) {
+    logger->trace("Reading Heroic file at {}.", path.u8string());
+  }
+
   // Use Qt to parse the file - it breaks the separation of Qt out into just
   // the GUI code, but it's not worth jumping through hoops to preserve that.
   auto file = QFile(QString::fromStdString(path.u8string()));
@@ -220,15 +231,8 @@ std::vector<std::filesystem::path> GetHeroicGamesLauncherConfigPaths() {
 
 std::vector<HeroicGame> GetInstalledGogGames(
     const std::filesystem::path& heroicConfigPath) {
-  const auto logger = getLogger();
-
   const auto installedGamesPath =
       heroicConfigPath / "gog_store" / "installed.json";
-
-  if (logger) {
-    logger->trace("Reading Heroic installed GOG games file at {}.",
-                  installedGamesPath.u8string());
-  }
 
   const auto json = ReadJsonObjectFromFile(installedGamesPath);
 
@@ -247,15 +251,8 @@ std::vector<HeroicGame> GetInstalledGogGames(
 
 std::vector<HeroicGame> GetInstalledEgsGames(
     const std::filesystem::path& heroicConfigPath) {
-  const auto logger = getLogger();
-
   const auto installedGamesPath =
       heroicConfigPath / "legendaryConfig" / "legendary" / "installed.json";
-
-  if (logger) {
-    logger->trace("Reading Heroic installed EGS games file at {}.",
-                  installedGamesPath.u8string());
-  }
 
   const auto json = ReadJsonObjectFromFile(installedGamesPath);
 
@@ -280,11 +277,6 @@ std::filesystem::path GetGameLocalPath(
 
   const auto gameConfigPath =
       heroicConfigPath / "GamesConfig" / (appName + ".json");
-
-  if (logger) {
-    logger->trace("Reading Heroic game config file at {}.",
-                  gameConfigPath.u8string());
-  }
 
   const auto json = ReadJsonObjectFromFile(gameConfigPath);
 
