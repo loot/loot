@@ -181,7 +181,6 @@ void GroupsEditorDialog::setupUi() {
   sidebarLayout->addLayout(formLayout);
   sidebarLayout->addWidget(divider2);
   sidebarLayout->addWidget(autoArrangeButton);
-  sidebarLayout->addLayout(formLayout);
 
   mainLayout->addWidget(graphView, 1);
   mainLayout->addLayout(sidebarLayout);
