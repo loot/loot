@@ -153,7 +153,8 @@ private:
                              state.getSettings().getLanguages(),
                              state.getSettings().getLanguage())};
 
-  SettingsDialog *settingsDialog{new SettingsDialog(this)};
+  SettingsDialog *settingsDialog{
+      new SettingsDialog(this, state.GetPaths().getLootDataPath())};
   SearchDialog *searchDialog{new SearchDialog(this)};
 
   PluginItemModel *pluginItemModel{new PluginItemModel(this)};

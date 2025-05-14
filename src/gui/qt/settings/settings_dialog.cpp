@@ -30,11 +30,62 @@
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QVBoxLayout>
 
+#include "gui/helpers.h"
 #include "gui/qt/helpers.h"
 #include "gui/qt/settings/new_game_dialog.h"
 
+namespace {
+std::vector<std::string> getGameFolderNames(
+    QStackedWidget& stackedWidget,
+    const std::filesystem::path& lootDataPath) {
+  std::vector<std::string> folders;
+
+  for (auto i = 1; i < stackedWidget.count(); i += 1) {
+    auto gameTab = qobject_cast<loot::GameTab*>(stackedWidget.widget(i));
+    auto otherFolder = gameTab->getLootFolder();
+
+    folders.push_back(otherFolder.toStdString());
+  }
+
+  // Also find names from the filesystem, in case there are any folders for
+  // games that have been deleted from LOOT's settings.
+  for (auto it = std::filesystem::directory_iterator(lootDataPath / "games");
+       it != std::filesystem::directory_iterator();
+       ++it) {
+    if (it->is_directory()) {
+      // It doesn't matter if this introduces duplicates.
+      folders.push_back(it->path().filename().u8string());
+    }
+  }
+
+  return folders;
+}
+
+std::string deriveFolderName(
+    loot::GameId gameId,
+    const std::vector<std::string>& existingFolderNames) {
+  const auto baseName = GetDefaultLootFolderName(gameId);
+  std::string name = baseName;
+  int suffixIndex = 1;
+  while (std::any_of(existingFolderNames.begin(),
+                     existingFolderNames.end(),
+                     [&](const std::string& existingName) {
+                       return loot::CompareFilenames(name, existingName) == 0;
+                     })) {
+    name = baseName + " (" + std::to_string(suffixIndex) + ")";
+    suffixIndex += 1;
+  }
+
+  return name;
+}
+}
+
 namespace loot {
-SettingsDialog::SettingsDialog(QWidget* parent) : QDialog(parent) { setupUi(); }
+SettingsDialog::SettingsDialog(QWidget* parent,
+                               const std::filesystem::path& lootDataPath) :
+    QDialog(parent), lootDataPath(lootDataPath) {
+  setupUi();
+}
 
 void SettingsDialog::initialiseInputs(
     const LootSettings& settings,
@@ -140,19 +191,6 @@ void SettingsDialog::removeTab(int index) {
   delete item;
 }
 
-QStringList SettingsDialog::getGameFolderNames() const {
-  QStringList folders;
-
-  for (auto i = 1; i < stackedWidget->count() - 1; i += 1) {
-    auto gameTab = qobject_cast<GameTab*>(stackedWidget->widget(i));
-    auto otherFolder = gameTab->getLootFolder();
-
-    folders.append(otherFolder);
-  }
-
-  return folders;
-}
-
 void SettingsDialog::on_dialogButtons_accepted() {
   if (!generalTab->areInputValuesValid()) {
     // Switch back to the general tab so that the tooltip that the
@@ -169,7 +207,7 @@ void SettingsDialog::on_dialogButtons_accepted() {
 void SettingsDialog::on_dialogButtons_rejected() { reject(); }
 
 void SettingsDialog::on_addGameButton_clicked() {
-  auto newGameDialog = new NewGameDialog(this, getGameFolderNames());
+  auto newGameDialog = new NewGameDialog(this);
 
   const auto result = newGameDialog->exec();
 
@@ -181,7 +219,8 @@ void SettingsDialog::on_addGameButton_clicked() {
   auto gameId = GameTab::GAME_IDS_BY_STRING.at(gameIdText);
 
   auto name = newGameDialog->getGameName().toStdString();
-  auto lootFolder = newGameDialog->getGameFolder().toStdString();
+  auto existingFolders = getGameFolderNames(*stackedWidget, lootDataPath);
+  auto lootFolder = deriveFolderName(gameId, existingFolders);
 
   GameSettings game(gameId, lootFolder);
   game.SetName(name);

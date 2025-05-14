@@ -33,58 +33,10 @@
 #include "gui/qt/helpers.h"
 #include "gui/qt/settings/game_tab.h"
 
-namespace {
-bool isReservedBasename(const QString& filename) {
-  const auto basename = filename.left(filename.indexOf(".")).toUpper();
-
-  static constexpr std::array<const char*, 24> INVALID_NAMES = {
-      "CON",  "PRN",  "AUX",  "NUL",  "COM0", "COM1", "COM2", "COM3",
-      "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT0", "LPT1",
-      "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
-
-  for (const auto& name : INVALID_NAMES) {
-    if (basename == name) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-bool isValidFolderName(const QString& filename) {
-  if (filename.endsWith(' ') || filename.endsWith('.')) {
-    return false;
-  }
-
-  static constexpr std::array<char, 41> INVALID_CHARS = {
-      '<', '>', ':', '"', '/', '\\', '|', '?', '*'};
-
-  for (const auto& invalidChar : INVALID_CHARS) {
-    if (filename.contains(invalidChar)) {
-      return false;
-    }
-  }
-
-  // Also check for ASCII control characters.
-  for (char i = 0; i < 32; i += 1) {
-    if (filename.contains(i)) {
-      return false;
-    }
-  }
-
-  return !isReservedBasename(filename);
-}
-}
-
 namespace loot {
-NewGameDialog::NewGameDialog(QWidget* parent, QStringList currentGameFolders) :
-    QDialog(parent), currentGameFolders(currentGameFolders) {
-  setupUi();
-}
+NewGameDialog::NewGameDialog(QWidget* parent) : QDialog(parent) { setupUi(); }
 
 QString NewGameDialog::getGameName() const { return nameInput->text(); }
-
-QString NewGameDialog::getGameFolder() const { return folderInput->text(); }
 
 QString NewGameDialog::getBaseGame() const {
   return baseGameComboBox->currentText();
@@ -100,7 +52,6 @@ void NewGameDialog::setupUi() {
 
   formLayout->addRow(nameLabel, nameInput);
   formLayout->addRow(baseGameLabel, baseGameComboBox);
-  formLayout->addRow(folderLabel, folderInput);
 
   dialogLayout->addLayout(formLayout);
   dialogLayout->addWidget(buttonBox);
@@ -122,10 +73,8 @@ void NewGameDialog::translateUi() {
 
   nameLabel->setText(translate("Name"));
   baseGameLabel->setText(translate("Base Game"));
-  folderLabel->setText(translate("LOOT Folder"));
 
   nameInput->setToolTip(translate("A name is required."));
-  folderInput->setToolTip(translate("A folder is required."));
 }
 
 void NewGameDialog::on_dialogButtons_accepted() {
@@ -133,31 +82,6 @@ void NewGameDialog::on_dialogButtons_accepted() {
     QToolTip::showText(
         nameInput->mapToGlobal(QPoint(0, 0)), nameInput->toolTip(), nameInput);
     return;
-  }
-
-  const auto lootFolder = folderInput->text();
-  if (lootFolder.isEmpty()) {
-    QToolTip::showText(folderInput->mapToGlobal(QPoint(0, 0)),
-                       folderInput->toolTip(),
-                       folderInput);
-    return;
-  }
-
-  if (!isValidFolderName(lootFolder)) {
-    QToolTip::showText(folderInput->mapToGlobal(QPoint(0, 0)),
-                       translate("This is not a valid Windows folder name."),
-                       folderInput);
-    return;
-  }
-
-  auto lowercaseLootFolder = lootFolder.toLower();
-  for (const auto& otherFolder : currentGameFolders) {
-    if (lowercaseLootFolder == otherFolder.toLower()) {
-      QToolTip::showText(folderInput->mapToGlobal(QPoint(0, 0)),
-                         translate("A game with this folder already exists."),
-                         folderInput);
-      return;
-    }
   }
 
   accept();

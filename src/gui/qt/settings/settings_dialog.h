@@ -41,7 +41,8 @@ namespace loot {
 class SettingsDialog : public QDialog {
   Q_OBJECT
 public:
-  explicit SettingsDialog(QWidget *parent);
+  explicit SettingsDialog(QWidget *parent,
+                          const std::filesystem::path &lootDataPath);
 
   void initialiseInputs(const LootSettings &settings,
                         const std::vector<std::string> &themes,
@@ -55,13 +56,13 @@ private:
   GeneralTab *generalTab{new GeneralTab(this)};
   QStackedWidget *stackedWidget{new QStackedWidget(this)};
 
+  std::filesystem::path lootDataPath;
+
   void setupUi();
   void translateUi();
 
   void addGameTab(const GameSettings &settings, bool isCurrentGame);
   void removeTab(int index);
-
-  QStringList getGameFolderNames() const;
 
 private slots:
   void on_dialogButtons_accepted();
