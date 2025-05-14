@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-10 19:02+0100\n"
+"POT-Creation-Date: 2025-05-14 21:23+0100\n"
 "PO-Revision-Date: 2024-06-30 20:36+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/loot/loot/es/>\n"
@@ -965,7 +965,7 @@ msgstr "URL"
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 #: src/gui/qt/settings/game_tab.cpp:151
-#: src/gui/qt/settings/new_game_dialog.cpp:123
+#: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
 msgstr "Nombre"
 
@@ -999,12 +999,11 @@ msgid "Browse…"
 msgstr "Buscando…"
 
 #: src/gui/qt/settings/game_tab.cpp:152
-#: src/gui/qt/settings/new_game_dialog.cpp:124
+#: src/gui/qt/settings/new_game_dialog.cpp:75
 msgid "Base Game"
 msgstr "Juego base"
 
 #: src/gui/qt/settings/game_tab.cpp:153
-#: src/gui/qt/settings/new_game_dialog.cpp:125
 msgid "LOOT Folder"
 msgstr "Carpeta de LOOT"
 
@@ -1090,35 +1089,23 @@ msgstr "Los cambios de idioma no tendrán efecto hasta que no se reinicie LOOT."
 msgid "Autodetect"
 msgstr "Autodetectar"
 
-#: src/gui/qt/settings/new_game_dialog.cpp:121
+#: src/gui/qt/settings/new_game_dialog.cpp:72
 msgid "Add new game"
 msgstr "Agregar un nuevo juego"
 
-#: src/gui/qt/settings/new_game_dialog.cpp:127
+#: src/gui/qt/settings/new_game_dialog.cpp:77
 msgid "A name is required."
 msgstr "Se requiere de un nombre."
 
-#: src/gui/qt/settings/new_game_dialog.cpp:128
-msgid "A folder is required."
-msgstr "Se requiere de una carpeta."
-
-#: src/gui/qt/settings/new_game_dialog.cpp:148
-msgid "This is not a valid Windows folder name."
-msgstr "No es un nombre de carpeta válido de Windows."
-
-#: src/gui/qt/settings/new_game_dialog.cpp:157
-msgid "A game with this folder already exists."
-msgstr "Ya existe un juego con esta carpeta."
-
-#: src/gui/qt/settings/settings_dialog.cpp:109
+#: src/gui/qt/settings/settings_dialog.cpp:160
 msgid "Settings"
 msgstr "Configuración"
 
-#: src/gui/qt/settings/settings_dialog.cpp:111
+#: src/gui/qt/settings/settings_dialog.cpp:162
 msgid "General"
 msgstr "General"
 
-#: src/gui/qt/settings/settings_dialog.cpp:113
+#: src/gui/qt/settings/settings_dialog.cpp:164
 msgid "Add new game…"
 msgstr "Añadiendo nuevo juego…"
 
@@ -1437,6 +1424,15 @@ msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] ""
 msgstr[1] ""
+
+#~ msgid "A folder is required."
+#~ msgstr "Se requiere de una carpeta."
+
+#~ msgid "This is not a valid Windows folder name."
+#~ msgstr "No es un nombre de carpeta válido de Windows."
+
+#~ msgid "A game with this folder already exists."
+#~ msgstr "Ya existe un juego con esta carpeta."
 
 #~ msgid ""
 #~ "This plugin is a light master and requires the non-master plugin \"{0}\". "

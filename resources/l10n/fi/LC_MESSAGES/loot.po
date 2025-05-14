@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-10 19:02+0100\n"
+"POT-Creation-Date: 2025-05-14 21:23+0100\n"
 "PO-Revision-Date: 2025-01-21 14:00+0000\n"
 "Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/loot/loot/fi/>\n"
@@ -950,7 +950,7 @@ msgstr "URL"
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 #: src/gui/qt/settings/game_tab.cpp:151
-#: src/gui/qt/settings/new_game_dialog.cpp:123
+#: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
 msgstr "Nimi"
 
@@ -984,12 +984,11 @@ msgid "Browse…"
 msgstr "Selaa…"
 
 #: src/gui/qt/settings/game_tab.cpp:152
-#: src/gui/qt/settings/new_game_dialog.cpp:124
+#: src/gui/qt/settings/new_game_dialog.cpp:75
 msgid "Base Game"
 msgstr "Pohjautuu peliin"
 
 #: src/gui/qt/settings/game_tab.cpp:153
-#: src/gui/qt/settings/new_game_dialog.cpp:125
 msgid "LOOT Folder"
 msgstr "LOOTin kansio"
 
@@ -1074,35 +1073,23 @@ msgstr ""
 msgid "Autodetect"
 msgstr "Tunnista automaattisesti"
 
-#: src/gui/qt/settings/new_game_dialog.cpp:121
+#: src/gui/qt/settings/new_game_dialog.cpp:72
 msgid "Add new game"
 msgstr "Lisää peli"
 
-#: src/gui/qt/settings/new_game_dialog.cpp:127
+#: src/gui/qt/settings/new_game_dialog.cpp:77
 msgid "A name is required."
 msgstr "Nimi vaaditaan."
 
-#: src/gui/qt/settings/new_game_dialog.cpp:128
-msgid "A folder is required."
-msgstr "Kansio vaaditaan."
-
-#: src/gui/qt/settings/new_game_dialog.cpp:148
-msgid "This is not a valid Windows folder name."
-msgstr "Tämä hakemistopolku ei ole Windowsissa hyväksyttävä."
-
-#: src/gui/qt/settings/new_game_dialog.cpp:157
-msgid "A game with this folder already exists."
-msgstr "Tämä kansio kuuluu jo lisätylle pelille."
-
-#: src/gui/qt/settings/settings_dialog.cpp:109
+#: src/gui/qt/settings/settings_dialog.cpp:160
 msgid "Settings"
 msgstr "Asetukset"
 
-#: src/gui/qt/settings/settings_dialog.cpp:111
+#: src/gui/qt/settings/settings_dialog.cpp:162
 msgid "General"
 msgstr "Yleiset"
 
-#: src/gui/qt/settings/settings_dialog.cpp:113
+#: src/gui/qt/settings/settings_dialog.cpp:164
 msgid "Add new game…"
 msgstr "Lisää peli…"
 
@@ -1458,6 +1445,15 @@ msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] ""
 msgstr[1] ""
+
+#~ msgid "A folder is required."
+#~ msgstr "Kansio vaaditaan."
+
+#~ msgid "This is not a valid Windows folder name."
+#~ msgstr "Tämä hakemistopolku ei ole Windowsissa hyväksyttävä."
+
+#~ msgid "A game with this folder already exists."
+#~ msgstr "Tämä kansio kuuluu jo lisätylle pelille."
 
 #~ msgid "Active Regular Plugins"
 #~ msgstr "Aktiivisia tavallisia lisäosia"

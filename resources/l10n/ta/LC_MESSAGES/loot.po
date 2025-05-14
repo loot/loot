@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-10 19:02+0100\n"
+"POT-Creation-Date: 2025-05-14 21:23+0100\n"
 "PO-Revision-Date: 2025-01-19 13:00+0000\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
@@ -955,7 +955,7 @@ msgstr "முகவரி"
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 #: src/gui/qt/settings/game_tab.cpp:151
-#: src/gui/qt/settings/new_game_dialog.cpp:123
+#: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
 msgstr "பெயர்"
 
@@ -989,12 +989,11 @@ msgid "Browse…"
 msgstr "உலாவுக…"
 
 #: src/gui/qt/settings/game_tab.cpp:152
-#: src/gui/qt/settings/new_game_dialog.cpp:124
+#: src/gui/qt/settings/new_game_dialog.cpp:75
 msgid "Base Game"
 msgstr "காரம் Game"
 
 #: src/gui/qt/settings/game_tab.cpp:153
-#: src/gui/qt/settings/new_game_dialog.cpp:125
 msgid "LOOT Folder"
 msgstr "கொள்ளை கோப்புறை"
 
@@ -1078,35 +1077,23 @@ msgstr "கொள்ளை மறுதொடக்கம் செய்யப�
 msgid "Autodetect"
 msgstr "ஆட்டோடெடெக்ட்"
 
-#: src/gui/qt/settings/new_game_dialog.cpp:121
+#: src/gui/qt/settings/new_game_dialog.cpp:72
 msgid "Add new game"
 msgstr "புதிய விளையாட்டைச் சேர்க்கவும்"
 
-#: src/gui/qt/settings/new_game_dialog.cpp:127
+#: src/gui/qt/settings/new_game_dialog.cpp:77
 msgid "A name is required."
 msgstr "ஒரு பெயர் தேவை."
 
-#: src/gui/qt/settings/new_game_dialog.cpp:128
-msgid "A folder is required."
-msgstr "ஒரு கோப்புறை தேவை."
-
-#: src/gui/qt/settings/new_game_dialog.cpp:148
-msgid "This is not a valid Windows folder name."
-msgstr "இது சரியான சாளரங்கள் கோப்புறை பெயர் அல்ல."
-
-#: src/gui/qt/settings/new_game_dialog.cpp:157
-msgid "A game with this folder already exists."
-msgstr "இந்த கோப்புறையுடன் ஒரு விளையாட்டு ஏற்கனவே உள்ளது."
-
-#: src/gui/qt/settings/settings_dialog.cpp:109
+#: src/gui/qt/settings/settings_dialog.cpp:160
 msgid "Settings"
 msgstr "அமைப்புகள்"
 
-#: src/gui/qt/settings/settings_dialog.cpp:111
+#: src/gui/qt/settings/settings_dialog.cpp:162
 msgid "General"
 msgstr "பொது"
 
-#: src/gui/qt/settings/settings_dialog.cpp:113
+#: src/gui/qt/settings/settings_dialog.cpp:164
 msgid "Add new game…"
 msgstr "புதிய விளையாட்டைச் சேர்க்கவும்…"
 
@@ -1485,3 +1472,12 @@ msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] "ஒளி சொருகி"
 msgstr[1] "ஒளி செருகுநிரல்கள்"
+
+#~ msgid "A folder is required."
+#~ msgstr "ஒரு கோப்புறை தேவை."
+
+#~ msgid "This is not a valid Windows folder name."
+#~ msgstr "இது சரியான சாளரங்கள் கோப்புறை பெயர் அல்ல."
+
+#~ msgid "A game with this folder already exists."
+#~ msgstr "இந்த கோப்புறையுடன் ஒரு விளையாட்டு ஏற்கனவே உள்ளது."
