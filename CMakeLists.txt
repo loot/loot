@@ -215,8 +215,8 @@ if(WIN32)
 endif()
 FetchContent_Declare(
     spdlog
-    URL "https://github.com/gabime/spdlog/archive/v1.15.2.tar.gz"
-    URL_HASH "SHA256=7a80896357f3e8e920e85e92633b14ba0f229c506e6f978578bdc35ba09e9a5d"
+    URL "https://github.com/gabime/spdlog/archive/v1.15.3.tar.gz"
+    URL_HASH "SHA256=15a04e69c222eb6c01094b5c7ff8a249b36bb22788d72519646fb85feb267e67"
     FIND_PACKAGE_ARGS)
 
 if(NOT DEFINED VALVE_FILE_VDF_URL)
