@@ -112,8 +112,8 @@ endif()
 
 
 if(NOT DEFINED MINIZIP_NG_URL)
-    set(MINIZIP_NG_URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.8.tar.gz")
-    set(MINIZIP_NG_HASH "SHA256=c3e9ceab2bec26cb72eba1cf46d0e2c7cad5d2fe3adf5df77e17d6bbfea4ec8f")
+    set(MINIZIP_NG_URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.10.tar.gz")
+    set(MINIZIP_NG_HASH "SHA256=c362e35ee973fa7be58cc5e38a4a6c23cc8f7e652555daf4f115a9eb2d3a6be7")
 endif()
 
 find_package(ZLIB)
