@@ -123,8 +123,8 @@ Hide inactive plugins
   Hides all plugins that are inactive.
 Hide messageless plugins
   Hides all plugins that have no visible messages.
-Hide Creation Club plugins
-  Hides all plugins that are available through Bethesda's Creation Club.
+Show only empty plugins
+  Hides all plugins that contain more than their header record. Empty plugins can be used to load assets from BSA or BA2 files (depending on the game).
 Show only warnings and errors
   Combines the Bash Tags, sources, notes and messageless plugins filters. Enabling it enables those other filters, and disabling any of those other filters will also disable it.
 
