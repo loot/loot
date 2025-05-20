@@ -390,6 +390,10 @@ std::optional<GameInstall> FindGameInstall(
   try {
     if (!std::filesystem::exists(steamAppManifestPath)) {
       // Avoid logging unnecessary warnings.
+      if (logger) {
+        logger->debug("The Steam app manifest at {} does not exist",
+                      steamAppManifestPath.u8string());
+      }
       return std::nullopt;
     }
 
@@ -448,6 +452,12 @@ std::optional<GameInstall> FindGameInstall(
     installPath = FixNehrimInstallPath(gameId, installPath);
 
     if (!IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
+      if (logger) {
+        logger->debug(
+            "The install path given in the Steam app manifest at {} is not "
+            "valid",
+            steamAppManifestPath.u8string());
+      }
       return std::nullopt;
     }
 
