@@ -55,6 +55,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
+#include "gui/qt/back_up_load_order_dialog.h"
 #include "gui/qt/card_delegate.h"
 #include "gui/qt/filters_widget.h"
 #include "gui/qt/groups_editor/groups_editor_dialog.h"
@@ -119,6 +120,7 @@ private:
   QAction *actionCopyContent{new QAction(this)};
   QAction *actionRefreshContent{new QAction(this)};
   QAction *actionRedatePlugins{new QAction(this)};
+  QAction *actionBackUpLoadOrder{new QAction(this)};
   QAction *actionFixAmbiguousLoadOrder{new QAction(this)};
   QAction *actionClearAllUserMetadata{new QAction(this)};
   QAction *actionCopyPluginName{new QAction(this)};
@@ -156,6 +158,7 @@ private:
   SettingsDialog *settingsDialog{
       new SettingsDialog(this, state.GetPaths().getLootDataPath())};
   SearchDialog *searchDialog{new SearchDialog(this)};
+  BackUpLoadOrderDialog *backupDialog{new BackUpLoadOrderDialog(this)};
 
   PluginItemModel *pluginItemModel{new PluginItemModel(this)};
   PluginItemFilterModel *proxyModel{new PluginItemFilterModel(this)};
@@ -249,6 +252,7 @@ private slots:
   void on_actionSearch_triggered();
   void on_actionCopyLoadOrder_triggered();
   void on_actionCopyContent_triggered();
+  void on_actionBackUpLoadOrder_triggered();
   void on_actionFixAmbiguousLoadOrder_triggered();
   void on_actionRefreshContent_triggered();
   void on_actionRedatePlugins_triggered();
@@ -301,6 +305,8 @@ private slots:
   void on_searchDialog_finished();
   void on_searchDialog_textChanged(const QVariant &text);
   void on_searchDialog_currentResultChanged(size_t resultIndex);
+  
+  void on_backupDialog_accepted();
 
   void handleGameChanged(QueryResult result);
   void handleRefreshGameDataLoaded(QueryResult result);

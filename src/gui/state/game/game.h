@@ -113,6 +113,8 @@ public:
 
   void RedatePlugins();  // Change timestamps to match load order (Skyrim only).
 
+  void BackUpCurrentLoadOrder(std::string_view name) const;
+
   void LoadAllInstalledPlugins(
       bool headersOnly);  // Loads all installed plugins.
   bool ArePluginsFullyLoaded()

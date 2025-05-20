@@ -11,6 +11,7 @@ The menu bar consists of the File, Game, Plugin and Help menus. Some menus and m
 
 A few items in the menus are not self-explanatory:
 
+- "Back Up Load Order…" records the current load order in a file that's saved in the LOOT folder for the current game.
 - "Redate Plugins…" is provided so that Skyrim and Skyrim Special Edition modders may set the load order for the Creation Kit. It is only available for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
 - "Copy Load Order" copies the displayed list of plugins and the decimal and hexadecimal indices of active plugins to the clipboard. The columns are:
 
@@ -49,7 +50,7 @@ Any errors encountered during sorting or masterlist update will be displayed on 
 Load Order Backups
 ^^^^^^^^^^^^^^^^^^
 
-LOOT automatically backs up the current load order before applying a sorted load order or fixing an ambiguous load order. Only the three most recent backups are retained.
+In addition to the "Back Up Load Order" Game menu action, LOOT automatically backs up the current load order before applying a sorted load order or fixing an ambiguous load order. Only the three most recent automatic backups are retained. LOOT never deletes manual backups.
 
 Backups are stored as JSON files in the LOOT's data folder for the current game. The files use the naming scheme ``loadorder.<creation timestamp>.json``.
 

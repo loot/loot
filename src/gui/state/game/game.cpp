@@ -666,6 +666,10 @@ void Game::RedatePlugins() {
   }
 }
 
+void Game::BackUpCurrentLoadOrder(std::string_view name) const {
+  BackupLoadOrder(GetLoadOrder(), GetLOOTGamePath(), name);
+}
+
 void Game::LoadAllInstalledPlugins(bool headersOnly) {
   LoadCurrentLoadOrderState();
 

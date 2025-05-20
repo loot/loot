@@ -29,6 +29,7 @@
 #include <loot/api.h>
 
 #include <QtCore/QDateTime>
+#include <QtCore/QFile>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonValue>
@@ -126,10 +127,10 @@ std::optional<std::filesystem::path> ResolveGameFilePath(
 }
 
 void CreateBackup(const std::vector<std::string>& loadOrder,
-                  const std::filesystem::path& backupDirectory) {
-  const auto name = "Automatic Load Order Backup";
+                  const std::filesystem::path& backupDirectory,
+                  std::string_view name,
+                  bool autoDelete) {
   const auto timestamp = QDateTime::currentDateTimeUtc();
-  const auto autoDelete = true;
 
   QJsonArray loadOrderArray;
   for (const auto& plugin : loadOrder) {
@@ -137,7 +138,7 @@ void CreateBackup(const std::vector<std::string>& loadOrder,
   }
 
   QJsonObject json;
-  json["name"] = name;
+  json["name"] = std::string(name).c_str();
   json["creationTimestamp"] = timestamp.toString(Qt::DateFormat::ISODateWithMs);
   json["autoDelete"] = autoDelete;
   json["loadOrder"] = loadOrderArray;
@@ -178,10 +179,22 @@ void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
     const auto filename = it->path().filename().u8string();
     if (boost::starts_with(filename, PREFIX) &&
         boost::ends_with(filename, SUFFIX)) {
-      const auto timestamp = filename.substr(
-          PREFIX.size(), filename.size() - (PREFIX.size() + SUFFIX.size()));
+      auto file = QFile(QString::fromStdString(it->path().u8string()));
 
-      backupFiles.emplace(std::stoll(timestamp), it->path());
+      file.open(QIODevice::ReadOnly | QIODevice::Text);
+      const auto content = file.readAll();
+      file.close();
+
+      const auto json = QJsonValue::fromJson(content).toObject();
+      const auto timestamp = json.value("creationTimestamp").toString();
+      const auto autoDelete = json.value("autoDelete").toBool();
+
+      if (!timestamp.isEmpty() && autoDelete) {
+        const auto timestampMs =
+            QDateTime::fromString(timestamp, Qt::DateFormat::ISODateWithMs)
+                .toMSecsSinceEpoch();
+        backupFiles.emplace(timestampMs, it->path());
+      }
     }
   }
 
@@ -197,7 +210,14 @@ void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
 namespace loot {
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory) {
-  CreateBackup(loadOrder, backupDirectory);
+  CreateBackup(loadOrder, backupDirectory, "Automatic Load Order Backup", true);
+  RemoveOldBackups(backupDirectory);
+}
+
+void BackupLoadOrder(const std::vector<std::string>& loadOrder,
+                     const std::filesystem::path& backupDirectory,
+                     std::string_view name) {
+  CreateBackup(loadOrder, backupDirectory, name, false);
   RemoveOldBackups(backupDirectory);
 }
 

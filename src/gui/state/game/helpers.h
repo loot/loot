@@ -43,6 +43,10 @@ namespace loot {
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory);
 
+void BackupLoadOrder(const std::vector<std::string>& loadOrder,
+                     const std::filesystem::path& backupDirectory,
+                     std::string_view name);
+
 // Escape any Markdown special characters in the input text.
 std::string EscapeMarkdownASCIIPunctuation(const std::string& text);
 

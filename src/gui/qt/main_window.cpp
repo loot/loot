@@ -438,6 +438,7 @@ void MainWindow::setupUi() {
 
   settingsDialog->setObjectName("settingsDialog");
   searchDialog->setObjectName("searchDialog");
+  backupDialog->setObjectName("backupDialog");
   sidebarPluginsView->setObjectName("sidebarPluginsView");
 
   toolBox->addItem(sidebarPluginsView, QString("P&lugins"));
@@ -566,6 +567,8 @@ void MainWindow::setupMenuBar() {
 
   actionRedatePlugins->setObjectName("actionRedatePlugins");
 
+  actionBackUpLoadOrder->setObjectName("actionBackUpLoadOrder");
+
   actionFixAmbiguousLoadOrder->setObjectName("actionFixAmbiguousLoadOrder");
 
   actionClearAllUserMetadata->setObjectName("actionClearAllUserMetadata");
@@ -607,6 +610,8 @@ void MainWindow::setupMenuBar() {
   menuGame->addAction(actionCopyLoadOrder);
   menuGame->addAction(actionCopyContent);
   menuGame->addAction(actionRefreshContent);
+  menuGame->addSeparator();
+  menuGame->addAction(actionBackUpLoadOrder);
   menuGame->addSeparator();
   menuGame->addAction(actionFixAmbiguousLoadOrder);
   menuGame->addAction(actionRedatePlugins);
@@ -778,6 +783,8 @@ void MainWindow::translateUi() {
   actionRefreshContent->setText(translate("&Refresh Content"));
   /* translators: This string is an action in the Game menu. */
   actionRedatePlugins->setText(translate("Redate &Plugins…"));
+  /* translators: This string is an action in the Game menu. */
+  actionBackUpLoadOrder->setText(translate("Back Up Load &Order…"));
   /* translators: This string is an action in the Game menu. */
   actionFixAmbiguousLoadOrder->setText(translate("&Fix Ambiguous Load Order"));
   /* translators: This string is an action in the Game menu. */
@@ -1700,6 +1707,16 @@ void MainWindow::on_actionCopyContent_triggered() {
   }
 }
 
+void MainWindow::on_actionBackUpLoadOrder_triggered() {
+  try {
+    backupDialog->reset();
+    backupDialog->open();
+
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
 void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
   try {
     auto loadOrder = state.GetCurrentGame().GetLoadOrder();
@@ -2515,6 +2532,22 @@ void MainWindow::on_searchDialog_currentResultChanged(size_t resultIndex) {
   pluginCardsView->scrollTo(proxyIndex, QAbstractItemView::PositionAtTop);
 }
 
+void MainWindow::on_backupDialog_accepted() {
+  try {
+    auto name = backupDialog->getBackupName();
+    if (name.isEmpty()) {
+      name = QString::fromUtf8("Manual Backup");
+    }
+
+    state.GetCurrentGame().BackUpCurrentLoadOrder(name.toStdString());
+
+    showNotification(
+        translate("A backup of the current load order has been created."));
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
 void MainWindow::handleGameChanged(QueryResult result) {
   try {
     filtersWidget->setGameId(state.GetCurrentGame().GetSettings().Id());
@@ -2859,8 +2892,6 @@ void MainWindow::handleLinkColorChanged() {
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-void MainWindow::handleColorSchemeChanged() {
-  applyTheme();
-}
+void MainWindow::handleColorSchemeChanged() { applyTheme(); }
 #endif
 }
