@@ -73,6 +73,7 @@ public:
     bool hideMessagelessPlugins{false};
     bool hideCreationClubPlugins{false};
     bool showOnlyEmptyPlugins{false};
+    bool showOnlyPluginsWithLoadAfterMetadata{false};
   };
 
   void load(const std::filesystem::path& file);

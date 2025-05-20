@@ -894,6 +894,9 @@ void LootSettings::load(const std::filesystem::path& file) {
     filters_.showOnlyEmptyPlugins =
         filters.at_path("showOnlyEmptyPlugins")
             .value_or(filters_.showOnlyEmptyPlugins);
+    filters_.showOnlyPluginsWithLoadAfterMetadata =
+        filters.at_path("showOnlyPluginsWithLoadAfterMetadata")
+            .value_or(filters_.showOnlyPluginsWithLoadAfterMetadata);
   }
 
   const auto languages = settings["languages"];
@@ -938,6 +941,8 @@ void LootSettings::save(const std::filesystem::path& file) {
            {"hideMessagelessPlugins", filters_.hideMessagelessPlugins},
            {"hideCreationClubPlugins", filters_.hideCreationClubPlugins},
            {"showOnlyEmptyPlugins", filters_.showOnlyEmptyPlugins},
+           {"showOnlyPluginsWithLoadAfterMetadata",
+            filters_.showOnlyPluginsWithLoadAfterMetadata},
        }}};
 
   if (mainWindowPosition_.has_value()) {

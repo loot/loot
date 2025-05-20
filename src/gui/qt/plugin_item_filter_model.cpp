@@ -112,6 +112,10 @@ bool PluginItemFilterModel::filterAcceptsRow(
     return false;
   }
 
+  if (filterState.showOnlyPluginsWithLoadAfterMetadata && !item.hasLoadAfterMetadata) {
+    return false;
+  }
+
   if (filterState.groupName.has_value() &&
       item.group.value_or(std::string(Group::DEFAULT_NAME)) !=
           filterState.groupName.value()) {
