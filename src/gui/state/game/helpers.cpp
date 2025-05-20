@@ -28,6 +28,11 @@
 #include <fmt/base.h>
 #include <loot/api.h>
 
+#include <QtCore/QDateTime>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonValue>
+#include <QtCore/QString>
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
 #include <fstream>
@@ -119,11 +124,30 @@ std::optional<std::filesystem::path> ResolveGameFilePath(
 
   return std::nullopt;
 }
+
+void CreateBackup(const std::vector<std::string>& loadOrder,
+                  const std::filesystem::path& backupDirectory) {
+  const auto name = "Automatic Load Order Backup";
+  const auto timestamp = QDateTime::currentDateTimeUtc();
+  const auto autoDelete = true;
+
+  QJsonArray loadOrderArray;
+  for (const auto& plugin : loadOrder) {
+    loadOrderArray.push_back(QString::fromStdString(plugin));
+  }
+
+  QJsonObject json;
+  json["name"] = name;
+  json["creationTimestamp"] = timestamp.toString(Qt::DateFormat::ISODateWithMs);
+  json["autoDelete"] = autoDelete;
+  json["loadOrder"] = loadOrderArray;
+
+  std::ofstream out(backupDirectory /
+                    std::filesystem::u8path("loadorder.bak.0"));
+  out << QJsonValue(json).toJson().toStdString();
 }
 
-namespace loot {
-void BackupLoadOrder(const std::vector<std::string>& loadOrder,
-                     const std::filesystem::path& backupDirectory) {
+void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
   const int maxBackupIndex = 2;
   const auto filenameFormat = "loadorder.bak.{0}";
 
@@ -142,11 +166,14 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
           backupDirectory / fmt::format(filenameFormat, i + 1));
     }
   }
+}
+}
 
-  std::ofstream out(backupDirectory / fmt::format(filenameFormat, 0));
-  for (const auto& plugin : loadOrder) {
-    out << plugin << std::endl;
-  }
+namespace loot {
+void BackupLoadOrder(const std::vector<std::string>& loadOrder,
+                     const std::filesystem::path& backupDirectory) {
+  RemoveOldBackups(backupDirectory);
+  CreateBackup(loadOrder, backupDirectory);
 }
 
 std::string EscapeMarkdownASCIIPunctuation(const std::string& text) {

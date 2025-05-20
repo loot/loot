@@ -25,6 +25,10 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_STATE_GAME_GAME_TEST
 #define LOOT_TESTS_GUI_STATE_GAME_GAME_TEST
 
+#include <QtCore/QFile>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonValue>
 #include <fstream>
 
 #include "gui/state/game/game.h"
@@ -62,8 +66,7 @@ TEST_F(CreationClubPluginsTest,
   EXPECT_FALSE(ccPlugins.IsCreationClubPlugin(ccPluginName));
 }
 
-TEST_F(CreationClubPluginsTest,
-       loadShouldTrimCRLFLineEndingsFromCCCFileLines) {
+TEST_F(CreationClubPluginsTest, loadShouldTrimCRLFLineEndingsFromCCCFileLines) {
   CreationClubPlugins ccPlugins;
 
   std::ofstream out(cccPath, std::ios::out | std::ios::binary);
@@ -129,6 +132,28 @@ protected:
       default:
         return std::nullopt;
     }
+  }
+
+  std::vector<std::string> ReadBackedUpLoadOrder(
+      const std::filesystem::path& backupPath) {
+    auto file = QFile(QString::fromStdString(backupPath.u8string()));
+
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    const auto content = file.readAll();
+    file.close();
+
+    const auto plugins =
+        QJsonValue::fromJson(content).toObject().value("loadOrder").toArray();
+
+    std::vector<std::string> loadOrder;
+    for (const auto plugin : plugins) {
+      const auto pluginName = plugin.toString();
+      if (!pluginName.isEmpty()) {
+        loadOrder.push_back(pluginName.toStdString());
+      }
+    }
+
+    return loadOrder;
   }
 
   std::vector<std::string> loadOrderToSet_;
@@ -502,14 +527,13 @@ TEST_P(
 
   auto messages =
       game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
-  EXPECT_EQ(
-      std::vector<SourcedMessage>({
-          SourcedMessage{MessageType::error,
-                         MessageSource::incompatibilityMetadata,
-                         "This plugin is incompatible with foo, but both "
-                         "are present."},
-      }),
-      messages);
+  EXPECT_EQ(std::vector<SourcedMessage>({
+                SourcedMessage{MessageType::error,
+                               MessageSource::incompatibilityMetadata,
+                               "This plugin is incompatible with foo, but both "
+                               "are present."},
+            }),
+            messages);
 }
 
 TEST_P(
@@ -1080,7 +1104,7 @@ TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
   EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
   EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
 
-  auto loadOrder = readFileLines(lootGamePath / loadOrderBackupFile0);
+  auto loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile0);
 
   EXPECT_TRUE(loadOrder.empty());
 }
@@ -1105,7 +1129,7 @@ TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
   EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
   EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
 
-  auto loadOrder = readFileLines(lootGamePath / loadOrderBackupFile0);
+  auto loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile0);
 
   EXPECT_EQ(initialLoadOrder, loadOrder);
 }
@@ -1139,10 +1163,10 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
   EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
   EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
 
-  auto loadOrder = readFileLines(lootGamePath / loadOrderBackupFile0);
+  auto loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile0);
   EXPECT_EQ(firstSetLoadOrder, loadOrder);
 
-  loadOrder = readFileLines(lootGamePath / loadOrderBackupFile1);
+  loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile1);
   EXPECT_EQ(initialLoadOrder, loadOrder);
 }
 
@@ -1192,13 +1216,13 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
   EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
   EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
 
-  auto loadOrder = readFileLines(lootGamePath / loadOrderBackupFile0);
+  auto loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile0);
   EXPECT_EQ(thirdSetLoadOrder, loadOrder);
 
-  loadOrder = readFileLines(lootGamePath / loadOrderBackupFile1);
+  loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile1);
   EXPECT_EQ(secondSetLoadOrder, loadOrder);
 
-  loadOrder = readFileLines(lootGamePath / loadOrderBackupFile2);
+  loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile2);
   EXPECT_EQ(firstSetLoadOrder, loadOrder);
 }
 
