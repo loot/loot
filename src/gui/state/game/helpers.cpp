@@ -56,41 +56,6 @@ using loot::GameId;
 
 constexpr const char* GHOST_EXTENSION = ".ghost";
 
-constexpr const char* MS_FO4_AUTOMATRON_DATA_PATH =
-    "../../../Fallout 4- Automatron (PC)/Content/Data";
-constexpr const char* MS_FO4_CONTRAPTIONS_DATA_PATH =
-    "../../../Fallout 4- Contraptions Workshop (PC)/Content/Data";
-constexpr const char* MS_FO4_FAR_HARBOR_DATA_PATH =
-    "../../../Fallout 4- Far Harbor (PC)/Content/Data";
-constexpr const char* MS_FO4_TEXTURE_PACK_DATA_PATH =
-    "../../../Fallout 4- High Resolution Texture Pack/Content/Data";
-constexpr const char* MS_FO4_NUKA_WORLD_DATA_PATH =
-    "../../../Fallout 4- Nuka-World (PC)/Content/Data";
-constexpr const char* MS_FO4_VAULT_TEC_DATA_PATH =
-    "../../../Fallout 4- Vault-Tec Workshop (PC)/Content/Data";
-constexpr const char* MS_FO4_WASTELAND_DATA_PATH =
-    "../../../Fallout 4- Wasteland Workshop (PC)/Content/Data";
-
-std::filesystem::path GetUserDocumentsPath(
-    const std::filesystem::path& gameLocalPath) {
-#ifdef _WIN32
-  PWSTR path;
-
-  if (SHGetKnownFolderPath(FOLDERID_Documents, 0, NULL, &path) != S_OK)
-    throw std::system_error(GetLastError(),
-                            std::system_category(),
-                            "Failed to get user Documents path.");
-
-  std::filesystem::path documentsPath(path);
-  CoTaskMemFree(path);
-
-  return documentsPath;
-#else
-  // Get the documents path relative to the game's local path.
-  return gameLocalPath.parent_path().parent_path().parent_path() / "Documents";
-#endif
-}
-
 std::optional<std::filesystem::path> GetPathThatExists(
     GameId gameId,
     std::filesystem::path&& path) {
