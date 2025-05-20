@@ -66,6 +66,7 @@ struct PluginItem {
   bool isCreationClubPlugin{false};
   bool hasLoadAfterMetadata{false};
   bool hasLoadAfterUserMetadata{false};
+  bool hasLoadOrderMetadata{false};
 
   std::vector<std::string> currentTags;
   std::vector<std::string> addTags;

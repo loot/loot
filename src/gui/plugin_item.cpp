@@ -153,6 +153,10 @@ PluginItem::PluginItem(GameId gameId,
 
   isDirty = !evaluatedMetadata.GetDirtyInfo().empty();
   hasLoadAfterMetadata = !evaluatedMetadata.GetLoadAfterFiles().empty();
+  hasLoadOrderMetadata = !evaluatedMetadata.GetLoadAfterFiles().empty() ||
+                         !evaluatedMetadata.GetRequirements().empty() ||
+                         evaluatedMetadata.GetGroup().has_value();
+
   group = evaluatedMetadata.GetGroup();
 
   messages.insert(messages.end(), evalErrors.begin(), evalErrors.end());

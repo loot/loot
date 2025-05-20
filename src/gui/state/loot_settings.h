@@ -75,6 +75,7 @@ public:
     bool showOnlyEmptyPlugins{false};
     bool showOnlyPluginsWithLoadAfterMetadata{false};
     bool showOnlyPluginsWithLoadAfterUserMetadata{false};
+    bool showOnlyPluginsWithoutLoadOrderMetadata{false};
   };
 
   void load(const std::filesystem::path& file);
