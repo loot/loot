@@ -101,10 +101,6 @@ protected:
       detail_(std::vector<MessageContent>({
           MessageContent("detail"),
       })),
-      loadOrderBackupFile0("loadorder.bak.0"),
-      loadOrderBackupFile1("loadorder.bak.1"),
-      loadOrderBackupFile2("loadorder.bak.2"),
-      loadOrderBackupFile3("loadorder.bak.3"),
       defaultGameSettings(GameSettings(GetParam(), u8"non\u00C1sciiFolder")
                               .SetMinimumHeaderVersion(0.0f)
                               .SetGamePath(gamePath)
@@ -134,6 +130,29 @@ protected:
     }
   }
 
+  std::vector<std::filesystem::path> FindLoadOrderBackups(const Game& game) {
+    using std::filesystem::u8path;
+
+    const auto parentPath = lootDataPath / u8path("games") /
+                            u8path(game.GetSettings().FolderName());
+
+    std::vector<std::filesystem::path> paths;
+
+    for (auto it = std::filesystem::directory_iterator(parentPath);
+         it != std::filesystem::directory_iterator();
+         ++it) {
+      const auto filename = it->path().filename().u8string();
+      if (boost::starts_with(filename, "loadorder.") &&
+          boost::ends_with(filename, ".json")) {
+        paths.push_back(it->path());
+      }
+    }
+
+    std::sort(paths.begin(), paths.end());
+
+    return paths;
+  }
+
   std::vector<std::string> ReadBackedUpLoadOrder(
       const std::filesystem::path& backupPath) {
     auto file = QFile(QString::fromStdString(backupPath.u8string()));
@@ -157,10 +176,6 @@ protected:
   }
 
   std::vector<std::string> loadOrderToSet_;
-  const std::string loadOrderBackupFile0;
-  const std::string loadOrderBackupFile1;
-  const std::string loadOrderBackupFile2;
-  const std::string loadOrderBackupFile3;
 
   const std::vector<MessageContent> detail_;
 
@@ -1089,22 +1104,14 @@ TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
   using std::filesystem::u8path;
   Game game = CreateInitialisedGame();
 
-  auto lootGamePath =
-      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
+  ASSERT_TRUE(FindLoadOrderBackups(game).empty());
 
-  auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
+  const auto paths = FindLoadOrderBackups(game);
+  ASSERT_EQ(1, paths.size());
 
-  auto loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile0);
+  const auto loadOrder = ReadBackedUpLoadOrder(paths[0]);
 
   EXPECT_TRUE(loadOrder.empty());
 }
@@ -1114,115 +1121,72 @@ TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
   Game game = CreateInitialisedGame();
   game.LoadAllInstalledPlugins(true);
 
-  auto lootGamePath =
-      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
+  ASSERT_TRUE(FindLoadOrderBackups(game).empty());
 
-  auto initialLoadOrder = getLoadOrder();
+  const auto initialLoadOrder = game.GetLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
+  const auto paths = FindLoadOrderBackups(game);
+  ASSERT_EQ(1, paths.size());
 
-  auto loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile0);
+  const auto loadOrder = ReadBackedUpLoadOrder(paths[0]);
 
   EXPECT_EQ(initialLoadOrder, loadOrder);
 }
 
-TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
+TEST_P(GameTest, setLoadOrderShouldKeepTheThreeNewestBackups) {
   using std::filesystem::u8path;
+
+  constexpr auto SLEEP_DURATION = std::chrono::milliseconds(1);
+
   Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
 
-  auto lootGamePath =
-      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
+  ASSERT_TRUE(FindLoadOrderBackups(game).empty());
 
-  auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  auto firstSetLoadOrder = loadOrderToSet_;
+  std::vector<std::string> firstSetLoadOrder = loadOrderToSet_;
 
   ASSERT_NE(blankPluginDependentEsp, loadOrderToSet_[9]);
   ASSERT_NE(blankDifferentMasterDependentEsp, loadOrderToSet_[10]);
   loadOrderToSet_[9] = blankPluginDependentEsp;
   loadOrderToSet_[10] = blankDifferentMasterDependentEsp;
 
+  // Backup files are distinguished using millisecond-precision timestamps, so
+  // make sure there's at least 1 ms between the creation of each.
+  std::this_thread::sleep_for(SLEEP_DURATION);
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
-
-  auto loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile0);
-  EXPECT_EQ(firstSetLoadOrder, loadOrder);
-
-  loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile1);
-  EXPECT_EQ(initialLoadOrder, loadOrder);
-}
-
-TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
-  using std::filesystem::u8path;
-  Game game = CreateInitialisedGame();
-
-  auto lootGamePath =
-      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
-
-  auto initialLoadOrder = getLoadOrder();
-  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
-
-  auto firstSetLoadOrder = loadOrderToSet_;
-
-  ASSERT_NE(blankPluginDependentEsp, loadOrderToSet_[9]);
-  ASSERT_NE(blankDifferentMasterDependentEsp, loadOrderToSet_[10]);
-  loadOrderToSet_[9] = blankPluginDependentEsp;
-  loadOrderToSet_[10] = blankDifferentMasterDependentEsp;
-
-  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
-
-  auto secondSetLoadOrder = loadOrderToSet_;
+  std::vector<std::string> secondSetLoadOrder = loadOrderToSet_;
 
   ASSERT_NE(blankMasterDependentEsp, loadOrderToSet_[7]);
   ASSERT_NE(blankEsp, loadOrderToSet_[8]);
   loadOrderToSet_[7] = blankMasterDependentEsp;
   loadOrderToSet_[8] = blankEsp;
 
+  std::this_thread::sleep_for(SLEEP_DURATION);
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  auto thirdSetLoadOrder = loadOrderToSet_;
+  std::vector<std::string> thirdSetLoadOrder = loadOrderToSet_;
 
   ASSERT_NE(blankDifferentEsm, loadOrderToSet_[2]);
   ASSERT_NE(blankMasterDependentEsm, loadOrderToSet_[3]);
   loadOrderToSet_[2] = blankDifferentEsm;
   loadOrderToSet_[3] = blankMasterDependentEsm;
 
+  std::this_thread::sleep_for(SLEEP_DURATION);
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
+  const auto paths = FindLoadOrderBackups(game);
+  ASSERT_EQ(3, paths.size());
 
-  auto loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile0);
+  auto loadOrder = ReadBackedUpLoadOrder(paths[2]);
   EXPECT_EQ(thirdSetLoadOrder, loadOrder);
 
-  loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile1);
+  loadOrder = ReadBackedUpLoadOrder(paths[1]);
   EXPECT_EQ(secondSetLoadOrder, loadOrder);
 
-  loadOrder = ReadBackedUpLoadOrder(lootGamePath / loadOrderBackupFile2);
+  loadOrder = ReadBackedUpLoadOrder(paths[0]);
   EXPECT_EQ(firstSetLoadOrder, loadOrder);
 }
 

@@ -142,28 +142,53 @@ void CreateBackup(const std::vector<std::string>& loadOrder,
   json["autoDelete"] = autoDelete;
   json["loadOrder"] = loadOrderArray;
 
-  std::ofstream out(backupDirectory /
-                    std::filesystem::u8path("loadorder.bak.0"));
+  const auto filename =
+      fmt::format("loadorder.{}.json", timestamp.toMSecsSinceEpoch());
+
+  std::ofstream out(backupDirectory / std::filesystem::u8path(filename));
   out << QJsonValue(json).toJson().toStdString();
 }
 
 void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
-  const int maxBackupIndex = 2;
-  const auto filenameFormat = "loadorder.bak.{0}";
+  using std::filesystem::u8path;
 
-  std::filesystem::path backupFilePath =
-      backupDirectory / fmt::format(filenameFormat, 2);
-  if (std::filesystem::exists(backupFilePath)) {
-    std::filesystem::remove(backupFilePath);
+  constexpr size_t MAX_BACKUPS = 3;
+  constexpr std::string_view PREFIX = "loadorder.";
+  constexpr std::string_view SUFFIX = ".json";
+
+  std::map<int64_t, std::filesystem::path> backupFiles;
+
+  // Remove backups that use the old naming scheme first.
+  const auto oldBak0 = backupDirectory / u8path("loadorder.bak.0");
+  const auto oldBak1 = backupDirectory / u8path("loadorder.bak.1");
+  const auto oldBak2 = backupDirectory / u8path("loadorder.bak.2");
+  if (std::filesystem::exists(oldBak2)) {
+    backupFiles.emplace(INT64_MIN, oldBak2);
+  }
+  if (std::filesystem::exists(oldBak1)) {
+    backupFiles.emplace(INT64_MIN + 1, oldBak1);
+  }
+  if (std::filesystem::exists(oldBak0)) {
+    backupFiles.emplace(INT64_MIN + 2, oldBak0);
   }
 
-  for (int i = maxBackupIndex - 1; i > -1; --i) {
-    const std::filesystem::path oldBackupFilePath =
-        backupDirectory / fmt::format(filenameFormat, i);
-    if (std::filesystem::exists(oldBackupFilePath)) {
-      std::filesystem::rename(
-          oldBackupFilePath,
-          backupDirectory / fmt::format(filenameFormat, i + 1));
+  for (auto it = std::filesystem::directory_iterator(backupDirectory);
+       it != std::filesystem::directory_iterator();
+       ++it) {
+    const auto filename = it->path().filename().u8string();
+    if (boost::starts_with(filename, PREFIX) &&
+        boost::ends_with(filename, SUFFIX)) {
+      const auto timestamp = filename.substr(
+          PREFIX.size(), filename.size() - (PREFIX.size() + SUFFIX.size()));
+
+      backupFiles.emplace(std::stoll(timestamp), it->path());
+    }
+  }
+
+  while (backupFiles.size() > MAX_BACKUPS) {
+    const auto node = backupFiles.extract(backupFiles.begin());
+    if (!node.empty()) {
+      std::filesystem::remove(node.mapped());
     }
   }
 }
@@ -172,8 +197,8 @@ void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
 namespace loot {
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory) {
-  RemoveOldBackups(backupDirectory);
   CreateBackup(loadOrder, backupDirectory);
+  RemoveOldBackups(backupDirectory);
 }
 
 std::string EscapeMarkdownASCIIPunctuation(const std::string& text) {
