@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-14 21:23+0100\n"
+"POT-Creation-Date: 2025-05-20 17:50+0100\n"
 "PO-Revision-Date: 2025-01-21 14:00+0000\n"
 "Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/loot/loot/fi/>\n"
@@ -24,11 +24,11 @@ msgstr ""
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
 msgstr "\"{0}\" sisältää ehdon, jota ei voitu tarkastaa. Lisätiedot: {1}"
 
-#: src/gui/plugin_item.cpp:194
+#: src/gui/plugin_item.cpp:199
 msgid "Location"
 msgstr "Sijainti"
 
-#: src/gui/plugin_item.cpp:199
+#: src/gui/plugin_item.cpp:204
 msgid "Location {0}"
 msgstr "Sijainti {0}"
 
@@ -68,91 +68,103 @@ msgstr "{0} löysi {1} ja {2}."
 msgid "{0} found {1}."
 msgstr "{0} löysi {1}."
 
-#: src/gui/qt/filters_widget.cpp:247
+#: src/gui/qt/filters_widget.cpp:283
 msgid "Show only overlapping plugins for"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:248
+#: src/gui/qt/filters_widget.cpp:284
 msgid "Show only plugins in group"
 msgstr "Näytä vain seuraavan ryhmän lisäosat"
 
-#: src/gui/qt/filters_widget.cpp:250
+#: src/gui/qt/filters_widget.cpp:286
 msgid "Show only plugins with cards that contain"
 msgstr "Hae lisäosien ilmoituksista"
 
-#: src/gui/qt/filters_widget.cpp:251 src/gui/qt/search_dialog.cpp:113
+#: src/gui/qt/filters_widget.cpp:287 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
 msgstr "Käytä säännöllisenä lausekkeena"
 
-#: src/gui/qt/filters_widget.cpp:252
+#: src/gui/qt/filters_widget.cpp:288
 msgid "Hide version numbers"
 msgstr "Piilota versionumerot"
 
-#: src/gui/qt/filters_widget.cpp:253
+#: src/gui/qt/filters_widget.cpp:289
 msgid "Hide CRCs"
 msgstr "Piilota CRC-tarkistussummat"
 
-#: src/gui/qt/filters_widget.cpp:254
+#: src/gui/qt/filters_widget.cpp:290
 msgid "Hide Bash Tags"
 msgstr "Piilota Bash-tägit"
 
-#: src/gui/qt/filters_widget.cpp:255
+#: src/gui/qt/filters_widget.cpp:291
 msgid "Hide Sources"
 msgstr "Piilota lähteet"
 
-#: src/gui/qt/filters_widget.cpp:256
+#: src/gui/qt/filters_widget.cpp:292
 msgid "Hide notes"
 msgstr "Piilota huomautukset"
 
-#: src/gui/qt/filters_widget.cpp:258
+#: src/gui/qt/filters_widget.cpp:294
 msgid "Hide official plugins' cleaning messages"
 msgstr "Piilota virallisten lisäosien puhdistamisvaroitukset"
 
-#: src/gui/qt/filters_widget.cpp:259
+#: src/gui/qt/filters_widget.cpp:295
 msgid "Hide all plugin messages"
 msgstr "Piilota kaikki ilmoitukset"
 
-#: src/gui/qt/filters_widget.cpp:260
+#: src/gui/qt/filters_widget.cpp:296
 msgid "Hide inactive plugins"
 msgstr "Näytä vain aktiiviset lisäosat"
 
-#: src/gui/qt/filters_widget.cpp:261
+#: src/gui/qt/filters_widget.cpp:297
 msgid "Hide messageless plugins"
 msgstr "Näytä vain ilmoitukselliset lisäosat"
 
-#: src/gui/qt/filters_widget.cpp:262
+#: src/gui/qt/filters_widget.cpp:298
 msgid "Hide Creation Club plugins"
 msgstr "Piilota Creation Clubin lisäosat"
 
-#: src/gui/qt/filters_widget.cpp:263
+#: src/gui/qt/filters_widget.cpp:299
 msgid "Show only empty plugins"
 msgstr "Näytä vain tyhjät lisäosat"
 
-#: src/gui/qt/filters_widget.cpp:265
+#: src/gui/qt/filters_widget.cpp:301
+msgid "Show only plugins with load after metadata"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:303
+msgid "Show only plugins with load after user metadata"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:305
+msgid "Show only plugins without load order metadata"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:307
 msgid "Show only warnings and errors"
 msgstr "Näytä vain varoitukset ja virheet"
 
-#: src/gui/qt/filters_widget.cpp:266
+#: src/gui/qt/filters_widget.cpp:308
 msgid "Hidden plugins:"
 msgstr "Piilotetut lisäosat:"
 
-#: src/gui/qt/filters_widget.cpp:267
+#: src/gui/qt/filters_widget.cpp:309
 msgid "Hidden messages:"
 msgstr "Piilotetut viestit:"
 
-#: src/gui/qt/filters_widget.cpp:269
+#: src/gui/qt/filters_widget.cpp:311
 msgid "No plugin selected"
 msgstr "(Älä suodata lisäosia)"
 
-#: src/gui/qt/filters_widget.cpp:276
+#: src/gui/qt/filters_widget.cpp:318
 msgid "No group selected"
 msgstr "(Älä suodata ryhmiä)"
 
-#: src/gui/qt/filters_widget.cpp:283
+#: src/gui/qt/filters_widget.cpp:325
 msgid "No text specified"
 msgstr "(Ei hakua)"
 
-#: src/gui/qt/filters_widget.cpp:286
+#: src/gui/qt/filters_widget.cpp:328
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr "Hakusanaa käytetään säännöllisenä lausekkeena (regular expression)."
 

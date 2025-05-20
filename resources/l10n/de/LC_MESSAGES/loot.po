@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.26.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-14 21:23+0100\n"
+"POT-Creation-Date: 2025-05-20 17:50+0100\n"
 "PO-Revision-Date: 2025-04-27 15:37+0200\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/loot/loot/de/>\n"
@@ -27,11 +27,11 @@ msgstr ""
 "\"{0}\" enthält eine Bedingung, die nicht ausgewertet werden konnte. "
 "Einzelheiten: {1}"
 
-#: src/gui/plugin_item.cpp:194
+#: src/gui/plugin_item.cpp:199
 msgid "Location"
 msgstr "Ort"
 
-#: src/gui/plugin_item.cpp:199
+#: src/gui/plugin_item.cpp:204
 msgid "Location {0}"
 msgstr "Orte {0}"
 
@@ -71,91 +71,103 @@ msgstr "{0} hat {1} und {2} gefunden."
 msgid "{0} found {1}."
 msgstr "{0} hat {1} gefunden."
 
-#: src/gui/qt/filters_widget.cpp:247
+#: src/gui/qt/filters_widget.cpp:283
 msgid "Show only overlapping plugins for"
 msgstr "Zeige nur überlappende Plugins für"
 
-#: src/gui/qt/filters_widget.cpp:248
+#: src/gui/qt/filters_widget.cpp:284
 msgid "Show only plugins in group"
 msgstr "Zeige nur Plugins in Gruppe"
 
-#: src/gui/qt/filters_widget.cpp:250
+#: src/gui/qt/filters_widget.cpp:286
 msgid "Show only plugins with cards that contain"
 msgstr "Zeige nur Plugins mit Karten die Folgendes beinhalten"
 
-#: src/gui/qt/filters_widget.cpp:251 src/gui/qt/search_dialog.cpp:113
+#: src/gui/qt/filters_widget.cpp:287 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
 msgstr "Reguläre Ausdrücke benutzen"
 
-#: src/gui/qt/filters_widget.cpp:252
+#: src/gui/qt/filters_widget.cpp:288
 msgid "Hide version numbers"
 msgstr "Versionsnummern ausblenden"
 
-#: src/gui/qt/filters_widget.cpp:253
+#: src/gui/qt/filters_widget.cpp:289
 msgid "Hide CRCs"
 msgstr "CRC Prüfsummen ausblenden"
 
-#: src/gui/qt/filters_widget.cpp:254
+#: src/gui/qt/filters_widget.cpp:290
 msgid "Hide Bash Tags"
 msgstr "Bash Tags ausblenden"
 
-#: src/gui/qt/filters_widget.cpp:255
+#: src/gui/qt/filters_widget.cpp:291
 msgid "Hide Sources"
 msgstr "Quellen ausblenden"
 
-#: src/gui/qt/filters_widget.cpp:256
+#: src/gui/qt/filters_widget.cpp:292
 msgid "Hide notes"
 msgstr "Notizen ausblenden"
 
-#: src/gui/qt/filters_widget.cpp:258
+#: src/gui/qt/filters_widget.cpp:294
 msgid "Hide official plugins' cleaning messages"
 msgstr "Säuberungsmeldungen von offiziellen Plugins ausblenden"
 
-#: src/gui/qt/filters_widget.cpp:259
+#: src/gui/qt/filters_widget.cpp:295
 msgid "Hide all plugin messages"
 msgstr "Alle aktiven Plugins ausblenden"
 
-#: src/gui/qt/filters_widget.cpp:260
+#: src/gui/qt/filters_widget.cpp:296
 msgid "Hide inactive plugins"
 msgstr "Inaktive Plugins ausblenden"
 
-#: src/gui/qt/filters_widget.cpp:261
+#: src/gui/qt/filters_widget.cpp:297
 msgid "Hide messageless plugins"
 msgstr "Nachrichtenlose Plugins ausblenden"
 
-#: src/gui/qt/filters_widget.cpp:262
+#: src/gui/qt/filters_widget.cpp:298
 msgid "Hide Creation Club plugins"
 msgstr "Creation Club Plugins ausblenden"
 
-#: src/gui/qt/filters_widget.cpp:263
+#: src/gui/qt/filters_widget.cpp:299
 msgid "Show only empty plugins"
 msgstr "Zeige nur leere Plugins"
 
-#: src/gui/qt/filters_widget.cpp:265
+#: src/gui/qt/filters_widget.cpp:301
+msgid "Show only plugins with load after metadata"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:303
+msgid "Show only plugins with load after user metadata"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:305
+msgid "Show only plugins without load order metadata"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:307
 msgid "Show only warnings and errors"
 msgstr "Zeige nur Warnungen und Fehler"
 
-#: src/gui/qt/filters_widget.cpp:266
+#: src/gui/qt/filters_widget.cpp:308
 msgid "Hidden plugins:"
 msgstr "Ausgeblendete Plugins:"
 
-#: src/gui/qt/filters_widget.cpp:267
+#: src/gui/qt/filters_widget.cpp:309
 msgid "Hidden messages:"
 msgstr "Ausgeblendete Nachrichten:"
 
-#: src/gui/qt/filters_widget.cpp:269
+#: src/gui/qt/filters_widget.cpp:311
 msgid "No plugin selected"
 msgstr "Kein Plugin ausgewählt"
 
-#: src/gui/qt/filters_widget.cpp:276
+#: src/gui/qt/filters_widget.cpp:318
 msgid "No group selected"
 msgstr "Keine Gruppe ausgewählt"
 
-#: src/gui/qt/filters_widget.cpp:283
+#: src/gui/qt/filters_widget.cpp:325
 msgid "No text specified"
 msgstr "Kein Text angegeben"
 
-#: src/gui/qt/filters_widget.cpp:286
+#: src/gui/qt/filters_widget.cpp:328
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr ""
 "Wenn angekreuzt, wird der Content Filter Text als regulärer Ausdruck "

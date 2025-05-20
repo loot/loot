@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-14 21:23+0100\n"
+"POT-Creation-Date: 2025-05-20 17:50+0100\n"
 "PO-Revision-Date: 2025-05-13 15:02+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
@@ -23,11 +23,11 @@ msgstr ""
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
 msgstr "„{0}“ съдържа условие, което не може да бъде оценено. Детайли: {1}"
 
-#: src/gui/plugin_item.cpp:194
+#: src/gui/plugin_item.cpp:199
 msgid "Location"
 msgstr "Местоположение"
 
-#: src/gui/plugin_item.cpp:199
+#: src/gui/plugin_item.cpp:204
 msgid "Location {0}"
 msgstr "Местоположение {0}"
 
@@ -67,91 +67,103 @@ msgstr "„{0}“ намери {1} и {2}."
 msgid "{0} found {1}."
 msgstr "„{0}“ намери {1}."
 
-#: src/gui/qt/filters_widget.cpp:247
+#: src/gui/qt/filters_widget.cpp:283
 msgid "Show only overlapping plugins for"
 msgstr "Покажи само застъпените приставки за"
 
-#: src/gui/qt/filters_widget.cpp:248
+#: src/gui/qt/filters_widget.cpp:284
 msgid "Show only plugins in group"
 msgstr "Покажи само приставките в групата"
 
-#: src/gui/qt/filters_widget.cpp:250
+#: src/gui/qt/filters_widget.cpp:286
 msgid "Show only plugins with cards that contain"
 msgstr "Покажи само приставките, които съдържат"
 
-#: src/gui/qt/filters_widget.cpp:251 src/gui/qt/search_dialog.cpp:113
+#: src/gui/qt/filters_widget.cpp:287 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
 msgstr "Използвай регулярен израз"
 
-#: src/gui/qt/filters_widget.cpp:252
+#: src/gui/qt/filters_widget.cpp:288
 msgid "Hide version numbers"
 msgstr "Скрий версията"
 
-#: src/gui/qt/filters_widget.cpp:253
+#: src/gui/qt/filters_widget.cpp:289
 msgid "Hide CRCs"
 msgstr "Скрий всички CRC"
 
-#: src/gui/qt/filters_widget.cpp:254
+#: src/gui/qt/filters_widget.cpp:290
 msgid "Hide Bash Tags"
 msgstr "Скрий етикетите на „Bash“"
 
-#: src/gui/qt/filters_widget.cpp:255
+#: src/gui/qt/filters_widget.cpp:291
 msgid "Hide Sources"
 msgstr "Скрий източниците"
 
-#: src/gui/qt/filters_widget.cpp:256
+#: src/gui/qt/filters_widget.cpp:292
 msgid "Hide notes"
 msgstr "Скрий бележките"
 
-#: src/gui/qt/filters_widget.cpp:258
+#: src/gui/qt/filters_widget.cpp:294
 msgid "Hide official plugins' cleaning messages"
 msgstr "Скрий всички съобщения за почистване на официалните приставки"
 
-#: src/gui/qt/filters_widget.cpp:259
+#: src/gui/qt/filters_widget.cpp:295
 msgid "Hide all plugin messages"
 msgstr "Скрий всички съобщения на приставките"
 
-#: src/gui/qt/filters_widget.cpp:260
+#: src/gui/qt/filters_widget.cpp:296
 msgid "Hide inactive plugins"
 msgstr "Скрий неактивните приставки"
 
-#: src/gui/qt/filters_widget.cpp:261
+#: src/gui/qt/filters_widget.cpp:297
 msgid "Hide messageless plugins"
 msgstr "Скрий приставките без съобщения"
 
-#: src/gui/qt/filters_widget.cpp:262
+#: src/gui/qt/filters_widget.cpp:298
 msgid "Hide Creation Club plugins"
 msgstr "Скрий приставките от „Creation Club“"
 
-#: src/gui/qt/filters_widget.cpp:263
+#: src/gui/qt/filters_widget.cpp:299
 msgid "Show only empty plugins"
 msgstr "Покажи само празните приставки"
 
-#: src/gui/qt/filters_widget.cpp:265
+#: src/gui/qt/filters_widget.cpp:301
+msgid "Show only plugins with load after metadata"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:303
+msgid "Show only plugins with load after user metadata"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:305
+msgid "Show only plugins without load order metadata"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:307
 msgid "Show only warnings and errors"
 msgstr "Покажи само предупрежденията и грешките"
 
-#: src/gui/qt/filters_widget.cpp:266
+#: src/gui/qt/filters_widget.cpp:308
 msgid "Hidden plugins:"
 msgstr "Скрити приставки:"
 
-#: src/gui/qt/filters_widget.cpp:267
+#: src/gui/qt/filters_widget.cpp:309
 msgid "Hidden messages:"
 msgstr "Скрити съобщения:"
 
-#: src/gui/qt/filters_widget.cpp:269
+#: src/gui/qt/filters_widget.cpp:311
 msgid "No plugin selected"
 msgstr "Не е избрана приставка"
 
-#: src/gui/qt/filters_widget.cpp:276
+#: src/gui/qt/filters_widget.cpp:318
 msgid "No group selected"
 msgstr "Не е избрана група"
 
-#: src/gui/qt/filters_widget.cpp:283
+#: src/gui/qt/filters_widget.cpp:325
 msgid "No text specified"
 msgstr "Не е посочен текст"
 
-#: src/gui/qt/filters_widget.cpp:286
+#: src/gui/qt/filters_widget.cpp:328
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr "Тълкуване на съдържанието на филтъра като регулярен израз."
 
