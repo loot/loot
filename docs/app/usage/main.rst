@@ -127,6 +127,8 @@ Show only empty plugins
   Hides all plugins that contain more than their header record. Empty plugins can be used to load assets from BSA or BA2 files (depending on the game).
 Show only plugins with load after metadata
   Hides all plugins that do not have load after metadata. This is checked after conditions are evaluated, so will hide plugins that have load after metadata that is irrelevant for your game install.
+Show only plugins with load after user metadata
+  Hides all plugins that do not have load after user metadata. This is checked before conditions are evaluated, so will also show plugins with user metadata that is irrevelant for your game install.
 Show only warnings and errors
   Combines the Bash Tags, sources, notes and messageless plugins filters. Enabling it enables those other filters, and disabling any of those other filters will also disable it.
 

@@ -136,6 +136,13 @@ void FiltersWidget::setFilterStates(const LootSettings::Filters& filters) {
     hasPluginFilterChanged = true;
   }
 
+  if (showOnlyPluginsWithLoadAfterUserMetadataFilter->isChecked() !=
+      filters.showOnlyPluginsWithLoadAfterUserMetadata) {
+    showOnlyPluginsWithLoadAfterUserMetadataFilter->setChecked(
+        filters.showOnlyPluginsWithLoadAfterUserMetadata);
+    hasPluginFilterChanged = true;
+  }
+
   updateWarningsAndErrorsFilterState();
 
   if (hasContentFilterChanged) {
@@ -164,6 +171,8 @@ LootSettings::Filters FiltersWidget::getFilterSettings() const {
   filters.showOnlyEmptyPlugins = showOnlyEmptyPluginsFilter->isChecked();
   filters.showOnlyPluginsWithLoadAfterMetadata =
       showOnlyPluginsWithLoadAfterMetadataFilter->isChecked();
+  filters.showOnlyPluginsWithLoadAfterUserMetadata =
+      showOnlyPluginsWithLoadAfterUserMetadataFilter->isChecked();
 
   return filters;
 }
@@ -190,6 +199,8 @@ void FiltersWidget::setupUi() {
   showOnlyEmptyPluginsFilter->setObjectName("showOnlyEmptyPluginsFilter");
   showOnlyPluginsWithLoadAfterMetadataFilter->setObjectName(
       "showOnlyPluginsWithLoadAfterMetadataFilter");
+  showOnlyPluginsWithLoadAfterUserMetadataFilter->setObjectName(
+      "showOnlyPluginsWithLoadAfterUserMetadataFilter");
   showOnlyWarningsAndErrorsFilter->setObjectName(
       "showOnlyWarningsAndErrorsFilter");
 
@@ -236,6 +247,7 @@ void FiltersWidget::setupUi() {
   verticalLayout->addWidget(creationClubPluginsFilter);
   verticalLayout->addWidget(showOnlyEmptyPluginsFilter);
   verticalLayout->addWidget(showOnlyPluginsWithLoadAfterMetadataFilter);
+  verticalLayout->addWidget(showOnlyPluginsWithLoadAfterUserMetadataFilter);
   verticalLayout->addWidget(showOnlyWarningsAndErrorsFilter);
   verticalLayout->addItem(verticalSpacer);
   verticalLayout->addWidget(divider);
@@ -275,6 +287,8 @@ void FiltersWidget::translateUi() {
   showOnlyEmptyPluginsFilter->setText(translate("Show only empty plugins"));
   showOnlyPluginsWithLoadAfterMetadataFilter->setText(
       translate("Show only plugins with load after metadata"));
+  showOnlyPluginsWithLoadAfterUserMetadataFilter->setText(
+      translate("Show only plugins with load after user metadata"));
   showOnlyWarningsAndErrorsFilter->setText(
       translate("Show only warnings and errors"));
   hiddenPluginsLabel->setText(translate("Hidden plugins:"));
@@ -361,6 +375,8 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
   filters.showOnlyEmptyPlugins = showOnlyEmptyPluginsFilter->isChecked();
   filters.showOnlyPluginsWithLoadAfterMetadata =
       showOnlyPluginsWithLoadAfterMetadataFilter->isChecked();
+  filters.showOnlyPluginsWithLoadAfterUserMetadata =
+      showOnlyPluginsWithLoadAfterUserMetadataFilter->isChecked();
 
   if (overlapFilter->currentIndex() > 0) {
     filters.overlapPluginName = overlapFilter->currentText().toStdString();
@@ -492,6 +508,10 @@ void FiltersWidget::on_showOnlyEmptyPluginsFilter_clicked() {
 }
 
 void FiltersWidget::on_showOnlyPluginsWithLoadAfterMetadataFilter_clicked() {
+  emit pluginFilterChanged(getPluginFiltersState());
+}
+
+void FiltersWidget::on_showOnlyPluginsWithLoadAfterUserMetadataFilter_clicked() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 

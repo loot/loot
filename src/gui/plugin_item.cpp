@@ -144,8 +144,8 @@ PluginItem::PluginItem(GameId gameId,
         game.GetCreationClubPlugins().IsCreationClubPlugin(plugin.GetName())) {
   auto userMetadata = game.GetUserMetadata(plugin.GetName());
   if (userMetadata.has_value()) {
-    hasUserMetadata =
-        userMetadata.has_value() && !userMetadata.value().HasNameOnly();
+    hasUserMetadata = !userMetadata.value().HasNameOnly();
+    hasLoadAfterUserMetadata = !userMetadata.value().GetLoadAfterFiles().empty();
   }
 
   const auto [evaluatedMetadata, evalErrors] =
