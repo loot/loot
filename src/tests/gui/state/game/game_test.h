@@ -1138,60 +1138,37 @@ TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
   EXPECT_EQ(initialLoadOrder, loadOrder);
 }
 
-TEST_P(GameTest, setLoadOrderShouldKeepTheThreeNewestBackups) {
+TEST_P(GameTest, setLoadOrderShouldKeepTheTenNewestBackups) {
   using std::filesystem::u8path;
 
   constexpr auto SLEEP_DURATION = std::chrono::milliseconds(1);
 
   Game game = CreateInitialisedGame();
 
-  ASSERT_TRUE(FindLoadOrderBackups(game).empty());
+  auto backupPaths = FindLoadOrderBackups(game);
+  ASSERT_TRUE(backupPaths.empty());
+
+  for (size_t i = 0; i < 10; i += 1) {
+    ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
+
+    const auto newBackupPaths = FindLoadOrderBackups(game);
+    EXPECT_EQ(backupPaths,
+              std::vector<std::filesystem::path>(newBackupPaths.begin(),
+                                                 newBackupPaths.end() - 1));
+
+    backupPaths = newBackupPaths;
+
+    // Backup files are distinguished using millisecond-precision timestamps, so
+    // make sure there's at least 1 ms between the creation of each.
+    std::this_thread::sleep_for(SLEEP_DURATION);
+  }
 
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
-
-  std::vector<std::string> firstSetLoadOrder = loadOrderToSet_;
-
-  ASSERT_NE(blankPluginDependentEsp, loadOrderToSet_[9]);
-  ASSERT_NE(blankDifferentMasterDependentEsp, loadOrderToSet_[10]);
-  loadOrderToSet_[9] = blankPluginDependentEsp;
-  loadOrderToSet_[10] = blankDifferentMasterDependentEsp;
-
-  // Backup files are distinguished using millisecond-precision timestamps, so
-  // make sure there's at least 1 ms between the creation of each.
-  std::this_thread::sleep_for(SLEEP_DURATION);
-  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
-
-  std::vector<std::string> secondSetLoadOrder = loadOrderToSet_;
-
-  ASSERT_NE(blankMasterDependentEsp, loadOrderToSet_[7]);
-  ASSERT_NE(blankEsp, loadOrderToSet_[8]);
-  loadOrderToSet_[7] = blankMasterDependentEsp;
-  loadOrderToSet_[8] = blankEsp;
-
-  std::this_thread::sleep_for(SLEEP_DURATION);
-  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
-
-  std::vector<std::string> thirdSetLoadOrder = loadOrderToSet_;
-
-  ASSERT_NE(blankDifferentEsm, loadOrderToSet_[2]);
-  ASSERT_NE(blankMasterDependentEsm, loadOrderToSet_[3]);
-  loadOrderToSet_[2] = blankDifferentEsm;
-  loadOrderToSet_[3] = blankMasterDependentEsm;
-
-  std::this_thread::sleep_for(SLEEP_DURATION);
-  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
-
-  const auto paths = FindLoadOrderBackups(game);
-  ASSERT_EQ(3, paths.size());
-
-  auto loadOrder = ReadBackedUpLoadOrder(paths[2]);
-  EXPECT_EQ(thirdSetLoadOrder, loadOrder);
-
-  loadOrder = ReadBackedUpLoadOrder(paths[1]);
-  EXPECT_EQ(secondSetLoadOrder, loadOrder);
-
-  loadOrder = ReadBackedUpLoadOrder(paths[0]);
-  EXPECT_EQ(firstSetLoadOrder, loadOrder);
+  const auto newBackupPaths = FindLoadOrderBackups(game);
+  EXPECT_EQ(std::vector<std::filesystem::path>(backupPaths.begin() + 1,
+                                               backupPaths.end()),
+            std::vector<std::filesystem::path>(newBackupPaths.begin(),
+                                               newBackupPaths.end() - 1));
 }
 
 TEST_P(GameTest, aMessageShouldBeCachedByDefault) {
