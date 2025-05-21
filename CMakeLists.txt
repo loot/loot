@@ -395,7 +395,7 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/sourced_message.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_item_model.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_item_filter_model.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/qt/restore_load_order_dialog.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/restore_load_order_dialog.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/search_dialog.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/game_tab.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/general_tab.h"
