@@ -523,15 +523,28 @@ void FiltersWidget::on_showOnlyEmptyPluginsFilter_clicked() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
-void FiltersWidget::on_showOnlyPluginsWithLoadAfterMetadataFilter_clicked() {
+void FiltersWidget::on_showOnlyPluginsWithLoadAfterMetadataFilter_clicked(
+    bool checked) {
+  if (checked) {
+    showOnlyPluginsWithoutLoadOrderMetadataFilter->setChecked(false);
+  }
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
-void FiltersWidget::on_showOnlyPluginsWithLoadAfterUserMetadataFilter_clicked() {
+void FiltersWidget::on_showOnlyPluginsWithLoadAfterUserMetadataFilter_clicked(
+    bool checked) {
+  if (checked) {
+    showOnlyPluginsWithoutLoadOrderMetadataFilter->setChecked(false);
+  }
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
-void FiltersWidget::on_showOnlyPluginsWithoutLoadOrderMetadataFilter_clicked() {
+void FiltersWidget::on_showOnlyPluginsWithoutLoadOrderMetadataFilter_clicked(
+    bool checked) {
+  if (checked) {
+    showOnlyPluginsWithLoadAfterMetadataFilter->setChecked(false);
+    showOnlyPluginsWithLoadAfterUserMetadataFilter->setChecked(false);
+  }
   emit pluginFilterChanged(getPluginFiltersState());
 }
 

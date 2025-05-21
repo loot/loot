@@ -84,7 +84,8 @@ private:
   QCheckBox *creationClubPluginsFilter{new QCheckBox(this)};
   QCheckBox *showOnlyEmptyPluginsFilter{new QCheckBox(this)};
   QCheckBox *showOnlyPluginsWithLoadAfterMetadataFilter{new QCheckBox(this)};
-  QCheckBox *showOnlyPluginsWithLoadAfterUserMetadataFilter{new QCheckBox(this)};
+  QCheckBox *showOnlyPluginsWithLoadAfterUserMetadataFilter{
+      new QCheckBox(this)};
   QCheckBox *showOnlyPluginsWithoutLoadOrderMetadataFilter{new QCheckBox(this)};
   QCheckBox *showOnlyWarningsAndErrorsFilter{new QCheckBox(this)};
   QLabel *hiddenPluginsLabel{new QLabel(this)};
@@ -121,9 +122,9 @@ private slots:
   void on_messagelessPluginsFilter_clicked(bool checked);
   void on_creationClubPluginsFilter_clicked();
   void on_showOnlyEmptyPluginsFilter_clicked();
-  void on_showOnlyPluginsWithLoadAfterMetadataFilter_clicked();
-  void on_showOnlyPluginsWithLoadAfterUserMetadataFilter_clicked();
-  void on_showOnlyPluginsWithoutLoadOrderMetadataFilter_clicked();
+  void on_showOnlyPluginsWithLoadAfterMetadataFilter_clicked(bool checked);
+  void on_showOnlyPluginsWithLoadAfterUserMetadataFilter_clicked(bool checked);
+  void on_showOnlyPluginsWithoutLoadOrderMetadataFilter_clicked(bool checked);
   void on_showOnlyWarningsAndErrorsFilter_clicked(bool checked);
 };
 }
