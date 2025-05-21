@@ -670,6 +670,10 @@ void Game::BackUpCurrentLoadOrder(std::string_view name) const {
   BackupLoadOrder(GetLoadOrder(), GetLOOTGamePath(), name);
 }
 
+std::vector<LoadOrderBackup> Game::FindLoadOrderBackups() const {
+  return loot::FindLoadOrderBackups(GetLOOTGamePath());
+}
+
 void Game::LoadAllInstalledPlugins(bool headersOnly) {
   LoadCurrentLoadOrderState();
 

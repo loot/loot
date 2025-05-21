@@ -62,6 +62,7 @@
 #include "gui/qt/plugin_editor/plugin_editor_widget.h"
 #include "gui/qt/plugin_item_filter_model.h"
 #include "gui/qt/plugin_item_model.h"
+#include "gui/qt/restore_load_order_dialog.h"
 #include "gui/qt/search_dialog.h"
 #include "gui/qt/settings/settings_dialog.h"
 #include "gui/qt/tasks/tasks.h"
@@ -121,6 +122,7 @@ private:
   QAction *actionRefreshContent{new QAction(this)};
   QAction *actionRedatePlugins{new QAction(this)};
   QAction *actionBackUpLoadOrder{new QAction(this)};
+  QAction *actionRestoreLoadOrder{new QAction(this)};
   QAction *actionFixAmbiguousLoadOrder{new QAction(this)};
   QAction *actionClearAllUserMetadata{new QAction(this)};
   QAction *actionCopyPluginName{new QAction(this)};
@@ -159,6 +161,7 @@ private:
       new SettingsDialog(this, state.GetPaths().getLootDataPath())};
   SearchDialog *searchDialog{new SearchDialog(this)};
   BackUpLoadOrderDialog *backupDialog{new BackUpLoadOrderDialog(this)};
+  RestoreLoadOrderDialog *restoreBackupDialog{new RestoreLoadOrderDialog(this)};
 
   PluginItemModel *pluginItemModel{new PluginItemModel(this)};
   PluginItemFilterModel *proxyModel{new PluginItemFilterModel(this)};
@@ -253,6 +256,8 @@ private slots:
   void on_actionCopyLoadOrder_triggered();
   void on_actionCopyContent_triggered();
   void on_actionBackUpLoadOrder_triggered();
+  void on_actionRestoreLoadOrder_triggered();
+  void on_restoreBackupDialog_accepted();
   void on_actionFixAmbiguousLoadOrder_triggered();
   void on_actionRefreshContent_triggered();
   void on_actionRedatePlugins_triggered();

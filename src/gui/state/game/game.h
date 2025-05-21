@@ -55,6 +55,7 @@
 #include "gui/sourced_message.h"
 #include "gui/state/change_count.h"
 #include "gui/state/game/game_settings.h"
+#include "gui/state/game/load_order_backup.h"
 #include "gui/state/logging.h"
 #include "loot/api.h"
 
@@ -114,6 +115,7 @@ public:
   void RedatePlugins();  // Change timestamps to match load order (Skyrim only).
 
   void BackUpCurrentLoadOrder(std::string_view name) const;
+  std::vector<LoadOrderBackup> FindLoadOrderBackups() const;
 
   void LoadAllInstalledPlugins(
       bool headersOnly);  // Loads all installed plugins.

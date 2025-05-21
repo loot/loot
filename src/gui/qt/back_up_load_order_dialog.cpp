@@ -44,7 +44,7 @@ QString BackUpLoadOrderDialog::getBackupName() const {
 void BackUpLoadOrderDialog::reset() { nameInput->clear(); }
 
 void BackUpLoadOrderDialog::setupUi() {
-  auto buttonBox =
+  const auto buttonBox =
       new QDialogButtonBox(QDialogButtonBox::StandardButton::Save |
                            QDialogButtonBox::StandardButton::Cancel, this);
 

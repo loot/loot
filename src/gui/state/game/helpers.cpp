@@ -53,6 +53,7 @@
 
 namespace {
 using loot::GameId;
+using loot::LoadOrderBackup;
 
 constexpr const char* GHOST_EXTENSION = ".ghost";
 
@@ -115,6 +116,67 @@ void CreateBackup(const std::vector<std::string>& loadOrder,
   out << QJsonValue(json).toJson().toStdString();
 }
 
+std::optional<LoadOrderBackup> ReadLoadOrder(const std::filesystem::path& path,
+                                             bool includePlugins) {
+  const auto filename = path.filename().u8string();
+
+  if (!boost::starts_with(filename, "loadorder.") ||
+      !boost::ends_with(filename, ".json")) {
+    return std::nullopt;
+  }
+  auto file = QFile(QString::fromStdString(path.u8string()));
+
+  file.open(QIODevice::ReadOnly | QIODevice::Text);
+  const auto content = file.readAll();
+  file.close();
+
+  const auto json = QJsonValue::fromJson(content).toObject();
+  const auto name = json.value("name").toString();
+  const auto timestamp = json.value("creationTimestamp").toString();
+  const auto autoDelete = json.value("autoDelete").toBool();
+  const auto loadOrder = json.value("loadOrder").toArray();
+
+  if (name.isEmpty() || timestamp.isEmpty()) {
+    return std::nullopt;
+  }
+
+  LoadOrderBackup backup;
+  backup.path = path;
+  backup.name = name.toStdString();
+  backup.unixTimestampMs =
+      QDateTime::fromString(timestamp, Qt::DateFormat::ISODateWithMs)
+          .toMSecsSinceEpoch();
+  backup.autoDelete = autoDelete;
+
+  if (includePlugins) {
+    for (const auto& entry : loadOrder) {
+      const auto pluginName = entry.toString();
+      if (!pluginName.isEmpty()) {
+        backup.loadOrder.push_back(pluginName.toStdString());
+      }
+    }
+  }
+
+  return backup;
+}
+
+std::vector<LoadOrderBackup> FindLoadOrderBackups(
+    const std::filesystem::path& backupDirectory) {
+  std::vector<LoadOrderBackup> backups;
+
+  for (auto it = std::filesystem::directory_iterator(backupDirectory);
+       it != std::filesystem::directory_iterator();
+       ++it) {
+    const auto loadOrder = ReadLoadOrder(it->path(), true);
+
+    if (loadOrder.has_value()) {
+      backups.push_back(loadOrder.value());
+    }
+  }
+
+  return backups;
+}
+
 void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
   using std::filesystem::u8path;
 
@@ -141,25 +203,10 @@ void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
   for (auto it = std::filesystem::directory_iterator(backupDirectory);
        it != std::filesystem::directory_iterator();
        ++it) {
-    const auto filename = it->path().filename().u8string();
-    if (boost::starts_with(filename, PREFIX) &&
-        boost::ends_with(filename, SUFFIX)) {
-      auto file = QFile(QString::fromStdString(it->path().u8string()));
+    const auto loadOrder = ReadLoadOrder(it->path(), false);
 
-      file.open(QIODevice::ReadOnly | QIODevice::Text);
-      const auto content = file.readAll();
-      file.close();
-
-      const auto json = QJsonValue::fromJson(content).toObject();
-      const auto timestamp = json.value("creationTimestamp").toString();
-      const auto autoDelete = json.value("autoDelete").toBool();
-
-      if (!timestamp.isEmpty() && autoDelete) {
-        const auto timestampMs =
-            QDateTime::fromString(timestamp, Qt::DateFormat::ISODateWithMs)
-                .toMSecsSinceEpoch();
-        backupFiles.emplace(timestampMs, it->path());
-      }
+    if (loadOrder.has_value() && loadOrder.value().autoDelete) {
+      backupFiles.emplace(loadOrder.value().unixTimestampMs, it->path());
     }
   }
 
@@ -184,6 +231,11 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      std::string_view name) {
   CreateBackup(loadOrder, backupDirectory, name, false);
   RemoveOldBackups(backupDirectory);
+}
+
+std::vector<LoadOrderBackup> FindLoadOrderBackups(
+    const std::filesystem::path& backupDirectory) {
+  return ::FindLoadOrderBackups(backupDirectory);
 }
 
 std::string EscapeMarkdownASCIIPunctuation(const std::string& text) {

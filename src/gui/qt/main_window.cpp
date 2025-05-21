@@ -439,6 +439,7 @@ void MainWindow::setupUi() {
   settingsDialog->setObjectName("settingsDialog");
   searchDialog->setObjectName("searchDialog");
   backupDialog->setObjectName("backupDialog");
+  restoreBackupDialog->setObjectName("restoreBackupDialog");
   sidebarPluginsView->setObjectName("sidebarPluginsView");
 
   toolBox->addItem(sidebarPluginsView, QString("P&lugins"));
@@ -569,6 +570,8 @@ void MainWindow::setupMenuBar() {
 
   actionBackUpLoadOrder->setObjectName("actionBackUpLoadOrder");
 
+  actionRestoreLoadOrder->setObjectName("actionRestoreLoadOrder");
+
   actionFixAmbiguousLoadOrder->setObjectName("actionFixAmbiguousLoadOrder");
 
   actionClearAllUserMetadata->setObjectName("actionClearAllUserMetadata");
@@ -612,6 +615,7 @@ void MainWindow::setupMenuBar() {
   menuGame->addAction(actionRefreshContent);
   menuGame->addSeparator();
   menuGame->addAction(actionBackUpLoadOrder);
+  menuGame->addAction(actionRestoreLoadOrder);
   menuGame->addSeparator();
   menuGame->addAction(actionFixAmbiguousLoadOrder);
   menuGame->addAction(actionRedatePlugins);
@@ -785,6 +789,7 @@ void MainWindow::translateUi() {
   actionRedatePlugins->setText(translate("Redate &Plugins…"));
   /* translators: This string is an action in the Game menu. */
   actionBackUpLoadOrder->setText(translate("Back Up Load &Order…"));
+  actionRestoreLoadOrder->setText(translate("Re&store Load Order…"));
   /* translators: This string is an action in the Game menu. */
   actionFixAmbiguousLoadOrder->setText(translate("&Fix Ambiguous Load Order"));
   /* translators: This string is an action in the Game menu. */
@@ -1717,6 +1722,17 @@ void MainWindow::on_actionBackUpLoadOrder_triggered() {
   }
 }
 
+void MainWindow::on_actionRestoreLoadOrder_triggered() {
+  try {
+    const auto backups = state.GetCurrentGame().FindLoadOrderBackups();
+    restoreBackupDialog->setLoadOrderBackups(backups);
+    restoreBackupDialog->open();
+
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
 void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
   try {
     auto loadOrder = state.GetCurrentGame().GetLoadOrder();
@@ -2543,6 +2559,47 @@ void MainWindow::on_backupDialog_accepted() {
 
     showNotification(
         translate("A backup of the current load order has been created."));
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_restoreBackupDialog_accepted() {
+  try {
+    const auto logger = getLogger();
+
+    const auto backup = restoreBackupDialog->getSelectedLoadOrderBackup();
+
+    if (backup.has_value()) {
+      if (logger) {
+        logger->info(
+            "Restoring load order from backup named \"{}\" created at {}, "
+            "stored in file at {}",
+            backup.value().name,
+            QDateTime::fromMSecsSinceEpoch(backup.value().unixTimestampMs)
+                .toString(Qt::ISODateWithMs)
+                .toStdString(),
+            backup.value().path.u8string());
+      }
+
+      // Before restoring the backup first remove any plugins that are no longer
+      // installed.
+      std::vector<std::string> loadOrder = backup.value().loadOrder;
+      for (auto it = loadOrder.begin(); it != loadOrder.end();) {
+        if (!state.GetCurrentGame().FileExists(*it)) {
+          it = loadOrder.erase(it);
+        } else {
+          ++it;
+        }
+      }
+
+      state.GetCurrentGame().SetLoadOrder(loadOrder);
+      loadGame(false);
+
+      showNotification(translate("Restored load order from backup."));
+    } else if (logger) {
+      logger->debug("No backup selected to restore.");
+    }
   } catch (const std::exception& e) {
     handleException(e);
   }

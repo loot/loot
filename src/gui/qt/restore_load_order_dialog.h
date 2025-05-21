@@ -23,27 +23,32 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_QT_BACK_UP_LOAD_ORDER_DIALOG
-#define LOOT_GUI_QT_BACK_UP_LOAD_ORDER_DIALOG
+#ifndef LOOT_GUI_QT_RESTORE_LOAD_ORDER_DIALOG
+#define LOOT_GUI_QT_RESTORE_LOAD_ORDER_DIALOG
 
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QWidget>
 
+#include "gui/state/game/load_order_backup.h"
+
 namespace loot {
-class BackUpLoadOrderDialog : public QDialog {
+class RestoreLoadOrderDialog : public QDialog {
   Q_OBJECT
 public:
-  explicit BackUpLoadOrderDialog(QWidget *parent);
+  explicit RestoreLoadOrderDialog(QWidget *parent);
 
-  QString getBackupName() const;
+  void setLoadOrderBackups(
+      const std::vector<LoadOrderBackup> &loadOrderBackups);
 
-  void reset();
+  std::optional<LoadOrderBackup> getSelectedLoadOrderBackup() const;
 
 private:
-  QLineEdit *nameInput{new QLineEdit(this)};
-  QLabel *nameLabel{new QLabel(this)};
+  QLabel *textLabel{new QLabel(this)};
+  QTableWidget *backupsTable{new QTableWidget(this)};
+
+  std::vector<LoadOrderBackup> backups;
 
   void setupUi();
   void translateUi();

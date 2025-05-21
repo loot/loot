@@ -4,7 +4,7 @@
     Morrowind, Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR,
     Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR.
 
-    Copyright (C) 2021    Oliver Hamlet
+    Copyright (C) 2018    Oliver Hamlet
 
     This file is part of LOOT.
 
@@ -23,30 +23,20 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_QT_BACK_UP_LOAD_ORDER_DIALOG
-#define LOOT_GUI_QT_BACK_UP_LOAD_ORDER_DIALOG
+#ifndef LOOT_GUI_STATE_GAME_LOAD_ORDER_BACKUP
+#define LOOT_GUI_STATE_GAME_LOAD_ORDER_BACKUP
 
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QWidget>
+#include <filesystem>
+#include <string>
+#include <vector>
 
 namespace loot {
-class BackUpLoadOrderDialog : public QDialog {
-  Q_OBJECT
-public:
-  explicit BackUpLoadOrderDialog(QWidget *parent);
-
-  QString getBackupName() const;
-
-  void reset();
-
-private:
-  QLineEdit *nameInput{new QLineEdit(this)};
-  QLabel *nameLabel{new QLabel(this)};
-
-  void setupUi();
-  void translateUi();
+struct LoadOrderBackup {
+  std::filesystem::path path;
+  std::string name;
+  int64_t unixTimestampMs{0};
+  bool autoDelete{false};
+  std::vector<std::string> loadOrder;
 };
 }
 

@@ -38,6 +38,7 @@
 
 #include "gui/sourced_message.h"
 #include "gui/state/game/game_id.h"
+#include "gui/state/game/load_order_backup.h"
 
 namespace loot {
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
@@ -46,6 +47,9 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory,
                      std::string_view name);
+
+std::vector<LoadOrderBackup> FindLoadOrderBackups(
+    const std::filesystem::path& backupDirectory);
 
 // Escape any Markdown special characters in the input text.
 std::string EscapeMarkdownASCIIPunctuation(const std::string& text);
