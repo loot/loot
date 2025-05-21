@@ -112,6 +112,8 @@ void CreateBackup(const std::vector<std::string>& loadOrder,
   const auto filename =
       fmt::format("loadorder.{}.json", timestamp.toMSecsSinceEpoch());
 
+  std::filesystem::create_directories(backupDirectory);
+
   std::ofstream out(backupDirectory / std::filesystem::u8path(filename));
   out << QJsonValue(json).toJson().toStdString();
 }
@@ -164,6 +166,10 @@ std::vector<LoadOrderBackup> FindLoadOrderBackups(
     const std::filesystem::path& backupDirectory) {
   std::vector<LoadOrderBackup> backups;
 
+  if (!std::filesystem::exists(backupDirectory)) {
+    return backups;
+  }
+
   for (auto it = std::filesystem::directory_iterator(backupDirectory);
        it != std::filesystem::directory_iterator();
        ++it) {
@@ -184,12 +190,17 @@ void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
   constexpr std::string_view PREFIX = "loadorder.";
   constexpr std::string_view SUFFIX = ".json";
 
+  if (!std::filesystem::exists(backupDirectory)) {
+    return;
+  }
+
   std::map<int64_t, std::filesystem::path> backupFiles;
 
   // Remove backups that use the old naming scheme first.
-  const auto oldBak0 = backupDirectory / u8path("loadorder.bak.0");
-  const auto oldBak1 = backupDirectory / u8path("loadorder.bak.1");
-  const auto oldBak2 = backupDirectory / u8path("loadorder.bak.2");
+  const auto oldBackupDirectory = backupDirectory.parent_path();
+  const auto oldBak0 = oldBackupDirectory / u8path("loadorder.bak.0");
+  const auto oldBak1 = oldBackupDirectory / u8path("loadorder.bak.1");
+  const auto oldBak2 = oldBackupDirectory / u8path("loadorder.bak.2");
   if (std::filesystem::exists(oldBak2)) {
     backupFiles.emplace(INT64_MIN, oldBak2);
   }

@@ -667,11 +667,11 @@ void Game::RedatePlugins() {
 }
 
 void Game::BackUpCurrentLoadOrder(std::string_view name) const {
-  BackupLoadOrder(GetLoadOrder(), GetLOOTGamePath(), name);
+  BackupLoadOrder(GetLoadOrder(), GetBackupsPath(), name);
 }
 
 std::vector<LoadOrderBackup> Game::FindLoadOrderBackups() const {
-  return loot::FindLoadOrderBackups(GetLOOTGamePath());
+  return loot::FindLoadOrderBackups(GetBackupsPath());
 }
 
 void Game::LoadAllInstalledPlugins(bool headersOnly) {
@@ -730,7 +730,7 @@ std::vector<std::string> Game::GetLoadOrder() const {
 }
 
 void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) {
-  BackupLoadOrder(GetLoadOrder(), GetLOOTGamePath());
+  BackupLoadOrder(GetLoadOrder(), GetBackupsPath());
   gameHandle_->SetLoadOrder(loadOrder);
 }
 
@@ -1056,6 +1056,10 @@ void Game::SaveUserMetadata() {
 std::filesystem::path Game::GetLOOTGamePath() const {
   return ::GetLOOTGamePath(lootDataPath_, settings_.FolderName());
 }
+
+std::filesystem::path Game::GetBackupsPath() const {
+  return GetLOOTGamePath() / "backups";
+ }
 
 std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
   // Checking to see if a plugin is valid is relatively slow, almost entirely

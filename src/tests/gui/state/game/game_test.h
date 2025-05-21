@@ -134,7 +134,11 @@ protected:
     using std::filesystem::u8path;
 
     const auto parentPath = lootDataPath / u8path("games") /
-                            u8path(game.GetSettings().FolderName());
+                            u8path(game.GetSettings().FolderName()) / "backups";
+
+    if (!std::filesystem::exists(parentPath)) {
+      return {};
+    }
 
     std::vector<std::filesystem::path> paths;
 

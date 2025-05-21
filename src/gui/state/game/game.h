@@ -177,6 +177,7 @@ public:
 
 private:
   std::filesystem::path GetLOOTGamePath() const;
+  std::filesystem::path GetBackupsPath() const;
   std::vector<std::filesystem::path> GetInstalledPluginPaths() const;
   std::optional<std::filesystem::path> ResolveGameFilePath(
       const std::string& pluginName) const;
