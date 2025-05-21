@@ -28,6 +28,7 @@
 
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QWidget>
 
@@ -47,11 +48,16 @@ public:
 private:
   QLabel *textLabel{new QLabel(this)};
   QTableWidget *backupsTable{new QTableWidget(this)};
+  QListWidget *loadOrderList{new QListWidget(this)};
 
   std::vector<LoadOrderBackup> backups;
 
   void setupUi();
   void translateUi();
+
+private slots:
+  void handleBackupSelectionChanged(const QItemSelection &selected,
+                                    const QItemSelection &);
 };
 }
 

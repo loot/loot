@@ -28,6 +28,7 @@
 #include <QtCore/QDateTime>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QFormLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QTableWidgetItem>
 #include <QtWidgets/QVBoxLayout>
@@ -78,6 +79,8 @@ RestoreLoadOrderDialog::getSelectedLoadOrderBackup() const {
 }
 
 void RestoreLoadOrderDialog::setupUi() {
+  setSizeGripEnabled(true);
+
   backupsTable->setColumnCount(2);
   backupsTable->setShowGrid(false);
   backupsTable->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -91,9 +94,13 @@ void RestoreLoadOrderDialog::setupUi() {
                            this);
 
   auto dialogLayout = new QVBoxLayout();
+  auto viewsLayout = new QHBoxLayout();
+
+  viewsLayout->addWidget(backupsTable);
+  viewsLayout->addWidget(loadOrderList);
 
   dialogLayout->addWidget(textLabel);
-  dialogLayout->addWidget(backupsTable);
+  dialogLayout->addLayout(viewsLayout);
   dialogLayout->addWidget(buttonBox);
 
   setLayout(dialogLayout);
@@ -102,6 +109,10 @@ void RestoreLoadOrderDialog::setupUi() {
 
   connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
   connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+  connect(backupsTable->selectionModel(),
+          &QItemSelectionModel::selectionChanged,
+          this,
+          &RestoreLoadOrderDialog::handleBackupSelectionChanged);
 }
 
 void RestoreLoadOrderDialog::translateUi() {
@@ -111,5 +122,18 @@ void RestoreLoadOrderDialog::translateUi() {
 
   backupsTable->setHorizontalHeaderLabels(
       {translate("Name"), translate("Created At")});
+}
+void RestoreLoadOrderDialog::handleBackupSelectionChanged(
+    const QItemSelection& selected,
+    const QItemSelection&) {
+  loadOrderList->clear();
+
+  const auto indexes = selected.indexes();
+  if (!indexes.empty()) {
+    const auto row = indexes.front().row();
+    for (const auto& plugin : backups.at(row).loadOrder) {
+      loadOrderList->addItem(QString::fromStdString(plugin));
+    }
+  }
 }
 }
