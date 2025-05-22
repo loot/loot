@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-21 22:18+0100\n"
+"POT-Creation-Date: 2025-05-22 20:49+0100\n"
 "PO-Revision-Date: 2025-01-19 13:00+0000\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
@@ -457,7 +457,7 @@ msgid "F&ilters"
 msgstr "எஃப்&ஐல்டர்ச்"
 
 #: src/gui/qt/main_window.cpp:1132 src/gui/qt/main_window.cpp:1586
-#: src/gui/qt/main_window.cpp:2233
+#: src/gui/qt/main_window.cpp:2235
 msgid "Updating and parsing masterlist…"
 msgstr "மாச்டர்லிச்ட்டைப் புதுப்பித்தல் மற்றும் பாகுபடுத்துதல்…"
 
@@ -501,7 +501,7 @@ msgstr ""
 "மேனிலை தரவு எடிட்டர் திறந்திருக்கும் போது சில நற்பொருத்தங்கள் முடக்கப்பட்டுள்ளன, அல்லது "
 "ஒரு வரிசைப்படுத்தப்பட்ட சுமை வரிசை பயன்படுத்தப்படவில்லை அல்லது நிராகரிக்கப்படவில்லை."
 
-#: src/gui/qt/main_window.cpp:1259 src/gui/qt/main_window.cpp:2107
+#: src/gui/qt/main_window.cpp:1259 src/gui/qt/main_window.cpp:2109
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -530,7 +530,7 @@ msgstr ""
 "உங்கள் {0} நீங்கள் இன்னும் விண்ணப்பிக்கவில்லை அல்லது ரத்து செய்யவில்லை. நீங்கள் நிச்சயமாக "
 "வெளியேற விரும்புகிறீர்களா?"
 
-#: src/gui/qt/main_window.cpp:1406
+#: src/gui/qt/main_window.cpp:1406 src/gui/qt/restore_load_order_dialog.cpp:204
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:369
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
@@ -594,16 +594,16 @@ msgstr "சுமை ஆர்டர் இடைநிலைப்பலகை�
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "கொள்ளையின் உள்ளடக்கம் இடைநிலைப்பலகைக்கு நகலெடுக்கப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:1742
+#: src/gui/qt/main_window.cpp:1744
 msgid "The load order displayed by LOOT has been set."
 msgstr "கொள்ளை காட்டும் சுமை ஆர்டர் அமைக்கப்பட்டுள்ளது."
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1767
+#: src/gui/qt/main_window.cpp:1769
 msgid "Redate Plugins?"
 msgstr "செருகுநிரல்கள் விளையாடியதா?"
 
-#: src/gui/qt/main_window.cpp:1769
+#: src/gui/qt/main_window.cpp:1771
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -616,11 +616,11 @@ msgstr ""
 "பாதிக்காது). நீங்கள் தொடர விரும்புகிறீர்களா?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1781
+#: src/gui/qt/main_window.cpp:1783
 msgid "Plugins were successfully redated."
 msgstr "செருகுநிரல்கள் வெற்றிகரமாக அகற்றப்பட்டன."
 
-#: src/gui/qt/main_window.cpp:1793
+#: src/gui/qt/main_window.cpp:1795
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -628,11 +628,11 @@ msgstr ""
 "அனைத்து செருகுநிரல்களிலிருந்தும் தற்போதுள்ள அனைத்து பயனர் கூட்டப்பட்ட மெட்டாடேட்டாவையும் "
 "அழிக்க விரும்புகிறீர்களா?"
 
-#: src/gui/qt/main_window.cpp:1841
+#: src/gui/qt/main_window.cpp:1843
 msgid "All user-added metadata has been cleared."
 msgstr "அனைத்து பயனர் கூட்டப்பட்ட மேனிலை தரவு அழிக்கப்பட்டுவிட்டது."
 
-#: src/gui/qt/main_window.cpp:1854
+#: src/gui/qt/main_window.cpp:1856
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
@@ -640,34 +640,34 @@ msgstr ""
 "சொருகி மேனிலை தரவு எடிட்டர் ஏற்கனவே திறந்திருக்கும், மற்றொரு சொருகி மெட்டாடேட்டாவைத் "
 "திருத்த முயற்சிக்கும் முன் முதலில் எடிட்டரை மூடு."
 
-#: src/gui/qt/main_window.cpp:1918
+#: src/gui/qt/main_window.cpp:1920
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\" க்கான மேனிலை தரவு இடைநிலைப்பலகைக்கு நகலெடுக்கப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:1936
+#: src/gui/qt/main_window.cpp:1938
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "சொருகி பெயர் \"{0}\" கிளிப்போர்டில் நகலெடுக்கப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:1955
+#: src/gui/qt/main_window.cpp:1957
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\" க்கான அட்டை உள்ளடக்கம் கிளிப்போர்டில் நகலெடுக்கப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:1970
+#: src/gui/qt/main_window.cpp:1972
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "\"{0}\" இலிருந்து தற்போதுள்ள அனைத்து பயனர் சேர்க்கப்பட்ட மெட்டாடேட்டாவையும் அழிக்க "
 "விரும்புகிறீர்களா?"
 
-#: src/gui/qt/main_window.cpp:2010
+#: src/gui/qt/main_window.cpp:2012
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "\"{0}\" க்கான பயனர் சேர்க்கப்பட்ட மேனிலை தரவு அழிக்கப்பட்டது."
 
-#: src/gui/qt/main_window.cpp:2093
+#: src/gui/qt/main_window.cpp:2095
 msgid "Version {0} (build {1})"
 msgstr "பதிப்பு {0} (உருவாக்கு {1})"
 
-#: src/gui/qt/main_window.cpp:2099
+#: src/gui/qt/main_window.cpp:2101
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
@@ -677,41 +677,41 @@ msgstr ""
 "ச்பெசல் எடிசன், ச்கைரிம் வி.ஆர், பல்லவுட் 3, பொழிவு: நியூ வேகாச், பல்லவுட் 4 மற்றும் "
 "பொழிவு 4 வி.ஆர்."
 
-#: src/gui/qt/main_window.cpp:2117
+#: src/gui/qt/main_window.cpp:2119
 msgid "About LOOT"
 msgstr "கொள்ளை பற்றி"
 
-#: src/gui/qt/main_window.cpp:2443
+#: src/gui/qt/main_window.cpp:2445
 msgid "Identifying overlapping plugins…"
 msgstr "ஒன்றுடன் ஒன்று செருகுநிரல்களை அடையாளம் காணுதல்…"
 
-#: src/gui/qt/main_window.cpp:2561
+#: src/gui/qt/main_window.cpp:2563
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2599
+#: src/gui/qt/main_window.cpp:2601
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2648
+#: src/gui/qt/main_window.cpp:2650
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr "குறைந்தது ஒரு பிழை செய்தி காண்பிக்கப்படுவதால் ஆட்டோ-சார்ட் ரத்து செய்யப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:2707
+#: src/gui/qt/main_window.cpp:2709
 msgid "No masterlist update was necessary."
 msgstr "மாச்டர்லிச்ட் புதுப்பிப்பு தேவையில்லை."
 
-#: src/gui/qt/main_window.cpp:2727
+#: src/gui/qt/main_window.cpp:2729
 msgid "Masterlist updated to revision {0}."
 msgstr "மாச்டர்லிச்ட் திருத்தம் {0} பெறுநர் க்கு புதுப்பிக்கப்பட்டது."
 
-#: src/gui/qt/main_window.cpp:2791
+#: src/gui/qt/main_window.cpp:2793
 msgid "No masterlist updates were necessary."
 msgstr "மாச்டர்லிச்ட் புதுப்பிப்புகள் தேவையில்லை."
 
-#: src/gui/qt/main_window.cpp:2814
+#: src/gui/qt/main_window.cpp:2816
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -719,11 +719,11 @@ msgstr ""
 "பின்வரும் விளையாட்டுகளுக்கு மாச்ட்லிச்ட்கள் புதுப்பிக்கப்பட்டன:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:2876
+#: src/gui/qt/main_window.cpp:2878
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "கொள்ளை ஒரு [புதிய வெளியீடு]({0}) கிடைக்கிறது."
 
-#: src/gui/qt/main_window.cpp:2893
+#: src/gui/qt/main_window.cpp:2895
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -812,23 +812,39 @@ msgstr "குறியெண்"
 msgid "Plugin Name"
 msgstr "சொருகி பெயர்"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:119
+#: src/gui/qt/restore_load_order_dialog.cpp:154
 msgid "Restore Load Order"
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:121
+#: src/gui/qt/restore_load_order_dialog.cpp:156
 msgid "Select a load order backup to restore."
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:124
+#: src/gui/qt/restore_load_order_dialog.cpp:157
+msgid "Current load order"
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:158
+msgid "Selected backup's load order"
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:161
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 #: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
 msgstr "பெயர்"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:124
+#: src/gui/qt/restore_load_order_dialog.cpp:161
 msgid "Created At"
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:163
+msgid "Delete Backup"
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:204
+msgid "Failed to delete backup."
 msgstr ""
 
 #: src/gui/qt/search_dialog.cpp:109
@@ -1304,6 +1320,10 @@ msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr "தற்போதைய சுமை வரிசையை ஏற்றுவதில் தோல்வி, காட்டப்படும் தகவல்கள் தவறாக இருக்கலாம்."
+
+#: src/gui/state/game/helpers.cpp:238
+msgid "Automatic Load Order Backup"
+msgstr ""
 
 #: src/gui/state/game/validation.cpp:82 src/gui/state/game/validation.cpp:113
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."

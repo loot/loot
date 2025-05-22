@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-21 22:18+0100\n"
+"POT-Creation-Date: 2025-05-22 20:49+0100\n"
 "PO-Revision-Date: 2024-05-22 20:01+0100\n"
 "Last-Translator: Simple Shawn\n"
 "Language-Team: \n"
@@ -455,7 +455,7 @@ msgid "F&ilters"
 msgstr "F&iltres"
 
 #: src/gui/qt/main_window.cpp:1132 src/gui/qt/main_window.cpp:1586
-#: src/gui/qt/main_window.cpp:2233
+#: src/gui/qt/main_window.cpp:2235
 msgid "Updating and parsing masterlist…"
 msgstr "Mise à jour et analyse de la masterlist…"
 
@@ -499,7 +499,7 @@ msgstr ""
 "métadonnées est ouvert, ou pendant qu'un ordre de chargement trié n'a pas "
 "été appliqué/annulé."
 
-#: src/gui/qt/main_window.cpp:1259 src/gui/qt/main_window.cpp:2107
+#: src/gui/qt/main_window.cpp:1259 src/gui/qt/main_window.cpp:2109
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -529,7 +529,7 @@ msgstr ""
 "Vous n'avez pas encore appliqué ou annulé votre {0}. Êtes-vous sur de "
 "vouloir quitter?"
 
-#: src/gui/qt/main_window.cpp:1406
+#: src/gui/qt/main_window.cpp:1406 src/gui/qt/restore_load_order_dialog.cpp:204
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:369
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
@@ -594,16 +594,16 @@ msgstr "L'ordre de chargement a été copié dans le presse-papier."
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "Le contenu de LOOT a été copié dans le presse-papier."
 
-#: src/gui/qt/main_window.cpp:1742
+#: src/gui/qt/main_window.cpp:1744
 msgid "The load order displayed by LOOT has been set."
 msgstr "L'ordre de chargement affiché par LOOT a été instauré."
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1767
+#: src/gui/qt/main_window.cpp:1769
 msgid "Redate Plugins?"
 msgstr "Redater les plugins?"
 
-#: src/gui/qt/main_window.cpp:1769
+#: src/gui/qt/main_window.cpp:1771
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -616,11 +616,11 @@ msgstr ""
 "(Skyrim Special Edition n'est pas affecté). Souhaitez-vous poursuivre?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1781
+#: src/gui/qt/main_window.cpp:1783
 msgid "Plugins were successfully redated."
 msgstr "Les plugins ont bien été redatés."
 
-#: src/gui/qt/main_window.cpp:1793
+#: src/gui/qt/main_window.cpp:1795
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -628,11 +628,11 @@ msgstr ""
 "Êtes-vous sur de vouloir effacer toutes les métadonnées ajoutées par "
 "l'utilisateur dans l'ensemble des plugins?"
 
-#: src/gui/qt/main_window.cpp:1841
+#: src/gui/qt/main_window.cpp:1843
 msgid "All user-added metadata has been cleared."
 msgstr "Toutes les métadonnées de l'utilisateur ont été effacées."
 
-#: src/gui/qt/main_window.cpp:1854
+#: src/gui/qt/main_window.cpp:1856
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
@@ -640,77 +640,77 @@ msgstr ""
 "L'éditeur de métadonnées est déjà ouvert, veuillez d'abord fermer l'éditeur "
 "avant d'essayer de modifier les métadonnées d'un autre plugin."
 
-#: src/gui/qt/main_window.cpp:1918
+#: src/gui/qt/main_window.cpp:1920
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "Les métadonnées pour \"{0}\" ont été copiées dans le presse-papier."
 
-#: src/gui/qt/main_window.cpp:1936
+#: src/gui/qt/main_window.cpp:1938
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "Le nom du plugin \"{0}\" a été copié dans le presse-papier."
 
-#: src/gui/qt/main_window.cpp:1955
+#: src/gui/qt/main_window.cpp:1957
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "Le contenu de la carte pour \"{0}\" a été copié dans le presse-papier."
 
-#: src/gui/qt/main_window.cpp:1970
+#: src/gui/qt/main_window.cpp:1972
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "Êtes-vous sûr de vouloir effacer toutes les métadonnées d'utilisateurs "
 "existantes de \"{0}\"?"
 
-#: src/gui/qt/main_window.cpp:2010
+#: src/gui/qt/main_window.cpp:2012
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr ""
 "Les métadonnées ajoutées par l'utilisateur pour \"{0}\" ont été effacées."
 
-#: src/gui/qt/main_window.cpp:2093
+#: src/gui/qt/main_window.cpp:2095
 msgid "Version {0} (build {1})"
 msgstr "Version {0} (build {1})"
 
-#: src/gui/qt/main_window.cpp:2099
+#: src/gui/qt/main_window.cpp:2101
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
 "3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2117
+#: src/gui/qt/main_window.cpp:2119
 msgid "About LOOT"
 msgstr "À propos de LOOT"
 
-#: src/gui/qt/main_window.cpp:2443
+#: src/gui/qt/main_window.cpp:2445
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2561
+#: src/gui/qt/main_window.cpp:2563
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2599
+#: src/gui/qt/main_window.cpp:2601
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2648
+#: src/gui/qt/main_window.cpp:2650
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 "Le tri automatique a été annulé car au moins un message d'erreur est présent."
 
-#: src/gui/qt/main_window.cpp:2707
+#: src/gui/qt/main_window.cpp:2709
 msgid "No masterlist update was necessary."
 msgstr "Aucune mise à jour de la masterlist est nécessaire."
 
-#: src/gui/qt/main_window.cpp:2727
+#: src/gui/qt/main_window.cpp:2729
 msgid "Masterlist updated to revision {0}."
 msgstr "Masterlist mise à jour vers la version {0}."
 
-#: src/gui/qt/main_window.cpp:2791
+#: src/gui/qt/main_window.cpp:2793
 msgid "No masterlist updates were necessary."
 msgstr "Aucune mise à jour de la masterlist est nécessaire."
 
-#: src/gui/qt/main_window.cpp:2814
+#: src/gui/qt/main_window.cpp:2816
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -718,11 +718,11 @@ msgstr ""
 "Les Masterlists ont été mises à jour pour les jeux suivants:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:2876
+#: src/gui/qt/main_window.cpp:2878
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "Une [nouvelle version]({0}) de LOOT est disponible."
 
-#: src/gui/qt/main_window.cpp:2893
+#: src/gui/qt/main_window.cpp:2895
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -812,23 +812,39 @@ msgstr "Index"
 msgid "Plugin Name"
 msgstr "Nom du plugin"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:119
+#: src/gui/qt/restore_load_order_dialog.cpp:154
 msgid "Restore Load Order"
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:121
+#: src/gui/qt/restore_load_order_dialog.cpp:156
 msgid "Select a load order backup to restore."
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:124
+#: src/gui/qt/restore_load_order_dialog.cpp:157
+msgid "Current load order"
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:158
+msgid "Selected backup's load order"
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:161
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 #: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:124
+#: src/gui/qt/restore_load_order_dialog.cpp:161
 msgid "Created At"
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:163
+msgid "Delete Backup"
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:204
+msgid "Failed to delete backup."
 msgstr ""
 
 #: src/gui/qt/search_dialog.cpp:109
@@ -1306,6 +1322,10 @@ msgid ""
 msgstr ""
 "L'ordre de chargement actuel n'a pas pu être obtenu, les informations "
 "affichées peuvent être incorrectes."
+
+#: src/gui/state/game/helpers.cpp:238
+msgid "Automatic Load Order Backup"
+msgstr ""
 
 #: src/gui/state/game/validation.cpp:82 src/gui/state/game/validation.cpp:113
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
