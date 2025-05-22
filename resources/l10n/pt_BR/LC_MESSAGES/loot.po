@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-21 17:43+0100\n"
+"POT-Creation-Date: 2025-05-21 22:18+0100\n"
 "PO-Revision-Date: 2025-05-08 23:01+0000\n"
 "Last-Translator: Carlos Gabriel <carlos2324feitosa@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/loot/"
@@ -821,22 +821,22 @@ msgstr "Índice"
 msgid "Plugin Name"
 msgstr "Nome do plugin"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:108
+#: src/gui/qt/restore_load_order_dialog.cpp:119
 msgid "Restore Load Order"
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:110
+#: src/gui/qt/restore_load_order_dialog.cpp:121
 msgid "Select a load order backup to restore."
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:113
+#: src/gui/qt/restore_load_order_dialog.cpp:124
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 #: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
 msgstr "Nome"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:113
+#: src/gui/qt/restore_load_order_dialog.cpp:124
 msgid "Created At"
 msgstr ""
 
