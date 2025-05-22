@@ -4,6 +4,74 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.26.1 - Unreleased
+===================
+
+Added
+-----
+
+- A "Show only plugins with load after metadata" filter.
+- A "Show only plugins with load after user metadata" filter.
+- A "Show only plugins without load order metadata" filter, where load order
+  metadata are load after, requirement or group metadata. It is mutually
+  exclusive with the other two new filters.
+- Support for manual load order backups, via a new "Back Up Load Order…" action
+  in the Game menu. LOOT already creates a load order backup whenever it's about
+  to set the load order, but this allows a backup to be created at any time with
+  a custom name.
+- Support for restoring load order backups, via a new "Restore Load Order…"
+  action in the Game menu. This does not support backups created by earlier
+  versions of LOOT, as they lack the required metadata. The Restore Load Order
+  dialog also allows selected backups to be deleted.
+
+Fixed
+-----
+
+- Saving settings with OpenMW installed, which was accidentally broken in LOOT
+  v0.26.0.
+- The wrong colours were used in the groups editor's graph, which could lead to
+  very low contrast.
+- Plugin card shadows are now drawn correctly when using the dark theme.
+- Qt printed some debug console output when launching LOOT relating to layouts
+  and some files not being found.
+
+Changed
+-------
+
+- LOOT will now force master files to load before non-master files when sorting
+  an Oblivion Remastered load order (similar to most other supported games), as
+  although the game does not require master files to load before non-master
+  files, doing otherwise can cause issues in-game. Via libloot.
+- Qt's ``windows11`` style is now overridden with Qt's ``windowsvista`` style,
+  as the former is relatively unpolished and looks particularly bad when using
+  the default LOOT theme with a dark Windows colour scheme.
+- The Bash Tags group box on plugin cards now uses a style that's consistent
+  across Windows 10 and 11, with sharp border corners and border colour that's
+  slightly darker than it was on Windows 10 and lighter than it was on Windows
+  11.
+- Improve the contrast of UI colours used in the default and dark themes.
+- Improve the consistency of the colour palette used for the dark theme.
+- The format of LOOT's load order backups has changed to allow metadata to be
+  recorded along with the plugin filenames.
+- Load order backups are now created within a ``backups`` subdirectory of the
+  relevant game's LOOT folder instead of directly within the folder itself.
+- The maximum number of automatic load order backups that are retained per game
+  has been increased from 3 to 10.
+- Updated the Brazilian Portuguese translation.
+- Updated the Bulgarian translation.
+- Updated the Russian translation.
+- Updated fmt to v11.2.0.
+- Updated libloot to v0.26.2.
+- Updated minizip-ng to v4.0.10.
+- Updated spdlog to v1.15.3.
+
+Removed
+-------
+
+- The ability to provide a LOOT Folder name when adding a game in the settings
+  dialog, as it was a relatively common source of confusion. LOOT will now
+  automatically generate a suitable folder name instead.
+
 0.26.0 - 2025-05-02
 ===================
 
