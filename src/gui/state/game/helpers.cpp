@@ -233,7 +233,10 @@ void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
 namespace loot {
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory) {
-  CreateBackup(loadOrder, backupDirectory, "Automatic Load Order Backup", true);
+  CreateBackup(loadOrder,
+               backupDirectory,
+               boost::locale::translate("Automatic Load Order Backup").str(),
+               true);
   RemoveOldBackups(backupDirectory);
 }
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.26.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-22 18:45+0100\n"
+"POT-Creation-Date: 2025-05-22 20:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1286,6 +1286,10 @@ msgstr ""
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
+msgstr ""
+
+#: src/gui/state/game/helpers.cpp:238
+msgid "Automatic Load Order Backup"
 msgstr ""
 
 #: src/gui/state/game/validation.cpp:82 src/gui/state/game/validation.cpp:113
