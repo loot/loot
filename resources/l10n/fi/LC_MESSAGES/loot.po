@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-21 22:18+0100\n"
+"POT-Creation-Date: 2025-05-22 20:49+0100\n"
 "PO-Revision-Date: 2025-01-21 14:00+0000\n"
 "Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/loot/loot/fi/>\n"
@@ -456,7 +456,7 @@ msgid "F&ilters"
 msgstr "&Suodattimet"
 
 #: src/gui/qt/main_window.cpp:1132 src/gui/qt/main_window.cpp:1586
-#: src/gui/qt/main_window.cpp:2233
+#: src/gui/qt/main_window.cpp:2235
 msgid "Updating and parsing masterlist…"
 msgstr "Päivitetään pääluetteloa…"
 
@@ -499,7 +499,7 @@ msgstr ""
 "Jotkin ominaisuudet eivät ole käytettävissä, kun metatietoja ollaan "
 "muokkaamassa tai järjestystä ei ole tallennettu eikä hylätty."
 
-#: src/gui/qt/main_window.cpp:1259 src/gui/qt/main_window.cpp:2107
+#: src/gui/qt/main_window.cpp:1259 src/gui/qt/main_window.cpp:2109
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -526,7 +526,7 @@ msgid ""
 "quit?"
 msgstr "Et ole vielä tallentanut tai hylännyt {0}. Haluatko varmasti poistua?"
 
-#: src/gui/qt/main_window.cpp:1406
+#: src/gui/qt/main_window.cpp:1406 src/gui/qt/restore_load_order_dialog.cpp:204
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:369
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
@@ -590,16 +590,16 @@ msgstr "Järjestys on kopioitu leikepöydälle."
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "LOOTin sisältö on kopioitu leikepöydälle."
 
-#: src/gui/qt/main_window.cpp:1742
+#: src/gui/qt/main_window.cpp:1744
 msgid "The load order displayed by LOOT has been set."
 msgstr "LOOTin järjestys on tallennettu."
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1767
+#: src/gui/qt/main_window.cpp:1769
 msgid "Redate Plugins?"
 msgstr "Muuta lisäosien päiväykset?"
 
-#: src/gui/qt/main_window.cpp:1769
+#: src/gui/qt/main_window.cpp:1771
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -612,11 +612,11 @@ msgstr ""
 "Jatketaanko?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1781
+#: src/gui/qt/main_window.cpp:1783
 msgid "Plugins were successfully redated."
 msgstr "Lisäosat päiväykset muutettiin onnistuneesti."
 
-#: src/gui/qt/main_window.cpp:1793
+#: src/gui/qt/main_window.cpp:1795
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -624,11 +624,11 @@ msgstr ""
 "Oletko varma, että haluat poistaa kaikki lisäämäsi metatiedot kaikista "
 "lisäosista?"
 
-#: src/gui/qt/main_window.cpp:1841
+#: src/gui/qt/main_window.cpp:1843
 msgid "All user-added metadata has been cleared."
 msgstr "Kaikki muokatut metatiedot poistettiin."
 
-#: src/gui/qt/main_window.cpp:1854
+#: src/gui/qt/main_window.cpp:1856
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
@@ -636,33 +636,33 @@ msgstr ""
 "Olet jo muokkaamassa lisäosan metatietoja. Sulje edellinen lisäosa ennen "
 "toisen lisäosan metatietojen muokkaamista."
 
-#: src/gui/qt/main_window.cpp:1918
+#: src/gui/qt/main_window.cpp:1920
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "Lisäosan {0} metatiedot on kopioitu leikepöydälle."
 
-#: src/gui/qt/main_window.cpp:1936
+#: src/gui/qt/main_window.cpp:1938
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "Lisäosan {0} nimi on kopioitu leikepöydälle."
 
-#: src/gui/qt/main_window.cpp:1955
+#: src/gui/qt/main_window.cpp:1957
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "Lisäosan {0} kortti on kopioitu leikepöydälle."
 
-#: src/gui/qt/main_window.cpp:1970
+#: src/gui/qt/main_window.cpp:1972
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "Oletko varma, että haluat poistaa kaikki muokatut metatiedot lisäosasta {0}?"
 
-#: src/gui/qt/main_window.cpp:2010
+#: src/gui/qt/main_window.cpp:2012
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "Muokatut metatiedot on poistettu lisäosasta {0}."
 
-#: src/gui/qt/main_window.cpp:2093
+#: src/gui/qt/main_window.cpp:2095
 msgid "Version {0} (build {1})"
 msgstr "Versio {0} (koonti {1})"
 
-#: src/gui/qt/main_window.cpp:2099
+#: src/gui/qt/main_window.cpp:2101
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
@@ -672,41 +672,41 @@ msgstr ""
 "Nehrim, Skyrim, Enderal, Skyrim Special Edition, Enderal Special Edition, "
 "Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 ja Fallout 4 VR."
 
-#: src/gui/qt/main_window.cpp:2117
+#: src/gui/qt/main_window.cpp:2119
 msgid "About LOOT"
 msgstr "Tietoja LOOTista"
 
-#: src/gui/qt/main_window.cpp:2443
+#: src/gui/qt/main_window.cpp:2445
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2561
+#: src/gui/qt/main_window.cpp:2563
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2599
+#: src/gui/qt/main_window.cpp:2601
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2648
+#: src/gui/qt/main_window.cpp:2650
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr "Automaattinen järjestäminen on peruutettu virheilmoituksen takia."
 
-#: src/gui/qt/main_window.cpp:2707
+#: src/gui/qt/main_window.cpp:2709
 msgid "No masterlist update was necessary."
 msgstr "Pääluettelon päivitystä ei tarvittu."
 
-#: src/gui/qt/main_window.cpp:2727
+#: src/gui/qt/main_window.cpp:2729
 msgid "Masterlist updated to revision {0}."
 msgstr "Pääluettelo päivitettiin versioon {0}."
 
-#: src/gui/qt/main_window.cpp:2791
+#: src/gui/qt/main_window.cpp:2793
 msgid "No masterlist updates were necessary."
 msgstr "Pääluetteloiden päivitystä ei tarvittu."
 
-#: src/gui/qt/main_window.cpp:2814
+#: src/gui/qt/main_window.cpp:2816
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -714,11 +714,11 @@ msgstr ""
 "Pääluettelot päivitettiin peleihin:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:2876
+#: src/gui/qt/main_window.cpp:2878
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "LOOTista on saatavilla [uusi versio]({0})."
 
-#: src/gui/qt/main_window.cpp:2893
+#: src/gui/qt/main_window.cpp:2895
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -807,23 +807,39 @@ msgstr "Indeksi"
 msgid "Plugin Name"
 msgstr "Lisäosan nimi"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:119
+#: src/gui/qt/restore_load_order_dialog.cpp:154
 msgid "Restore Load Order"
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:121
+#: src/gui/qt/restore_load_order_dialog.cpp:156
 msgid "Select a load order backup to restore."
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:124
+#: src/gui/qt/restore_load_order_dialog.cpp:157
+msgid "Current load order"
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:158
+msgid "Selected backup's load order"
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:161
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 #: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
 msgstr "Nimi"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:124
+#: src/gui/qt/restore_load_order_dialog.cpp:161
 msgid "Created At"
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:163
+msgid "Delete Backup"
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:204
+msgid "Failed to delete backup."
 msgstr ""
 
 #: src/gui/qt/search_dialog.cpp:109
@@ -1302,6 +1318,10 @@ msgid ""
 msgstr ""
 "Nykyisen järjestyksen lukeminen epäonnistui. Näytetyt tiedot eivät "
 "välttämättä vastaa todellisuutta."
+
+#: src/gui/state/game/helpers.cpp:238
+msgid "Automatic Load Order Backup"
+msgstr ""
 
 #: src/gui/state/game/validation.cpp:82 src/gui/state/game/validation.cpp:113
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
