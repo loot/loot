@@ -51,6 +51,7 @@ private:
   QLabel *selectLabel{new QLabel(this)};
   QLabel *currentLoadOrderLabel{new QLabel(this)};
   QLabel *selectedLoadOrderLabel{new QLabel(this)};
+  QLabel *identicalLabel{new QLabel(this)};
   QTableWidget *backupsTable{new QTableWidget(this)};
   QListWidget *currentLoadOrderList{new QListWidget(this)};
   QListWidget *backupLoadOrderList{new QListWidget(this)};

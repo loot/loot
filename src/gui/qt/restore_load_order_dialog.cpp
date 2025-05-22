@@ -77,6 +77,7 @@ void RestoreLoadOrderDialog::setLoadOrderBackups(
       QHeaderView::ResizeToContents);
 
   deleteButton->setEnabled(false);
+  identicalLabel->setHidden(true);
 
   backups = loadOrderBackups;
 }
@@ -106,6 +107,8 @@ void RestoreLoadOrderDialog::setupUi() {
   deleteButton->setEnabled(false);
   deleteButton->sizePolicy().setHorizontalPolicy(QSizePolicy::Policy::Fixed);
 
+  identicalLabel->setHidden(true);
+
   const auto buttonBox =
       new QDialogButtonBox(QDialogButtonBox::StandardButton::Ok |
                                QDialogButtonBox::StandardButton::Cancel,
@@ -116,6 +119,8 @@ void RestoreLoadOrderDialog::setupUi() {
   auto tableLayout = new QVBoxLayout();
   auto currentLoadOrderLayout = new QVBoxLayout();
   auto backupLoadOrderLayout = new QVBoxLayout();
+  auto listsLayout = new QHBoxLayout();
+  auto listsAndTextLayout = new QVBoxLayout();
 
   tableLayout->addWidget(selectLabel);
   tableLayout->addWidget(backupsTable);
@@ -127,9 +132,14 @@ void RestoreLoadOrderDialog::setupUi() {
   backupLoadOrderLayout->addWidget(selectedLoadOrderLabel);
   backupLoadOrderLayout->addWidget(backupLoadOrderList);
 
+  listsLayout->addLayout(currentLoadOrderLayout);
+  listsLayout->addLayout(backupLoadOrderLayout);
+
+  listsAndTextLayout->addLayout(listsLayout);
+  listsAndTextLayout->addWidget(identicalLabel);
+
   viewsLayout->addLayout(tableLayout);
-  viewsLayout->addLayout(currentLoadOrderLayout);
-  viewsLayout->addLayout(backupLoadOrderLayout);
+  viewsLayout->addLayout(listsAndTextLayout);
 
   dialogLayout->addLayout(viewsLayout);
   dialogLayout->addWidget(buttonBox);
@@ -161,6 +171,9 @@ void RestoreLoadOrderDialog::translateUi() {
       {translate("Name"), translate("Created At")});
 
   deleteButton->setText(translate("Delete Backup"));
+
+  identicalLabel->setText(
+      translate("The current and selected backup load orders are identical."));
 }
 
 void RestoreLoadOrderDialog::handleBackupSelectionChanged(
@@ -170,13 +183,20 @@ void RestoreLoadOrderDialog::handleBackupSelectionChanged(
 
   const auto indexes = selected.indexes();
   if (!indexes.empty()) {
-    const auto row = indexes.front().row();
-    for (const auto& plugin : backups.at(row).loadOrder) {
+    const auto backup = backups.at(indexes.front().row());
+    for (const auto& plugin : backup.loadOrder) {
       backupLoadOrderList->addItem(QString::fromStdString(plugin));
     }
-  }
 
-  deleteButton->setEnabled(true);
+    std::vector<std::string> currentLoadOrder;
+    for (int i = 0; i < currentLoadOrderList->count(); i += 1) {
+      currentLoadOrder.push_back(
+          currentLoadOrderList->item(i)->text().toStdString());
+    }
+
+    identicalLabel->setHidden(backup.loadOrder != currentLoadOrder);
+    deleteButton->setEnabled(true);
+  }
 }
 
 void RestoreLoadOrderDialog::handleDeleteButtonClicked() {
