@@ -40,15 +40,19 @@ class RestoreLoadOrderDialog : public QDialog {
 public:
   explicit RestoreLoadOrderDialog(QWidget *parent);
 
+  void setCurrentLoadOrder(const std::vector<std::string> &loadOrder);
   void setLoadOrderBackups(
       const std::vector<LoadOrderBackup> &loadOrderBackups);
 
   std::optional<LoadOrderBackup> getSelectedLoadOrderBackup() const;
 
 private:
-  QLabel *textLabel{new QLabel(this)};
+  QLabel *selectLabel{new QLabel(this)};
+  QLabel *currentLoadOrderLabel{new QLabel(this)};
+  QLabel *selectedLoadOrderLabel{new QLabel(this)};
   QTableWidget *backupsTable{new QTableWidget(this)};
-  QListWidget *loadOrderList{new QListWidget(this)};
+  QListWidget *currentLoadOrderList{new QListWidget(this)};
+  QListWidget *backupLoadOrderList{new QListWidget(this)};
 
   std::vector<LoadOrderBackup> backups;
 

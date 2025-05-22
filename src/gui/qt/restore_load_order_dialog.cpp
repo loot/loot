@@ -41,6 +41,15 @@ RestoreLoadOrderDialog::RestoreLoadOrderDialog(QWidget* parent) :
   setupUi();
 }
 
+void RestoreLoadOrderDialog::setCurrentLoadOrder(
+    const std::vector<std::string>& loadOrder) {
+  currentLoadOrderList->clear();
+
+  for (const auto& plugin : loadOrder) {
+    currentLoadOrderList->addItem(QString::fromStdString(plugin));
+  }
+}
+
 void RestoreLoadOrderDialog::setLoadOrderBackups(
     const std::vector<LoadOrderBackup>& loadOrderBackups) {
   backupsTable->clearContents();
@@ -97,11 +106,23 @@ void RestoreLoadOrderDialog::setupUi() {
 
   auto dialogLayout = new QVBoxLayout();
   auto viewsLayout = new QHBoxLayout();
+  auto tableLayout = new QVBoxLayout();
+  auto currentLoadOrderLayout = new QVBoxLayout();
+  auto backupLoadOrderLayout = new QVBoxLayout();
 
-  viewsLayout->addWidget(backupsTable);
-  viewsLayout->addWidget(loadOrderList);
+  tableLayout->addWidget(selectLabel);
+  tableLayout->addWidget(backupsTable);
 
-  dialogLayout->addWidget(textLabel);
+  currentLoadOrderLayout->addWidget(currentLoadOrderLabel);
+  currentLoadOrderLayout->addWidget(currentLoadOrderList);
+
+  backupLoadOrderLayout->addWidget(selectedLoadOrderLabel);
+  backupLoadOrderLayout->addWidget(backupLoadOrderList);
+
+  viewsLayout->addLayout(tableLayout);
+  viewsLayout->addLayout(currentLoadOrderLayout);
+  viewsLayout->addLayout(backupLoadOrderLayout);
+
   dialogLayout->addLayout(viewsLayout);
   dialogLayout->addWidget(buttonBox);
 
@@ -120,21 +141,24 @@ void RestoreLoadOrderDialog::setupUi() {
 void RestoreLoadOrderDialog::translateUi() {
   setWindowTitle(translate("Restore Load Order"));
 
-  textLabel->setText(translate("Select a load order backup to restore."));
+  selectLabel->setText(translate("Select a load order backup to restore."));
+  currentLoadOrderLabel->setText(translate("Current load order"));
+  selectedLoadOrderLabel->setText(translate("Selected backup's load order"));
 
   backupsTable->setHorizontalHeaderLabels(
       {translate("Name"), translate("Created At")});
 }
+
 void RestoreLoadOrderDialog::handleBackupSelectionChanged(
     const QItemSelection& selected,
     const QItemSelection&) {
-  loadOrderList->clear();
+  backupLoadOrderList->clear();
 
   const auto indexes = selected.indexes();
   if (!indexes.empty()) {
     const auto row = indexes.front().row();
     for (const auto& plugin : backups.at(row).loadOrder) {
-      loadOrderList->addItem(QString::fromStdString(plugin));
+      backupLoadOrderList->addItem(QString::fromStdString(plugin));
     }
   }
 }

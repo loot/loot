@@ -1725,6 +1725,8 @@ void MainWindow::on_actionBackUpLoadOrder_triggered() {
 void MainWindow::on_actionRestoreLoadOrder_triggered() {
   try {
     const auto backups = state.GetCurrentGame().FindLoadOrderBackups();
+    restoreBackupDialog->setCurrentLoadOrder(
+        state.GetCurrentGame().GetLoadOrder());
     restoreBackupDialog->setLoadOrderBackups(backups);
     restoreBackupDialog->open();
 
