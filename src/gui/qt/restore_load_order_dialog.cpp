@@ -52,8 +52,10 @@ void RestoreLoadOrderDialog::setLoadOrderBackups(
     nameItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     backupsTable->setItem(row, 0, nameItem);
 
-    auto timestampItem = new QTableWidgetItem(
-        QDateTime::fromMSecsSinceEpoch(backup.unixTimestampMs).toString());
+    const auto timestamp =
+        QDateTime::fromMSecsSinceEpoch(backup.unixTimestampMs);
+    auto timestampItem =
+        new QTableWidgetItem(QLocale::system().toString(timestamp));
     timestampItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     backupsTable->setItem(row, 1, timestampItem);
 
