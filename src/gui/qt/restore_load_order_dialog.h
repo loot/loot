@@ -29,6 +29,7 @@
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QWidget>
 
@@ -53,6 +54,7 @@ private:
   QTableWidget *backupsTable{new QTableWidget(this)};
   QListWidget *currentLoadOrderList{new QListWidget(this)};
   QListWidget *backupLoadOrderList{new QListWidget(this)};
+  QPushButton *deleteButton{new QPushButton(this)};
 
   std::vector<LoadOrderBackup> backups;
 
@@ -62,6 +64,7 @@ private:
 private slots:
   void handleBackupSelectionChanged(const QItemSelection &selected,
                                     const QItemSelection &);
+  void handleDeleteButtonClicked();
 };
 }
 

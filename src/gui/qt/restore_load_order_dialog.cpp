@@ -30,10 +30,12 @@
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QTableWidgetItem>
 #include <QtWidgets/QVBoxLayout>
 
 #include "gui/qt/helpers.h"
+#include "gui/state/logging.h"
 
 namespace loot {
 RestoreLoadOrderDialog::RestoreLoadOrderDialog(QWidget* parent) :
@@ -74,6 +76,8 @@ void RestoreLoadOrderDialog::setLoadOrderBackups(
   backupsTable->horizontalHeader()->resizeSections(
       QHeaderView::ResizeToContents);
 
+  deleteButton->setEnabled(false);
+
   backups = loadOrderBackups;
 }
 
@@ -99,6 +103,9 @@ void RestoreLoadOrderDialog::setupUi() {
   backupsTable->verticalHeader()->hide();
   backupsTable->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
 
+  deleteButton->setEnabled(false);
+  deleteButton->sizePolicy().setHorizontalPolicy(QSizePolicy::Policy::Fixed);
+
   const auto buttonBox =
       new QDialogButtonBox(QDialogButtonBox::StandardButton::Ok |
                                QDialogButtonBox::StandardButton::Cancel,
@@ -112,6 +119,7 @@ void RestoreLoadOrderDialog::setupUi() {
 
   tableLayout->addWidget(selectLabel);
   tableLayout->addWidget(backupsTable);
+  tableLayout->addWidget(deleteButton);
 
   currentLoadOrderLayout->addWidget(currentLoadOrderLabel);
   currentLoadOrderLayout->addWidget(currentLoadOrderList);
@@ -136,6 +144,10 @@ void RestoreLoadOrderDialog::setupUi() {
           &QItemSelectionModel::selectionChanged,
           this,
           &RestoreLoadOrderDialog::handleBackupSelectionChanged);
+  connect(deleteButton,
+          &QAbstractButton::clicked,
+          this,
+          &RestoreLoadOrderDialog::handleDeleteButtonClicked);
 }
 
 void RestoreLoadOrderDialog::translateUi() {
@@ -147,6 +159,8 @@ void RestoreLoadOrderDialog::translateUi() {
 
   backupsTable->setHorizontalHeaderLabels(
       {translate("Name"), translate("Created At")});
+
+  deleteButton->setText(translate("Delete Backup"));
 }
 
 void RestoreLoadOrderDialog::handleBackupSelectionChanged(
@@ -160,6 +174,34 @@ void RestoreLoadOrderDialog::handleBackupSelectionChanged(
     for (const auto& plugin : backups.at(row).loadOrder) {
       backupLoadOrderList->addItem(QString::fromStdString(plugin));
     }
+  }
+
+  deleteButton->setEnabled(true);
+}
+
+void RestoreLoadOrderDialog::handleDeleteButtonClicked() {
+  try {
+    const auto selected = backupsTable->selectedItems();
+    if (selected.empty()) {
+      return;
+    }
+
+    const auto row = selected.front()->row();
+
+    std::filesystem::remove(backups.at(row).path);
+
+    backups.erase(backups.begin() + row);
+
+    setLoadOrderBackups(backups);
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error("Caught an exception while trying to delete backup: {}",
+                    e.what());
+    }
+
+    QMessageBox::critical(
+        this, translate("Error"), translate("Failed to delete backup."));
   }
 }
 }

@@ -12,7 +12,7 @@ The menu bar consists of the File, Game, Plugin and Help menus. Some menus and m
 A few items in the menus are not self-explanatory:
 
 - "Back Up Load Order…" records the current load order in a file that's saved in the LOOT folder for the current game.
-- "Restore Load Order…" allows you to restore from a previous load order backup. Restoring a backup first creates an automatic backup of the current load order.
+- "Restore Load Order…" allows you to restore from a previous load order backup. Restoring a backup first creates an automatic backup of the current load order. The restore dialog also allows you to to delete load order backups.
 - "Redate Plugins…" is provided so that Skyrim and Skyrim Special Edition modders may set the load order for the Creation Kit. It is only available for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
 - "Copy Load Order" copies the displayed list of plugins and the decimal and hexadecimal indices of active plugins to the clipboard. The columns are:
 
@@ -51,7 +51,7 @@ Any errors encountered during sorting or masterlist update will be displayed on 
 Load Order Backups
 ^^^^^^^^^^^^^^^^^^
 
-In addition to the "Back Up Load Order" Game menu action, LOOT automatically backs up the current load order before applying a sorted load order, fixing an ambiguous load order or restoring a load order backup. Only the ten most recent automatic backups are retained. LOOT never deletes manual backups.
+In addition to the "Back Up Load Order" Game menu action, LOOT automatically backs up the current load order before applying a sorted load order, fixing an ambiguous load order or restoring a load order backup. Only the ten most recent automatic backups are retained. LOOT never automatically deletes manual backups.
 
 Backups are stored as JSON files in the LOOT's data folder for the current game. The files use the naming scheme ``loadorder.<creation timestamp>.json``.
 
