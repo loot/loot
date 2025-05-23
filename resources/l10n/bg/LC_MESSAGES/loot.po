@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-22 20:49+0100\n"
-"PO-Revision-Date: 2025-05-21 21:39+0000\n"
+"POT-Creation-Date: 2025-05-23 08:32+0100\n"
+"PO-Revision-Date: 2025-05-23 07:53+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
 ">\n"
@@ -532,7 +532,7 @@ msgstr ""
 "Все още не сте приложили или отказали {0}. Сигурни ли сте, че искате да "
 "излезете?"
 
-#: src/gui/qt/main_window.cpp:1406 src/gui/qt/restore_load_order_dialog.cpp:204
+#: src/gui/qt/main_window.cpp:1406 src/gui/qt/restore_load_order_dialog.cpp:224
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:369
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
@@ -815,40 +815,44 @@ msgstr "Индекс"
 msgid "Plugin Name"
 msgstr "Име на приставката"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:154
+#: src/gui/qt/restore_load_order_dialog.cpp:164
 msgid "Restore Load Order"
 msgstr "Възстанови реда за зареждане"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:156
+#: src/gui/qt/restore_load_order_dialog.cpp:166
 msgid "Select a load order backup to restore."
-msgstr "Избери резервно копие на реда за зареждане за възстановяване."
+msgstr "Избери резервно копие за възстановяване."
 
-#: src/gui/qt/restore_load_order_dialog.cpp:157
+#: src/gui/qt/restore_load_order_dialog.cpp:167
 msgid "Current load order"
-msgstr ""
+msgstr "Текущ ред за зареждане"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:158
+#: src/gui/qt/restore_load_order_dialog.cpp:168
 msgid "Selected backup's load order"
-msgstr ""
+msgstr "Избрано резервно копие"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:161
+#: src/gui/qt/restore_load_order_dialog.cpp:171
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 #: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
 msgstr "Име"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:161
+#: src/gui/qt/restore_load_order_dialog.cpp:171
 msgid "Created At"
 msgstr "Създаден в"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:163
+#: src/gui/qt/restore_load_order_dialog.cpp:173
 msgid "Delete Backup"
+msgstr "Изтрий резервното копие"
+
+#: src/gui/qt/restore_load_order_dialog.cpp:176
+msgid "The current and selected backup load orders are identical."
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:204
+#: src/gui/qt/restore_load_order_dialog.cpp:224
 msgid "Failed to delete backup."
-msgstr ""
+msgstr "Изтриването на резервното копие е неуспешно."
 
 #: src/gui/qt/search_dialog.cpp:109
 msgid "Search Cards"
@@ -1328,7 +1332,7 @@ msgstr ""
 
 #: src/gui/state/game/helpers.cpp:238
 msgid "Automatic Load Order Backup"
-msgstr ""
+msgstr "Автоматично съхранение на реда за зареждане"
 
 #: src/gui/state/game/validation.cpp:82 src/gui/state/game/validation.cpp:113
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."

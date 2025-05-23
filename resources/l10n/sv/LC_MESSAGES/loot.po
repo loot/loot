@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-22 20:49+0100\n"
+"POT-Creation-Date: 2025-05-23 08:32+0100\n"
 "PO-Revision-Date: 2025-03-14 01:55+0000\n"
 "Last-Translator: tygyh <jonis9898@hotmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/loot/loot/sv/>\n"
@@ -524,7 +524,7 @@ msgid ""
 "quit?"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1406 src/gui/qt/restore_load_order_dialog.cpp:204
+#: src/gui/qt/main_window.cpp:1406 src/gui/qt/restore_load_order_dialog.cpp:224
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:369
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
@@ -782,38 +782,42 @@ msgstr ""
 msgid "Plugin Name"
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:154
+#: src/gui/qt/restore_load_order_dialog.cpp:164
 msgid "Restore Load Order"
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:156
+#: src/gui/qt/restore_load_order_dialog.cpp:166
 msgid "Select a load order backup to restore."
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:157
+#: src/gui/qt/restore_load_order_dialog.cpp:167
 msgid "Current load order"
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:158
+#: src/gui/qt/restore_load_order_dialog.cpp:168
 msgid "Selected backup's load order"
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:161
+#: src/gui/qt/restore_load_order_dialog.cpp:171
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 #: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
 msgstr "Namn"
 
-#: src/gui/qt/restore_load_order_dialog.cpp:161
+#: src/gui/qt/restore_load_order_dialog.cpp:171
 msgid "Created At"
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:163
+#: src/gui/qt/restore_load_order_dialog.cpp:173
 msgid "Delete Backup"
 msgstr ""
 
-#: src/gui/qt/restore_load_order_dialog.cpp:204
+#: src/gui/qt/restore_load_order_dialog.cpp:176
+msgid "The current and selected backup load orders are identical."
+msgstr ""
+
+#: src/gui/qt/restore_load_order_dialog.cpp:224
 msgid "Failed to delete backup."
 msgstr ""
 
