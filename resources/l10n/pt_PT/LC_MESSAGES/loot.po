@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-23 08:32+0100\n"
+"POT-Creation-Date: 2025-05-24 21:29+0100\n"
 "PO-Revision-Date: 2025-04-09 06:03+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese (Portugal) <https://hosted.weblate.org/projects/"
@@ -379,7 +379,7 @@ msgid "Back Up Load &Order…"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:792
-msgid "Re&store Load Order…"
+msgid "Res&tore Load Order…"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
