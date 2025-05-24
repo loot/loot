@@ -789,7 +789,7 @@ void MainWindow::translateUi() {
   actionRedatePlugins->setText(translate("Redate &Plugins…"));
   /* translators: This string is an action in the Game menu. */
   actionBackUpLoadOrder->setText(translate("Back Up Load &Order…"));
-  actionRestoreLoadOrder->setText(translate("Re&store Load Order…"));
+  actionRestoreLoadOrder->setText(translate("Res&tore Load Order…"));
   /* translators: This string is an action in the Game menu. */
   actionFixAmbiguousLoadOrder->setText(translate("&Fix Ambiguous Load Order"));
   /* translators: This string is an action in the Game menu. */
