@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.26.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-05-23 08:32+0100\n"
-"PO-Revision-Date: 2025-05-24 21:29+0200\n"
+"PO-Revision-Date: 2025-05-24 21:43+0200\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/loot/loot/de/>\n"
 "Language: de\n"
@@ -861,7 +861,7 @@ msgstr "Ladereihenfolge wiederherstellen"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:166
 msgid "Select a load order backup to restore."
-msgstr "Wählen Sie ein Ladereihenfolge Backup zum Wiederherstellen"
+msgstr "Wählen Sie ein Ladereihenfolge Backup zum Wiederherstellen."
 
 #: src/gui/qt/restore_load_order_dialog.cpp:167
 msgid "Current load order"
@@ -1657,12 +1657,3 @@ msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] "Light Plugin"
 msgstr[1] "Light Plugins"
-
-#~ msgid "A folder is required."
-#~ msgstr "Ein Ordner wird benötigt."
-
-#~ msgid "This is not a valid Windows folder name."
-#~ msgstr "Dies ist kein gültiger Windows-Ordnername."
-
-#~ msgid "A game with this folder already exists."
-#~ msgstr "Ein Videospiel mit diesem Ordner existiert bereits."
