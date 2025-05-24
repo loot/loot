@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-05-23 08:32+0100\n"
-"PO-Revision-Date: 2025-05-23 07:53+0000\n"
+"PO-Revision-Date: 2025-05-24 11:05+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
-"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
-">\n"
+"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/>"
+"\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -848,7 +848,7 @@ msgstr "Изтрий резервното копие"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:176
 msgid "The current and selected backup load orders are identical."
-msgstr ""
+msgstr "Текущото и избраното резервно копие са идентични."
 
 #: src/gui/qt/restore_load_order_dialog.cpp:224
 msgid "Failed to delete backup."
