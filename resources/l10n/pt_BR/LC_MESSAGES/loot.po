@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-05-24 21:29+0100\n"
-"PO-Revision-Date: 2025-05-08 23:01+0000\n"
+"PO-Revision-Date: 2025-05-28 04:01+0000\n"
 "Last-Translator: Carlos Gabriel <carlos2324feitosa@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/loot/"
 "loot/pt_BR/>\n"
@@ -67,15 +67,15 @@ msgstr "{0} encontrou {1}."
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:68
 msgid "Back Up Load Order"
-msgstr ""
+msgstr "Fazer backup da ordem de carregamento"
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:70
 msgid "Manual Backup"
-msgstr ""
+msgstr "Fazer backup manualmente"
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:71
 msgid "Backup name:"
-msgstr ""
+msgstr "Nome do Backup:"
 
 #: src/gui/qt/filters_widget.cpp:283
 msgid "Show only overlapping plugins for"
@@ -139,15 +139,15 @@ msgstr "Mostrar apenas plugins vazios"
 
 #: src/gui/qt/filters_widget.cpp:301
 msgid "Show only plugins with load after metadata"
-msgstr ""
+msgstr "Mostrar apenas plugins com metadados de carregamento posterior"
 
 #: src/gui/qt/filters_widget.cpp:303
 msgid "Show only plugins with load after user metadata"
-msgstr ""
+msgstr "Mostrar apenas plugins com carregamento após os metadados do usuário"
 
 #: src/gui/qt/filters_widget.cpp:305
 msgid "Show only plugins without load order metadata"
-msgstr ""
+msgstr "Mostrar apenas plugins sem metadados da ordem de carregamento"
 
 #: src/gui/qt/filters_widget.cpp:307
 msgid "Show only warnings and errors"
@@ -373,11 +373,11 @@ msgstr "&Redatar Plugins…"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:791
 msgid "Back Up Load &Order…"
-msgstr ""
+msgstr "Fazendo backup da Ordem de Carregamento…"
 
 #: src/gui/qt/main_window.cpp:792
 msgid "Res&tore Load Order…"
-msgstr ""
+msgstr "Restaurando Ordem de Carregamento…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:794
@@ -694,11 +694,11 @@ msgstr "Identificação de plugins sobrepostos…"
 
 #: src/gui/qt/main_window.cpp:2563
 msgid "A backup of the current load order has been created."
-msgstr ""
+msgstr "Foi criado um backup da ordem de carregamento atual."
 
 #: src/gui/qt/main_window.cpp:2601
 msgid "Restored load order from backup."
-msgstr ""
+msgstr "Ordem de carregamento restaurada a partir do backup."
 
 #: src/gui/qt/main_window.cpp:2650
 msgid ""
@@ -823,19 +823,19 @@ msgstr "Nome do plugin"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:164
 msgid "Restore Load Order"
-msgstr ""
+msgstr "Restaurar Ordem de Carregamento"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:166
 msgid "Select a load order backup to restore."
-msgstr ""
+msgstr "Selecione um backup da ordem de carregamento para restaurar."
 
 #: src/gui/qt/restore_load_order_dialog.cpp:167
 msgid "Current load order"
-msgstr ""
+msgstr "Ordem de Carregamento Atual"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:168
 msgid "Selected backup's load order"
-msgstr ""
+msgstr "Ordem de carregamento do backup selecionado"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:171
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
@@ -846,19 +846,19 @@ msgstr "Nome"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:171
 msgid "Created At"
-msgstr ""
+msgstr "Criado em"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:173
 msgid "Delete Backup"
-msgstr ""
+msgstr "Apagar Backup"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:176
 msgid "The current and selected backup load orders are identical."
-msgstr ""
+msgstr "A ordem de carregamento atual e a do backup selecionado são idênticas."
 
 #: src/gui/qt/restore_load_order_dialog.cpp:224
 msgid "Failed to delete backup."
-msgstr ""
+msgstr "Falha ao apagar o backup."
 
 #: src/gui/qt/search_dialog.cpp:109
 msgid "Search Cards"
@@ -1349,7 +1349,7 @@ msgstr ""
 
 #: src/gui/state/game/helpers.cpp:238
 msgid "Automatic Load Order Backup"
-msgstr ""
+msgstr "Backup Automática da Ordem de Carregamento"
 
 #: src/gui/state/game/validation.cpp:82 src/gui/state/game/validation.cpp:113
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
