@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     env:
-      LIBLOOT_VERSION: 0.26.1
+      LIBLOOT_VERSION: 0.26.3
 
     steps:
       - uses: actions/checkout@v4

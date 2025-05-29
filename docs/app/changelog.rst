@@ -38,10 +38,6 @@ Fixed
 Changed
 -------
 
-- LOOT will now force master files to load before non-master files when sorting
-  an Oblivion Remastered load order (similar to most other supported games), as
-  although the game does not require master files to load before non-master
-  files, doing otherwise can cause issues in-game. Via libloot.
 - Qt's ``windows11`` style is now overridden with Qt's ``windowsvista`` style,
   as the former is relatively unpolished and looks particularly bad when using
   the default LOOT theme with a dark Windows colour scheme.
