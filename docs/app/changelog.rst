@@ -53,6 +53,7 @@ Changed
   relevant game's LOOT folder instead of directly within the folder itself.
 - The maximum number of automatic load order backups that are retained per game
   has been increased from 3 to 10.
+- Updated the German translation.
 - Updated the Brazilian Portuguese translation.
 - Updated the Bulgarian translation.
 - Updated the Russian translation.
