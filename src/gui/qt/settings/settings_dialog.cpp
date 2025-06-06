@@ -47,9 +47,14 @@ std::vector<std::string> getGameFolderNames(
     folders.push_back(otherFolder.toStdString());
   }
 
+  const auto gamesPath = lootDataPath / "games";
+  if (!std::filesystem::is_directory(gamesPath)) {
+    return folders;
+  }
+
   // Also find names from the filesystem, in case there are any folders for
   // games that have been deleted from LOOT's settings.
-  for (auto it = std::filesystem::directory_iterator(lootDataPath / "games");
+  for (auto it = std::filesystem::directory_iterator(gamesPath);
        it != std::filesystem::directory_iterator();
        ++it) {
     if (it->is_directory()) {
