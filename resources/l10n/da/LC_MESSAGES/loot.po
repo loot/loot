@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-24 21:29+0100\n"
+"POT-Creation-Date: 2025-06-06 22:14+0100\n"
 "PO-Revision-Date: 2024-05-22 19:59+0100\n"
 "Last-Translator: Kasper \"ZyPA\" R. Kristensen <rytterkasper972@gmail.com>\n"
 "Language-Team: Danish\n"
@@ -1159,15 +1159,15 @@ msgstr "Tilføj nyt spil"
 msgid "A name is required."
 msgstr "Et navn er krævet."
 
-#: src/gui/qt/settings/settings_dialog.cpp:160
+#: src/gui/qt/settings/settings_dialog.cpp:165
 msgid "Settings"
 msgstr "Indstillinger"
 
-#: src/gui/qt/settings/settings_dialog.cpp:162
+#: src/gui/qt/settings/settings_dialog.cpp:167
 msgid "General"
 msgstr "Generel"
 
-#: src/gui/qt/settings/settings_dialog.cpp:164
+#: src/gui/qt/settings/settings_dialog.cpp:169
 msgid "Add new game…"
 msgstr "Tilføj nyt spil…"
 

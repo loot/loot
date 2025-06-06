@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-24 21:29+0100\n"
+"POT-Creation-Date: 2025-06-06 22:14+0100\n"
 "PO-Revision-Date: 2024-09-26 05:16+0000\n"
 "Last-Translator: IllusiveMan196 <hamsterrv@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/"
@@ -1175,15 +1175,15 @@ msgstr "Додати нову гру"
 msgid "A name is required."
 msgstr "Потрібна назва."
 
-#: src/gui/qt/settings/settings_dialog.cpp:160
+#: src/gui/qt/settings/settings_dialog.cpp:165
 msgid "Settings"
 msgstr "Налаштування"
 
-#: src/gui/qt/settings/settings_dialog.cpp:162
+#: src/gui/qt/settings/settings_dialog.cpp:167
 msgid "General"
 msgstr "Загальні налаштування"
 
-#: src/gui/qt/settings/settings_dialog.cpp:164
+#: src/gui/qt/settings/settings_dialog.cpp:169
 msgid "Add new game…"
 msgstr "Додати нову гру…"
 

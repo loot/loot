@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-24 21:29+0100\n"
+"POT-Creation-Date: 2025-06-06 22:14+0100\n"
 "PO-Revision-Date: 2025-05-28 04:01+0000\n"
 "Last-Translator: Carlos Gabriel <carlos2324feitosa@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/loot/"
@@ -1173,15 +1173,15 @@ msgstr "Adicionar novo jogo"
 msgid "A name is required."
 msgstr "Um nome é necessário."
 
-#: src/gui/qt/settings/settings_dialog.cpp:160
+#: src/gui/qt/settings/settings_dialog.cpp:165
 msgid "Settings"
 msgstr "Configurações"
 
-#: src/gui/qt/settings/settings_dialog.cpp:162
+#: src/gui/qt/settings/settings_dialog.cpp:167
 msgid "General"
 msgstr "Geral"
 
-#: src/gui/qt/settings/settings_dialog.cpp:164
+#: src/gui/qt/settings/settings_dialog.cpp:169
 msgid "Add new game…"
 msgstr "Adicionar novo jogo…"
 

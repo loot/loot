@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-24 21:29+0100\n"
+"POT-Creation-Date: 2025-06-06 22:14+0100\n"
 "PO-Revision-Date: 2025-05-26 07:01+0000\n"
 "Last-Translator: xsSplater <xssplater@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
@@ -148,7 +148,8 @@ msgstr "Показывать только плагины с загрузкой �
 
 #: src/gui/qt/filters_widget.cpp:303
 msgid "Show only plugins with load after user metadata"
-msgstr "Показывать только плагины с загрузкой после пользовательских метаданных"
+msgstr ""
+"Показывать только плагины с загрузкой после пользовательских метаданных"
 
 #: src/gui/qt/filters_widget.cpp:305
 msgid "Show only plugins without load order metadata"
@@ -495,8 +496,8 @@ msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
-"Плагины можно перетащить с боковой панели в таблицы редактора метаданных «"
-"Загружать после», «Требования» и «Несовместимости»."
+"Плагины можно перетащить с боковой панели в таблицы редактора метаданных "
+"«Загружать после», «Требования» и «Несовместимости»."
 
 #: src/gui/qt/main_window.cpp:1252
 msgid ""
@@ -1172,15 +1173,15 @@ msgstr "Добавить новую игру"
 msgid "A name is required."
 msgstr "Необходимо указать название."
 
-#: src/gui/qt/settings/settings_dialog.cpp:160
+#: src/gui/qt/settings/settings_dialog.cpp:165
 msgid "Settings"
 msgstr "Настройки"
 
-#: src/gui/qt/settings/settings_dialog.cpp:162
+#: src/gui/qt/settings/settings_dialog.cpp:167
 msgid "General"
 msgstr "Общие"
 
-#: src/gui/qt/settings/settings_dialog.cpp:164
+#: src/gui/qt/settings/settings_dialog.cpp:169
 msgid "Add new game…"
 msgstr "Добавить новую игру…"
 
@@ -1206,7 +1207,8 @@ msgstr "Сортировка порядка загрузки…"
 
 #: src/gui/state/loot_state.cpp:170
 msgid "Error: Game-specific settings could not be initialised. {0}"
-msgstr "Ошибка: Не удалось инициализировать специфичные для игры настройки. {0}"
+msgstr ""
+"Ошибка: Не удалось инициализировать специфичные для игры настройки. {0}"
 
 #: src/gui/state/loot_state.cpp:209
 msgid "Error: Could not create LOOT data directory. {0}"

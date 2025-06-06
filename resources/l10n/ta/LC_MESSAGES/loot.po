@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-05-24 21:29+0100\n"
+"POT-Creation-Date: 2025-06-06 22:14+0100\n"
 "PO-Revision-Date: 2025-01-19 13:00+0000\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
@@ -1159,15 +1159,15 @@ msgstr "புதிய விளையாட்டைச் சேர்க்�
 msgid "A name is required."
 msgstr "ஒரு பெயர் தேவை."
 
-#: src/gui/qt/settings/settings_dialog.cpp:160
+#: src/gui/qt/settings/settings_dialog.cpp:165
 msgid "Settings"
 msgstr "அமைப்புகள்"
 
-#: src/gui/qt/settings/settings_dialog.cpp:162
+#: src/gui/qt/settings/settings_dialog.cpp:167
 msgid "General"
 msgstr "பொது"
 
-#: src/gui/qt/settings/settings_dialog.cpp:164
+#: src/gui/qt/settings/settings_dialog.cpp:169
 msgid "Add new game…"
 msgstr "புதிய விளையாட்டைச் சேர்க்கவும்…"
 
