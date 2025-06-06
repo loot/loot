@@ -4,7 +4,7 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.26.1 - Unreleased
+0.26.1 - 2025-06-07
 ===================
 
 Added
@@ -57,7 +57,7 @@ Changed
 - Updated the Bulgarian translation.
 - Updated the Russian translation.
 - Updated fmt to v11.2.0.
-- Updated libloot to v0.26.2.
+- Updated libloot to v0.26.3.
 - Updated minizip-ng to v4.0.10.
 - Updated spdlog to v1.15.3.
 

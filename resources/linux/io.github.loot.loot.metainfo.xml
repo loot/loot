@@ -71,6 +71,17 @@
   </screenshots>
 
   <releases>
+    <release version="0.26.1" date="2025-06-07">
+      <description>
+        <ul>
+          <li>Add a few new filters.</li>
+          <li>Support for creating named load order backups and restoring load order backups.</li>
+          <li>Improvements to the colour palettes used by the default and dark themes.</li>
+          <li>Other fixes and improvements.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.26.1/app/changelog.html#id1</url>
+    </release>
     <release version="0.26.0" date="2025-05-02">
       <description>
         <ul>
