@@ -54,7 +54,7 @@ modules:
     buildsystem: simple
     build-commands:
       - ./bootstrap.sh --prefix=/app
-      - ./b2 link=static runtime-link=shared variant=release cxxflags="-std=c++17 -fPIC" --with-locale install
+      - ./b2 link=static runtime-link=shared variant=debug cxxflags="-std=c++17 -fPIC" --with-locale install
     sources:
       - type: archive
         url: https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2
@@ -64,7 +64,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DTBB_TEST=OFF
     sources:
       - type: archive
@@ -75,7 +75,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=Debug
       - -DMZ_ZLIB=ON
       - -DMZ_BZIP2=OFF
       - -DMZ_LZMA=OFF
@@ -96,7 +96,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=Debug
     sources:
       - type: archive
         url: https://github.com/marzer/tomlplusplus/archive/v3.4.0.tar.gz
@@ -106,7 +106,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=Debug
       - -DFMT_DOC=OFF
       - -DFMT_TEST=OFF
       - -DCMAKE_POSITION_INDEPENDENT_CODE=ON
@@ -119,7 +119,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=Debug
       - -DSPDLOG_BUILD_EXAMPLE=OFF
       - -DSPDLOG_BUILD_PIC=ON
       - -DSPDLOG_FMT_EXTERNAL=ON
@@ -132,7 +132,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=Debug
     sources:
       - type: archive
         url: https://ogdf.uos.de/wp-content/uploads/2023/09/ogdf.v2023.09.zip
@@ -163,7 +163,7 @@ modules:
       env:
         CARGO_HOME: /run/build/libloot/cargo
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=Debug
       - -DLIBLOOT_BUILD_TESTS=OFF
       - -DLIBLOOT_INSTALL_DOCS=OFF
       - -DESPLUGIN_URL=/run/build/libloot/6.1.3.tar.gz
@@ -198,7 +198,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=Debug
       - -DLOOT_BUILD_TESTS=OFF
       - -DVALVE_FILE_VDF_URL=/run/build/LOOT/v1.1.0.tar.gz
     build-commands:
