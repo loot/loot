@@ -57,7 +57,6 @@
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 #include "loot/exception/error_categories.h"
-#include "loot/exception/file_access_error.h"
 #include "loot/exception/undefined_group_error.h"
 
 using std::lock_guard;
@@ -363,7 +362,7 @@ void InitLootGameFolder(const std::filesystem::path& lootDataPath,
       GetLOOTGamePath(lootDataPath, settings.FolderName());
   if (!fs::is_directory(lootGamePath)) {
     if (fs::exists(lootGamePath)) {
-      throw FileAccessError(
+      throw std::runtime_error(
           "Could not create LOOT folder for game, the path exists but is not "
           "a directory");
     }
@@ -1059,7 +1058,7 @@ std::filesystem::path Game::GetLOOTGamePath() const {
 
 std::filesystem::path Game::GetBackupsPath() const {
   return GetLOOTGamePath() / "backups";
- }
+}
 
 std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
   // Checking to see if a plugin is valid is relatively slow, almost entirely

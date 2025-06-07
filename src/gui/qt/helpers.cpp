@@ -25,7 +25,6 @@
 
 #include "gui/qt/helpers.h"
 
-#include <loot/exception/file_access_error.h>
 #include <fmt/base.h>
 #include <toml++/toml.h>
 
@@ -135,7 +134,7 @@ std::string calculateGitBlobHash(const std::filesystem::path& filePath) {
 
   auto result = file.open(QIODevice::ReadOnly);
   if (!result) {
-    throw FileAccessError(filePath.u8string() + " is not a regular file");
+    throw std::runtime_error(filePath.u8string() + " is not a regular file");
   }
 
   QByteArray fileContent = file.readAll();
@@ -156,10 +155,6 @@ FileRevision getFileRevision(const std::filesystem::path& filePath) {
   revision.id = calculateGitBlobHash(filePath);
 
   auto metadataPath = getFileMetadataPath(filePath);
-
-  if (!std::filesystem::is_regular_file(filePath)) {
-    throw FileAccessError(metadataPath.u8string() + " is not a regular file");
-  }
 
   // Don't use toml::parse_file() as it just uses a std stream,
   // which don't support UTF-8 paths on Windows.
@@ -196,8 +191,10 @@ FileRevisionSummary getFileRevisionSummary(
   auto logger = getLogger();
 
   try {
-    return FileRevisionSummary(getFileRevision(filePath));
-  } catch (FileAccessError&) {
+    if (std::filesystem::is_regular_file(filePath)) {
+      return FileRevisionSummary(getFileRevision(filePath));
+    }
+
     if (logger) {
       if (fileType == FileType::Masterlist) {
         logger->warn("No masterlist present at {}", filePath.u8string());
@@ -206,16 +203,17 @@ FileRevisionSummary getFileRevisionSummary(
                      filePath.u8string());
       }
     }
+
     auto text = fileType == FileType::Masterlist
                     ? translate("N/A: No masterlist present").str()
                     :
-                    /* translators: N/A is an abbreviation for Not Applicable. A
-                       masterlist is a database that contains information for
-                       various mods. */
+                    /* translators: N/A is an abbreviation for Not Applicable.
+                       A masterlist is a database that contains information
+                       for various mods. */
                     translate("N/A: No masterlist prelude present").str();
 
     return FileRevisionSummary(text, text);
-  } catch (std::runtime_error&) {
+  } catch (std::exception&) {
     if (logger) {
       logger->warn("Failed to read metadata for: {}",
                    filePath.parent_path().u8string());

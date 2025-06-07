@@ -1355,7 +1355,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   try {
     state.getSettings().storeLastGame(
         state.GetCurrentGame().GetSettings().FolderName());
-  } catch (const std::runtime_error& e) {
+  } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
       logger->error("Couldn't set last game: {}", e.what());

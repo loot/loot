@@ -27,7 +27,6 @@
 #define LOOT_TESTS_GUI_QT_HELPERS_TEST
 
 #include <gtest/gtest.h>
-#include <loot/exception/file_access_error.h>
 
 #include "gui/qt/helpers.h"
 #include "tests/gui/test_helpers.h"
@@ -99,7 +98,7 @@ TEST_F(CalculateGitBlobHashTest, shouldReplaceCRLFWithLFBeforeCalculatingHash) {
 }
 
 TEST_F(GetFileRevisionTest, shouldThrowIfGivenPathIsNotARegularFile) {
-  EXPECT_THROW(getFileRevision(rootPath_), FileAccessError);
+  EXPECT_THROW(getFileRevision(rootPath_), std::runtime_error);
 }
 
 TEST_F(GetFileRevisionTest,
