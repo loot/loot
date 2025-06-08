@@ -86,9 +86,6 @@ void apiLogCallback(LogLevel level, std::string_view message) {
     case LogLevel::error:
       logger->error(message);
       break;
-    case LogLevel::fatal:
-      logger->critical(message);
-      break;
     default:
       logger->trace(message);
       break;

@@ -239,7 +239,7 @@ TEST_P(GameTest,
   if (GetParam() == GameId::tes3) {
     EXPECT_NO_THROW(game.Init());
   } else {
-    EXPECT_THROW(game.Init(), std::system_error);
+    EXPECT_THROW(game.Init(), std::runtime_error);
   }
 }
 #else
