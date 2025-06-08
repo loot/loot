@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.26.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-06-06 22:14+0100\n"
+"POT-Creation-Date: 2025-06-07 19:40+0100\n"
 "PO-Revision-Date: 2025-05-26 07:01+0000\n"
 "Last-Translator: Ortham <weblate@ortham.net>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/loot/loot/de/>\n"
@@ -247,26 +247,26 @@ msgstr "Plugins insgesamt"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:95
+#: src/gui/qt/helpers.cpp:94
 msgid "(edited)"
 msgstr "(bearbeitet)"
 
-#: src/gui/qt/helpers.cpp:210
+#: src/gui/qt/helpers.cpp:208
 msgid "N/A: No masterlist present"
 msgstr "N.z.: Keine Masterliste präsent"
 
-#. translators: N/A is an abbreviation for Not Applicable. A
-#. masterlist is a database that contains information for
-#. various mods.
-#: src/gui/qt/helpers.cpp:215
+#. translators: N/A is an abbreviation for Not Applicable.
+#. A masterlist is a database that contains information
+#. for various mods.
+#: src/gui/qt/helpers.cpp:213
 msgid "N/A: No masterlist prelude present"
 msgstr "N.z.: Kein Masterliste-Prelude präsent"
 
-#: src/gui/qt/helpers.cpp:223
+#: src/gui/qt/helpers.cpp:221
 msgid "Unknown: No revision metadata found"
 msgstr "Unbekannt: Keine Revisions-Metadaten gefunden"
 
-#: src/gui/qt/helpers.cpp:359
+#: src/gui/qt/helpers.cpp:357
 msgid "Invalid regular expression: {0}"
 msgstr "Ungültiger Regulärer Ausdruck: {0}"
 
@@ -1216,32 +1216,32 @@ msgstr "Einlesen, zusammenführen und auswerten der Metadaten…"
 msgid "Sorting load order…"
 msgstr "Sortiere Ladereihenfolge…"
 
-#: src/gui/state/loot_state.cpp:170
+#: src/gui/state/loot_state.cpp:167
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr ""
 "Fehler: Videospiel-spezifische Einstellungen konnten nicht initialisiert "
 "werden. {0}"
 
-#: src/gui/state/loot_state.cpp:209
+#: src/gui/state/loot_state.cpp:206
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr "Fehler: Konnte LOOT-Datenordner nicht anlegen. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:223 src/gui/state/loot_state.cpp:293
+#: src/gui/state/loot_state.cpp:220 src/gui/state/loot_state.cpp:290
 msgid "Error: Settings parsing failed. {0}"
 msgstr "Fehler: Einlesen der Einstellungen fehlgeschlagen. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:232
+#: src/gui/state/loot_state.cpp:229
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 "Fehler: --auto-sort wurde übergeben aber kein --game Parameter wurde "
 "angegeben."
 
-#: src/gui/state/loot_state.cpp:274
+#: src/gui/state/loot_state.cpp:271
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
@@ -1251,7 +1251,7 @@ msgstr ""
 "nicht migriert werden! Sie können im LOOTDebugLog.txt (Sie können es über "
 "das Datei-Menü erreichen) für mehr Informationen nachsehen."
 
-#: src/gui/state/loot_state.cpp:284
+#: src/gui/state/loot_state.cpp:281
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
@@ -1261,25 +1261,25 @@ msgstr ""
 "migriert werden! Sie können im LOOTDebugLog.txt (Sie können es über das "
 "Datei-Menü erreichen) für mehr Informationen nachsehen."
 
-#: src/gui/state/loot_state.cpp:334
+#: src/gui/state/loot_state.cpp:331
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr "Fehler: Konnte LOOT-Prelude-Ordner nicht anlegen. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:351
+#: src/gui/state/loot_state.cpp:348
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 "Fehler: --game-path wurde übergeben aber kein --game Parameter wurde "
 "angegeben."
 
-#: src/gui/state/loot_state.cpp:364
+#: src/gui/state/loot_state.cpp:361
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr ""
 "Fehler: Überschreiben des Videospiel-Ordnerpfades fehlgeschlagen, das "
 "Videospiel {0} wurde nicht erkannt."
 
-#: src/gui/state/loot_state.cpp:398
+#: src/gui/state/loot_state.cpp:395
 msgid ""
 "No supported games were detected. Try running the launcher(s) for the "
 "supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
@@ -1289,7 +1289,7 @@ msgstr ""
 "für die unterstützten Spiele, die Sie installiert haben, zu starten (z.B. "
 "drücken Sie \"Play\" in Steam oder GOG Galaxy) und starten Sie dann LOOT neu."
 
-#: src/gui/state/loot_state.cpp:417
+#: src/gui/state/loot_state.cpp:414
 msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "
 "installed, try running its launcher then restarting LOOT."
@@ -1298,21 +1298,21 @@ msgstr ""
 "werden. Wenn es installiert ist, versuchen Sie den Launcher auszuführen und "
 "LOOT neu zu starten."
 
-#: src/gui/state/game/game.cpp:210
+#: src/gui/state/game/game.cpp:208
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "Zyklische Interaktion zwischen \"{0}\" und \"{1}\" festgestellt: {2}"
 
-#: src/gui/state/game/game.cpp:228
+#: src/gui/state/game/game.cpp:226
 msgid "The group \"{0}\" does not exist."
 msgstr "Die Gruppe \"{0}\" existiert nicht."
 
-#: src/gui/state/game/game.cpp:337
+#: src/gui/state/game/game.cpp:335
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""
 "LOOT hat festgestellt das \"{0}\" ungültig ist und wird es ab sofort "
 "ignorieren."
 
-#: src/gui/state/game/game.cpp:855
+#: src/gui/state/game/game.cpp:850
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1320,11 +1320,11 @@ msgstr ""
 "Die Sortierung ist fehlgeschlagen, da mindestens ein installiertes Plugin "
 "von mindestens einem nicht installierten Plugin abhängt."
 
-#: src/gui/state/game/game.cpp:886
+#: src/gui/state/game/game.cpp:879
 msgid "You have not sorted your load order this session."
 msgstr "Sie haben Ihre Ladereihenfolge in dieser Sitzung noch nicht sortiert."
 
-#: src/gui/state/game/game.cpp:958
+#: src/gui/state/game/game.cpp:951
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1359,7 +1359,7 @@ msgstr ""
 "Sie können auch nach Unterstützung in LOOTs Forumthema suchen, welche unter "
 "[LOOTs Webseite]({1}) verlinkt ist."
 
-#: src/gui/state/game/game.cpp:1146
+#: src/gui/state/game/game.cpp:1139
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

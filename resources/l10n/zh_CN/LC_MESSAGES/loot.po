@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-06-06 22:14+0100\n"
+"POT-Creation-Date: 2025-06-07 19:40+0100\n"
 "PO-Revision-Date: 2025-03-14 22:42+0000\n"
 "Last-Translator: core Dcy <j7ox_5f@163.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -235,26 +235,26 @@ msgstr "全部插件"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:95
+#: src/gui/qt/helpers.cpp:94
 msgid "(edited)"
 msgstr "(已被编辑)"
 
-#: src/gui/qt/helpers.cpp:210
+#: src/gui/qt/helpers.cpp:208
 msgid "N/A: No masterlist present"
 msgstr "N/A:不存在主列表"
 
-#. translators: N/A is an abbreviation for Not Applicable. A
-#. masterlist is a database that contains information for
-#. various mods.
-#: src/gui/qt/helpers.cpp:215
+#. translators: N/A is an abbreviation for Not Applicable.
+#. A masterlist is a database that contains information
+#. for various mods.
+#: src/gui/qt/helpers.cpp:213
 msgid "N/A: No masterlist prelude present"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:223
+#: src/gui/qt/helpers.cpp:221
 msgid "Unknown: No revision metadata found"
 msgstr "未知：未找到修订元数据"
 
-#: src/gui/qt/helpers.cpp:359
+#: src/gui/qt/helpers.cpp:357
 msgid "Invalid regular expression: {0}"
 msgstr "正则表达式无效：{0}"
 
@@ -1148,56 +1148,56 @@ msgstr ""
 msgid "Sorting load order…"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:170
+#: src/gui/state/loot_state.cpp:167
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:209
+#: src/gui/state/loot_state.cpp:206
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr ""
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:223 src/gui/state/loot_state.cpp:293
+#: src/gui/state/loot_state.cpp:220 src/gui/state/loot_state.cpp:290
 msgid "Error: Settings parsing failed. {0}"
 msgstr ""
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:232
+#: src/gui/state/loot_state.cpp:229
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:274
+#: src/gui/state/loot_state.cpp:271
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
 "File menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:284
+#: src/gui/state/loot_state.cpp:281
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
 "menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:334
+#: src/gui/state/loot_state.cpp:331
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr ""
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:351
+#: src/gui/state/loot_state.cpp:348
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:364
+#: src/gui/state/loot_state.cpp:361
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:398
+#: src/gui/state/loot_state.cpp:395
 msgid ""
 "No supported games were detected. Try running the launcher(s) for the "
 "supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
@@ -1206,7 +1206,7 @@ msgstr ""
 "未检测到支持的游戏。请尝试运行已安装的受支持游戏的启动器（如点击 Steam 或 "
 "GOG Galaxy 内的 游玩 按钮），然后重启 LOOT。"
 
-#: src/gui/state/loot_state.cpp:417
+#: src/gui/state/loot_state.cpp:414
 msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "
 "installed, try running its launcher then restarting LOOT."
@@ -1214,29 +1214,29 @@ msgstr ""
 "无法设置文件夹名称为 \"{0}\" 的初始游戏。如其已安装，请尝试运行其启动器，然后"
 "重启 LOOT。"
 
-#: src/gui/state/game/game.cpp:210
+#: src/gui/state/game/game.cpp:208
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:228
+#: src/gui/state/game/game.cpp:226
 msgid "The group \"{0}\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:337
+#: src/gui/state/game/game.cpp:335
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:855
+#: src/gui/state/game/game.cpp:850
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr "排序失败，原因为至少有一个已安装的插件其所依赖的插件未安装。"
 
-#: src/gui/state/game/game.cpp:886
+#: src/gui/state/game/game.cpp:879
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:958
+#: src/gui/state/game/game.cpp:951
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1265,7 +1265,7 @@ msgstr ""
 "\n"
 "您也可在 LOOT 论坛线程寻求帮助，相应链接在 [LOOT 网站]({1})。"
 
-#: src/gui/state/game/game.cpp:1146
+#: src/gui/state/game/game.cpp:1139
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
