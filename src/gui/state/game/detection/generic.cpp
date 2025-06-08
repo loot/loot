@@ -331,7 +331,7 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
   }
 #else
   if (gameId == GameId::openmw) {
-    FindOpenMWLinuxInstalls();
+    installs = FindOpenMWLinuxInstalls();
   }
 #endif
 
