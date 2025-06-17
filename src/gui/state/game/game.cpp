@@ -911,32 +911,23 @@ std::vector<SourcedMessage> Game::GetMessages(
 void Game::ClearMessages() { messages_.clear(); }
 
 void Game::LoadMetadata() {
-  auto logger = getLogger();
+  const auto logger = getLogger();
 
-  if (logger) {
-    logger->debug("Parsing metadata list(s).");
-  }
   try {
-    if (std::filesystem::exists(MasterlistPath())) {
+    const auto masterlistPath = MasterlistPath();
+    if (std::filesystem::exists(masterlistPath)) {
       if (std::filesystem::exists(preludePath_)) {
         if (logger) {
           logger->debug("Parsing the prelude and masterlist.");
         }
-        gameHandle_->GetDatabase().LoadMasterlistWithPrelude(MasterlistPath(),
+        gameHandle_->GetDatabase().LoadMasterlistWithPrelude(masterlistPath,
                                                              preludePath_);
       } else {
         if (logger) {
           logger->debug("Parsing the masterlist.");
         }
-        gameHandle_->GetDatabase().LoadMasterlist(MasterlistPath());
+        gameHandle_->GetDatabase().LoadMasterlist(masterlistPath);
       }
-    }
-
-    if (std::filesystem::exists(UserlistPath())) {
-      if (logger) {
-        logger->debug("Parsing the userlist.");
-      }
-      gameHandle_->GetDatabase().LoadUserlist(UserlistPath());
     }
   } catch (const std::exception& e) {
     if (logger) {
@@ -946,24 +937,52 @@ void Game::LoadMetadata() {
     AppendMessage(SourcedMessage{
         MessageType::error,
         MessageSource::caughtException,
+        fmt::format(boost::locale::translate(
+                        "An error occurred while parsing the metadata list(s): "
+                        "{0}.\n\nTry updating your masterlist to resolve the "
+                        "error.")
+                        .str(),
+                    EscapeMarkdownASCIIPunctuation(e.what()),
+                    "https://loot.github.io/")});
+  }
+
+  try {
+    const auto userlistPath = UserlistPath();
+    if (std::filesystem::exists(userlistPath)) {
+      if (logger) {
+        logger->debug("Parsing the userlist.");
+      }
+      gameHandle_->GetDatabase().LoadUserlist(userlistPath);
+    }
+  } catch (const std::exception& e) {
+    if (logger) {
+      logger->error("An error occurred while parsing the userlist: {}",
+                    e.what());
+    }
+
+    const auto docUrl = fmt::format(
+        "https://loot-api.readthedocs.io/en/{}.{}.{}/metadata/"
+        "introduction.html",
+        LIBLOOT_VERSION_MAJOR,
+        LIBLOOT_VERSION_MINOR,
+        LIBLOOT_VERSION_PATCH);
+
+    AppendMessage(SourcedMessage{
+        MessageType::error,
+        MessageSource::caughtException,
         fmt::format(
             boost::locale::translate(
-                "An error occurred while parsing the metadata list(s): "
-                "{0}.\n\nTry updating your masterlist to resolve the error. If "
-                "the error is with your user metadata, this probably happened "
-                "because an update to LOOT changed its metadata syntax "
-                "support. Your user metadata will have to be updated "
-                "manually.\n\nTo do so, use 'Open LOOT Data Folder' in LOOT's "
-                "File menu to open its data folder, then open your "
-                "'userlist.yaml' file in the relevant game folder. You can "
-                "then edit the metadata it contains with reference to the "
-                "documentation, which is accessible through LOOT's main "
-                "menu.\n\nYou can also seek support on LOOT's forum thread, "
-                "which is linked to on [LOOT's "
-                "website]({1}).")
+                "An error occurred while parsing your userlist: {0}.\n\nThis "
+                "probably happened because an update to LOOT changed its "
+                "metadata syntax support. Your user metadata will have to be "
+                "updated manually.\n\nTo do so, use 'Open LOOT Data Folder' in "
+                "LOOT's File menu, then open your 'userlist.yaml' file in the "
+                "relevant game folder. You can then edit the metadata it "
+                "contains, with the help of the [metadata syntax "
+                "documentation]({1}).")
                 .str(),
             EscapeMarkdownASCIIPunctuation(e.what()),
-            "https://loot.github.io/")});
+            docUrl)});
   }
 }
 
