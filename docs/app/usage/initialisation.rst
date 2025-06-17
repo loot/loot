@@ -81,8 +81,15 @@ If running LOOT as a Flatpak application, it only has permission to access the f
 - ``$XDG_CONFIG_HOME/heroic``
 - ``~/.var/app/com.heroicgameslauncher.hgl/config/heroic``
 - ``~/Games/Heroic``
+- ``/etc``
+- ``/usr``
+- ``/var/lib/flatpak/app/org.openmw.OpenMW``
+- ``~/.local/share/flatpak/app/org.openmw.OpenMW``
+- ``~/.var/app/org.openmw.OpenMW``
+- ``$XDG_CONFIG_HOME/openmw``
+- ``$XDG_DATA_HOME/openmw``
 
-Those paths grant access to the default Steam and Heroic Games Launcher directories. If you have installed games elsewhere, you will need to grant LOOT access to the relevant paths. This can be done using an application such as `Flatseal`_ or on the command line using ``flatpak --user override --filesystem=<path> io.github.loot.loot``.
+Those paths grant access to the default Steam, Heroic Games Launcher and OpenMW directories. If you have installed games elsewhere, you will need to grant LOOT access to the relevant paths. This can be done using an application such as `Flatseal`_ or on the command line using ``flatpak --user override --filesystem=<path> io.github.loot.loot``.
 
 .. _Heroic Games Launcher: https://heroicgameslauncher.com/
 .. _Flatseal: https://flathub.org/apps/com.github.tchx84.Flatseal

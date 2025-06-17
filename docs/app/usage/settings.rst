@@ -31,6 +31,12 @@ Check for LOOT updates on startup
 Enable Debug Logging
   If enabled, writes debug output to ``%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt``. Debug logging can have a noticeable impact on performance, so it is off by default.
 
+Display dialog when sorting makes no changes
+  If enabled, when LOOT sorts the load order and makes no changes, it will display a dialog message box saying so. If disabled, LOOT will instead display the message in the status bar.
+
+Warn if the game's paths are in a case-sensitive filesystem
+  If enabled and LOOT detects that the current game is installed in a case-sensitive filesystem (as is usually the case on Linux), it will display a warning message saying so in the General Information card.
+
 Masterlist prelude source
   The URL of a masterlist prelude file that LOOT uses to update its local copy of the masterlist prelude.
 
@@ -61,7 +67,7 @@ Base Game
   - OpenMW
 
 LOOT Folder
-  The sub-folder which LOOT uses to store the game's files in. Each game must be given a unique sub-folder.
+  The sub-folder which LOOT uses to store the game's files in. Each game is given a unique sub-folder.
 
 Main Master Plugin
   The game's main master plugin. This is checked for when detecting if the game is installed.

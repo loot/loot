@@ -13,9 +13,7 @@ The editor panel is accessed by selecting a plugin in the sidebar and then click
 
 The editor's header displays the name of the plugin being edited, "Save" and "Cancel" buttons, and a row of tabs.
 
-The Group tab's page contains the "Group" dropdown, which sets the group that the plugin belongs to, and is set to the "default" group by default.
-
-  Plugin groups are used to concisely load groups of plugins after others. The dropdown lists all defined groups: to define new groups or edit existing groups, use the Groups Editor.
+The Group tab's page contains the "Group" dropdown, which sets the group that the plugin belongs to, and is set to the "default" group by default. Plugin groups are used to concisely load groups of plugins after others. The dropdown lists all defined groups: to define new groups or edit existing groups, use the Groups Editor.
 
 The other tab pages contain metadata tables, which are detailed below. New rows can be added, and existing user-added rows can be removed, though rows containing metadata from the masterlist or from plugins cannot. Such non-user metadata rows are greyed out to indicate that they are not editable. The Load After, Requirements and Incompatibilities tables can have rows added by dragging and dropping plugins from the sidebar into the table area.
 
@@ -23,7 +21,8 @@ Load After
   This is a list of plugins which, if present, the current plugin must load after, but which are not required. This metadata can be used for resolving specific compatibility issues. Each entry has two fields:
 
   - The filename is the path, relative to the game's plugins folder (usually ``Data``), of the file to be checked for. This field is required. It gives the filenames of installed plugins as autocomplete suggestions.
-  - The condition is the optional condition string that is used to determine if the file should be checked for. If left blank, the file will always be checked for. Condition strings are a relatively advanced part of LOOT's functionality, and their syntax is covered in the Metadata Syntax documentation.
+  - The condition is an optional condition string that is used to determine if the file should be checked for. If left blank, the file will always be checked for. Condition strings are a relatively advanced part of LOOT's functionality, and their syntax is covered in the `Metadata Syntax documentation`_.
+  - The constraint is an optional condition string that must evaluate to true for the file's existence to be recognised.
 
 Requirements
   This is a list of files that are required by the current plugin for it to function correctly. The current plugin will be loaded after any plugins listed. LOOT will also display an error message if any of the listed files are missing. Any file, not just plugins, can be listed here. Each entry has the same fields as for the load after table and two additional fields:
@@ -83,3 +82,5 @@ Locations
   - The Name you wish to give the URL. If given, LOOT uses this as the text displayed for the hyperlink on the plugin's card.
 
 .. _Wrye Bash's readme: https://wrye-bash.github.io/docs/Wrye%20Bash%20Advanced%20Readme.html#patch-tags
+
+.. _Metadata Syntax documentation: https://loot-api.readthedocs.io/en/latest/metadata/introduction.html

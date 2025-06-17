@@ -76,9 +76,9 @@ The groups editor enforces a few rules:
 - It's not possible to remove 'load after' entries from a group if they were
   defined in the masterlist.
 
-Another rule that the groups editor cannot enforce is that **group metadata must
-not introduce cycles**. A simple example of cyclic groups is where group ``B``
-loads after group ``A``, and group ``A`` loads after group ``B``.
+It's possible to define group relationships and memberships that would produce
+a cyclic load order. A simple example is where group ``B`` loads after group
+``A``, and group ``A`` loads after group ``B``.
 
 A more complex example involving other types of metadata is where
 
@@ -89,63 +89,10 @@ A more complex example involving other types of metadata is where
 - The ``late`` group loads after the ``mid`` group, which loads after the
   ``early`` group.
 
-This will cause a cyclic interaction error when sorting, because the groups say
-that the load order should be
+A load order must be linear, so where group metadata is involved in a cycle,
+LOOT will break the cycle by ignoring a plugin's group membership: in the
+example above, ``C.esp``'s group membership would be ignored.
 
-1. ``A.esp``
-2. ``B.esp``
-3. ``C.esp``
-
-but ``A.esp`` must load after ``C.esp`` to satisfy its dependency.
-
-Cycle Avoidance
-===============
-
-Groups must not introduce cycles, but in practice this can be quite hard to
-ensure. LOOT helps by avoiding cycles that have an "obvious" solution.
-
-- If group membership contradicts where a plugin's masters, master flag, load
-  after or requirement metadata say that plugin should load relative to another
-  plugin, the plugins' groups' relationship will not be enforced. For example,
-  if:
-
-    - ``dependent.esp`` belongs to group ``early``
-    - ``master.esp`` belongs to group ``late``
-    - ``master.esp`` is a master of ``dependent.esp``
-    - The ``late`` group loads after the ``early`` group.
-
-  ``dependent.esp`` must load after ``master.esp`` due to the former being a
-  master of the latter, but their groups suggest that ``master.esp`` must load
-  after ``dependent.esp``, so the group metadata is ignored for that pair of
-  plugins.
-
-- In addition, if one of a pair of plugins with contradictory groups is the
-  ``default`` group, that plugin will also have its group metadata ignored for
-  all plugins in all groups that load between ``default`` and the other plugin's
-  group.
-
-  For example, if:
-
-    - ``A.esp`` is in the ``default`` group
-    - ``B.esp`` is in the ``mid`` group
-    - ``C.esp`` is in the ``late`` group
-    - ``A.esp`` has ``C.esp`` as a master
-    - The ``late`` group loads after the ``mid`` group, which loads after the
-      ``default`` group.
-
-  This will not cause a cycle, as:
-
-    - ``A.esp``'s group is ignored for ``C.esp`` as their groups contradict
-      ``C.esp`` being a master of ``A.esp``
-    - ``A.esp``'s group is ignored for ``B.esp`` as ``B.esp`` is in the ``mid``
-      group, which loads between ``default`` and ``late``.
-
-  The sorted load order is therefore:
-
-    1. ``B.esp``
-    2. ``C.esp``
-    3. ``A.esp``
-
-  This is very similar to the example given in the previous section which *did*
-  cause a cycle: the only difference is that the ``early`` group is now
-  ``default``.
+While not a strict rule, it's best to avoid defining cyclic group relationships
+or assigning plugins to groups that would introduce cycles, to avoid surprising
+sorting behaviour due to LOOT breaking those cycles.

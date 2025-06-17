@@ -20,11 +20,12 @@ set of rules on a small load order looks like this:
 It may seem like there are a lot of edges in that image, but a real load order
 graph can contain thousands of vertices and over a hundred thousand edges.
 
-To improve performance, LOOT actually sorts using two graphs: one for
-master-flagged plugins and one for the other plugins, and then appends the
-latter's sorted order to the former's sorted order to give the complete sorted
-load order. The two graphs are sorted the same way, so the information below
-applies to both, and the result is the same as if a single graph was used.
+To improve performance, LOOT actually sorts using three graphs: one for
+master-flagged plugins, one for blueprint masters, and one for the other
+plugins, and then appends the latter's sorted order to the former's sorted order
+to give the complete sorted load order. The two graphs are sorted the same way,
+so the information below applies to both, and the result is the same as if a
+single graph was used.
 
 Building The Plugin Graph
 =========================
@@ -80,19 +81,14 @@ A and B.
 However, group rules are 'soft' rules, so can be ignored to avoid cyclic
 interactions. A cyclic interaction occurs when following the rules results in a
 load order that loops back on itself, e.g. the two rules "B loads after A" and
-"A loads after B" are cyclic. If one of those rules is a hard rule and the other
-is a group rule, LOOT will ignore the group rule to avoid the cycle. There are
-also a few other cases in which LOOT can avoid a cycle involving group rules,
-which are detailed in :ref:`groups_editor`.
+"A loads after B" are cyclic. If applying a group rule would cause a cycle, LOOT
+ignores it.
 
-It's not always possible for LOOT to choose which plugin's group metadata to
-ignore, and it's often impractical to know all of the hard and group rules that
-a plugin may be involved in, so plugin grouping is a relatively common source of
-cyclic interaction errors.
-
-Anyway, after applying all the hard rules, LOOT applies all the group rules it
-can for each plugin in lexicographical order, avoiding cycles by ignoring those
-groups that it needs to.
+LOOT applies group rules by traversing the groups graph, starting with the
+earliest-loading group and other groups that don't load after any others, and
+for each group it tries to add edges going from all the plugins in all earlier
+groups to the plugins in the current group. It does this for all groups except
+the default group, and then does it for the default group.
 
 In the example graph image above, the edge from ``Cutting Room Floor.esp`` to
 ``Bashed Patch, 0.esp`` is due to a group rule, because ``Bashed Patch, 0.esp``
