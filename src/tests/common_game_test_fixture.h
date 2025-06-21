@@ -127,9 +127,9 @@ protected:
   void TearDown() override {
     // Grant write permissions to everything in rootTestPath
     // in case the test made anything read only.
-    for (const auto& path :
+    for (const auto& entry :
          std::filesystem::recursive_directory_iterator(rootTestPath)) {
-      std::filesystem::permissions(path,
+      std::filesystem::permissions(entry,
                                    std::filesystem::perms::owner_write,
                                    std::filesystem::perm_options::add);
     }
@@ -164,17 +164,17 @@ protected:
     std::vector<std::string> actual;
     if (isLoadOrderTimestampBased(gameId_)) {
       std::map<std::filesystem::file_time_type, std::string> loadOrder;
-      for (std::filesystem::directory_iterator it(dataPath);
-           it != std::filesystem::directory_iterator();
-           ++it) {
-        if (std::filesystem::is_regular_file(it->status())) {
-          std::string filename = it->path().filename().u8string();
-          if (boost::ends_with(filename, ".ghost"))
-            filename = it->path().stem().u8string();
+      for (const auto& entry : std::filesystem::directory_iterator(dataPath)) {
+        if (entry.is_regular_file()) {
+          std::string filename = entry.path().filename().u8string();
+          if (boost::ends_with(filename, ".ghost")) {
+            filename = entry.path().stem().u8string();
+          }
           if (boost::ends_with(filename, ".esp") ||
-              boost::ends_with(filename, ".esm"))
-            loadOrder.emplace(std::filesystem::last_write_time(it->path()),
+              boost::ends_with(filename, ".esm")) {
+            loadOrder.emplace(std::filesystem::last_write_time(entry.path()),
                               filename);
+          }
         }
       }
       for (const auto& plugin : loadOrder) actual.push_back(plugin.second);

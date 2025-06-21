@@ -170,10 +170,9 @@ std::vector<LoadOrderBackup> FindLoadOrderBackups(
     return backups;
   }
 
-  for (auto it = std::filesystem::directory_iterator(backupDirectory);
-       it != std::filesystem::directory_iterator();
-       ++it) {
-    const auto loadOrder = ReadLoadOrder(it->path(), true);
+  for (const auto& entry :
+       std::filesystem::directory_iterator(backupDirectory)) {
+    const auto loadOrder = ReadLoadOrder(entry.path(), true);
 
     if (loadOrder.has_value()) {
       backups.push_back(loadOrder.value());
@@ -211,13 +210,12 @@ void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
     backupFiles.emplace(INT64_MIN + 2, oldBak0);
   }
 
-  for (auto it = std::filesystem::directory_iterator(backupDirectory);
-       it != std::filesystem::directory_iterator();
-       ++it) {
-    const auto loadOrder = ReadLoadOrder(it->path(), false);
+  for (const auto& entry :
+       std::filesystem::directory_iterator(backupDirectory)) {
+    const auto loadOrder = ReadLoadOrder(entry.path(), false);
 
     if (loadOrder.has_value() && loadOrder.value().autoDelete) {
-      backupFiles.emplace(loadOrder.value().unixTimestampMs, it->path());
+      backupFiles.emplace(loadOrder.value().unixTimestampMs, entry.path());
     }
   }
 

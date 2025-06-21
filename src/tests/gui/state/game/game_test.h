@@ -142,13 +142,11 @@ protected:
 
     std::vector<std::filesystem::path> paths;
 
-    for (auto it = std::filesystem::directory_iterator(parentPath);
-         it != std::filesystem::directory_iterator();
-         ++it) {
-      const auto filename = it->path().filename().u8string();
+    for (const auto& entry : std::filesystem::directory_iterator(parentPath)) {
+      const auto filename = entry.path().filename().u8string();
       if (boost::starts_with(filename, "loadorder.") &&
           boost::ends_with(filename, ".json")) {
-        paths.push_back(it->path());
+        paths.push_back(entry.path());
       }
     }
 

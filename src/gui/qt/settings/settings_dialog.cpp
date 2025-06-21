@@ -54,12 +54,10 @@ std::vector<std::string> getGameFolderNames(
 
   // Also find names from the filesystem, in case there are any folders for
   // games that have been deleted from LOOT's settings.
-  for (auto it = std::filesystem::directory_iterator(gamesPath);
-       it != std::filesystem::directory_iterator();
-       ++it) {
-    if (it->is_directory()) {
+  for (const auto& entry : std::filesystem::directory_iterator(gamesPath)) {
+    if (entry.is_directory()) {
       // It doesn't matter if this introduces duplicates.
-      folders.push_back(it->path().filename().u8string());
+      folders.push_back(entry.path().filename().u8string());
     }
   }
 

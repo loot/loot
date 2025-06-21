@@ -100,14 +100,12 @@ std::vector<std::string> findThemes(const std::filesystem::path& themesPath) {
   }
 
   const auto logger = getLogger();
-  for (std::filesystem::directory_iterator it(themesPath);
-       it != std::filesystem::directory_iterator();
-       ++it) {
-    if (!std::filesystem::is_regular_file(it->status())) {
+  for (const auto& entry : std::filesystem::directory_iterator(themesPath)) {
+    if (!entry.is_regular_file()) {
       continue;
     }
 
-    const auto filename = it->path().filename().u8string();
+    const auto filename = entry.path().filename().u8string();
     if (!boost::iends_with(filename, QSS_SUFFIX)) {
       continue;
     }

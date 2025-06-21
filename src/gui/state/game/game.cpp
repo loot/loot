@@ -264,10 +264,9 @@ void FindFiles(const std::filesystem::path& directory,
     logger->trace("Scanning for files in {}", directory.u8string());
   }
 
-  for (fs::directory_iterator it(directory); it != fs::directory_iterator();
-       ++it) {
-    if (fs::is_regular_file(it->status())) {
-      processPath(it->path());
+  for (const auto& entry : fs::directory_iterator(directory)) {
+    if (entry.is_regular_file()) {
+      processPath(entry.path());
     }
   }
 }
