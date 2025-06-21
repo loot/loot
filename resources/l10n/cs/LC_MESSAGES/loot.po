@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-06-17 18:46+0100\n"
+"POT-Creation-Date: 2025-06-21 20:44+0100\n"
 "PO-Revision-Date: 2024-05-22 19:58+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1140,15 +1140,15 @@ msgstr ""
 msgid "A name is required."
 msgstr "Název je nutný."
 
-#: src/gui/qt/settings/settings_dialog.cpp:165
+#: src/gui/qt/settings/settings_dialog.cpp:163
 msgid "Settings"
 msgstr "Nastavení"
 
-#: src/gui/qt/settings/settings_dialog.cpp:167
+#: src/gui/qt/settings/settings_dialog.cpp:165
 msgid "General"
 msgstr ""
 
-#: src/gui/qt/settings/settings_dialog.cpp:169
+#: src/gui/qt/settings/settings_dialog.cpp:167
 msgid "Add new game…"
 msgstr ""
 
@@ -1283,7 +1283,7 @@ msgid ""
 msgstr ""
 "Nelze načíst aktuální zatížení, zobrazené informace mohou být nesprávné."
 
-#: src/gui/state/game/helpers.cpp:238
+#: src/gui/state/game/helpers.cpp:236
 msgid "Automatic Load Order Backup"
 msgstr ""
 

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-06-17 18:46+0100\n"
+"POT-Creation-Date: 2025-06-21 20:44+0100\n"
 "PO-Revision-Date: 2024-05-22 20:02+0100\n"
 "Last-Translator: SteamB23 <steamb23@gmail.com>\n"
 "Language-Team: SteamB23 <steamb23@gmail.com>\n"
@@ -1137,15 +1137,15 @@ msgstr "새 게임 추가"
 msgid "A name is required."
 msgstr "이름이 필요합니다."
 
-#: src/gui/qt/settings/settings_dialog.cpp:165
+#: src/gui/qt/settings/settings_dialog.cpp:163
 msgid "Settings"
 msgstr "설정"
 
-#: src/gui/qt/settings/settings_dialog.cpp:167
+#: src/gui/qt/settings/settings_dialog.cpp:165
 msgid "General"
 msgstr "일반"
 
-#: src/gui/qt/settings/settings_dialog.cpp:169
+#: src/gui/qt/settings/settings_dialog.cpp:167
 msgid "Add new game…"
 msgstr ""
 
@@ -1282,7 +1282,7 @@ msgstr ""
 "현재 로드 순서를 로드하지 못했습니다. 표시된 정보가 올바르지 않을 수 있습니"
 "다."
 
-#: src/gui/state/game/helpers.cpp:238
+#: src/gui/state/game/helpers.cpp:236
 msgid "Automatic Load Order Backup"
 msgstr ""
 
