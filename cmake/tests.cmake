@@ -25,37 +25,39 @@ FetchContent_MakeAvailable(GTest testing-plugins)
 ##############################
 
 set(LOOT_SRC_TESTS_GUI_CPP_FILES
-"${CMAKE_SOURCE_DIR}/src/tests/gui/main.cpp"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.cpp")
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/main.cpp"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.cpp")
 
 set(LOOT_SRC_TESTS_GUI_H_FILES
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/change_count_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/common_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/detail_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/epic_games_store_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/generic_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/gog_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/heroic_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/microsoft_store_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/steam_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/test_registry.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_settings_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/games_manager_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/group_node_positions_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/helpers_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/qt/helpers_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/tasks_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/backup_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/helpers_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/sourced_message_test.h"
-"${CMAKE_SOURCE_DIR}/src/tests/gui/test_helpers.h")
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/change_count_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/common_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/detail_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/epic_games_store_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/generic_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/gog_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/heroic_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/microsoft_store_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/steam_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection/test_registry.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_settings_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/games_manager_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/group_node_positions_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/helpers_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/helpers_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/tasks_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/backup_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/helpers_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/sourced_message_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/test_helpers.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/common_game_test_fixture.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/printers.h")
 
-source_group(TREE "${CMAKE_SOURCE_DIR}/src/tests/gui"
+source_group(TREE "${CMAKE_SOURCE_DIR}/src/tests"
     PREFIX "Header Files"
     FILES ${LOOT_SRC_TESTS_GUI_H_FILES})
 
@@ -192,8 +194,7 @@ endif()
 if(LOOT_RUN_CLANG_TIDY)
     # Skip some checks for tests because they're not worth the noise (e.g. GTest
     # happens to use goto, lots of tests use magic numbers as expected values).
-    set(CLANG_TIDY_TEST_CHECKS
-        ${CLANG_TIDY_COMMON_CHECKS})
+    set(CLANG_TIDY_TEST_CHECKS ${CLANG_TIDY_COMMON_CHECKS})
 
     list(JOIN CLANG_TIDY_TEST_CHECKS "," CLANG_TIDY_TEST_CHECKS_JOINED)
 
