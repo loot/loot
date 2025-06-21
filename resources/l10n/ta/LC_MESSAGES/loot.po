@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-06-17 18:46+0100\n"
+"POT-Creation-Date: 2025-06-21 20:44+0100\n"
 "PO-Revision-Date: 2025-01-19 13:00+0000\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
@@ -1159,15 +1159,15 @@ msgstr "புதிய விளையாட்டைச் சேர்க்�
 msgid "A name is required."
 msgstr "ஒரு பெயர் தேவை."
 
-#: src/gui/qt/settings/settings_dialog.cpp:165
+#: src/gui/qt/settings/settings_dialog.cpp:163
 msgid "Settings"
 msgstr "அமைப்புகள்"
 
-#: src/gui/qt/settings/settings_dialog.cpp:167
+#: src/gui/qt/settings/settings_dialog.cpp:165
 msgid "General"
 msgstr "பொது"
 
-#: src/gui/qt/settings/settings_dialog.cpp:169
+#: src/gui/qt/settings/settings_dialog.cpp:167
 msgid "Add new game…"
 msgstr "புதிய விளையாட்டைச் சேர்க்கவும்…"
 
@@ -1313,7 +1313,7 @@ msgid ""
 "incorrect."
 msgstr "தற்போதைய சுமை வரிசையை ஏற்றுவதில் தோல்வி, காட்டப்படும் தகவல்கள் தவறாக இருக்கலாம்."
 
-#: src/gui/state/game/helpers.cpp:238
+#: src/gui/state/game/helpers.cpp:236
 msgid "Automatic Load Order Backup"
 msgstr ""
 
