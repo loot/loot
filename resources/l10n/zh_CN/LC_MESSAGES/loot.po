@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-06-21 20:44+0100\n"
-"PO-Revision-Date: 2025-03-14 22:42+0000\n"
-"Last-Translator: core Dcy <j7ox_5f@163.com>\n"
+"PO-Revision-Date: 2025-06-25 02:01+0000\n"
+"Last-Translator: YanJun Sun <yanjun.sun@mail.ru>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/loot/loot/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.11-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: src/gui/plugin_item.cpp:45
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -63,15 +63,15 @@ msgstr "{0}发现{1}."
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:68
 msgid "Back Up Load Order"
-msgstr ""
+msgstr "备份加载顺序"
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:70
 msgid "Manual Backup"
-msgstr ""
+msgstr "手动备份"
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:71
 msgid "Backup name:"
-msgstr ""
+msgstr "备份名称："
 
 #: src/gui/qt/filters_widget.cpp:283
 msgid "Show only overlapping plugins for"
@@ -99,7 +99,7 @@ msgstr "隐藏 CRCs"
 
 #: src/gui/qt/filters_widget.cpp:290
 msgid "Hide Bash Tags"
-msgstr ""
+msgstr "隐藏 Bash 标签"
 
 #: src/gui/qt/filters_widget.cpp:291
 msgid "Hide Sources"
@@ -143,7 +143,7 @@ msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:305
 msgid "Show only plugins without load order metadata"
-msgstr ""
+msgstr "仅显示无加载顺序元数据的插件"
 
 #: src/gui/qt/filters_widget.cpp:307
 msgid "Show only warnings and errors"
@@ -179,7 +179,7 @@ msgstr "激活小型插件"
 
 #: src/gui/qt/general_info_card.cpp:147 src/gui/qt/general_info_card.cpp:220
 msgid "Active Light Plugins"
-msgstr ""
+msgstr "激活轻型插件"
 
 #: src/gui/qt/general_info_card.cpp:206
 msgid "General Information"
@@ -248,7 +248,7 @@ msgstr "N/A:不存在主列表"
 #. for various mods.
 #: src/gui/qt/helpers.cpp:213
 msgid "N/A: No masterlist prelude present"
-msgstr ""
+msgstr "不可用：Masterlist Prelude 不存在"
 
 #: src/gui/qt/helpers.cpp:221
 msgid "Unknown: No revision metadata found"
@@ -273,7 +273,7 @@ msgstr "LOOT 无法确切设置加载顺序。"
 
 #: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1532
 msgid "Ambiguous load order detected"
-msgstr ""
+msgstr "检测到模糊的加载顺序"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:752
@@ -350,7 +350,7 @@ msgstr "复制加载顺序"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:785
 msgid "&Copy Content"
-msgstr ""
+msgstr "复制内容(&C)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:787
@@ -360,16 +360,16 @@ msgstr "刷新内容"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:789
 msgid "Redate &Plugins…"
-msgstr ""
+msgstr "重新设置插件日期(&P)…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:791
 msgid "Back Up Load &Order…"
-msgstr ""
+msgstr "备份加载顺序(&O)…"
 
 #: src/gui/qt/main_window.cpp:792
 msgid "Res&tore Load Order…"
-msgstr ""
+msgstr "恢复加载顺序(&T)…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:794
@@ -400,28 +400,28 @@ msgstr ""
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:806
 msgid "Copy &Metadata"
-msgstr ""
+msgstr "复制元数据(&M)"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:808
 msgid "&Edit Metadata…"
-msgstr ""
+msgstr "编辑元数据(&E)…"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:810
 msgid "Clear &User Metadata…"
-msgstr ""
+msgstr "清除用户元数据(&U)…"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:814
 msgid "&Help"
-msgstr ""
+msgstr "帮助(&H)"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:816
 msgid "&View Documentation"
-msgstr ""
+msgstr "查看文档(&V)"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:818
@@ -431,43 +431,43 @@ msgstr "打开常见问题解答(&O)"
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:820
 msgid "&Join Discord Server"
-msgstr ""
+msgstr "加入 Discord 服务器(&J)"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:822
 msgid "&About"
-msgstr ""
+msgstr "关于(&A)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:827
 msgid "P&lugins"
-msgstr ""
+msgstr "插件(&L)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:830
 msgid "F&ilters"
-msgstr ""
+msgstr "过滤器(&I)"
 
 #: src/gui/qt/main_window.cpp:1132 src/gui/qt/main_window.cpp:1586
 #: src/gui/qt/main_window.cpp:2235
 msgid "Updating and parsing masterlist…"
-msgstr ""
+msgstr "正在更新和分析主列表…"
 
 #: src/gui/qt/main_window.cpp:1220
 msgid ""
 "This appears to be the first time you have run LOOT v{0}. Your current LOOT "
 "data has been backed up to: {1}"
-msgstr ""
+msgstr "您似乎是初次运行 LOOT v{0}。您当前的 LOOT 数据已备份到：{1}"
 
 #: src/gui/qt/main_window.cpp:1228
 msgid "This appears to be the first time you have run LOOT v{0}."
-msgstr ""
+msgstr "似乎您是初次运行 LOOT v{0}。"
 
 #: src/gui/qt/main_window.cpp:1235
 msgid "Here are some tips to help you get started with the interface."
-msgstr ""
+msgstr "这是一些帮助您快速上手界面的提示。"
 
 #: src/gui/qt/main_window.cpp:1240
 msgid ""
@@ -479,7 +479,7 @@ msgstr ""
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
-msgstr ""
+msgstr "您可从侧边栏拖放插件到元数据编辑器的“加载于之后”，“必需”和“不兼容”表格内。"
 
 #: src/gui/qt/main_window.cpp:1252
 msgid ""
@@ -496,28 +496,28 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1274
 msgid "First-Time Tips"
-msgstr ""
+msgstr "初次提示"
 
 #: src/gui/qt/main_window.cpp:1309
 msgid "metadata edits"
-msgstr ""
+msgstr "元数据编辑"
 
 #: src/gui/qt/main_window.cpp:1310
 msgid "sorted load order"
-msgstr ""
+msgstr "加载顺序已排序"
 
 #: src/gui/qt/main_window.cpp:1313
 msgid ""
 "You have not yet applied or cancelled your {0}. Are you sure you want to "
 "quit?"
-msgstr ""
+msgstr "您还未应用或取消您的 {0}。您确定要要退出？"
 
 #: src/gui/qt/main_window.cpp:1406 src/gui/qt/restore_load_order_dialog.cpp:224
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:369
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
-msgstr ""
+msgstr "错误"
 
 #: src/gui/qt/main_window.cpp:1416
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:363
@@ -525,17 +525,18 @@ msgstr ""
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
-msgstr ""
+msgstr "噢不，有错误发生！请检查您的 "
+"LOOTDebugLog.txt（您可通过主菜单找到它）以获取更多信息。"
 
 #: src/gui/qt/main_window.cpp:1463
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
-msgstr ""
+msgstr "排序插件失败。详细信息可在常规信息部分找到。"
 
 #: src/gui/qt/main_window.cpp:1481
 msgid "Sorting made no changes to the load order."
-msgstr ""
+msgstr "排序操作并未更改加载顺序。"
 
 #: src/gui/qt/main_window.cpp:1533
 msgid ""
@@ -546,6 +547,11 @@ msgid ""
 "You can use the \"Fix Ambiguous Load Order\" action in the Game menu to "
 "unambiguously set the load order to what is displayed by LOOT."
 msgstr ""
+"LOOT 检测到当前加载顺序模棱两可，即其它程序可能使用不同于 LOOT "
+"所显示的加载顺序。\n"
+"\n"
+"您可使用 游戏 菜单内的 “修复模糊加载顺序” 以明确将加载顺序设置为 LOOT "
+"显示的顺序。"
 
 #: src/gui/qt/main_window.cpp:1609
 msgid "Updating all masterlists…"
@@ -553,28 +559,28 @@ msgstr "正在更新所有 Masterlist…"
 
 #: src/gui/qt/main_window.cpp:1641
 msgid "Your LOOT data has been backed up to: {0}"
-msgstr ""
+msgstr "您的 LOOT 数据已备份到：{0}"
 
 #: src/gui/qt/main_window.cpp:1648
 msgid "No backup has been created as LOOT has no data to backup."
-msgstr ""
+msgstr "备份未创建，因为 LOOT 没有数据可备份。"
 
 #: src/gui/qt/main_window.cpp:1691
 msgid "The load order has been copied to the clipboard."
-msgstr ""
+msgstr "加载顺序已复制到剪贴板。"
 
 #: src/gui/qt/main_window.cpp:1709
 msgid "LOOT's content has been copied to the clipboard."
-msgstr ""
+msgstr "LOOT 的内容已复制到剪贴板。"
 
 #: src/gui/qt/main_window.cpp:1744
 msgid "The load order displayed by LOOT has been set."
-msgstr ""
+msgstr "已设置为 LOOT 所显示的加载顺序。"
 
 #. translators: Title of a dialog box.
 #: src/gui/qt/main_window.cpp:1769
 msgid "Redate Plugins?"
-msgstr ""
+msgstr "重新设置插件日期？"
 
 #: src/gui/qt/main_window.cpp:1771
 msgid ""
