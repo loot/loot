@@ -93,7 +93,7 @@ msgstr "Visa endast insticksmoduler med kort som innehåller"
 
 #: src/gui/qt/filters_widget.cpp:287 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
-msgstr "Använd reguläruttryck"
+msgstr "Använd reguljäruttryck"
 
 #: src/gui/qt/filters_widget.cpp:288
 msgid "Hide version numbers"
