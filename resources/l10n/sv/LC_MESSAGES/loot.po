@@ -93,7 +93,7 @@ msgstr "Visa endast insticksmoduler med kort som innehåller"
 
 #: src/gui/qt/filters_widget.cpp:287 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
-msgstr "Använd reguljäruttryck"
+msgstr "Använd reguljära uttryck"
 
 #: src/gui/qt/filters_widget.cpp:288
 msgid "Hide version numbers"
@@ -117,7 +117,7 @@ msgstr "Dölj anteckningar"
 
 #: src/gui/qt/filters_widget.cpp:294
 msgid "Hide official plugins' cleaning messages"
-msgstr ""
+msgstr "Dölj officiella plugins rengöringsmeddelanden"
 
 #: src/gui/qt/filters_widget.cpp:295
 msgid "Hide all plugin messages"
@@ -141,15 +141,15 @@ msgstr "Visa endast tomma plugins"
 
 #: src/gui/qt/filters_widget.cpp:301
 msgid "Show only plugins with load after metadata"
-msgstr ""
+msgstr "Visa endast plugins med laddning efter metadata"
 
 #: src/gui/qt/filters_widget.cpp:303
 msgid "Show only plugins with load after user metadata"
-msgstr ""
+msgstr "Visa endast plugins med laddning efter användar-metadata"
 
 #: src/gui/qt/filters_widget.cpp:305
 msgid "Show only plugins without load order metadata"
-msgstr ""
+msgstr "Visa endast plugins utan laddningsordnings-metadata"
 
 #: src/gui/qt/filters_widget.cpp:307
 msgid "Show only warnings and errors"
