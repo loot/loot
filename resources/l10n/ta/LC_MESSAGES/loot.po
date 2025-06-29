@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-06-21 20:44+0100\n"
-"PO-Revision-Date: 2025-06-27 02:01+0000\n"
-"Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
+"PO-Revision-Date: 2025-06-30 02:01+0000\n"
+"Last-Translator: Ortham <weblate@ortham.net>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
@@ -372,11 +372,11 @@ msgstr "ரிட்டேட் செருகு&நிரல்கள்…"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:791
 msgid "Back Up Load &Order…"
-msgstr "காப்புப்பிரதி சுமை & ஆர்டர்…"
+msgstr "காப்புப்பிரதி சுமை &ஆர்டர்…"
 
 #: src/gui/qt/main_window.cpp:792
 msgid "Res&tore Load Order…"
-msgstr "ரெச் & டோர் சுமை வரிசையில்…"
+msgstr "ரெச் &டோர் சுமை வரிசையில்…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:794
@@ -571,7 +571,7 @@ msgstr ""
 "தற்போதைய சுமை ஒழுங்கு தெளிவற்றது என்பதை கொள்ளையடித்துள்ளது, அதாவது மற்ற பயன்பாடுகள் "
 "கொள்ளை காண்பிப்பதை விட வேறு சுமை வரிசையைப் பயன்படுத்தலாம்.\n"
 "\n"
-" கொள்ளை மூலம் காண்பிக்கப்படுவதற்கு சுமை வரிசையை தெளிவாக அமைக்க விளையாட்டு பட்டியலில் "
+"கொள்ளை மூலம் காண்பிக்கப்படுவதற்கு சுமை வரிசையை தெளிவாக அமைக்க விளையாட்டு பட்டியலில் "
 "\"தெளிவற்ற சுமை வரிசையை சரிசெய்யவும்\" செயலைப் பயன்படுத்தலாம்."
 
 #: src/gui/qt/main_window.cpp:1609
@@ -1311,14 +1311,14 @@ msgid ""
 "metadata it contains, with the help of the [metadata syntax documentation]"
 "({1})."
 msgstr ""
-"உங்கள் பயனர் பட்டியலை பாகுபடுத்தும்போது பிழை ஏற்பட்டது: {0}. \n"
+"உங்கள் பயனர் பட்டியலை பாகுபடுத்தும்போது பிழை ஏற்பட்டது: {0}.\n"
 "\n"
 "கொள்ளைக்கான புதுப்பிப்பு அதன் மேனிலை தரவு தொடரியல் ஆதரவை மாற்றியதால் இது நடந்திருக்கலாம்"
-". உங்கள் பயனர் மேனிலை தரவு கைமுறையாக புதுப்பிக்கப்பட வேண்டும். \n"
+". உங்கள் பயனர் மேனிலை தரவு கைமுறையாக புதுப்பிக்கப்பட வேண்டும்.\n"
 "\n"
 "அவ்வாறு செய்ய, கொள்ளையின் கோப்பு பட்டியலில் 'திறந்த கொள்ளை தரவு கோப்புறையை' பயன்படுத்தவும்"
 ", பின்னர் தொடர்புடைய விளையாட்டு கோப்புறையில் உங்கள் 'USERLIST.YAML' கோப்பைத் திறக்கவும். "
-"[மெட்டாடேட்டா தொடரியல் ஆவணங்கள்] ({1}) உதவியுடன் அதில் உள்ள மெட்டாடேட்டாவை நீங்கள் "
+"[மெட்டாடேட்டா தொடரியல் ஆவணங்கள்]({1}) உதவியுடன் அதில் உள்ள மெட்டாடேட்டாவை நீங்கள் "
 "திருத்தலாம்."
 
 #: src/gui/state/game/game.cpp:1158
