@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-06-21 20:44+0100\n"
-"PO-Revision-Date: 2025-06-25 02:01+0000\n"
+"PO-Revision-Date: 2025-06-30 02:01+0000\n"
 "Last-Translator: YanJun Sun <yanjun.sun@mail.ru>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/loot/loot/zh_Hans/>\n"
@@ -195,11 +195,11 @@ msgstr "主列表更新日期"
 
 #: src/gui/qt/general_info_card.cpp:210
 msgid "Masterlist Prelude Revision ID"
-msgstr ""
+msgstr "Masterlist Prelude 修订 ID"
 
 #: src/gui/qt/general_info_card.cpp:211
 msgid "Masterlist Prelude Update Date"
-msgstr ""
+msgstr "Masterlist Prelude 更新日期"
 
 #: src/gui/qt/general_info_card.cpp:213
 msgid "Warnings"
@@ -485,7 +485,8 @@ msgstr "您可从侧边栏拖放插件到元数据编辑器的“加载于之后
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
-msgstr ""
+msgstr "在元数据编辑器打开，或加载顺序排序后还未应用或放弃的情况下，某些功能是禁用的"
+"。"
 
 #: src/gui/qt/main_window.cpp:1259 src/gui/qt/main_window.cpp:2109
 msgid ""
@@ -589,52 +590,55 @@ msgid ""
 "will be re-downloaded by Steam (this does not affect Skyrim Special "
 "Edition). Do you wish to continue?"
 msgstr ""
+"此功能提供给模组制作者以便其使用 Creation Kit 设置加载顺序。负效应是 Steam "
+"会重新下载已订阅的 Steam Workshop 模组（但不影响 Skyrim Special "
+"Edition）。您要继续？"
 
 #. translators: Notification text.
 #: src/gui/qt/main_window.cpp:1783
 msgid "Plugins were successfully redated."
-msgstr ""
+msgstr "插件已成功重新设置日期。"
 
 #: src/gui/qt/main_window.cpp:1795
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
-msgstr ""
+msgstr "您确定要从所有插件内清除全部现有用户元数据？"
 
 #: src/gui/qt/main_window.cpp:1843
 msgid "All user-added metadata has been cleared."
-msgstr ""
+msgstr "所有用户元数据已清除。"
 
 #: src/gui/qt/main_window.cpp:1856
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
-msgstr ""
+msgstr "插件元数据编辑器已打开，在尝试编辑其它插件的元数据前请先关闭它。"
 
 #: src/gui/qt/main_window.cpp:1920
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
-msgstr ""
+msgstr "\"{0}\" 的元数据已复制到剪贴板。"
 
 #: src/gui/qt/main_window.cpp:1938
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
-msgstr ""
+msgstr "插件名称 \"{0}\" 已复制到剪贴板。"
 
 #: src/gui/qt/main_window.cpp:1957
 msgid "The card content for \"{0}\" has been copied to the clipboard."
-msgstr ""
+msgstr "\"{0}\" 的卡片内容已复制到剪贴板。"
 
 #: src/gui/qt/main_window.cpp:1972
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
-msgstr ""
+msgstr "您确定要从 \"{0}\" 内清除全部现有的用户元数据？"
 
 #: src/gui/qt/main_window.cpp:2012
 msgid "The user-added metadata for \"{0}\" has been cleared."
-msgstr ""
+msgstr "\"{0}\" 的用户元数据已清除。"
 
 #: src/gui/qt/main_window.cpp:2095
 msgid "Version {0} (build {1})"
-msgstr ""
+msgstr "版本 {0} (构建 {1})"
 
 #: src/gui/qt/main_window.cpp:2101
 msgid ""
@@ -648,7 +652,7 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:2119
 msgid "About LOOT"
-msgstr ""
+msgstr "关于 LOOT"
 
 #: src/gui/qt/main_window.cpp:2445
 msgid "Identifying overlapping plugins…"
@@ -656,11 +660,11 @@ msgstr "正在识别重叠的插件…"
 
 #: src/gui/qt/main_window.cpp:2563
 msgid "A backup of the current load order has been created."
-msgstr ""
+msgstr "当前加载顺序的备份已创建。"
 
 #: src/gui/qt/main_window.cpp:2601
 msgid "Restored load order from backup."
-msgstr ""
+msgstr "已从备份恢复加载顺序。"
 
 #: src/gui/qt/main_window.cpp:2650
 msgid ""
@@ -670,15 +674,15 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:2709
 msgid "No masterlist update was necessary."
-msgstr ""
+msgstr "Masterlist（主列表） 无需更新。"
 
 #: src/gui/qt/main_window.cpp:2729
 msgid "Masterlist updated to revision {0}."
-msgstr ""
+msgstr "Masterlist（主列表）已更新到修订版本 {0}。"
 
 #: src/gui/qt/main_window.cpp:2793
 msgid "No masterlist updates were necessary."
-msgstr ""
+msgstr "主列表无需更新。"
 
 #: src/gui/qt/main_window.cpp:2816
 msgid ""
@@ -690,7 +694,7 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:2878
 msgid "A [new release]({0}) of LOOT is available."
-msgstr ""
+msgstr "LOOT 有  [新版本]({0})可用。"
 
 #: src/gui/qt/main_window.cpp:2895
 msgid ""
