@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-06-21 20:44+0100\n"
-"PO-Revision-Date: 2025-03-14 01:55+0000\n"
+"PO-Revision-Date: 2025-06-30 02:01+0000\n"
 "Last-Translator: tygyh <jonis9898@hotmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/loot/loot/sv/>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: src/gui/plugin_item.cpp:45
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -69,15 +69,15 @@ msgstr "{0} hittade {1}."
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:68
 msgid "Back Up Load Order"
-msgstr ""
+msgstr "Backa upp laddningsordning"
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:70
 msgid "Manual Backup"
-msgstr ""
+msgstr "Manuell backup"
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:71
 msgid "Backup name:"
-msgstr ""
+msgstr "Backup-namn:"
 
 #: src/gui/qt/filters_widget.cpp:283
 msgid "Show only overlapping plugins for"
@@ -85,7 +85,7 @@ msgstr "Visa endast överlappande plugins för"
 
 #: src/gui/qt/filters_widget.cpp:284
 msgid "Show only plugins in group"
-msgstr ""
+msgstr "Visa endast plugins i grupp"
 
 #: src/gui/qt/filters_widget.cpp:286
 msgid "Show only plugins with cards that contain"
@@ -93,7 +93,7 @@ msgstr "Visa endast insticksmoduler med kort som innehåller"
 
 #: src/gui/qt/filters_widget.cpp:287 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
-msgstr ""
+msgstr "Använd reguljära uttryck"
 
 #: src/gui/qt/filters_widget.cpp:288
 msgid "Hide version numbers"
@@ -117,7 +117,7 @@ msgstr "Dölj anteckningar"
 
 #: src/gui/qt/filters_widget.cpp:294
 msgid "Hide official plugins' cleaning messages"
-msgstr ""
+msgstr "Dölj officiella plugins rengöringsmeddelanden"
 
 #: src/gui/qt/filters_widget.cpp:295
 msgid "Hide all plugin messages"
@@ -141,15 +141,15 @@ msgstr "Visa endast tomma plugins"
 
 #: src/gui/qt/filters_widget.cpp:301
 msgid "Show only plugins with load after metadata"
-msgstr ""
+msgstr "Visa endast plugins med laddning efter metadata"
 
 #: src/gui/qt/filters_widget.cpp:303
 msgid "Show only plugins with load after user metadata"
-msgstr ""
+msgstr "Visa endast plugins med laddning efter användar-metadata"
 
 #: src/gui/qt/filters_widget.cpp:305
 msgid "Show only plugins without load order metadata"
-msgstr ""
+msgstr "Visa endast plugins utan laddningsordnings-metadata"
 
 #: src/gui/qt/filters_widget.cpp:307
 msgid "Show only warnings and errors"
