@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-06-21 20:44+0100\n"
-"PO-Revision-Date: 2025-06-30 02:01+0000\n"
+"PO-Revision-Date: 2025-07-07 12:02+0000\n"
 "Last-Translator: tygyh <jonis9898@hotmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/loot/loot/sv/>\n"
 "Language: sv\n"
@@ -195,11 +195,11 @@ msgstr "Allmän information"
 
 #: src/gui/qt/general_info_card.cpp:208
 msgid "Masterlist Revision ID"
-msgstr ""
+msgstr "Huvudlistans revisions-ID"
 
 #: src/gui/qt/general_info_card.cpp:209
 msgid "Masterlist Update Date"
-msgstr ""
+msgstr "Huvudlistans uppdateringsdatum"
 
 #: src/gui/qt/general_info_card.cpp:210
 msgid "Masterlist Prelude Revision ID"
@@ -227,7 +227,7 @@ msgstr "Aktiverade insticksmoduler"
 
 #: src/gui/qt/general_info_card.cpp:218
 msgid "Active Full Plugins"
-msgstr ""
+msgstr "Aktiva fullständiga insticksmoduler"
 
 #: src/gui/qt/general_info_card.cpp:219
 msgid "Active Medium Plugins"
@@ -294,28 +294,28 @@ msgstr ""
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:756
 msgid "&Apply Sorted Load Order"
-msgstr ""
+msgstr "&Använd sorterad laddningsordning"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:758
 msgid "&Discard Sorted Load Order"
-msgstr ""
+msgstr "&Tag bort sorterad laddningsordning"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:763
 msgid "&File"
-msgstr ""
+msgstr "&Fil"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:765
 msgid "&Settings…"
-msgstr ""
+msgstr "&Inställningar…"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:767
 msgid "&Update All Masterlists"
-msgstr ""
+msgstr "&Uppdatera alla huvudlistor"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:769
