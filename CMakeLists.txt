@@ -20,6 +20,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+if(MSVC)
+    add_compile_options("/MP")
+endif()
+
 ##############################
 # Get Build Revision
 ##############################
