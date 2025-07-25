@@ -112,7 +112,7 @@ void CheckForUpdateTask::sendHttpRequest(
     const std::string &url,
     void (CheckForUpdateTask::*onFinished)()) {
   QNetworkRequest request(QUrl(QString::fromStdString(url)));
-  request.setTransferTimeout(QNetworkRequest::DefaultTransferTimeout);
+  request.setTransferTimeout(TRANSFER_TIMEOUT_MS);
   request.setRawHeader("Accept", "application/vnd.github.v3+json");
 
   const auto reply = networkAccessManager->get(request);

@@ -57,7 +57,7 @@ void UpdatePreludeTask::execute() {
     }
 
     QNetworkRequest request(QUrl(QString::fromStdString(preludeSource)));
-    request.setTransferTimeout(QNetworkRequest::DefaultTransferTimeout);
+    request.setTransferTimeout(TRANSFER_TIMEOUT_MS);
 
     const auto reply = networkAccessManager->get(request);
 
@@ -139,7 +139,7 @@ void UpdateMasterlistTask::execute() {
     }
 
     QNetworkRequest request(QUrl(QString::fromStdString(masterlistSource)));
-    request.setTransferTimeout(QNetworkRequest::DefaultTransferTimeout);
+    request.setTransferTimeout(TRANSFER_TIMEOUT_MS);
 
     const auto reply = networkAccessManager->get(request);
 

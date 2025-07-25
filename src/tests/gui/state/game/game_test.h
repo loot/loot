@@ -27,8 +27,8 @@ along with LOOT.  If not, see
 
 #include <QtCore/QFile>
 #include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
-#include <QtCore/QJsonValue>
 #include <fstream>
 
 #include "gui/state/game/game.h"
@@ -164,7 +164,7 @@ protected:
     file.close();
 
     const auto plugins =
-        QJsonValue::fromJson(content).toObject().value("loadOrder").toArray();
+        QJsonDocument::fromJson(content).object().value("loadOrder").toArray();
 
     std::vector<std::string> loadOrder;
     for (const auto plugin : plugins) {

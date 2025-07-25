@@ -31,8 +31,8 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>
 #include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
-#include <QtCore/QJsonValue>
 #include <QtCore/QString>
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
@@ -115,7 +115,7 @@ void CreateBackup(const std::vector<std::string>& loadOrder,
   std::filesystem::create_directories(backupDirectory);
 
   std::ofstream out(backupDirectory / std::filesystem::u8path(filename));
-  out << QJsonValue(json).toJson().toStdString();
+  out << QJsonDocument(json).toJson().toStdString();
 }
 
 std::optional<LoadOrderBackup> ReadLoadOrder(const std::filesystem::path& path,
@@ -132,7 +132,7 @@ std::optional<LoadOrderBackup> ReadLoadOrder(const std::filesystem::path& path,
   const auto content = file.readAll();
   file.close();
 
-  const auto json = QJsonValue::fromJson(content).toObject();
+  const auto json = QJsonDocument::fromJson(content).object();
   const auto name = json.value("name").toString();
   const auto timestamp = json.value("creationTimestamp").toString();
   const auto autoDelete = json.value("autoDelete").toBool();

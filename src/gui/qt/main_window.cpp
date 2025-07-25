@@ -334,6 +334,7 @@ void MainWindow::applyTheme() {
     logger->debug("The current style name is {}",
                   qApp->style()->name().toStdString());
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     const auto colorScheme = QGuiApplication::styleHints()->colorScheme();
     std::string description;
     if (colorScheme == Qt::ColorScheme::Unknown) {
@@ -352,6 +353,7 @@ void MainWindow::applyTheme() {
     } else {
       logger->debug("The detected color scheme is light");
     }
+#endif
   }
 
   std::optional<QString> styleSheet;
