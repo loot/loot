@@ -161,7 +161,7 @@ To use a different version of libloot in CI builds:
 - change the value of the `LIBLOOT_VERSION` environment variable in `.github/workflows/CI.yml` to the relevant Git tag, branch or commit hash. If you're using a Git repository other than [loot/libloot](https://github.com/loot/libloot) then you'll also need to replace the two instances of `loot/libloot` with the relevant GitHub owner and repository names.
 - Update the `type: git` source for libloot in `resources/linux/io.github.loot.loot.yml` to have the relevant `url`, `commit` and/or `tag`.
 
-For local builds, download the relevant libloot snapshot build or release archive, or create one from a local libloot build, and then pass `-DLIBLOOT_URL=<path to that file>` when running `cmake` for LOOT.
+For local builds, pass the relevant `LIBLOOT_*` parameter(s) documented in the [README.md](./README.md) when running `cmake` for LOOT.
 
 ## Code Style
 

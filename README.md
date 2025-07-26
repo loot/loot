@@ -85,12 +85,15 @@ LOOT uses the following CMake variables to set build parameters:
 
 Parameter | Values | Default |Description
 ----------|--------|---------|-----------
-`LIBLOOT_URL` | A URL | A GitHub release archive URL | The URL to get the libloot release archive from. By default, this is the URL of a libloot release archive hosted on GitHub. Specifying this is useful if you want to link to a libloot that was built and packaged locally.
+`LIBLOOT_GIT_REPOSITORY` | A URL | `https://github.com/loot/libloot.git` | A Git repository to clone and build libloot from. Takes precedence over `LIBLOOT_URL` if Git is installed, unless building with MSVC and `LIBLOOT_USE_PREBUILT_MSVC_BINARY` is `ON`.
+`LIBLOOT_GIT_COMMIT` | A Git commit hash | A release commit hash | The Git commit to checkout when building libloot from a Git repository. Takes precedence over `LIBLOOT_URL` if Git is installed, unless building with MSVC and `LIBLOOT_USE_PREBUILT_MSVC_BINARY` is `ON`.
+`LIBLOOT_URL` | A URL | A release archive URL | The URL to get libloot from. When building LOOT using MSVC, the URL is expected to be of either prebuilt binaries or source code depending on the value of `LIBLOOT_USE_PREBUILT_MSVC_BINARY`. If not using MSVC, the URL is always expected to be of source code. If `LIBLOOT_URL` is used to build libloot from source, the binary's embedded libloot revision will be unknown.
+`LIBLOOT_USE_PREBUILT_MSVC_BINARY` | `ON`, `OFF` | `ON` | Controls whether builds that use MSVC will use prebuilt libloot release binaries (`ON`) or build libloot from source (`OFF`). Is effectively forced `OFF` if not using MSVC to build LOOT, or if Git is installed and a non-default value is provided for `LIBLOOT_GIT_REPOSITORY` or `LIBLOOT_GIT_COMMIT`.
 `LOOT_BUILD_TESTS` | `ON`, `OFF` | `ON` | Whether or not to build LOOT's tests.
 `LOOT_RUN_CLANG_TIDY` | `ON`, `OFF` | `OFF` | Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator.
 `MINIZIP_NG_URL` | A URL | A release archive URL | The URL to get a source archive from.
 `OGDF_URL` | A URL | A release archive URL | The URL to get a source archive from.
-`VALVE_FILE_VDF_URL` | A URL | A GitHub commit archive URL | The URL to get a source archive from.
+`VALVE_FILE_VDF_URL` | A URL | A release archive URL | The URL to get a source archive from.
 `ZLIB_URL` | A URL | A release archive URL | The URL to get a source archive from.
 
 The URL parameters can be used to supply a local path if the archive has already been downloaded (e.g. for offline builds).
