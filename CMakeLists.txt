@@ -64,9 +64,6 @@ find_package(Boost REQUIRED COMPONENTS locale CONFIG)
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(ICU REQUIRED COMPONENTS data uc i18n)
     find_package(TBB REQUIRED)
-    find_package(libloot REQUIRED CONFIG)
-else()
-    find_package(libloot CONFIG)
 endif()
 
 find_package(Qt6 6.4 COMPONENTS Widgets Network Concurrent REQUIRED)
@@ -76,41 +73,110 @@ if(NOT DEFINED EP_PREFIX)
 endif()
 
 find_package(libloot CONFIG)
-if(libloot_FOUND)
-    get_target_property(LIBLOOT_INCLUDE_DIRS libloot::loot INTERFACE_INCLUDE_DIRECTORIES)
-    set(LIBLOOT_LINKER_FILE $<TARGET_LINKER_FILE:libloot::loot>)
-    set(LIBLOOT_TARGET_FILE $<TARGET_FILE:libloot::loot>)
-else()
-    if(NOT DEFINED LIBLOOT_URL)
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.28.0/libloot-0.28.0-win64.7z")
-        set(LIBLOOT_HASH "SHA256=9cee812c17538fa0e3cbf376a2afc92431c42b606a02c9f7395503cd64327b72")
-    else()
-        file(TO_CMAKE_PATH "${LIBLOOT_URL}" LIBLOOT_URL)
+if(NOT libloot_FOUND)
+    set(LIBLOOT_GIT_REPOSITORY_DEFAULT "https://github.com/loot/libloot.git")
+    set(LIBLOOT_GIT_COMMIT_DEFAULT "55bdf5622771f9fd6b0c6572267e0fcb2b33247f")
+    if(NOT DEFINED LIBLOOT_GIT_REPOSITORY)
+        set(LIBLOOT_GIT_REPOSITORY ${LIBLOOT_GIT_REPOSITORY_DEFAULT})
+    endif()
+    if(NOT DEFINED LIBLOOT_GIT_COMMIT)
+        set(LIBLOOT_GIT_COMMIT ${LIBLOOT_GIT_COMMIT_DEFAULT})
     endif()
 
-    ExternalProject_Add(libloot
-        URL ${LIBLOOT_URL}
-        URL_HASH ${LIBLOOT_HASH}
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND ""
-        INSTALL_COMMAND "")
-    ExternalProject_Get_Property(libloot SOURCE_DIR)
-    set(LIBLOOT_INCLUDE_DIRS "${SOURCE_DIR}/include")
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-        set(LIBLOOT_LINKER_FILE "${SOURCE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}loot.dll${CMAKE_STATIC_LIBRARY_SUFFIX}")
-    else()
-        set(LIBLOOT_LINKER_FILE "${SOURCE_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    if(NOT MSVC OR (GIT_FOUND AND (NOT LIBLOOT_GIT_REPOSITORY STREQUAL LIBLOOT_GIT_REPOSITORY_DEFAULT OR NOT LIBLOOT_GIT_COMMIT STREQUAL LIBLOOT_GIT_COMMIT_DEFAULT)))
+        set(LIBLOOT_USE_PREBUILT_MSVC_BINARY FALSE)
+    elseif(NOT DEFINED LIBLOOT_USE_PREBUILT_MSVC_BINARY)
+        set(LIBLOOT_USE_PREBUILT_MSVC_BINARY TRUE)
     endif()
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        set(LIBLOOT_TARGET_FILE "${SOURCE_DIR}/bin/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
-    else()
-        # lib64 is used if the library was packaged on anything other than Debian (or a Debian-derived distro, e.g. Ubuntu)
-        # see <https://stackoverflow.com/questions/76517286/how-does-cmake-decide-to-make-a-lib-or-lib64-directory-for-installations>
-        # GitHub Actions runners use Ubuntu.
-        if(NOT DEFINED LIBLOOT_LIB_DIR)
-            set(LIBLOOT_LIB_DIR "lib")
+
+    # If a URL is set and a Git source is not, prefer the URL over the Git or default source.
+    if(LIBLOOT_USE_PREBUILT_MSVC_BINARY)
+        if(DEFINED LIBLOOT_URL)
+            cmake_path(CONVERT "${LIBLOOT_URL}" TO_CMAKE_PATH_LIST LIBLOOT_URL)
+        else()
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.28.0/libloot-0.28.0-win64.7z")
+            set(LIBLOOT_HASH "SHA256=9cee812c17538fa0e3cbf376a2afc92431c42b606a02c9f7395503cd64327b72")
         endif()
-        set(LIBLOOT_TARGET_FILE "${SOURCE_DIR}/${LIBLOOT_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
+        set(LIBLOOT_DOWNLOAD_ARGS
+            URL ${LIBLOOT_URL}
+            URL_HASH ${LIBLOOT_HASH})
+    elseif(GIT_FOUND)
+        set(LIBLOOT_DOWNLOAD_ARGS
+            GIT_REPOSITORY ${LIBLOOT_GIT_REPOSITORY}
+            GIT_TAG ${LIBLOOT_GIT_COMMIT})
+    else()
+        message(WARNING "Git not found: building libloot from a source archive")
+        set(LIBLOOT_DOWNLOAD_ARGS
+            URL "https://github.com/loot/libloot/archive/55bdf5622771f9fd6b0c6572267e0fcb2b33247f.tar.gz"
+            URL_HASH "SHA256=05c94076459e7104890f9907d9366425eaa7b66311b89b738b4debbec80abbb7")
+    endif()
+
+    message(DEBUG "LIBLOOT_USE_PREBUILT_MSVC_BINARY: ${LIBLOOT_USE_PREBUILT_MSVC_BINARY}")
+    message(DEBUG "LIBLOOT_DOWNLOAD_ARGS: ${LIBLOOT_DOWNLOAD_ARGS}")
+endif()
+
+
+if(MSVC)
+    if(libloot_FOUND)
+        # Use the already-installed binary: because it's already been built it won't appear as part of the Visual Studio solution, so the name collision mentioned below isn't a problem.
+        add_library(libloot::libloot ALIAS libloot::loot)
+    elseif(LIBLOOT_USE_PREBUILT_MSVC_BINARY)
+        # Download a prebuilt binary and use it.
+        # For some reason if we use FetchContent's OVERRIDE_FIND_PACKAGE with find_package, find_package will find libloot but not import its target, so instead explicitly make it available and give an explicit search path to find_package.
+        FetchContent_Declare(
+            libloot
+            ${LIBLOOT_DOWNLOAD_ARGS})
+
+        FetchContent_MakeAvailable(libloot)
+
+        find_package(libloot REQUIRED CONFIG
+            PATHS "${CMAKE_BINARY_DIR}/_deps/libloot-src/lib/cmake/libloot")
+
+        add_library(libloot::libloot ALIAS libloot::loot)
+    else()
+        # Assume that prebuilt binaries are not available, build from source.
+        # Can't use FetchContent because the libloot Visual Studio project name is case-insensitively equal to the LOOT project name, so only one gets loaded.
+        # Instead, use ExternalProject to build libloot separately and add an imported library target that depends on it and supplies its include and binary paths.
+        ExternalProject_Add(libloot
+            ${LIBLOOT_DOWNLOAD_ARGS}
+            CMAKE_ARGS
+                -DLIBLOOT_BUILD_TESTS=OFF
+                -DLIBLOOT_INSTALL_DOCS=OFF
+                -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+                -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            SOURCE_SUBDIR "cpp"
+            INSTALL_COMMAND "")
+
+        ExternalProject_Get_Property(libloot SOURCE_DIR BINARY_DIR)
+
+        add_library(libloot::libloot SHARED IMPORTED)
+        add_dependencies(libloot::libloot libloot)
+
+        # This is a hack to stop CMake complaining about the include path not existing at configure time, see <https://gitlab.kitware.com/cmake/cmake/-/issues/15052>
+        set(LIBLOOT_INCLUDE_DIR "${SOURCE_DIR}/cpp/include")
+        file(MAKE_DIRECTORY ${LIBLOOT_INCLUDE_DIR})
+        target_include_directories(libloot::libloot INTERFACE ${LIBLOOT_INCLUDE_DIR})
+
+        set_target_properties(libloot::libloot PROPERTIES
+            IMPORTED_IMPLIB "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}"
+            IMPORTED_LOCATION "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    endif()
+else()
+    set(LIBLOOT_BUILD_TESTS OFF)
+    set(LIBLOOT_INSTALL_DOCS OFF)
+    FetchContent_Declare(
+        libloot
+        ${LIBLOOT_DOWNLOAD_ARGS}
+        SOURCE_SUBDIR "cpp"
+        FIND_PACKAGE_ARGS)
+
+    FetchContent_MakeAvailable(libloot)
+
+    if(libloot_FOUND)
+        add_library(libloot::libloot ALIAS libloot::loot)
+    else()
+        get_target_property(LIBLOOT_ALIASED_TARGET libloot::loot ALIASED_TARGET)
+        add_library(libloot::libloot ALIAS ${LIBLOOT_ALIASED_TARGET})
     endif()
 endif()
 
@@ -479,6 +545,7 @@ target_link_libraries(LOOT PRIVATE
     Qt::Widgets Qt::Network Qt::Concurrent
     Boost::headers Boost::locale
     fmt::fmt
+    libloot::libloot
     spdlog::spdlog
     tomlplusplus::tomlplusplus
     ValveFileVDF::ValveFileVDF)
@@ -486,16 +553,6 @@ target_link_libraries(LOOT PRIVATE
 ##############################
 # Set Target-Specific Flags
 ##############################
-
-if(libloot_FOUND)
-    target_link_libraries(LOOT PRIVATE libloot::loot)
-else()
-    add_dependencies(LOOT libloot)
-
-    target_include_directories(LOOT SYSTEM PRIVATE ${LIBLOOT_INCLUDE_DIRS})
-
-    target_link_libraries(LOOT PRIVATE ${LIBLOOT_LINKER_FILE})
-endif()
 
 if(ZLIB_FOUND)
     target_link_libraries(LOOT PRIVATE MINIZIP::minizip)
@@ -600,8 +657,8 @@ endif()
 # Copy the API binary to the build directory.
 add_custom_command(TARGET LOOT POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-       ${LIBLOOT_TARGET_FILE}
-       "$<TARGET_FILE_DIR:LOOT>/$<PATH:GET_FILENAME,${LIBLOOT_TARGET_FILE}>")
+       $<TARGET_FILE:libloot::libloot>
+       "$<TARGET_FILE_DIR:LOOT>/$<PATH:GET_FILENAME,$<TARGET_FILE:libloot::libloot>>")
 
 if(LOOT_BUILD_TESTS)
     include("cmake/tests.cmake")

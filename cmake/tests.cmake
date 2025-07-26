@@ -137,6 +137,7 @@ target_link_libraries(loot_gui_tests PRIVATE
     Boost::headers Boost::locale
     GTest::gtest_main
     fmt::fmt
+    libloot::libloot
     spdlog::spdlog
     tomlplusplus::tomlplusplus
     ValveFileVDF::ValveFileVDF)
@@ -144,16 +145,6 @@ target_link_libraries(loot_gui_tests PRIVATE
 ##############################
 # Set Target-Specific Flags
 ##############################
-
-if(libloot_FOUND)
-    target_link_libraries(loot_gui_tests PRIVATE libloot::loot)
-else()
-    add_dependencies(loot_gui_tests libloot)
-
-    target_include_directories(loot_gui_tests SYSTEM PRIVATE ${LIBLOOT_INCLUDE_DIRS})
-
-    target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_LINKER_FILE})
-endif()
 
 if(ZLIB_FOUND)
     target_link_libraries(loot_gui_tests PRIVATE MINIZIP::minizip)
@@ -219,8 +210,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         # Copy the API binary to the build directory.
         add_custom_command(TARGET loot_gui_tests POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                ${LIBLOOT_TARGET_FILE}
-                "$<TARGET_FILE_DIR:loot_gui_tests>/$<PATH:GET_FILENAME,${LIBLOOT_TARGET_FILE}>")
+                $<TARGET_FILE:libloot::libloot>
+                "$<TARGET_FILE_DIR:loot_gui_tests>/$<PATH:GET_FILENAME,$<TARGET_FILE:libloot::libloot>>")
     endif()
 endif()
 
