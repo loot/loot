@@ -138,26 +138,10 @@ modules:
         url: https://ogdf.uos.de/wp-content/uploads/2023/09/ogdf.v2023.09.zip
         sha256: a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436
 
-  - name: cbindgen
-    buildsystem: simple
-    builddir: true
-    build-options:
-      append-path: /usr/lib/sdk/rust-stable/bin
-      env:
-        CARGO_HOME: /run/build/cbindgen/cargo
-    build-commands:
-      - cargo build --release --offline
-      - install -D /run/build/cbindgen/target/release/cbindgen /app/bin/cbindgen
-    sources:
-      - type: archive
-        url: https://github.com/mozilla/cbindgen/archive/0.28.0.tar.gz
-        sha256: 620d569c431f8c15b69e1455695cf4be44c11678cc08b25a35b312109baf1980
-      # Generated using scripts/generate_manifests.sh
-      - ../../build/flatpak-manifests/cbindgen.json
-
   - name: libloot
     buildsystem: cmake-ninja
     builddir: true
+    subdir: cpp
     build-options:
       append-path: /usr/lib/sdk/rust-stable/bin
       env:
@@ -166,33 +150,14 @@ modules:
       - -DCMAKE_BUILD_TYPE=Release
       - -DLIBLOOT_BUILD_TESTS=OFF
       - -DLIBLOOT_INSTALL_DOCS=OFF
-      - -DESPLUGIN_URL=/run/build/libloot/6.1.3.tar.gz
-      - -DLIBLOADORDER_URL=/run/build/libloot/18.4.0.tar.gz
-      - -DLOOT_CONDITION_INTERPRETER_URL=/run/build/libloot/5.3.2.tar.gz
-      - -DFETCHCONTENT_SOURCE_DIR_YAML-CPP=/run/build/libloot/yaml-cpp
     sources:
       # Use the Git repository so that libloot's commit hash gets embedded in the build.
       - type: git
         url: https://github.com/loot/libloot.git
-        tag: 0.27.0
-        commit: 356749df2100ee96b071cf8327c2469a744f85ba
-      - type: file
-        url: https://github.com/Ortham/esplugin/archive/refs/tags/6.1.3.tar.gz
-        sha256: d11373b9108036e8d8453ff77000ae2961f9d1243c99c42dd732dad0c83d8618
-      - type: file
-        url: https://github.com/Ortham/libloadorder/archive/refs/tags/18.4.0.tar.gz
-        sha256: c83f1f48829e013f2634041b62fed8c4957fb7469a401250b3793953ed3c3d2c
-      - type: file
-        url: https://github.com/loot/loot-condition-interpreter/archive/refs/tags/5.3.2.tar.gz
-        sha256: 11a2c62898f6450cdae6db607c63fd7898f62bf67d4874b7ceed3d3693331af3
-      - type: archive
-        url: https://github.com/loot/yaml-cpp/archive/0.8.0+merge-key-support.3.tar.gz
-        sha256: e2067f1ab8f658aeb8a8795fd0e06a753b4150b9352cae047280e659078dd44f
-        dest: yaml-cpp
+        tag: 0.28.0
+        commit: 55bdf5622771f9fd6b0c6572267e0fcb2b33247f
       # Generated using scripts/generate_manifests.sh
-      - ../../build/flatpak-manifests/esplugin.json
-      - ../../build/flatpak-manifests/libloadorder.json
-      - ../../build/flatpak-manifests/loot-condition-interpreter.json
+      - ../../build/flatpak-manifests/libloot.json
 
   - name: LOOT
     buildsystem: cmake-ninja
@@ -206,14 +171,8 @@ modules:
       - install -D ../resources/linux/io.github.loot.loot.metainfo.xml /app/share/metainfo/io.github.loot.loot.metainfo.xml
       - install -D ../resources/linux/io.github.loot.loot.desktop /app/share/applications/io.github.loot.loot.desktop
       - install -D ../resources/icons/loot.svg /app/share/icons/hicolor/scalable/apps/io.github.loot.loot.svg
-      - |
-        cd ..
-        python scripts/po_to_mo.py
-      - |
-        for path in ../resources/l10n/*/LC_MESSAGES/loot.mo
-        do
-          install -D "$path" "/app/share/locale/${path#../resources/l10n/}"
-        done
+      - cd ..; python scripts/po_to_mo.py
+      - for path in ../resources/l10n/*/LC_MESSAGES/loot.mo; do install -D "$path" "/app/share/locale/${path#../resources/l10n/}"; done
       - sphinx-build -b html ../docs /app/share/doc/loot
     no-make-install: true
     modules:
@@ -229,7 +188,6 @@ modules:
         url: https://github.com/TinyTinni/ValveFileVDF/archive/refs/tags/v1.1.0.tar.gz
         sha256: 9149a6b01ca857f49f5660d608639acd579542bf862ad23e9cbf4c1e80ade55e
 cleanup:
-  - /bin/cbindgen
   - /include
   - /lib/cmake
   - /lib/*.a

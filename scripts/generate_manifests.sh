@@ -3,19 +3,23 @@
 set -e
 
 APP_MANIFEST="../../resources/linux/io.github.loot.loot.yml"
+BUILD_DIR="build/flatpak-manifests"
 
-generate_cargo_manifest() {
-    REPO="$1"
+generate_libloot_cargo_manifest() {
+    echo "Generating manifest for libloot..."
+    APP_MANIFEST_JSON="$(python3 -c "import yaml; import json; print(json.dumps(yaml.safe_load(open('$APP_MANIFEST', 'r'))))")"
 
-    URL="$(grep -Po "https://.+/$REPO/.+" "$APP_MANIFEST")"
-    VERSION="${URL##*/}"
-    VERSION="${VERSION%.tar.gz}"
+    echo "PRINTING APP_MANIFEST_JSON:"
+    echo "$APP_MANIFEST_JSON"
+    COMMIT_HASH="$(echo "$APP_MANIFEST_JSON" | jq -r '.modules[] | select(.name == "libloot") | .sources[] | objects | select(.type == "git") | .commit')"
 
-    echo "Downloading and extracting $URL..."
-    curl -sSfL "$URL" | tar xz
+    CARGO_LOCK_URL="https://raw.githubusercontent.com/loot/libloot/${COMMIT_HASH}/Cargo.lock"
 
-    echo "Generating manifest for $REPO $VERSION..."
-    ./flatpak-cargo-generator.py "$REPO-$VERSION/Cargo.lock" -o "$REPO.json"
+    echo "Downloading and extracting $CARGO_LOCK_URL..."
+    curl -sSfLO "$CARGO_LOCK_URL"
+
+    echo "Generating manifest for libloot commit $COMMIT_HASH..."
+    ./flatpak-cargo-generator.py "Cargo.lock" -o "libloot.json"
 }
 
 mkdir -p build/flatpak-manifests
@@ -45,7 +49,4 @@ flatpak --user install -y flathub "$RUNTIME"
 echo "Generating manifest for docs..."
 ./flatpak-pip-generator --runtime="$RUNTIME" --requirements-file ../../docs/requirements.txt --output docs --cleanup=all
 
-generate_cargo_manifest cbindgen
-generate_cargo_manifest esplugin
-generate_cargo_manifest libloadorder
-generate_cargo_manifest loot-condition-interpreter
+generate_libloot_cargo_manifest

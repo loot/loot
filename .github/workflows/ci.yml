@@ -9,6 +9,7 @@ on:
 
 env:
   BOOST_VERSION: 1.87.0
+  LIBLOOT_VERSION: 0.28.0
   OGDF_VERSION: elderberry-202309
   QT_VERSION: 6.9.0
 
@@ -49,9 +50,6 @@ jobs:
 
   linux:
     runs-on: ubuntu-24.04
-
-    env:
-      LIBLOOT_VERSION: 0.27.0
 
     steps:
       - uses: actions/checkout@v4
@@ -102,16 +100,6 @@ jobs:
             libicu-dev \
             libtbb-dev
 
-      # The version in apt is too old.
-      - name: Install cbindgen
-        run: |
-          wget https://github.com/mozilla/cbindgen/releases/download/0.28.0/cbindgen
-          BIN_PATH="$HOME/.local/bin/"
-          mkdir -p "$BIN_PATH"
-          mv cbindgen "$BIN_PATH"
-          chmod +x "$BIN_PATH/cbindgen"
-          echo "$BIN_PATH" >> "$GITHUB_PATH"
-
       - name: Download & build Boost
         run: |
           wget https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.1/install_boost.py
@@ -125,20 +113,25 @@ jobs:
           aqt install-qt linux desktop $QT_VERSION linux_gcc_64
           echo "root=${{ github.workspace }}/$QT_VERSION/gcc_64" >> $GITHUB_OUTPUT
 
-      - name: Download and build libloot
-        run: |
-          wget https://github.com/loot/libloot/archive/$LIBLOOT_VERSION.tar.gz
-          tar -xf $LIBLOOT_VERSION.tar.gz
+      - name: Checkout libloot repository
+        uses: actions/checkout@v4
+        with:
+          repository: loot/libloot
+          ref: ${{ env.LIBLOOT_VERSION }}
+          path: libloot-${{ env.LIBLOOT_VERSION }}
+        if: steps.libloot-cache.outputs.cache-hit != 'true'
 
-          LIBLOOT_BUILD_DIR="libloot-$LIBLOOT_VERSION/build"
+      - name: Build libloot
+        run: |
+          LIBLOOT_BUILD_DIR="libloot-$LIBLOOT_VERSION/cpp/build"
 
           cmake \
-            -DCMAKE_PREFIX_PATH=${{ steps.boost-metadata.outputs.root }}/stage \
+            -DCMAKE_BUILD_TYPE=Release \
             -DLIBLOOT_BUILD_TESTS=OFF \
             -DLIBLOOT_INSTALL_DOCS=OFF \
             -DCMAKE_INSTALL_PREFIX="$LIBLOOT_INSTALL_PATH" \
             -B "$LIBLOOT_BUILD_DIR" \
-            -S "libloot-$LIBLOOT_VERSION"
+            -S "libloot-$LIBLOOT_VERSION/cpp"
           cmake --build "$LIBLOOT_BUILD_DIR" --target loot --config Release
           cmake --install "$LIBLOOT_BUILD_DIR" --config Release
         if: steps.libloot-cache.outputs.cache-hit != 'true'
@@ -147,6 +140,7 @@ jobs:
         run: |
           cmake \
             -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" \
+            -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }};${{ steps.boost-metadata.outputs.root }}/stage" \
             -B build
           cmake --build build --target loot_gui_tests
@@ -265,6 +259,10 @@ jobs:
           $BOOST_ROOT="${{ github.workspace }}/boost_" + $env:BOOST_VERSION -replace "\.", "_"
           echo "root=$BOOST_ROOT" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
+      - name: Set libloot install path
+        shell: bash
+        run: echo "LIBLOOT_INSTALL_PATH=${{ github.workspace }}/libloot-${{ env.LIBLOOT_VERSION }}-install" >> $GITHUB_ENV
+
       - name: Set OGDF install path
         shell: bash
         run: echo "OGDF_INSTALL_PATH=${{ github.workspace }}/ogdf-${{ env.OGDF_VERSION }}-install" >> $GITHUB_ENV
@@ -277,6 +275,13 @@ jobs:
             ${{ steps.boost-metadata.outputs.root }}/boost
             ${{ steps.boost-metadata.outputs.root }}/stage
           key: ${{ runner.os }}-x64-Boost-${{ env.BOOST_VERSION }}
+
+      - name: libloot cache
+        id: libloot-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.LIBLOOT_INSTALL_PATH }}
+          key: ${{ runner.os }}-libloot-${{ env.LIBLOOT_VERSION }}
 
       - name: OGDF cache
         id: ogdf-cache
@@ -325,11 +330,33 @@ jobs:
           aqt install-qt windows desktop ${env:QT_VERSION} win64_msvc2022_64
           echo "root=${{ github.workspace }}/${env:QT_VERSION}/msvc2022_64" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
+      - name: Checkout libloot repository
+        uses: actions/checkout@v4
+        with:
+          repository: loot/libloot
+          ref: ${{ env.LIBLOOT_VERSION }}
+          path: libloot-${{ env.LIBLOOT_VERSION }}
+        if: steps.libloot-cache.outputs.cache-hit != 'true'
+
+      - name: Download and build libloot
+        run: |
+          $LIBLOOT_BUILD_DIR="libloot-$env:LIBLOOT_VERSION/cpp/build"
+
+          cmake `
+            -DLIBLOOT_BUILD_TESTS=OFF `
+            -DLIBLOOT_INSTALL_DOCS=OFF `
+            -DCMAKE_INSTALL_PREFIX="$env:LIBLOOT_INSTALL_PATH" `
+            -B "$LIBLOOT_BUILD_DIR" `
+            -S "libloot-$env:LIBLOOT_VERSION/cpp"
+          cmake --build "$LIBLOOT_BUILD_DIR" --target loot --config Release
+          cmake --install "$LIBLOOT_BUILD_DIR" --config Release
+        if: steps.libloot-cache.outputs.cache-hit != 'true'
+
       - name: Run CMake
         run: |
           cmake -G "Visual Studio 17 2022" `
             -A x64 `
-            -DCMAKE_PREFIX_PATH="${{ steps.boost-metadata.outputs.root }}\stage" `
+            -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }};${{ steps.boost-metadata.outputs.root }}\stage" `
             -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" `
             -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}" `
             -B build

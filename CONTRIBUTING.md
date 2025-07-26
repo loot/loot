@@ -152,35 +152,16 @@ Some strings to be translated may contain special characters. Different types of
   This document features every string with ampersands (`&`) added to them. `Table 1` includes all the original English strings, `Table 2` adds the ampersands to them and `Table 3` lists every `&+character` combination that it finds in `Table 2`, plus it will automatically colourize duplicate entries red. You can utilise this document to first translate all the strings from `Table 1` into your own language and then add the ampersands accordingly. Once you are finished and every `&+character` combination within the different "Levels" is unique, you can add your translations in Poedit. In order to be able to use the document, open it by clicking on the above link, then rightclick on the sheet `English -> Copy to -> New Spreadsheet` which will create your own copy of the document, which you now should be able to change.
 * A small number of strings include Markdown hyperlinks (e.g. `[example text](http://example.com/)`). The text between the square brackets should be translated, but the text between the parentheses should not be.
 
-## Depending on libloot snapshot builds
+## Depending on different versions of libloot
 
-It's occasionally useful to build LOOT using a snapshot build of libloot, e.g. when integrating
-unreleased libloot changes. To do this, download a snapshot build artifact from GitHub Actions (you
-need to be logged into GitHub to do so) and unzip it to get a 7-zip or XZ-compressed tar file, then
-pass `-DLIBLOOT_URL=<path to that file>` when running `cmake`.
+It's occasionally useful to build LOOT using different version of libloot, e.g. when integrating unreleased libloot changes.
 
-To download and extract a snapshot build artifact during the GitHub Actions CI workflow, change the value of the `LIBLOOT_VERSION` environment variable to be the relevant commit hash. That only affects Linux builds, which build libloot from source. Windows builds use a prebuilt binary archive, so add a step to download the appropriate archive, before the step that runs `cmake`:
+To use a different version of libloot in CI builds:
 
-```yaml
-- name: Download libloot snapshot build artifact
-  shell: bash
-  run: |
-    curl -sSfL \
-      -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-      -H 'Accept: application/vnd.github.v3+json' \
-      -o 'libloot.zip' \
-      https://api.github.com/repos/loot/libloot/actions/artifacts/39467110/zip
-    unzip libloot.zip
-    echo "LIBLOOT_URL=${{ github.workspace }}/$(ls -1 libloot-*.7z)" >> $GITHUB_ENV
-```
+- change the value of the `LIBLOOT_VERSION` environment variable in `.github/workflows/CI.yml` to the relevant Git tag, branch or commit hash. If you're using a Git repository other than [loot/libloot](https://github.com/loot/libloot) then you'll also need to replace the two instances of `loot/libloot` with the relevant GitHub owner and repository names.
+- Update the `type: git` source for libloot in `resources/linux/io.github.loot.loot.yml` to have the relevant `url`, `commit` and/or `tag`.
 
-Replace `39467110` with the relevant artifact's ID. You can get an artifact's ID from the last
-path component in its download URL on the libloot build's GitHub Actions page in your browser: for
-example, the page at `https://github.com/loot/libloot/actions/runs/542851787` lists
-`libloot-0.16.1-9-ge97208c_linux-github-actions-Linux.tar.xz` as an artifact, and its download URL
-is `https://github.com/loot/libloot/suites/1982340583/artifacts/39467110`.
-
-Also append ` -DLIBLOOT_URL="${{ env.LIBLOOT_URL }}"` to the arguments passed to `cmake`.
+For local builds, download the relevant libloot snapshot build or release archive, or create one from a local libloot build, and then pass `-DLIBLOOT_URL=<path to that file>` when running `cmake` for LOOT.
 
 ## Code Style
 
