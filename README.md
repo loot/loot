@@ -64,9 +64,11 @@ Refer to `.github/workflows/ci.yml`'s `flatpak` job for the build process.
 
 Building the Flatpak is relatively self-contained and should only need the following installed:
 
+- `curl`
 - `git`
 - `flatpak`
 - `flatpak-builder`
+- `jq`
 - `python`, `pip` and `venv`
 
 Your Linux distribution may package Python, pip and venv separately.
