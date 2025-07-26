@@ -186,8 +186,6 @@ void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
   using std::filesystem::u8path;
 
   constexpr size_t MAX_BACKUPS = 10;
-  constexpr std::string_view PREFIX = "loadorder.";
-  constexpr std::string_view SUFFIX = ".json";
 
   if (!std::filesystem::exists(backupDirectory)) {
     return;
