@@ -60,9 +60,13 @@ vslavik's [precompiled Gettext binaries](https://github.com/vslavik/gettext-tool
 
 ### Linux
 
-Refer to `.github/workflows/ci.yml`'s `flatpak` job for the build process.
+Not all LOOT's features have been implemented for Linux builds. Issues labelled
+`linux` on LOOT's issue tracker cover such missing features where they can be
+implemented.
 
-Building the Flatpak is relatively self-contained and should only need the following installed:
+#### Flatpak
+
+Building the Flatpak needs the following installed:
 
 - `curl`
 - `git`
@@ -71,13 +75,32 @@ Building the Flatpak is relatively self-contained and should only need the follo
 - `jq`
 - `python`, `pip` and `venv`
 
-Your Linux distribution may package Python, pip and venv separately.
+For example, on Ubuntu 24.04:
 
-Not all LOOT's features have been implemented for Linux builds. Issues labelled
-`linux` on LOOT's issue tracker cover such missing features where they can be
-implemented.
+```sh
+sudo apt-get install curl git flatpak flatpak-builder jq python3 python3-pip python3-venv
+git clone https://github.com/loot/loot.git
+cd loot
+./scripts/generate_manifests.sh
+./scripts/build_flatpak.sh
+```
 
 Note that building the Flatpak doesn't work in an unprivileged container. This includes running the `generate_manifests.sh` script.
+
+#### Non-Flatpak
+
+Refer to `.github/workflows/ci.yml`'s `linux` job for the build process.
+
+It may be possible to use older versions of LOOT's dependencies that are available in your distribution's package repositories, though LOOT may not work as well with them as with the versions it uses in its CI builds. For example, on Ubuntu 24.04:
+
+```sh
+sudo apt-get install cmake g++ git libboost-locale-dev libicu-dev libtbb-dev qt6-base-dev rustup
+rustup default stable
+git clone https://github.com/loot/loot.git
+cd loot
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+```
 
 ### CMake Variables
 
