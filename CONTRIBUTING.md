@@ -165,25 +165,7 @@ For local builds, pass the relevant `LIBLOOT_*` parameter(s) documented in the [
 
 ## Code Style
 
-LOOT's JavaScript code style is codified by the included ESLint configuration, which is based off the Airbnb and Prettier rules.
-
-### C++ Code Style
-
-The [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) is used as the base, with deviations as listed below. Formatting style is codified in the repository's `.clang-format` file, but is not enforced.
-
-#### C++ Features
-
-* Static variables may contain non-POD types.
-* Reference arguments don't need to be `const` (i.e. they can be used for output variables).
-* Exceptions can be used.
-* Unsigned integer types can be used.
-* There's no restriction on which Boost libraries can be used.
-* Specialising `std::hash` is allowed.
-
-#### Naming
-
-* Constant, enumerator and variable names should use `camelCase` or `underscore_separators`, but they should be consistent within the same scope.
-* Function names should use `PascalCase` or `camelCase`, but they should be consistent within the same scope.
+LOOT's C++ formatting style is codified in the repository's `.clang-format` file, but is not enforced.
 
 ## Git pre-commit hook
 
