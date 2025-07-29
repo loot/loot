@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-07-26 08:44+0100\n"
-"PO-Revision-Date: 2025-07-28 20:02+0000\n"
-"Last-Translator: ssantos <ssantos@web.de>\n"
+"PO-Revision-Date: 2025-07-29 20:55+0000\n"
+"Last-Translator: pStyl3 <qp-git@pm.me>\n"
 "Language-Team: Portuguese (Portugal) <https://hosted.weblate.org/projects/"
 "loot/loot/pt_PT/>\n"
 "Language: pt_PT\n"
@@ -376,11 +376,11 @@ msgstr "&Redatar Plugins…"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:793
 msgid "Back Up Load &Order…"
-msgstr "A fazer backup da ordem de carregamento…"
+msgstr "A &fazer backup da ordem de carregamento…"
 
 #: src/gui/qt/main_window.cpp:794
 msgid "Res&tore Load Order…"
-msgstr "A restaurar ordem de carregamento…"
+msgstr "A restaurar orde&m de carregamento…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:796
