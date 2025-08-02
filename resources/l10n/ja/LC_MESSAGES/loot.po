@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-07-26 08:44+0100\n"
+"POT-Creation-Date: 2025-07-26 19:50+0100\n"
 "PO-Revision-Date: 2024-05-22 20:01+0100\n"
 "Last-Translator: kuroko\n"
 "Language-Team: \n"
@@ -1302,7 +1302,7 @@ msgstr ""
 "現在のロードオーダーの読み込みに失敗しました。不正確な情報が表示されている可"
 "能性があります。"
 
-#: src/gui/state/game/helpers.cpp:236
+#: src/gui/state/game/helpers.cpp:234
 msgid "Automatic Load Order Backup"
 msgstr ""
 
