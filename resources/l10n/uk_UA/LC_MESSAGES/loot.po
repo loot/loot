@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-07-26 08:44+0100\n"
+"POT-Creation-Date: 2025-07-26 19:50+0100\n"
 "PO-Revision-Date: 2024-09-26 05:16+0000\n"
 "Last-Translator: IllusiveMan196 <hamsterrv@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/"
@@ -1330,7 +1330,7 @@ msgstr ""
 "Не вдалося завантажити поточний порядок завантаження, відображена інформація "
 "може бути хибною."
 
-#: src/gui/state/game/helpers.cpp:236
+#: src/gui/state/game/helpers.cpp:234
 msgid "Automatic Load Order Backup"
 msgstr ""
 

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-07-26 08:44+0100\n"
+"POT-Creation-Date: 2025-07-26 19:50+0100\n"
 "PO-Revision-Date: 2025-06-30 02:01+0000\n"
 "Last-Translator: YanJun Sun <yanjun.sun@mail.ru>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -1294,7 +1294,7 @@ msgid ""
 "incorrect."
 msgstr "加载当前排序顺序失败，所显示的信息可能不正确。"
 
-#: src/gui/state/game/helpers.cpp:236
+#: src/gui/state/game/helpers.cpp:234
 msgid "Automatic Load Order Backup"
 msgstr "自动备份加载顺序"
 

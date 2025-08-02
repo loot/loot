@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.26.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-07-26 08:44+0100\n"
+"POT-Creation-Date: 2025-07-26 19:50+0100\n"
 "PO-Revision-Date: 2025-06-22 18:54+0200\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/loot/loot/de/>\n"
@@ -1365,7 +1365,7 @@ msgstr ""
 "Laden der derzeitigen Ladereihenfolge fehlgeschlagen, angezeigte "
 "Informationen sind womöglich inakkurat."
 
-#: src/gui/state/game/helpers.cpp:236
+#: src/gui/state/game/helpers.cpp:234
 msgid "Automatic Load Order Backup"
 msgstr "Automatisches Ladereihenfolge Backup"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-07-26 08:44+0100\n"
+"POT-Creation-Date: 2025-07-26 19:50+0100\n"
 "PO-Revision-Date: 2025-06-30 02:01+0000\n"
 "Last-Translator: Ortham <weblate@ortham.net>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
@@ -1325,7 +1325,7 @@ msgid ""
 "incorrect."
 msgstr "தற்போதைய சுமை வரிசையை ஏற்றுவதில் தோல்வி, காட்டப்படும் தகவல்கள் தவறாக இருக்கலாம்."
 
-#: src/gui/state/game/helpers.cpp:236
+#: src/gui/state/game/helpers.cpp:234
 msgid "Automatic Load Order Backup"
 msgstr "தானியங்கி சுமை ஆர்டர் காப்புப்பிரதி"
 
