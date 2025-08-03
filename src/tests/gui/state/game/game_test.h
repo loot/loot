@@ -220,7 +220,8 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
       lootDataPath / "games" / u8path(defaultGameSettings.FolderName());
   EXPECT_EQ(lootGamePath / "masterlist.yaml", game.MasterlistPath());
   EXPECT_EQ(lootGamePath / "userlist.yaml", game.UserlistPath());
-  EXPECT_EQ(lootGamePath / "group_node_positions.bin", game.GroupNodePositionsPath());
+  EXPECT_EQ(lootGamePath / "group_node_positions.bin",
+            game.GroupNodePositionsPath());
   EXPECT_EQ(lootGamePath / "old_messages.json", game.OldMessagesPath());
 }
 
@@ -1018,6 +1019,41 @@ TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsAtExternalPaths) {
 
   EXPECT_NE(nullptr, plugin);
 }
+
+#ifdef _WIN32
+TEST_P(
+    GameTest,
+    loadAllInstalledPluginsShouldLoadPluginsThatAreSymlinksForOnlyOpenMWAndOblivionRemastered) {
+  const auto symlinkPluginName = "Blank.symlink.esm";
+  std::filesystem::create_symlink(getSourcePluginsPath() / blankEsm,
+                                  dataPath / symlinkPluginName);
+
+  Game game = CreateInitialisedGame();
+  game.LoadAllInstalledPlugins(true);
+
+  const auto plugin = game.GetPlugin(symlinkPluginName);
+
+  if (GetParam() == GameId::openmw ||
+      GetParam() == GameId::oblivionRemastered) {
+    EXPECT_NE(nullptr, plugin);
+  } else {
+    EXPECT_EQ(nullptr, plugin);
+  }
+}
+#else
+TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsThatAreSymlinks) {
+  const auto symlinkPluginName = "Blank.symlink.esm";
+  std::filesystem::create_symlink(dataPath / blankEsm,
+                                  dataPath / symlinkPluginName);
+
+  Game game = CreateInitialisedGame();
+  game.LoadAllInstalledPlugins(true);
+
+  const auto plugin = game.GetPlugin(symlinkPluginName);
+
+  EXPECT_NE(nullptr, plugin);
+}
+#endif
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
   Game game = CreateInitialisedGame();

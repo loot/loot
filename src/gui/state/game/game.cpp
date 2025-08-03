@@ -253,7 +253,8 @@ std::set<Filename> ReadFilenamesInFile(const std::filesystem::path& filePath) {
   return filenames;
 }
 
-void FindFiles(const std::filesystem::path& directory,
+void FindFiles(GameId gameId,
+               const std::filesystem::path& directory,
                std::function<void(const std::filesystem::path&)> processPath) {
   if (!std::filesystem::exists(directory)) {
     return;
@@ -265,7 +266,15 @@ void FindFiles(const std::filesystem::path& directory,
   }
 
   for (const auto& entry : fs::directory_iterator(directory)) {
-    if (entry.is_regular_file()) {
+#ifdef _WIN32
+    const auto allowFile =
+        entry.is_regular_file() &&
+        (!entry.is_symlink() ||
+         (gameId == GameId::openmw || gameId == GameId::oblivionRemastered));
+#else
+    const auto allowFile = entry.is_regular_file();
+#endif
+    if (allowFile) {
       processPath(entry.path());
     }
   }
@@ -1096,7 +1105,7 @@ std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
   // Scan external data paths first, as the game checks them before the main
   // data path.
   const auto processDirectory = [&](const std::filesystem::path& directory) {
-    FindFiles(directory, recordPath);
+    FindFiles(settings_.Id(), directory, recordPath);
   };
 
   const auto additionalDataPaths = gameHandle_->GetAdditionalDataPaths();
@@ -1111,13 +1120,15 @@ std::vector<std::filesystem::path> Game::GetInstalledPluginPaths() const {
   }
 
   std::set<Filename> dataPathFilenames;
-  FindFiles(settings_.DataPath(), [&](const std::filesystem::path& filePath) {
-    const auto filename = recordPath(filePath);
+  FindFiles(settings_.Id(),
+            settings_.DataPath(),
+            [&](const std::filesystem::path& filePath) {
+              const auto filename = recordPath(filePath);
 
-    if (settings_.Id() == GameId::starfield) {
-      dataPathFilenames.insert(filename);
-    }
-  });
+              if (settings_.Id() == GameId::starfield) {
+                dataPathFilenames.insert(filename);
+              }
+            });
 
   return FilterForPlugins(std::move(foundFilePaths),
                           settings_.Id(),

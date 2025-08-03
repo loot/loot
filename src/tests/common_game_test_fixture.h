@@ -129,9 +129,11 @@ protected:
     // in case the test made anything read only.
     for (const auto& entry :
          std::filesystem::recursive_directory_iterator(rootTestPath)) {
-      std::filesystem::permissions(entry,
-                                   std::filesystem::perms::owner_write,
-                                   std::filesystem::perm_options::add);
+      if (!entry.is_symlink()) {
+        std::filesystem::permissions(entry,
+                                     std::filesystem::perms::owner_write,
+                                     std::filesystem::perm_options::add);
+      }
     }
 
     std::filesystem::remove_all(rootTestPath);
@@ -219,6 +221,10 @@ protected:
     });
   }
 
+  std::filesystem::path getSourcePluginsPath() const {
+    return loot::test::getSourcePluginsPath(gameId_);
+  }
+
 private:
   GameId gameId_;
   const std::filesystem::path rootTestPath;
@@ -247,10 +253,6 @@ protected:
   const uint32_t blankEsmCrc;
 
 private:
-  std::filesystem::path getSourcePluginsPath() const {
-    return loot::test::getSourcePluginsPath(gameId_);
-  }
-
   std::string getMasterFile() const {
     switch (gameId_) {
       case GameId::tes3:
