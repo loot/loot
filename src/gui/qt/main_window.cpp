@@ -1104,13 +1104,13 @@ void MainWindow::refreshPluginRawData(const std::string& pluginName) {
     const auto pluginItem = index.data(RawDataRole).value<PluginItem>();
 
     if (pluginItem.name == pluginName) {
-      const auto& plugin = *state.GetCurrentGame().GetPlugin(pluginName);
+      const auto plugin = state.GetCurrentGame().GetPlugin(pluginName);
       const auto newPluginItem = PluginItem(
           state.GetCurrentGame().GetSettings().Id(),
-          plugin,
+          *plugin,
           state.GetCurrentGame(),
-          state.GetCurrentGame().GetActiveLoadOrderIndex(plugin, loadOrder),
-          state.GetCurrentGame().IsPluginActive(plugin.GetName()),
+          state.GetCurrentGame().GetActiveLoadOrderIndex(*plugin, loadOrder),
+          state.GetCurrentGame().IsPluginActive(plugin->GetName()),
           state.getSettings().getLanguage());
 
       const auto indexData = QVariant::fromValue(newPluginItem);
