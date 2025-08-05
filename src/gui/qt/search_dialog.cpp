@@ -41,7 +41,7 @@ QVariant SearchDialog::getSearchText() const {
   const auto text = searchInput->text();
 
   if (regexCheckbox->isChecked()) {
-    return QRegularExpression(text, QRegularExpression::CaseInsensitiveOption);
+    return QRegularExpression(text, QRegularExpression::CaseInsensitiveOption | QRegularExpression::UseUnicodePropertiesOption);
   }
 
   return text;
