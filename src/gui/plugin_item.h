@@ -76,7 +76,6 @@ struct PluginItem {
   std::vector<Location> locations;
 
   bool containsText(const std::string& text) const;
-  bool containsMatchingText(const std::regex& regex) const;
 
   // QAbstractItemModel has a match() function that operates on items' strings,
   // so build a string that contains all the text that would be displayed for

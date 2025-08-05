@@ -27,6 +27,7 @@
 #define LOOT_GUI_QT_FILTERS_STATES
 
 #include <QtCore/QMetaType>
+#include <QtCore/QRegularExpression>
 #include <optional>
 #include <regex>
 #include <string>
@@ -57,7 +58,7 @@ struct PluginFiltersState {
   bool showOnlyPluginsWithoutLoadOrderMetadata{false};
   std::optional<std::string> overlapPluginName;
   std::optional<std::string> groupName;
-  std::variant<std::monostate, std::string, std::regex> content;
+  std::variant<std::monostate, std::string, QRegularExpression> content;
 };
 }
 

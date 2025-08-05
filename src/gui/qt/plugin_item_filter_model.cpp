@@ -25,8 +25,66 @@
 
 #include "gui/qt/plugin_item_filter_model.h"
 
+#include "gui/helpers.h"
 #include "gui/plugin_item.h"
 #include "gui/qt/plugin_item_model.h"
+
+namespace {
+bool isMatch(const std::string& text, const QRegularExpression& regex) {
+  return regex.match(QString::fromUtf8(text)).hasMatch();
+}
+
+bool containsMatchingText(const loot::PluginItem& pluginItem,
+                          const QRegularExpression& regex) {
+  if (isMatch(pluginItem.name, regex)) {
+    return true;
+  }
+
+  if (pluginItem.version.has_value() &&
+      isMatch(pluginItem.version.value(), regex)) {
+    return true;
+  }
+
+  if (pluginItem.crc.has_value()) {
+    auto crcText = loot::crcToString(pluginItem.crc.value());
+    if (isMatch(crcText, regex)) {
+      return true;
+    }
+  }
+
+  for (const auto& tag : pluginItem.currentTags) {
+    if (isMatch(tag, regex)) {
+      return true;
+    }
+  }
+
+  for (const auto& tag : pluginItem.addTags) {
+    if (isMatch(tag, regex)) {
+      return true;
+    }
+  }
+
+  for (const auto& tag : pluginItem.removeTags) {
+    if (isMatch(tag, regex)) {
+      return true;
+    }
+  }
+
+  for (const auto& message : pluginItem.messages) {
+    if (isMatch(message.text, regex)) {
+      return true;
+    }
+  }
+
+  for (const auto& location : pluginItem.locations) {
+    if (isMatch(location.GetName(), regex)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+}
 
 namespace loot {
 bool anyMessagesVisible(const PluginItem& plugin,
@@ -112,7 +170,8 @@ bool PluginItemFilterModel::filterAcceptsRow(
     return false;
   }
 
-  if (filterState.showOnlyPluginsWithLoadAfterMetadata && !item.hasLoadAfterMetadata) {
+  if (filterState.showOnlyPluginsWithLoadAfterMetadata &&
+      !item.hasLoadAfterMetadata) {
     return false;
   }
 
@@ -137,8 +196,9 @@ bool PluginItemFilterModel::filterAcceptsRow(
     return false;
   }
 
-  if (std::holds_alternative<std::regex>(filterState.content) &&
-      !item.containsMatchingText(std::get<std::regex>(filterState.content))) {
+  if (std::holds_alternative<QRegularExpression>(filterState.content) &&
+      !containsMatchingText(
+          item, std::get<QRegularExpression>(filterState.content))) {
     return false;
   }
 

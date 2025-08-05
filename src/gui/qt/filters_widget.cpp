@@ -403,11 +403,12 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
   }
 
   if (!contentFilter->text().isEmpty()) {
-    auto contentFilterText = contentFilter->text().toStdString();
     if (contentRegexCheckbox->isChecked()) {
       try {
-        filters.content = std::regex(
-            contentFilterText, std::regex::ECMAScript | std::regex::icase);
+        filters.content = QRegularExpression(
+            contentFilter->text(),
+            QRegularExpression::CaseInsensitiveOption |
+                QRegularExpression::UseUnicodePropertiesOption);
       } catch (const std::exception& e) {
         auto logger = getLogger();
         if (logger) {
@@ -417,7 +418,7 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
         showInvalidRegexTooltip(*contentFilter, e.what());
       }
     } else {
-      filters.content = contentFilterText;
+      filters.content = contentFilter->text().toStdString();
     }
   }
 

@@ -257,55 +257,6 @@ bool PluginItem::containsText(const std::string& text) const {
   return false;
 }
 
-bool PluginItem::containsMatchingText(const std::regex& regex) const {
-  if (std::regex_search(name, regex)) {
-    return true;
-  }
-
-  if (version.has_value() && std::regex_search(version.value(), regex)) {
-    return true;
-  }
-
-  if (crc.has_value()) {
-    auto crcText = crcToString(crc.value());
-    if (std::regex_search(crcText, regex)) {
-      return true;
-    }
-  }
-
-  for (const auto& tag : currentTags) {
-    if (std::regex_search(tag, regex)) {
-      return true;
-    }
-  }
-
-  for (const auto& tag : addTags) {
-    if (std::regex_search(tag, regex)) {
-      return true;
-    }
-  }
-
-  for (const auto& tag : removeTags) {
-    if (std::regex_search(tag, regex)) {
-      return true;
-    }
-  }
-
-  for (const auto& message : messages) {
-    if (std::regex_search(message.text, regex)) {
-      return true;
-    }
-  }
-
-  for (const auto& location : locations) {
-    if (std::regex_search(location.GetName(), regex)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
 std::string PluginItem::contentToSearch() const {
   auto text = name;
 
