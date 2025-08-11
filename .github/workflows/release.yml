@@ -12,38 +12,17 @@ env:
 jobs:
   create_release:
     runs-on: ubuntu-24.04
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-      git_tag: ${{ steps.get-git-tag.outputs.name }}
-    steps:
-      - name: Get Git tag
-        id: get-git-tag
-        run: |
-          GIT_REF=${{ github.ref }}
-          echo "name=${GIT_REF#refs/*/}" >> $GITHUB_OUTPUT
 
-      - id: create_release
-        uses: actions/create-release@v1
+    steps:
+      - name: Create a draft GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.get-git-tag.outputs.name }}
-          release_name: LOOT v${{ steps.get-git-tag.outputs.name }}
-          draft: true
-          body: |
-            The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).
+        run: |
+          RELEASE_TAG="${{ github.ref_name }}"
+          RELEASE_TITLE="LOOT v$RELEASE_TAG"
+          RELEASE_NOTES="$(printf "The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).\n\n## Windows\n\nLOOT requires a 64-bit version of Windows 10 (1809) or later and the [MSVC 2022 x64 redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe).\n\nThe \`.exe\` installer will automatically download and install the redistributable if you don't already have it installed.\n\n[7-Zip](https://www.7-zip.org/) is required to extract the \`.7z\` archive on Windows 10.\n\n## Linux\n\nLOOT requires a 64-bit version of Linux, and can be installed from [Flathub](https://flathub.org/apps/io.github.loot.loot).")"
 
-            ## Windows
-
-            LOOT requires a 64-bit version of Windows 10 (1809) or later and the [MSVC 2022 x64 redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe).
-
-            The `.exe` installer will automatically download and install the redistributable if you don't already have it installed.
-
-            [7-Zip](https://www.7-zip.org/) is required to extract the `.7z` archive on Windows 10.
-
-            ## Linux
-
-            LOOT requires a 64-bit version of Linux, and can be installed from [Flathub](https://flathub.org/apps/io.github.loot.loot).
+          gh release create --draft --title "$RELEASE_TITLE" --notes "$RELEASE_NOTES" --verify-tag --repo "${{ github.repository }}" "$RELEASE_TAG"
 
   windows:
     runs-on: windows-2022
@@ -166,12 +145,12 @@ jobs:
         id: get-artifact-basename
         shell: bash
         run: |
-          echo "basename=loot_${{ needs.create_release.outputs.git_tag }}-win64" >> $GITHUB_OUTPUT
+          echo "basename=loot_${{ github.ref_name }}-win64" >> $GITHUB_OUTPUT
 
       - name: Build archive
         run: |
           $env:PATH="${{ steps.qt-metadata.outputs.root }}/bin;$env:PATH"
-          python scripts\archive.py . ${{ needs.create_release.outputs.git_tag }}
+          python scripts\archive.py . ${{ github.ref_name }}
           mv "build\loot_${{ steps.get-loot-version.outputs.version }}.7z" "build\${{ steps.get-artifact-basename.outputs.basename }}.7z"
 
       - name: Build installer
@@ -183,22 +162,12 @@ jobs:
 
           mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
 
-      - name: Upload Archive
-        uses: actions/upload-release-asset@v1
+      - name: Upload archive to GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: build\${{ steps.get-artifact-basename.outputs.basename }}.7z
-          asset_name: ${{ steps.get-artifact-basename.outputs.basename }}.7z
-          asset_content_type: application/x-7z-compressed
+        run: gh release upload --repo "${{ github.repository }}" "${{ github.ref_name }}" build\${{ steps.get-artifact-basename.outputs.basename }}.7z#${{ steps.get-artifact-basename.outputs.basename }}.7z
 
-      - name: Upload Installer
-        uses: actions/upload-release-asset@v1
+      - name: Upload installer to GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: build\${{ steps.get-artifact-basename.outputs.basename }}.exe
-          asset_name: ${{ steps.get-artifact-basename.outputs.basename }}.exe
-          asset_content_type: application/octet-stream
+        run: gh release upload --repo "${{ github.repository }}" "${{ github.ref_name }}" build\${{ steps.get-artifact-basename.outputs.basename }}.exe#${{ steps.get-artifact-basename.outputs.basename }}.exe
