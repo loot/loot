@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-07-26 19:50+0100\n"
+"POT-Creation-Date: 2025-08-05 17:22+0100\n"
 "PO-Revision-Date: 2024-05-22 20:01+0100\n"
 "Last-Translator: kuroko\n"
 "Language-Team: \n"
@@ -237,26 +237,26 @@ msgstr "合計プラグイン数"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:94
+#: src/gui/qt/helpers.cpp:105
 msgid "(edited)"
 msgstr "(編集有り)"
 
-#: src/gui/qt/helpers.cpp:208
+#: src/gui/qt/helpers.cpp:228
 msgid "N/A: No masterlist present"
 msgstr "利用不可: マスターリストなし"
 
 #. translators: N/A is an abbreviation for Not Applicable.
 #. A masterlist is a database that contains information
 #. for various mods.
-#: src/gui/qt/helpers.cpp:213
+#: src/gui/qt/helpers.cpp:233
 msgid "N/A: No masterlist prelude present"
 msgstr "利用不可: 前読みマスターリストなし"
 
-#: src/gui/qt/helpers.cpp:221
+#: src/gui/qt/helpers.cpp:241
 msgid "Unknown: No revision metadata found"
 msgstr "不明: リビジョン有メタデータなし"
 
-#: src/gui/qt/helpers.cpp:357
+#: src/gui/qt/helpers.cpp:377
 msgid "Invalid regular expression: {0}"
 msgstr "不正な正規表現: {0}"
 

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-07-26 19:50+0100\n"
+"POT-Creation-Date: 2025-08-05 17:22+0100\n"
 "PO-Revision-Date: 2024-06-30 20:36+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/loot/loot/es/>\n"
@@ -239,26 +239,26 @@ msgstr "Cantidad de plugins"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:94
+#: src/gui/qt/helpers.cpp:105
 msgid "(edited)"
 msgstr "(editada)"
 
-#: src/gui/qt/helpers.cpp:208
+#: src/gui/qt/helpers.cpp:228
 msgid "N/A: No masterlist present"
 msgstr "No aplica: No se encuentra la lista de referencia (masterlist)"
 
 #. translators: N/A is an abbreviation for Not Applicable.
 #. A masterlist is a database that contains information
 #. for various mods.
-#: src/gui/qt/helpers.cpp:213
+#: src/gui/qt/helpers.cpp:233
 msgid "N/A: No masterlist prelude present"
 msgstr "No aplica: No hay un preludio de la masterlist presente"
 
-#: src/gui/qt/helpers.cpp:221
+#: src/gui/qt/helpers.cpp:241
 msgid "Unknown: No revision metadata found"
 msgstr "Advertencia: No se encontró la revisión de metadatos"
 
-#: src/gui/qt/helpers.cpp:357
+#: src/gui/qt/helpers.cpp:377
 msgid "Invalid regular expression: {0}"
 msgstr "Expresión común no válida: {0}"
 
