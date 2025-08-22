@@ -382,7 +382,6 @@ private:
       case GameId::tes5:
       case GameId::enderal:
         return "TESV.exe";
-        return "TESV.exe";
       case GameId::tes5se:
       case GameId::enderalse:
         return "SkyrimSE.exe";
