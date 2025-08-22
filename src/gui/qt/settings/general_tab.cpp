@@ -27,7 +27,7 @@
 
 #include <fmt/format.h>
 
-#include <QtWidgets/QApplication>
+#include <QtGui/QGuiApplication>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QToolTip>
 #include <QtWidgets/QVBoxLayout>
@@ -160,7 +160,7 @@ bool GeneralTab::areInputValuesValid() const {
 void GeneralTab::setupUi() {
   defaultGameComboBox->addItem(QString(), QVariant(QString("auto")));
 
-  const auto lineHeight = QFontMetricsF(QApplication::font()).height();
+  const auto lineHeight = QFontMetricsF(QGuiApplication::font()).height();
   const auto spacer = new QSpacerItem(0, static_cast<int>(lineHeight));
 
   auto generalLayout = new QFormLayout(this);

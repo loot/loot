@@ -30,7 +30,6 @@
 #include <QtCore/QVariant>
 #include <QtCore/QtGlobal>
 #include <QtGui/QAction>
-#include <QtWidgets/QApplication>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFrame>
@@ -310,7 +309,7 @@ private slots:
   void on_searchDialog_finished();
   void on_searchDialog_textChanged(const QVariant &text);
   void on_searchDialog_currentResultChanged(size_t resultIndex);
-  
+
   void on_backupDialog_accepted();
 
   void handleGameChanged(QueryResult result);

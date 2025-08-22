@@ -28,7 +28,6 @@
 
 #include <loot/metadata/plugin_metadata.h>
 
-#include <QtWidgets/QAbstractButton>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QWidget>

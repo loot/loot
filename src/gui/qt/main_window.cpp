@@ -31,12 +31,12 @@
 #include <QtGui/QCloseEvent>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QStyleHints>
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QScrollBar>
-#include <QtWidgets/QTextEdit>
 #include <boost/algorithm/string.hpp>
 
 #include "gui/backup.h"
@@ -122,7 +122,7 @@ int calculateSidebarHeaderWidth(const QAbstractItemView& view, int column) {
   const auto headerText =
       view.model()->headerData(column, Qt::Horizontal).toString();
 
-  const auto textWidth = QFontMetricsF(QApplication::font())
+  const auto textWidth = QFontMetricsF(QGuiApplication::font())
                              .size(Qt::TextSingleLine, headerText)
                              .width();
 
@@ -138,7 +138,7 @@ int calculateSidebarPositionSectionWidth(size_t pluginCount) {
   static constexpr std::array<char, 10> DIGIT_CHARACTERS = {
       '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
-  const auto fontMetrics = QFontMetricsF(QApplication::font());
+  const auto fontMetrics = QFontMetricsF(QGuiApplication::font());
 
   qreal maxCharWidth = 0;
   for (const auto hexCharacter : DIGIT_CHARACTERS) {
@@ -178,7 +178,7 @@ int calculateSidebarIndexSectionWidth(bool gameSupportsLightPlugins) {
                                                           'E',
                                                           'F'};
 
-  auto fontMetrics = QFontMetricsF(QApplication::font());
+  auto fontMetrics = QFontMetricsF(QGuiApplication::font());
 
   qreal maxCharWidth = 0;
   for (const auto hexCharacter : HEX_CHARACTERS) {

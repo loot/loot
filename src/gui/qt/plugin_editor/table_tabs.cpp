@@ -42,7 +42,7 @@
 
 namespace loot {
 int calculateItemWidth(const QString& text) {
-  auto textWidth = QFontMetricsF(QApplication::font())
+  auto textWidth = QFontMetricsF(QGuiApplication::font())
                        .size(Qt::TextSingleLine, text)
                        .width();
 

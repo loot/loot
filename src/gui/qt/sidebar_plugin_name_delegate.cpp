@@ -25,6 +25,8 @@
 
 #include "gui/qt/sidebar_plugin_name_delegate.h"
 
+#include <QtGui/QGuiApplication>
+
 #include "gui/qt/plugin_item_model.h"
 
 namespace loot {
@@ -32,7 +34,7 @@ qreal getSidebarRowHeight(bool inEditMode) {
   static constexpr double MULTIPLIER = 1.125;
 
   const auto lineHeight =
-      QFontMetricsF(QApplication::font()).height() * MULTIPLIER;
+      QFontMetricsF(QGuiApplication::font()).height() * MULTIPLIER;
 
   return inEditMode ? lineHeight * 2.0 : lineHeight;
 }

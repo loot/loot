@@ -27,7 +27,6 @@
 #define LOOT_GUI_QT_SIDEBAR_PLUGIN_NAME_DELEGATE
 
 #include <QtGui/QPainter>
-#include <QtWidgets/QApplication>
 #include <QtWidgets/QStyledItemDelegate>
 
 namespace loot {
