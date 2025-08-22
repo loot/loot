@@ -2357,12 +2357,12 @@ void MainWindow::on_pluginItemModel_dataChanged(const QModelIndex& topLeft,
 
   cardSizingCache.update(topLeft, bottomRight);
 
-  if (roles.isEmpty() || roles.contains(CardContentFiltersRole)) {
+  if (roles.isEmpty() || roles.contains(FilteredContentRole)) {
     proxyModel->invalidate();
   }
 
   if (roles.isEmpty() || roles.contains(RawDataRole) ||
-      roles.contains(CardContentFiltersRole)) {
+      roles.contains(FilteredContentRole)) {
     updateCounts(pluginItemModel->getGeneralMessages(),
                  pluginItemModel->getPluginItems());
     refreshSearch();

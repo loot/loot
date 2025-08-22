@@ -41,12 +41,7 @@ std::vector<std::string> getMessageTexts(
 }
 
 std::vector<std::string> getLocationNames(
-    const std::vector<Location>& locations,
-    bool hideLocations) {
-  if (hideLocations) {
-    return {};
-  }
-
+    const std::vector<Location>& locations) {
   std::vector<std::string> names;
   std::transform(locations.begin(),
                  locations.end(),
@@ -104,16 +99,14 @@ SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
                             {std::to_string(pluginTypeRowCount)},
                             true);
   } else {
-    auto pluginItem = index.data(RawDataRole).value<PluginItem>();
-    auto filters =
-        index.data(CardContentFiltersRole).value<CardContentFiltersState>();
+    auto pluginItem = index.data(FilteredContentRole).value<PluginItem>();
 
     return SizeHintCacheKey(
-        getTagsText(pluginItem.currentTags, filters.hideBashTags),
-        getTagsText(pluginItem.addTags, filters.hideBashTags),
-        getTagsText(pluginItem.removeTags, filters.hideBashTags),
-        getMessageTexts(filterMessages(pluginItem, filters)),
-        getLocationNames(pluginItem.locations, filters.hideLocations),
+        getTagsText(pluginItem.currentTags),
+        getTagsText(pluginItem.addTags),
+        getTagsText(pluginItem.removeTags),
+        getMessageTexts(pluginItem.messages),
+        getLocationNames(pluginItem.locations),
         false);
   }
 }
@@ -147,13 +140,11 @@ GeneralInfoCard* setGeneralInfoCardContent(GeneralInfoCard* card,
 }
 
 PluginCard* setPluginCardContent(PluginCard* card, const QModelIndex& index) {
-  auto pluginItem = index.data(RawDataRole).value<PluginItem>();
-  auto filters =
-      index.data(CardContentFiltersRole).value<CardContentFiltersState>();
+  auto pluginItem = index.data(FilteredContentRole).value<PluginItem>();
   auto searchResultData =
       index.data(SearchResultRole).value<SearchResultData>();
 
-  card->setContent(pluginItem, filters);
+  card->setContent(pluginItem);
 
   card->setSearchResult(searchResultData.isResult,
                         searchResultData.isCurrentResult);

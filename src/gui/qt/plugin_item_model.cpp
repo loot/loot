@@ -31,6 +31,47 @@
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
 
+namespace {
+using loot::CardContentFiltersState;
+using loot::PluginItem;
+
+PluginItem filterPluginItemContent(
+    const PluginItem& plugin, const CardContentFiltersState& filters) {
+  PluginItem result = plugin;
+
+  if (filters.hideCRCs) {
+    result.crc = std::nullopt;
+  }
+
+  if (filters.hideVersionNumbers) {
+    result.version = std::nullopt;
+  }
+
+  if (filters.hideBashTags) {
+    result.currentTags.clear();
+    result.addTags.clear();
+    result.removeTags.clear();
+  }
+
+  if (filters.hideLocations) {
+    result.locations.clear();
+  }
+
+  if (filters.hideAllPluginMessages) {
+    result.messages.clear();
+  } else {
+    auto it = std::remove_if(result.messages.begin(),
+                             result.messages.end(),
+        [&](const loot::SourcedMessage& message) {
+                         return shouldFilterMessage(result.name, message, filters);
+        });
+    result.messages.erase(it, result.messages.end());
+  }
+
+  return result;
+}
+}
+
 namespace loot {
 SearchResultData::SearchResultData(bool isResult, bool isCurrentResult) :
     isResult(isResult), isCurrentResult(isCurrentResult) {}
@@ -72,6 +113,20 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
 
     const int itemsIndex = index.row() - 1;
     return QVariant::fromValue(items.at(itemsIndex));
+  }
+
+  // Filtered content can be retrieved for any row and column.
+  if (role == FilteredContentRole) {
+    if (index.row() == 0) {
+      // The zeroth row is a special row for the general information
+      // card.
+      return QVariant::fromValue(generalInformation);
+    }
+
+    const int itemsIndex = index.row() - 1;
+    auto& item = items.at(itemsIndex);
+    auto filteredItem = filterPluginItemContent(item, cardContentFiltersState);
+    return QVariant::fromValue(filteredItem);
   }
 
   if (index.row() == 0) {
@@ -134,9 +189,7 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
         break;
       }
       case CARDS_COLUMN: {
-        if (role == CardContentFiltersRole) {
-          return QVariant::fromValue(cardContentFiltersState);
-        } else if (role == ContentSearchRole) {
+        if (role == ContentSearchRole) {
           return QString::fromStdString(plugin.contentToSearch());
         } else if (role == SearchResultRole) {
           const int searchResultsIndex = index.row() - 1;
@@ -400,7 +453,7 @@ void PluginItemModel::setCardContentFiltersState(
 
   const auto startIndex = index(1, CARDS_COLUMN);
   const auto endIndex = index(rowCount() - 1, CARDS_COLUMN);
-  emit dataChanged(startIndex, endIndex, {CardContentFiltersRole});
+  emit dataChanged(startIndex, endIndex, {FilteredContentRole});
 }
 
 QModelIndex PluginItemModel::setCurrentSearchResult(size_t resultIndex) {

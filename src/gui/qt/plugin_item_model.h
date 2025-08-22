@@ -40,10 +40,10 @@ namespace loot {
 static constexpr int RawDataRole = Qt::UserRole + 1;
 static constexpr int EditorStateRole = Qt::UserRole + 2;
 static constexpr int CountersRole = Qt::UserRole + 4;
-static constexpr int CardContentFiltersRole = Qt::UserRole + 5;
 static constexpr int ContentSearchRole = Qt::UserRole + 6;
 static constexpr int DragRole = Qt::UserRole + 7;
 static constexpr int SearchResultRole = Qt::UserRole + 8;
+static constexpr int FilteredContentRole = Qt::UserRole + 9;
 
 struct SearchResultData {
   SearchResultData() = default;

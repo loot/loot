@@ -87,21 +87,6 @@ bool containsMatchingText(const loot::PluginItem& pluginItem,
 }
 
 namespace loot {
-bool anyMessagesVisible(const PluginItem& plugin,
-                        const CardContentFiltersState& filters) {
-  if (filters.hideAllPluginMessages) {
-    return false;
-  }
-
-  for (const auto& message : plugin.messages) {
-    if (!shouldFilterMessage(plugin.name, message, filters)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
 PluginItemFilterModel::PluginItemFilterModel(QObject* parent) :
     QSortFilterProxyModel(parent) {}
 
@@ -149,16 +134,13 @@ bool PluginItemFilterModel::filterAcceptsRow(
   const auto sourceIndex = sourceModel()->index(
       sourceRow, PluginItemModel::CARDS_COLUMN, sourceParent);
 
-  auto item = sourceIndex.data(RawDataRole).value<PluginItem>();
-  auto contentFilters =
-      sourceIndex.data(CardContentFiltersRole).value<CardContentFiltersState>();
+  auto item = sourceIndex.data(FilteredContentRole).value<PluginItem>();
 
   if (filterState.hideInactivePlugins && !item.isActive) {
     return false;
   }
 
-  if (filterState.hideMessagelessPlugins &&
-      !anyMessagesVisible(item, contentFilters)) {
+  if (filterState.hideMessagelessPlugins && item.messages.empty()) {
     return false;
   }
 

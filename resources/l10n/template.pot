@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.26.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-08-22 10:22+0100\n"
+"POT-Creation-Date: 2025-08-22 11:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -249,26 +249,26 @@ msgstr ""
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:105
+#: src/gui/qt/helpers.cpp:94
 msgid "(edited)"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:228
+#: src/gui/qt/helpers.cpp:208
 msgid "N/A: No masterlist present"
 msgstr ""
 
 #. translators: N/A is an abbreviation for Not Applicable.
 #. A masterlist is a database that contains information
 #. for various mods.
-#: src/gui/qt/helpers.cpp:233
+#: src/gui/qt/helpers.cpp:213
 msgid "N/A: No masterlist prelude present"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:241
+#: src/gui/qt/helpers.cpp:221
 msgid "Unknown: No revision metadata found"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:377
+#: src/gui/qt/helpers.cpp:357
 #, c++-format
 msgid "Invalid regular expression: {0}"
 msgstr ""
@@ -713,85 +713,85 @@ msgid ""
 "can get to it through the main menu) for more information."
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:163
+#: src/gui/qt/plugin_card.cpp:139
 msgid "Source:"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:164
+#: src/gui/qt/plugin_card.cpp:140
 msgid "Sources:"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:180
+#: src/gui/qt/plugin_card.cpp:155
 #, c++-format
 msgid "Verified clean by {0}"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:188
+#: src/gui/qt/plugin_card.cpp:163
 msgid "Small Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:191 src/gui/qt/plugin_card.cpp:309
+#: src/gui/qt/plugin_card.cpp:166 src/gui/qt/plugin_card.cpp:284
 msgid "Light Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:306
+#: src/gui/qt/plugin_card.cpp:281
 msgid "Active Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:307
+#: src/gui/qt/plugin_card.cpp:282
 msgid "Master Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:308
+#: src/gui/qt/plugin_card.cpp:283
 msgid "Blueprint Master Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:310
+#: src/gui/qt/plugin_card.cpp:285
 msgid "Medium Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:311
+#: src/gui/qt/plugin_card.cpp:286
 msgid "Empty Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:312
+#: src/gui/qt/plugin_card.cpp:287
 msgid "Loads Archive"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:313 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:288 src/gui/qt/plugin_item_model.cpp:183
 msgid "Has User Metadata"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:315
+#: src/gui/qt/plugin_card.cpp:290
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:316
+#: src/gui/qt/plugin_card.cpp:291
 msgid "Current"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:317 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:292 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:318 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:293 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:126
+#: src/gui/qt/plugin_item_model.cpp:181
 msgid "Editor Is Open"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:177
+#: src/gui/qt/plugin_item_model.cpp:230
 msgid "Position"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:179
+#: src/gui/qt/plugin_item_model.cpp:232
 msgid "Index"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:181
+#: src/gui/qt/plugin_item_model.cpp:234
 msgid "Plugin Name"
 msgstr ""
 

@@ -36,11 +36,7 @@
 #include "gui/qt/messages_widget.h"
 
 namespace loot {
-QString getTagsText(const std::vector<std::string> tags, bool hideTags);
-
-std::vector<SourcedMessage> filterMessages(
-    const PluginItem& plugin,
-    const CardContentFiltersState& filters);
+QString getTagsText(const std::vector<std::string> tags);
 
 class PluginCard : public Card {
   Q_OBJECT
@@ -49,8 +45,7 @@ public:
 
   void setIcons();
 
-  void setContent(const PluginItem& plugin,
-                  const CardContentFiltersState& filters);
+  void setContent(const PluginItem& plugin);
 
   void setSearchResult(bool isSearchResult, bool isCurrentSearchResult);
 

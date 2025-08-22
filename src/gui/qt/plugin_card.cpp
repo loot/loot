@@ -45,11 +45,7 @@ void setIcon(QLabel* label, QIcon icon) {
   label->setPixmap(IconFactory::getPixmap(icon, ATTRIBUTE_ICON_HEIGHT));
 }
 
-QString getTagsText(const std::vector<std::string> tags, bool hideTags) {
-  if (hideTags) {
-    return "";
-  }
-
+QString getTagsText(const std::vector<std::string> tags) {
   QStringList tagsList;
   for (const auto& tag : tags) {
     tagsList.append(QString::fromStdString(tag));
@@ -60,22 +56,6 @@ QString getTagsText(const std::vector<std::string> tags, bool hideTags) {
   }
 
   return tagsList.join(", ");
-}
-
-std::vector<SourcedMessage> filterMessages(
-    const PluginItem& plugin,
-    const CardContentFiltersState& filters) {
-  std::vector<SourcedMessage> filteredMessages;
-
-  if (!filters.hideAllPluginMessages) {
-    for (const auto& message : plugin.messages) {
-      if (!shouldFilterMessage(plugin.name, message, filters)) {
-        filteredMessages.push_back(message);
-      }
-    }
-  }
-
-  return filteredMessages;
 }
 
 PluginCard::PluginCard(QWidget* parent) : Card(parent, true) { setupUi(); }
@@ -93,18 +73,17 @@ void PluginCard::setIcons() {
   setIcon(hasUserEditsLabel, IconFactory::getHasUserMetadataIcon());
 }
 
-void PluginCard::setContent(const PluginItem& plugin,
-                            const CardContentFiltersState& filters) {
+void PluginCard::setContent(const PluginItem& plugin) {
   nameLabel->setText(QString::fromStdString(plugin.name));
 
-  if (plugin.crc.has_value() && !filters.hideCRCs) {
+  if (plugin.crc.has_value()) {
     auto crc = crcToString(plugin.crc.value());
     crcLabel->setText(QString::fromStdString(crc));
   } else {
     crcLabel->clear();
   }
 
-  if (plugin.version.has_value() && !filters.hideVersionNumbers) {
+  if (plugin.version.has_value()) {
     versionLabel->setText(QString::fromStdString(plugin.version.value()));
   } else {
     versionLabel->clear();
@@ -120,9 +99,9 @@ void PluginCard::setContent(const PluginItem& plugin,
   isCleanLabel->setVisible(plugin.cleaningUtility.has_value());
   hasUserEditsLabel->setVisible(plugin.hasUserMetadata);
 
-  auto currentTagsText = getTagsText(plugin.currentTags, filters.hideBashTags);
-  auto addTagsText = getTagsText(plugin.addTags, filters.hideBashTags);
-  auto removeTagsText = getTagsText(plugin.removeTags, filters.hideBashTags);
+  auto currentTagsText = getTagsText(plugin.currentTags);
+  auto addTagsText = getTagsText(plugin.addTags);
+  auto removeTagsText = getTagsText(plugin.removeTags);
 
   const auto showBashTags = !currentTagsText.isEmpty() ||
                             !addTagsText.isEmpty() || !removeTagsText.isEmpty();
@@ -145,8 +124,7 @@ void PluginCard::setContent(const PluginItem& plugin,
 
   tagsGroupBox->setVisible(showBashTags);
 
-  const auto showLocations =
-      !plugin.locations.empty() && !filters.hideLocations;
+  const auto showLocations = !plugin.locations.empty();
   if (showLocations) {
     std::vector<std::string> locationLinks;
     std::transform(plugin.locations.begin(),
@@ -167,11 +145,10 @@ void PluginCard::setContent(const PluginItem& plugin,
 
   locationsLabel->setVisible(showLocations);
 
-  auto messages = filterMessages(plugin, filters);
-  if (!messages.empty()) {
-    messagesWidget->setMessages(messages);
+  if (!plugin.messages.empty()) {
+    messagesWidget->setMessages(plugin.messages);
   }
-  messagesWidget->setVisible(!messages.empty());
+  messagesWidget->setVisible(!plugin.messages.empty());
 
   if (plugin.cleaningUtility.has_value()) {
     auto cleanText =
