@@ -38,14 +38,27 @@ using loot::GeneralInformation;
 using loot::PluginItem;
 using loot::SourcedMessage;
 
-bool shouldFilterMessage(const SourcedMessage& message,
-                         const CardContentFiltersState& filters) {
-  return message.type == loot::MessageType::say && filters.hideNotes;
+bool shouldFilterMessage(
+    const SourcedMessage& message,
+    const CardContentFiltersState& filters,
+    const std::unordered_set<std::string>& hiddenGeneralMessages) {
+  if (message.type == loot::MessageType::say && filters.hideNotes) {
+    return true;
+  }
+
+  if (hiddenGeneralMessages.count(message.text) > 0) {
+    return true;
+  }
+
+  return false;
 }
 
-bool shouldFilterMessage(const std::string& pluginName,
-                         const SourcedMessage& message,
-                         const CardContentFiltersState& filters) {
+bool shouldFilterMessage(
+    const std::string& pluginName,
+    const SourcedMessage& message,
+    const CardContentFiltersState& filters,
+    const std::unordered_map<std::string, std::unordered_set<std::string>>&
+        hiddenMessagesByPluginName) {
   if (message.type == loot::MessageType::say && filters.hideNotes) {
     return true;
   }
@@ -53,6 +66,12 @@ bool shouldFilterMessage(const std::string& pluginName,
   if (filters.hideOfficialPluginsCleaningMessages &&
       message.source == loot::MessageSource::cleaningMetadata &&
       loot::IsOfficialPlugin(filters.gameId, pluginName)) {
+    return true;
+  }
+
+  const auto it = hiddenMessagesByPluginName.find(pluginName);
+  if (it != hiddenMessagesByPluginName.end() &&
+      it->second.count(message.text) > 0) {
     return true;
   }
 
@@ -65,8 +84,11 @@ void filterMessages(std::vector<SourcedMessage>& messages,
   messages.erase(it, messages.end());
 }
 
-PluginItem filterContent(const PluginItem& plugin,
-                         const CardContentFiltersState& filters) {
+PluginItem filterContent(
+    const PluginItem& plugin,
+    const CardContentFiltersState& filters,
+    const std::unordered_map<std::string, std::unordered_set<std::string>>&
+        hiddenMessages) {
   PluginItem result = plugin;
 
   if (filters.hideCRCs) {
@@ -91,19 +113,21 @@ PluginItem filterContent(const PluginItem& plugin,
     result.messages.clear();
   } else {
     filterMessages(result.messages, [&](const SourcedMessage& message) {
-      return shouldFilterMessage(result.name, message, filters);
+      return shouldFilterMessage(result.name, message, filters, hiddenMessages);
     });
   }
 
   return result;
 }
 
-GeneralInformation filterContent(const GeneralInformation& generalInfo,
-                                 const CardContentFiltersState& filters) {
+GeneralInformation filterContent(
+    const GeneralInformation& generalInfo,
+    const CardContentFiltersState& filters,
+    const std::unordered_set<std::string>& hiddenGeneralMessages) {
   GeneralInformation result = generalInfo;
 
   filterMessages(result.generalMessages, [&](const SourcedMessage& message) {
-    return shouldFilterMessage(message, filters);
+    return shouldFilterMessage(message, filters, hiddenGeneralMessages);
   });
 
   return result;
@@ -158,14 +182,15 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
     if (index.row() == 0) {
       // The zeroth row is a special row for the general information
       // card.
-      auto filteredInfo =
-          filterContent(generalInformation, cardContentFiltersState);
+      auto filteredInfo = filterContent(
+          generalInformation, cardContentFiltersState, hiddenGeneralMessages);
       return QVariant::fromValue(filteredInfo);
     }
 
     const int itemsIndex = index.row() - 1;
     auto& item = items.at(itemsIndex);
-    auto filteredItem = filterContent(item, cardContentFiltersState);
+    auto filteredItem = filterContent(
+        item, cardContentFiltersState, hiddenMessagesByPluginName);
     return QVariant::fromValue(filteredItem);
   }
 
@@ -496,6 +521,31 @@ void PluginItemModel::setCardContentFiltersState(
   emit dataChanged(startIndex, endIndex, {FilteredContentRole});
 }
 
+void PluginItemModel::setHiddenMessages(
+    const std::vector<HiddenMessage>& hiddenMessages) {
+  hiddenMessagesByPluginName.clear();
+  hiddenGeneralMessages.clear();
+
+  for (const auto& hiddenMessage : hiddenMessages) {
+    if (hiddenMessage.pluginName.has_value()) {
+      const auto& pluginName = hiddenMessage.pluginName.value();
+      auto it = hiddenMessagesByPluginName.find(pluginName);
+      if (it == hiddenMessagesByPluginName.end()) {
+        hiddenMessagesByPluginName.emplace(
+            pluginName, std::unordered_set{hiddenMessage.text});
+      } else {
+        it->second.insert(hiddenMessage.text);
+      }
+    } else {
+      hiddenGeneralMessages.insert(hiddenMessage.text);
+    }
+  }
+
+  const auto startIndex = index(0, CARDS_COLUMN);
+  const auto endIndex = index(rowCount() - 1, CARDS_COLUMN);
+  emit dataChanged(startIndex, endIndex, {FilteredContentRole});
+}
+
 QModelIndex PluginItemModel::setCurrentSearchResult(size_t resultIndex) {
   size_t currentResultIndex = 0;
   for (size_t i = 0; i < searchResults.size(); i += 1) {
@@ -525,7 +575,8 @@ size_t PluginItemModel::countHiddenMessages() {
                           generalInformation.generalMessages.end(),
                           [&](const SourcedMessage& message) {
                             return shouldFilterMessage(message,
-                                                       cardContentFiltersState);
+                                                       cardContentFiltersState,
+                                                       hiddenGeneralMessages);
                           });
 
   for (const auto& plugin : items) {
@@ -538,8 +589,10 @@ size_t PluginItemModel::countHiddenMessages() {
         std::count_if(plugin.messages.begin(),
                       plugin.messages.end(),
                       [&](const SourcedMessage& message) {
-                        return shouldFilterMessage(
-                            plugin.name, message, cardContentFiltersState);
+                        return shouldFilterMessage(plugin.name,
+                                                   message,
+                                                   cardContentFiltersState,
+                                                   hiddenMessagesByPluginName);
                       });
   }
 

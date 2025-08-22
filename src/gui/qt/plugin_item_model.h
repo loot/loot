@@ -33,6 +33,7 @@
 #include "gui/qt/filters_states.h"
 #include "gui/qt/general_info.h"
 #include "gui/qt/helpers.h"
+#include "gui/state/game/game_settings.h"
 
 Q_DECLARE_METATYPE(loot::PluginItem);
 
@@ -111,6 +112,8 @@ public:
 
   void setCardContentFiltersState(CardContentFiltersState&& state);
 
+  void setHiddenMessages(const std::vector<HiddenMessage>& hiddenMessages);
+
   QModelIndex setCurrentSearchResult(size_t resultIndex);
 
   size_t countHiddenMessages();
@@ -123,6 +126,9 @@ private:
 
   std::optional<std::string> currentEditorPluginName;
   CardContentFiltersState cardContentFiltersState;
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      hiddenMessagesByPluginName;
+  std::unordered_set<std::string> hiddenGeneralMessages;
 };
 }
 

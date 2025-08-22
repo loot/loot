@@ -42,6 +42,11 @@ std::string GetDefaultMasterlistUrl(const std::string& repositoryName);
 
 std::string GetDefaultMasterlistUrl(const GameId gameId);
 
+struct HiddenMessage {
+  std::optional<std::string> pluginName;
+  std::string text;
+};
+
 class GameSettings {
 public:
   GameSettings() = default;
@@ -57,6 +62,8 @@ public:
   std::filesystem::path GameLocalPath() const;
   std::filesystem::path DataPath() const;
 
+  const std::vector<HiddenMessage>& HiddenMessages() const;
+
   GameSettings& SetName(const std::string& name);
   GameSettings& SetMaster(const std::string& masterFile);
   GameSettings& SetMinimumHeaderVersion(float minimumHeaderVersion);
@@ -64,6 +71,9 @@ public:
   GameSettings& SetGamePath(const std::filesystem::path& path);
   GameSettings& SetGameLocalPath(const std::filesystem::path& GameLocalPath);
   GameSettings& SetGameLocalFolder(const std::string& folderName);
+
+  GameSettings& SetHiddenMessages(
+      const std::vector<HiddenMessage>& hiddenMessages);
 
 private:
   GameId id_{GameId::tes4};
@@ -77,6 +87,8 @@ private:
 
   std::filesystem::path gamePath_;
   std::filesystem::path gameLocalPath_;
+
+  std::vector<HiddenMessage> hiddenMessages_;
 };
 }
 

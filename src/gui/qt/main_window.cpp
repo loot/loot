@@ -300,6 +300,8 @@ void MainWindow::initialise() {
     // to re-filter the full plugin list.
     pluginItemModel->setCardContentFiltersState(
         filtersWidget->getCardContentFiltersState());
+    pluginItemModel->setHiddenMessages(
+        state.GetCurrentGame().GetSettings().HiddenMessages());
     proxyModel->setFiltersState(filtersWidget->getPluginFiltersState(), {});
 
     gameComboBox->setCurrentText(

@@ -629,6 +629,23 @@ std::string getGameFolder(const toml::table& table) {
   return *folder;
 }
 
+HiddenMessage convertHiddenMessageTable(const toml::table& table) {
+  auto pluginName = table["pluginName"].value<std::string>();
+  auto text = table["text"].value<std::string>();
+
+  if (!text) {
+    throw std::runtime_error("'text' key missing from hidden message table");
+  }
+
+  HiddenMessage hiddenMessage;
+  if (pluginName) {
+    hiddenMessage.pluginName = *pluginName;
+  }
+  hiddenMessage.text = *text;
+
+  return hiddenMessage;
+}
+
 GameSettings convertGameTable(const toml::table& table) {
   const auto gameId = getGameId(table);
   const auto folder = getGameFolder(table);
@@ -677,6 +694,21 @@ GameSettings convertGameTable(const toml::table& table) {
     game.SetGameLocalPath(std::filesystem::u8path(*localPath));
   } else if (localFolder) {
     game.SetGameLocalFolder(*localFolder);
+  }
+
+  auto hiddenMessagesToml = table["hiddenMessages"];
+  if (hiddenMessagesToml.is_array_of_tables()) {
+    std::vector<HiddenMessage> hiddenMessages;
+    for (const auto& hiddenMessageToml : *hiddenMessagesToml.as_array()) {
+      if (!hiddenMessageToml.is_table()) {
+        throw std::runtime_error("hiddenMessages array element is not a table");
+      }
+
+      hiddenMessages.push_back(
+          convertHiddenMessageTable(*hiddenMessageToml.as_table()));
+    }
+
+    game.SetHiddenMessages(hiddenMessages);
   }
 
   return game;
@@ -970,6 +1002,21 @@ void LootSettings::save(const std::filesystem::path& file) {
     toml::array games;
 
     for (const auto& gameSettings : gameSettings_) {
+      toml::array hiddenMessages;
+
+      for (const auto& hiddenMessage : gameSettings.HiddenMessages()) {
+        toml::table hiddenMessageToml{
+            {"text", hiddenMessage.text},
+        };
+
+        if (hiddenMessage.pluginName.has_value()) {
+          hiddenMessageToml.insert("pluginName",
+                                   hiddenMessage.pluginName.value());
+        }
+
+        hiddenMessages.push_back(hiddenMessageToml);
+      }
+
       toml::table game{
           {"gameId", ToString(gameSettings.Id())},
           {"name", gameSettings.Name()},
@@ -979,6 +1026,7 @@ void LootSettings::save(const std::filesystem::path& file) {
           {"masterlistSource", gameSettings.MasterlistSource()},
           {"path", gameSettings.GamePath().u8string()},
           {"local_path", gameSettings.GameLocalPath().u8string()},
+          {"hiddenMessages", hiddenMessages},
       };
 
       games.push_back(game);

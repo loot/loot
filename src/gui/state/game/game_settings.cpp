@@ -149,6 +149,10 @@ std::filesystem::path GameSettings::DataPath() const {
   return GetDataPath(id_, gamePath_);
 }
 
+const std::vector<HiddenMessage>& GameSettings::HiddenMessages() const {
+  return hiddenMessages_;
+}
+
 GameSettings& GameSettings::SetName(const std::string& name) {
   name_ = name;
   return *this;
@@ -183,6 +187,12 @@ GameSettings& GameSettings::SetGameLocalPath(
 
 GameSettings& GameSettings::SetGameLocalFolder(const std::string& folderName) {
   gameLocalPath_ = getLocalAppDataPath() / std::filesystem::u8path(folderName);
+  return *this;
+}
+
+GameSettings& GameSettings::SetHiddenMessages(
+    const std::vector<HiddenMessage>& hiddenMessages) {
+  hiddenMessages_ = hiddenMessages;
   return *this;
 }
 }
