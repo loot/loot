@@ -117,6 +117,10 @@ std::string GetDefaultMasterlistUrl(const GameId gameId) {
   return GetDefaultMasterlistUrl(repoName);
 }
 
+bool operator==(const HiddenMessage& lhs, const HiddenMessage& rhs) {
+  return lhs.pluginName == rhs.pluginName && lhs.text == rhs.text;
+}
+
 GameSettings::GameSettings(const GameId gameId, const std::string& lootFolder) :
     id_(gameId),
     name_(GetGameName(gameId)),
@@ -194,5 +198,19 @@ GameSettings& GameSettings::SetHiddenMessages(
     const std::vector<HiddenMessage>& hiddenMessages) {
   hiddenMessages_ = hiddenMessages;
   return *this;
+}
+
+void GameSettings::HideMessage(const std::string& pluginName,
+                               const std::string& messageText) {
+  HiddenMessage message;
+  if (!pluginName.empty()) {
+    message.pluginName = pluginName;
+  }
+  message.text = messageText;
+
+  auto it = std::find(hiddenMessages_.begin(), hiddenMessages_.end(), message);
+  if (it == hiddenMessages_.end()) {
+    hiddenMessages_.push_back(message);
+  }
 }
 }

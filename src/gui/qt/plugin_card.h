@@ -30,8 +30,8 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QWidget>
 
-#include "gui/qt/card.h"
 #include "gui/plugin_item.h"
+#include "gui/qt/card.h"
 #include "gui/qt/filters_states.h"
 #include "gui/qt/messages_widget.h"
 
@@ -50,6 +50,10 @@ public:
   void setSearchResult(bool isSearchResult, bool isCurrentSearchResult);
 
   void refreshMessages();
+
+signals:
+  void hideMessage(const std::string& pluginName,
+                   const std::string& messageText);
 
 private:
   QLabel* nameLabel{new QLabel(this)};
@@ -77,6 +81,8 @@ private:
   void setupUi();
 
   void translateUi();
+
+  void onHideMessage(const std::string& messageText);
 };
 }
 

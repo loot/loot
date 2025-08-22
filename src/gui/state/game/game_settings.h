@@ -47,6 +47,8 @@ struct HiddenMessage {
   std::string text;
 };
 
+bool operator==(const HiddenMessage& lhs, const HiddenMessage& rhs);
+
 class GameSettings {
 public:
   GameSettings() = default;
@@ -74,6 +76,9 @@ public:
 
   GameSettings& SetHiddenMessages(
       const std::vector<HiddenMessage>& hiddenMessages);
+
+  void HideMessage(const std::string& pluginName,
+                   const std::string& messageText);
 
 private:
   GameId id_{GameId::tes4};

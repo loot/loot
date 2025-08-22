@@ -200,6 +200,11 @@ void GeneralInfoCard::setupUi() {
   setLayout(generalInfoLayout);
 
   translateUi();
+
+  connect(messagesWidget,
+          &MessagesWidget::hideMessage,
+          this,
+          &GeneralInfoCard::hideMessage);
 }
 
 void GeneralInfoCard::translateUi() {

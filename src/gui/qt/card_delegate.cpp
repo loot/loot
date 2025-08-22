@@ -102,13 +102,12 @@ SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
   } else {
     auto pluginItem = index.data(FilteredContentRole).value<PluginItem>();
 
-    return SizeHintCacheKey(
-        getTagsText(pluginItem.currentTags),
-        getTagsText(pluginItem.addTags),
-        getTagsText(pluginItem.removeTags),
-        getMessageTexts(pluginItem.messages),
-        getLocationNames(pluginItem.locations),
-        false);
+    return SizeHintCacheKey(getTagsText(pluginItem.currentTags),
+                            getTagsText(pluginItem.addTags),
+                            getTagsText(pluginItem.removeTags),
+                            getMessageTexts(pluginItem.messages),
+                            getLocationNames(pluginItem.locations),
+                            false);
   }
 }
 
@@ -324,6 +323,11 @@ CardDelegate::CardDelegate(QListView* parent,
     cardSizingCache(&cardSizingCache) {
   prepareWidget(generalInfoCard);
   prepareWidget(pluginCard);
+
+  connect(this,
+          &CardDelegate::hideMessage,
+          this,
+          &QAbstractItemDelegate::sizeHintChanged);
 }
 
 void CardDelegate::setIcons() { pluginCard->setIcons(); }
@@ -431,9 +435,22 @@ QWidget* CardDelegate::createEditor(QWidget* parent,
   }
 
   if (index.row() == 0) {
-    return new GeneralInfoCard(parent);
+    auto card = new GeneralInfoCard(parent);
+    connect(card,
+            &GeneralInfoCard::hideMessage,
+            [this, index](const std::string& messageText) {
+              emit this->hideMessage(index, "", messageText);
+            });
+    return card;
   } else {
-    return new PluginCard(parent);
+    auto card = new PluginCard(parent);
+    connect(card,
+            &PluginCard::hideMessage,
+            [this, index](const std::string& pluginName,
+                          const std::string& messageText) {
+              emit this->hideMessage(index, pluginName, messageText);
+            });
+    return card;
   }
 }
 
