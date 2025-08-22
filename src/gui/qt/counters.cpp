@@ -65,41 +65,4 @@ void GeneralInformationCounters::countMessages(
 
   totalMessages += messages.size();
 }
-
-bool shouldFilterMessage(const std::string& pluginName,
-                         const SourcedMessage& message,
-                         const CardContentFiltersState& filters) {
-  if (message.type == MessageType::say && filters.hideNotes) {
-    return true;
-  }
-
-  if (filters.hideOfficialPluginsCleaningMessages &&
-      message.source == MessageSource::cleaningMetadata &&
-      IsOfficialPlugin(filters.gameId, pluginName)) {
-    return true;
-  }
-
-  return false;
-}
-
-size_t countHiddenMessages(const std::vector<PluginItem>& plugins,
-                           const CardContentFiltersState& filters) {
-  size_t hidden = 0;
-
-  for (const auto& plugin : plugins) {
-    if (filters.hideAllPluginMessages) {
-      hidden += plugin.messages.size();
-      continue;
-    }
-
-    hidden += std::count_if(plugin.messages.begin(),
-                            plugin.messages.end(),
-                            [&](const SourcedMessage& message) {
-                              return shouldFilterMessage(
-                                  plugin.name, message, filters);
-                            });
-  }
-
-  return hidden;
-}
 }

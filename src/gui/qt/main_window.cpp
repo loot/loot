@@ -974,8 +974,7 @@ void MainWindow::updateCounts(
     const std::vector<SourcedMessage>& generalMessages,
     const std::vector<PluginItem>& plugins) {
   const auto counters = GeneralInformationCounters(generalMessages, plugins);
-  const auto hiddenMessageCount =
-      countHiddenMessages(plugins, filtersWidget->getCardContentFiltersState());
+  const auto hiddenMessageCount = pluginItemModel->countHiddenMessages();
   const auto hiddenPluginCount =
       counters.totalPlugins - static_cast<size_t>(proxyModel->rowCount()) + 1;
 

@@ -113,6 +113,8 @@ public:
 
   QModelIndex setCurrentSearchResult(size_t resultIndex);
 
+  size_t countHiddenMessages();
+
 private:
   GeneralInformation generalInformation;
   std::vector<PluginItem> items;

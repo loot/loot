@@ -49,13 +49,6 @@ struct GeneralInformationCounters {
 private:
   void countMessages(const std::vector<SourcedMessage>& messages);
 };
-
-bool shouldFilterMessage(const std::string& pluginName,
-                         const SourcedMessage& message,
-                         const CardContentFiltersState& filters);
-
-size_t countHiddenMessages(const std::vector<PluginItem>& plugins,
-                           const CardContentFiltersState& filters);
 }
 
 Q_DECLARE_METATYPE(loot::GeneralInformationCounters);

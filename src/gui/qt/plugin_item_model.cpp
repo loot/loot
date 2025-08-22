@@ -30,13 +30,31 @@
 
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
+#include "gui/state/game/helpers.h"
 
 namespace {
 using loot::CardContentFiltersState;
 using loot::PluginItem;
+using loot::SourcedMessage;
 
-PluginItem filterPluginItemContent(
-    const PluginItem& plugin, const CardContentFiltersState& filters) {
+bool shouldFilterMessage(const std::string& pluginName,
+                         const SourcedMessage& message,
+                         const CardContentFiltersState& filters) {
+  if (message.type == loot::MessageType::say && filters.hideNotes) {
+    return true;
+  }
+
+  if (filters.hideOfficialPluginsCleaningMessages &&
+      message.source == loot::MessageSource::cleaningMetadata &&
+      loot::IsOfficialPlugin(filters.gameId, pluginName)) {
+    return true;
+  }
+
+  return false;
+}
+
+PluginItem filterPluginItemContent(const PluginItem& plugin,
+                                   const CardContentFiltersState& filters) {
   PluginItem result = plugin;
 
   if (filters.hideCRCs) {
@@ -62,9 +80,10 @@ PluginItem filterPluginItemContent(
   } else {
     auto it = std::remove_if(result.messages.begin(),
                              result.messages.end(),
-        [&](const loot::SourcedMessage& message) {
-                         return shouldFilterMessage(result.name, message, filters);
-        });
+                             [&](const SourcedMessage& message) {
+                               return shouldFilterMessage(
+                                   result.name, message, filters);
+                             });
     result.messages.erase(it, result.messages.end());
   }
 
@@ -476,5 +495,26 @@ QModelIndex PluginItemModel::setCurrentSearchResult(size_t resultIndex) {
   }
 
   return QModelIndex();
+}
+
+size_t PluginItemModel::countHiddenMessages() {
+  size_t hidden = 0;
+
+  for (const auto& plugin : items) {
+    if (cardContentFiltersState.hideAllPluginMessages) {
+      hidden += plugin.messages.size();
+      continue;
+    }
+
+    hidden +=
+        std::count_if(plugin.messages.begin(),
+                      plugin.messages.end(),
+                      [&](const SourcedMessage& message) {
+                        return shouldFilterMessage(
+                            plugin.name, message, cardContentFiltersState);
+                      });
+  }
+
+  return hidden;
 }
 }
