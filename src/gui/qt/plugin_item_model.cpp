@@ -528,22 +528,35 @@ void PluginItemModel::setHiddenMessages(
 
   for (const auto& hiddenMessage : hiddenMessages) {
     if (hiddenMessage.pluginName.has_value()) {
-      const auto& pluginName = hiddenMessage.pluginName.value();
-      auto it = hiddenMessagesByPluginName.find(pluginName);
-      if (it == hiddenMessagesByPluginName.end()) {
-        hiddenMessagesByPluginName.emplace(
-            pluginName, std::unordered_set{hiddenMessage.text});
-      } else {
-        it->second.insert(hiddenMessage.text);
-      }
+      hideMessage(hiddenMessage.pluginName.value(), hiddenMessage.text);
     } else {
-      hiddenGeneralMessages.insert(hiddenMessage.text);
+      hideGeneralMessage(hiddenMessage.text);
     }
   }
 
   const auto startIndex = index(0, CARDS_COLUMN);
   const auto endIndex = index(rowCount() - 1, CARDS_COLUMN);
   emit dataChanged(startIndex, endIndex, {FilteredContentRole});
+}
+
+void PluginItemModel::handleHideMessage(const std::string& pluginName,
+                                        const std::string& text) {
+  if (pluginName.empty()) {
+    hideGeneralMessage(text);
+
+    auto index = this->index(0, CARDS_COLUMN);
+    emit dataChanged(index, index, {FilteredContentRole});
+  } else {
+    hideMessage(pluginName, text);
+
+    for (int i = 0; i < items.size(); i += 1) {
+      if (items.at(i).name == pluginName) {
+        auto index = this->index(i + 1, CARDS_COLUMN);
+        emit dataChanged(index, index, {FilteredContentRole});
+        break;
+      }
+    }
+  }
 }
 
 QModelIndex PluginItemModel::setCurrentSearchResult(size_t resultIndex) {
@@ -597,5 +610,18 @@ size_t PluginItemModel::countHiddenMessages() {
   }
 
   return hidden;
+}
+void PluginItemModel::hideGeneralMessage(const std::string& text) {
+  hiddenGeneralMessages.insert(text);
+}
+
+void PluginItemModel::hideMessage(const std::string& pluginName,
+                                  const std::string& text) {
+  auto it = hiddenMessagesByPluginName.find(pluginName);
+  if (it == hiddenMessagesByPluginName.end()) {
+    hiddenMessagesByPluginName.emplace(pluginName, std::unordered_set{text});
+  } else {
+    it->second.insert(text);
+  }
 }
 }

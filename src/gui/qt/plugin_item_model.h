@@ -114,6 +114,9 @@ public:
 
   void setHiddenMessages(const std::vector<HiddenMessage>& hiddenMessages);
 
+  void handleHideMessage(const std::string& pluginName,
+                         const std::string& text);
+
   QModelIndex setCurrentSearchResult(size_t resultIndex);
 
   size_t countHiddenMessages();
@@ -129,6 +132,9 @@ private:
   std::unordered_map<std::string, std::unordered_set<std::string>>
       hiddenMessagesByPluginName;
   std::unordered_set<std::string> hiddenGeneralMessages;
+
+  void hideGeneralMessage(const std::string& text);
+  void hideMessage(const std::string& pluginName, const std::string& text);
 };
 }
 

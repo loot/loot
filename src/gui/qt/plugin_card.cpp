@@ -145,10 +145,7 @@ void PluginCard::setContent(const PluginItem& plugin) {
 
   locationsLabel->setVisible(showLocations);
 
-  if (!plugin.messages.empty()) {
-    messagesWidget->setMessages(plugin.messages);
-  }
-  messagesWidget->setVisible(!plugin.messages.empty());
+  messagesWidget->setMessages(plugin.messages);
 
   if (plugin.cleaningUtility.has_value()) {
     auto cleanText =
@@ -275,6 +272,11 @@ void PluginCard::setupUi() {
   setLayout(layout);
 
   translateUi();
+
+  connect(messagesWidget,
+          &MessagesWidget::hideMessage,
+          this,
+          &PluginCard::onHideMessage);
 }
 
 void PluginCard::translateUi() {
@@ -291,5 +293,21 @@ void PluginCard::translateUi() {
   currentTagsHeaderLabel->setText(translate("Current"));
   addTagsHeaderLabel->setText(translate("Add"));
   removeTagsHeaderLabel->setText(translate("Remove"));
+}
+
+void PluginCard::onHideMessage(const std::string& messageText) {
+  try {
+    auto pluginName = nameLabel->text().toStdString();
+    emit hideMessage(pluginName, messageText);
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "Caught an exception in PluginCard::onHideMessage() with message "
+          "text \"{}\": {}",
+          messageText,
+          e.what());
+    }
+  }
 }
 }

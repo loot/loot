@@ -62,6 +62,9 @@ public:
 
   void refreshMessages();
 
+signals:
+  void hideMessage(const std::string& messageText);
+
 private:
   static constexpr int PLUGIN_VALUE_COLUMN = 5;
 

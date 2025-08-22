@@ -91,6 +91,22 @@ bool isColorSchemeDark() {
 
   return window < windowText;
 }
+
+void recordCurrentGameHiddenMessages(
+    loot::LootSettings& lootSettings,
+    const loot::GameSettings& currentGameSettings) {
+  auto currentFolderName = currentGameSettings.FolderName();
+  std::vector<loot::GameSettings> gamesSettings =
+      lootSettings.getGameSettings();
+  for (auto& gameSettings : gamesSettings) {
+    if (gameSettings.FolderName() == currentFolderName) {
+      gameSettings.SetHiddenMessages(currentGameSettings.HiddenMessages());
+      break;
+    }
+  }
+
+  lootSettings.storeGameSettings(gamesSettings);
+}
 }
 
 namespace loot {
@@ -727,8 +743,13 @@ void MainWindow::setupViews() {
 
   cardSizingCache.update(pluginItemModel);
 
-  pluginCardsView->setItemDelegate(
-      new CardDelegate(pluginCardsView, cardSizingCache));
+  auto cardDelegate = new CardDelegate(pluginCardsView, cardSizingCache);
+  pluginCardsView->setItemDelegate(cardDelegate);
+
+  connect(cardDelegate,
+          &CardDelegate::hideMessage,
+          this,
+          &MainWindow::handleHideMessage);
 
   // Enable the right-click Plugin context menu.
   pluginCardsView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -1362,6 +1383,17 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     auto logger = getLogger();
     if (logger) {
       logger->error("Couldn't set last game: {}", e.what());
+    }
+  }
+
+  try {
+    recordCurrentGameHiddenMessages(state.getSettings(),
+                                    state.GetCurrentGame().GetSettings());
+  } catch (const std::exception& e) {
+    auto logger = getLogger();
+    if (logger) {
+      logger->error("Couldn't record current game's hidden messages: {}",
+                    e.what());
     }
   }
 
@@ -2468,6 +2500,8 @@ void MainWindow::on_settingsDialog_accepted() {
   try {
     const auto currentTheme = state.getSettings().getTheme();
     settingsDialog->recordInputValues(state);
+    recordCurrentGameHiddenMessages(state.getSettings(),
+                                    state.GetCurrentGame().GetSettings());
 
     state.getSettings().save(state.GetPaths().getSettingsPath());
 
@@ -2956,4 +2990,20 @@ void MainWindow::handleLinkColorChanged() {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
 void MainWindow::handleColorSchemeChanged() { applyTheme(); }
 #endif
+
+void MainWindow::handleHideMessage(const std::string& pluginName,
+                                   const std::string& messageText) {
+  try {
+    state.GetCurrentGame().GetSettings().HideMessage(pluginName, messageText);
+    recordCurrentGameHiddenMessages(state.getSettings(),
+                                    state.GetCurrentGame().GetSettings());
+
+    pluginItemModel->handleHideMessage(pluginName, messageText);
+
+    updateCounts(pluginItemModel->getGeneralMessages(),
+                 pluginItemModel->getPluginItems());
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
 }

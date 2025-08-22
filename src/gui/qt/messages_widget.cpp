@@ -30,7 +30,9 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QStyle>
 
+#include "gui/qt/helpers.h"
 #include "gui/sourced_message.h"
+#include "gui/state/logging.h"
 
 namespace loot {
 static constexpr const char* MESSAGE_TYPE_PROPERTY = "messageType";
@@ -153,6 +155,8 @@ void MessagesWidget::setMessages(const std::vector<SourcedMessage>& messages) {
 void MessagesWidget::refresh() { setMessages(currentMessages); }
 
 void MessagesWidget::setupUi() {
+  menuMessage->addAction(hideMessageAction);
+
   // Bullet points rendered using rich text are positioned uncomfortably close
   // to the text following them, and there's no way to change that. Use a
   // QGridLayout instead of a QVBoxLayout to fake a bullet point list by putting
@@ -165,6 +169,24 @@ void MessagesWidget::setupUi() {
 
   layout->setContentsMargins(0, 0, 0, 0);
   layout->setSpacing(0);
+
+  setContextMenuPolicy(Qt::CustomContextMenu);
+
+  translateUi();
+
+  connect(hideMessageAction,
+          &QAction::triggered,
+          this,
+          &MessagesWidget::onHideMessageAction);
+
+  connect(this,
+          &QWidget::customContextMenuRequested,
+          this,
+          &MessagesWidget::onCustomContextMenuRequested);
+}
+
+void MessagesWidget::translateUi() {
+  hideMessageAction->setText(translate("Hide message"));
 }
 
 void MessagesWidget::setMessages(const std::vector<BareMessage>& messages) {
@@ -212,6 +234,7 @@ void MessagesWidget::setMessages(const std::vector<BareMessage>& messages) {
   }
 
   layout()->activate();
+  setVisible(!messages.empty());
 
   // Store the source markdown text because it can't be retrieved from the
   // QLabel text, as that's set using HTML. Also store the message types
@@ -227,5 +250,84 @@ bool MessagesWidget::willChangeContent(
   }
 
   return currentMessages != toBareMessages(messages);
+}
+
+void MessagesWidget::onCustomContextMenuRequested(const QPoint& pos) {
+  try {
+    // Find message index that is displayed at pos.
+    menuTargetMessageIndex = std::nullopt;
+
+    auto layout = qobject_cast<QGridLayout*>(this->layout());
+    for (int i = 0; i < layout->rowCount(); i += 1) {
+      auto item = layout->itemAtPosition(i, BULLET_POINT_COLUMN);
+      if (item) {
+        auto widget = item->widget();
+        if (widget && widget->underMouse()) {
+          menuTargetMessageIndex = i;
+          break;
+        }
+      }
+
+      item = layout->itemAtPosition(i, MESSAGE_LABEL_COLUMN);
+      if (item) {
+        auto widget = item->widget();
+        if (widget && widget->underMouse()) {
+          menuTargetMessageIndex = i;
+          break;
+        }
+      }
+    }
+
+    if (menuTargetMessageIndex.has_value()) {
+      const auto globalPos = this->mapToGlobal(pos);
+
+      menuMessage->exec(globalPos);
+    } else {
+      const auto logger = getLogger();
+      if (logger) {
+        logger->warn("Could not find message under mouse");
+      }
+    }
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "Caught an exception in "
+          "MessagesWidget::onCustomContextMenuRequested(): {}",
+          e.what());
+    }
+  }
+}
+
+void MessagesWidget::onHideMessageAction() {
+  try {
+    if (menuTargetMessageIndex.has_value()) {
+      auto index = menuTargetMessageIndex.value();
+      if (index < currentMessages.size()) {
+        std::string text = currentMessages.at(index).second;
+
+        currentMessages.erase(currentMessages.begin() + index);
+        setMessages(currentMessages);
+
+        emit hideMessage(text);
+      } else {
+        const auto logger = getLogger();
+        if (logger) {
+          logger->error(
+              "Menu target message index is greater than the number of current "
+              "messages: index is {}, size is {}",
+              index,
+              currentMessages.size());
+        }
+      }
+    }
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "Caught an exception in MessagesWidget::onHideMessageAction(): {}",
+          e.what());
+    }
+  }
 }
 }

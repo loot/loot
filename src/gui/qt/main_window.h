@@ -330,6 +330,9 @@ private slots:
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   void handleColorSchemeChanged();
 #endif
+
+  void handleHideMessage(const std::string &pluginName,
+                         const std::string &messageText);
 };
 }
 

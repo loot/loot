@@ -34,7 +34,6 @@
 #include "gui/query/query.h"
 
 Q_DECLARE_METATYPE(loot::QueryResult);
-Q_DECLARE_METATYPE(std::string);
 
 namespace loot {
 class ProgressUpdater : public QObject {

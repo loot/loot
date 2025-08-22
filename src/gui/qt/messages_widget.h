@@ -26,6 +26,7 @@
 #ifndef LOOT_GUI_QT_MESSAGES_WIDGET
 #define LOOT_GUI_QT_MESSAGES_WIDGET
 
+#include <QtWidgets/QMenu>
 #include <QtWidgets/QWidget>
 
 #include "gui/sourced_message.h"
@@ -36,6 +37,7 @@ namespace loot {
 typedef std::pair<MessageType, std::string> BareMessage;
 
 class MessagesWidget : public QWidget {
+  Q_OBJECT
 public:
   explicit MessagesWidget(QWidget* parent);
 
@@ -43,14 +45,26 @@ public:
 
   void refresh();
 
+signals:
+  void hideMessage(const std::string& messageText);
+
 private:
+  QMenu* menuMessage{new QMenu(this)};
+  QAction* hideMessageAction{new QAction(menuMessage)};
+
   std::vector<BareMessage> currentMessages;
+  std::optional<size_t> menuTargetMessageIndex;
 
   void setupUi();
+
+  void translateUi();
 
   void setMessages(const std::vector<BareMessage>& messages);
 
   bool willChangeContent(const std::vector<SourcedMessage>& messages) const;
+
+  void onCustomContextMenuRequested(const QPoint& pos);
+  void onHideMessageAction();
 };
 }
 
