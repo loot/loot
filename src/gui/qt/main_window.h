@@ -119,6 +119,8 @@ private:
   QAction *actionCopyLoadOrder{new QAction(this)};
   QAction *actionCopyContent{new QAction(this)};
   QAction *actionRefreshContent{new QAction(this)};
+  QAction *actionUnhideMessages{new QAction(this)};
+  QAction *actionUnhideGeneralMessages{new QAction(this)};
   QAction *actionRedatePlugins{new QAction(this)};
   QAction *actionBackUpLoadOrder{new QAction(this)};
   QAction *actionRestoreLoadOrder{new QAction(this)};
@@ -127,6 +129,7 @@ private:
   QAction *actionCopyPluginName{new QAction(this)};
   QAction *actionCopyCardContent{new QAction(this)};
   QAction *actionCopyMetadata{new QAction(this)};
+  QAction *actionUnhidePluginMessages{new QAction(this)};
   QAction *actionEditMetadata{new QAction(this)};
   QAction *actionClearMetadata{new QAction(this)};
   QAction *actionSettings{new QAction(this)};
@@ -245,6 +248,8 @@ private:
 
   void refreshGamesDropdown();
 
+  void setHiddenMessages(const std::vector<HiddenMessage> &hiddenMessages);
+
 private slots:
   void on_actionSettings_triggered();
   void on_actionUpdateMasterlists_triggered();
@@ -259,12 +264,15 @@ private slots:
   void on_restoreBackupDialog_accepted();
   void on_actionFixAmbiguousLoadOrder_triggered();
   void on_actionRefreshContent_triggered();
+  void on_actionUnhideMessages_triggered();
+  void on_actionUnhideGeneralMessages_triggered();
   void on_actionRedatePlugins_triggered();
   void on_actionClearAllUserMetadata_triggered();
   void on_actionEditMetadata_triggered();
   void on_actionCopyPluginName_triggered();
   void on_actionCopyCardContent_triggered();
   void on_actionCopyMetadata_triggered();
+  void on_actionUnhidePluginMessages_triggered();
   void on_actionClearMetadata_triggered();
   void on_actionViewDocs_triggered();
   void on_actionOpenFAQs_triggered();

@@ -62,6 +62,7 @@ public:
   static QIcon getCopyContentIcon();
   static QIcon getCopyMetadataIcon();
   static QIcon getRefreshIcon();
+  static QIcon getUnhideMessagesIcon();
   static QIcon getRedateIcon();
   static QIcon getFixIcon();
   static QIcon getDeleteIcon();

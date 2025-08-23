@@ -586,6 +586,10 @@ void MainWindow::setupMenuBar() {
   actionRefreshContent->setObjectName("actionRefreshContent");
   actionRefreshContent->setShortcut(QKeySequence::Refresh);
 
+  actionUnhideMessages->setObjectName("actionUnhideMessages");
+
+  actionUnhideGeneralMessages->setObjectName("actionUnhideGeneralMessages");
+
   actionRedatePlugins->setObjectName("actionRedatePlugins");
 
   actionBackUpLoadOrder->setObjectName("actionBackUpLoadOrder");
@@ -601,6 +605,8 @@ void MainWindow::setupMenuBar() {
   actionCopyCardContent->setObjectName("actionCopyCardContent");
 
   actionCopyMetadata->setObjectName("actionCopyMetadata");
+
+  actionUnhidePluginMessages->setObjectName("actionUnhidePluginMessages");
 
   actionEditMetadata->setObjectName("actionEditMetadata");
   actionEditMetadata->setShortcut(QString("Ctrl+E"));
@@ -634,6 +640,9 @@ void MainWindow::setupMenuBar() {
   menuGame->addAction(actionCopyContent);
   menuGame->addAction(actionRefreshContent);
   menuGame->addSeparator();
+  menuGame->addAction(actionUnhideMessages);
+  menuGame->addAction(actionUnhideGeneralMessages);
+  menuGame->addSeparator();
   menuGame->addAction(actionBackUpLoadOrder);
   menuGame->addAction(actionRestoreLoadOrder);
   menuGame->addSeparator();
@@ -645,6 +654,8 @@ void MainWindow::setupMenuBar() {
   menuPlugin->addAction(actionCopyPluginName);
   menuPlugin->addAction(actionCopyCardContent);
   menuPlugin->addAction(actionCopyMetadata);
+  menuPlugin->addSeparator();
+  menuPlugin->addAction(actionUnhidePluginMessages);
   menuPlugin->addSeparator();
   menuPlugin->addAction(actionClearMetadata);
   menuHelp->addAction(actionViewDocs);
@@ -811,6 +822,11 @@ void MainWindow::translateUi() {
   /* translators: This string is an action in the Game menu. */
   actionRefreshContent->setText(translate("&Refresh Content"));
   /* translators: This string is an action in the Game menu. */
+  actionUnhideMessages->setText(
+      translate("U&nhide all individually-hidden messages"));
+  actionUnhideGeneralMessages->setText(
+      translate("Unhide all individually-hidden &general messages"));
+  /* translators: This string is an action in the Game menu. */
   actionRedatePlugins->setText(translate("Redate &Plugins…"));
   /* translators: This string is an action in the Game menu. */
   actionBackUpLoadOrder->setText(translate("Back Up Load &Order…"));
@@ -831,6 +847,9 @@ void MainWindow::translateUi() {
   actionCopyMetadata->setText(translate("Copy &Metadata"));
   /* translators: This string is an action in the Plugin menu. */
   actionEditMetadata->setText(translate("&Edit Metadata…"));
+  /* translators: This string is an action in the Plugin menu. */
+  actionUnhidePluginMessages->setText(
+      translate("Un&hide individually-hidden messages"));
   /* translators: This string is an action in the Plugin menu. */
   actionClearMetadata->setText(translate("Clear &User Metadata…"));
 
@@ -870,12 +889,15 @@ void MainWindow::setIcons() {
   actionCopyLoadOrder->setIcon(IconFactory::getCopyLoadOrderIcon());
   actionCopyContent->setIcon(IconFactory::getCopyContentIcon());
   actionRefreshContent->setIcon(IconFactory::getRefreshIcon());
+  actionUnhideMessages->setIcon(IconFactory::getUnhideMessagesIcon());
+  actionUnhideGeneralMessages->setIcon(IconFactory::getUnhideMessagesIcon());
   actionRedatePlugins->setIcon(IconFactory::getRedateIcon());
   actionFixAmbiguousLoadOrder->setIcon(IconFactory::getFixIcon());
   actionClearAllUserMetadata->setIcon(IconFactory::getDeleteIcon());
   actionCopyPluginName->setIcon(IconFactory::getCopyContentIcon());
   actionCopyCardContent->setIcon(IconFactory::getCopyContentIcon());
   actionCopyMetadata->setIcon(IconFactory::getCopyMetadataIcon());
+  actionUnhidePluginMessages->setIcon(IconFactory::getUnhideMessagesIcon());
   actionEditMetadata->setIcon(IconFactory::getEditIcon());
   actionClearMetadata->setIcon(IconFactory::getDeleteIcon());
 
@@ -894,6 +916,12 @@ void MainWindow::enableGameActions() {
   const auto enableRedatePlugins =
       ShouldAllowRedating(state.GetCurrentGame().GetSettings().Id());
   actionRedatePlugins->setEnabled(enableRedatePlugins);
+
+  const auto enableUnhideMessages =
+      !state.GetCurrentGame().GetSettings().HiddenMessages().empty();
+  actionUnhideMessages->setEnabled(enableUnhideMessages);
+  actionUnhideGeneralMessages->setEnabled(
+      state.GetCurrentGame().GetSettings().HasHiddenGeneralMessages());
 
   actionFixAmbiguousLoadOrder->setEnabled(false);
 }
@@ -1597,6 +1625,16 @@ void MainWindow::refreshGamesDropdown() {
   }
 }
 
+void MainWindow::setHiddenMessages(
+    const std::vector<HiddenMessage>& hiddenMessages) {
+  state.GetCurrentGame().GetSettings().SetHiddenMessages(hiddenMessages);
+  recordCurrentGameHiddenMessages(state.getSettings(),
+                                  state.GetCurrentGame().GetSettings());
+
+  pluginItemModel->setHiddenMessages(hiddenMessages);
+  actionUnhideMessages->setEnabled(!hiddenMessages.empty());
+}
+
 void MainWindow::on_actionSettings_triggered() {
   try {
     auto currentGameFolder =
@@ -1791,6 +1829,32 @@ void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
 void MainWindow::on_actionRefreshContent_triggered() {
   try {
     loadGame(false);
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_actionUnhideMessages_triggered() {
+  try {
+    setHiddenMessages({});
+    actionUnhideGeneralMessages->setEnabled(false);
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_actionUnhideGeneralMessages_triggered() {
+  try {
+    std::vector<HiddenMessage> hiddenMessages;
+    for (const auto& hiddenMessage :
+         state.GetCurrentGame().GetSettings().HiddenMessages()) {
+      if (hiddenMessage.pluginName.has_value()) {
+        hiddenMessages.push_back(hiddenMessage);
+      }
+    }
+
+    setHiddenMessages(hiddenMessages);
+    actionUnhideGeneralMessages->setEnabled(false);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1994,6 +2058,23 @@ void MainWindow::on_actionCopyCardContent_triggered() {
         selectedPlugin.name);
 
     showNotification(QString::fromStdString(text));
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_actionUnhidePluginMessages_triggered() {
+  try {
+    const auto& selectedPluginName = getSelectedPlugin().name;
+    std::vector<HiddenMessage> hiddenMessages;
+    for (const auto& hiddenMessage :
+         state.GetCurrentGame().GetSettings().HiddenMessages()) {
+      if (hiddenMessage.pluginName != selectedPluginName) {
+        hiddenMessages.push_back(hiddenMessage);
+      }
+    }
+
+    setHiddenMessages(hiddenMessages);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2339,6 +2420,11 @@ void MainWindow::handleSidebarPluginsSelectionChanged(
 
   if (hasPluginSelected) {
     enablePluginActions();
+
+    const auto enableUnhidePluginMessages =
+        state.GetCurrentGame().GetSettings().PluginHasHiddenMessages(
+            getSelectedPlugin().name);
+    actionUnhidePluginMessages->setEnabled(enableUnhidePluginMessages);
   } else {
     disablePluginActions();
   }
@@ -2999,6 +3085,11 @@ void MainWindow::handleHideMessage(const std::string& pluginName,
                                     state.GetCurrentGame().GetSettings());
 
     pluginItemModel->handleHideMessage(pluginName, messageText);
+
+    actionUnhideMessages->setEnabled(true);
+    if (pluginName.empty()) {
+      actionUnhideGeneralMessages->setEnabled(true);
+    }
 
     updateCounts(pluginItemModel->getGeneralMessages(),
                  pluginItemModel->getPluginItems());
