@@ -72,7 +72,8 @@ QString getLongestString(std::initializer_list<std::string> list) {
 
 SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
   if (index.row() == 0) {
-    auto generalInfo = index.data(RawDataRole).value<GeneralInformation>();
+    auto generalInfo =
+        index.data(FilteredContentRole).value<GeneralInformation>();
     auto counters =
         index.data(CountersRole).value<GeneralInformationCounters>();
 
@@ -120,7 +121,8 @@ void prepareWidget(QWidget* widget) {
 
 GeneralInfoCard* setGeneralInfoCardContent(GeneralInfoCard* card,
                                            const QModelIndex& index) {
-  auto generalInfo = index.data(RawDataRole).value<GeneralInformation>();
+  auto generalInfo =
+      index.data(FilteredContentRole).value<GeneralInformation>();
   auto counters = index.data(CountersRole).value<GeneralInformationCounters>();
 
   card->setShowSeparateLightPluginCount(generalInfo.gameSupportsLightPlugins);
