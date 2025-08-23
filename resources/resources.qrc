@@ -32,6 +32,7 @@
     <file>icons/material-icons/settings_black_48dp.svg</file>
     <file>icons/material-icons/sort_black_48dp.svg</file>
     <file>icons/material-icons/today_black_48dp.svg</file>
+    <file>icons/material-icons/visibility_black_48dp.svg</file>
     <file>icons/material-icons/visibility_off_black_48dp.svg</file>
   </qresource>
   <qresource prefix="/">

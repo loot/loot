@@ -66,6 +66,8 @@ public:
 
   const std::vector<HiddenMessage>& HiddenMessages() const;
 
+  bool PluginHasHiddenMessages(const std::string& pluginName) const;
+
   GameSettings& SetName(const std::string& name);
   GameSettings& SetMaster(const std::string& masterFile);
   GameSettings& SetMinimumHeaderVersion(float minimumHeaderVersion);
@@ -79,6 +81,9 @@ public:
 
   void HideMessage(const std::string& pluginName,
                    const std::string& messageText);
+
+  bool HasHiddenGeneralMessages();
+  bool PluginHasHiddenMessages(const std::string& pluginName);
 
 private:
   GameId id_{GameId::tes4};
