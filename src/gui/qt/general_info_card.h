@@ -56,6 +56,8 @@ public:
 
   void setGeneralMessages(const std::vector<SourcedMessage>& messages);
 
+  void setHasHiddenMessages(bool hasHiddenMessages);
+
   void setShowSeparateLightPluginCount(bool showCount);
 
   void setShowSeparateMediumPluginCount(bool showCount);
@@ -69,6 +71,7 @@ private:
   static constexpr int PLUGIN_VALUE_COLUMN = 5;
 
   QLabel* headingLabel{new QLabel(this)};
+  QLabel* hasHiddenMessagesLabel{new QLabel(this)};
   QLabel* masterlistRevisionLabel{new QLabel(this)};
   QLabel* masterlistRevisionValue{new QLabel(this)};
   QLabel* masterlistDateLabel{new QLabel(this)};
@@ -105,6 +108,8 @@ private:
   void translateUi();
 
   void updatePluginRowsAndColumns();
+
+  void onHideMessage(const std::string& messageText);
 };
 }
 

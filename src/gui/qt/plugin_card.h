@@ -45,7 +45,7 @@ public:
 
   void setIcons();
 
-  void setContent(const PluginItem& plugin);
+  void setContent(const PluginItem& plugin, bool hasHiddenMessages);
 
   void setSearchResult(bool isSearchResult, bool isCurrentSearchResult);
 
@@ -68,6 +68,7 @@ private:
   QLabel* loadsArchiveLabel{new QLabel(this)};
   QLabel* isCleanLabel{new QLabel(this)};
   QLabel* hasUserEditsLabel{new QLabel(this)};
+  QLabel* hasHiddenMessagesLabel{new QLabel(this)};
   QLabel* currentTagsHeaderLabel{new QLabel(this)};
   QLabel* currentTagsLabel{new QLabel(this)};
   QLabel* addTagsHeaderLabel{new QLabel(this)};

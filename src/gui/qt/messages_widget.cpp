@@ -31,6 +31,7 @@
 #include <QtWidgets/QStyle>
 
 #include "gui/qt/helpers.h"
+#include "gui/qt/icon_factory.h"
 #include "gui/sourced_message.h"
 #include "gui/state/logging.h"
 
@@ -155,6 +156,8 @@ void MessagesWidget::setMessages(const std::vector<SourcedMessage>& messages) {
 void MessagesWidget::refresh() { setMessages(currentMessages); }
 
 void MessagesWidget::setupUi() {
+  hideMessageAction->setIcon(IconFactory::getHideMessagesIcon());
+
   menuMessage->addAction(hideMessageAction);
 
   // Bullet points rendered using rich text are positioned uncomfortably close

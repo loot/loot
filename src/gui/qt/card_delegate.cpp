@@ -123,6 +123,7 @@ GeneralInfoCard* setGeneralInfoCardContent(GeneralInfoCard* card,
   auto generalInfo =
       index.data(FilteredContentRole).value<GeneralInformation>();
   auto counters = index.data(CountersRole).value<GeneralInformationCounters>();
+  auto hasHiddenMessages = index.data(HasHiddenMessagesRole).value<bool>();
 
   card->setShowSeparateLightPluginCount(generalInfo.gameSupportsLightPlugins);
   card->setShowSeparateMediumPluginCount(generalInfo.gameSupportsMediumPlugins);
@@ -136,6 +137,7 @@ GeneralInfoCard* setGeneralInfoCardContent(GeneralInfoCard* card,
                         counters.dirty,
                         counters.totalPlugins);
   card->setGeneralMessages(generalInfo.generalMessages);
+  card->setHasHiddenMessages(hasHiddenMessages);
 
   return card;
 }
@@ -144,8 +146,9 @@ PluginCard* setPluginCardContent(PluginCard* card, const QModelIndex& index) {
   auto pluginItem = index.data(FilteredContentRole).value<PluginItem>();
   auto searchResultData =
       index.data(SearchResultRole).value<SearchResultData>();
+  auto hasHiddenMessages = index.data(HasHiddenMessagesRole).value<bool>();
 
-  card->setContent(pluginItem);
+  card->setContent(pluginItem, hasHiddenMessages);
 
   card->setSearchResult(searchResultData.isResult,
                         searchResultData.isCurrentResult);

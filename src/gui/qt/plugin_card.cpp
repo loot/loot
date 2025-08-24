@@ -39,12 +39,6 @@
 #include "gui/qt/icon_factory.h"
 
 namespace loot {
-static constexpr int ATTRIBUTE_ICON_HEIGHT = 18;
-
-void setIcon(QLabel* label, QIcon icon) {
-  label->setPixmap(IconFactory::getPixmap(icon, ATTRIBUTE_ICON_HEIGHT));
-}
-
 QString getTagsText(const std::vector<std::string> tags) {
   QStringList tagsList;
   for (const auto& tag : tags) {
@@ -71,9 +65,10 @@ void PluginCard::setIcons() {
   setIcon(loadsArchiveLabel, IconFactory::getLoadsArchiveIcon());
   setIcon(isCleanLabel, IconFactory::getIsCleanIcon());
   setIcon(hasUserEditsLabel, IconFactory::getHasUserMetadataIcon());
+  setIcon(hasHiddenMessagesLabel, IconFactory::getHideMessagesIcon());
 }
 
-void PluginCard::setContent(const PluginItem& plugin) {
+void PluginCard::setContent(const PluginItem& plugin, bool hasHiddenMessages) {
   nameLabel->setText(QString::fromStdString(plugin.name));
 
   if (plugin.crc.has_value()) {
@@ -98,6 +93,7 @@ void PluginCard::setContent(const PluginItem& plugin) {
   loadsArchiveLabel->setVisible(plugin.loadsArchive);
   isCleanLabel->setVisible(plugin.cleaningUtility.has_value());
   hasUserEditsLabel->setVisible(plugin.hasUserMetadata);
+  hasHiddenMessagesLabel->setVisible(hasHiddenMessages);
 
   auto currentTagsText = getTagsText(plugin.currentTags);
   auto addTagsText = getTagsText(plugin.addTags);
@@ -204,6 +200,7 @@ void PluginCard::setupUi() {
   loadsArchiveLabel->setVisible(false);
   isCleanLabel->setVisible(false);
   hasUserEditsLabel->setVisible(false);
+  hasHiddenMessagesLabel->setVisible(false);
 
   tagsGroupBox->setVisible(false);
 
@@ -254,6 +251,7 @@ void PluginCard::setupUi() {
   headerLayout->addWidget(loadsArchiveLabel);
   headerLayout->addWidget(isCleanLabel);
   headerLayout->addWidget(hasUserEditsLabel);
+  headerLayout->addWidget(hasHiddenMessagesLabel);
 
   tagsLayout->addWidget(currentTagsHeaderLabel, 0, 0, Qt::AlignTop);
   tagsLayout->addWidget(currentTagsLabel, 0, 1, Qt::AlignTop);
@@ -288,6 +286,7 @@ void PluginCard::translateUi() {
   emptyPluginLabel->setToolTip(translate("Empty Plugin"));
   loadsArchiveLabel->setToolTip(translate("Loads Archive"));
   hasUserEditsLabel->setToolTip(translate("Has User Metadata"));
+  hasHiddenMessagesLabel->setToolTip(translate("Has Hidden Messages"));
 
   tagsGroupBox->setTitle(translate("Bash Tags"));
   currentTagsHeaderLabel->setText(translate("Current"));
@@ -297,6 +296,8 @@ void PluginCard::translateUi() {
 
 void PluginCard::onHideMessage(const std::string& messageText) {
   try {
+    hasHiddenMessagesLabel->setVisible(true);
+
     auto pluginName = nameLabel->text().toStdString();
     emit hideMessage(pluginName, messageText);
   } catch (const std::exception& e) {
