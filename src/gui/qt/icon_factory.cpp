@@ -65,7 +65,7 @@ QIcon IconFactory::getMediumPluginIcon() {
 }
 
 QIcon IconFactory::getEmptyPluginIcon() {
-  return getIcon(":/icons/material-icons/visibility_off_black_48dp.svg");
+  return getIcon(":/icons/material-icons/draft_black_48dp.svg");
 }
 
 QIcon IconFactory::getLoadsArchiveIcon() {
