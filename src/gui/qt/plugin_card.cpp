@@ -295,9 +295,20 @@ void PluginCard::translateUi() {
 }
 
 void PluginCard::onHideMessage(const std::string& messageText) {
-  hasHiddenMessagesLabel->setVisible(true);
+  try {
+    hasHiddenMessagesLabel->setVisible(true);
 
-  auto pluginName = this->nameLabel->text().toStdString();
-  emit this->hideMessage(pluginName, messageText);
+    auto pluginName = this->nameLabel->text().toStdString();
+    emit this->hideMessage(pluginName, messageText);
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "Caught an exception in PluginCard::onHideMessage() with message "
+          "text \"{}\": {}",
+          messageText,
+          e.what());
+    }
+  }
 }
 }

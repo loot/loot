@@ -439,19 +439,50 @@ QWidget* CardDelegate::createEditor(QWidget* parent,
 
   if (index.row() == 0) {
     auto card = new GeneralInfoCard(parent);
+    QModelIndex indexCopy = index;
     connect(card,
             &GeneralInfoCard::hideMessage,
-            [this, index](const std::string& messageText) {
-              emit this->hideMessage(index, "", messageText);
+            [this, indexCopy](const std::string& messageText) {
+              try {
+                emit this->hideMessage(indexCopy, "", messageText);
+              } catch (const std::exception& e) {
+                const auto logger = getLogger();
+                if (logger) {
+                  logger->error(
+                      "Caught an exception in CardDelegate's slot for the "
+                      "GeneralInfoCard::hideMessage() signal with index "
+                      "(row={}, col={}) and message text \"{}\": {}",
+                      indexCopy.row(),
+                      indexCopy.column(),
+                      messageText,
+                      e.what());
+                }
+              }
             });
     return card;
   } else {
     auto card = new PluginCard(parent);
+    QModelIndex indexCopy = index;
     connect(card,
             &PluginCard::hideMessage,
-            [this, index](const std::string& pluginName,
-                          const std::string& messageText) {
-              emit this->hideMessage(index, pluginName, messageText);
+            [this, indexCopy](const std::string& pluginName,
+                              const std::string& messageText) {
+              try {
+                emit this->hideMessage(indexCopy, pluginName, messageText);
+              } catch (const std::exception& e) {
+                const auto logger = getLogger();
+                if (logger) {
+                  logger->error(
+                      "Caught an exception in CardDelegate's slot for the "
+                      "PluginCard::hideMessage() signal with index (row={}, "
+                      "col={}), plugin name \"{}\" and message text \"{}\": {}",
+                      indexCopy.row(),
+                      indexCopy.column(),
+                      pluginName,
+                      messageText,
+                      e.what());
+                }
+              }
             });
     return card;
   }

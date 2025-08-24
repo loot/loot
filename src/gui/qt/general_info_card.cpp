@@ -29,6 +29,7 @@
 
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
+#include "gui/state/logging.h"
 
 namespace loot {
 GeneralInfoCard::GeneralInfoCard(QWidget* parent) : Card(parent, false) {
@@ -244,8 +245,19 @@ void GeneralInfoCard::translateUi() {
 }
 
 void GeneralInfoCard::onHideMessage(const std::string& messageText) {
-  hasHiddenMessagesLabel->setVisible(true);
+  try {
+    hasHiddenMessagesLabel->setVisible(true);
 
-  emit hideMessage(messageText);
+    emit hideMessage(messageText);
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "Caught an exception in GeneralInfoCard::onHideMessage() with "
+          "message text \"{}\": {}",
+          messageText,
+          e.what());
+    }
+  }
 }
 }

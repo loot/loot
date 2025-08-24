@@ -256,61 +256,80 @@ bool MessagesWidget::willChangeContent(
 }
 
 void MessagesWidget::onCustomContextMenuRequested(const QPoint& pos) {
-  // Find message index that is displayed at pos.
-  menuTargetMessageIndex = std::nullopt;
+  try {
+    // Find message index that is displayed at pos.
+    menuTargetMessageIndex = std::nullopt;
 
-  auto layout = qobject_cast<QGridLayout*>(this->layout());
-  for (int i = 0; i < layout->rowCount(); i += 1) {
-    auto item = layout->itemAtPosition(i, BULLET_POINT_COLUMN);
-    if (item) {
-      auto widget = item->widget();
-      if (widget && widget->underMouse()) {
-        menuTargetMessageIndex = i;
-        break;
+    auto layout = qobject_cast<QGridLayout*>(this->layout());
+    for (int i = 0; i < layout->rowCount(); i += 1) {
+      auto item = layout->itemAtPosition(i, BULLET_POINT_COLUMN);
+      if (item) {
+        auto widget = item->widget();
+        if (widget && widget->underMouse()) {
+          menuTargetMessageIndex = i;
+          break;
+        }
+      }
+
+      item = layout->itemAtPosition(i, MESSAGE_LABEL_COLUMN);
+      if (item) {
+        auto widget = item->widget();
+        if (widget && widget->underMouse()) {
+          menuTargetMessageIndex = i;
+          break;
+        }
       }
     }
 
-    item = layout->itemAtPosition(i, MESSAGE_LABEL_COLUMN);
-    if (item) {
-      auto widget = item->widget();
-      if (widget && widget->underMouse()) {
-        menuTargetMessageIndex = i;
-        break;
+    if (menuTargetMessageIndex.has_value()) {
+      const auto globalPos = this->mapToGlobal(pos);
+
+      menuMessage->exec(globalPos);
+    } else {
+      const auto logger = getLogger();
+      if (logger) {
+        logger->warn("Could not find message under mouse");
       }
     }
-  }
-
-  if (menuTargetMessageIndex.has_value()) {
-    const auto globalPos = this->mapToGlobal(pos);
-
-    menuMessage->exec(globalPos);
-  } else {
+  } catch (const std::exception& e) {
     const auto logger = getLogger();
     if (logger) {
-      logger->warn("Could not find message under mouse");
+      logger->error(
+          "Caught an exception in "
+          "MessagesWidget::onCustomContextMenuRequested(): {}",
+          e.what());
     }
   }
 }
 
 void MessagesWidget::onHideMessageAction() {
-  if (menuTargetMessageIndex.has_value()) {
-    auto index = menuTargetMessageIndex.value();
-    if (index < currentMessages.size()) {
-      std::string text = currentMessages.at(index).second;
+  try {
+    if (menuTargetMessageIndex.has_value()) {
+      auto index = menuTargetMessageIndex.value();
+      if (index < currentMessages.size()) {
+        std::string text = currentMessages.at(index).second;
 
-      currentMessages.erase(currentMessages.begin() + index);
-      setMessages(currentMessages);
+        currentMessages.erase(currentMessages.begin() + index);
+        setMessages(currentMessages);
 
-      emit hideMessage(text);
-    } else {
-      const auto logger = getLogger();
-      if (logger) {
-        logger->warn(
-            "Menu target message index is greater than the number of current "
-            "messages: index is {}, size is {}",
-            index,
-            currentMessages.size());
+        emit hideMessage(text);
+      } else {
+        const auto logger = getLogger();
+        if (logger) {
+          logger->error(
+              "Menu target message index is greater than the number of current "
+              "messages: index is {}, size is {}",
+              index,
+              currentMessages.size());
+        }
       }
+    }
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "Caught an exception in MessagesWidget::onHideMessageAction(): {}",
+          e.what());
     }
   }
 }
