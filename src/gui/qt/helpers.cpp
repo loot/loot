@@ -213,7 +213,7 @@ FileRevisionSummary getFileRevisionSummary(
                     translate("N/A: No masterlist prelude present").str();
 
     return FileRevisionSummary(text, text);
-  } catch (std::exception&) {
+  } catch (const std::exception&) {
     if (logger) {
       logger->warn("Failed to read metadata for: {}",
                    filePath.parent_path().u8string());
@@ -241,7 +241,7 @@ bool isFileUpToDate(const std::filesystem::path& filePath,
     }
 
     return expectedHash == existingFileHash;
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     if (logger) {
       logger->error(
           "Caught exception when getting file revision, assuming file is not "
