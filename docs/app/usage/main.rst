@@ -87,7 +87,7 @@ The plugin card's header holds the following information, some of which is only 
   :scale: 45%
 .. |medium_plugin_icon| image:: ../../../resources/icons/medium.svg
   :scale: 45%
-.. |empty_plugin_icon| image:: ../../../resources/icons/material-icons/visibility_off_black_48dp.svg
+.. |empty_plugin_icon| image:: ../../../resources/icons/material-icons/draft_black_48dp.svg
   :scale: 45%
 .. |loads_archive_icon| image:: ../../../resources/icons/material-icons/attachment_black_48dp.svg
   :scale: 45%
