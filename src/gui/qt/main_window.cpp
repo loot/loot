@@ -663,6 +663,8 @@ void MainWindow::setupMenuBar() {
   menuHelp->addAction(actionJoinDiscordServer);
   menuHelp->addSeparator();
   menuHelp->addAction(actionAbout);
+
+  menuGeneralInfo->addAction(actionUnhideGeneralMessages);
 }
 
 void MainWindow::setupToolBar() {
@@ -2456,15 +2458,19 @@ void MainWindow::on_pluginCardsView_customContextMenuRequested(
     const QPoint& position) {
   const auto itemIndex = pluginCardsView->indexAt(position);
 
-  if (!itemIndex.isValid() || itemIndex.row() == 0) {
+  if (!itemIndex.isValid()) {
     return;
   }
 
-  sidebarPluginsView->selectRow(itemIndex.row());
-
   const auto globalPos = pluginCardsView->mapToGlobal(position);
 
-  menuPlugin->exec(globalPos);
+  if (itemIndex.row() == 0) {
+    menuGeneralInfo->exec(globalPos);
+  } else {
+    sidebarPluginsView->selectRow(itemIndex.row());
+
+    menuPlugin->exec(globalPos);
+  }
 }
 
 void MainWindow::on_pluginItemModel_dataChanged(const QModelIndex& topLeft,
