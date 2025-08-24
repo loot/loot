@@ -141,6 +141,7 @@ private:
   QMenu *menuHelp{new QMenu(menubar)};
   QMenu *menuGame{new QMenu(menubar)};
   QMenu *menuPlugin{new QMenu(menubar)};
+  QMenu *menuGeneralInfo{new QMenu(this)};
   QStatusBar *statusbar{new QStatusBar(this)};
   QToolBar *toolBar{new QToolBar(this)};
   QComboBox *gameComboBox{new QComboBox(toolBar)};
