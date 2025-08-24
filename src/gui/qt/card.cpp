@@ -26,6 +26,7 @@
 #include "gui/qt/card.h"
 
 #include <QtGui/QPainter>
+#include "gui/qt/icon_factory.h"
 
 namespace {
 constexpr auto CARD_TOP_SHADOW_HEIGHT = 3;
@@ -49,6 +50,10 @@ QBrush GetCardBottomBorderShadowBrush(QColor near, QColor far) {
 namespace loot {
 Card::Card(QWidget* parent, bool paintTopShadow) :
     QFrame(parent), paintTopShadow_(paintTopShadow) {}
+
+void Card::setIcon(QLabel* label, QIcon icon) {
+  label->setPixmap(IconFactory::getPixmap(icon, ATTRIBUTE_ICON_HEIGHT));
+}
 
 void Card::paintEvent(QPaintEvent* event) {
   QFrame::paintEvent(event);

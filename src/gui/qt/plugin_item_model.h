@@ -45,6 +45,7 @@ static constexpr int ContentSearchRole = Qt::UserRole + 6;
 static constexpr int DragRole = Qt::UserRole + 7;
 static constexpr int SearchResultRole = Qt::UserRole + 8;
 static constexpr int FilteredContentRole = Qt::UserRole + 9;
+static constexpr int HasHiddenMessagesRole = Qt::UserRole + 10;
 
 struct SearchResultData {
   SearchResultData() = default;

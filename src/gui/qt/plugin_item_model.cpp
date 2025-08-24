@@ -132,6 +132,31 @@ GeneralInformation filterContent(
 
   return result;
 }
+
+bool hasHiddenMessages(
+    const PluginItem& plugin,
+    const CardContentFiltersState& filters,
+    const std::unordered_map<std::string, std::unordered_set<std::string>>&
+        hiddenMessages) {
+  return std::any_of(plugin.messages.begin(),
+                     plugin.messages.end(),
+                     [&](const SourcedMessage& message) {
+                       return shouldFilterMessage(
+                           plugin.name, message, filters, hiddenMessages);
+                     });
+}
+
+bool hasHiddenMessages(
+    const GeneralInformation& generalInfo,
+    const CardContentFiltersState& filters,
+    const std::unordered_set<std::string>& hiddenGeneralMessages) {
+  return std::any_of(generalInfo.generalMessages.begin(),
+                     generalInfo.generalMessages.end(),
+                     [&](const SourcedMessage& message) {
+                       return shouldFilterMessage(
+                           message, filters, hiddenGeneralMessages);
+                     });
+}
 }
 
 namespace loot {
@@ -192,6 +217,18 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
     auto filteredItem = filterContent(
         item, cardContentFiltersState, hiddenMessagesByPluginName);
     return QVariant::fromValue(filteredItem);
+  }
+
+  if (role == HasHiddenMessagesRole) {
+    if (index.row() == 0) {
+      return QVariant::fromValue(hasHiddenMessages(
+          generalInformation, cardContentFiltersState, hiddenGeneralMessages));
+    }
+
+    const int itemsIndex = index.row() - 1;
+    auto& item = items.at(itemsIndex);
+    return QVariant::fromValue(hasHiddenMessages(
+        item, cardContentFiltersState, hiddenMessagesByPluginName));
   }
 
   if (index.row() == 0) {

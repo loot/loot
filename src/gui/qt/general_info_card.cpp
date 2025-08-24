@@ -28,6 +28,7 @@
 #include <QtWidgets/QVBoxLayout>
 
 #include "gui/qt/helpers.h"
+#include "gui/qt/icon_factory.h"
 
 namespace loot {
 GeneralInfoCard::GeneralInfoCard(QWidget* parent) : Card(parent, false) {
@@ -76,6 +77,10 @@ void GeneralInfoCard::setGeneralMessages(
   messagesWidget->setVisible(!messages.empty());
 
   layout()->activate();
+}
+
+void GeneralInfoCard::setHasHiddenMessages(bool hasHiddenMessages) {
+  hasHiddenMessagesLabel->setVisible(hasHiddenMessages);
 }
 
 void GeneralInfoCard::setShowSeparateLightPluginCount(bool showCount) {
@@ -161,8 +166,18 @@ void GeneralInfoCard::setupUi() {
 
   scaleCardHeading(*headingLabel);
 
+  setIcon(hasHiddenMessagesLabel, IconFactory::getHideMessagesIcon());
+
+  hasHiddenMessagesLabel->setVisible(false);
+
   auto generalInfoLayout = new QVBoxLayout();
   generalInfoLayout->setSizeConstraint(QLayout::SetMinimumSize);
+
+  auto headerLayout = new QHBoxLayout();
+
+  headerLayout->addWidget(headingLabel);
+  headerLayout->addStretch();
+  headerLayout->addWidget(hasHiddenMessagesLabel);
 
   gridLayout->setHorizontalSpacing(TABLE_COLUMN_SPACING);
   gridLayout->setColumnMinimumWidth(METADATA_VALUE_COLUMN,
@@ -192,7 +207,7 @@ void GeneralInfoCard::setupUi() {
 
   updatePluginRowsAndColumns();
 
-  generalInfoLayout->addWidget(headingLabel);
+  generalInfoLayout->addLayout(headerLayout);
   generalInfoLayout->addLayout(gridLayout);
 
   generalInfoLayout->addWidget(messagesWidget);
@@ -204,11 +219,12 @@ void GeneralInfoCard::setupUi() {
   connect(messagesWidget,
           &MessagesWidget::hideMessage,
           this,
-          &GeneralInfoCard::hideMessage);
+          &GeneralInfoCard::onHideMessage);
 }
 
 void GeneralInfoCard::translateUi() {
   headingLabel->setText(translate("General Information"));
+  hasHiddenMessagesLabel->setToolTip(translate("Has Hidden Messages"));
 
   masterlistRevisionLabel->setText(translate("Masterlist Revision ID"));
   masterlistDateLabel->setText(translate("Masterlist Update Date"));
@@ -225,5 +241,11 @@ void GeneralInfoCard::translateUi() {
   activeLightCountLabel->setText(translate("Active Light Plugins"));
   dirtyCountLabel->setText(translate("Dirty Plugins"));
   totalPluginsCountLabel->setText(translate("Total Plugins"));
+}
+
+void GeneralInfoCard::onHideMessage(const std::string& messageText) {
+  hasHiddenMessagesLabel->setVisible(true);
+
+  emit hideMessage(messageText);
 }
 }

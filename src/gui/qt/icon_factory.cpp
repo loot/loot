@@ -134,6 +134,10 @@ QIcon IconFactory::getRefreshIcon() {
   return getIcon(":/icons/material-icons/refresh_black_48dp.svg");
 }
 
+QIcon IconFactory::getHideMessagesIcon() {
+  return getIcon(":/icons/material-icons/visibility_off_black_48dp.svg");
+}
+
 QIcon IconFactory::getUnhideMessagesIcon() {
   return getIcon(":/icons/material-icons/visibility_black_48dp.svg");
 }

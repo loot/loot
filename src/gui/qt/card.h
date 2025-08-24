@@ -27,6 +27,7 @@
 #define LOOT_GUI_QT_CARD
 
 #include <QtWidgets/QFrame>
+#include <QtWidgets/QLabel>
 
 namespace loot {
 class Card : public QFrame {
@@ -37,6 +38,10 @@ public:
   explicit Card(QWidget* parent, bool paintTopShadow);
 
 protected:
+  static constexpr int ATTRIBUTE_ICON_HEIGHT = 18;
+
+  static void setIcon(QLabel* label, QIcon icon);
+
   void paintEvent(QPaintEvent* event) override;
 
 private:
