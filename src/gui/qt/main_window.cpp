@@ -1456,7 +1456,7 @@ void MainWindow::executeBackgroundQuery(
             [this, onComplete](QueryResult result) {
               (this->*onComplete)(result);
             })
-      .onFailed(this, [this](std::exception& e) { handleError(e.what()); })
+      .onFailed(this, [this](const std::exception& e) { handleError(e.what()); })
       .then(this, [progressUpdater]() {
         if (progressUpdater) {
           progressUpdater->deleteLater();
@@ -2276,7 +2276,7 @@ void MainWindow::on_gameComboBox_activated(int index) {
 void MainWindow::on_actionSort_triggered() {
   try {
     sortPlugins(false);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
