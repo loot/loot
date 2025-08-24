@@ -3083,15 +3083,14 @@ void MainWindow::handleLinkColorChanged() {
 void MainWindow::handleColorSchemeChanged() { applyTheme(); }
 #endif
 
-void MainWindow::handleHideMessage(const QModelIndex& index,
-                                   const std::string& pluginName,
+void MainWindow::handleHideMessage(const std::string& pluginName,
                                    const std::string& messageText) {
   try {
     state.GetCurrentGame().GetSettings().HideMessage(pluginName, messageText);
     recordCurrentGameHiddenMessages(state.getSettings(),
                                     state.GetCurrentGame().GetSettings());
 
-    pluginItemModel->hideMessage(index, pluginName, messageText);
+    pluginItemModel->handleHideMessage(pluginName, messageText);
     actionUnhideMessages->setEnabled(true);
     if (pluginName.empty()) {
       actionUnhideGeneralMessages->setEnabled(true);

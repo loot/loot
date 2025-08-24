@@ -576,16 +576,24 @@ void PluginItemModel::setHiddenMessages(
   emit dataChanged(startIndex, endIndex, {FilteredContentRole});
 }
 
-void PluginItemModel::hideMessage(const QModelIndex& index,
-                                  const std::string& pluginName,
-                                  const std::string& text) {
+void PluginItemModel::handleHideMessage(const std::string& pluginName,
+                                        const std::string& text) {
   if (pluginName.empty()) {
     hideGeneralMessage(text);
+
+    auto index = this->index(0, CARDS_COLUMN);
+    emit dataChanged(index, index, {FilteredContentRole});
   } else {
     hideMessage(pluginName, text);
-  }
 
-  emit dataChanged(index, index, {FilteredContentRole});
+    for (int i = 0; i < items.size(); i += 1) {
+      if (items.at(i).name == pluginName) {
+        auto index = this->index(i + 1, CARDS_COLUMN);
+        emit dataChanged(index, index, {FilteredContentRole});
+        break;
+      }
+    }
+  }
 }
 
 QModelIndex PluginItemModel::setCurrentSearchResult(size_t resultIndex) {

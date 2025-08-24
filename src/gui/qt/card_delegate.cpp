@@ -326,11 +326,6 @@ CardDelegate::CardDelegate(QListView* parent,
     cardSizingCache(&cardSizingCache) {
   prepareWidget(generalInfoCard);
   prepareWidget(pluginCard);
-
-  connect(this,
-          &CardDelegate::hideMessage,
-          this,
-          &QAbstractItemDelegate::sizeHintChanged);
 }
 
 void CardDelegate::setIcons() { pluginCard->setIcons(); }
@@ -439,21 +434,18 @@ QWidget* CardDelegate::createEditor(QWidget* parent,
 
   if (index.row() == 0) {
     auto card = new GeneralInfoCard(parent);
-    QModelIndex indexCopy = index;
     connect(card,
             &GeneralInfoCard::hideMessage,
-            [this, indexCopy](const std::string& messageText) {
+            [this](const std::string& messageText) {
               try {
-                emit this->hideMessage(indexCopy, "", messageText);
+                emit this->hideMessage("", messageText);
               } catch (const std::exception& e) {
                 const auto logger = getLogger();
                 if (logger) {
                   logger->error(
                       "Caught an exception in CardDelegate's slot for the "
-                      "GeneralInfoCard::hideMessage() signal with index "
-                      "(row={}, col={}) and message text \"{}\": {}",
-                      indexCopy.row(),
-                      indexCopy.column(),
+                      "GeneralInfoCard::hideMessage() signal with message text "
+                      "\"{}\": {}",
                       messageText,
                       e.what());
                 }
@@ -462,28 +454,25 @@ QWidget* CardDelegate::createEditor(QWidget* parent,
     return card;
   } else {
     auto card = new PluginCard(parent);
-    QModelIndex indexCopy = index;
-    connect(card,
-            &PluginCard::hideMessage,
-            [this, indexCopy](const std::string& pluginName,
-                              const std::string& messageText) {
-              try {
-                emit this->hideMessage(indexCopy, pluginName, messageText);
-              } catch (const std::exception& e) {
-                const auto logger = getLogger();
-                if (logger) {
-                  logger->error(
-                      "Caught an exception in CardDelegate's slot for the "
-                      "PluginCard::hideMessage() signal with index (row={}, "
-                      "col={}), plugin name \"{}\" and message text \"{}\": {}",
-                      indexCopy.row(),
-                      indexCopy.column(),
-                      pluginName,
-                      messageText,
-                      e.what());
-                }
-              }
-            });
+    connect(
+        card,
+        &PluginCard::hideMessage,
+        [this](const std::string& pluginName, const std::string& messageText) {
+          try {
+            emit this->hideMessage(pluginName, messageText);
+          } catch (const std::exception& e) {
+            const auto logger = getLogger();
+            if (logger) {
+              logger->error(
+                  "Caught an exception in CardDelegate's slot for the "
+                  "PluginCard::hideMessage() signal with plugin name \"{}\" "
+                  "and message text \"{}\": {}",
+                  pluginName,
+                  messageText,
+                  e.what());
+            }
+          }
+        });
     return card;
   }
 }

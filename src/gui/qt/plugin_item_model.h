@@ -115,9 +115,8 @@ public:
 
   void setHiddenMessages(const std::vector<HiddenMessage>& hiddenMessages);
 
-  void hideMessage(const QModelIndex& index,
-                   const std::string& pluginName,
-                   const std::string& text);
+  void handleHideMessage(const std::string& pluginName,
+                         const std::string& text);
 
   QModelIndex setCurrentSearchResult(size_t resultIndex);
 

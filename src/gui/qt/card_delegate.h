@@ -120,8 +120,7 @@ public:
                     const QModelIndex& index) const override;
 
 signals:
-  void hideMessage(const QModelIndex& index,
-                   const std::string& pluginName,
+  void hideMessage(const std::string& pluginName,
                    const std::string& messageText) const;
 
 private:

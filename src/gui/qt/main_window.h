@@ -340,8 +340,7 @@ private slots:
   void handleColorSchemeChanged();
 #endif
 
-  void handleHideMessage(const QModelIndex &index,
-                         const std::string &pluginName,
+  void handleHideMessage(const std::string &pluginName,
                          const std::string &messageText);
 };
 }
