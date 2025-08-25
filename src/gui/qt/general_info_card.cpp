@@ -225,7 +225,7 @@ void GeneralInfoCard::setupUi() {
 
 void GeneralInfoCard::translateUi() {
   headingLabel->setText(translate("General Information"));
-  hasHiddenMessagesLabel->setToolTip(translate("Has Hidden Messages"));
+  hasHiddenMessagesLabel->setToolTip(translate("Has Individually-Hidden Messages"));
 
   masterlistRevisionLabel->setText(translate("Masterlist Revision ID"));
   masterlistDateLabel->setText(translate("Masterlist Update Date"));

@@ -74,7 +74,7 @@ The plugin card's header holds the following information, some of which is only 
 - The "Loads Archive" |loads_archive_icon| icon.
 - The "Verified clean" |verified_clean_icon| icon.
 - The "Has User Metadata" |has_user_metadata_icon| icon.
-- The "Has Hidden Messages" |has_hidden_messages_icon| icon.
+- The "Has Individually-Hidden Messages" |has_hidden_messages_icon| icon.
 
 .. |active_plugin_icon| image:: ../../../resources/icons/material-icons/check_black_48dp.svg
   :scale: 45%

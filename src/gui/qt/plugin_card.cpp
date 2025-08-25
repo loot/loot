@@ -286,7 +286,7 @@ void PluginCard::translateUi() {
   emptyPluginLabel->setToolTip(translate("Empty Plugin"));
   loadsArchiveLabel->setToolTip(translate("Loads Archive"));
   hasUserEditsLabel->setToolTip(translate("Has User Metadata"));
-  hasHiddenMessagesLabel->setToolTip(translate("Has Hidden Messages"));
+  hasHiddenMessagesLabel->setToolTip(translate("Has Individually-Hidden Messages"));
 
   tagsGroupBox->setTitle(translate("Bash Tags"));
   currentTagsHeaderLabel->setText(translate("Current"));
