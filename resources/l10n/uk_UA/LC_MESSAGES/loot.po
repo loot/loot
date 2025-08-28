@@ -5,17 +5,17 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-08-25 17:50+0100\n"
-"PO-Revision-Date: 2024-09-26 05:16+0000\n"
-"Last-Translator: IllusiveMan196 <hamsterrv@gmail.com>\n"
-"Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/"
-">\n"
+"PO-Revision-Date: 2025-08-29 20:01+0000\n"
+"Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/>"
+"\n"
 "Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 5.13.1-dev\n"
 
 #: src/gui/plugin_item.cpp:45
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -70,15 +70,15 @@ msgstr "{0} містить {1}."
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:68
 msgid "Back Up Load Order"
-msgstr ""
+msgstr "Порядок резервного завантаження"
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:70
 msgid "Manual Backup"
-msgstr ""
+msgstr "Ручне резервне копіювання"
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:71
 msgid "Backup name:"
-msgstr ""
+msgstr "Назва резервної копії:"
 
 #: src/gui/qt/filters_widget.cpp:283
 msgid "Show only overlapping plugins for"
@@ -142,15 +142,15 @@ msgstr "Показати лише пусті плагіни"
 
 #: src/gui/qt/filters_widget.cpp:301
 msgid "Show only plugins with load after metadata"
-msgstr ""
+msgstr "Показувати лише плагіни з завантаженням після метаданих"
 
 #: src/gui/qt/filters_widget.cpp:303
 msgid "Show only plugins with load after user metadata"
-msgstr ""
+msgstr "Показувати лише плагіни, які завантажуються після метаданих користувача"
 
 #: src/gui/qt/filters_widget.cpp:305
 msgid "Show only plugins without load order metadata"
-msgstr ""
+msgstr "Показувати лише плагіни без метаданих порядку завантаження"
 
 #: src/gui/qt/filters_widget.cpp:307
 msgid "Show only warnings and errors"
@@ -196,7 +196,7 @@ msgstr "Загальна інформація"
 
 #: src/gui/qt/general_info_card.cpp:228 src/gui/qt/plugin_card.cpp:289
 msgid "Has Individually-Hidden Messages"
-msgstr ""
+msgstr "Містить індивідуально приховані повідомлення"
 
 #: src/gui/qt/general_info_card.cpp:230
 msgid "Masterlist Revision ID"
@@ -375,11 +375,11 @@ msgstr "Оновити з&міст"
 
 #: src/gui/qt/main_window.cpp:828
 msgid "U&nhide all individually-hidden messages"
-msgstr ""
+msgstr "Показати всі окремо приховані повідомлення"
 
 #: src/gui/qt/main_window.cpp:830
 msgid "Unhide all individually-hidden &general messages"
-msgstr ""
+msgstr "Показати всі окремо приховані та загальні повідомлення"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:832
@@ -389,11 +389,11 @@ msgstr "П&ередатувати плагіни…"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:834
 msgid "Back Up Load &Order…"
-msgstr ""
+msgstr "Резервне копіювання, завантаження та замовлення…"
 
 #: src/gui/qt/main_window.cpp:835
 msgid "Res&tore Load Order…"
-msgstr ""
+msgstr "Відновити порядок завантаження…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:837
@@ -433,7 +433,7 @@ msgstr "&Редагувати метадані…"
 
 #: src/gui/qt/main_window.cpp:854
 msgid "Un&hide individually-hidden messages"
-msgstr ""
+msgstr "Відобразити та приховати окремо приховані повідомлення"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:856
@@ -711,11 +711,11 @@ msgstr "Визначення конфліктних плагінів…"
 
 #: src/gui/qt/main_window.cpp:2692
 msgid "A backup of the current load order has been created."
-msgstr ""
+msgstr "Створено резервну копію поточного порядку завантаження."
 
 #: src/gui/qt/main_window.cpp:2730
 msgid "Restored load order from backup."
-msgstr ""
+msgstr "Відновлено порядок завантаження з резервної копії."
 
 #: src/gui/qt/main_window.cpp:2779
 msgid ""
@@ -727,7 +727,7 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:2838
 msgid "No masterlist update was necessary."
-msgstr "Оновлення правил сортування не потрібне."
+msgstr "Оновлення правил сортування не потрібно."
 
 #: src/gui/qt/main_window.cpp:2858
 msgid "Masterlist updated to revision {0}."
@@ -759,7 +759,7 @@ msgstr ""
 
 #: src/gui/qt/messages_widget.cpp:192
 msgid "Hide message"
-msgstr ""
+msgstr "Приховати повідомлення"
 
 #: src/gui/qt/plugin_card.cpp:135
 msgid "Source:"
@@ -844,19 +844,19 @@ msgstr "Назва плагіну"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:164
 msgid "Restore Load Order"
-msgstr ""
+msgstr "Відновлення порядку завантаження"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:166
 msgid "Select a load order backup to restore."
-msgstr ""
+msgstr "Виберіть резервну копію порядку завантаження для відновлення."
 
 #: src/gui/qt/restore_load_order_dialog.cpp:167
 msgid "Current load order"
-msgstr ""
+msgstr "Поточний порядок завантаження"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:168
 msgid "Selected backup's load order"
-msgstr ""
+msgstr "Порядок завантаження вибраної резервної копії"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:171
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
@@ -867,19 +867,19 @@ msgstr "Назва"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:171
 msgid "Created At"
-msgstr ""
+msgstr "Створено в"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:173
 msgid "Delete Backup"
-msgstr ""
+msgstr "Видалити резервну копію"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:176
 msgid "The current and selected backup load orders are identical."
-msgstr ""
+msgstr "Поточний та вибраний порядок завантаження резервних копій ідентичні."
 
 #: src/gui/qt/restore_load_order_dialog.cpp:224
 msgid "Failed to delete backup."
-msgstr ""
+msgstr "Не вдалося видалити резервну копію."
 
 # Menu-level header string
 # Also used for actual search window title
@@ -1063,7 +1063,7 @@ msgstr "Вираз"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
 msgid "Constraint"
-msgstr ""
+msgstr "Обмеження"
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
 msgid "URL"
@@ -1133,11 +1133,11 @@ msgstr "Видалити гру"
 
 #: src/gui/qt/settings/general_tab.cpp:47
 msgid "{0} (Dark)"
-msgstr ""
+msgstr "{0} (Темний)"
 
 #: src/gui/qt/settings/general_tab.cpp:52
 msgid "{0} (Light)"
-msgstr ""
+msgstr "{0} (Світло)"
 
 #: src/gui/qt/settings/general_tab.cpp:186
 msgid "Default Game"
@@ -1317,6 +1317,8 @@ msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
+"Сортування не вдалося, оскільки є принаймні один встановлений плагін, який "
+"залежить від принаймні одного невстановленого плагіна."
 
 #: src/gui/state/game/game.cpp:878
 msgid "You have not sorted your load order this session."
@@ -1328,6 +1330,9 @@ msgid ""
 "\n"
 "Try updating your masterlist to resolve the error."
 msgstr ""
+"Сталася помилка під час аналізу списку(ів) метаданих: {0}.\n"
+"\n"
+"Спробуйте оновити свій головний список, щоб виправити помилку."
 
 #: src/gui/state/game/game.cpp:974
 msgid ""
@@ -1341,6 +1346,15 @@ msgid ""
 "metadata it contains, with the help of the [metadata syntax documentation]"
 "({1})."
 msgstr ""
+"Під час аналізу вашого списку користувачів сталася помилка: {0}.\n"
+"\n"
+"Ймовірно, це сталося через те, що оновлення LOOT змінило підтримку "
+"синтаксису метаданих. Ваші метадані користувача доведеться оновити вручну.\n"
+"\n"
+"Для цього скористайтеся пунктом «Відкрити папку даних LOOT» у меню «Файл» "
+"LOOT, а потім відкрийте файл «userlist.yaml» у відповідній папці гри. Після "
+"цього ви зможете редагувати метадані, що містяться в ньому, за допомогою "
+"[документації щодо синтаксису метаданих]({1})."
 
 #: src/gui/state/game/game.cpp:1157
 msgid ""
@@ -1352,7 +1366,7 @@ msgstr ""
 
 #: src/gui/state/game/helpers.cpp:234
 msgid "Automatic Load Order Backup"
-msgstr ""
+msgstr "Автоматичне резервне копіювання порядку завантаження"
 
 #: src/gui/state/game/validation.cpp:82 src/gui/state/game/validation.cpp:113
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
@@ -1364,7 +1378,7 @@ msgstr "Цей плагін потребує увімкненого плагін
 
 #: src/gui/state/game/validation.cpp:119
 msgid "This plugin requires {0} to be installed, but it is missing."
-msgstr ""
+msgstr "Для цього плагіна потрібно встановити {0}, але його немає."
 
 #: src/gui/state/game/validation.cpp:140
 msgid "This plugin is incompatible with \"{0}\", but both are present."
@@ -1372,7 +1386,7 @@ msgstr "Цей плагін несумісний з \"{0}\", але обидва
 
 #: src/gui/state/game/validation.cpp:146
 msgid "This plugin is incompatible with {0}, but both are present."
-msgstr ""
+msgstr "Цей плагін несумісний з {0}, але обидва присутні."
 
 #: src/gui/state/game/validation.cpp:175
 msgid "small master"
@@ -1415,6 +1429,8 @@ msgid ""
 "This plugin is an update plugin but adds new records. Using this plugin may "
 "cause irreversible damage to your game saves."
 msgstr ""
+"Цей плагін є плагіном оновлення, але додає нові записи. Використання цього "
+"плагіна може призвести до незворотної шкоди вашим збереженням гри."
 
 #: src/gui/state/game/validation.cpp:258
 msgid "plugin"
@@ -1447,6 +1463,8 @@ msgid ""
 "\"{0}\" is flagged as a light {1}, but the game does not support such "
 "plugins, and will load it as a full {1}."
 msgstr ""
+"\"{0}\" позначено як легкий {1}, але гра не підтримує такі плагіни та "
+"завантажить його як повний {1}."
 
 #: src/gui/state/game/validation.cpp:322
 msgid ""
@@ -1454,6 +1472,9 @@ msgid ""
 "\"{0}\". This can cause issues in-game, as this plugin will always load "
 "before \"{0}\"."
 msgstr ""
+"Цей плагін не є майстром креслень і вимагає майстра креслень \"{0}\". Це "
+"може спричинити проблеми в грі, оскільки цей плагін завжди "
+"завантажуватиметься раніше за \"{0}\"."
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
@@ -1483,7 +1504,7 @@ msgstr ""
 
 #: src/gui/state/game/validation.cpp:561
 msgid "You have {0} active full plugins but the game only supports up to {1}."
-msgstr ""
+msgstr "У вас є {0} активних повних плагінів, але гра підтримує лише до {1}."
 
 #: src/gui/state/game/validation.cpp:571
 msgid "You have {0} active plugins but the game only supports up to {1}."
@@ -1499,18 +1520,21 @@ msgstr ""
 
 #: src/gui/state/game/validation.cpp:612
 msgid "You have {0} active {1} but the game only supports up to {2}."
-msgstr ""
+msgstr "У вас активних {1}: {0}, але гра підтримує лише до {2}."
 
 #: src/gui/state/game/validation.cpp:634
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
 "Deactivate a full plugin or your {1} to avoid potential issues."
 msgstr ""
+"У вас є повний плагін, і {0} {1} спільно використовує індекс порядку "
+"завантаження FE. Деактивуйте повний плагін або ваш {1}, щоб уникнути "
+"потенційних проблем."
 
 #: src/gui/state/game/validation.cpp:656
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
-msgstr ""
+msgstr "У вас є {0} активних плагінів Medium, але гра підтримує лише до {1}."
 
 #: src/gui/state/game/validation.cpp:676
 msgid ""
@@ -1518,6 +1542,9 @@ msgid ""
 "order index. Deactivate a full plugin or all your medium plugins to avoid "
 "potential issues."
 msgstr ""
+"У вас є повний плагін і принаймні один середній плагін, що використовують "
+"той самий індекс порядку завантаження FD. Деактивуйте повний плагін або всі "
+"середні плагіни, щоб уникнути потенційних проблем."
 
 #. translators: The placeholder is for the current game's name.
 #.
@@ -1546,16 +1573,16 @@ msgstr ""
 #: src/gui/state/game/validation.cpp:847
 msgid "small plugin"
 msgid_plural "small plugins"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "невеликий плагін"
+msgstr[1] "невеликі плагіни"
+msgstr[2] "невеликі плагінів"
 
 #: src/gui/state/game/validation.cpp:850
 msgid "light plugin"
 msgid_plural "light plugins"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "легкий плагін"
+msgstr[1] "легкі плагіни"
+msgstr[2] "легкі плагінів"
 
 #~ msgid ""
 #~ "An error occurred while parsing the metadata list(s): {0}.\n"
