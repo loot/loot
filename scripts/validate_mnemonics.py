@@ -13,17 +13,21 @@ MENU_COMMENT = "translators: The mnemonic in this string shouldn't conflict with
 def extract_mnemonic(msgstr):
     index = msgstr.find('&')
 
-    return msgstr[index + 1]
+    if index > -1:
+        return msgstr[index + 1]
+    else:
+        return None
 
 def validate_bucket(entries):
     mnemonics = {}
 
     for entry in entries:
         mnemonic = extract_mnemonic(entry.msgstr)
-        if mnemonic not in mnemonics:
-            mnemonics[mnemonic] = [entry]
-        else:
-            mnemonics[mnemonic].append(entry)
+        if mnemonic:
+            if mnemonic not in mnemonics:
+                mnemonics[mnemonic] = [entry]
+            else:
+                mnemonics[mnemonic].append(entry)
 
     for [mnemonic, entries] in mnemonics.items():
         if len(entries) > 1:
