@@ -923,6 +923,8 @@ void LootSettings::load(const std::filesystem::path& file) {
     filters_.hideCreationClubPlugins =
         filters.at_path("hideCreationClubPlugins")
             .value_or(filters_.hideCreationClubPlugins);
+    filters_.showOnlyNewMessages = filters.at_path("showOnlyNewMessages")
+                                       .value_or(filters_.showOnlyNewMessages);
     filters_.showOnlyEmptyPlugins =
         filters.at_path("showOnlyEmptyPlugins")
             .value_or(filters_.showOnlyEmptyPlugins);
@@ -978,6 +980,7 @@ void LootSettings::save(const std::filesystem::path& file) {
            {"hideInactivePlugins", filters_.hideInactivePlugins},
            {"hideMessagelessPlugins", filters_.hideMessagelessPlugins},
            {"hideCreationClubPlugins", filters_.hideCreationClubPlugins},
+           {"showOnlyNewMessages", filters_.showOnlyNewMessages},
            {"showOnlyEmptyPlugins", filters_.showOnlyEmptyPlugins},
            {"showOnlyPluginsWithLoadAfterMetadata",
             filters_.showOnlyPluginsWithLoadAfterMetadata},

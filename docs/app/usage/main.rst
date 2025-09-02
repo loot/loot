@@ -132,6 +132,8 @@ Hide inactive plugins
   Hides all plugins that are inactive.
 Hide messageless plugins
   Hides all plugins that have no visible messages.
+Show only new messages
+  Hides all messages that existed the last time LOOT ran for the current game, before its content was last refreshed, or before its masterlist was last updated while it was the current game.
 Show only empty plugins
   Hides all plugins that contain more than their header record. Empty plugins can be used to load assets from BSA or BA2 files (depending on the game).
 Show only plugins with load after metadata

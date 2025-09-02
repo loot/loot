@@ -72,6 +72,7 @@ public:
     bool hideInactivePlugins{false};
     bool hideMessagelessPlugins{false};
     bool hideCreationClubPlugins{false};
+    bool showOnlyNewMessages{false};
     bool showOnlyEmptyPlugins{false};
     bool showOnlyPluginsWithLoadAfterMetadata{false};
     bool showOnlyPluginsWithLoadAfterUserMetadata{false};

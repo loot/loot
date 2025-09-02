@@ -714,6 +714,10 @@ std::filesystem::path Game::GetActivePluginsFilePath() const {
   return gameHandle_->GetActivePluginsFilePath();
 }
 
+std::filesystem::path Game::OldMessagesPath() const {
+  return GetLOOTGamePath() / "old_messages.json";
+}
+
 fs::path Game::UserlistPath() const {
   return GetLOOTGamePath() / "userlist.yaml";
 }

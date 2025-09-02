@@ -69,6 +69,10 @@ class UpdateFileWithDataTest : public QtHelpersFixture {};
 
 class UpdateFileTest : public QtHelpersFixture {};
 
+class ReadOldMessagesTest : public QtHelpersFixture {};
+
+class WriteOldMessagesTest : public QtHelpersFixture {};
+
 TEST(calculateGitBlobHash, shouldCalculateTheSameHashAsGitDoesForABlob) {
   auto data = QByteArray("some text to hash");
   auto hash = calculateGitBlobHash(data);
@@ -339,6 +343,54 @@ TEST(isValidUrl, shouldBeTrueForAHttpsUrl) {
 
   EXPECT_TRUE(result);
 }
+
+TEST_F(ReadOldMessagesTest, shouldReadOldMessagesFromAJsonFile) {
+  const auto jsonPath = rootPath_ / "messages.json";
+
+  std::ofstream out(jsonPath);
+  out << "{\"messages\":["
+   << "{\"text\":\"general message\"}," 
+      << "{\"pluginName\":\"plugin name\",\"text\":\"plugin message\"}"
+   << "]}";
+  out.close();
+  
+  std::vector<HiddenMessage> expectedMessages{
+      HiddenMessage{std::nullopt, "general message"},
+      HiddenMessage{"plugin name", "plugin message"}};
+
+  EXPECT_EQ(expectedMessages, ReadOldMessages(jsonPath));
+}
+
+TEST_F(WriteOldMessagesTest, shouldWriteOldMessagesToAJsonFile) {
+  const auto jsonPath = rootPath_ / "messages.json";
+
+  std::vector<HiddenMessage> messages{
+      HiddenMessage{std::nullopt, "general message"},
+      HiddenMessage{"plugin name", "plugin message"}};
+
+  WriteOldMessages(jsonPath, messages);
+
+  std::stringstream expected;
+  expected << "{\n"
+           << "    \"messages\": [\n"
+           << "        {\n"
+           << "            \"text\": \"general message\"\n"
+           << "        },\n"
+           << "        {\n"
+           << "            \"pluginName\": \"plugin name\",\n"
+           << "            \"text\": \"plugin message\"\n"
+           << "        }\n"
+           << "    ]\n"
+           << "}\n";
+
+  std::ifstream in(jsonPath);
+  std::stringstream buffer;
+  buffer << in.rdbuf();
+  const auto contents = buffer.str();
+
+  EXPECT_EQ(expected.str(), contents);
+}
+
 }
 }
 

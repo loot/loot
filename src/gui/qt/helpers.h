@@ -36,6 +36,8 @@
 #include <filesystem>
 #include <vector>
 
+#include "gui/state/game/game_settings.h"
+
 namespace loot {
 enum class FileType { Masterlist, MasterlistPrelude };
 
@@ -83,6 +85,12 @@ void showInvalidRegexTooltip(QWidget& widget, const std::string& details);
 void CopyToClipboard(const std::string& text);
 
 void OpenInDefaultApplication(const std::filesystem::path& path);
+
+std::vector<HiddenMessage> ReadOldMessages(
+    const std::filesystem::path& filePath);
+
+void WriteOldMessages(const std::filesystem::path& filePath,
+                      const std::vector<HiddenMessage>& oldMessages);
 }
 
 Q_DECLARE_METATYPE(loot::MessageContent);

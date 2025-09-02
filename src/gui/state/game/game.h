@@ -128,6 +128,7 @@ public:
   std::filesystem::path UserlistPath() const;
   std::filesystem::path GroupNodePositionsPath() const;
   std::filesystem::path GetActivePluginsFilePath() const;
+  std::filesystem::path OldMessagesPath() const;
 
   std::vector<std::string> GetLoadOrder() const;
   void SetLoadOrder(const std::vector<std::string>& loadOrder);

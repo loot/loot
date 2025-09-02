@@ -1428,6 +1428,17 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
+    WriteOldMessages(state.GetCurrentGame().OldMessagesPath(),
+                     pluginItemModel->getCurrentMessages());
+  } catch (const std::exception& e) {
+    auto logger = getLogger();
+    if (logger) {
+      logger->error("Couldn't record current game's current messages: {}",
+                    e.what());
+    }
+  }
+
+  try {
     state.getSettings().updateLastVersion();
     state.getSettings().save(state.GetPaths().getSettingsPath());
   } catch (const std::exception& e) {
@@ -1500,6 +1511,8 @@ void MainWindow::handleGameDataLoaded(QueryResult result) {
   progressDialog->reset();
 
   pluginItemModel->setPluginItems(std::move(std::get<PluginItems>(result)));
+  pluginItemModel->setOldMessages(
+      ReadOldMessages(state.GetCurrentGame().OldMessagesPath()));
 
   updateGeneralInformation();
 
@@ -1830,6 +1843,9 @@ void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
 
 void MainWindow::on_actionRefreshContent_triggered() {
   try {
+    WriteOldMessages(state.GetCurrentGame().OldMessagesPath(),
+                     pluginItemModel->getCurrentMessages());
+
     loadGame(false);
   } catch (const std::exception& e) {
     handleException(e);
@@ -2252,6 +2268,9 @@ void MainWindow::on_gameComboBox_activated(int index) {
          folderName == state.GetCurrentGame().GetSettings().FolderName())) {
       return;
     }
+
+    WriteOldMessages(state.GetCurrentGame().OldMessagesPath(),
+                     pluginItemModel->getCurrentMessages());
 
     auto progressUpdater = new ProgressUpdater();
 
@@ -2843,6 +2862,9 @@ void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
       return;
     }
 
+    WriteOldMessages(state.GetCurrentGame().OldMessagesPath(),
+                     pluginItemModel->getCurrentMessages());
+
     state.GetCurrentGame().LoadMetadata();
 
     const auto pluginItems =
@@ -2881,7 +2903,7 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
     }
 
     const auto logger = getLogger();
-    const auto gamesSettings = state.getSettings().getGameSettings();
+    const auto& gamesSettings = state.getSettings().getGameSettings();
 
     std::vector<std::string> updatedGameNames;
     bool wasCurrentGameMasterlistUpdated{false};
@@ -2890,7 +2912,7 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
         continue;
       }
 
-      const auto updateResult = std::get<MasterlistUpdateResult>(result);
+      const auto& updateResult = std::get<MasterlistUpdateResult>(result);
 
       if (wasPreludeUpdated || updateResult.second) {
         const auto it =
@@ -2928,6 +2950,9 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
     }
 
     if (wasCurrentGameMasterlistUpdated) {
+      WriteOldMessages(state.GetCurrentGame().OldMessagesPath(),
+                       pluginItemModel->getCurrentMessages());
+
       // Need to reload the current game data.
       state.GetCurrentGame().LoadMetadata();
 

@@ -31,6 +31,9 @@
 #include <QtCore/QCryptographicHash>
 #include <QtCore/QDate>
 #include <QtCore/QFile>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
 #include <QtCore/QPoint>
 #include <QtCore/QUrl>
 #include <QtGui/QClipboard>
@@ -414,5 +417,63 @@ void OpenInDefaultApplication(const std::filesystem::path& path) {
     }
   }
 #endif
+}
+
+std::vector<HiddenMessage> ReadOldMessages(
+    const std::filesystem::path& filePath) {
+  if (!std::filesystem::exists(filePath)) {
+    return {};
+  }
+
+  QFile file(QString::fromStdString(filePath.u8string()));
+
+  auto result = file.open(QIODevice::ReadOnly);
+  if (!result) {
+    throw std::runtime_error(filePath.u8string() + " is not a regular file");
+  }
+
+  QByteArray fileContent = file.readAll();
+
+  const auto json = QJsonDocument::fromJson(fileContent).object();
+
+  std::vector<HiddenMessage> messages;
+  for (const auto& jsonMessage : json["messages"].toArray()) {
+    const auto object = jsonMessage.toObject();
+    HiddenMessage message;
+    if (object.contains("pluginName")) {
+      message.pluginName = object["pluginName"].toString().toStdString();
+    }
+    message.text = object["text"].toString().toStdString();
+    messages.push_back(message);
+  }
+
+  return messages;
+}
+
+void WriteOldMessages(const std::filesystem::path& filePath,
+                      const std::vector<HiddenMessage>& oldMessages) {
+  QFile file(QString::fromStdString(filePath.u8string()));
+
+  auto result = file.open(QIODevice::WriteOnly);
+  if (!result) {
+    throw std::runtime_error(filePath.u8string() + " is not a regular file");
+  }
+
+  QJsonArray messages;
+  for (const auto& oldMessage : oldMessages) {
+    QJsonObject jsonMessage;
+    if (oldMessage.pluginName.has_value()) {
+      jsonMessage["pluginName"] =
+          QString::fromStdString(oldMessage.pluginName.value());
+    }
+    jsonMessage["text"] = QString::fromStdString(oldMessage.text);
+
+    messages.push_back(jsonMessage);
+  }
+
+  QJsonObject root;
+  root["messages"] = messages;
+
+  file.write(QJsonDocument(root).toJson());
 }
 }

@@ -95,11 +95,18 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_FALSE(settings_.getFilters().hideVersionNumbers);
   EXPECT_TRUE(settings_.getFilters().hideBashTags);
   EXPECT_FALSE(settings_.getFilters().hideCRCs);
+  EXPECT_TRUE(settings_.getFilters().hideLocations);
   EXPECT_FALSE(settings_.getFilters().hideNotes);
   EXPECT_FALSE(settings_.getFilters().hideAllPluginMessages);
   EXPECT_FALSE(settings_.getFilters().hideOfficialPluginsCleaningMessages);
   EXPECT_FALSE(settings_.getFilters().hideInactivePlugins);
   EXPECT_FALSE(settings_.getFilters().hideMessagelessPlugins);
+  EXPECT_FALSE(settings_.getFilters().hideCreationClubPlugins);
+  EXPECT_FALSE(settings_.getFilters().showOnlyNewMessages);
+  EXPECT_FALSE(settings_.getFilters().showOnlyEmptyPlugins);
+  EXPECT_FALSE(settings_.getFilters().showOnlyPluginsWithLoadAfterMetadata);
+  EXPECT_FALSE(settings_.getFilters().showOnlyPluginsWithLoadAfterUserMetadata);
+  EXPECT_FALSE(settings_.getFilters().showOnlyPluginsWithoutLoadOrderMetadata);
   EXPECT_EQ("https://raw.githubusercontent.com/loot/prelude/v0.26/prelude.yaml",
             settings_.getPreludeSource());
   EXPECT_TRUE(settings_.getGameSettings().empty());
@@ -205,6 +212,112 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ(1, settings_.getLanguages().size());
   EXPECT_EQ(LootSettings::Language({"en", "English"}),
             settings_.getLanguages()[0]);
+}
+
+TEST_F(LootSettingsTest, loadShouldEnableFiltersForFiltersEnabledInTomlFile) {
+  LootSettings::Filters filters;
+  filters.hideBashTags = false;
+  filters.hideLocations = false;
+  settings_.storeFilters(filters);
+
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[filters]" << endl
+      << "hideVersionNumbers = true" << endl
+      << "hideCRCs = true" << endl
+      << "hideBashTags = true" << endl
+      << "hideLocations = true" << endl
+      << "hideNotes = true" << endl
+      << "hideOfficialPluginsCleaningMessages = true" << endl
+      << "hideAllPluginMessages = true" << endl
+      << "hideInactivePlugins = true" << endl
+      << "hideMessagelessPlugins = true" << endl
+      << "hideCreationClubPlugins = true" << endl
+      << "showOnlyNewMessages = true" << endl
+      << "showOnlyEmptyPlugins = true" << endl
+      << "showOnlyPluginsWithLoadAfterMetadata = true" << endl
+      << "showOnlyPluginsWithLoadAfterUserMetadata = true" << endl
+      << "showOnlyPluginsWithoutLoadOrderMetadata = true" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  EXPECT_TRUE(settings_.getFilters().hideVersionNumbers);
+  EXPECT_TRUE(settings_.getFilters().hideBashTags);
+  EXPECT_TRUE(settings_.getFilters().hideCRCs);
+  EXPECT_TRUE(settings_.getFilters().hideLocations);
+  EXPECT_TRUE(settings_.getFilters().hideNotes);
+  EXPECT_TRUE(settings_.getFilters().hideAllPluginMessages);
+  EXPECT_TRUE(settings_.getFilters().hideOfficialPluginsCleaningMessages);
+  EXPECT_TRUE(settings_.getFilters().hideInactivePlugins);
+  EXPECT_TRUE(settings_.getFilters().hideMessagelessPlugins);
+  EXPECT_TRUE(settings_.getFilters().hideCreationClubPlugins);
+  EXPECT_TRUE(settings_.getFilters().showOnlyNewMessages);
+  EXPECT_TRUE(settings_.getFilters().showOnlyEmptyPlugins);
+  EXPECT_TRUE(settings_.getFilters().showOnlyPluginsWithLoadAfterMetadata);
+  EXPECT_TRUE(settings_.getFilters().showOnlyPluginsWithLoadAfterUserMetadata);
+  EXPECT_TRUE(settings_.getFilters().showOnlyPluginsWithoutLoadOrderMetadata);
+}
+
+TEST_F(LootSettingsTest, loadShouldDisableFiltersForFiltersDisabledInTomlFile) {
+  LootSettings::Filters filters{true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
+  settings_.storeFilters(filters);
+  
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[filters]" << endl
+      << "hideVersionNumbers = false" << endl
+      << "hideCRCs = false" << endl
+      << "hideBashTags = false" << endl
+      << "hideLocations = false" << endl
+      << "hideNotes = false" << endl
+      << "hideOfficialPluginsCleaningMessages = false" << endl
+      << "hideAllPluginMessages = false" << endl
+      << "hideInactivePlugins = false" << endl
+      << "hideMessagelessPlugins = false" << endl
+      << "hideCreationClubPlugins = false" << endl
+      << "showOnlyNewMessages = false" << endl
+      << "showOnlyEmptyPlugins = false" << endl
+      << "showOnlyPluginsWithLoadAfterMetadata = false" << endl
+      << "showOnlyPluginsWithLoadAfterUserMetadata = false" << endl
+      << "showOnlyPluginsWithoutLoadOrderMetadata = false" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  EXPECT_FALSE(settings_.getFilters().hideVersionNumbers);
+  EXPECT_FALSE(settings_.getFilters().hideBashTags);
+  EXPECT_FALSE(settings_.getFilters().hideCRCs);
+  EXPECT_FALSE(settings_.getFilters().hideLocations);
+  EXPECT_FALSE(settings_.getFilters().hideNotes);
+  EXPECT_FALSE(settings_.getFilters().hideAllPluginMessages);
+  EXPECT_FALSE(settings_.getFilters().hideOfficialPluginsCleaningMessages);
+  EXPECT_FALSE(settings_.getFilters().hideInactivePlugins);
+  EXPECT_FALSE(settings_.getFilters().hideMessagelessPlugins);
+  EXPECT_FALSE(settings_.getFilters().hideCreationClubPlugins);
+  EXPECT_FALSE(settings_.getFilters().showOnlyNewMessages);
+  EXPECT_FALSE(settings_.getFilters().showOnlyEmptyPlugins);
+  EXPECT_FALSE(settings_.getFilters().showOnlyPluginsWithLoadAfterMetadata);
+  EXPECT_FALSE(settings_.getFilters().showOnlyPluginsWithLoadAfterUserMetadata);
+  EXPECT_FALSE(settings_.getFilters().showOnlyPluginsWithoutLoadOrderMetadata);
+}
+
+TEST_F(LootSettingsTest,
+       loadShouldRetainCurrentValueOfFilterNotPresentInTomlFile) {
+  LootSettings::Filters filters;
+  settings_.storeFilters(filters);
+
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[filters]" << endl 
+      << "hideCRCs = true" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  EXPECT_FALSE(settings_.getFilters().hideVersionNumbers);
+  EXPECT_TRUE(settings_.getFilters().hideBashTags);
+  EXPECT_TRUE(settings_.getFilters().hideCRCs);
 }
 
 TEST_F(LootSettingsTest, loadingShouldMapGameIds) {
@@ -1606,6 +1719,73 @@ TEST_F(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {
 
   EXPECT_NE(std::string::npos, contents.find(u8"non\u00C1sciiGamePath"));
   EXPECT_NE(std::string::npos, contents.find(u8"non\u00C1sciiGameLocalPath"));
+}
+
+TEST_F(LootSettingsTest, saveShouldWriteAllFiltersWhenTheyAreDisabled) {
+  LootSettings::Filters filters;
+  filters.hideBashTags = false;
+  filters.hideLocations = false;
+  settings_.storeFilters(filters);
+
+  settings_.save(settingsFile_);
+  
+  settings_.load(settingsFile_);
+
+  EXPECT_FALSE(settings_.getFilters().hideVersionNumbers);
+  EXPECT_FALSE(settings_.getFilters().hideBashTags);
+  EXPECT_FALSE(settings_.getFilters().hideCRCs);
+  EXPECT_FALSE(settings_.getFilters().hideLocations);
+  EXPECT_FALSE(settings_.getFilters().hideNotes);
+  EXPECT_FALSE(settings_.getFilters().hideAllPluginMessages);
+  EXPECT_FALSE(settings_.getFilters().hideOfficialPluginsCleaningMessages);
+  EXPECT_FALSE(settings_.getFilters().hideInactivePlugins);
+  EXPECT_FALSE(settings_.getFilters().hideMessagelessPlugins);
+  EXPECT_FALSE(settings_.getFilters().hideCreationClubPlugins);
+  EXPECT_FALSE(settings_.getFilters().showOnlyNewMessages);
+  EXPECT_FALSE(settings_.getFilters().showOnlyEmptyPlugins);
+  EXPECT_FALSE(settings_.getFilters().showOnlyPluginsWithLoadAfterMetadata);
+  EXPECT_FALSE(settings_.getFilters().showOnlyPluginsWithLoadAfterUserMetadata);
+  EXPECT_FALSE(settings_.getFilters().showOnlyPluginsWithoutLoadOrderMetadata);
+}
+
+TEST_F(LootSettingsTest, saveShouldWriteAllFiltersWhenTheyAreEnabled) {
+  LootSettings::Filters filters{true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true};
+
+  settings_.storeFilters(filters);
+
+  settings_.save(settingsFile_);
+
+  settings_.load(settingsFile_);
+
+  EXPECT_TRUE(settings_.getFilters().hideVersionNumbers);
+  EXPECT_TRUE(settings_.getFilters().hideBashTags);
+  EXPECT_TRUE(settings_.getFilters().hideCRCs);
+  EXPECT_TRUE(settings_.getFilters().hideLocations);
+  EXPECT_TRUE(settings_.getFilters().hideNotes);
+  EXPECT_TRUE(settings_.getFilters().hideAllPluginMessages);
+  EXPECT_TRUE(settings_.getFilters().hideOfficialPluginsCleaningMessages);
+  EXPECT_TRUE(settings_.getFilters().hideInactivePlugins);
+  EXPECT_TRUE(settings_.getFilters().hideMessagelessPlugins);
+  EXPECT_TRUE(settings_.getFilters().hideCreationClubPlugins);
+  EXPECT_TRUE(settings_.getFilters().showOnlyNewMessages);
+  EXPECT_TRUE(settings_.getFilters().showOnlyEmptyPlugins);
+  EXPECT_TRUE(settings_.getFilters().showOnlyPluginsWithLoadAfterMetadata);
+  EXPECT_TRUE(settings_.getFilters().showOnlyPluginsWithLoadAfterUserMetadata);
+  EXPECT_TRUE(settings_.getFilters().showOnlyPluginsWithoutLoadOrderMetadata);
 }
 
 TEST_F(LootSettingsTest, storeGameSettingsShouldReplaceExistingGameSettings) {

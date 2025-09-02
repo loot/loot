@@ -120,6 +120,10 @@ public:
 
   QModelIndex setCurrentSearchResult(size_t resultIndex);
 
+  std::vector<HiddenMessage> getCurrentMessages() const;
+
+  void setOldMessages(const std::vector<HiddenMessage>& oldMessages);
+
   size_t countHiddenMessages();
 
 private:
@@ -133,6 +137,10 @@ private:
   std::unordered_map<std::string, std::unordered_set<std::string>>
       hiddenMessagesByPluginName;
   std::unordered_set<std::string> hiddenGeneralMessages;
+
+  std::unordered_map<std::string, std::unordered_set<std::string>>
+      oldMessagesByPluginName;
+  std::unordered_set<std::string> oldGeneralMessages;
 
   void hideGeneralMessage(const std::string& text);
   void hideMessage(const std::string& pluginName, const std::string& text);

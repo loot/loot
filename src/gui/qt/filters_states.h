@@ -44,6 +44,7 @@ struct CardContentFiltersState {
   bool hideNotes{false};
   bool hideOfficialPluginsCleaningMessages{false};
   bool hideAllPluginMessages{false};
+  bool showOnlyNewMessages{false};
 
   GameId gameId{GameId::tes3};
 };

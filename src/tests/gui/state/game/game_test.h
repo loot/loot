@@ -220,6 +220,8 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
       lootDataPath / "games" / u8path(defaultGameSettings.FolderName());
   EXPECT_EQ(lootGamePath / "masterlist.yaml", game.MasterlistPath());
   EXPECT_EQ(lootGamePath / "userlist.yaml", game.UserlistPath());
+  EXPECT_EQ(lootGamePath / "group_node_positions.bin", game.GroupNodePositionsPath());
+  EXPECT_EQ(lootGamePath / "old_messages.json", game.OldMessagesPath());
 }
 
 TEST_P(GameTest, initShouldThrowIfGamePathWasNotGiven) {

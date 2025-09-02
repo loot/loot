@@ -82,6 +82,7 @@ private:
   QCheckBox *inactivePluginsFilter{new QCheckBox(this)};
   QCheckBox *messagelessPluginsFilter{new QCheckBox(this)};
   QCheckBox *creationClubPluginsFilter{new QCheckBox(this)};
+  QCheckBox *showOnlyNewMessagesFilter{new QCheckBox(this)};
   QCheckBox *showOnlyEmptyPluginsFilter{new QCheckBox(this)};
   QCheckBox *showOnlyPluginsWithLoadAfterMetadataFilter{new QCheckBox(this)};
   QCheckBox *showOnlyPluginsWithLoadAfterUserMetadataFilter{
@@ -121,6 +122,7 @@ private slots:
   void on_inactivePluginsFilter_clicked();
   void on_messagelessPluginsFilter_clicked(bool checked);
   void on_creationClubPluginsFilter_clicked();
+  void on_showOnlyNewMessagesFilter_clicked();
   void on_showOnlyEmptyPluginsFilter_clicked();
   void on_showOnlyPluginsWithLoadAfterMetadataFilter_clicked(bool checked);
   void on_showOnlyPluginsWithLoadAfterUserMetadataFilter_clicked(bool checked);
