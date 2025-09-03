@@ -74,7 +74,7 @@ The plugin card's header holds the following information, some of which is only 
 - The "Loads Archive" |loads_archive_icon| icon.
 - The "Verified clean" |verified_clean_icon| icon.
 - The "Has User Metadata" |has_user_metadata_icon| icon.
-- The "Has Individually-Hidden Messages" |has_hidden_messages_icon| icon.
+- The "Has Hidden Messages" |has_hidden_messages_icon| icon.
 
 .. |active_plugin_icon| image:: ../../../resources/icons/material-icons/check_black_48dp.svg
   :scale: 45%
@@ -103,7 +103,7 @@ Messages, Bash Tag suggestions and plugin sources are displayed below the plugin
 
 LOOT's plugin messages are a valuable resource, as they provide information that might not be obvious. It is important for a stable, healthy game that you act on any messages that require action. If you think a message suggests an unnecessary action, report it to an official LOOT thread. If you encounter a message that is non-conditional, ie. it suggests an action but is still displayed on subsequent runs of LOOT after the action has been carried out, also report it to an official LOOT thread, so that it can be made conditional.
 
-You can hide individual messages by right-clicking them and selecting the "Hide message" context menu action. A card with individually-hidden messages will display the "Has Individually-Hidden Messages" icon, and they can be unhidden by right-clicking the card (anywhere outside its list of messages) and selecting the relevant context menu action. The selected plugin's hidden messages can also be unhidden from the Plugin menu. The Game menu contains actions to unhide individually-hidden general messages, and to unhide all individually-hidden messages.
+You can hide individual messages by right-clicking them and selecting the "Hide message" context menu action. A card with hidden messages (whether hidden individually or using filters) will display the "Has Hidden Messages" icon, and they can be unhidden by right-clicking the card (anywhere outside its list of messages) and selecting the relevant context menu action. The selected plugin's hidden messages can also be unhidden from the Plugin menu. The Game menu contains actions to unhide individually-hidden general messages, and to unhide all individually-hidden messages.
 
 You generally don't need to do anything with Bash Tag suggestions, so they're hidden by default. If you're using Wrye Bash it will automatically apply LOOT's suggestions, and if you're not using Wrye Bash then this information doesn't apply.
 
