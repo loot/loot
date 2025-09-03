@@ -244,6 +244,80 @@ TEST_P(GameSettingsTest,
       getLocalAppDataPath() / std::filesystem::u8path(folderName);
   EXPECT_EQ(expectedPath, settings_.GameLocalPath());
 }
+
+TEST_P(GameSettingsTest, setHiddenMessagesShouldStoreGivenValue) {
+  std::vector<HiddenMessage> messages{
+      HiddenMessage{std::nullopt, "general message"},
+      HiddenMessage{"plugin name", "plugin message"}};
+
+  settings_.SetHiddenMessages(messages);
+
+  EXPECT_EQ(messages, settings_.HiddenMessages());
+}
+
+TEST_P(GameSettingsTest, hideMessageShouldAppendNewHiddenMessage) {
+  std::vector<HiddenMessage> messages{
+      HiddenMessage{std::nullopt, "general message"},
+      HiddenMessage{"plugin name", "plugin message"}};
+
+  settings_.HideMessage("", messages[0].text);
+  settings_.HideMessage(messages[1].pluginName.value(), messages[1].text);
+
+  EXPECT_EQ(messages, settings_.HiddenMessages());
+}
+
+TEST_P(GameSettingsTest,
+       hideMessageShouldMakeNoChangesIfMessageIsAlreadyHidden) {
+  std::vector<HiddenMessage> messages{
+      HiddenMessage{std::nullopt, "general message"},
+      HiddenMessage{"plugin name", "plugin message"}};
+
+  settings_.SetHiddenMessages(messages);
+
+  settings_.HideMessage("", messages[0].text);
+  settings_.HideMessage(messages[1].pluginName.value(), messages[1].text);
+
+  EXPECT_EQ(messages, settings_.HiddenMessages());
+}
+
+TEST_P(
+    GameSettingsTest,
+    hasHiddenGeneralMessageShouldBeFalseIfThereAreNoMessagesWithoutAPluginName) {
+  settings_.HideMessage("plugin name", "plugin message");
+
+  EXPECT_FALSE(settings_.HasHiddenGeneralMessages());
+}
+
+TEST_P(
+    GameSettingsTest,
+    hasHiddenGeneralMessageShouldBeTrueIfThereIsAMessageWithoutAPluginName) {
+  settings_.HideMessage("", "plugin message");
+
+  EXPECT_TRUE(settings_.HasHiddenGeneralMessages());
+}
+
+TEST_P(
+    GameSettingsTest,
+    pluginHasHiddenMessagesShouldBeFalseIfThereAreNoMessagesWithTheGivenPluginName) {
+  std::vector<HiddenMessage> messages{
+      HiddenMessage{std::nullopt, "general message"},
+      HiddenMessage{"other plugin name", "plugin message"}};
+
+  settings_.SetHiddenMessages(messages);
+
+  EXPECT_FALSE(settings_.PluginHasHiddenMessages("plugin name"));
+}
+
+TEST_P(GameSettingsTest,
+    pluginHasHiddenMessagesShouldBeTrueIfThereIsAMessageWithTheGivenPluginName) {
+  std::vector<HiddenMessage> messages{
+      HiddenMessage{std::nullopt, "general message"},
+      HiddenMessage{"plugin name", "plugin message"}};
+
+  settings_.SetHiddenMessages(messages);
+
+  EXPECT_TRUE(settings_.PluginHasHiddenMessages("plugin name"));
+}
 }
 }
 #endif

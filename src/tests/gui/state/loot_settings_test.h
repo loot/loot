@@ -954,7 +954,8 @@ TEST_F(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_F(LootSettingsTest, loadingTomlShouldUpdateSkyrimVrSourceFromOldDefaultSource) {
+TEST_F(LootSettingsTest,
+       loadingTomlShouldUpdateSkyrimVrSourceFromOldDefaultSource) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -1217,6 +1218,30 @@ TEST_F(
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/v0.26/prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
+}
+
+TEST_F(LootSettingsTest, loadingShouldReadHiddenMessagesForTheParentGame) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "[[games.hiddenMessages]]" << endl
+      << "text = \"general message\"" << endl
+      << "[[games.hiddenMessages]]" << endl
+      << "pluginName = \"plugin name\"" << endl
+      << "text = \"plugin message\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  std::vector<HiddenMessage> expectedMessages{
+      HiddenMessage{std::nullopt, "general message"},
+      HiddenMessage{"plugin name", "plugin message"}};
+  const auto& messages = settings_.getGameSettings().at(0).HiddenMessages();
+
+  EXPECT_EQ(expectedMessages, messages);
 }
 
 TEST_F(
@@ -1500,10 +1525,15 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   groupsEditorWindowPosition.right = 4;
   groupsEditorWindowPosition.maximised = true;
 
+  std::vector<HiddenMessage> hiddenMessages{
+      HiddenMessage{std::nullopt, "general message"},
+      HiddenMessage{"plugin name", "plugin message"}};
+
   const std::vector<GameSettings> games({
       GameSettings(GameId::tes4, "")
           .SetName("Game Name")
-          .SetMinimumHeaderVersion(2.5),
+          .SetMinimumHeaderVersion(2.5)
+          .SetHiddenMessages(hiddenMessages),
   });
   LootSettings::Filters filters;
   filters.hideBashTags = false;
@@ -1555,6 +1585,7 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(games[0].Name(), settings.getGameSettings().at(0).Name());
   EXPECT_EQ(games[0].MinimumHeaderVersion(),
             settings.getGameSettings().at(0).MinimumHeaderVersion());
+  EXPECT_EQ(hiddenMessages, settings.getGameSettings().at(0).HiddenMessages());
 
   EXPECT_EQ(filters.hideBashTags, settings.getFilters().hideBashTags);
   EXPECT_EQ(filters.hideCRCs, settings.getFilters().hideCRCs);
