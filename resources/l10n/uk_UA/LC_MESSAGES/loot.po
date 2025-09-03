@@ -4,11 +4,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-08-25 17:50+0100\n"
+"POT-Creation-Date: 2025-09-03 19:05+0100\n"
 "PO-Revision-Date: 2025-08-29 20:01+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
-"Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/>"
-"\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/"
+">\n"
 "Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,7 +146,8 @@ msgstr "Показувати лише плагіни з завантаження
 
 #: src/gui/qt/filters_widget.cpp:303
 msgid "Show only plugins with load after user metadata"
-msgstr "Показувати лише плагіни, які завантажуються після метаданих користувача"
+msgstr ""
+"Показувати лише плагіни, які завантажуються після метаданих користувача"
 
 #: src/gui/qt/filters_widget.cpp:305
 msgid "Show only plugins without load order metadata"
@@ -195,8 +196,8 @@ msgid "General Information"
 msgstr "Загальна інформація"
 
 #: src/gui/qt/general_info_card.cpp:228 src/gui/qt/plugin_card.cpp:289
-msgid "Has Individually-Hidden Messages"
-msgstr "Містить індивідуально приховані повідомлення"
+msgid "Has Hidden Messages"
+msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:230
 msgid "Masterlist Revision ID"
@@ -1583,6 +1584,9 @@ msgid_plural "light plugins"
 msgstr[0] "легкий плагін"
 msgstr[1] "легкі плагіни"
 msgstr[2] "легкі плагінів"
+
+#~ msgid "Has Individually-Hidden Messages"
+#~ msgstr "Містить індивідуально приховані повідомлення"
 
 #~ msgid ""
 #~ "An error occurred while parsing the metadata list(s): {0}.\n"

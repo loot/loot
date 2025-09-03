@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-08-25 17:50+0100\n"
+"POT-Creation-Date: 2025-09-03 19:05+0100\n"
 "PO-Revision-Date: 2024-05-22 20:01+0100\n"
 "Last-Translator: kuroko\n"
 "Language-Team: \n"
@@ -188,7 +188,7 @@ msgid "General Information"
 msgstr "全体情報"
 
 #: src/gui/qt/general_info_card.cpp:228 src/gui/qt/plugin_card.cpp:289
-msgid "Has Individually-Hidden Messages"
+msgid "Has Hidden Messages"
 msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:230
