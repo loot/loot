@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-08-25 17:50+0100\n"
+"POT-Creation-Date: 2025-09-03 19:05+0100\n"
 "PO-Revision-Date: 2025-07-29 20:55+0000\n"
 "Last-Translator: pStyl3 <qp-git@pm.me>\n"
 "Language-Team: Portuguese (Portugal) <https://hosted.weblate.org/projects/"
@@ -195,7 +195,7 @@ msgid "General Information"
 msgstr "Informação Geral"
 
 #: src/gui/qt/general_info_card.cpp:228 src/gui/qt/plugin_card.cpp:289
-msgid "Has Individually-Hidden Messages"
+msgid "Has Hidden Messages"
 msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:230
