@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-09-03 19:05+0100\n"
+"POT-Creation-Date: 2025-09-04 18:00+0100\n"
 "PO-Revision-Date: 2025-01-21 14:00+0000\n"
 "Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/loot/loot/fi/>\n"
@@ -80,103 +80,107 @@ msgstr ""
 msgid "Backup name:"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:283
+#: src/gui/qt/filters_widget.cpp:291
 msgid "Show only overlapping plugins for"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:284
+#: src/gui/qt/filters_widget.cpp:292
 msgid "Show only plugins in group"
 msgstr "Näytä vain seuraavan ryhmän lisäosat"
 
-#: src/gui/qt/filters_widget.cpp:286
+#: src/gui/qt/filters_widget.cpp:294
 msgid "Show only plugins with cards that contain"
 msgstr "Hae lisäosien ilmoituksista"
 
-#: src/gui/qt/filters_widget.cpp:287 src/gui/qt/search_dialog.cpp:113
+#: src/gui/qt/filters_widget.cpp:295 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
 msgstr "Käytä säännöllisenä lausekkeena"
 
-#: src/gui/qt/filters_widget.cpp:288
+#: src/gui/qt/filters_widget.cpp:296
 msgid "Hide version numbers"
 msgstr "Piilota versionumerot"
 
-#: src/gui/qt/filters_widget.cpp:289
+#: src/gui/qt/filters_widget.cpp:297
 msgid "Hide CRCs"
 msgstr "Piilota CRC-tarkistussummat"
 
-#: src/gui/qt/filters_widget.cpp:290
+#: src/gui/qt/filters_widget.cpp:298
 msgid "Hide Bash Tags"
 msgstr "Piilota Bash-tägit"
 
-#: src/gui/qt/filters_widget.cpp:291
+#: src/gui/qt/filters_widget.cpp:299
 msgid "Hide Sources"
 msgstr "Piilota lähteet"
 
-#: src/gui/qt/filters_widget.cpp:292
+#: src/gui/qt/filters_widget.cpp:300
 msgid "Hide notes"
 msgstr "Piilota huomautukset"
 
-#: src/gui/qt/filters_widget.cpp:294
+#: src/gui/qt/filters_widget.cpp:302
 msgid "Hide official plugins' cleaning messages"
 msgstr "Piilota virallisten lisäosien puhdistamisvaroitukset"
 
-#: src/gui/qt/filters_widget.cpp:295
+#: src/gui/qt/filters_widget.cpp:303
 msgid "Hide all plugin messages"
 msgstr "Piilota kaikki ilmoitukset"
 
-#: src/gui/qt/filters_widget.cpp:296
+#: src/gui/qt/filters_widget.cpp:304
 msgid "Hide inactive plugins"
 msgstr "Näytä vain aktiiviset lisäosat"
 
-#: src/gui/qt/filters_widget.cpp:297
+#: src/gui/qt/filters_widget.cpp:305
 msgid "Hide messageless plugins"
 msgstr "Näytä vain ilmoitukselliset lisäosat"
 
-#: src/gui/qt/filters_widget.cpp:298
+#: src/gui/qt/filters_widget.cpp:306
 msgid "Hide Creation Club plugins"
 msgstr "Piilota Creation Clubin lisäosat"
 
-#: src/gui/qt/filters_widget.cpp:299
+#: src/gui/qt/filters_widget.cpp:307
+msgid "Show only new messages"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:308
 msgid "Show only empty plugins"
 msgstr "Näytä vain tyhjät lisäosat"
 
-#: src/gui/qt/filters_widget.cpp:301
+#: src/gui/qt/filters_widget.cpp:310
 msgid "Show only plugins with load after metadata"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:303
+#: src/gui/qt/filters_widget.cpp:312
 msgid "Show only plugins with load after user metadata"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:305
+#: src/gui/qt/filters_widget.cpp:314
 msgid "Show only plugins without load order metadata"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:307
+#: src/gui/qt/filters_widget.cpp:316
 msgid "Show only warnings and errors"
 msgstr "Näytä vain varoitukset ja virheet"
 
-#: src/gui/qt/filters_widget.cpp:308
+#: src/gui/qt/filters_widget.cpp:317
 msgid "Hidden plugins:"
 msgstr "Piilotetut lisäosat:"
 
-#: src/gui/qt/filters_widget.cpp:309
+#: src/gui/qt/filters_widget.cpp:318
 msgid "Hidden messages:"
 msgstr "Piilotetut viestit:"
 
-#: src/gui/qt/filters_widget.cpp:311
+#: src/gui/qt/filters_widget.cpp:320
 msgid "No plugin selected"
 msgstr "(Älä suodata lisäosia)"
 
-#: src/gui/qt/filters_widget.cpp:318
+#: src/gui/qt/filters_widget.cpp:327
 msgid "No group selected"
 msgstr "(Älä suodata ryhmiä)"
 
-#: src/gui/qt/filters_widget.cpp:325
+#: src/gui/qt/filters_widget.cpp:334
 msgid "No text specified"
 msgstr "(Ei hakua)"
 
-#: src/gui/qt/filters_widget.cpp:328
+#: src/gui/qt/filters_widget.cpp:337
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr "Hakusanaa käytetään säännöllisenä lausekkeena (regular expression)."
 
@@ -246,26 +250,26 @@ msgstr "Lisäosia yhteensä"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:94
+#: src/gui/qt/helpers.cpp:97
 msgid "(edited)"
 msgstr "(muokattu)"
 
-#: src/gui/qt/helpers.cpp:208
+#: src/gui/qt/helpers.cpp:211
 msgid "N/A: No masterlist present"
 msgstr "Pääluettelo ei ole saatavilla"
 
 #. translators: N/A is an abbreviation for Not Applicable.
 #. A masterlist is a database that contains information
 #. for various mods.
-#: src/gui/qt/helpers.cpp:213
+#: src/gui/qt/helpers.cpp:216
 msgid "N/A: No masterlist prelude present"
 msgstr "Pääluettelon pohja ei ole saatavilla"
 
-#: src/gui/qt/helpers.cpp:221
+#: src/gui/qt/helpers.cpp:224
 msgid "Unknown: No revision metadata found"
 msgstr "Tuntematon: version metatietoja ei löydy"
 
-#: src/gui/qt/helpers.cpp:357
+#: src/gui/qt/helpers.cpp:360
 msgid "Invalid regular expression: {0}"
 msgstr "Virheellinen säännöllinen lauseke: {0}"
 
@@ -280,7 +284,7 @@ msgstr ""
 msgid "LOOT could not unambiguously set the load order."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1597
+#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1610
 msgid "Ambiguous load order detected"
 msgstr "Epäselvä järjestys havaittu"
 
@@ -471,8 +475,8 @@ msgstr "Lisä&osat"
 msgid "F&ilters"
 msgstr "&Suodattimet"
 
-#: src/gui/qt/main_window.cpp:1186 src/gui/qt/main_window.cpp:1661
-#: src/gui/qt/main_window.cpp:2353
+#: src/gui/qt/main_window.cpp:1186 src/gui/qt/main_window.cpp:1674
+#: src/gui/qt/main_window.cpp:2372
 msgid "Updating and parsing masterlist…"
 msgstr "Päivitetään pääluetteloa…"
 
@@ -515,7 +519,7 @@ msgstr ""
 "Jotkin ominaisuudet eivät ole käytettävissä, kun metatietoja ollaan "
 "muokkaamassa tai järjestystä ei ole tallennettu eikä hylätty."
 
-#: src/gui/qt/main_window.cpp:1313 src/gui/qt/main_window.cpp:2227
+#: src/gui/qt/main_window.cpp:1313 src/gui/qt/main_window.cpp:2243
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -542,14 +546,14 @@ msgid ""
 "quit?"
 msgstr "Et ole vielä tallentanut tai hylännyt {0}. Haluatko varmasti poistua?"
 
-#: src/gui/qt/main_window.cpp:1471 src/gui/qt/restore_load_order_dialog.cpp:224
+#: src/gui/qt/main_window.cpp:1482 src/gui/qt/restore_load_order_dialog.cpp:224
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:369
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr "Virhe"
 
-#: src/gui/qt/main_window.cpp:1481
+#: src/gui/qt/main_window.cpp:1492
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:363
 #: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
@@ -559,17 +563,17 @@ msgstr ""
 "Oho! Jokin meni pieleen! LOOTDebugLog.txt saattaa sisältää lisätietoja "
 "virheestä. Löydät sen päävalikon kautta."
 
-#: src/gui/qt/main_window.cpp:1528
+#: src/gui/qt/main_window.cpp:1541
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
 msgstr "Järjestäminen epäonnistui. Lisätietoja voi löytyä yleistietojen alta."
 
-#: src/gui/qt/main_window.cpp:1546
+#: src/gui/qt/main_window.cpp:1559
 msgid "Sorting made no changes to the load order."
 msgstr "Järjestys ei tarvinnut muutosta."
 
-#: src/gui/qt/main_window.cpp:1598
+#: src/gui/qt/main_window.cpp:1611
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -584,38 +588,38 @@ msgstr ""
 "Voit valita Peli-valikon alta \"Korjaa epäselvä järjestys\" tallentaaksesi "
 "LOOTissa näkyvän järjestyksen kaikille sovelluksille."
 
-#: src/gui/qt/main_window.cpp:1684
+#: src/gui/qt/main_window.cpp:1697
 msgid "Updating all masterlists…"
 msgstr "Päivitetään kaikkia pääluetteloita…"
 
-#: src/gui/qt/main_window.cpp:1716
+#: src/gui/qt/main_window.cpp:1729
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr "LOOTin tiedot on tallennettu seuraavaan kansioon: {0}"
 
-#: src/gui/qt/main_window.cpp:1723
+#: src/gui/qt/main_window.cpp:1736
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr ""
 "Varmuuskopiota ei voitu luoda, koska mitään varmuuskopioitavaa ei ole "
 "LOOTtiin tallennettu."
 
-#: src/gui/qt/main_window.cpp:1766
+#: src/gui/qt/main_window.cpp:1779
 msgid "The load order has been copied to the clipboard."
 msgstr "Järjestys on kopioitu leikepöydälle."
 
-#: src/gui/qt/main_window.cpp:1784
+#: src/gui/qt/main_window.cpp:1797
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "LOOTin sisältö on kopioitu leikepöydälle."
 
-#: src/gui/qt/main_window.cpp:1819
+#: src/gui/qt/main_window.cpp:1832
 msgid "The load order displayed by LOOT has been set."
 msgstr "LOOTin järjestys on tallennettu."
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1870
+#: src/gui/qt/main_window.cpp:1886
 msgid "Redate Plugins?"
 msgstr "Muuta lisäosien päiväykset?"
 
-#: src/gui/qt/main_window.cpp:1872
+#: src/gui/qt/main_window.cpp:1888
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -628,11 +632,11 @@ msgstr ""
 "Jatketaanko?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1884
+#: src/gui/qt/main_window.cpp:1900
 msgid "Plugins were successfully redated."
 msgstr "Lisäosat päiväykset muutettiin onnistuneesti."
 
-#: src/gui/qt/main_window.cpp:1896
+#: src/gui/qt/main_window.cpp:1912
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -640,11 +644,11 @@ msgstr ""
 "Oletko varma, että haluat poistaa kaikki lisäämäsi metatiedot kaikista "
 "lisäosista?"
 
-#: src/gui/qt/main_window.cpp:1944
+#: src/gui/qt/main_window.cpp:1960
 msgid "All user-added metadata has been cleared."
 msgstr "Kaikki muokatut metatiedot poistettiin."
 
-#: src/gui/qt/main_window.cpp:1957
+#: src/gui/qt/main_window.cpp:1973
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
@@ -652,33 +656,33 @@ msgstr ""
 "Olet jo muokkaamassa lisäosan metatietoja. Sulje edellinen lisäosa ennen "
 "toisen lisäosan metatietojen muokkaamista."
 
-#: src/gui/qt/main_window.cpp:2021
+#: src/gui/qt/main_window.cpp:2037
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "Lisäosan {0} metatiedot on kopioitu leikepöydälle."
 
-#: src/gui/qt/main_window.cpp:2039
+#: src/gui/qt/main_window.cpp:2055
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "Lisäosan {0} nimi on kopioitu leikepöydälle."
 
-#: src/gui/qt/main_window.cpp:2058
+#: src/gui/qt/main_window.cpp:2074
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "Lisäosan {0} kortti on kopioitu leikepöydälle."
 
-#: src/gui/qt/main_window.cpp:2090
+#: src/gui/qt/main_window.cpp:2106
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "Oletko varma, että haluat poistaa kaikki muokatut metatiedot lisäosasta {0}?"
 
-#: src/gui/qt/main_window.cpp:2130
+#: src/gui/qt/main_window.cpp:2146
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "Muokatut metatiedot on poistettu lisäosasta {0}."
 
-#: src/gui/qt/main_window.cpp:2213
+#: src/gui/qt/main_window.cpp:2229
 msgid "Version {0} (build {1})"
 msgstr "Versio {0} (koonti {1})"
 
-#: src/gui/qt/main_window.cpp:2219
+#: src/gui/qt/main_window.cpp:2235
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
@@ -688,41 +692,41 @@ msgstr ""
 "Nehrim, Skyrim, Enderal, Skyrim Special Edition, Enderal Special Edition, "
 "Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 ja Fallout 4 VR."
 
-#: src/gui/qt/main_window.cpp:2237
+#: src/gui/qt/main_window.cpp:2253
 msgid "About LOOT"
 msgstr "Tietoja LOOTista"
 
-#: src/gui/qt/main_window.cpp:2572
+#: src/gui/qt/main_window.cpp:2591
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2692
+#: src/gui/qt/main_window.cpp:2711
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2730
+#: src/gui/qt/main_window.cpp:2749
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2779
+#: src/gui/qt/main_window.cpp:2798
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr "Automaattinen järjestäminen on peruutettu virheilmoituksen takia."
 
-#: src/gui/qt/main_window.cpp:2838
+#: src/gui/qt/main_window.cpp:2857
 msgid "No masterlist update was necessary."
 msgstr "Pääluettelon päivitystä ei tarvittu."
 
-#: src/gui/qt/main_window.cpp:2858
+#: src/gui/qt/main_window.cpp:2880
 msgid "Masterlist updated to revision {0}."
 msgstr "Pääluettelo päivitettiin versioon {0}."
 
-#: src/gui/qt/main_window.cpp:2922
+#: src/gui/qt/main_window.cpp:2944
 msgid "No masterlist updates were necessary."
 msgstr "Pääluetteloiden päivitystä ei tarvittu."
 
-#: src/gui/qt/main_window.cpp:2945
+#: src/gui/qt/main_window.cpp:2970
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -730,11 +734,11 @@ msgstr ""
 "Pääluettelot päivitettiin peleihin:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:3007
+#: src/gui/qt/main_window.cpp:3032
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "LOOTista on saatavilla [uusi versio]({0})."
 
-#: src/gui/qt/main_window.cpp:3024
+#: src/gui/qt/main_window.cpp:3049
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -790,7 +794,7 @@ msgstr "Tyhjä lisäosa"
 msgid "Loads Archive"
 msgstr "Sisältää arkiston"
 
-#: src/gui/qt/plugin_card.cpp:288 src/gui/qt/plugin_item_model.cpp:285
+#: src/gui/qt/plugin_card.cpp:288 src/gui/qt/plugin_item_model.cpp:317
 msgid "Has User Metadata"
 msgstr "Metatietoja muutettu"
 
@@ -811,19 +815,19 @@ msgstr "Lisää"
 msgid "Remove"
 msgstr "Poista"
 
-#: src/gui/qt/plugin_item_model.cpp:283
+#: src/gui/qt/plugin_item_model.cpp:315
 msgid "Editor Is Open"
 msgstr "Muokkaus on auki"
 
-#: src/gui/qt/plugin_item_model.cpp:332
+#: src/gui/qt/plugin_item_model.cpp:364
 msgid "Position"
 msgstr "Asema"
 
-#: src/gui/qt/plugin_item_model.cpp:334
+#: src/gui/qt/plugin_item_model.cpp:366
 msgid "Index"
 msgstr "Indeksi"
 
-#: src/gui/qt/plugin_item_model.cpp:336
+#: src/gui/qt/plugin_item_model.cpp:368
 msgid "Plugin Name"
 msgstr "Lisäosan nimi"
 
@@ -1295,24 +1299,24 @@ msgstr "Ryhmää {0} ei ole olemassa."
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT on havainnut, että {0} on virheellinen ja jättää sen huomiotta."
 
-#: src/gui/state/game/game.cpp:849
+#: src/gui/state/game/game.cpp:853
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:878
+#: src/gui/state/game/game.cpp:882
 msgid "You have not sorted your load order this session."
 msgstr "Et ole vielä tällä kerralla järjestänyt lisäosiasi."
 
-#: src/gui/state/game/game.cpp:940
+#: src/gui/state/game/game.cpp:944
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
 "Try updating your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:974
+#: src/gui/state/game/game.cpp:978
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
 "\n"
@@ -1325,7 +1329,7 @@ msgid ""
 "({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1157
+#: src/gui/state/game/game.cpp:1161
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

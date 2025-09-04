@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-09-03 19:05+0100\n"
+"POT-Creation-Date: 2025-09-04 18:00+0100\n"
 "PO-Revision-Date: 2024-05-22 19:58+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -81,103 +81,107 @@ msgstr ""
 msgid "Backup name:"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:283
+#: src/gui/qt/filters_widget.cpp:291
 msgid "Show only overlapping plugins for"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:284
+#: src/gui/qt/filters_widget.cpp:292
 msgid "Show only plugins in group"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:286
+#: src/gui/qt/filters_widget.cpp:294
 msgid "Show only plugins with cards that contain"
 msgstr "Zobrazit pouze pluginy s kartami, které obsahují"
 
-#: src/gui/qt/filters_widget.cpp:287 src/gui/qt/search_dialog.cpp:113
+#: src/gui/qt/filters_widget.cpp:295 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:288
+#: src/gui/qt/filters_widget.cpp:296
 msgid "Hide version numbers"
 msgstr "Skrýt čísla verzí"
 
-#: src/gui/qt/filters_widget.cpp:289
+#: src/gui/qt/filters_widget.cpp:297
 msgid "Hide CRCs"
 msgstr "Schovat CRC"
 
-#: src/gui/qt/filters_widget.cpp:290
+#: src/gui/qt/filters_widget.cpp:298
 msgid "Hide Bash Tags"
 msgstr "Schovat Bash Tagy"
 
-#: src/gui/qt/filters_widget.cpp:291
+#: src/gui/qt/filters_widget.cpp:299
 msgid "Hide Sources"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:292
+#: src/gui/qt/filters_widget.cpp:300
 msgid "Hide notes"
 msgstr "Schovat poznámky"
 
-#: src/gui/qt/filters_widget.cpp:294
+#: src/gui/qt/filters_widget.cpp:302
 msgid "Hide official plugins' cleaning messages"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:295
+#: src/gui/qt/filters_widget.cpp:303
 msgid "Hide all plugin messages"
 msgstr "Schovat všechny zprávy pluginů"
 
-#: src/gui/qt/filters_widget.cpp:296
+#: src/gui/qt/filters_widget.cpp:304
 msgid "Hide inactive plugins"
 msgstr "Schovat neaktivní pluginy"
 
-#: src/gui/qt/filters_widget.cpp:297
+#: src/gui/qt/filters_widget.cpp:305
 msgid "Hide messageless plugins"
 msgstr "Schovat bez-zprávé pluginy"
 
-#: src/gui/qt/filters_widget.cpp:298
+#: src/gui/qt/filters_widget.cpp:306
 msgid "Hide Creation Club plugins"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:299
-msgid "Show only empty plugins"
-msgstr ""
-
-#: src/gui/qt/filters_widget.cpp:301
-msgid "Show only plugins with load after metadata"
-msgstr ""
-
-#: src/gui/qt/filters_widget.cpp:303
-msgid "Show only plugins with load after user metadata"
-msgstr ""
-
-#: src/gui/qt/filters_widget.cpp:305
-msgid "Show only plugins without load order metadata"
-msgstr ""
-
 #: src/gui/qt/filters_widget.cpp:307
-msgid "Show only warnings and errors"
+msgid "Show only new messages"
 msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:308
+msgid "Show only empty plugins"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:310
+msgid "Show only plugins with load after metadata"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:312
+msgid "Show only plugins with load after user metadata"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:314
+msgid "Show only plugins without load order metadata"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:316
+msgid "Show only warnings and errors"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:317
 msgid "Hidden plugins:"
 msgstr "Schované pluginy:"
 
-#: src/gui/qt/filters_widget.cpp:309
+#: src/gui/qt/filters_widget.cpp:318
 msgid "Hidden messages:"
 msgstr "Schované zprávy:"
 
-#: src/gui/qt/filters_widget.cpp:311
+#: src/gui/qt/filters_widget.cpp:320
 msgid "No plugin selected"
 msgstr "Není vybraný žádný plugin"
 
-#: src/gui/qt/filters_widget.cpp:318
+#: src/gui/qt/filters_widget.cpp:327
 msgid "No group selected"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:325
+#: src/gui/qt/filters_widget.cpp:334
 msgid "No text specified"
 msgstr "Žádný Text Nebyl Specifikován"
 
-#: src/gui/qt/filters_widget.cpp:328
+#: src/gui/qt/filters_widget.cpp:337
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr ""
 
@@ -247,26 +251,26 @@ msgstr "Celkové Pluginy"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:94
+#: src/gui/qt/helpers.cpp:97
 msgid "(edited)"
 msgstr "(upraveno)"
 
-#: src/gui/qt/helpers.cpp:208
+#: src/gui/qt/helpers.cpp:211
 msgid "N/A: No masterlist present"
 msgstr "N/A: Žádný masterlist nenalezen"
 
 #. translators: N/A is an abbreviation for Not Applicable.
 #. A masterlist is a database that contains information
 #. for various mods.
-#: src/gui/qt/helpers.cpp:213
+#: src/gui/qt/helpers.cpp:216
 msgid "N/A: No masterlist prelude present"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:221
+#: src/gui/qt/helpers.cpp:224
 msgid "Unknown: No revision metadata found"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:357
+#: src/gui/qt/helpers.cpp:360
 msgid "Invalid regular expression: {0}"
 msgstr ""
 
@@ -281,7 +285,7 @@ msgstr ""
 msgid "LOOT could not unambiguously set the load order."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1597
+#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1610
 msgid "Ambiguous load order detected"
 msgstr ""
 
@@ -472,8 +476,8 @@ msgstr ""
 msgid "F&ilters"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1186 src/gui/qt/main_window.cpp:1661
-#: src/gui/qt/main_window.cpp:2353
+#: src/gui/qt/main_window.cpp:1186 src/gui/qt/main_window.cpp:1674
+#: src/gui/qt/main_window.cpp:2372
 msgid "Updating and parsing masterlist…"
 msgstr "Aktualizace a rozbor masterlistu…"
 
@@ -513,7 +517,7 @@ msgstr ""
 "Některé funkce jsou deaktivovány při otevřeném editoru metadat, nebo když je "
 "řazen příkazem pro třídění, který nebyl aplikován nebo zlikvidován."
 
-#: src/gui/qt/main_window.cpp:1313 src/gui/qt/main_window.cpp:2227
+#: src/gui/qt/main_window.cpp:1313 src/gui/qt/main_window.cpp:2243
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -540,14 +544,14 @@ msgid ""
 "quit?"
 msgstr "Dosud jsi nepoužil nebo nezrušil {0}. Opravdu chcete skončit?"
 
-#: src/gui/qt/main_window.cpp:1471 src/gui/qt/restore_load_order_dialog.cpp:224
+#: src/gui/qt/main_window.cpp:1482 src/gui/qt/restore_load_order_dialog.cpp:224
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:369
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr "Chyba"
 
-#: src/gui/qt/main_window.cpp:1481
+#: src/gui/qt/main_window.cpp:1492
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:363
 #: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
@@ -557,17 +561,17 @@ msgstr ""
 "Neeee, něco se pokazilo! Můžeš zkontrolovat LOOTDebugLog.txt (Mužeš ho "
 "nalézt v hlavním menu) pro více informací."
 
-#: src/gui/qt/main_window.cpp:1528
+#: src/gui/qt/main_window.cpp:1541
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1546
+#: src/gui/qt/main_window.cpp:1559
 msgid "Sorting made no changes to the load order."
 msgstr "Seřazení neudělalo žádné změny do seřazovací řady."
 
-#: src/gui/qt/main_window.cpp:1598
+#: src/gui/qt/main_window.cpp:1611
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -577,36 +581,36 @@ msgid ""
 "unambiguously set the load order to what is displayed by LOOT."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1684
+#: src/gui/qt/main_window.cpp:1697
 msgid "Updating all masterlists…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1716
+#: src/gui/qt/main_window.cpp:1729
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1723
+#: src/gui/qt/main_window.cpp:1736
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1766
+#: src/gui/qt/main_window.cpp:1779
 msgid "The load order has been copied to the clipboard."
 msgstr "Pořadí načítání bylo zkopírováno do schránky."
 
-#: src/gui/qt/main_window.cpp:1784
+#: src/gui/qt/main_window.cpp:1797
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "Obsah LOOT(u) byl zkopírován do schránky."
 
-#: src/gui/qt/main_window.cpp:1819
+#: src/gui/qt/main_window.cpp:1832
 msgid "The load order displayed by LOOT has been set."
 msgstr ""
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1870
+#: src/gui/qt/main_window.cpp:1886
 msgid "Redate Plugins?"
 msgstr "Přehrát přílohy?"
 
-#: src/gui/qt/main_window.cpp:1872
+#: src/gui/qt/main_window.cpp:1888
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -619,11 +623,11 @@ msgstr ""
 "neovlivní Skyrim Special Edition). Chcete pokračovat?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1884
+#: src/gui/qt/main_window.cpp:1900
 msgid "Plugins were successfully redated."
 msgstr "Pluginy byly úspěšně přehrány."
 
-#: src/gui/qt/main_window.cpp:1896
+#: src/gui/qt/main_window.cpp:1912
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -631,95 +635,95 @@ msgstr ""
 "Opravdu chcete vymazat všechna existující uživatelsky přidaná metadata ze "
 "všech pluginů?"
 
-#: src/gui/qt/main_window.cpp:1944
+#: src/gui/qt/main_window.cpp:1960
 msgid "All user-added metadata has been cleared."
 msgstr "Všechna uživatelská metadata byla smazána."
 
-#: src/gui/qt/main_window.cpp:1957
+#: src/gui/qt/main_window.cpp:1973
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2021
+#: src/gui/qt/main_window.cpp:2037
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "Metadata pro \"{0}\" byla zkopírována do schránky."
 
-#: src/gui/qt/main_window.cpp:2039
+#: src/gui/qt/main_window.cpp:2055
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2058
+#: src/gui/qt/main_window.cpp:2074
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2090
+#: src/gui/qt/main_window.cpp:2106
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "Opravdu chcete odstranit všechny existující metadata přidané uživatelem z "
 "\"{0}\"?"
 
-#: src/gui/qt/main_window.cpp:2130
+#: src/gui/qt/main_window.cpp:2146
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "Metadata přidaná uživatelem pro \"{0}\" byla vymazána."
 
-#: src/gui/qt/main_window.cpp:2213
+#: src/gui/qt/main_window.cpp:2229
 msgid "Version {0} (build {1})"
 msgstr "Verze {0} (build {1})"
 
-#: src/gui/qt/main_window.cpp:2219
+#: src/gui/qt/main_window.cpp:2235
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
 "3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2237
+#: src/gui/qt/main_window.cpp:2253
 msgid "About LOOT"
 msgstr "O LOOT(u)"
 
-#: src/gui/qt/main_window.cpp:2572
+#: src/gui/qt/main_window.cpp:2591
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2692
+#: src/gui/qt/main_window.cpp:2711
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2730
+#: src/gui/qt/main_window.cpp:2749
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2779
+#: src/gui/qt/main_window.cpp:2798
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2838
+#: src/gui/qt/main_window.cpp:2857
 msgid "No masterlist update was necessary."
 msgstr "Masterlist aktualizace nebyla nutná."
 
-#: src/gui/qt/main_window.cpp:2858
+#: src/gui/qt/main_window.cpp:2880
 msgid "Masterlist updated to revision {0}."
 msgstr "Masterlist aktualize do revize {0}."
 
-#: src/gui/qt/main_window.cpp:2922
+#: src/gui/qt/main_window.cpp:2944
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2945
+#: src/gui/qt/main_window.cpp:2970
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3007
+#: src/gui/qt/main_window.cpp:3032
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "K dispozici je [new release]({0}) LOOT."
 
-#: src/gui/qt/main_window.cpp:3024
+#: src/gui/qt/main_window.cpp:3049
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -776,7 +780,7 @@ msgstr "Vyprázdnit Plugin"
 msgid "Loads Archive"
 msgstr "Načítací Archívy"
 
-#: src/gui/qt/plugin_card.cpp:288 src/gui/qt/plugin_item_model.cpp:285
+#: src/gui/qt/plugin_card.cpp:288 src/gui/qt/plugin_item_model.cpp:317
 msgid "Has User Metadata"
 msgstr "Obsahuje Uživatelská Metadata"
 
@@ -797,19 +801,19 @@ msgstr "Přidat"
 msgid "Remove"
 msgstr "Odebrat"
 
-#: src/gui/qt/plugin_item_model.cpp:283
+#: src/gui/qt/plugin_item_model.cpp:315
 msgid "Editor Is Open"
 msgstr "Editor je otevřen"
 
-#: src/gui/qt/plugin_item_model.cpp:332
+#: src/gui/qt/plugin_item_model.cpp:364
 msgid "Position"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:334
+#: src/gui/qt/plugin_item_model.cpp:366
 msgid "Index"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:336
+#: src/gui/qt/plugin_item_model.cpp:368
 msgid "Plugin Name"
 msgstr ""
 
@@ -1266,24 +1270,24 @@ msgstr "Skupina \"{0}\" neexistuje."
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT detekoval {0} je neplatné and bude to odteď ignorovat."
 
-#: src/gui/state/game/game.cpp:849
+#: src/gui/state/game/game.cpp:853
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:878
+#: src/gui/state/game/game.cpp:882
 msgid "You have not sorted your load order this session."
 msgstr "Nevybrali jste načítací řadu této relace."
 
-#: src/gui/state/game/game.cpp:940
+#: src/gui/state/game/game.cpp:944
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
 "Try updating your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:974
+#: src/gui/state/game/game.cpp:978
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
 "\n"
@@ -1296,7 +1300,7 @@ msgid ""
 "({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1157
+#: src/gui/state/game/game.cpp:1161
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
