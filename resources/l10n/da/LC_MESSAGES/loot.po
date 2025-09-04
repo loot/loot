@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-09-03 19:05+0100\n"
+"POT-Creation-Date: 2025-09-04 18:00+0100\n"
 "PO-Revision-Date: 2024-05-22 19:59+0100\n"
 "Last-Translator: Kasper \"ZyPA\" R. Kristensen <rytterkasper972@gmail.com>\n"
 "Language-Team: Danish\n"
@@ -83,103 +83,107 @@ msgstr ""
 msgid "Backup name:"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:283
+#: src/gui/qt/filters_widget.cpp:291
 msgid "Show only overlapping plugins for"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:284
+#: src/gui/qt/filters_widget.cpp:292
 msgid "Show only plugins in group"
 msgstr "Vis kun plugins i gruppe"
 
-#: src/gui/qt/filters_widget.cpp:286
+#: src/gui/qt/filters_widget.cpp:294
 msgid "Show only plugins with cards that contain"
 msgstr "Vis kun plugins med kort der indeholder"
 
-#: src/gui/qt/filters_widget.cpp:287 src/gui/qt/search_dialog.cpp:113
+#: src/gui/qt/filters_widget.cpp:295 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
 msgstr "Brug regulært udtryk"
 
-#: src/gui/qt/filters_widget.cpp:288
+#: src/gui/qt/filters_widget.cpp:296
 msgid "Hide version numbers"
 msgstr "Skjul versionsnumre"
 
-#: src/gui/qt/filters_widget.cpp:289
+#: src/gui/qt/filters_widget.cpp:297
 msgid "Hide CRCs"
 msgstr "Skjul CRC’er"
 
-#: src/gui/qt/filters_widget.cpp:290
+#: src/gui/qt/filters_widget.cpp:298
 msgid "Hide Bash Tags"
 msgstr "Skjul Bash‐tags"
 
-#: src/gui/qt/filters_widget.cpp:291
+#: src/gui/qt/filters_widget.cpp:299
 msgid "Hide Sources"
 msgstr "Skjul kilder"
 
-#: src/gui/qt/filters_widget.cpp:292
+#: src/gui/qt/filters_widget.cpp:300
 msgid "Hide notes"
 msgstr "Skjul noter"
 
-#: src/gui/qt/filters_widget.cpp:294
+#: src/gui/qt/filters_widget.cpp:302
 msgid "Hide official plugins' cleaning messages"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:295
+#: src/gui/qt/filters_widget.cpp:303
 msgid "Hide all plugin messages"
 msgstr "Skjul alle plugin‐beskeder"
 
-#: src/gui/qt/filters_widget.cpp:296
+#: src/gui/qt/filters_widget.cpp:304
 msgid "Hide inactive plugins"
 msgstr "Skjul inaktive plugins"
 
-#: src/gui/qt/filters_widget.cpp:297
+#: src/gui/qt/filters_widget.cpp:305
 msgid "Hide messageless plugins"
 msgstr "Skjul plugins uden beskeder"
 
-#: src/gui/qt/filters_widget.cpp:298
+#: src/gui/qt/filters_widget.cpp:306
 msgid "Hide Creation Club plugins"
 msgstr "Skjul Creation Club plugins"
 
-#: src/gui/qt/filters_widget.cpp:299
+#: src/gui/qt/filters_widget.cpp:307
+msgid "Show only new messages"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:308
 msgid "Show only empty plugins"
 msgstr "Vis kun tomme plugins"
 
-#: src/gui/qt/filters_widget.cpp:301
+#: src/gui/qt/filters_widget.cpp:310
 msgid "Show only plugins with load after metadata"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:303
+#: src/gui/qt/filters_widget.cpp:312
 msgid "Show only plugins with load after user metadata"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:305
+#: src/gui/qt/filters_widget.cpp:314
 msgid "Show only plugins without load order metadata"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:307
+#: src/gui/qt/filters_widget.cpp:316
 msgid "Show only warnings and errors"
 msgstr "Vis kun advarsler og fejl"
 
-#: src/gui/qt/filters_widget.cpp:308
+#: src/gui/qt/filters_widget.cpp:317
 msgid "Hidden plugins:"
 msgstr "Skjulte plugins:"
 
-#: src/gui/qt/filters_widget.cpp:309
+#: src/gui/qt/filters_widget.cpp:318
 msgid "Hidden messages:"
 msgstr "Skjulte beskeder:"
 
-#: src/gui/qt/filters_widget.cpp:311
+#: src/gui/qt/filters_widget.cpp:320
 msgid "No plugin selected"
 msgstr "Intet plugin valgt"
 
-#: src/gui/qt/filters_widget.cpp:318
+#: src/gui/qt/filters_widget.cpp:327
 msgid "No group selected"
 msgstr "Ingen gruppe valgt"
 
-#: src/gui/qt/filters_widget.cpp:325
+#: src/gui/qt/filters_widget.cpp:334
 msgid "No text specified"
 msgstr "Ingen tekst angivet"
 
-#: src/gui/qt/filters_widget.cpp:328
+#: src/gui/qt/filters_widget.cpp:337
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr ""
 "Hvis markeret, bliver indholdsfilterteksten fortolket som et regulært udtryk."
@@ -250,26 +254,26 @@ msgstr "Samlet antal plugins"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:94
+#: src/gui/qt/helpers.cpp:97
 msgid "(edited)"
 msgstr "(ændret/redigeret)"
 
-#: src/gui/qt/helpers.cpp:208
+#: src/gui/qt/helpers.cpp:211
 msgid "N/A: No masterlist present"
 msgstr "N/A: Der er ingen masterliste tilstede"
 
 #. translators: N/A is an abbreviation for Not Applicable.
 #. A masterlist is a database that contains information
 #. for various mods.
-#: src/gui/qt/helpers.cpp:213
+#: src/gui/qt/helpers.cpp:216
 msgid "N/A: No masterlist prelude present"
 msgstr "N/A: Ingen masterliste optakt til stede"
 
-#: src/gui/qt/helpers.cpp:221
+#: src/gui/qt/helpers.cpp:224
 msgid "Unknown: No revision metadata found"
 msgstr "Ukendt: Ingen revisions-metadata fundet"
 
-#: src/gui/qt/helpers.cpp:357
+#: src/gui/qt/helpers.cpp:360
 msgid "Invalid regular expression: {0}"
 msgstr "Ugyldigt regulært udtryk: {0}"
 
@@ -284,7 +288,7 @@ msgstr ""
 msgid "LOOT could not unambiguously set the load order."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1597
+#: src/gui/qt/main_window.cpp:81 src/gui/qt/main_window.cpp:1610
 msgid "Ambiguous load order detected"
 msgstr "Tvetydig indlæsningsrækkefølge registreret"
 
@@ -475,8 +479,8 @@ msgstr "P&lugins"
 msgid "F&ilters"
 msgstr "F&iltre"
 
-#: src/gui/qt/main_window.cpp:1186 src/gui/qt/main_window.cpp:1661
-#: src/gui/qt/main_window.cpp:2353
+#: src/gui/qt/main_window.cpp:1186 src/gui/qt/main_window.cpp:1674
+#: src/gui/qt/main_window.cpp:2372
 msgid "Updating and parsing masterlist…"
 msgstr "Opdaterer og læser masterliste…"
 
@@ -518,7 +522,7 @@ msgstr ""
 "Nogle funktioner er slået fra mens metadatabehandleren er åbent, eller når "
 "en indlæsningsrækkefølge er blevet sorteret men ikke anvendt eller kasseret."
 
-#: src/gui/qt/main_window.cpp:1313 src/gui/qt/main_window.cpp:2227
+#: src/gui/qt/main_window.cpp:1313 src/gui/qt/main_window.cpp:2243
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -547,14 +551,14 @@ msgstr ""
 "Du har ikke anvendt eller annulleret din {0}. Er du sikker på du vil "
 "afslutte?"
 
-#: src/gui/qt/main_window.cpp:1471 src/gui/qt/restore_load_order_dialog.cpp:224
+#: src/gui/qt/main_window.cpp:1482 src/gui/qt/restore_load_order_dialog.cpp:224
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:369
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr "Fejl"
 
-#: src/gui/qt/main_window.cpp:1481
+#: src/gui/qt/main_window.cpp:1492
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:363
 #: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
@@ -564,18 +568,18 @@ msgstr ""
 "Åh nej, noget gik galt! Du kan kigge i din LOOTDebugLog.txt (du kan finde "
 "den via hovedmenuen) for mere information."
 
-#: src/gui/qt/main_window.cpp:1528
+#: src/gui/qt/main_window.cpp:1541
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
 msgstr ""
 "Kunne ikke sortere plugins. Flere detaljer i Generelle oplysninger sektionen."
 
-#: src/gui/qt/main_window.cpp:1546
+#: src/gui/qt/main_window.cpp:1559
 msgid "Sorting made no changes to the load order."
 msgstr "Sortering ændrede ikke i indlæsningsrækkefølgen."
 
-#: src/gui/qt/main_window.cpp:1598
+#: src/gui/qt/main_window.cpp:1611
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -591,38 +595,38 @@ msgstr ""
 "Du kan bruge handlingen \"Ret tvetydig indlæsningsrækkefølge\" i spilmenuen "
 "til entydigt at indstille indlæsningsrækkefølgen til det, der vises af LOOT."
 
-#: src/gui/qt/main_window.cpp:1684
+#: src/gui/qt/main_window.cpp:1697
 msgid "Updating all masterlists…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1716
+#: src/gui/qt/main_window.cpp:1729
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr "Dine LOOT-data er blevet sikkerhedskopieret til: {0}"
 
-#: src/gui/qt/main_window.cpp:1723
+#: src/gui/qt/main_window.cpp:1736
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr ""
 "Sikkerhedskopi blev ikke lavet., da LOOT ikke har nogen data at "
 "sikkerhedskopiere."
 
-#: src/gui/qt/main_window.cpp:1766
+#: src/gui/qt/main_window.cpp:1779
 msgid "The load order has been copied to the clipboard."
 msgstr "Indlæsningsrækkefølgen blev kopieret til udklipsholderen."
 
-#: src/gui/qt/main_window.cpp:1784
+#: src/gui/qt/main_window.cpp:1797
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "LOOTs indhold blev kopieret til udklipsholderen."
 
-#: src/gui/qt/main_window.cpp:1819
+#: src/gui/qt/main_window.cpp:1832
 msgid "The load order displayed by LOOT has been set."
 msgstr "Indlæsningsrækkefølgen vist af LOOT er blevet indstillet."
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1870
+#: src/gui/qt/main_window.cpp:1886
 msgid "Redate Plugins?"
 msgstr "Omdatér plugins?"
 
-#: src/gui/qt/main_window.cpp:1872
+#: src/gui/qt/main_window.cpp:1888
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -635,11 +639,11 @@ msgstr ""
 "ikke Skyrim Special Edition). Vil du fortsætte?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1884
+#: src/gui/qt/main_window.cpp:1900
 msgid "Plugins were successfully redated."
 msgstr "Plugins blev omdateret."
 
-#: src/gui/qt/main_window.cpp:1896
+#: src/gui/qt/main_window.cpp:1912
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -647,11 +651,11 @@ msgstr ""
 "Er du sikker på du vil rydde al eksisterende brugertilføjet metadata fra "
 "alle plugins?"
 
-#: src/gui/qt/main_window.cpp:1944
+#: src/gui/qt/main_window.cpp:1960
 msgid "All user-added metadata has been cleared."
 msgstr "Al brugertilføjet metadata blev ryddet."
 
-#: src/gui/qt/main_window.cpp:1957
+#: src/gui/qt/main_window.cpp:1973
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
@@ -659,57 +663,57 @@ msgstr ""
 "Plugin-metadatabehandleren er allerede åben. Luk behandleren, før du "
 "forsøger at redigere et andet plugins metadata."
 
-#: src/gui/qt/main_window.cpp:2021
+#: src/gui/qt/main_window.cpp:2037
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "Metadata for “{0}” er blevet kopieret til udklipsholderen."
 
-#: src/gui/qt/main_window.cpp:2039
+#: src/gui/qt/main_window.cpp:2055
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "Plugin-navnet \"{0}\" er blevet kopieret til udklipsholderen."
 
-#: src/gui/qt/main_window.cpp:2058
+#: src/gui/qt/main_window.cpp:2074
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "Kortindholdet for \"{0}\" er blevet kopieret til udklipsholderen."
 
-#: src/gui/qt/main_window.cpp:2090
+#: src/gui/qt/main_window.cpp:2106
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "Er du sikker på du vil rydde al eksisterende brugertilføjet metadata fra "
 "“{0}”?"
 
-#: src/gui/qt/main_window.cpp:2130
+#: src/gui/qt/main_window.cpp:2146
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "Det brugertilføjede metadata for “{0}” blev ryddet."
 
-#: src/gui/qt/main_window.cpp:2213
+#: src/gui/qt/main_window.cpp:2229
 msgid "Version {0} (build {1})"
 msgstr "Version {0} (byg {1})"
 
-#: src/gui/qt/main_window.cpp:2219
+#: src/gui/qt/main_window.cpp:2235
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
 "3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2237
+#: src/gui/qt/main_window.cpp:2253
 msgid "About LOOT"
 msgstr "Om LOOT"
 
-#: src/gui/qt/main_window.cpp:2572
+#: src/gui/qt/main_window.cpp:2591
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2692
+#: src/gui/qt/main_window.cpp:2711
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2730
+#: src/gui/qt/main_window.cpp:2749
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2779
+#: src/gui/qt/main_window.cpp:2798
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
@@ -717,29 +721,29 @@ msgstr ""
 "Automatisk sortering er blevet annulleret, da der vises mindst én fejl-"
 "meddelelse."
 
-#: src/gui/qt/main_window.cpp:2838
+#: src/gui/qt/main_window.cpp:2857
 msgid "No masterlist update was necessary."
 msgstr "Masterlisteopdatering var ikke nødvendig."
 
-#: src/gui/qt/main_window.cpp:2858
+#: src/gui/qt/main_window.cpp:2880
 msgid "Masterlist updated to revision {0}."
 msgstr "Masterliste opdateret til udgave {0}."
 
-#: src/gui/qt/main_window.cpp:2922
+#: src/gui/qt/main_window.cpp:2944
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2945
+#: src/gui/qt/main_window.cpp:2970
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3007
+#: src/gui/qt/main_window.cpp:3032
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "En [ny version]({0}) af LOOT er tilgængelig."
 
-#: src/gui/qt/main_window.cpp:3024
+#: src/gui/qt/main_window.cpp:3049
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -795,7 +799,7 @@ msgstr "Tomt plugin"
 msgid "Loads Archive"
 msgstr "Indlæser arkiv"
 
-#: src/gui/qt/plugin_card.cpp:288 src/gui/qt/plugin_item_model.cpp:285
+#: src/gui/qt/plugin_card.cpp:288 src/gui/qt/plugin_item_model.cpp:317
 msgid "Has User Metadata"
 msgstr "Har bruger metadata"
 
@@ -816,19 +820,19 @@ msgstr "Tilføj"
 msgid "Remove"
 msgstr "Fjern"
 
-#: src/gui/qt/plugin_item_model.cpp:283
+#: src/gui/qt/plugin_item_model.cpp:315
 msgid "Editor Is Open"
 msgstr "Behandleren er åben"
 
-#: src/gui/qt/plugin_item_model.cpp:332
+#: src/gui/qt/plugin_item_model.cpp:364
 msgid "Position"
 msgstr "Position"
 
-#: src/gui/qt/plugin_item_model.cpp:334
+#: src/gui/qt/plugin_item_model.cpp:366
 msgid "Index"
 msgstr "Indeks"
 
-#: src/gui/qt/plugin_item_model.cpp:336
+#: src/gui/qt/plugin_item_model.cpp:368
 msgid "Plugin Name"
 msgstr "Plugin navn"
 
@@ -1293,24 +1297,24 @@ msgstr "Gruppen “{0}” findes ikke."
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT har opdaget at “{0}” er ugyldigt og ignorerer det nu."
 
-#: src/gui/state/game/game.cpp:849
+#: src/gui/state/game/game.cpp:853
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:878
+#: src/gui/state/game/game.cpp:882
 msgid "You have not sorted your load order this session."
 msgstr "Du har ikke sorteret din indlæsningsrækkefølge i denne session."
 
-#: src/gui/state/game/game.cpp:940
+#: src/gui/state/game/game.cpp:944
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
 "Try updating your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:974
+#: src/gui/state/game/game.cpp:978
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
 "\n"
@@ -1323,7 +1327,7 @@ msgid ""
 "({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1157
+#: src/gui/state/game/game.cpp:1161
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
