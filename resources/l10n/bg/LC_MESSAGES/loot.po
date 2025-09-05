@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-09-04 18:00+0100\n"
-"PO-Revision-Date: 2025-09-04 17:27+0000\n"
+"PO-Revision-Date: 2025-09-05 18:01+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
-"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
-">\n"
+"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/>"
+"\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,7 +137,7 @@ msgstr "Скрий приставките от „Creation Club“"
 
 #: src/gui/qt/filters_widget.cpp:307
 msgid "Show only new messages"
-msgstr ""
+msgstr "Покажи само новите съобщения"
 
 #: src/gui/qt/filters_widget.cpp:308
 msgid "Show only empty plugins"
