@@ -531,7 +531,9 @@ set(LOOT_ALL_SOURCES
 ##############################
 
 if(MSVC)
-    list(APPEND LOOT_ALL_SOURCES "${CMAKE_SOURCE_DIR}/resources/resources.windows.qrc")
+    list(APPEND LOOT_ALL_SOURCES
+        "${CMAKE_SOURCE_DIR}/resources/resources.windows.qrc"
+        "${CMAKE_SOURCE_DIR}/src/gui/LOOT.manifest")
 endif()
 
 ##############################
