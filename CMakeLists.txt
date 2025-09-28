@@ -510,7 +510,6 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
     "${CMAKE_SOURCE_DIR}/src/gui/version.h")
 
 source_group(TREE "${CMAKE_SOURCE_DIR}/src/gui"
