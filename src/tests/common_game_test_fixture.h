@@ -313,11 +313,15 @@ private:
     using std::filesystem::u8path;
     if (gameId_ == GameId::tes3) {
       std::ofstream out(gamePath / "Morrowind.ini");
+      out << "[Game Files]" << std::endl;
+
+      size_t activeIndex = 0;
       for (const auto& plugin : loadOrder) {
         if (plugin.second) {
-          out << "GameFile0="
+          out << "GameFile" << activeIndex << "="
               << boost::locale::conv::from_utf(plugin.first, "Windows-1252")
               << std::endl;
+          activeIndex += 1;
         }
       }
     } else {
