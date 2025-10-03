@@ -33,7 +33,9 @@
 #include "gui/version.h"
 
 namespace {
-using loot::gui::Version;
+using loot::LOOT_VERSION_MAJOR;
+using loot::LOOT_VERSION_MINOR;
+using loot::LOOT_VERSION_PATCH;
 
 int compareLOOTVersion(const std::string &version) {
   std::vector<std::string> parts;
@@ -45,29 +47,29 @@ int compareLOOTVersion(const std::string &version) {
   }
 
   const auto givenMajor = std::stoul(parts.at(0));
-  if (Version::major > givenMajor) {
+  if (LOOT_VERSION_MAJOR > givenMajor) {
     return 1;
   }
 
-  if (Version::major < givenMajor) {
+  if (LOOT_VERSION_MAJOR < givenMajor) {
     return -1;
   }
 
   const auto givenMinor = std::stoul(parts.at(1));
-  if (Version::minor > givenMinor) {
+  if (LOOT_VERSION_MINOR > givenMinor) {
     return 1;
   }
 
-  if (Version::minor < givenMinor) {
+  if (LOOT_VERSION_MINOR < givenMinor) {
     return -1;
   }
 
   const auto givenPatch = std::stoul(parts.at(2));
-  if (Version::patch > givenPatch) {
+  if (LOOT_VERSION_PATCH > givenPatch) {
     return 1;
   }
 
-  if (Version::patch < givenPatch) {
+  if (LOOT_VERSION_PATCH < givenPatch) {
     return -1;
   }
 
@@ -191,7 +193,7 @@ void CheckForUpdateTask::onGetTagCommitReplyFinished() {
     const auto json = QJsonDocument::fromJson(responseData.value());
     const auto commitHash = json["sha"].toString().toStdString();
 
-    if (boost::istarts_with(commitHash, gui::Version::revision)) {
+    if (boost::istarts_with(commitHash, GetLootRevision())) {
       emit finished(false);
       return;
     }
@@ -205,8 +207,7 @@ void CheckForUpdateTask::onGetTagCommitReplyFinished() {
     }
 
     // Now get the build commit ID to do the final comparison.
-    const auto url = "https://api.github.com/repos/loot/loot/commits/" +
-                     gui::Version::revision;
+    const auto url = "https://api.github.com/repos/loot/loot/commits/" + GetLootRevision();
     sendHttpRequest(url, &CheckForUpdateTask::onGetBuildCommitReplyFinished);
   } catch (const std::exception &e) {
     handleException(e);
@@ -236,8 +237,7 @@ void CheckForUpdateTask::onGetBuildCommitReplyFinished() {
     }
 
     const auto json = QJsonDocument::fromJson(responseData.value());
-    const auto buildCommitDate =
-        getDateFromCommitJson(json, gui::Version::revision);
+    const auto buildCommitDate = getDateFromCommitJson(json, GetLootRevision());
 
     if (!buildCommitDate.has_value()) {
       emit error("Build commit date not found");

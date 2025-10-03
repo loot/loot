@@ -25,14 +25,15 @@
 #include "gui/version.h"
 
 namespace loot {
-namespace gui {
-const unsigned int Version::major = 0;
-const unsigned int Version::minor = 26;
-const unsigned int Version::patch = 1;
-const std::string Version::revision = "@GIT_COMMIT_STRING@";
+std::string GetLootVersion() {
+  static const auto LOOT_VERSION = std::to_string(LOOT_VERSION_MAJOR) + '.' +
+                                   std::to_string(LOOT_VERSION_MINOR) + '.' +
+                                   std::to_string(LOOT_VERSION_PATCH);
 
-std::string Version::string() {
-  return std::to_string(major) + '.' + std::to_string(minor) + '.' + std::to_string(patch);
+  return LOOT_VERSION;
 }
+
+std::string GetLootRevision() {
+  return "@GIT_COMMIT_STRING@";
 }
 }

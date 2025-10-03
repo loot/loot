@@ -65,9 +65,8 @@ void logRuntimeEnvironment() {
                  static_cast<int>(QSysInfo::WordSize),
                  QSysInfo::prettyProductName().toStdString(),
                  QSysInfo::currentCpuArchitecture().toStdString());
-    logger->info("LOOT version: {}+{}",
-                 loot::gui::Version::string(),
-                 loot::gui::Version::revision);
+    logger->info(
+        "LOOT version: {}+{}", loot::GetLootVersion(), loot::GetLootRevision());
     logger->info("libloot version: {}+{}",
                  loot::GetLiblootVersion(),
                  loot::GetLiblootRevision());

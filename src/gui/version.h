@@ -29,17 +29,13 @@
 #include <string>
 
 namespace loot {
-namespace gui {
-class Version {
-public:
-  static const unsigned int major;
-  static const unsigned int minor;
-  static const unsigned int patch;
-  static const std::string revision;
+inline constexpr unsigned int LOOT_VERSION_MAJOR = 0;
+inline constexpr unsigned int LOOT_VERSION_MINOR = 26;
+inline constexpr unsigned int LOOT_VERSION_PATCH = 1;
 
-  static std::string string();
-};
-}
+std::string GetLootVersion();
+
+std::string GetLootRevision();
 }
 
 #endif

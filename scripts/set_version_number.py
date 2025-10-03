@@ -26,9 +26,9 @@ def update_installer_script(path, version):
 def update_cpp_file(path, version):
     version_parts = version.split('.')
 
-    replace_in_file(path, 'Version::major = \\d+;', 'Version::major = {};'.format(version_parts[0]))
-    replace_in_file(path, 'Version::minor = \\d+;', 'Version::minor = {};'.format(version_parts[1]))
-    replace_in_file(path, 'Version::patch = \\d+;', 'Version::patch = {};'.format(version_parts[2]))
+    replace_in_file(path, 'LOOT_VERSION_MAJOR = \\d+;', 'LOOT_VERSION_MAJOR = {};'.format(version_parts[0]))
+    replace_in_file(path, 'LOOT_VERSION_MINOR = \\d+;', 'LOOT_VERSION_MINOR = {};'.format(version_parts[1]))
+    replace_in_file(path, 'LOOT_VERSION_PATCH = \\d+;', 'LOOT_VERSION_PATCH = {};'.format(version_parts[2]))
 
 def update_resource_file(path, version):
     comma_separated_version = version.replace('.', ', ')
@@ -59,7 +59,7 @@ if __name__ == "__main__":
         version
     )
     update_cpp_file(
-        os.path.join('src', 'gui', 'version.cpp.in'),
+        os.path.join('src', 'gui', 'version.h'),
         version
     )
     update_resource_file(

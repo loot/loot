@@ -82,8 +82,6 @@ protected:
 };
 
 TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
-  const std::string currentVersion = gui::Version::string();
-
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
   EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_TRUE(settings_.isLootUpdateCheckEnabled());
@@ -262,7 +260,7 @@ TEST_F(LootSettingsTest, loadShouldEnableFiltersForFiltersEnabledInTomlFile) {
 TEST_F(LootSettingsTest, loadShouldDisableFiltersForFiltersDisabledInTomlFile) {
   LootSettings::Filters filters{true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
   settings_.storeFilters(filters);
-  
+
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[filters]" << endl
@@ -309,7 +307,7 @@ TEST_F(LootSettingsTest,
 
   using std::endl;
   std::ofstream out(settingsFile_);
-  out << "[filters]" << endl 
+  out << "[filters]" << endl
       << "hideCRCs = true" << endl;
   out.close();
 
@@ -1728,7 +1726,7 @@ TEST_F(LootSettingsTest, saveShouldWriteAllFiltersWhenTheyAreDisabled) {
   settings_.storeFilters(filters);
 
   settings_.save(settingsFile_);
-  
+
   settings_.load(settingsFile_);
 
   EXPECT_FALSE(settings_.getFilters().hideVersionNumbers);
@@ -1840,8 +1838,6 @@ TEST_F(LootSettingsTest,
 }
 
 TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
-  const std::string currentVersion = gui::Version::string();
-
   std::ofstream out(settingsFile_);
   out << "lastVersion = \"0.7.1\"" << std::endl;
   out.close();
@@ -1849,7 +1845,7 @@ TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
   settings_.load(settingsFile_);
   settings_.updateLastVersion();
 
-  EXPECT_EQ(currentVersion, settings_.getLastVersion());
+  EXPECT_EQ(GetLootVersion(), settings_.getLastVersion());
 }
 }
 }

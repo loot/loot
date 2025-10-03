@@ -288,7 +288,7 @@ void MainWindow::initialise() {
   try {
     themes = findThemes(state.GetPaths().getThemesPath());
 
-    if (state.getSettings().getLastVersion() != gui::Version::string()) {
+    if (state.getSettings().getLastVersion() != GetLootVersion()) {
       showFirstRunDialog();
     }
 
@@ -1275,14 +1275,14 @@ void MainWindow::showFirstRunDialog() {
             "This appears to be the first time you have run LOOT v{0}. Your "
             "current LOOT data has been backed up to: {1}")
             .str(),
-        gui::Version::string(),
+        GetLootVersion(),
         link);
   } else {
     paragraph1 = fmt::format(
         boost::locale::translate(
             "This appears to be the first time you have run LOOT v{0}.")
             .str(),
-        gui::Version::string());
+        GetLootVersion());
   }
 
   auto paragraph2 =
@@ -2228,8 +2228,8 @@ void MainWindow::on_actionAbout_triggered() {
 
     auto paragraph1 =
         fmt::format(boost::locale::translate("Version {0} (build {1})").str(),
-                    gui::Version::string(),
-                    gui::Version::revision);
+                    GetLootVersion(),
+                    GetLootRevision());
 
     auto paragraph2 =
         boost::locale::translate(

@@ -1261,7 +1261,7 @@ void LootSettings::storeFilters(const Filters& filters) {
 void LootSettings::updateLastVersion() {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  lastVersion_ = gui::Version::string();
+  lastVersion_ = GetLootVersion();
 }
 
 }
