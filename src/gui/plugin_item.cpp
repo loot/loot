@@ -263,7 +263,7 @@ bool PluginItem::containsText(const std::string& text) const {
 }
 
 std::string PluginItem::contentToSearch() const {
-  auto text = name;
+  std::string text = name;
 
   if (version.has_value()) {
     text += version.value();

@@ -288,7 +288,7 @@ std::string DeriveName(
   // to distinguish it. A name with that suffix might also already
   // exist, so increment the index until that's not the case.
 
-  auto name = baseName;
+  std::string name = baseName;
   int suffixIndex = 1;
   while (std::any_of(existingNames.begin(),
                      existingNames.end(),
@@ -419,7 +419,7 @@ void AppendNewGamesSettings(
                    gameSourceCounts,
                    folderNames);
 
-    const auto gameSettings =
+    const GameSettings gameSettings =
         GameSettings(gameInstall.gameId, folderName)
             .SetName(gameName)
             .SetMaster(GetMasterFilename(gameInstall.gameId))

@@ -146,7 +146,7 @@ void scaleCardHeading(QLabel& label) {
   // Scale the current font size by a multiplier to respect Windows' font
   // scaling, which setting the font size in QSS doesn't do.
   static constexpr double NAME_FONT_SIZE_MULTIPLIER = 1.143;
-  auto headingFont = label.font();
+  QFont headingFont = label.font();
   const auto headingFontSize = headingFont.pointSizeF();
   headingFont.setPointSizeF(headingFontSize * NAME_FONT_SIZE_MULTIPLIER);
   label.setFont(headingFont);

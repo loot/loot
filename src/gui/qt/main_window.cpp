@@ -296,7 +296,7 @@ void MainWindow::initialise() {
       state.initCurrentGame();
     }
 
-    auto initMessages = state.getInitMessages();
+    std::vector<SourcedMessage> initMessages = state.getInitMessages();
     const auto initHasErrored =
         std::any_of(initMessages.begin(),
                     initMessages.end(),
@@ -1039,7 +1039,7 @@ void MainWindow::updateCounts(
 void MainWindow::updateGeneralInformation() {
   const auto preludeInfo = getFileRevisionSummary(
       state.GetPaths().getPreludePath(), FileType::MasterlistPrelude);
-  auto initMessages = state.getInitMessages();
+  std::vector<SourcedMessage> initMessages = state.getInitMessages();
 
   if (!state.HasCurrentGame()) {
     pluginItemModel->setGeneralInformation(
@@ -1065,7 +1065,7 @@ void MainWindow::updateGeneralInformation() {
 }
 
 void MainWindow::updateGeneralMessages() {
-  auto initMessages = state.getInitMessages();
+  std::vector<SourcedMessage> initMessages = state.getInitMessages();
   auto gameMessages = state.GetCurrentGame().GetMessages(
       state.getSettings().getLanguage(),
       state.getSettings().isWarnOnCaseSensitiveGamePathsEnabled());
@@ -1976,7 +1976,7 @@ void MainWindow::on_actionEditMetadata_triggered() {
       return;
     }
 
-    const auto selectedPluginName = getSelectedPlugin().name;
+    const std::string selectedPluginName = getSelectedPlugin().name;
     const auto groups = GetGroupNames(state.GetCurrentGame());
 
     pluginEditorWidget->initialiseInputs(
@@ -2019,7 +2019,7 @@ void MainWindow::on_actionEditMetadata_triggered() {
 
 void MainWindow::on_actionCopyMetadata_triggered() {
   try {
-    const auto selectedPluginName = getSelectedPlugin().name;
+    const std::string selectedPluginName = getSelectedPlugin().name;
 
     const auto text =
         GetMetadataAsBBCodeYaml(state.GetCurrentGame(), selectedPluginName);
@@ -2047,7 +2047,7 @@ void MainWindow::on_actionCopyMetadata_triggered() {
 
 void MainWindow::on_actionCopyPluginName_triggered() {
   try {
-    const auto selectedPluginName = getSelectedPlugin().name;
+    const std::string selectedPluginName = getSelectedPlugin().name;
 
     CopyToClipboard(selectedPluginName);
 
@@ -2084,7 +2084,7 @@ void MainWindow::on_actionCopyCardContent_triggered() {
 
 void MainWindow::on_actionUnhidePluginMessages_triggered() {
   try {
-    const auto& selectedPluginName = getSelectedPlugin().name;
+    const std::string selectedPluginName = getSelectedPlugin().name;
     std::vector<HiddenMessage> hiddenMessages;
     for (const auto& hiddenMessage :
          state.GetCurrentGame().GetSettings().HiddenMessages()) {
@@ -2101,7 +2101,7 @@ void MainWindow::on_actionUnhidePluginMessages_triggered() {
 
 void MainWindow::on_actionClearMetadata_triggered() {
   try {
-    auto selectedPluginName = getSelectedPlugin().name;
+    const std::string selectedPluginName = getSelectedPlugin().name;
 
     auto questionText = fmt::format(
         boost::locale::translate("Are you sure you want to clear all existing "
@@ -2348,7 +2348,7 @@ void MainWindow::on_actionDiscardSort_triggered() {
                              });
 
       if (it != pluginItems.end()) {
-        auto newPluginItem = *it;
+        PluginItem newPluginItem = *it;
         newPluginItem.loadOrderIndex = pluginPair.second;
         newPluginItems.push_back(newPluginItem);
       }

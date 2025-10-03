@@ -159,7 +159,7 @@ std::optional<std::filesystem::path> GetLocalisedGameInstallPath(
 
   // Sort the given paths so they're in the same order as the preferred
   // languages.
-  auto pathsToCheck = paths;
+  std::vector<LocalisedGameInstallPath> pathsToCheck = paths;
   SortPathsByPreferredLanguage(pathsToCheck, uiPreferredLanguages);
 
   // Now check each of the sorted paths in turn and return the first

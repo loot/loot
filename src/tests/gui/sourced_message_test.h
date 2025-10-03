@@ -30,17 +30,15 @@ along with LOOT.  If not, see
 
 namespace loot::test {
 TEST(SourcedMessage, equalityOperatorShouldReturnTrueIfAllFieldsAreEqual) {
-  const auto message1 =
-      SourcedMessage{MessageType::say, MessageSource::init, ""};
-  const auto message2 = message1;
+  const SourcedMessage message1{MessageType::say, MessageSource::init, ""};
+  const SourcedMessage message2 = message1;
 
   EXPECT_TRUE(message1 == message2);
 }
 
 TEST(SourcedMessage, equalityOperatorShouldReturnFalseIfAnyFieldIsNotEqual) {
-  const auto message1 =
-      SourcedMessage{MessageType::say, MessageSource::init, ""};
-  auto message2 = SourcedMessage{MessageType::warn, MessageSource::init, ""};
+  const SourcedMessage message1{MessageType::say, MessageSource::init, ""};
+  SourcedMessage message2{MessageType::warn, MessageSource::init, ""};
 
   EXPECT_FALSE(message1 == message2);
 
@@ -53,17 +51,15 @@ TEST(SourcedMessage, equalityOperatorShouldReturnFalseIfAnyFieldIsNotEqual) {
 }
 
 TEST(SourcedMessage, inequalityOperatorShouldReturnFalseIfAllFieldsAreEqual) {
-  const auto message1 =
-      SourcedMessage{MessageType::say, MessageSource::init, ""};
-  const auto message2 = message1;
+  const SourcedMessage message1{MessageType::say, MessageSource::init, ""};
+  const SourcedMessage message2 = message1;
 
   EXPECT_FALSE(message1 != message2);
 }
 
 TEST(SourcedMessage, equalityOperatorShouldReturnTrueIfAnyFieldIsNotEqual) {
-  const auto message1 =
-      SourcedMessage{MessageType::say, MessageSource::init, ""};
-  auto message2 = SourcedMessage{MessageType::warn, MessageSource::init, ""};
+  const SourcedMessage message1{MessageType::say, MessageSource::init, ""};
+  SourcedMessage message2{MessageType::warn, MessageSource::init, ""};
 
   EXPECT_TRUE(message1 != message2);
 

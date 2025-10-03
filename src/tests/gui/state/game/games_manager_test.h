@@ -161,7 +161,7 @@ TEST(
   auto currentFolderName = TEST_GAMES_SETTINGS[1].FolderName();
   manager.SetCurrentGame(currentFolderName);
 
-  auto newGameSettings = createSettings(GameId::tes5)
+  GameSettings newGameSettings = createSettings(GameId::tes5)
                              .SetName("different")
                              .SetMinimumHeaderVersion(100.0f)
                              .SetMasterlistSource("different");

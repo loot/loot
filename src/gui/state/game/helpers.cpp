@@ -316,7 +316,7 @@ std::vector<std::string> CheckForRemovedPlugins(
                                    pluginNamesAfter.cend());
 
   std::vector<std::string> removedPlugins;
-  for (auto pluginName : pluginNamesBefore) {
+  for (std::string pluginName : pluginNamesBefore) {
     if (boost::iends_with(pluginName, GHOST_EXTENSION)) {
       pluginName =
           pluginName.substr(0, pluginName.size() - GHOST_EXTENSION_LENGTH);

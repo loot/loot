@@ -36,7 +36,7 @@
 
 namespace loot {
 std::filesystem::path compressDirectory(const std::filesystem::path& dir) {
-  auto archivePath = dir;
+  std::filesystem::path archivePath = dir;
   archivePath += ".zip";
 
   auto archivePathString = archivePath.u8string();

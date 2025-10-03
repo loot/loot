@@ -504,7 +504,7 @@ TEST_P(Steam_FindGameInstallsTest,
     return;
   }
 
-  auto steamGamePath = gamePath;
+  std::filesystem::path steamGamePath = gamePath;
   if (GetParam() == GameId::nehrim) {
     // Steam's version of Nehrim puts its files in a NehrimFiles subfolder,
     // so move them there.

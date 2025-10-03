@@ -226,7 +226,8 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
 }
 
 TEST_P(GameTest, initShouldThrowIfGamePathWasNotGiven) {
-  auto settings = GameSettings(GetParam(), "").SetGameLocalPath(localPath);
+  GameSettings settings =
+      GameSettings(GetParam(), "").SetGameLocalPath(localPath);
   Game game(settings, "", "");
   EXPECT_THROW(game.Init(), std::invalid_argument);
 }
@@ -234,7 +235,8 @@ TEST_P(GameTest, initShouldThrowIfGamePathWasNotGiven) {
 #ifndef _WIN32
 TEST_P(GameTest,
        initShouldNotThrowOnLinuxIfLocalPathWasNotGivenAndGameIsMorrowind) {
-  auto settings = GameSettings(GetParam(), "folder").SetGamePath(gamePath);
+  GameSettings settings =
+      GameSettings(GetParam(), "folder").SetGamePath(gamePath);
   Game game(settings, lootDataPath, "");
 
   if (GetParam() == GameId::tes3) {
@@ -245,7 +247,8 @@ TEST_P(GameTest,
 }
 #else
 TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathWasNotGiven) {
-  auto settings = GameSettings(GetParam(), "folder").SetGamePath(gamePath);
+  GameSettings settings =
+      GameSettings(GetParam(), "folder").SetGamePath(gamePath);
   Game game(settings, lootDataPath, "");
   EXPECT_NO_THROW(game.Init());
 }

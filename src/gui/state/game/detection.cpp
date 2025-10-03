@@ -51,7 +51,7 @@ std::vector<GameSettings> FindInstalledGames(
     const std::vector<std::string>& preferredUILanguages_) {
   const auto heroicConfigPaths = heroic::GetHeroicGamesLauncherConfigPaths();
 
-  auto gamesSettingsToUpdate = gamesSettings;
+  std::vector<GameSettings> gamesSettingsToUpdate = gamesSettings;
   UpdateInstalledGamesSettings(gamesSettingsToUpdate,
                                Registry(),
                                heroicConfigPaths,

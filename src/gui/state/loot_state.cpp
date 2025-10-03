@@ -351,7 +351,7 @@ void LootState::overrideGamePath(const std::string& gameFolderName,
                   "provided.")));
   }
 
-  auto gamesSettings = settings_.getGameSettings();
+  std::vector<GameSettings> gamesSettings = settings_.getGameSettings();
   auto it = std::find_if(gamesSettings.begin(),
                          gamesSettings.end(),
                          [&](const GameSettings& settings) {
@@ -428,7 +428,7 @@ void LootState::InitialiseGameData(gui::Game& game) { game.Init(); }
 
 std::optional<std::string> LootState::getPreferredGameFolderName(
     const std::string& cliGameValue) const {
-  auto preferredGame = cliGameValue;
+  std::string preferredGame = cliGameValue;
 
   if (preferredGame.empty()) {
     // Get preferred game from settings.
