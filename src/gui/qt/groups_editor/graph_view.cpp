@@ -38,9 +38,11 @@
 #include "gui/qt/groups_editor/node.h"
 #include "gui/state/logging.h"
 
-namespace loot {
+namespace {
+using loot::Node;
+
 std::map<std::string, Node *>::iterator insertNode(
-    GraphView *graphView,
+    loot::GraphView *graphView,
     std::map<std::string, Node *> &map,
     const std::string &name,
     bool isUserMetadata,
@@ -60,7 +62,7 @@ std::map<std::string, Node *>::iterator insertNode(
 }
 
 std::map<std::string, QPointF> convertNodePositions(
-    const std::vector<GroupNodePosition> &nodePositions) {
+    const std::vector<loot::GroupNodePosition> &nodePositions) {
   std::map<std::string, QPointF> map;
 
   for (const auto &position : nodePositions) {
@@ -84,7 +86,9 @@ void setNodePositions(const std::vector<Node *> &nodes,
     }
   }
 }
+}
 
+namespace loot {
 GraphView::GraphView(QWidget *parent) :
     QGraphicsView(parent),
     masterColor(
@@ -374,7 +378,8 @@ void GraphView::doLayout(const std::vector<GroupNodePosition> &nodePositions) {
   const auto calculatedNodePositions = calculateGraphLayout(nodes);
   for (const auto &[node, position] : calculatedNodePositions) {
     if (node == nullptr) {
-      throw std::logic_error("calculated node positions map contains a null node pointer");
+      throw std::logic_error(
+          "calculated node positions map contains a null node pointer");
     }
 
     node->setPosition(position);

@@ -40,9 +40,9 @@
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
 
-namespace loot {
+namespace {
 std::map<std::string, std::set<std::string>> groupsAsMap(
-    const std::vector<Group>& groups) {
+    const std::vector<loot::Group>& groups) {
   std::map<std::string, std::set<std::string>> map;
 
   for (const auto& group : groups) {
@@ -55,7 +55,7 @@ std::map<std::string, std::set<std::string>> groupsAsMap(
 }
 
 std::map<std::string, std::pair<double, double>> positionsAsMap(
-    const std::vector<GroupNodePosition>& positions) {
+    const std::vector<loot::GroupNodePosition>& positions) {
   std::map<std::string, std::pair<double, double>> map;
 
   for (const auto& position : positions) {
@@ -64,7 +64,9 @@ std::map<std::string, std::pair<double, double>> positionsAsMap(
 
   return map;
 }
+}
 
+namespace loot {
 GroupsEditorDialog::GroupsEditorDialog(QWidget* parent,
                                        PluginItemModel* pluginItemModel) :
     QDialog(

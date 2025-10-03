@@ -35,7 +35,10 @@
 #include "gui/sourced_message.h"
 #include "gui/state/logging.h"
 
-namespace loot {
+namespace {
+using loot::BareMessage;
+using loot::MessageType;
+
 static constexpr const char* MESSAGE_TYPE_PROPERTY = "messageType";
 static constexpr int COLUMN_COUNT = 2;
 static constexpr int BULLET_POINT_COLUMN = 0;
@@ -133,7 +136,7 @@ void updateMessageLabel(QLabel* label, const BareMessage& message) {
 }
 
 std::vector<BareMessage> toBareMessages(
-    const std::vector<SourcedMessage>& messages) {
+    const std::vector<loot::SourcedMessage>& messages) {
   std::vector<BareMessage> bareMessages;
   for (const auto& message : messages) {
     bareMessages.push_back(BareMessage{message.type, message.text});
@@ -141,7 +144,9 @@ std::vector<BareMessage> toBareMessages(
 
   return bareMessages;
 }
+}
 
+namespace loot {
 MessagesWidget::MessagesWidget(QWidget* parent) : QWidget(parent) { setupUi(); }
 
 void MessagesWidget::setMessages(const std::vector<SourcedMessage>& messages) {

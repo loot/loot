@@ -57,15 +57,15 @@ using std::exception;
 namespace fs = std::filesystem;
 
 namespace {
+using loot::LogLevel;
+
 loot::SourcedMessage CreateInitErrorMessage(const std::string& text) {
   return loot::CreatePlainTextSourcedMessage(
       loot::MessageType::error, loot::MessageSource::init, text);
 }
-}
 
-namespace loot {
 void apiLogCallback(LogLevel level, std::string_view message) {
-  auto logger = getLogger();
+  auto logger = loot::getLogger();
   if (!logger) {
     return;
   }
@@ -91,7 +91,9 @@ void apiLogCallback(LogLevel level, std::string_view message) {
       break;
   }
 }
+}
 
+namespace loot {
 LootState::LootState(LootPaths&& paths) :
     GamesManager(paths.getLootDataPath(), paths.getPreludePath()),
     paths_(paths) {

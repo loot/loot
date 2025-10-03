@@ -33,7 +33,7 @@
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 
-namespace loot {
+namespace {
 static constexpr const char* QSS_SUFFIX = ".theme.qss";
 static constexpr size_t QSS_SUFFIX_LENGTH =
     std::char_traits<char>::length(QSS_SUFFIX);
@@ -48,7 +48,9 @@ std::optional<QString> loadStyleSheet(const QString& resourcePath) {
   QTextStream ts(&file);
   return ts.readAll();
 }
+}
 
+namespace loot {
 std::optional<QString> loadStyleSheet(const std::filesystem::path& themesPath,
                                       const std::string& themeName) {
   // First try loading the theme from the filesystem, then try loading from
@@ -62,7 +64,7 @@ std::optional<QString> loadStyleSheet(const std::filesystem::path& themesPath,
 
   const auto filesystemPath = (themesPath / (themeName + QSS_SUFFIX));
   auto styleSheet =
-      loadStyleSheet(QString::fromStdString(filesystemPath.u8string()));
+      ::loadStyleSheet(QString::fromStdString(filesystemPath.u8string()));
   if (styleSheet.has_value()) {
     return styleSheet.value();
   }
@@ -76,7 +78,7 @@ std::optional<QString> loadStyleSheet(const std::filesystem::path& themesPath,
 
   const auto builtInPath =
       QString(":/themes/%1.theme.qss").arg(QString::fromStdString(themeName));
-  styleSheet = loadStyleSheet(builtInPath);
+  styleSheet = ::loadStyleSheet(builtInPath);
   if (styleSheet.has_value()) {
     return styleSheet.value();
   }

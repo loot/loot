@@ -30,7 +30,7 @@
 #include <QtGui/QScreen>
 #include <QtWidgets/QStyle>
 
-namespace loot {
+namespace {
 QPixmap changeColor(QPixmap pixmap, QColor color) {
   QImage image = pixmap.toImage();
 
@@ -43,7 +43,9 @@ QPixmap changeColor(QPixmap pixmap, QColor color) {
 
   return QPixmap::fromImage(image);
 }
+}
 
+namespace loot {
 QIcon IconFactory::getIsActiveIcon() {
   return getIcon(":/icons/material-icons/check_black_48dp.svg");
 }

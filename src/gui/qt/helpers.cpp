@@ -51,7 +51,9 @@
 
 #include "gui/state/logging.h"
 
-namespace loot {
+namespace {
+using loot::getLogger;
+
 static constexpr const char* METADATA_PATH_SUFFIX = ".metadata.toml";
 static constexpr const char* METADATA_ID_KEY = "blob_sha1";
 static constexpr const char* METADATA_DATE_KEY = "update_timestamp";
@@ -87,6 +89,38 @@ void writeFileRevision(const std::filesystem::path& filePath,
   out << table;
 }
 
+bool isFileUpToDate(const std::filesystem::path& filePath,
+                    const std::string& expectedHash) {
+  if (!std::filesystem::exists(filePath)) {
+    return false;
+  }
+
+  auto logger = getLogger();
+
+  try {
+    auto existingFileHash = loot::calculateGitBlobHash(filePath);
+
+    if (logger) {
+      logger->debug("Calculated blob hash for file at {}: {}",
+                    filePath.u8string(),
+                    existingFileHash);
+    }
+
+    return expectedHash == existingFileHash;
+  } catch (const std::exception& e) {
+    if (logger) {
+      logger->error(
+          "Caught exception when getting file revision, assuming file is not "
+          "up to date: {}",
+          e.what());
+    }
+
+    return false;
+  }
+}
+}
+
+namespace loot {
 FileRevisionSummary::FileRevisionSummary(const FileRevision& fileRevision) :
     id(fileRevision.id.substr(0, SHORT_HASH_LENGTH)), date(fileRevision.date) {
   if (fileRevision.is_modified) {
@@ -223,36 +257,6 @@ FileRevisionSummary getFileRevisionSummary(
     }
     auto text = translate("Unknown: No revision metadata found").str();
     return FileRevisionSummary(text, text);
-  }
-}
-
-bool isFileUpToDate(const std::filesystem::path& filePath,
-                    const std::string& expectedHash) {
-  if (!std::filesystem::exists(filePath)) {
-    return false;
-  }
-
-  auto logger = getLogger();
-
-  try {
-    auto existingFileHash = calculateGitBlobHash(filePath);
-
-    if (logger) {
-      logger->debug("Calculated blob hash for file at {}: {}",
-                    filePath.u8string(),
-                    existingFileHash);
-    }
-
-    return expectedHash == existingFileHash;
-  } catch (const std::exception& e) {
-    if (logger) {
-      logger->error(
-          "Caught exception when getting file revision, assuming file is not "
-          "up to date: {}",
-          e.what());
-    }
-
-    return false;
   }
 }
 

@@ -76,9 +76,7 @@ std::string GetExecutableName(GameId gameId) {
       throw std::logic_error("Unrecognised game ID");
   }
 }
-}
 
-namespace loot {
 bool ExecutableExists(const GameId& gameType,
                       const std::filesystem::path& gamePath) {
   switch (gameType) {
@@ -110,17 +108,8 @@ bool ExecutableExists(const GameId& gameType,
   }
 }
 
-bool IsValidGamePath(const GameId gameId,
-                     const std::string& masterFilename,
-                     const std::filesystem::path& pathToCheck) {
-  return !pathToCheck.empty() &&
-         std::filesystem::exists(GetDataPath(gameId, pathToCheck) /
-                                 std::filesystem::u8path(masterFilename)) &&
-         ExecutableExists(gameId, pathToCheck);
-}
-
 void SortPathsByPreferredLanguage(
-    std::vector<LocalisedGameInstallPath>& paths,
+    std::vector<loot::LocalisedGameInstallPath>& paths,
     const std::vector<std::string>& uiPreferredLanguages) {
   const auto findPreferredLanguageIndex = [&](const std::string& language) {
     // The input languages are two-letter ISO-639-1 codes.
@@ -149,6 +138,17 @@ void SortPathsByPreferredLanguage(
 
         return lhsIndex < rhsIndex;
       });
+}
+}
+
+namespace loot {
+bool IsValidGamePath(const GameId gameId,
+                     const std::string& masterFilename,
+                     const std::filesystem::path& pathToCheck) {
+  return !pathToCheck.empty() &&
+         std::filesystem::exists(GetDataPath(gameId, pathToCheck) /
+                                 std::filesystem::u8path(masterFilename)) &&
+         ExecutableExists(gameId, pathToCheck);
 }
 
 std::optional<std::filesystem::path> GetLocalisedGameInstallPath(

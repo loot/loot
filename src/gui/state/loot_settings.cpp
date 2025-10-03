@@ -41,6 +41,27 @@ using std::recursive_mutex;
 
 namespace {
 using loot::GameId;
+using loot::GameSettings;
+using loot::HiddenMessage;
+using loot::LootSettings;
+using loot::getLogger;
+using loot::DEFAULT_MASTERLIST_BRANCH;
+using loot::MASTERLIST_FILENAME;
+
+static const std::set<std::string> OLD_DEFAULT_BRANCHES({"master",
+                                                       "v0.7",
+                                                       "v0.8",
+                                                       "v0.10",
+                                                       "v0.13",
+                                                       "v0.14",
+                                                       "v0.15",
+                                                       "v0.17",
+                                                       "v0.18",
+                                                       "v0.21"});
+
+static const std::regex GITHUB_REPO_URL_REGEX =
+    std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",
+               std::regex::ECMAScript | std::regex::icase);
 
 std::optional<std::string> GetLocalFolder(const toml::table& table) {
   const auto localPath = table["local_path"].value<std::string>();
@@ -124,24 +145,6 @@ bool IsEnderal(const toml::table& table) { return IsEnderal(table, "enderal"); }
 bool IsEnderalSE(const toml::table& table) {
   return IsEnderal(table, "Enderal Special Edition");
 }
-}
-
-namespace loot {
-static const std::set<std::string> oldDefaultBranches({"master",
-                                                       "v0.7",
-                                                       "v0.8",
-                                                       "v0.10",
-                                                       "v0.13",
-                                                       "v0.14",
-                                                       "v0.15",
-                                                       "v0.17",
-                                                       "v0.18",
-                                                       "v0.21"});
-
-static const std::regex GITHUB_REPO_URL_REGEX =
-    std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",
-               std::regex::ECMAScript | std::regex::icase);
-
 std::optional<std::string> getOldDefaultRepoUrl(GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
@@ -218,7 +221,7 @@ std::optional<std::string> migrateMasterlistRepoSettings(GameId gameId,
                                                          std::string branch) {
   auto logger = getLogger();
 
-  if (oldDefaultBranches.count(branch) == 1) {
+  if (OLD_DEFAULT_BRANCHES.count(branch) == 1) {
     // Update to the latest masterlist branch.
     if (logger) {
       logger->info("Updating masterlist repository branch from {} to {}",
@@ -349,7 +352,7 @@ std::optional<std::string> migratePreludeRepoSettings(const std::string& url,
                                                       std::string branch) {
   auto logger = getLogger();
 
-  if (oldDefaultBranches.count(branch) == 1) {
+  if (OLD_DEFAULT_BRANCHES.count(branch) == 1) {
     // Update to the latest masterlist prelude branch.
     if (logger) {
       logger->info(
@@ -461,7 +464,7 @@ std::optional<std::string> migrateMasterlistSource(std::string_view source,
     } else if (repo == "fallout4vr") {
       newRepo = "fallout4";
     }
-    const auto newSource = GetDefaultMasterlistUrl(newRepo);
+    const auto newSource = loot::GetDefaultMasterlistUrl(newRepo);
 
     const auto logger = getLogger();
     if (logger) {
@@ -489,7 +492,7 @@ std::string migrateMasterlistSource(const std::string& source) {
                                                                    "starfield"};
 
   for (const auto& repo : officialMasterlistRepos) {
-    for (const auto& branch : oldDefaultBranches) {
+    for (const auto& branch : OLD_DEFAULT_BRANCHES) {
       auto migrated = migrateMasterlistSource(source, repo, branch);
       if (migrated.has_value()) {
         return migrated.value();
@@ -513,12 +516,12 @@ std::string migrateMasterlistSource(const std::string& source) {
 }
 
 std::string migratePreludeSource(const std::string& source) {
-  for (const auto& branch : oldDefaultBranches) {
+  for (const auto& branch : OLD_DEFAULT_BRANCHES) {
     const auto url = "https://raw.githubusercontent.com/loot/prelude/" +
                      branch + "/prelude.yaml";
 
     if (source == url) {
-      const auto newSource = getDefaultPreludeSource();
+      const auto newSource = loot::getDefaultPreludeSource();
 
       const auto logger = getLogger();
       if (logger) {
@@ -714,6 +717,59 @@ GameSettings convertGameTable(const toml::table& table) {
   return game;
 }
 
+LootSettings::Language convertLanguageTable(const toml::table& table) {
+  auto locale = table["locale"].value<std::string>();
+  if (!locale) {
+    throw std::runtime_error("'locale' key missing from language table");
+  }
+
+  auto name = table["name"].value<std::string>();
+  if (!name) {
+    throw std::runtime_error("'name' key missing from language table");
+  }
+
+  LootSettings::Language language;
+  language.locale = locale.value();
+  language.name = name.value();
+
+  return language;
+}
+
+toml::table windowPositionToToml(
+    const LootSettings::WindowPosition& windowPosition) {
+  return toml::table{
+      {"top", windowPosition.top},
+      {"bottom", windowPosition.bottom},
+      {"left", windowPosition.left},
+      {"right", windowPosition.right},
+      {"maximised", windowPosition.maximised},
+  };
+}
+
+std::optional<LootSettings::WindowPosition> windowPositionFromToml(
+    const toml::table& table) {
+  const auto windowTop = table["top"].value<long>();
+  const auto windowBottom = table["bottom"].value<long>();
+  const auto windowLeft = table["left"].value<long>();
+  const auto windowRight = table["right"].value<long>();
+  const auto windowMaximised = table["maximised"].value<bool>();
+  if (windowTop && windowBottom && windowLeft && windowRight &&
+      windowMaximised) {
+    LootSettings::WindowPosition windowPosition;
+    windowPosition.top = *windowTop;
+    windowPosition.bottom = *windowBottom;
+    windowPosition.left = *windowLeft;
+    windowPosition.right = *windowRight;
+    windowPosition.maximised = *windowMaximised;
+
+    return windowPosition;
+  }
+
+  return std::nullopt;
+}
+}
+
+namespace loot {
 CheckSettingsResult checkSettingsFile(const std::filesystem::path& filePath) {
   CheckSettingsResult result;
 
@@ -765,57 +821,6 @@ CheckSettingsResult checkSettingsFile(const std::filesystem::path& filePath) {
 std::string getDefaultPreludeSource() {
   return std::string("https://raw.githubusercontent.com/loot/prelude/") +
          DEFAULT_MASTERLIST_BRANCH + "/prelude.yaml";
-}
-
-LootSettings::Language convertLanguageTable(const toml::table& table) {
-  auto locale = table["locale"].value<std::string>();
-  if (!locale) {
-    throw std::runtime_error("'locale' key missing from language table");
-  }
-
-  auto name = table["name"].value<std::string>();
-  if (!name) {
-    throw std::runtime_error("'name' key missing from language table");
-  }
-
-  LootSettings::Language language;
-  language.locale = locale.value();
-  language.name = name.value();
-
-  return language;
-}
-
-toml::table windowPositionToToml(
-    const LootSettings::WindowPosition& windowPosition) {
-  return toml::table{
-      {"top", windowPosition.top},
-      {"bottom", windowPosition.bottom},
-      {"left", windowPosition.left},
-      {"right", windowPosition.right},
-      {"maximised", windowPosition.maximised},
-  };
-}
-
-std::optional<LootSettings::WindowPosition> windowPositionFromToml(
-    const toml::table& table) {
-  const auto windowTop = table["top"].value<long>();
-  const auto windowBottom = table["bottom"].value<long>();
-  const auto windowLeft = table["left"].value<long>();
-  const auto windowRight = table["right"].value<long>();
-  const auto windowMaximised = table["maximised"].value<bool>();
-  if (windowTop && windowBottom && windowLeft && windowRight &&
-      windowMaximised) {
-    LootSettings::WindowPosition windowPosition;
-    windowPosition.top = *windowTop;
-    windowPosition.bottom = *windowBottom;
-    windowPosition.left = *windowLeft;
-    windowPosition.right = *windowRight;
-    windowPosition.maximised = *windowMaximised;
-
-    return windowPosition;
-  }
-
-  return std::nullopt;
 }
 
 void LootSettings::load(const std::filesystem::path& file) {

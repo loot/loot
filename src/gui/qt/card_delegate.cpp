@@ -29,9 +29,20 @@
 #include "gui/qt/plugin_item_model.h"
 #include "gui/state/logging.h"
 
-namespace loot {
+namespace {
+using loot::CountersRole;
+using loot::FilteredContentRole;
+using loot::GeneralInfoCard;
+using loot::GeneralInformation;
+using loot::GeneralInformationCounters;
+using loot::getTagsText;
+using loot::HasHiddenMessagesRole;
+using loot::PluginCard;
+using loot::PluginItem;
+using loot::SizeHintCacheKey;
+
 std::vector<std::string> getMessageTexts(
-    const std::vector<SourcedMessage>& messages) {
+    const std::vector<loot::SourcedMessage>& messages) {
   std::vector<std::string> texts;
   for (const auto& message : messages) {
     texts.push_back(message.text);
@@ -41,7 +52,7 @@ std::vector<std::string> getMessageTexts(
 }
 
 std::vector<std::string> getLocationNames(
-    const std::vector<Location>& locations) {
+    const std::vector<loot::Location>& locations) {
   std::vector<std::string> names;
   std::transform(locations.begin(),
                  locations.end(),
@@ -145,7 +156,7 @@ GeneralInfoCard* setGeneralInfoCardContent(GeneralInfoCard* card,
 PluginCard* setPluginCardContent(PluginCard* card, const QModelIndex& index) {
   auto pluginItem = index.data(FilteredContentRole).value<PluginItem>();
   auto searchResultData =
-      index.data(SearchResultRole).value<SearchResultData>();
+      index.data(loot::SearchResultRole).value<loot::SearchResultData>();
   auto hasHiddenMessages = index.data(HasHiddenMessagesRole).value<bool>();
 
   card->setContent(pluginItem, hasHiddenMessages);
@@ -155,8 +166,6 @@ PluginCard* setPluginCardContent(PluginCard* card, const QModelIndex& index) {
 
   return card;
 }
-
-static std::map<QWidget*, int> minWidthByCard;
 
 QSize calculateSize(const QWidget* card,
                     const QStyleOptionViewItem& option,
@@ -208,7 +217,9 @@ QSize calculateSize(const QWidget* card,
 
   return QSize(cardWidth, height);
 }
+}
 
+namespace loot {
 CardSizingCache::CardSizingCache(QWidget* cardParentWidget) :
     cardParentWidget(cardParentWidget) {}
 

@@ -52,6 +52,7 @@
 #endif
 
 namespace {
+using loot::EdgeType;
 using loot::GameId;
 using loot::LoadOrderBackup;
 
@@ -224,36 +225,6 @@ void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
     }
   }
 }
-}
-
-namespace loot {
-void BackupLoadOrder(const std::vector<std::string>& loadOrder,
-                     const std::filesystem::path& backupDirectory) {
-  CreateBackup(loadOrder,
-               backupDirectory,
-               boost::locale::translate("Automatic Load Order Backup").str(),
-               true);
-  RemoveOldBackups(backupDirectory);
-}
-
-void BackupLoadOrder(const std::vector<std::string>& loadOrder,
-                     const std::filesystem::path& backupDirectory,
-                     std::string_view name) {
-  CreateBackup(loadOrder, backupDirectory, name, false);
-  RemoveOldBackups(backupDirectory);
-}
-
-std::vector<LoadOrderBackup> FindLoadOrderBackups(
-    const std::filesystem::path& backupDirectory) {
-  return ::FindLoadOrderBackups(backupDirectory);
-}
-
-std::string EscapeMarkdownASCIIPunctuation(const std::string& text) {
-  // As defined by <https://github.github.com/gfm/#ascii-punctuation-character>.
-  static const std::regex asciiPunctuationCharacters(
-      "([!\"#$%&'()*+,\\-./:;<=>?@\\[\\\\\\]^_`{|}~])");
-  return std::regex_replace(text, asciiPunctuationCharacters, "\\$1");
-}
 
 std::string DescribeEdgeType(const EdgeType edgeType) {
   switch (edgeType) {
@@ -284,6 +255,36 @@ std::string DescribeEdgeType(const EdgeType edgeType) {
     default:
       return "Unknown";
   }
+}
+}
+
+namespace loot {
+void BackupLoadOrder(const std::vector<std::string>& loadOrder,
+                     const std::filesystem::path& backupDirectory) {
+  CreateBackup(loadOrder,
+               backupDirectory,
+               boost::locale::translate("Automatic Load Order Backup").str(),
+               true);
+  RemoveOldBackups(backupDirectory);
+}
+
+void BackupLoadOrder(const std::vector<std::string>& loadOrder,
+                     const std::filesystem::path& backupDirectory,
+                     std::string_view name) {
+  CreateBackup(loadOrder, backupDirectory, name, false);
+  RemoveOldBackups(backupDirectory);
+}
+
+std::vector<LoadOrderBackup> FindLoadOrderBackups(
+    const std::filesystem::path& backupDirectory) {
+  return ::FindLoadOrderBackups(backupDirectory);
+}
+
+std::string EscapeMarkdownASCIIPunctuation(const std::string& text) {
+  // As defined by <https://github.github.com/gfm/#ascii-punctuation-character>.
+  static const std::regex asciiPunctuationCharacters(
+      "([!\"#$%&'()*+,\\-./:;<=>?@\\[\\\\\\]^_`{|}~])");
+  return std::regex_replace(text, asciiPunctuationCharacters, "\\$1");
 }
 
 std::string DescribeCycle(const std::vector<Vertex>& cycle) {

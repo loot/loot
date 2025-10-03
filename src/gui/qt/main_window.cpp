@@ -59,6 +59,7 @@
 
 namespace {
 using loot::GameId;
+using loot::LootSettings;
 using loot::LootState;
 using loot::translate;
 
@@ -107,10 +108,8 @@ void recordCurrentGameHiddenMessages(
 
   lootSettings.storeGameSettings(gamesSettings);
 }
-}
 
-namespace loot {
-std::vector<std::string> GetGroupNames(const gui::Game& game) {
+std::vector<std::string> GetGroupNames(const loot::gui::Game& game) {
   std::vector<std::string> groupNames;
   for (const auto& group : game.GetGroups()) {
     groupNames.push_back(group.GetName());
@@ -120,7 +119,7 @@ std::vector<std::string> GetGroupNames(const gui::Game& game) {
 }
 
 bool hasLoadOrderChanged(const std::vector<std::string>& oldLoadOrder,
-                         const std::vector<PluginItem>& newLoadOrder) {
+                         const std::vector<loot::PluginItem>& newLoadOrder) {
   if (oldLoadOrder.size() != newLoadOrder.size()) {
     return true;
   }
@@ -249,7 +248,7 @@ void setWindowPosition(QWidget& window,
   if (QGuiApplication::screenAt(topLeft) == nullptr) {
     // No screen exists at the old position, just leave the Window at the
     // default position Qt gives it so that it isn't positioned off-screen.
-    auto logger = getLogger();
+    auto logger = loot::getLogger();
     if (logger) {
       logger->warn(
           "Could not restore window position because no screen exists "
@@ -262,7 +261,9 @@ void setWindowPosition(QWidget& window,
     window.setGeometry(geometry);
   }
 }
+}
 
+namespace loot {
 MainWindow::MainWindow(LootState& state, QWidget* parent) :
     QMainWindow(parent), state(state) {
   qRegisterMetaType<QueryResult>("QueryResult");

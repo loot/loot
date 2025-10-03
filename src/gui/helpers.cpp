@@ -321,7 +321,7 @@ std::vector<std::filesystem::path> GetDriveRootPaths() {
   // .NET uses 8KiB:
   // <https://github.com/dotnet/runtime/blob/7414af2a5f6d8d99efc27d3f5ef7a394e0b23c42/src/native/libs/System.Native/pal_mount.c#L24>
   static constexpr size_t BUFFER_SIZE = 8192;
-  struct mntent entry {};
+  struct mntent entry{};
   std::array<char, BUFFER_SIZE> stringsBuffer{};
   std::vector<std::filesystem::path> paths;
 

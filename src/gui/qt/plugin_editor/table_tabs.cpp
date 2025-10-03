@@ -40,7 +40,7 @@
 #include "gui/qt/plugin_editor/models/message_table_model.h"
 #include "gui/qt/plugin_editor/models/tag_table_model.h"
 
-namespace loot {
+namespace {
 int calculateItemWidth(const QString& text) {
   auto textWidth = QFontMetricsF(QGuiApplication::font())
                        .size(Qt::TextSingleLine, text)
@@ -128,7 +128,9 @@ int calculateMinimumColumnWidth(
 
   return maxTextWidth;
 }
+}
 
+namespace loot {
 BaseTableTab::BaseTableTab(QWidget* parent) : QWidget(parent) { setupUi(); }
 
 QAbstractItemModel* BaseTableTab::getTableModel() const {

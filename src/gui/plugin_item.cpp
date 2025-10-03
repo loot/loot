@@ -36,8 +36,13 @@
 #include "gui/state/logging.h"
 
 namespace {
-loot::SourcedMessage CreateEvalFailedMessage(std::string_view pluginName,
-                                             std::string_view what) {
+using loot::getLogger;
+using loot::PluginMetadata;
+using loot::SourcedMessage;
+using loot::gui::Game;
+
+SourcedMessage CreateEvalFailedMessage(std::string_view pluginName,
+                                       std::string_view what) {
   return loot::CreatePlainTextSourcedMessage(
       loot::MessageType::error,
       loot::MessageSource::caughtException,
@@ -48,12 +53,9 @@ loot::SourcedMessage CreateEvalFailedMessage(std::string_view pluginName,
                   pluginName,
                   what));
 }
-}
 
-namespace loot {
 std::variant<std::optional<PluginMetadata>, SourcedMessage>
-evaluateMasterlistMetadata(const gui::Game& game,
-                           const std::string& pluginName) {
+evaluateMasterlistMetadata(const Game& game, const std::string& pluginName) {
   try {
     return game.GetMasterlistMetadata(pluginName, true);
   } catch (const std::exception& e) {
@@ -71,7 +73,7 @@ evaluateMasterlistMetadata(const gui::Game& game,
 }
 
 std::variant<std::optional<PluginMetadata>, SourcedMessage>
-evaluateUserlistMetadata(const gui::Game& game, const std::string& pluginName) {
+evaluateUserlistMetadata(const Game& game, const std::string& pluginName) {
   try {
     return game.GetUserMetadata(pluginName, true);
   } catch (const std::exception& e) {
@@ -89,7 +91,7 @@ evaluateUserlistMetadata(const gui::Game& game, const std::string& pluginName) {
 }
 
 std::pair<PluginMetadata, std::vector<SourcedMessage>> evaluateMetadata(
-    const gui::Game& game,
+    const Game& game,
     const std::string& pluginName) {
   std::vector<SourcedMessage> evalErrors;
 
@@ -121,7 +123,9 @@ std::pair<PluginMetadata, std::vector<SourcedMessage>> evaluateMetadata(
 
   return {metadata, evalErrors};
 }
+}
 
+namespace loot {
 PluginItem::PluginItem(GameId gameId,
                        const PluginInterface& plugin,
                        const gui::Game& game,
@@ -145,7 +149,8 @@ PluginItem::PluginItem(GameId gameId,
   auto userMetadata = game.GetUserMetadata(plugin.GetName());
   if (userMetadata.has_value()) {
     hasUserMetadata = !userMetadata.value().HasNameOnly();
-    hasLoadAfterUserMetadata = !userMetadata.value().GetLoadAfterFiles().empty();
+    hasLoadAfterUserMetadata =
+        !userMetadata.value().GetLoadAfterFiles().empty();
   }
 
   const auto [evaluatedMetadata, evalErrors] =
@@ -195,8 +200,8 @@ PluginItem::PluginItem(GameId gameId,
   // Set numbered names for locations with no existing name so that URLs
   // don't appear in the UI.
   if (locations.size() == 1 && locations[0].GetName().empty()) {
-    locations[0] =
-        Location(locations[0].GetURL(), boost::locale::translate("Location").str());
+    locations[0] = Location(locations[0].GetURL(),
+                            boost::locale::translate("Location").str());
   } else if (locations.size() > 1) {
     for (size_t i = 0; i < locations.size(); i += 1) {
       if (locations[i].GetName().empty()) {

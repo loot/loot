@@ -32,7 +32,9 @@
 #include "gui/qt/helpers.h"
 #include "gui/version.h"
 
-namespace loot {
+namespace {
+using loot::gui::Version;
+
 int compareLOOTVersion(const std::string &version) {
   std::vector<std::string> parts;
   boost::split(parts, version, boost::is_any_of("."));
@@ -43,29 +45,29 @@ int compareLOOTVersion(const std::string &version) {
   }
 
   const auto givenMajor = std::stoul(parts.at(0));
-  if (gui::Version::major > givenMajor) {
+  if (Version::major > givenMajor) {
     return 1;
   }
 
-  if (gui::Version::major < givenMajor) {
+  if (Version::major < givenMajor) {
     return -1;
   }
 
   const auto givenMinor = std::stoul(parts.at(1));
-  if (gui::Version::minor > givenMinor) {
+  if (Version::minor > givenMinor) {
     return 1;
   }
 
-  if (gui::Version::minor < givenMinor) {
+  if (Version::minor < givenMinor) {
     return -1;
   }
 
   const auto givenPatch = std::stoul(parts.at(2));
-  if (gui::Version::patch > givenPatch) {
+  if (Version::patch > givenPatch) {
     return 1;
   }
 
-  if (gui::Version::patch < givenPatch) {
+  if (Version::patch < givenPatch) {
     return -1;
   }
 
@@ -77,7 +79,7 @@ std::optional<QDate> getDateFromCommitJson(const QJsonDocument &document,
   // Committer can be null, but that will just result in an Undefined value.
   const auto dateString = document["commit"]["committer"]["date"].toString();
   if (dateString.isEmpty()) {
-    const auto logger = getLogger();
+    const auto logger = loot::getLogger();
     if (logger) {
       logger->error(
           "Error while checking for LOOT updates: couldn't get commit date for "
@@ -89,7 +91,9 @@ std::optional<QDate> getDateFromCommitJson(const QJsonDocument &document,
 
   return QDate::fromString(dateString, Qt::ISODate);
 }
+}
 
+namespace loot {
 void CheckForUpdateTask::execute() {
   try {
     // Delay construction of the manager so that it's created in the correct

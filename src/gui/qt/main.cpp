@@ -40,6 +40,7 @@
 #include "gui/state/loot_state.h"
 #include "gui/version.h"
 
+namespace {
 bool isRunningThroughModOrganiser() {
 #ifdef _WIN32
   const std::array<const char*, 3> dlls = {
@@ -81,6 +82,7 @@ void logRuntimeEnvironment() {
     }
     logger->info("Available Qt styles: {}", fmt::join(styles, ", "));
   }
+}
 }
 
 int main(int argc, char* argv[]) {

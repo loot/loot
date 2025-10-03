@@ -27,7 +27,7 @@
 
 #include <fstream>
 
-namespace loot {
+namespace {
 constexpr uint32_t LGNP_MAGIC_NUMBER = 0x504E474C;
 constexpr uint8_t LGNP_FORMAT_VERSION = 1;
 
@@ -52,7 +52,9 @@ void writeStringLength(std::ostream& out, size_t length) {
                              std::to_string(UINT16_MAX) + " bytes");
   }
 }
+}
 
+namespace loot {
 std::vector<GroupNodePosition> LoadGroupNodePositions(
     const std ::filesystem::path& filePath) {
   if (!std::filesystem::exists(filePath)) {

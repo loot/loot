@@ -46,6 +46,18 @@
 #include <shlobj.h>
 #endif
 
+namespace {
+std::vector<std::pair<std::string, std::string>> getStringsToCensor() {
+  const auto userProfilePath = loot::getUserProfilePath();
+
+#ifdef _WIN32
+  return {{userProfilePath.u8string(), "%USERPROFILE%"}};
+#else
+  return {{userProfilePath.u8string(), "$HOME"}};
+#endif
+}
+}
+
 namespace loot {
 static const char* LOGGER_NAME = "loot_logger";
 
@@ -106,16 +118,6 @@ private:
     return false;
   }
 };
-
-std::vector<std::pair<std::string, std::string>> getStringsToCensor() {
-  const auto userProfilePath = getUserProfilePath();
-
-#ifdef _WIN32
-  return {{userProfilePath.u8string(), "%USERPROFILE%"}};
-#else
-  return {{userProfilePath.u8string(), "$HOME"}};
-#endif
-}
 
 std::shared_ptr<spdlog::logger> getLogger() {
   auto logger = spdlog::get(LOGGER_NAME);
