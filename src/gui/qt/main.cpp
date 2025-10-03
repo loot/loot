@@ -171,7 +171,7 @@ int main(int argc, char* argv[]) {
     // content. This should only take a few milliseconds to complete,
     // but it varies
     auto logger = loot::getLogger();
-    const auto initialGeometry = mainWindow.geometry();
+    const auto& initialGeometry = mainWindow.geometry();
     auto timer = new QTimer();
     auto loopCounter = 1;
     static constexpr int LOOP_COUNTER_MAX = 100;

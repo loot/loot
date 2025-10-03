@@ -104,7 +104,7 @@ std::pair<PluginMetadata, std::vector<SourcedMessage>> evaluateMetadata(
   if (std::holds_alternative<SourcedMessage>(evaluatedUserMetadata)) {
     evalErrors.push_back(std::get<SourcedMessage>(evaluatedUserMetadata));
   } else {
-    const auto userMetadata =
+    const auto& userMetadata =
         std::get<std::optional<PluginMetadata>>(evaluatedUserMetadata);
     if (userMetadata.has_value()) {
       metadata = userMetadata.value();
@@ -114,7 +114,7 @@ std::pair<PluginMetadata, std::vector<SourcedMessage>> evaluateMetadata(
   if (std::holds_alternative<SourcedMessage>(evaluatedMasterlistMetadata)) {
     evalErrors.push_back(std::get<SourcedMessage>(evaluatedMasterlistMetadata));
   } else {
-    const auto masterlistMetadata =
+    const auto& masterlistMetadata =
         std::get<std::optional<PluginMetadata>>(evaluatedMasterlistMetadata);
     if (masterlistMetadata.has_value()) {
       metadata.MergeMetadata(masterlistMetadata.value());

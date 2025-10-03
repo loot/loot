@@ -96,7 +96,7 @@ void createBackup(const std::filesystem::path& sourceDir,
   for (auto it = std::filesystem::recursive_directory_iterator(sourceDir);
        it != std::filesystem::recursive_directory_iterator();
        ++it) {
-    auto path = it->path();
+    const auto& path = it->path();
     auto filename = path.filename().u8string();
 
     if (filename == ".git" || (it.depth() == 0 && filename == "backups")) {

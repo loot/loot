@@ -1530,7 +1530,7 @@ void MainWindow::handleGameDataLoaded(QueryResult result) {
 bool MainWindow::handlePluginsSorted(QueryResult result) {
   filtersWidget->resetOverlapAndGroupsFilters();
 
-  auto sortedPlugins = std::get<PluginItems>(result);
+  const auto& sortedPlugins = std::get<PluginItems>(result);
 
   if (sortedPlugins.empty()) {
     // If there was a sorting failure the array of plugins will be empty.
@@ -1940,7 +1940,7 @@ void MainWindow::on_actionClearAllUserMetadata_triggered() {
     updateGeneralMessages();
 
     // These plugin items are only those that had their user metadata removed.
-    auto pluginItems = std::get<PluginItems>(result);
+    const auto& pluginItems = std::get<PluginItems>(result);
 
     // For each item, find its existing index in the model and update its data.
     // The sidebar item and card will be updated by handling the resulting
@@ -2129,7 +2129,7 @@ void MainWindow::on_actionClearMetadata_triggered() {
     // The result is the changed plugin's derived metadata. Update the
     // model's data and also the message counts.
 
-    auto newPluginItem = std::get<PluginItem>(result);
+    const auto& newPluginItem = std::get<PluginItem>(result);
 
     for (int i = 1; i < pluginItemModel->rowCount(); i += 1) {
       const auto index = pluginItemModel->index(i, 0);
@@ -2334,12 +2334,12 @@ void MainWindow::on_actionDiscardSort_triggered() {
 
     auto result = query.executeLogic();
 
-    auto pluginItems = pluginItemModel->getPluginItems();
+    const auto& pluginItems = pluginItemModel->getPluginItems();
 
     std::vector<PluginItem> newPluginItems;
     newPluginItems.reserve(pluginItems.size());
     for (const auto& pluginPair : std::get<CancelSortResult>(result)) {
-      auto pluginName = pluginPair.first;
+      const auto& pluginName = pluginPair.first;
 
       auto it = std::find_if(pluginItems.cbegin(),
                              pluginItems.cend(),
@@ -3052,7 +3052,7 @@ void MainWindow::handleUpdateCheckError(const std::string&) {
             "(you can get to it through the main menu) for more information.")
             .str();
 
-    const auto generalMessages = pluginItemModel->getGeneralMessages();
+    const auto& generalMessages = pluginItemModel->getGeneralMessages();
     for (const auto& message : generalMessages) {
       if (message.text == text) {
         return;

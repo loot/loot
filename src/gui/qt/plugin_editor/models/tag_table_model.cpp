@@ -41,7 +41,7 @@ int TagTableModel::columnCount(const QModelIndex&) const { return 3; }
 QVariant TagTableModel::data(const Tag& element, int column, int role) const {
   switch (column) {
     case TYPE_COLUMN: {
-      auto pair = suggestionTypeMap.at(element.IsAddition());
+      const auto& pair = suggestionTypeMap.at(element.IsAddition());
       if (role == Qt::DisplayRole) {
         return QVariant(pair.first);
       } else {

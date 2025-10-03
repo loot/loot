@@ -287,7 +287,7 @@ void GroupsEditorDialog::refreshPluginLists() {
   groupPluginsList->clear();
   pluginComboBox->clear();
 
-  const auto groupName = selectedGroupName.value();
+  const auto& groupName = selectedGroupName.value();
 
   for (const auto& plugin : pluginItemModel->getPluginItems()) {
     const auto pluginGroup = getPluginGroup(plugin);
@@ -469,7 +469,7 @@ void GroupsEditorDialog::on_addPluginButton_clicked() {
   }
 
   const auto pluginName = pluginComboBox->currentText().toStdString();
-  const auto groupName = selectedGroupName.value();
+  const auto& groupName = selectedGroupName.value();
 
   // Get the plugin's item.
   const auto pluginItem = getPluginItem(pluginName);
@@ -528,7 +528,7 @@ void GroupsEditorDialog::on_renameGroupButton_clicked() {
     return;
   }
 
-  const auto oldName = selectedGroupName.value();
+  const auto& oldName = selectedGroupName.value();
   const auto newName = groupNameInput->text().toStdString();
 
   // Renaming groups isn't a built-in operation, instead:

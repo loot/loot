@@ -64,7 +64,7 @@ QVariant MessageTableModel::data(const Message& element,
                                  int role) const {
   switch (column) {
     case TYPE_COLUMN: {
-      auto pair = typeDisplayDataMap.at(element.GetType());
+      const auto& pair = typeDisplayDataMap.at(element.GetType());
 
       if (role == Qt::DisplayRole) {
         return QVariant(pair.first);

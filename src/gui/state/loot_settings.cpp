@@ -586,7 +586,7 @@ GameId getGameId(const toml::table& table) {
         "'gameId' and 'type' keys both missing from game settings table");
   }
 
-  const auto gameType = *type;
+  const auto& gameType = *type;
 
   if (gameType == "Morrowind") {
     return GameId::tes3;

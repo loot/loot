@@ -417,7 +417,7 @@ std::optional<GameInstall> FindGameInstall(
       return std::nullopt;
     }
 
-    const auto manifest = result.value();
+    const auto& manifest = result.value();
 
     if (manifest.appId.empty()) {
       if (logger) {

@@ -502,7 +502,7 @@ std::unordered_map<std::string, int> PluginItemModel::getPluginNameToRowMap()
   for (int i = 1; i < rowCount(); i += 1) {
     // The column we choose doesn't matter, it's the same data for both.
     const auto index = this->index(i, 0);
-    auto indexName = index.data(RawDataRole).value<PluginItem>().name;
+    const auto& indexName = index.data(RawDataRole).value<PluginItem>().name;
 
     nameToRowMap.emplace(indexName, i);
   }

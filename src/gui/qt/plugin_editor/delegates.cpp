@@ -139,7 +139,7 @@ void MessageContentDelegate::setModelData(QWidget* editor,
 void MessageContentDelegate::updateEditorGeometry(QWidget* editor,
                                                   const QStyleOptionViewItem&,
                                                   const QModelIndex&) const {
-  const auto parentGeometry = editor->parentWidget()->geometry();
+  const auto& parentGeometry = editor->parentWidget()->geometry();
   const auto mappedGeometry =
       editor->parentWidget()->parentWidget()->mapToGlobal(
           parentGeometry.topLeft());

@@ -183,7 +183,7 @@ void RestoreLoadOrderDialog::handleBackupSelectionChanged(
 
   const auto indexes = selected.indexes();
   if (!indexes.empty()) {
-    const auto backup = backups.at(indexes.front().row());
+    const auto& backup = backups.at(indexes.front().row());
     for (const auto& plugin : backup.loadOrder) {
       backupLoadOrderList->addItem(QString::fromStdString(plugin));
     }

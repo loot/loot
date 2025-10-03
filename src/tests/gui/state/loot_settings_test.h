@@ -111,7 +111,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             settings_.getPreludeSource());
   EXPECT_TRUE(settings_.getGameSettings().empty());
 
-  auto actualLanguages = settings_.getLanguages();
+  const auto& actualLanguages = settings_.getLanguages();
   EXPECT_EQ(20, actualLanguages.size());
   EXPECT_EQ(LootSettings::Language({"en", "English"}), actualLanguages[0]);
   EXPECT_EQ(LootSettings::Language({"bg", "Български"}), actualLanguages[1]);

@@ -694,7 +694,7 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
   }
 
   std::vector<std::string> loadedPluginNames;
-  for (auto plugin : gameHandle_->GetLoadedPlugins()) {
+  for (const auto& plugin : gameHandle_->GetLoadedPlugins()) {
     loadedPluginNames.push_back(plugin->GetName());
   }
 

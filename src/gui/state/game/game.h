@@ -228,7 +228,7 @@ std::vector<T> MapFromLoadOrderData(
   typedef std::variant<T, std::string> MappedDataOrError;
   const auto transformer = [&mapper](const LoadOrderTuple& loadOrderTuple) {
     try {
-      const auto [plugin, activeLoadOrderIndex, isActive] = loadOrderTuple;
+      const auto& [plugin, activeLoadOrderIndex, isActive] = loadOrderTuple;
 
       const auto mappedData = mapper(plugin, activeLoadOrderIndex, isActive);
 
