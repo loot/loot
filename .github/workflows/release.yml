@@ -13,6 +13,9 @@ jobs:
   create_release:
     runs-on: ubuntu-24.04
 
+    permissions:
+      contents: write
+
     steps:
       - name: Create a draft GitHub Release
         env:
@@ -27,6 +30,9 @@ jobs:
   windows:
     runs-on: windows-2022
     needs: create_release
+
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
