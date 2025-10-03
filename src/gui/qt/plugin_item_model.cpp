@@ -618,7 +618,7 @@ void PluginItemModel::handleHideMessage(const std::string& pluginName,
   } else {
     hideMessage(pluginName, text);
 
-    for (int i = 0; i < items.size(); i += 1) {
+    for (size_t i = 0; i < items.size(); i += 1) {
       if (items.at(i).name == pluginName) {
         auto index = this->index(i + 1, CARDS_COLUMN);
         emit dataChanged(index, index, {FilteredContentRole});
