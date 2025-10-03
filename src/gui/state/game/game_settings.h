@@ -83,7 +83,6 @@ public:
                    const std::string& messageText);
 
   bool HasHiddenGeneralMessages();
-  bool PluginHasHiddenMessages(const std::string& pluginName);
 
 private:
   GameId id_{GameId::tes4};

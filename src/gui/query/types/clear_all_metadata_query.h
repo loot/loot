@@ -74,7 +74,7 @@ private:
   }
 
   std::vector<PluginItem> getDerivedMetadata(
-      const std::vector<std::string>& userlistPlugins) {
+      const std::vector<std::string>& userlistPlugins) const {
     return GetPluginItems(userlistPlugins, game_, language_);
   }
 };

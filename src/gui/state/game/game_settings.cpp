@@ -224,7 +224,7 @@ bool GameSettings::HasHiddenGeneralMessages() {
   return false;
 }
 
-bool GameSettings::PluginHasHiddenMessages(const std::string& pluginName) {
+bool GameSettings::PluginHasHiddenMessages(const std::string& pluginName) const {
   for (const auto& hiddenMessage : hiddenMessages_) {
     if (hiddenMessage.pluginName == pluginName) {
       return true;
