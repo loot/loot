@@ -65,21 +65,28 @@ jobs:
 
       - name: Download and extract svg_to_ico
         run: |
-          curl -sfSLO 'https://github.com/Ortham/svg_to_ico/releases/download/1.1.0/svg_to_ico.7z'
-          7z e -y svg_to_ico.7z
+          $filename = scripts\download_file.ps1 `
+            'https://github.com/Ortham/svg_to_ico/releases/download/1.1.0/svg_to_ico.7z' `
+            'b2a3e82591ad4834a253290a76f007e5bab35e5a97584d29b3a4b5d0ff9acef3'
+          7z e -y $filename
 
       - name: Generate ICO file
         run: .\svg_to_ico.exe -i resources\icons\loot.svg -o build\icon\icon.ico
 
       - name: Download & build Boost
         run: |
-          curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.1/install_boost.py
-          python install_boost.py --directory ${{ github.workspace }} --boost-version ${{ env.BOOST_VERSION }} -a 64 locale
+          $filename = scripts\download_file.ps1 `
+            'https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.1/install_boost.py' `
+            'a6e3f965d31cf45ff80a28d932b011359a45d7154398807e296a9e08f27e67e7'
+          python $filename --directory ${{ github.workspace }} --boost-version ${{ env.BOOST_VERSION }} -a 64 locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download and build OGDF
         run: |
-          curl -sSfLO https://github.com/ogdf/ogdf/archive/refs/tags/${env:OGDF_VERSION}.zip
+          $filename = scripts\download_file.ps1 `
+            "https://github.com/ogdf/ogdf/archive/refs/tags/${env:OGDF_VERSION}.zip" `
+            'b3ae408c95ea79e36fb4bd0ad54f145dde564132e3c849edf9f992c3ba411ab4'
+
           Expand-Archive -Path "${env:OGDF_VERSION}.zip" -DestinationPath .
 
           $OGDF_BUILD_DIR="ogdf-${env:OGDF_VERSION}/build"
@@ -120,9 +127,9 @@ jobs:
 
       - name: Install Gettext
         run: |
-          $filename='gettext-tools-windows-0.22.5.zip'
-
-          curl -sSfLO "https://github.com/vslavik/gettext-tools-windows/releases/download/v0.22.5/$filename"
+          $filename = scripts\download_file.ps1 `
+            'https://github.com/vslavik/gettext-tools-windows/releases/download/v0.22.5/gettext-tools-windows-0.22.5.zip' `
+            '2a49b7c26e91c4f4f3d389067c3d6dda77aee816aee0f36e172d84577311b7da'
 
           7z x -y -ogettext ".\$filename"
 

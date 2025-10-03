@@ -26,7 +26,10 @@ mkdir -p build/flatpak-manifests
 cd build/flatpak-manifests
 
 curl -sSfLO https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/8bdf4f4892fefedd316035dbc041a65ba6a4dec8/cargo/flatpak-cargo-generator.py
+echo "be155d00839c781c5d3176891facab2e5b3a423e88c73c7799a6b7e5d3a3786d flatpak-cargo-generator.py" | sha256sum -c
+
 curl -sSfLO https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/8bdf4f4892fefedd316035dbc041a65ba6a4dec8/pip/flatpak-pip-generator
+echo "545b3e3d7ba0aaa90051f6781b2603795accd88fcec059177dba34a20a6b73c2 flatpak-pip-generator" | sha256sum -c
 
 chmod u+x flatpak-cargo-generator.py
 chmod u+x flatpak-pip-generator
