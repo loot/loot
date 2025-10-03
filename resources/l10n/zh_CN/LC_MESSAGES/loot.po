@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-09-04 18:00+0100\n"
+"POT-Creation-Date: 2025-10-03 18:44+0100\n"
 "PO-Revision-Date: 2025-06-30 02:01+0000\n"
 "Last-Translator: YanJun Sun <yanjun.sun@mail.ru>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -1268,21 +1268,21 @@ msgstr ""
 msgid "The group \"{0}\" does not exist."
 msgstr "组 \"{0}\" 不存在。"
 
-#: src/gui/state/game/game.cpp:334
+#: src/gui/state/game/game.cpp:343
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT 检测到 \"{0}\" 无效并已忽略它。"
 
-#: src/gui/state/game/game.cpp:853
+#: src/gui/state/game/game.cpp:862
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr "排序失败，原因为至少有一个已安装的插件其所依赖的插件未安装。"
 
-#: src/gui/state/game/game.cpp:882
+#: src/gui/state/game/game.cpp:891
 msgid "You have not sorted your load order this session."
 msgstr "您本次会话还未排序加载顺序。"
 
-#: src/gui/state/game/game.cpp:944
+#: src/gui/state/game/game.cpp:953
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1292,7 +1292,7 @@ msgstr ""
 "\n"
 "请尝试更新您的主列表以解决此错误。"
 
-#: src/gui/state/game/game.cpp:978
+#: src/gui/state/game/game.cpp:987
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
 "\n"
@@ -1312,7 +1312,7 @@ msgstr ""
 "于相应游戏文件夹内的文件 'userlist.yaml'。您可手动编辑包含的元数据，可参考 "
 "[元数据语法文档]({1}) 内容。"
 
-#: src/gui/state/game/game.cpp:1161
+#: src/gui/state/game/game.cpp:1172
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

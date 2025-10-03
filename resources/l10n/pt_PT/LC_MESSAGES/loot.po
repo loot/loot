@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-09-04 18:00+0100\n"
+"POT-Creation-Date: 2025-10-03 18:44+0100\n"
 "PO-Revision-Date: 2025-07-29 20:55+0000\n"
 "Last-Translator: pStyl3 <qp-git@pm.me>\n"
 "Language-Team: Portuguese (Portugal) <https://hosted.weblate.org/projects/"
@@ -1325,11 +1325,11 @@ msgstr "Interação cíclica detectada entre \"{0}\" e \"{1}\": {2}"
 msgid "The group \"{0}\" does not exist."
 msgstr "O grupo \"{0}\" não existe."
 
-#: src/gui/state/game/game.cpp:334
+#: src/gui/state/game/game.cpp:343
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "O LOOT detetou que \"{0}\" é inválido e agora o está ignorando."
 
-#: src/gui/state/game/game.cpp:853
+#: src/gui/state/game/game.cpp:862
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1337,11 +1337,11 @@ msgstr ""
 "A classificação falhou porque há pelo menos um plug-in instalado que depende "
 "de pelo menos um plug-in que não está instalado."
 
-#: src/gui/state/game/game.cpp:882
+#: src/gui/state/game/game.cpp:891
 msgid "You have not sorted your load order this session."
 msgstr "Não ordenou a sua ordem de carregamento nesta sessão."
 
-#: src/gui/state/game/game.cpp:944
+#: src/gui/state/game/game.cpp:953
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1351,7 +1351,7 @@ msgstr ""
 "\n"
 "Tente atualizar a sua lista mestre para resolver o erro."
 
-#: src/gui/state/game/game.cpp:978
+#: src/gui/state/game/game.cpp:987
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
 "\n"
@@ -1374,7 +1374,7 @@ msgstr ""
 "editar os metadados contidos nele com a ajuda da [documentação sobre sintaxe "
 "de metadados]({1})."
 
-#: src/gui/state/game/game.cpp:1161
+#: src/gui/state/game/game.cpp:1172
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

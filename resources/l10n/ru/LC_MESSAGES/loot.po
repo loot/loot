@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-09-04 18:00+0100\n"
+"POT-Creation-Date: 2025-10-03 18:44+0100\n"
 "PO-Revision-Date: 2025-06-21 20:02+0000\n"
 "Last-Translator: xsSplater <xssplater@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
@@ -1313,11 +1313,11 @@ msgstr "Между \"{0}\" и \"{1}\" обнаружено циклическо�
 msgid "The group \"{0}\" does not exist."
 msgstr "Группа \"{0}\" не существует."
 
-#: src/gui/state/game/game.cpp:334
+#: src/gui/state/game/game.cpp:343
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT обнаружил, что \"{0}\" неправильный и теперь игнорирует его."
 
-#: src/gui/state/game/game.cpp:853
+#: src/gui/state/game/game.cpp:862
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1325,11 +1325,11 @@ msgstr ""
 "Сортировка не удалась, так как есть как минимум один установленный плагин, "
 "который зависит как минимум от одного неустановленного плагина."
 
-#: src/gui/state/game/game.cpp:882
+#: src/gui/state/game/game.cpp:891
 msgid "You have not sorted your load order this session."
 msgstr "Вы ещё не отсортировали порядок загрузки в этом сеансе."
 
-#: src/gui/state/game/game.cpp:944
+#: src/gui/state/game/game.cpp:953
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1339,7 +1339,7 @@ msgstr ""
 "\n"
 "Попробуйте обновить свой основной список, чтобы устранить ошибку."
 
-#: src/gui/state/game/game.cpp:978
+#: src/gui/state/game/game.cpp:987
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
 "\n"
@@ -1362,7 +1362,7 @@ msgstr ""
 "можете редактировать метаданные, которые он содержит, с помощью "
 "[документации по синтаксису метаданных]({1})."
 
-#: src/gui/state/game/game.cpp:1161
+#: src/gui/state/game/game.cpp:1172
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

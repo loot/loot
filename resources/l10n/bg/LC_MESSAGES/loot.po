@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-09-04 18:00+0100\n"
+"POT-Creation-Date: 2025-10-03 18:44+0100\n"
 "PO-Revision-Date: 2025-09-05 18:01+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
-"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/>"
-"\n"
+"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
+">\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1299,11 +1299,11 @@ msgstr "Установено е циклично взаимодействие м
 msgid "The group \"{0}\" does not exist."
 msgstr "Групата „{0}“ не съществува."
 
-#: src/gui/state/game/game.cpp:334
+#: src/gui/state/game/game.cpp:343
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT установи, че „{0}“ е невалиден и ще бъде игнориран."
 
-#: src/gui/state/game/game.cpp:853
+#: src/gui/state/game/game.cpp:862
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1311,11 +1311,11 @@ msgstr ""
 "Сортирането е неуспешно, защото има поне една инсталирана приставка, която е "
 "зависима от друга неинсталирана приставка."
 
-#: src/gui/state/game/game.cpp:882
+#: src/gui/state/game/game.cpp:891
 msgid "You have not sorted your load order this session."
 msgstr "Редът за зареждане не е сортиран по време на тази сесия."
 
-#: src/gui/state/game/game.cpp:944
+#: src/gui/state/game/game.cpp:953
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1325,7 +1325,7 @@ msgstr ""
 "\n"
 "Моля, обновете основния списък за да поправите грешката."
 
-#: src/gui/state/game/game.cpp:978
+#: src/gui/state/game/game.cpp:987
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
 "\n"
@@ -1347,7 +1347,7 @@ msgstr ""
 "редактирате метаданните, съобразно [документацията за синтаксиса на "
 "метаданните]({1})."
 
-#: src/gui/state/game/game.cpp:1161
+#: src/gui/state/game/game.cpp:1172
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
