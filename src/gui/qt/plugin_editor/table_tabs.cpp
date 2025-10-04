@@ -217,7 +217,7 @@ void BaseTableTab::resizeEvent(QResizeEvent*) {
     }
   }
 
-  if (headersWidth == 0) {
+  if (!std::isnormal(headersWidth)) {
     // Don't divide by zero.
     return;
   }
