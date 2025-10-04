@@ -238,6 +238,7 @@ std::optional<GameInstall> FindGameInstallInRegistry(
   return std::nullopt;
 }
 
+#ifdef _WIN32
 std::optional<GameInstall> FindSiblingGameInstall(const GameId gameId) {
   const auto path = std::filesystem::current_path().parent_path();
 
@@ -268,6 +269,7 @@ std::optional<GameInstall> FindSiblingGameInstall(const GameId gameId) {
   return GameInstall{
       gameId, InstallSource::unknown, path, std::filesystem::path()};
 }
+#endif
 
 #ifndef _WIN32
 std::vector<GameInstall> FindOpenMWLinuxInstalls() {
