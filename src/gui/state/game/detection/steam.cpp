@@ -148,29 +148,6 @@ std::vector<loot::RegistryValue> GetRegistryValues(const GameId gameId) {
   return registryValues;
 }
 
-/*
-It looks like the ACF/VCF files LOOT needs to read have a common format.
-There's some information about it here:
-https://developer.valvesoftware.com/wiki/KeyValues#About_KeyValues_Text_File_Format
-*/
-
-void StripEscapes(std::string& token) {
-  boost::replace_all(token, "\\n", "\n");
-  boost::replace_all(token, "\\t", "\t");
-  boost::replace_all(token, "\\\\", "\\");
-  boost::replace_all(token, "\\\"", "\"");
-}
-
-std::string GetStringValue(const std::string& line,
-                           const std::string& linePrefix) {
-  // -1 to cut off trailing double quote.
-  auto value =
-      line.substr(linePrefix.size(), line.size() - linePrefix.size() - 1);
-  StripEscapes(value);
-
-  return value;
-}
-
 // Return a list of paths to appmanifest files.
 std::vector<std::filesystem::path> ParseLibraryFoldersVdf(
     std::istream& stream) {
