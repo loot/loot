@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# /// script
+# requires-python = ">=3"
+# dependencies = ["polib==1.2.0"]
+# ///
 
 import os
 import polib
