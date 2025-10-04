@@ -617,7 +617,10 @@ if(MSVC)
         "/external:anglebrackets"
         "/external:W0"
         "/sdl"
-        "$<$<CONFIG:Debug>:/RTC1>")
+        "$<$<CONFIG:Debug>:/RTC1>"
+        "/Zc:__cplusplus"
+        "/GL"
+        "/MP")
 
     target_link_options(LOOT PRIVATE "/INCREMENTAL:NO" "/LTCG")
 endif()
