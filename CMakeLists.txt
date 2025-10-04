@@ -598,7 +598,26 @@ if(MSVC)
     set_target_properties(LOOT PROPERTIES WIN32_EXECUTABLE TRUE)
 
     # Turn off permissive mode to be more standards-compliant and avoid compiler errors.
-    target_compile_options(LOOT PRIVATE "/permissive-" "/W4")
+    target_compile_options(LOOT PRIVATE
+        "/permissive-"
+        "/W4"
+        "/Wall"
+        "/wd4371"
+        "/wd4514"
+        "/wd4623"
+        "/wd4625"
+        "/wd4626"
+        "/wd4710"
+        "/wd4711"
+        "/wd4820"
+        "/wd4866"
+        "/wd5026"
+        "/wd5027"
+        "/wd5045"
+        "/external:anglebrackets"
+        "/external:W0"
+        "/sdl"
+        "$<$<CONFIG:Debug>:/RTC1>")
 
     target_link_options(LOOT PRIVATE "/INCREMENTAL:NO" "/LTCG")
 endif()
