@@ -89,11 +89,11 @@ public:
        const std::filesystem::path& lootDataPath,
        const std::filesystem::path& preludePath);
   Game(const Game& game) = delete;
-  Game(Game&& game);
+  Game(Game&& game) noexcept;
   ~Game() = default;
 
   Game& operator=(const Game& game) = delete;
-  Game& operator=(Game&& game);
+  Game& operator=(Game&& game) noexcept;
 
   const GameSettings& GetSettings() const;
   GameSettings& GetSettings();

@@ -552,7 +552,7 @@ Game::Game(const GameSettings& gameSettings,
     supportsLightPlugins_(
         ::SupportsLightPlugins(settings_.Id(), settings_.DataPath())) {}
 
-Game::Game(Game&& game) {
+Game::Game(Game&& game) noexcept {
   settings_ = std::move(game.settings_);
   creationClubPlugins_ = std::move(game.creationClubPlugins_);
   gameHandle_ = std::move(game.gameHandle_);
@@ -564,7 +564,7 @@ Game::Game(Game&& game) {
   supportsLightPlugins_ = std::move(game.supportsLightPlugins_);
 }
 
-Game& Game::operator=(Game&& game) {
+Game& Game::operator=(Game&& game) noexcept {
   if (&game != this) {
     settings_ = std::move(game.settings_);
     creationClubPlugins_ = std::move(game.creationClubPlugins_);
