@@ -170,11 +170,12 @@ QColor toOpaqueColor(const QColor &color, const QColor &backgroundColor) {
   }
 
   const auto& bg = backgroundColor;
-  const auto alpha = color.alphaF();
+  const auto alpha = color.alpha();
 
-  const auto red = bg.red() + (color.red() - bg.red()) * alpha;
-  const auto green = bg.green() + (color.green() - bg.green()) * alpha;
-  const auto blue = bg.blue() + (color.blue() - bg.blue()) * alpha;
+  const auto red = bg.red() + (color.red() - bg.red()) * alpha / MAX_ALPHA;
+  const auto green =
+      bg.green() + (color.green() - bg.green()) * alpha / MAX_ALPHA;
+  const auto blue = bg.blue() + (color.blue() - bg.blue()) * alpha / MAX_ALPHA;
 
   return QColor(red, green, blue);
 }
