@@ -102,7 +102,7 @@ void CleaningDataTableModel::setData(PluginCleaningData& element,
     static constexpr int CRC_BASE = 16;
 
     element = PluginCleaningData(
-        std::stoul(value.toString().toStdString(), nullptr, CRC_BASE),
+        static_cast<uint32_t>(std::stoul(value.toString().toStdString(), nullptr, CRC_BASE)),
         element.GetCleaningUtility(),
         element.GetDetail(),
         element.GetITMCount(),
