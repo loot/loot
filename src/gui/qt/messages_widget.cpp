@@ -314,7 +314,8 @@ void MessagesWidget::onHideMessageAction() {
       if (index < currentMessages.size()) {
         std::string text = currentMessages.at(index).second;
 
-        currentMessages.erase(currentMessages.begin() + index);
+        currentMessages.erase(std::next(currentMessages.begin(),
+                                        static_cast<std::ptrdiff_t>(index)));
         setMessages(currentMessages);
 
         emit hideMessage(text);

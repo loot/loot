@@ -292,7 +292,7 @@ void BaseTableTab::on_deleteRowButton_clicked() {
   // First convert all selected indices to persistent indices so that
   // deleting rows doesn't change what data they point to.
   std::vector<QPersistentModelIndex> persistentIndices;
-  persistentIndices.reserve(selectedIndexes.size());
+  persistentIndices.reserve(static_cast<size_t>(selectedIndexes.size()));
   for (const auto& index : selectedIndexes) {
     persistentIndices.push_back(QPersistentModelIndex(index));
   }

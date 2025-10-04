@@ -130,7 +130,7 @@ private:
   GeneralInformation generalInformation;
   std::vector<PluginItem> items;
   std::vector<bool> searchResults;
-  std::optional<int> currentSearchResultIndex;
+  std::optional<size_t> currentSearchResultIndex;
 
   std::optional<std::string> currentEditorPluginName;
   CardContentFiltersState cardContentFiltersState;

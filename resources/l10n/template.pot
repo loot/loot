@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.26.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-10-04 09:35+0100\n"
+"POT-Creation-Date: 2025-10-04 11:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -261,22 +261,22 @@ msgstr ""
 msgid "(edited)"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:245
+#: src/gui/qt/helpers.cpp:246
 msgid "N/A: No masterlist present"
 msgstr ""
 
 #. translators: N/A is an abbreviation for Not Applicable.
 #. A masterlist is a database that contains information
 #. for various mods.
-#: src/gui/qt/helpers.cpp:250
+#: src/gui/qt/helpers.cpp:251
 msgid "N/A: No masterlist prelude present"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:258
+#: src/gui/qt/helpers.cpp:259
 msgid "Unknown: No revision metadata found"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:364
+#: src/gui/qt/helpers.cpp:365
 #, c++-format
 msgid "Invalid regular expression: {0}"
 msgstr ""
@@ -733,7 +733,7 @@ msgid ""
 "can get to it through the main menu) for more information."
 msgstr ""
 
-#: src/gui/qt/messages_widget.cpp:197
+#: src/gui/qt/messages_widget.cpp:199
 msgid "Hide message"
 msgstr ""
 
@@ -807,15 +807,15 @@ msgstr ""
 msgid "Editor Is Open"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:364
+#: src/gui/qt/plugin_item_model.cpp:365
 msgid "Position"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:366
+#: src/gui/qt/plugin_item_model.cpp:367
 msgid "Index"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:368
+#: src/gui/qt/plugin_item_model.cpp:369
 msgid "Plugin Name"
 msgstr ""
 
@@ -927,11 +927,11 @@ msgstr ""
 msgid "Group already exists!"
 msgstr ""
 
-#: src/gui/qt/groups_editor/node.cpp:249
+#: src/gui/qt/groups_editor/node.cpp:244
 msgid "Only user groups can be removed!"
 msgstr ""
 
-#: src/gui/qt/groups_editor/node.cpp:254
+#: src/gui/qt/groups_editor/node.cpp:249
 msgid "A group that is not empty cannot be removed!"
 msgstr ""
 
@@ -1319,7 +1319,7 @@ msgid ""
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:266
+#: src/gui/state/game/helpers.cpp:268
 msgid "Automatic Load Order Backup"
 msgstr ""
 
@@ -1508,13 +1508,13 @@ msgid ""
 "are not case-sensitive, which is the default on Windows."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:847
+#: src/gui/state/game/validation.cpp:846
 msgid "small plugin"
 msgid_plural "small plugins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/validation.cpp:850
+#: src/gui/state/game/validation.cpp:851
 msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] ""

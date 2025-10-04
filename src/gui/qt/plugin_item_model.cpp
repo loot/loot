@@ -222,7 +222,7 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
       return QVariant::fromValue(generalInformation);
     }
 
-    const int itemsIndex = index.row() - 1;
+    const size_t itemsIndex = static_cast<size_t>(index.row()) - 1;
     return QVariant::fromValue(items.at(itemsIndex));
   }
 
@@ -238,7 +238,7 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
       return QVariant::fromValue(filteredInfo);
     }
 
-    const int itemsIndex = index.row() - 1;
+    const size_t itemsIndex = static_cast<size_t>(index.row()) - 1;
     auto& item = items.at(itemsIndex);
     auto filteredItem = filterContent(item,
                                       cardContentFiltersState,
@@ -255,7 +255,7 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
                                                    oldGeneralMessages));
     }
 
-    const int itemsIndex = index.row() - 1;
+    const size_t itemsIndex = static_cast<size_t>(index.row()) - 1;
     auto& item = items.at(itemsIndex);
     return QVariant::fromValue(hasHiddenMessages(item,
                                                  cardContentFiltersState,
@@ -270,7 +270,7 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
       return QVariant::fromValue(counters);
     }
   } else {
-    const int itemsIndex = index.row() - 1;
+    const size_t itemsIndex = static_cast<size_t>(index.row()) - 1;
     const auto& plugin = items.at(itemsIndex);
 
     switch (index.column()) {
@@ -326,7 +326,8 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
         if (role == ContentSearchRole) {
           return QString::fromStdString(plugin.contentToSearch());
         } else if (role == SearchResultRole) {
-          const int searchResultsIndex = index.row() - 1;
+          const size_t searchResultsIndex =
+              static_cast<size_t>(index.row()) - 1;
 
           const auto isResult = searchResults.at(searchResultsIndex);
           const auto isCurrentResult =
@@ -418,7 +419,7 @@ bool PluginItemModel::setData(const QModelIndex& index,
 
   if (role == SearchResultRole) {
     if (index.row() > 0) {
-      int searchResultsIndex = index.row() - 1;
+      const size_t searchResultsIndex = static_cast<size_t>(index.row()) - 1;
       auto newData = value.value<SearchResultData>();
       const auto existingIsResult = searchResults.at(searchResultsIndex);
 
@@ -435,8 +436,9 @@ bool PluginItemModel::setData(const QModelIndex& index,
         // Before replacing the stored current search result index,
         // call setData for that index to ensure that item is updated.
         if (currentSearchResultIndex.has_value()) {
-          const auto otherIndex =
-              this->index(currentSearchResultIndex.value() + 1, CARDS_COLUMN);
+          const auto otherIndex = this->index(
+              static_cast<int>(currentSearchResultIndex.value()) + 1,
+              CARDS_COLUMN);
           auto otherItemData =
               data(otherIndex, SearchResultRole).value<SearchResultData>();
           otherItemData.isCurrentResult = false;
@@ -466,7 +468,7 @@ bool PluginItemModel::setData(const QModelIndex& index,
     // The zeroth row is a special row for the general information card.
     generalInformation = value.value<GeneralInformation>();
   } else {
-    const int itemsIndex = index.row() - 1;
+    const size_t itemsIndex = static_cast<size_t>(index.row()) - 1;
 
     items.at(itemsIndex) = value.value<PluginItem>();
   }
@@ -496,7 +498,7 @@ std::vector<std::string> PluginItemModel::getPluginNames() const {
 std::unordered_map<std::string, int> PluginItemModel::getPluginNameToRowMap()
     const {
   std::unordered_map<std::string, int> nameToRowMap;
-  const int size = rowCount() - 1;
+  const size_t size = static_cast<size_t>(rowCount()) - 1;
   nameToRowMap.reserve(size);
 
   for (int i = 1; i < rowCount(); i += 1) {

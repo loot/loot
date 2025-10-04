@@ -93,7 +93,7 @@ std::vector<GroupNodePosition> LoadGroupNodePositions(
     }
 
     std::string name(stringLength, '\0');
-    in.read(name.data(), stringLength);
+    in.read(name.data(), static_cast<std::streamsize>(stringLength));
 
     double x{0.0};
     in.read(reinterpret_cast<char*>(&x), sizeof x);
@@ -128,7 +128,8 @@ void SaveGroupNodePositions(const std ::filesystem::path& filePath,
     writeStringLength(out, nodePosition.groupName.size());
 
     // Don't write the null terminator as it's unnecessary.
-    out.write(nodePosition.groupName.c_str(), nodePosition.groupName.size());
+    out.write(nodePosition.groupName.c_str(),
+              static_cast<std::streamsize>(nodePosition.groupName.size()));
 
     out.write(reinterpret_cast<const char*>(&nodePosition.x),
               sizeof nodePosition.x);

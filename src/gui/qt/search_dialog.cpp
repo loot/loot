@@ -120,7 +120,10 @@ void SearchDialog::translateUi() {
 }
 
 void SearchDialog::updateCountLabel() {
-  const int index = state.currentResultIndex.value_or(-1);
+  int index = -1;
+  if (state.currentResultIndex.has_value()) {
+    index = static_cast<int>(state.currentResultIndex.value());
+  }
 
   countLabel->setText(QString::number(index + 1) % " / " %
                       QString::number(state.resultsCount));

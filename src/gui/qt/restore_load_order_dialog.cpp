@@ -89,7 +89,7 @@ RestoreLoadOrderDialog::getSelectedLoadOrderBackup() const {
     return std::nullopt;
   }
 
-  const auto row = selectedItems.at(0)->row();
+  const auto row = static_cast<size_t>(selectedItems.at(0)->row());
 
   return backups.at(row);
 }
@@ -183,7 +183,7 @@ void RestoreLoadOrderDialog::handleBackupSelectionChanged(
 
   const auto indexes = selected.indexes();
   if (!indexes.empty()) {
-    const auto& backup = backups.at(indexes.front().row());
+    const auto& backup = backups.at(static_cast<size_t>(indexes.front().row()));
     for (const auto& plugin : backup.loadOrder) {
       backupLoadOrderList->addItem(QString::fromStdString(plugin));
     }
@@ -208,7 +208,7 @@ void RestoreLoadOrderDialog::handleDeleteButtonClicked() {
 
     const auto row = selected.front()->row();
 
-    std::filesystem::remove(backups.at(row).path);
+    std::filesystem::remove(backups.at(static_cast<size_t>(row)).path);
 
     backups.erase(backups.begin() + row);
 

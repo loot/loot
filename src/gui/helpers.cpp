@@ -147,34 +147,30 @@ const char* getDriveTypeText(UINT driveType) {
 namespace loot {
 #ifdef _WIN32
 std::wstring ToWinWide(const std::string& str) {
-  size_t len = MultiByteToWideChar(
+  int len = MultiByteToWideChar(
       CP_UTF8, 0, str.c_str(), static_cast<int>(str.length()), 0, 0);
-  std::wstring wstr(len, 0);
-  MultiByteToWideChar(CP_UTF8,
-                      0,
-                      str.c_str(),
-                      static_cast<int>(str.length()),
-                      &wstr[0],
-                      static_cast<int>(len));
+  std::wstring wstr(static_cast<size_t>(len), 0);
+  MultiByteToWideChar(
+      CP_UTF8, 0, str.c_str(), static_cast<int>(str.length()), &wstr[0], len);
   return wstr;
 }
 
 std::string FromWinWide(const std::wstring& wstr) {
-  size_t len = WideCharToMultiByte(CP_UTF8,
-                                   0,
-                                   wstr.c_str(),
-                                   static_cast<int>(wstr.length()),
-                                   NULL,
-                                   0,
-                                   NULL,
-                                   NULL);
-  std::string str(len, 0);
+  int len = WideCharToMultiByte(CP_UTF8,
+                                0,
+                                wstr.c_str(),
+                                static_cast<int>(wstr.length()),
+                                NULL,
+                                0,
+                                NULL,
+                                NULL);
+  std::string str(static_cast<size_t>(len), 0);
   WideCharToMultiByte(CP_UTF8,
                       0,
                       wstr.c_str(),
                       static_cast<int>(wstr.length()),
                       &str[0],
-                      static_cast<int>(len),
+                      len,
                       NULL,
                       NULL);
   return str;
@@ -269,7 +265,7 @@ std::vector<std::filesystem::path> GetDriveRootPaths() {
 
   if (maxBufferLength == 0) {
     throw std::system_error(
-        GetLastError(),
+        static_cast<int>(GetLastError()),
         std::system_category(),
         "Failed to length of the buffer needed to hold all drive root paths");
   }
@@ -393,7 +389,7 @@ std::optional<std::filesystem::path> FindXboxGamingRootPath(
     // char16_t is little-endian on all platforms LOOT runs on.
     char16_t highByte = bytes.at(i);
     char16_t lowByte = bytes.at(i + 1);
-    char16_t value = highByte | (lowByte << CHAR_BIT);
+    char16_t value = static_cast<char16_t>(highByte | lowByte << CHAR_BIT);
     content.push_back(value);
   }
 
@@ -473,7 +469,7 @@ std::filesystem::path getExecutableDirectory() {
     if (logger) {
       logger->error("Failed to get LOOT executable path.");
     }
-    throw std::system_error(GetLastError(),
+    throw std::system_error(static_cast<int>(GetLastError()),
                             std::system_category(),
                             "Failed to get LOOT executable path.");
   }
@@ -502,7 +498,7 @@ std::filesystem::path getUserProfilePath() {
   PWSTR path;
 
   if (SHGetKnownFolderPath(FOLDERID_Profile, 0, NULL, &path) != S_OK)
-    throw std::system_error(GetLastError(),
+    throw std::system_error(static_cast<int>(GetLastError()),
                             std::system_category(),
                             "Failed to get %USERPROFILE% path.");
 
@@ -528,7 +524,7 @@ std::filesystem::path getLocalAppDataPath() {
   PWSTR path;
 
   if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK) {
-    throw std::system_error(GetLastError(),
+    throw std::system_error(static_cast<int>(GetLastError()),
                             std::system_category(),
                             "Failed to get %LOCALAPPDATA% path.");
   }

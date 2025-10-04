@@ -58,10 +58,11 @@ public:
     const auto isNonUserMetadata =
         index.row() < static_cast<int>(nonUserMetadata.size());
 
+    const auto rowIndex = static_cast<size_t>(index.row());
+
     const auto& element =
-        isNonUserMetadata
-            ? nonUserMetadata.at(index.row())
-            : userMetadata.at(index.row() - nonUserMetadata.size());
+        isNonUserMetadata ? nonUserMetadata.at(rowIndex)
+                          : userMetadata.at(rowIndex - nonUserMetadata.size());
 
     if (role == Qt::ForegroundRole) {
       // Grey out metadata that's not editable.
@@ -134,7 +135,10 @@ public:
 
     const auto index = row - nonUserMetadata.size();
 
-    userMetadata.insert(userMetadata.begin() + index, count, T());
+    userMetadata.insert(
+        std::next(userMetadata.begin(), static_cast<std::ptrdiff_t>(index)),
+        static_cast<size_t>(count),
+        T());
 
     endInsertRows();
 
@@ -154,8 +158,10 @@ public:
     const auto startIndex = row - nonUserMetadata.size();
     const auto endIndex = startIndex + count;
 
-    userMetadata.erase(userMetadata.begin() + startIndex,
-                       userMetadata.begin() + endIndex);
+    userMetadata.erase(
+        std::next(userMetadata.begin(),
+                  static_cast<std::ptrdiff_t>(startIndex)),
+        std::next(userMetadata.begin(), static_cast<std::ptrdiff_t>(endIndex)));
 
     endRemoveRows();
 

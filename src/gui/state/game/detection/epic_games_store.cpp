@@ -121,7 +121,7 @@ std::filesystem::path GetProgramDataPath() {
   PWSTR path;
 
   if (SHGetKnownFolderPath(FOLDERID_ProgramData, 0, NULL, &path) != S_OK)
-    throw std::system_error(GetLastError(),
+    throw std::system_error(static_cast<int>(GetLastError()),
                             std::system_category(),
                             "Failed to get %ProgramData% path.");
 

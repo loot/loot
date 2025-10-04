@@ -2689,7 +2689,7 @@ void MainWindow::on_searchDialog_textChanged(const QVariant& text) {
                         flags);
 
   proxyModel->setSearchResults(results);
-  searchDialog->setSearchResults(results.size());
+  searchDialog->setSearchResults(static_cast<size_t>(results.size()));
 }
 
 void MainWindow::on_searchDialog_currentResultChanged(size_t resultIndex) {

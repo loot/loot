@@ -159,7 +159,8 @@ std::string calculateGitBlobHash(const QByteArray& data) {
   static constexpr QByteArrayView HEADER_PREFIX = QByteArrayView("blob ");
 
   hasher.addData(HEADER_PREFIX);
-  hasher.addData(QByteArrayView(sizeString.c_str(), sizeString.size() + 1));
+  hasher.addData(QByteArrayView(sizeString.c_str(),
+                                static_cast<qsizetype>(sizeString.size()) + 1));
 
   hasher.addData(data);
 

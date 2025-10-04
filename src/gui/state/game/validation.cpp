@@ -843,11 +843,15 @@ void ValidateActivePluginCounts(std::vector<SourcedMessage>& output,
 
   const auto lightPluginType =
       gameId == GameId::starfield
-          ? boost::locale::translate(
-                "small plugin", "small plugins", counters.activeLightPlugins)
+          ? boost::locale::translate("small plugin",
+                                     "small plugins",
+                                     static_cast<boost::locale::count_type>(
+                                         counters.activeLightPlugins))
                 .str()
-          : boost::locale::translate(
-                "light plugin", "light plugins", counters.activeLightPlugins)
+          : boost::locale::translate("light plugin",
+                                     "light plugins",
+                                     static_cast<boost::locale::count_type>(
+                                         counters.activeLightPlugins))
                 .str();
 
   if (counters.activeLightPlugins > SAFE_MAX_ACTIVE_LIGHT_PLUGINS) {
