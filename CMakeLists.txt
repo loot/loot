@@ -599,6 +599,8 @@ if(MSVC)
 
     # Turn off permissive mode to be more standards-compliant and avoid compiler errors.
     target_compile_options(LOOT PRIVATE "/permissive-" "/W4")
+
+    target_link_options(LOOT PRIVATE "/INCREMENTAL:NO" "/LTCG")
 endif()
 
 ##############################
