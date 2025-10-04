@@ -150,8 +150,8 @@ int calculateSidebarHeaderWidth(const QAbstractItemView& view, int column) {
 int calculateSidebarPositionSectionWidth(size_t pluginCount) {
   // Find the widest digit character in the current font and use that to
   // calculate the load order section width.
-  static constexpr std::array<char, 10> DIGIT_CHARACTERS = {
-      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+  static constexpr std::array<char, 10> DIGIT_CHARACTERS{
+      {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}};
 
   const auto fontMetrics = QFontMetricsF(QGuiApplication::font());
 
@@ -176,22 +176,22 @@ int calculateSidebarPositionSectionWidth(size_t pluginCount) {
 int calculateSidebarIndexSectionWidth(bool gameSupportsLightPlugins) {
   // Find the widest hex character in the current font and use that to
   // calculate the load order section width.
-  static constexpr std::array<char, 16> HEX_CHARACTERS = {'0',
-                                                          '1',
-                                                          '2',
-                                                          '3',
-                                                          '4',
-                                                          '5',
-                                                          '6',
-                                                          '7',
-                                                          '8',
-                                                          '9',
-                                                          'A',
-                                                          'B',
-                                                          'C',
-                                                          'D',
-                                                          'E',
-                                                          'F'};
+  static constexpr std::array<char, 16> HEX_CHARACTERS{{'0',
+                                                        '1',
+                                                        '2',
+                                                        '3',
+                                                        '4',
+                                                        '5',
+                                                        '6',
+                                                        '7',
+                                                        '8',
+                                                        '9',
+                                                        'A',
+                                                        'B',
+                                                        'C',
+                                                        'D',
+                                                        'E',
+                                                        'F'}};
 
   auto fontMetrics = QFontMetricsF(QGuiApplication::font());
 
