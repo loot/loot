@@ -1,6 +1,0 @@
-# Install with
-#   pipenv install -r requirements.txt
-# or
-#   pip -r requirements.txt
-sphinx==8.1.3
-sphinx_rtd_theme==3.0.2
