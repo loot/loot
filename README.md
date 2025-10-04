@@ -121,7 +121,7 @@ Parameter | Values | Default |Description
 
 The URL parameters can be used to supply a local path if the archive has already been downloaded (e.g. for offline builds).
 
-You may also need to set `BOOST_ROOT` if CMake cannot find Boost, and `Qt6_ROOT` (e.g. to `C:/Qt/6.9.0/msvc2022_64`) if CMake cannot find Qt.
+You may also need to set `BOOST_ROOT` if CMake cannot find Boost, and `Qt6_ROOT` (e.g. to `C:/Qt/6.9.3/msvc2022_64`) if CMake cannot find Qt.
 
 ## Building The Documentation
 
