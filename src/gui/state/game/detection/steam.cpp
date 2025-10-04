@@ -84,6 +84,7 @@ std::vector<std::string> GetSteamGameIds(const GameId gameId) {
   }
 }
 
+#ifndef _WIN32
 std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
@@ -118,6 +119,7 @@ std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
       throw std::logic_error("Unsupported GameId value");
   }
 }
+#endif
 
 std::map<std::string, GameId> GetSteamGameIdMap() {
   std::map<std::string, GameId> map;
