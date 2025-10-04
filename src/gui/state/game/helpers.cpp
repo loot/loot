@@ -252,6 +252,8 @@ std::string DescribeEdgeType(const EdgeType edgeType) {
       return "Asset Overlap";
     case EdgeType::tieBreak:
       return "Tie Break";
+    case EdgeType::blueprintMaster:
+      return "Blueprint Master";
     default:
       return "Unknown";
   }
