@@ -591,7 +591,24 @@ else()
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    target_compile_options(LOOT PRIVATE "-Wall" "-Wextra")
+    target_compile_options(LOOT PRIVATE
+        "-Wall"
+        "-Wextra"
+        "-Wpedantic"
+        "-Wconversion"
+        "-Wdeprecated"
+        "-Wuninitialized"
+        "-Winit-self"
+        "-Wstringop-overflow=4"
+        "-Wduplicated-branches"
+        "-Wduplicated-cond"
+        "-Wzero-as-null-pointer-constant"
+        "-Wfloat-equal"
+        "-Wcast-qual"
+        "-Wcast-align"
+        "-Wlogical-op"
+        "-Wvla"
+        "-Wno-xor-used-as-pow")
 endif()
 
 if(MSVC)
