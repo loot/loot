@@ -41,6 +41,8 @@ public:
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
+  using MetadataTableModel::setData;
+
   static constexpr int LANGUAGE_COLUMN = 0;
   static constexpr int TEXT_COLUMN = 1;
 

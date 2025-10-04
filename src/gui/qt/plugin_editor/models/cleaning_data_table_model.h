@@ -40,6 +40,8 @@ public:
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
+  using MetadataTableModel::setData;
+
   static constexpr int CRC_COLUMN = 0;
   static constexpr int ITM_COLUMN = 1;
   static constexpr int DELETED_REFERENCE_COLUMN = 2;

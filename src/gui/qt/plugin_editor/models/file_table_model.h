@@ -50,6 +50,8 @@ public:
                     int column,
                     const QModelIndex& parent) override;
 
+  using MetadataTableModel::setData;
+
   static constexpr int NAME_COLUMN = 0;
   static constexpr int DISPLAY_NAME_COLUMN = 1;
   static constexpr int DETAIL_COLUMN = 2;

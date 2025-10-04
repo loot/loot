@@ -40,6 +40,8 @@ public:
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
+  using MetadataTableModel::setData;
+
   static constexpr int TYPE_COLUMN = 0;
   static constexpr int NAME_COLUMN = 1;
   static constexpr int CONDITION_COLUMN = 2;
