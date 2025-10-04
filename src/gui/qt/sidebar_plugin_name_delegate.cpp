@@ -30,13 +30,13 @@
 #include "gui/qt/plugin_item_model.h"
 
 namespace loot {
-qreal getSidebarRowHeight(bool inEditMode) {
+int getSidebarRowHeight(bool inEditMode) {
   static constexpr double MULTIPLIER = 1.125;
 
   const auto lineHeight =
       QFontMetricsF(QGuiApplication::font()).height() * MULTIPLIER;
 
-  return inEditMode ? lineHeight * 2.0 : lineHeight;
+  return static_cast<int>(inEditMode ? lineHeight * 2.0 : lineHeight);
 }
 
 SidebarPluginNameDelegate::SidebarPluginNameDelegate(QObject* parent) :
@@ -88,7 +88,7 @@ void SidebarPluginNameDelegate::paint(QPainter* painter,
   if (isEditorOpen && pluginItem.group.has_value() &&
       pluginItem.group.value() != Group::DEFAULT_NAME) {
     auto groupRect = styleOption.rect;
-    groupRect.translate(0, getSidebarRowHeight(true) / 2.0);
+    groupRect.translate(0, getSidebarRowHeight(true) / 2);
 
     if (!isSelected) {
       const auto groupColor =

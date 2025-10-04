@@ -30,7 +30,7 @@
 #include <QtWidgets/QStyledItemDelegate>
 
 namespace loot {
-qreal getSidebarRowHeight(bool inEditMode);
+int getSidebarRowHeight(bool inEditMode);
 
 class SidebarPluginNameDelegate : public QStyledItemDelegate {
   Q_OBJECT

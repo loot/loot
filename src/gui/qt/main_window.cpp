@@ -144,7 +144,7 @@ int calculateSidebarHeaderWidth(const QAbstractItemView& view, int column) {
   const auto paddingWidth =
       QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
 
-  return textWidth + paddingWidth;
+  return static_cast<int>(textWidth) + paddingWidth;
 }
 
 int calculateSidebarPositionSectionWidth(size_t pluginCount) {
@@ -168,7 +168,7 @@ int calculateSidebarPositionSectionWidth(size_t pluginCount) {
   const auto paddingWidth =
       QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
 
-  const int numberOfDigits = log10(pluginCount) + 1;
+  const int numberOfDigits = static_cast<int>(log10(pluginCount)) + 1;
 
   return numberOfDigits * static_cast<int>(maxCharWidth) + paddingWidth;
 }
