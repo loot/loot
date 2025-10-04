@@ -36,12 +36,12 @@ class MetadataTableModel : public QAbstractTableModel {
 public:
   std::vector<T> getUserMetadata() const { return userMetadata; }
 
-  int rowCount(const QModelIndex& = QModelIndex()) const override {
+  int rowCount(const QModelIndex& = QModelIndex()) const final override {
     return static_cast<int>(nonUserMetadata.size() + userMetadata.size());
   }
 
   QVariant data(const QModelIndex& index,
-                int role = Qt::DisplayRole) const override {
+                int role = Qt::DisplayRole) const final override {
     if (role != Qt::DisplayRole && role != Qt::EditRole &&
         role != Qt::ForegroundRole) {
       return QVariant();
@@ -76,7 +76,7 @@ public:
 
   QVariant headerData(int section,
                       Qt::Orientation orientation,
-                      int role) const override {
+                      int role) const final override {
     if (role != Qt::DisplayRole) {
       return QVariant();
     }
@@ -102,7 +102,7 @@ public:
 
   bool setData(const QModelIndex& index,
                const QVariant& value,
-               int role) override {
+               int role) final override {
     if (!index.isValid() || role != Qt::EditRole) {
       return false;
     }
@@ -126,7 +126,7 @@ public:
 
   bool insertRows(int row,
                   int count,
-                  const QModelIndex& parent = QModelIndex()) override {
+                  const QModelIndex& parent = QModelIndex()) final override {
     if (row < static_cast<int>(nonUserMetadata.size()) || row > rowCount()) {
       return false;
     }
@@ -147,7 +147,7 @@ public:
 
   bool removeRows(int row,
                   int count,
-                  const QModelIndex& parent = QModelIndex()) override {
+                  const QModelIndex& parent = QModelIndex()) final override {
     if (row < static_cast<int>(nonUserMetadata.size()) || row > rowCount() ||
         row + count > rowCount()) {
       return false;
