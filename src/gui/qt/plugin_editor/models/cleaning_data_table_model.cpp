@@ -112,7 +112,7 @@ void CleaningDataTableModel::setData(PluginCleaningData& element,
     element = PluginCleaningData(element.GetCRC(),
                                  element.GetCleaningUtility(),
                                  element.GetDetail(),
-                                 value.toInt(),
+                                 value.toUInt(),
                                  element.GetDeletedReferenceCount(),
                                  element.GetDeletedNavmeshCount());
   } else if (column == DELETED_REFERENCE_COLUMN) {
@@ -120,7 +120,7 @@ void CleaningDataTableModel::setData(PluginCleaningData& element,
                                  element.GetCleaningUtility(),
                                  element.GetDetail(),
                                  element.GetITMCount(),
-                                 value.toInt(),
+                                 value.toUInt(),
                                  element.GetDeletedNavmeshCount());
   } else if (column == DELETED_NAVMESH_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
@@ -128,7 +128,7 @@ void CleaningDataTableModel::setData(PluginCleaningData& element,
                                  element.GetDetail(),
                                  element.GetITMCount(),
                                  element.GetDeletedReferenceCount(),
-                                 value.toInt());
+                                 value.toUInt());
   } else if (column == CLEANING_UTILITY_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  value.toString().toStdString(),
