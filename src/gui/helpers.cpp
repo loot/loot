@@ -94,7 +94,7 @@ std::vector<std::string> GetPreferredUILanguages(
   }
   // The buffer contains an ordered list of null-delimited languages, ending
   // with two null characters.
-  std::vector<wchar_t> buffer(size_t{cchLanguagesBuffer});
+  std::vector<wchar_t> buffer(static_cast<size_t>(cchLanguagesBuffer));
 
   result = win32Function(MUI_LANGUAGE_NAME,
                          &wszLanguagesBuffer,
@@ -275,7 +275,7 @@ std::vector<std::filesystem::path> GetDriveRootPaths() {
   }
 
   // Add space for the terminating null character.
-  std::vector<wchar_t> buffer(size_t{maxBufferLength} + 1);
+  std::vector<wchar_t> buffer(static_cast<size_t>(maxBufferLength) + 1);
 
   const size_t stringsLength =
       GetLogicalDriveStrings(static_cast<DWORD>(buffer.size()), buffer.data());

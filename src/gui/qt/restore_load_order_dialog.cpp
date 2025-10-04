@@ -55,7 +55,7 @@ void RestoreLoadOrderDialog::setCurrentLoadOrder(
 void RestoreLoadOrderDialog::setLoadOrderBackups(
     const std::vector<LoadOrderBackup>& loadOrderBackups) {
   backupsTable->clearContents();
-  backupsTable->setRowCount(loadOrderBackups.size());
+  backupsTable->setRowCount(static_cast<int>(loadOrderBackups.size()));
 
   int row = 0;
   for (const auto& backup : loadOrderBackups) {
