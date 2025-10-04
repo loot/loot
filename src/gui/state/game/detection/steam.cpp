@@ -80,7 +80,7 @@ std::vector<std::string> GetSteamGameIds(const GameId gameId) {
     case GameId::oblivionRemastered:
       return {"2623190"};
     default:
-      throw std::logic_error("Unrecognised game ID");
+      throw std::logic_error("Unsupported GameId value");
   }
 }
 
@@ -112,8 +112,10 @@ std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
       return "Fallout4VR";
     case GameId::starfield:
       return "Starfield";
-    default:
+    case GameId::openmw:
       throw std::logic_error("Unsupported Steam game");
+    default:
+      throw std::logic_error("Unsupported GameId value");
   }
 }
 

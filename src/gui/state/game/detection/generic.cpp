@@ -169,8 +169,21 @@ bool IsEpicInstall(const GameId gameId,
       return std::filesystem::exists(installPath / "FalloutLauncherEpic.exe");
     case GameId::fonv:
       return std::filesystem::exists(installPath / "EOSSDK-Win32-Shipping.dll");
-    default:
+    case GameId::tes3:
+    case GameId::tes4:
+    case GameId::nehrim:
+    case GameId::tes5:
+    case GameId::tes5vr:
+    case GameId::enderal:
+    case GameId::enderalse:
+    case GameId::fo4:
+    case GameId::fo4vr:
+    case GameId::starfield:
+    case GameId::openmw:
+    case GameId::oblivionRemastered:
       return false;
+    default:
+      throw std::logic_error("Unsupported GameId value");
   }
 }
 
@@ -190,8 +203,16 @@ bool IsMicrosoftInstall(const GameId gameId,
     case GameId::starfield:
     case GameId::oblivionRemastered:
       return std::filesystem::exists(installPath / "appxmanifest.xml");
-    default:
+    case GameId::nehrim:
+    case GameId::tes5:
+    case GameId::tes5vr:
+    case GameId::enderal:
+    case GameId::enderalse:
+    case GameId::fo4vr:
+    case GameId::openmw:
       return false;
+    default:
+      throw std::logic_error("Unsupported GameId value");
   }
 }
 

@@ -76,16 +76,16 @@ std::optional<std::string> GetEgsAppName(GameId gameId) {
     case GameId::tes4:
     case GameId::nehrim:
     case GameId::tes5:
+    case GameId::tes5vr:
     case GameId::enderal:
     case GameId::enderalse:
-    case GameId::tes5vr:
     case GameId::fo4vr:
     case GameId::starfield:
     case GameId::openmw:
     case GameId::oblivionRemastered:
       return std::nullopt;
     default:
-      throw std::logic_error("Unrecognised game type");
+      throw std::logic_error("Unsupported GameId value");
   }
 }
 
@@ -111,8 +111,20 @@ std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
               {basePath / "Fallout New Vegas German", "de"},
               {basePath / "Fallout New Vegas Italian", "it"},
               {basePath / "Fallout New Vegas Spanish", "es"}};
-    default:
+    case GameId::tes3:
+    case GameId::tes4:
+    case GameId::nehrim:
+    case GameId::tes5:
+    case GameId::tes5vr:
+    case GameId::enderal:
+    case GameId::enderalse:
+    case GameId::fo4vr:
+    case GameId::starfield:
+    case GameId::openmw:
+    case GameId::oblivionRemastered:
       throw std::logic_error("Unsupported Epic Games Store game");
+    default:
+      throw std::logic_error("Unsupported GameId value");
   }
 };
 
@@ -271,8 +283,20 @@ std::string GetAppDataFolderName(const GameId gameId) {
       return "FalloutNV_Epic";
     case GameId::fo4:
       return "Fallout4 EPIC";
-    default:
+    case GameId::tes3:
+    case GameId::tes4:
+    case GameId::nehrim:
+    case GameId::tes5:
+    case GameId::tes5vr:
+    case GameId::enderal:
+    case GameId::enderalse:
+    case GameId::fo4vr:
+    case GameId::starfield:
+    case GameId::openmw:
+    case GameId::oblivionRemastered:
       throw std::logic_error("Unsupported Epic Games Store game");
+    default:
+      throw std::logic_error("Unsupported GameId value");
   }
 }
 

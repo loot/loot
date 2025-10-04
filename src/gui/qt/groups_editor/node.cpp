@@ -184,16 +184,11 @@ void Node::setPosition(const QPointF &pos) {
 void Node::setPosition(qreal x, qreal y) { setPosition(QPointF(x, y)); }
 
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
-  switch (change) {
-    case ItemPositionHasChanged: {
-      for (Edge *edge : edgeList) {
-        edge->adjust();
-      }
-      break;
+  if (change == ItemPositionHasChanged) {
+    for (Edge *edge : edgeList) {
+      edge->adjust();
     }
-    default:
-      break;
-  };
+  }
 
   return QGraphicsItem::itemChange(change, value);
 }

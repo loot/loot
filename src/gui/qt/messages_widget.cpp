@@ -50,6 +50,8 @@ QString getPropertyValue(MessageType messageType) {
       return "warn";
     case MessageType::error:
       return "error";
+    case MessageType::say:
+      return "say";
     default:
       return "say";
   }

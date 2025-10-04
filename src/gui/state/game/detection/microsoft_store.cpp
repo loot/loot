@@ -67,8 +67,16 @@ std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
       // the game supports, so just use en (the choice doesn't
       // matter).
       return {{basePath, "en"}};
-    default:
+    case GameId::nehrim:
+    case GameId::tes5:
+    case GameId::tes5vr:
+    case GameId::enderal:
+    case GameId::enderalse:
+    case GameId::fo4vr:
+    case GameId::openmw:
       throw std::logic_error("Unsupported Microsoft Store game");
+    default:
+      throw std::logic_error("Unsupported GameId value");
   }
 };
 
@@ -92,7 +100,7 @@ bool IsOnMicrosoftStore(const GameId gameId) {
     case GameId::openmw:
       return false;
     default:
-      throw std::logic_error("Unrecognised game type");
+      throw std::logic_error("Unsupported GameId value");
   }
 }
 
@@ -122,8 +130,16 @@ std::filesystem::path GetGameContentPath(
     case GameId::oblivionRemastered:
       return xboxGamingRootPath / "The Elder Scrolls IV- Oblivion Remastered" /
              "Content";
-    default:
+    case GameId::nehrim:
+    case GameId::tes5:
+    case GameId::tes5vr:
+    case GameId::enderal:
+    case GameId::enderalse:
+    case GameId::fo4vr:
+    case GameId::openmw:
       throw std::logic_error("Unsupported Microsoft Store game");
+    default:
+      throw std::logic_error("Unsupported GameId value");
   }
 }
 

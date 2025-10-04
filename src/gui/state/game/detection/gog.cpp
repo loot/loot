@@ -85,8 +85,16 @@ std::vector<std::string> GetGogGameIds(const GameId gameId) {
               "1998527297",
               // High res texture pack
               "1408237434"};
-    default:
+    case GameId::tes5:
+    case GameId::tes5vr:
+    case GameId::enderal:
+    case GameId::fo4vr:
+    case GameId::starfield:
+    case GameId::openmw:
+    case GameId::oblivionRemastered:
       return {};
+    default:
+      throw std::logic_error("Unsupported GameId value");
   }
 }
 
@@ -107,8 +115,16 @@ std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
       return "FalloutNV";
     case GameId::fo4:
       return "Fallout4";
-    default:
+    case GameId::tes5:
+    case GameId::tes5vr:
+    case GameId::enderal:
+    case GameId::fo4vr:
+    case GameId::starfield:
+    case GameId::openmw:
+    case GameId::oblivionRemastered:
       throw std::logic_error("Unsupported GOG game");
+    default:
+      throw std::logic_error("Unsupported GameId value");
   }
 }
 

@@ -180,8 +180,10 @@ std::string GetSourceDescription(const InstallSource source) {
       return "the Epic Games Store";
     case InstallSource::microsoft:
       return "the Microsoft Store";
-    default:
+    case InstallSource::unknown:
       return "an unknown source";
+    default:
+      throw std::logic_error("Unsupported InstallSource value");
   }
 }
 
@@ -195,8 +197,10 @@ std::string GetNameSourceSuffix(const InstallSource source) {
       return " (EGS)";
     case InstallSource::microsoft:
       return " (MS Store)";
-    default:
+    case InstallSource::unknown:
       return "";
+    default:
+      throw std::logic_error("Unsupported InstallSource value");
   }
 }
 
