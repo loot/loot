@@ -47,6 +47,7 @@ int compareLOOTVersion(const std::string &version) {
   }
 
   const auto givenMajor = std::stoul(parts.at(0));
+#pragma warning(suppress : 4296, justification : "The major version may not be zero at some point in the future.")
   if (LOOT_VERSION_MAJOR > givenMajor) {
     return 1;
   }
@@ -207,7 +208,8 @@ void CheckForUpdateTask::onGetTagCommitReplyFinished() {
     }
 
     // Now get the build commit ID to do the final comparison.
-    const auto url = "https://api.github.com/repos/loot/loot/commits/" + GetLootRevision();
+    const auto url =
+        "https://api.github.com/repos/loot/loot/commits/" + GetLootRevision();
     sendHttpRequest(url, &CheckForUpdateTask::onGetBuildCommitReplyFinished);
   } catch (const std::exception &e) {
     handleException(e);
