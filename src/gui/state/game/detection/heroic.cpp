@@ -171,6 +171,9 @@ std::optional<HeroicGame> GetGameMetdata(
 }
 
 std::optional<GameInstall> FindGogGameInstall(
+#ifdef _WIN32
+    [[maybe_unused]]
+#endif
     const std::filesystem::path& heroicConfigPath,
     const HeroicGame& game) {
   if (!IsValidGamePath(
@@ -193,6 +196,9 @@ std::optional<GameInstall> FindGogGameInstall(
 }
 
 std::optional<GameInstall> FindEgsGameInstall(
+#ifdef _WIN32
+    [[maybe_unused]]
+#endif
     const std::filesystem::path& heroicConfigPath,
     const std::vector<std::string>& preferredUILanguages,
     const HeroicGame& game) {

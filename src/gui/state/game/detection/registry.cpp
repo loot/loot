@@ -61,9 +61,9 @@ std::string format_as(RegistryRootKey rootKey) {
   }
 }
 
+#ifdef _WIN32
 std::optional<std::string> Registry::GetStringValue(
     const RegistryValue& value) const {
-#ifdef _WIN32
   HKEY hKey = GetRegistryRootKey(value.rootKey);
   DWORD len = MAX_PATH;
   std::wstring wstr(MAX_PATH, 0);
@@ -115,10 +115,13 @@ std::optional<std::string> Registry::GetStringValue(
     }
     return std::nullopt;
   }
-#else
-  return std::nullopt;
-#endif
 }
+#else
+std::optional<std::string> Registry::GetStringValue(
+    [[maybe_unused]] const RegistryValue& value) const {
+  return std::nullopt;
+}
+#endif
 
 std::optional<std::filesystem::path> ReadPathFromRegistry(
     const RegistryInterface& registry,

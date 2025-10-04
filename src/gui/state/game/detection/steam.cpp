@@ -271,6 +271,9 @@ std::filesystem::path FixNehrimInstallPath(
 
 namespace loot::steam {
 std::vector<std::filesystem::path> GetSteamInstallPaths(
+#ifndef _WIN32
+    [[maybe_unused]]
+#endif
     const RegistryInterface& registry) {
   try {
 #ifdef _WIN32

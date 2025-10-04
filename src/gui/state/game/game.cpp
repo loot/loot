@@ -253,9 +253,13 @@ std::set<Filename> ReadFilenamesInFile(const std::filesystem::path& filePath) {
   return filenames;
 }
 
-void FindFiles(GameId gameId,
-               const std::filesystem::path& directory,
-               std::function<void(const std::filesystem::path&)> processPath) {
+void FindFiles(
+#ifndef _WIN32
+    [[maybe_unused]]
+#endif
+    GameId gameId,
+    const std::filesystem::path& directory,
+    std::function<void(const std::filesystem::path&)> processPath) {
   if (!std::filesystem::exists(directory)) {
     return;
   }
