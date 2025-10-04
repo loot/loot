@@ -34,7 +34,7 @@
 
 namespace loot::heroic {
 struct HeroicGame {
-  GameId gameId;
+  GameId gameId{GameId::tes3};
   std::string appName;
   std::filesystem::path installPath;
 };
