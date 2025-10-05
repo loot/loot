@@ -38,7 +38,7 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(GetMasterFilenameTest, shouldNotThrowForAnyValidGameId) {
-  EXPECT_NO_THROW(GetMasterFilename(GetParam()));
+  EXPECT_NO_THROW(getMasterFilename(GetParam()));
 }
 
 class IsValidGamePathTest : public CommonGameTestFixture,
@@ -54,7 +54,7 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(IsValidGamePathTest, shouldSupportNonAsciiGameMasters) {
-  EXPECT_TRUE(IsValidGamePath(GetParam(), nonAsciiEsp, gamePath));
+  EXPECT_TRUE(isValidGamePath(GetParam(), nonAsciiEsp, gamePath));
 }
 
 }

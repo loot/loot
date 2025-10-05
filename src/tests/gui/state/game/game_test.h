@@ -53,17 +53,17 @@ TEST_F(CreationClubPluginsTest,
 
   CreationClubPlugins ccPlugins;
 
-  ccPlugins.Load(GameId::tes5se, gamePath);
+  ccPlugins.load(GameId::tes5se, gamePath);
 
-  EXPECT_TRUE(ccPlugins.IsCreationClubPlugin(ccPluginName));
+  EXPECT_TRUE(ccPlugins.isCreationClubPlugin(ccPluginName));
 
-  ccPlugins.Load(GameId::tes5se, gamePath);
+  ccPlugins.load(GameId::tes5se, gamePath);
 
   std::filesystem::remove(cccPath);
 
-  ccPlugins.Load(GameId::tes5se, gamePath);
+  ccPlugins.load(GameId::tes5se, gamePath);
 
-  EXPECT_FALSE(ccPlugins.IsCreationClubPlugin(ccPluginName));
+  EXPECT_FALSE(ccPlugins.isCreationClubPlugin(ccPluginName));
 }
 
 TEST_F(CreationClubPluginsTest, loadShouldTrimCRLFLineEndingsFromCCCFileLines) {
@@ -73,9 +73,9 @@ TEST_F(CreationClubPluginsTest, loadShouldTrimCRLFLineEndingsFromCCCFileLines) {
   out << ccPluginName << "\r\n";
   out.close();
 
-  ccPlugins.Load(GameId::tes5se, gamePath);
+  ccPlugins.load(GameId::tes5se, gamePath);
 
-  EXPECT_TRUE(ccPlugins.IsCreationClubPlugin(ccPluginName));
+  EXPECT_TRUE(ccPlugins.isCreationClubPlugin(ccPluginName));
 }
 }
 
@@ -102,22 +102,22 @@ protected:
           MessageContent("detail"),
       })),
       defaultGameSettings(GameSettings(GetParam(), u8"non\u00C1sciiFolder")
-                              .SetMinimumHeaderVersion(0.0f)
-                              .SetGamePath(gamePath)
-                              .SetGameLocalPath(localPath)) {
+                              .setMinimumHeaderVersion(0.0f)
+                              .setGamePath(gamePath)
+                              .setGameLocalPath(localPath)) {
     // Do some preliminary locale / UTF-8 support setup, as GetMessages()
     // indirectly calls boost::locale::to_lower().
     boost::locale::generator gen;
     std::locale::global(gen("en.UTF-8"));
   }
 
-  Game CreateInitialisedGame() {
+  Game createInitialisedGame() {
     Game game(defaultGameSettings, lootDataPath, "");
-    game.Init();
+    game.init();
     return game;
   }
 
-  std::optional<std::filesystem::path> GetCCCPath() {
+  std::optional<std::filesystem::path> getCCCPath() {
     switch (GetParam()) {
       case GameId::tes5se:
         return gamePath / "Skyrim.ccc";
@@ -130,11 +130,11 @@ protected:
     }
   }
 
-  std::vector<std::filesystem::path> FindLoadOrderBackups(const Game& game) {
+  std::vector<std::filesystem::path> findLoadOrderBackups(const Game& game) {
     using std::filesystem::u8path;
 
     const auto parentPath = lootDataPath / u8path("games") /
-                            u8path(game.GetSettings().FolderName()) / "backups";
+                            u8path(game.getSettings().folderName()) / "backups";
 
     if (!std::filesystem::exists(parentPath)) {
       return {};
@@ -155,7 +155,7 @@ protected:
     return paths;
   }
 
-  std::vector<std::string> ReadBackedUpLoadOrder(
+  std::vector<std::string> readBackedUpLoadOrder(
       const std::filesystem::path& backupPath) {
     auto file = QFile(QString::fromStdString(backupPath.u8string()));
 
@@ -201,56 +201,56 @@ INSTANTIATE_TEST_SUITE_P(,
 TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   using std::filesystem::u8path;
   GameSettings settings = defaultGameSettings;
-  settings.SetName("foo");
-  settings.SetMaster(blankEsm);
-  settings.SetMasterlistSource("foo");
+  settings.setName("foo");
+  settings.setMaster(blankEsm);
+  settings.setMasterlistSource("foo");
   Game game(settings, lootDataPath, "");
 
-  EXPECT_EQ(settings.Id(), game.GetSettings().Id());
-  EXPECT_EQ(settings.Name(), game.GetSettings().Name());
-  EXPECT_EQ(settings.FolderName(), game.GetSettings().FolderName());
-  EXPECT_EQ(settings.Master(), game.GetSettings().Master());
-  EXPECT_EQ(settings.MinimumHeaderVersion(),
-            game.GetSettings().MinimumHeaderVersion());
-  EXPECT_EQ(settings.MasterlistSource(), game.GetSettings().MasterlistSource());
-  EXPECT_EQ(settings.GamePath(), game.GetSettings().GamePath());
-  EXPECT_EQ(settings.GameLocalPath(), game.GetSettings().GameLocalPath());
+  EXPECT_EQ(settings.id(), game.getSettings().id());
+  EXPECT_EQ(settings.name(), game.getSettings().name());
+  EXPECT_EQ(settings.folderName(), game.getSettings().folderName());
+  EXPECT_EQ(settings.master(), game.getSettings().master());
+  EXPECT_EQ(settings.minimumHeaderVersion(),
+            game.getSettings().minimumHeaderVersion());
+  EXPECT_EQ(settings.masterlistSource(), game.getSettings().masterlistSource());
+  EXPECT_EQ(settings.gamePath(), game.getSettings().gamePath());
+  EXPECT_EQ(settings.gameLocalPath(), game.getSettings().gameLocalPath());
 
   auto lootGamePath =
-      lootDataPath / "games" / u8path(defaultGameSettings.FolderName());
-  EXPECT_EQ(lootGamePath / "masterlist.yaml", game.MasterlistPath());
-  EXPECT_EQ(lootGamePath / "userlist.yaml", game.UserlistPath());
+      lootDataPath / "games" / u8path(defaultGameSettings.folderName());
+  EXPECT_EQ(lootGamePath / "masterlist.yaml", game.masterlistPath());
+  EXPECT_EQ(lootGamePath / "userlist.yaml", game.userlistPath());
   EXPECT_EQ(lootGamePath / "group_node_positions.bin",
-            game.GroupNodePositionsPath());
-  EXPECT_EQ(lootGamePath / "old_messages.json", game.OldMessagesPath());
+            game.groupNodePositionsPath());
+  EXPECT_EQ(lootGamePath / "old_messages.json", game.oldMessagesPath());
 }
 
 TEST_P(GameTest, initShouldThrowIfGamePathWasNotGiven) {
   GameSettings settings =
-      GameSettings(GetParam(), "").SetGameLocalPath(localPath);
+      GameSettings(GetParam(), "").setGameLocalPath(localPath);
   Game game(settings, "", "");
-  EXPECT_THROW(game.Init(), std::invalid_argument);
+  EXPECT_THROW(game.init(), std::invalid_argument);
 }
 
 #ifndef _WIN32
 TEST_P(GameTest,
        initShouldNotThrowOnLinuxIfLocalPathWasNotGivenAndGameIsMorrowind) {
   GameSettings settings =
-      GameSettings(GetParam(), "folder").SetGamePath(gamePath);
+      GameSettings(GetParam(), "folder").setGamePath(gamePath);
   Game game(settings, lootDataPath, "");
 
   if (GetParam() == GameId::tes3) {
-    EXPECT_NO_THROW(game.Init());
+    EXPECT_NO_THROW(game.init());
   } else {
-    EXPECT_THROW(game.Init(), std::runtime_error);
+    EXPECT_THROW(game.init(), std::runtime_error);
   }
 }
 #else
 TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathWasNotGiven) {
   GameSettings settings =
-      GameSettings(GetParam(), "folder").SetGamePath(gamePath);
+      GameSettings(GetParam(), "folder").setGamePath(gamePath);
   Game game(settings, lootDataPath, "");
-  EXPECT_NO_THROW(game.Init());
+  EXPECT_NO_THROW(game.init());
 }
 #endif
 
@@ -259,9 +259,9 @@ TEST_P(GameTest, initShouldThrowIfTheLootDataPathIsEmpty) {
   Game game(defaultGameSettings, "", "");
 
   auto lootGamePath =
-      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
+      lootDataPath / "games" / u8path(game.getSettings().folderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
-  EXPECT_THROW(game.Init(), std::runtime_error);
+  EXPECT_THROW(game.init(), std::runtime_error);
 
   EXPECT_FALSE(std::filesystem::exists(lootGamePath));
 }
@@ -271,9 +271,9 @@ TEST_P(GameTest, initShouldCreateAGameFolderIfTheLootDataPathIsNotEmpty) {
   Game game(defaultGameSettings, lootDataPath, "");
 
   auto lootGamePath =
-      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
+      lootDataPath / "games" / u8path(game.getSettings().folderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
-  EXPECT_NO_THROW(game.Init());
+  EXPECT_NO_THROW(game.init());
 
   EXPECT_TRUE(std::filesystem::exists(lootGamePath));
 }
@@ -284,31 +284,31 @@ TEST_P(GameTest, initShouldThrowIfTheLootGamePathExistsAndIsNotADirectory) {
 
   std::filesystem::create_directory(lootDataPath / "games");
   auto lootGamePath =
-      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
+      lootDataPath / "games" / u8path(game.getSettings().folderName());
   std::ofstream out(lootGamePath);
   out << "";
   out.close();
 
   ASSERT_TRUE(std::filesystem::exists(lootGamePath));
   ASSERT_FALSE(std::filesystem::is_directory(lootGamePath));
-  EXPECT_ANY_THROW(game.Init());
+  EXPECT_ANY_THROW(game.init());
 }
 
 TEST_P(GameTest, initShouldMoveTheLegacyGameFolderIfItExists) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto legacyGamePath = lootDataPath / u8path(game.GetSettings().FolderName());
+  auto legacyGamePath = lootDataPath / u8path(game.getSettings().folderName());
   std::filesystem::create_directory(legacyGamePath);
   std::ofstream out(legacyGamePath / "file.txt");
   out << "";
   out.close();
 
   auto lootGamePath =
-      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
+      lootDataPath / "games" / u8path(game.getSettings().folderName());
 
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
-  EXPECT_NO_THROW(game.Init());
+  EXPECT_NO_THROW(game.init());
 
   EXPECT_FALSE(std::filesystem::exists(legacyGamePath));
   EXPECT_TRUE(std::filesystem::exists(lootGamePath));
@@ -319,16 +319,16 @@ TEST_P(GameTest, initShouldNotMoveAFileWithTheSamePathAsTheLegacyGameFolder) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto legacyGamePath = lootDataPath / u8path(game.GetSettings().FolderName());
+  auto legacyGamePath = lootDataPath / u8path(game.getSettings().folderName());
   std::ofstream out(legacyGamePath);
   out << "";
   out.close();
 
   auto lootGamePath =
-      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
+      lootDataPath / "games" / u8path(game.getSettings().folderName());
 
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
-  EXPECT_NO_THROW(game.Init());
+  EXPECT_NO_THROW(game.init());
 
   EXPECT_TRUE(std::filesystem::exists(legacyGamePath));
   EXPECT_TRUE(std::filesystem::is_directory(lootGamePath));
@@ -340,7 +340,7 @@ TEST_P(
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto legacyGamePath = lootDataPath / u8path(game.GetSettings().FolderName());
+  auto legacyGamePath = lootDataPath / u8path(game.getSettings().folderName());
   std::filesystem::create_directory(legacyGamePath);
   std::ofstream out(legacyGamePath / "file.txt");
   out << "";
@@ -350,9 +350,9 @@ TEST_P(
   std::filesystem::remove_all(lootGamesPath);
 
   ASSERT_FALSE(std::filesystem::exists(lootGamesPath));
-  EXPECT_NO_THROW(game.Init());
+  EXPECT_NO_THROW(game.init());
 
-  auto lootGamePath = lootGamesPath / u8path(game.GetSettings().FolderName());
+  auto lootGamePath = lootGamesPath / u8path(game.getSettings().folderName());
 
   EXPECT_FALSE(std::filesystem::exists(legacyGamePath));
   EXPECT_TRUE(std::filesystem::exists(lootGamePath));
@@ -378,10 +378,10 @@ TEST_P(GameTest, initShouldMigrateTheSkyrimSEGameFolder) {
   std::filesystem::remove_all(lootGamesPath);
 
   ASSERT_FALSE(std::filesystem::exists(lootGamesPath));
-  EXPECT_NO_THROW(game.Init());
+  EXPECT_NO_THROW(game.init());
 
   const auto lootGamePath =
-      lootGamesPath / u8path(game.GetSettings().FolderName());
+      lootGamesPath / u8path(game.getSettings().folderName());
 
   EXPECT_FALSE(std::filesystem::exists(legacyGamePath));
   EXPECT_TRUE(std::filesystem::exists(lootGamePath));
@@ -391,12 +391,12 @@ TEST_P(GameTest, initShouldMigrateTheSkyrimSEGameFolder) {
 TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
   Game game(defaultGameSettings, lootDataPath, "");
 
-  EXPECT_NO_THROW(game.Init());
+  EXPECT_NO_THROW(game.init());
 }
 
 TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetRequirements({
@@ -405,12 +405,12 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
   });
 
   auto messages =
-      game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
   EXPECT_EQ(std::vector<SourcedMessage>({
                 SourcedMessage{MessageType::error,
                                MessageSource::requirementMetadata,
                                "This plugin requires \"" +
-                                   EscapeMarkdownASCIIPunctuation(missingEsp) +
+                                   escapeMarkdownASCIIPunctuation(missingEsp) +
                                    "\" to be installed, but it is missing."},
             }),
             messages);
@@ -422,8 +422,8 @@ TEST_P(GameTest,
   ASSERT_NO_THROW(std::filesystem::rename(
       dataPath / blankEsp, dataPath / u8path(u8"nonAsc\u00EDi.esp.ghost")));
 
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetRequirements({
@@ -432,15 +432,15 @@ TEST_P(GameTest,
   });
 
   auto messages =
-      game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
   EXPECT_TRUE(messages.empty());
 }
 
 TEST_P(
     GameTest,
     checkInstallValidityShouldUseDisplayNamesInRequirementMessagesIfPresent) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetRequirements({
@@ -449,7 +449,7 @@ TEST_P(
   });
 
   auto messages =
-      game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
   EXPECT_EQ(
       std::vector<SourcedMessage>({
           SourcedMessage{MessageType::error,
@@ -463,8 +463,8 @@ TEST_P(
 TEST_P(
     GameTest,
     checkInstallValidityShouldNotDisplayMoreThanOneRequirementMessageForAnyOneDisplayName) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetRequirements({
@@ -474,7 +474,7 @@ TEST_P(
   });
 
   auto messages =
-      game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
   EXPECT_EQ(
       std::vector<SourcedMessage>({
           SourcedMessage{MessageType::error,
@@ -487,8 +487,8 @@ TEST_P(
 
 TEST_P(GameTest,
        checkInstallValidityShouldAddAMessageForActiveIncompatiblePlugins) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetIncompatibilities({
@@ -497,12 +497,12 @@ TEST_P(GameTest,
   });
 
   auto messages =
-      game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
   EXPECT_EQ(std::vector<SourcedMessage>({
                 SourcedMessage{MessageType::error,
                                MessageSource::incompatibilityMetadata,
                                "This plugin is incompatible with \"" +
-                                   EscapeMarkdownASCIIPunctuation(masterFile) +
+                                   escapeMarkdownASCIIPunctuation(masterFile) +
                                    "\", but both are present."},
             }),
             messages);
@@ -511,8 +511,8 @@ TEST_P(GameTest,
 TEST_P(
     GameTest,
     checkInstallValidityShouldShowAMessageForIncompatibleNonPluginFilesThatArePresent) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   std::string incompatibleFilename = "incompatible.txt";
   std::ofstream out(dataPath / incompatibleFilename);
@@ -524,13 +524,13 @@ TEST_P(
   });
 
   auto messages =
-      game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
   EXPECT_EQ(std::vector<SourcedMessage>({
                 SourcedMessage{
                     MessageType::error,
                     MessageSource::incompatibilityMetadata,
                     "This plugin is incompatible with \"" +
-                        EscapeMarkdownASCIIPunctuation(incompatibleFilename) +
+                        escapeMarkdownASCIIPunctuation(incompatibleFilename) +
                         "\", but both are present."},
             }),
             messages);
@@ -539,8 +539,8 @@ TEST_P(
 TEST_P(
     GameTest,
     checkInstallValidityShouldUseDisplayNamesInIncompatibilityMessagesIfPresent) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetIncompatibilities({
@@ -549,7 +549,7 @@ TEST_P(
   });
 
   auto messages =
-      game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
   EXPECT_EQ(std::vector<SourcedMessage>({
                 SourcedMessage{MessageType::error,
                                MessageSource::incompatibilityMetadata,
@@ -562,8 +562,8 @@ TEST_P(
 TEST_P(
     GameTest,
     checkInstallValidityShouldNotDisplayMoreThanOneIncompatibilityMessageForAnyOneDisplayName) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   std::string incompatibleFilename = "incompatible.txt";
   std::ofstream out(dataPath / incompatibleFilename);
@@ -576,7 +576,7 @@ TEST_P(
   });
 
   auto messages =
-      game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
   EXPECT_EQ(
       std::vector<SourcedMessage>({
           SourcedMessage{MessageType::error,
@@ -588,8 +588,8 @@ TEST_P(
 }
 
 TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   const std::vector<MessageContent> detail = std::vector<MessageContent>({
@@ -602,12 +602,12 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
   });
 
   auto messages =
-      game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
   EXPECT_EQ(std::vector<SourcedMessage>({
-                ToSourcedMessage(PluginCleaningData(
+                toSourcedMessage(PluginCleaningData(
                                      blankEsmCrc, "utility1", detail, 0, 1, 2),
                                  MessageContent::DEFAULT_LANGUAGE),
-                ToSourcedMessage(PluginCleaningData(
+                toSourcedMessage(PluginCleaningData(
                                      0xDEADBEEF, "utility2", detail, 0, 5, 10),
                                  MessageContent::DEFAULT_LANGUAGE),
             }),
@@ -617,19 +617,19 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
 TEST_P(
     GameTest,
     checkInstallValidityShouldCheckIfAPluginsMastersAreAllPresentAndActiveIfNoFilterTagIsPresent) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
 
-  auto messages = game.CheckInstallValidity(
-      *game.GetPlugin(blankDifferentMasterDependentEsp), metadata, "en");
+  auto messages = game.checkInstallValidity(
+      *game.getPlugin(blankDifferentMasterDependentEsp), metadata, "en");
   EXPECT_EQ(
       std::vector<SourcedMessage>({
           SourcedMessage{MessageType::error,
                          MessageSource::inactiveMaster,
                          "This plugin requires \\\"" +
-                             EscapeMarkdownASCIIPunctuation(blankDifferentEsm) +
+                             escapeMarkdownASCIIPunctuation(blankDifferentEsm) +
                              "\\\" to be active\\, but it is inactive\\."},
       }),
       messages);
@@ -638,28 +638,28 @@ TEST_P(
 TEST_P(
     GameTest,
     checkInstallValidityShouldNotCheckIfAPluginsMastersAreAllActiveIfAFilterTagIsPresent) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
   metadata.SetTags({Tag("Filter")});
 
-  auto messages = game.CheckInstallValidity(
-      *game.GetPlugin(blankDifferentMasterDependentEsp), metadata, "en");
+  auto messages = game.checkInstallValidity(
+      *game.getPlugin(blankDifferentMasterDependentEsp), metadata, "en");
   EXPECT_TRUE(messages.empty());
 }
 
 TEST_P(
     GameTest,
     checkInstallValidityShouldNotCompareConditionsWhenCheckingIfAFilterTagIsPresent) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
   metadata.SetTags({Tag("Filter", true, "file(\"master.esm\")")});
 
-  auto messages = game.CheckInstallValidity(
-      *game.GetPlugin(blankDifferentMasterDependentEsp), metadata, "en");
+  auto messages = game.checkInstallValidity(
+      *game.getPlugin(blankDifferentMasterDependentEsp), metadata, "en");
   EXPECT_TRUE(messages.empty());
 }
 
@@ -677,11 +677,11 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
   out.put('\xFF');
   out.close();
 
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(false);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(false);
 
-  auto messages = game.CheckInstallValidity(
-      *game.GetPlugin(blankEsl), PluginMetadata(blankEsl), "en");
+  auto messages = game.checkInstallValidity(
+      *game.getPlugin(blankEsl), PluginMetadata(blankEsl), "en");
   EXPECT_EQ(
       std::vector<SourcedMessage>({
           SourcedMessage{
@@ -708,11 +708,11 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAMediumPluginIsValid) {
   out.put('\xFF');
   out.close();
 
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(false);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(false);
 
-  auto messages = game.CheckInstallValidity(
-      *game.GetPlugin(blankEsm), PluginMetadata(blankEsm), "en");
+  auto messages = game.checkInstallValidity(
+      *game.getPlugin(blankEsm), PluginMetadata(blankEsm), "en");
   EXPECT_EQ(
       std::vector<SourcedMessage>({
           SourcedMessage{
@@ -728,12 +728,12 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAMediumPluginIsValid) {
 TEST_P(
     GameTest,
     checkInstallValidityShouldCheckThatAPluginHeaderVersionIsNotLessThanTheMinimum) {
-  Game game = CreateInitialisedGame();
-  game.GetSettings().SetMinimumHeaderVersion(5.1f);
-  game.LoadAllInstalledPlugins(false);
+  Game game = createInitialisedGame();
+  game.getSettings().setMinimumHeaderVersion(5.1f);
+  game.loadAllInstalledPlugins(false);
 
-  auto messages = game.CheckInstallValidity(
-      *game.GetPlugin(blankEsm), PluginMetadata(blankEsm), "en");
+  auto messages = game.checkInstallValidity(
+      *game.getPlugin(blankEsm), PluginMetadata(blankEsm), "en");
 
   std::string messageText;
   if (GetParam() == GameId::tes3) {
@@ -758,14 +758,14 @@ TEST_P(
 }
 
 TEST_P(GameTest, checkInstallValidityShouldCheckThatAPluginGroupExists) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetGroup("missing group");
 
   auto messages =
-      game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
   EXPECT_EQ(std::vector<SourcedMessage>({
                 SourcedMessage{
                     MessageType::error,
@@ -789,8 +789,8 @@ TEST_P(GameTest, checkInstallValidityShouldResolveExternalPluginPaths) {
   std::filesystem::create_directories(dlcDataPath);
   loot::test::touch(dlcDataPath / dlcPluginName);
 
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetRequirements({
@@ -799,7 +799,7 @@ TEST_P(GameTest, checkInstallValidityShouldResolveExternalPluginPaths) {
   });
 
   const auto messages =
-      game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
   EXPECT_TRUE(messages.empty());
 }
 
@@ -829,15 +829,15 @@ TEST_P(
   out.put('\x02');
   out.close();
 
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
-  const auto eslMessages = game.CheckInstallValidity(
-      *game.GetPlugin(blankEsl), PluginMetadata(blankEsl), "en");
-  const auto esmMessages = game.CheckInstallValidity(
-      *game.GetPlugin(blankEsm), PluginMetadata(blankEsm), "en");
-  const auto espMessages = game.CheckInstallValidity(
-      *game.GetPlugin(blankEsp), PluginMetadata(blankEsp), "en");
+  const auto eslMessages = game.checkInstallValidity(
+      *game.getPlugin(blankEsl), PluginMetadata(blankEsl), "en");
+  const auto esmMessages = game.checkInstallValidity(
+      *game.getPlugin(blankEsm), PluginMetadata(blankEsm), "en");
+  const auto espMessages = game.checkInstallValidity(
+      *game.getPlugin(blankEsp), PluginMetadata(blankEsp), "en");
 
   if (GetParam() == GameId::tes5vr) {
     ASSERT_EQ(1, eslMessages.size());
@@ -920,8 +920,8 @@ TEST_P(
     redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
   using std::filesystem::u8path;
 
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
   std::vector<std::pair<std::string, bool>> loadOrder = getInitialLoadOrder();
 
@@ -938,7 +938,7 @@ TEST_P(
               std::filesystem::last_write_time(pluginPath));
   }
 
-  EXPECT_NO_THROW(game.RedatePlugins());
+  EXPECT_NO_THROW(game.redatePlugins());
 
   auto interval = std::chrono::seconds(60);
   if (GetParam() != GameId::tes5 && GetParam() != GameId::tes5se)
@@ -957,14 +957,14 @@ TEST_P(
 TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
 
-  EXPECT_NO_THROW(game.LoadAllInstalledPlugins(true));
-  EXPECT_EQ(12, game.GetPlugins().size());
+  EXPECT_NO_THROW(game.loadAllInstalledPlugins(true));
+  EXPECT_EQ(12, game.getPlugins().size());
 
   // Check that one plugin's header has been read.
-  ASSERT_NO_THROW(game.GetPlugin(masterFile));
-  auto plugin = game.GetPlugin(masterFile);
+  ASSERT_NO_THROW(game.getPlugin(masterFile));
+  auto plugin = game.getPlugin(masterFile);
   EXPECT_EQ("5.0", plugin->GetVersion().value());
 
   // Check that only the header has been read.
@@ -974,14 +974,14 @@ TEST_P(
 TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
 
-  EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
-  EXPECT_EQ(12, game.GetPlugins().size());
+  EXPECT_NO_THROW(game.loadAllInstalledPlugins(false));
+  EXPECT_EQ(12, game.getPlugins().size());
 
   // Check that one plugin's header has been read.
-  ASSERT_NO_THROW(game.GetPlugin(blankEsm));
-  auto plugin = game.GetPlugin(blankEsm);
+  ASSERT_NO_THROW(game.getPlugin(blankEsm));
+  auto plugin = game.getPlugin(blankEsm);
   EXPECT_EQ("5.0", plugin->GetVersion().value());
 
   // Check that not only the header has been read.
@@ -990,16 +990,16 @@ TEST_P(
 
 TEST_P(GameTest,
        loadAllInstalledPluginsShouldNotGenerateWarningsForGhostedPlugins) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
 
-  EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
+  EXPECT_NO_THROW(game.loadAllInstalledPlugins(false));
 
   const auto messages =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
+      game.getMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
   EXPECT_EQ(1, messages.size());
   EXPECT_EQ("You have not sorted your load order this session\\.",
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false)[0].text);
+            game.getMessages(MessageContent::DEFAULT_LANGUAGE, false)[0].text);
 }
 
 TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsAtExternalPaths) {
@@ -1015,10 +1015,10 @@ TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsAtExternalPaths) {
   std::filesystem::create_directories(dlcDataPath);
   std::filesystem::copy(dataPath / blankEsm, dlcDataPath / dlcPluginName);
 
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
-  const auto plugin = game.GetPlugin(dlcPluginName);
+  const auto plugin = game.getPlugin(dlcPluginName);
 
   EXPECT_NE(nullptr, plugin);
 }
@@ -1031,10 +1031,10 @@ TEST_P(
   std::filesystem::create_symlink(getSourcePluginsPath() / blankEsm,
                                   dataPath / symlinkPluginName);
 
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
-  const auto plugin = game.GetPlugin(symlinkPluginName);
+  const auto plugin = game.getPlugin(symlinkPluginName);
 
   if (GetParam() == GameId::openmw ||
       GetParam() == GameId::oblivionRemastered) {
@@ -1049,130 +1049,130 @@ TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsThatAreSymlinks) {
   std::filesystem::create_symlink(dataPath / blankEsm,
                                   dataPath / symlinkPluginName);
 
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
-  const auto plugin = game.GetPlugin(symlinkPluginName);
+  const auto plugin = game.getPlugin(symlinkPluginName);
 
   EXPECT_NE(nullptr, plugin);
 }
 #endif
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
 
-  EXPECT_FALSE(game.ArePluginsFullyLoaded());
+  EXPECT_FALSE(game.arePluginsFullyLoaded());
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
 
-  ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(game.loadAllInstalledPlugins(true));
 
-  EXPECT_FALSE(game.ArePluginsFullyLoaded());
+  EXPECT_FALSE(game.arePluginsFullyLoaded());
 }
 
 TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
 
-  ASSERT_NO_THROW(game.LoadAllInstalledPlugins(false));
+  ASSERT_NO_THROW(game.loadAllInstalledPlugins(false));
 
-  EXPECT_TRUE(game.ArePluginsFullyLoaded());
+  EXPECT_TRUE(game.arePluginsFullyLoaded());
 }
 
 TEST_P(GameTest,
        supportsLightPluginsShouldReturnTrueForSkyrimVRIfSKSEPluginIsInstalled) {
-  Game game = CreateInitialisedGame();
-  const auto gameId = game.GetSettings().Id();
+  Game game = createInitialisedGame();
+  const auto gameId = game.getSettings().id();
 
   if (gameId == GameId::tes5se || gameId == GameId::fo4 ||
       gameId == GameId::starfield) {
-    EXPECT_TRUE(game.SupportsLightPlugins());
+    EXPECT_TRUE(game.supportsLightPlugins());
   } else {
-    EXPECT_FALSE(game.SupportsLightPlugins());
+    EXPECT_FALSE(game.supportsLightPlugins());
   }
 
   loot::test::touch(dataPath / "SKSE" / "Plugins" / "skyrimvresl.dll");
-  game.LoadAllInstalledPlugins(true);
+  game.loadAllInstalledPlugins(true);
 
   if (gameId == GameId::tes5se || gameId == GameId::tes5vr ||
       gameId == GameId::fo4 || gameId == GameId::starfield) {
-    EXPECT_TRUE(game.SupportsLightPlugins());
+    EXPECT_TRUE(game.supportsLightPlugins());
   } else {
-    EXPECT_FALSE(game.SupportsLightPlugins());
+    EXPECT_FALSE(game.supportsLightPlugins());
   }
 }
 
 TEST_P(GameTest,
        GetActiveLoadOrderIndexShouldReturnNulloptForAPluginThatIsNotActive) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
-  auto index = game.GetActiveLoadOrderIndex(*game.GetPlugin(blankEsp),
-                                            game.GetLoadOrder());
+  auto index = game.getActiveLoadOrderIndex(*game.getPlugin(blankEsp),
+                                            game.getLoadOrder());
   EXPECT_FALSE(index.has_value());
 }
 
 TEST_P(
     GameTest,
     GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingInactivePlugins) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
-  auto index = game.GetActiveLoadOrderIndex(*game.GetPlugin(masterFile),
-                                            game.GetLoadOrder());
+  auto index = game.getActiveLoadOrderIndex(*game.getPlugin(masterFile),
+                                            game.getLoadOrder());
   EXPECT_EQ(0, index);
 
-  index = game.GetActiveLoadOrderIndex(*game.GetPlugin(blankEsm),
-                                       game.GetLoadOrder());
+  index = game.getActiveLoadOrderIndex(*game.getPlugin(blankEsm),
+                                       game.getLoadOrder());
   EXPECT_EQ(1, index.value());
 
-  index = game.GetActiveLoadOrderIndex(
-      *game.GetPlugin(blankDifferentMasterDependentEsp), game.GetLoadOrder());
+  index = game.getActiveLoadOrderIndex(
+      *game.getPlugin(blankDifferentMasterDependentEsp), game.getLoadOrder());
   EXPECT_EQ(2, index.value());
 }
 
 TEST_P(
     GameTest,
     GetActiveLoadOrderIndexShouldCaseInsensitivelyCompareNonAsciiPluginNamesCorrectly) {
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
-  auto index = game.GetActiveLoadOrderIndex(*game.GetPlugin(nonAsciiEsp),
+  auto index = game.getActiveLoadOrderIndex(*game.getPlugin(nonAsciiEsp),
                                             {u8"non\u00E1scii.esp"});
   EXPECT_EQ(0, index.value());
 }
 
 TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
   using std::filesystem::u8path;
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
 
-  ASSERT_TRUE(FindLoadOrderBackups(game).empty());
+  ASSERT_TRUE(findLoadOrderBackups(game).empty());
 
-  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
+  ASSERT_NO_THROW(game.setLoadOrder(loadOrderToSet_));
 
-  const auto paths = FindLoadOrderBackups(game);
+  const auto paths = findLoadOrderBackups(game);
   ASSERT_EQ(1, paths.size());
 
-  const auto loadOrder = ReadBackedUpLoadOrder(paths[0]);
+  const auto loadOrder = readBackedUpLoadOrder(paths[0]);
 
   EXPECT_TRUE(loadOrder.empty());
 }
 
 TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
   using std::filesystem::u8path;
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
-  ASSERT_TRUE(FindLoadOrderBackups(game).empty());
+  ASSERT_TRUE(findLoadOrderBackups(game).empty());
 
-  const auto initialLoadOrder = game.GetLoadOrder();
-  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
+  const auto initialLoadOrder = game.getLoadOrder();
+  ASSERT_NO_THROW(game.setLoadOrder(loadOrderToSet_));
 
-  const auto paths = FindLoadOrderBackups(game);
+  const auto paths = findLoadOrderBackups(game);
   ASSERT_EQ(1, paths.size());
 
-  const auto loadOrder = ReadBackedUpLoadOrder(paths[0]);
+  const auto loadOrder = readBackedUpLoadOrder(paths[0]);
 
   EXPECT_EQ(initialLoadOrder, loadOrder);
 }
@@ -1182,15 +1182,15 @@ TEST_P(GameTest, setLoadOrderShouldKeepTheTenNewestBackups) {
 
   constexpr auto SLEEP_DURATION = std::chrono::milliseconds(1);
 
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
 
-  auto backupPaths = FindLoadOrderBackups(game);
+  auto backupPaths = findLoadOrderBackups(game);
   ASSERT_TRUE(backupPaths.empty());
 
   for (size_t i = 0; i < 10; i += 1) {
-    ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
+    ASSERT_NO_THROW(game.setLoadOrder(loadOrderToSet_));
 
-    const auto newBackupPaths = FindLoadOrderBackups(game);
+    const auto newBackupPaths = findLoadOrderBackups(game);
     EXPECT_EQ(backupPaths,
               std::vector<std::filesystem::path>(newBackupPaths.begin(),
                                                  newBackupPaths.end() - 1));
@@ -1202,8 +1202,8 @@ TEST_P(GameTest, setLoadOrderShouldKeepTheTenNewestBackups) {
     std::this_thread::sleep_for(SLEEP_DURATION);
   }
 
-  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
-  const auto newBackupPaths = FindLoadOrderBackups(game);
+  ASSERT_NO_THROW(game.setLoadOrder(loadOrderToSet_));
+  const auto newBackupPaths = findLoadOrderBackups(game);
   EXPECT_EQ(std::vector<std::filesystem::path>(backupPaths.begin() + 1,
                                                backupPaths.end()),
             std::vector<std::filesystem::path>(newBackupPaths.begin(),
@@ -1211,10 +1211,10 @@ TEST_P(GameTest, setLoadOrderShouldKeepTheTenNewestBackups) {
 }
 
 TEST_P(GameTest, aMessageShouldBeCachedByDefault) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
 
   const auto messageCount =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false).size();
+      game.getMessages(MessageContent::DEFAULT_LANGUAGE, false).size();
 
   ASSERT_EQ(1, messageCount);
 }
@@ -1232,10 +1232,10 @@ TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
   std::filesystem::create_directories(dlcDataPath);
   std::filesystem::copy(dataPath / blankEsm, dlcDataPath / dlcPluginName);
 
-  Game game = CreateInitialisedGame();
-  game.LoadAllInstalledPlugins(true);
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
 
-  const auto loadOrder = game.SortPlugins();
+  const auto loadOrder = game.sortPlugins();
 
   EXPECT_EQ(std::vector<std::string>({masterFile,
                                       dlcPluginName,
@@ -1255,49 +1255,49 @@ TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
 
 TEST_P(GameTest,
        incrementLoadOrderSortCountShouldSupressTheDefaultCachedMessage) {
-  Game game = CreateInitialisedGame();
-  game.GetSortCount().Increment();
+  Game game = createInitialisedGame();
+  game.getSortCount().increment();
 
   const auto messages =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
+      game.getMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
   EXPECT_TRUE(messages.empty());
 }
 
 TEST_P(GameTest,
        decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedMessage) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
   auto expectedMessages =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
-  game.GetSortCount().Increment();
-  game.GetSortCount().Decrement();
+      game.getMessages(MessageContent::DEFAULT_LANGUAGE, false);
+  game.getSortCount().increment();
+  game.getSortCount().decrement();
 
   EXPECT_EQ(expectedMessages,
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false));
+            game.getMessages(MessageContent::DEFAULT_LANGUAGE, false));
 }
 
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountThatIsAlreadyZeroShouldShowTheDefaultCachedMessage) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
   auto expectedMessages =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
-  game.GetSortCount().Decrement();
+      game.getMessages(MessageContent::DEFAULT_LANGUAGE, false);
+  game.getSortCount().decrement();
 
   EXPECT_EQ(expectedMessages,
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false));
+            game.getMessages(MessageContent::DEFAULT_LANGUAGE, false));
 }
 
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
-  Game game = CreateInitialisedGame();
-  game.GetSortCount().Increment();
-  game.GetSortCount().Increment();
-  game.GetSortCount().Decrement();
+  Game game = createInitialisedGame();
+  game.getSortCount().increment();
+  game.getSortCount().increment();
+  game.getSortCount().decrement();
 
   const auto messages =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
+      game.getMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
   EXPECT_TRUE(messages.empty());
 }
@@ -1305,9 +1305,9 @@ TEST_P(
 #ifndef _WIN32
 TEST_P(GameTest,
        getMessagesShouldIncludeCaseSensitivityWarningIfParameterIsTrue) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
   const auto messages =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, true);
+      game.getMessages(MessageContent::DEFAULT_LANGUAGE, true);
 
   EXPECT_EQ(3, messages.size());
   EXPECT_EQ("You have not sorted your load order this session\\.",
@@ -1321,9 +1321,9 @@ TEST_P(GameTest,
 
 TEST_P(GameTest,
        getMessagesShouldIncludeCaseSensitivityWarningIfParameterIsFalse) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
   const auto messages =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
+      game.getMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
   EXPECT_EQ(1, messages.size());
   EXPECT_EQ("You have not sorted your load order this session\\.",
@@ -1332,17 +1332,17 @@ TEST_P(GameTest,
 #endif
 
 TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
   std::vector<SourcedMessage> messages({
       SourcedMessage{MessageType::say, MessageSource::messageMetadata, "1"},
       SourcedMessage{MessageType::error, MessageSource::messageMetadata, "2"},
   });
   for (const auto& message : messages) {
-    game.AppendMessage(message);
+    game.appendMessage(message);
   }
 
   const auto gameMessages =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false);
+      game.getMessages(MessageContent::DEFAULT_LANGUAGE, false);
 
   ASSERT_EQ(3, gameMessages.size());
   EXPECT_EQ(messages[0], gameMessages[0]);
@@ -1350,22 +1350,22 @@ TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
 }
 
 TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
-  Game game = CreateInitialisedGame();
+  Game game = createInitialisedGame();
   std::vector<SourcedMessage> messages({
       SourcedMessage{MessageType::say, MessageSource::messageMetadata, "1"},
       SourcedMessage{MessageType::error, MessageSource::messageMetadata, "2"},
   });
   for (const auto& message : messages) {
-    game.AppendMessage(message);
+    game.appendMessage(message);
   }
 
   const auto previousSize =
-      game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false).size();
+      game.getMessages(MessageContent::DEFAULT_LANGUAGE, false).size();
 
-  game.ClearMessages();
+  game.clearMessages();
 
   EXPECT_EQ(previousSize - messages.size(),
-            game.GetMessages(MessageContent::DEFAULT_LANGUAGE, false).size());
+            game.getMessages(MessageContent::DEFAULT_LANGUAGE, false).size());
 }
 }
 

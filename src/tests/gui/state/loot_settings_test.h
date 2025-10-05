@@ -202,7 +202,7 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ(8, settings_.getGroupsEditorWindowPosition().value().right);
   EXPECT_TRUE(settings_.getGroupsEditorWindowPosition().value().maximised);
 
-  EXPECT_EQ("Game Name", settings_.getGameSettings().at(0).Name());
+  EXPECT_EQ("Game Name", settings_.getGameSettings().at(0).name());
 
   EXPECT_FALSE(settings_.getFilters().hideBashTags);
   EXPECT_TRUE(settings_.getFilters().hideCRCs);
@@ -371,21 +371,21 @@ TEST_F(LootSettingsTest, loadingShouldMapGameIds) {
   settings_.load(settingsFile_);
 
   ASSERT_EQ(15, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::tes3, settings_.getGameSettings()[0].Id());
-  EXPECT_EQ(GameId::tes4, settings_.getGameSettings()[1].Id());
-  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[2].Id());
-  EXPECT_EQ(GameId::tes5, settings_.getGameSettings()[3].Id());
-  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[4].Id());
-  EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[5].Id());
-  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[6].Id());
-  EXPECT_EQ(GameId::tes5vr, settings_.getGameSettings()[7].Id());
-  EXPECT_EQ(GameId::fo3, settings_.getGameSettings()[8].Id());
-  EXPECT_EQ(GameId::fonv, settings_.getGameSettings()[9].Id());
-  EXPECT_EQ(GameId::fo4, settings_.getGameSettings()[10].Id());
-  EXPECT_EQ(GameId::fo4vr, settings_.getGameSettings()[11].Id());
-  EXPECT_EQ(GameId::starfield, settings_.getGameSettings()[12].Id());
-  EXPECT_EQ(GameId::openmw, settings_.getGameSettings()[13].Id());
-  EXPECT_EQ(GameId::oblivionRemastered, settings_.getGameSettings()[14].Id());
+  EXPECT_EQ(GameId::tes3, settings_.getGameSettings()[0].id());
+  EXPECT_EQ(GameId::tes4, settings_.getGameSettings()[1].id());
+  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[2].id());
+  EXPECT_EQ(GameId::tes5, settings_.getGameSettings()[3].id());
+  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[4].id());
+  EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[5].id());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[6].id());
+  EXPECT_EQ(GameId::tes5vr, settings_.getGameSettings()[7].id());
+  EXPECT_EQ(GameId::fo3, settings_.getGameSettings()[8].id());
+  EXPECT_EQ(GameId::fonv, settings_.getGameSettings()[9].id());
+  EXPECT_EQ(GameId::fo4, settings_.getGameSettings()[10].id());
+  EXPECT_EQ(GameId::fo4vr, settings_.getGameSettings()[11].id());
+  EXPECT_EQ(GameId::starfield, settings_.getGameSettings()[12].id());
+  EXPECT_EQ(GameId::openmw, settings_.getGameSettings()[13].id());
+  EXPECT_EQ(GameId::oblivionRemastered, settings_.getGameSettings()[14].id());
 }
 
 TEST_F(LootSettingsTest, loadingShouldSkipGameIfGameIdAndTypeAreNotPresent) {
@@ -434,15 +434,15 @@ TEST_F(LootSettingsTest, loadingShouldMapFromTypeIfGameIdIsNotPresent) {
   settings_.load(settingsFile_);
 
   ASSERT_EQ(9, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::tes3, settings_.getGameSettings()[0].Id());
-  EXPECT_EQ(GameId::tes4, settings_.getGameSettings()[1].Id());
-  EXPECT_EQ(GameId::tes5, settings_.getGameSettings()[2].Id());
-  EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[3].Id());
-  EXPECT_EQ(GameId::tes5vr, settings_.getGameSettings()[4].Id());
-  EXPECT_EQ(GameId::fo3, settings_.getGameSettings()[5].Id());
-  EXPECT_EQ(GameId::fonv, settings_.getGameSettings()[6].Id());
-  EXPECT_EQ(GameId::fo4, settings_.getGameSettings()[7].Id());
-  EXPECT_EQ(GameId::fo4vr, settings_.getGameSettings()[8].Id());
+  EXPECT_EQ(GameId::tes3, settings_.getGameSettings()[0].id());
+  EXPECT_EQ(GameId::tes4, settings_.getGameSettings()[1].id());
+  EXPECT_EQ(GameId::tes5, settings_.getGameSettings()[2].id());
+  EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[3].id());
+  EXPECT_EQ(GameId::tes5vr, settings_.getGameSettings()[4].id());
+  EXPECT_EQ(GameId::fo3, settings_.getGameSettings()[5].id());
+  EXPECT_EQ(GameId::fonv, settings_.getGameSettings()[6].id());
+  EXPECT_EQ(GameId::fo4, settings_.getGameSettings()[7].id());
+  EXPECT_EQ(GameId::fo4vr, settings_.getGameSettings()[8].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -457,7 +457,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -476,7 +476,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -492,7 +492,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -508,7 +508,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -523,7 +523,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -539,7 +539,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -558,7 +558,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -574,7 +574,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -590,7 +590,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -611,7 +611,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -626,7 +626,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -642,7 +642,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -665,8 +665,8 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(2, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].Id());
-  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[1].Id());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].id());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[1].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -686,8 +686,8 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(2, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].Id());
-  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[1].Id());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].id());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[1].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -703,7 +703,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(
@@ -727,7 +727,7 @@ TEST_F(
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -742,7 +742,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest,
@@ -758,7 +758,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
@@ -774,8 +774,8 @@ TEST_F(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_EQ(1.0, settings_.getGameSettings()[0].MinimumHeaderVersion());
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].name());
+  EXPECT_EQ(1.0, settings_.getGameSettings()[0].minimumHeaderVersion());
 }
 
 TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
@@ -807,11 +807,11 @@ TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
+  EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].folderName());
   EXPECT_EQ(u8"non\u00C1sciiGamePath",
-            settings_.getGameSettings()[0].GamePath().u8string());
+            settings_.getGameSettings()[0].gamePath().u8string());
   EXPECT_EQ(u8"non\u00C1sciiGameLocalPath",
-            settings_.getGameSettings()[0].GameLocalPath().u8string());
+            settings_.getGameSettings()[0].gameLocalPath().u8string());
 }
 
 TEST_F(LootSettingsTest,
@@ -844,10 +844,10 @@ TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
   settings_.load(settingsFile_);
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
+  EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].folderName());
   EXPECT_EQ(getLocalAppDataPath() /
                 std::filesystem::u8path(u8"non\u00C1sciiGameFolder"),
-            settings_.getGameSettings()[0].GameLocalPath());
+            settings_.getGameSettings()[0].gameLocalPath());
 }
 
 TEST_F(
@@ -868,7 +868,7 @@ TEST_F(
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/v0.26/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -888,7 +888,7 @@ TEST_F(LootSettingsTest,
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrimse/v0.26/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -909,7 +909,7 @@ TEST_F(
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/custom/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -931,7 +931,7 @@ TEST_F(
   const auto expectedSource =
       "https://raw.githubusercontent.com/not-loot/skyrimse/v0.17/"
       "masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(LootSettingsTest, loadingShouldNotMigratePathMasterlistSources) {
@@ -947,7 +947,7 @@ TEST_F(LootSettingsTest, loadingShouldNotMigratePathMasterlistSources) {
   settings_.load(settingsFile_);
 
   const auto expectedSource = "C:\\masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -966,7 +966,7 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   auto expectedSource = "masterlist-source";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -986,7 +986,7 @@ TEST_F(
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/custom/"
       "masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1005,7 +1005,7 @@ TEST_F(LootSettingsTest,
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion-foo/v0.26/"
       "masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1021,8 +1021,8 @@ TEST_F(LootSettingsTest,
 
   settings_.load(settingsFile_);
 
-  auto expectedSource = GameSettings(GameId::tes4, "").MasterlistSource();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  auto expectedSource = GameSettings(GameId::tes4, "").masterlistSource();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -1043,7 +1043,7 @@ TEST_F(
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/foo/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -1061,8 +1061,8 @@ TEST_F(
 
   settings_.load(settingsFile_);
 
-  auto expectedSource = GameSettings(GameId::tes4, "").MasterlistSource();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  auto expectedSource = GameSettings(GameId::tes4, "").masterlistSource();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1083,7 +1083,7 @@ TEST_F(LootSettingsTest,
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrimse/v0.26/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1102,7 +1102,7 @@ TEST_F(LootSettingsTest,
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrimse/foo/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1121,7 +1121,7 @@ TEST_F(LootSettingsTest,
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrim-vr/foo/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1142,7 +1142,7 @@ TEST_F(LootSettingsTest,
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/fallout4/v0.26/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1161,7 +1161,7 @@ TEST_F(LootSettingsTest,
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/fallout4/foo/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -1181,7 +1181,7 @@ TEST_F(
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/fallout4-vr/foo/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -1202,7 +1202,7 @@ TEST_F(
   settings_.load(settingsFile_);
 
   auto expectedSource = (gitRepoPath_ / "masterlist.yaml").u8string();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -1223,8 +1223,8 @@ TEST_F(
 
   settings_.load(settingsFile_);
 
-  auto expectedSource = GameSettings(GameId::fo4vr, "").MasterlistSource();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  auto expectedSource = GameSettings(GameId::fo4vr, "").masterlistSource();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -1245,8 +1245,8 @@ TEST_F(
 
   settings_.load(settingsFile_);
 
-  auto expectedSource = GameSettings(GameId::fo4vr, "").MasterlistSource();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  auto expectedSource = GameSettings(GameId::fo4vr, "").masterlistSource();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -1267,7 +1267,7 @@ TEST_F(
   settings_.load(settingsFile_);
 
   auto expectedSource = (gitRepoPath_ / "masterlist.yaml").u8string();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -1285,8 +1285,8 @@ TEST_F(
 
   settings_.load(settingsFile_);
 
-  auto expectedSource = GameSettings(GameId::fo4vr, "").MasterlistSource();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  auto expectedSource = GameSettings(GameId::fo4vr, "").masterlistSource();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -1307,7 +1307,7 @@ TEST_F(
   auto expectedSource =
       "https://raw.githubusercontent.com/my-forks/fallout4-vr/custom/"
       "masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].masterlistSource());
 }
 
 TEST_F(
@@ -1350,7 +1350,7 @@ TEST_F(LootSettingsTest, loadingShouldReadHiddenMessagesForTheParentGame) {
   std::vector<HiddenMessage> expectedMessages{
       HiddenMessage{std::nullopt, "general message"},
       HiddenMessage{"plugin name", "plugin message"}};
-  const auto& messages = settings_.getGameSettings().at(0).HiddenMessages();
+  const auto& messages = settings_.getGameSettings().at(0).hiddenMessages();
 
   EXPECT_EQ(expectedMessages, messages);
 }
@@ -1577,8 +1577,8 @@ TEST_F(LootSettingsTest, loadingTomlShouldUseGivenFolderWhenTypeIsNotPresent) {
 
   settings_.load(settingsFile_);
 
-  EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[0].Id());
-  EXPECT_EQ("SkyrimSE", settings_.getGameSettings()[0].FolderName());
+  EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[0].id());
+  EXPECT_EQ("SkyrimSE", settings_.getGameSettings()[0].folderName());
 }
 
 TEST_F(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
@@ -1592,9 +1592,9 @@ TEST_F(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
 
   settings_.load(settingsFile_);
 
-  EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[0].id());
   EXPECT_EQ("Skyrim Special Edition",
-            settings_.getGameSettings()[0].FolderName());
+            settings_.getGameSettings()[0].folderName());
 }
 
 TEST_F(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
@@ -1612,7 +1612,7 @@ TEST_F(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
 
   settings_.load(settingsFile_);
 
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].name());
 }
 
 TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
@@ -1642,9 +1642,9 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
 
   const std::vector<GameSettings> games({
       GameSettings(GameId::tes4, "")
-          .SetName("Game Name")
-          .SetMinimumHeaderVersion(2.5)
-          .SetHiddenMessages(hiddenMessages),
+          .setName("Game Name")
+          .setMinimumHeaderVersion(2.5)
+          .setHiddenMessages(hiddenMessages),
   });
   LootSettings::Filters filters;
   filters.hideBashTags = false;
@@ -1692,11 +1692,11 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(4, settings.getGroupsEditorWindowPosition().value().right);
   EXPECT_TRUE(settings.getGroupsEditorWindowPosition().value().maximised);
 
-  EXPECT_EQ(games[0].Id(), settings.getGameSettings().at(0).Id());
-  EXPECT_EQ(games[0].Name(), settings.getGameSettings().at(0).Name());
-  EXPECT_EQ(games[0].MinimumHeaderVersion(),
-            settings.getGameSettings().at(0).MinimumHeaderVersion());
-  EXPECT_EQ(hiddenMessages, settings.getGameSettings().at(0).HiddenMessages());
+  EXPECT_EQ(games[0].id(), settings.getGameSettings().at(0).id());
+  EXPECT_EQ(games[0].name(), settings.getGameSettings().at(0).name());
+  EXPECT_EQ(games[0].minimumHeaderVersion(),
+            settings.getGameSettings().at(0).minimumHeaderVersion());
+  EXPECT_EQ(hiddenMessages, settings.getGameSettings().at(0).hiddenMessages());
 
   EXPECT_EQ(filters.hideBashTags, settings.getFilters().hideBashTags);
   EXPECT_EQ(filters.hideCRCs, settings.getFilters().hideCRCs);
@@ -1706,8 +1706,8 @@ TEST_F(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {
   using std::filesystem::u8path;
   settings_.storeGameSettings(
       {GameSettings(GameId::tes4, "")
-           .SetGamePath(u8path(u8"non\u00C1sciiGamePath"))
-           .SetGameLocalPath(u8path(u8"non\u00C1sciiGameLocalPath"))});
+           .setGamePath(u8path(u8"non\u00C1sciiGamePath"))
+           .setGameLocalPath(u8path(u8"non\u00C1sciiGameLocalPath"))});
   settings_.save(settingsFile_);
 
   std::ifstream in(settingsFile_);
@@ -1793,13 +1793,13 @@ TEST_F(LootSettingsTest, storeGameSettingsShouldReplaceExistingGameSettings) {
       {GameSettings(GameId::tes3, ""), GameSettings(GameId::tes4, "")});
 
   ASSERT_EQ(2, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::tes3, settings_.getGameSettings()[0].Id());
-  EXPECT_EQ(GameId::tes4, settings_.getGameSettings()[1].Id());
+  EXPECT_EQ(GameId::tes3, settings_.getGameSettings()[0].id());
+  EXPECT_EQ(GameId::tes4, settings_.getGameSettings()[1].id());
 
   settings_.storeGameSettings({GameSettings(GameId::tes5, "")});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameId::tes5, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::tes5, settings_.getGameSettings()[0].id());
 }
 
 TEST_F(LootSettingsTest, storeLastGameShouldReplaceExistingValue) {
@@ -1845,7 +1845,7 @@ TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
   settings_.load(settingsFile_);
   settings_.updateLastVersion();
 
-  EXPECT_EQ(GetLootVersion(), settings_.getLastVersion());
+  EXPECT_EQ(getLootVersion(), settings_.getLastVersion());
 }
 }
 }

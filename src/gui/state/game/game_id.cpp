@@ -29,7 +29,7 @@
 #include <stdexcept>
 
 namespace {
-std::filesystem::path GetOpenMWDataPath(const std::filesystem::path& gamePath) {
+std::filesystem::path getOpenMWDataPath(const std::filesystem::path& gamePath) {
 #ifndef _WIN32
   if (gamePath == "/usr/games") {
     // Ubuntu, Debian
@@ -68,7 +68,7 @@ std::filesystem::path GetOpenMWDataPath(const std::filesystem::path& gamePath) {
 }
 
 namespace loot {
-std::string ToString(const GameId gameId) {
+std::string toString(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
       return "Morrowind";
@@ -105,12 +105,12 @@ std::string ToString(const GameId gameId) {
   }
 }
 
-bool ShouldAllowRedating(const GameId gameId) {
+bool shouldAllowRedating(const GameId gameId) {
   return gameId == GameId::tes5 || gameId == GameId::enderal ||
          gameId == GameId::tes5se || gameId == GameId::enderalse ||
          gameId == GameId::oblivionRemastered;
 }
-std::string GetMasterFilename(const GameId gameId) {
+std::string getMasterFilename(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
       return "Morrowind.esm";
@@ -145,7 +145,7 @@ std::string GetMasterFilename(const GameId gameId) {
   }
 }
 
-std::string GetGameName(const GameId gameId) {
+std::string getGameName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
       return "TES III: Morrowind";
@@ -182,7 +182,7 @@ std::string GetGameName(const GameId gameId) {
   }
 }
 
-std::string GetDefaultLootFolderName(const GameId gameId) {
+std::string getDefaultLootFolderName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
       return "Morrowind";
@@ -219,7 +219,7 @@ std::string GetDefaultLootFolderName(const GameId gameId) {
   }
 }
 
-std::filesystem::path GetDataPath(const GameId gameId,
+std::filesystem::path getDataPath(const GameId gameId,
                                   const std::filesystem::path& gamePath) {
   switch (gameId) {
     case GameId::tes3:
@@ -238,7 +238,7 @@ std::filesystem::path GetDataPath(const GameId gameId,
     case GameId::starfield:
       return gamePath / "Data";
     case GameId::openmw:
-      return GetOpenMWDataPath(gamePath);
+      return getOpenMWDataPath(gamePath);
     case GameId::oblivionRemastered:
       return gamePath / "OblivionRemastered" / "Content" / "Dev" / "ObvData" /
              "Data";

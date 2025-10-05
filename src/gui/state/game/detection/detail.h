@@ -38,44 +38,44 @@
 #include "gui/state/game/game_settings.h"
 
 namespace loot {
-std::string GetDefaultLootFolderName(const GameId gameId);
+std::string getDefaultLootFolderName(const GameId gameId);
 
-std::string GetSourceDescription(const InstallSource source);
+std::string getSourceDescription(const InstallSource source);
 
-std::string GetNameSourceSuffix(const InstallSource source);
+std::string getNameSourceSuffix(const InstallSource source);
 
-std::vector<GameInstall> FindGameInstalls(
+std::vector<GameInstall> findGameInstalls(
     const RegistryInterface& registry,
     const std::vector<std::filesystem::path>& heroicConfigPaths,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages);
 
 std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>
-CountGameInstalls(const std::vector<GameInstall>& configuredInstalls,
+countGameInstalls(const std::vector<GameInstall>& configuredInstalls,
                   const std::vector<GameInstall>& newInstalls);
 
-std::string DeriveName(
+std::string deriveName(
     const GameInstall& gameInstall,
     std::string baseName,
     const std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>&
         gameSourceCounts,
     const std::vector<std::string>& existingNames);
 
-void UpdateSettingsPaths(GameSettings& settings, const GameInstall& install);
+void updateSettingsPaths(GameSettings& settings, const GameInstall& install);
 
-bool ArePathsEquivalent(const GameSettings& settings,
+bool arePathsEquivalent(const GameSettings& settings,
                         const GameInstall& install);
 
-std::vector<GameInstall> UpdateMatchingSettings(
+std::vector<GameInstall> updateMatchingSettings(
     std::vector<GameSettings>& gamesSettings,
     const std::vector<GameInstall>& gameInstalls,
     const std::function<bool(const GameSettings& settings,
                              const GameInstall& install)>& primaryComparator);
 
-std::vector<GameInstall> DetectConfiguredInstalls(
+std::vector<GameInstall> detectConfiguredInstalls(
     const std::vector<GameSettings>& gamesSettings);
 
-void AppendNewGamesSettings(
+void appendNewGamesSettings(
     std::vector<GameSettings>& gamesSettings,
     const std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>&
         gameSourceCounts,
@@ -87,7 +87,7 @@ void AppendNewGamesSettings(
 // paths in any matching existing settings objects. Returns
 // the settings objects (that may have been updated), plus the new settings
 // objects.
-void UpdateInstalledGamesSettings(
+void updateInstalledGamesSettings(
     std::vector<GameSettings>& gamesSettings,
     const RegistryInterface& registry,
     const std::vector<std::filesystem::path>& heroicConfigPaths,

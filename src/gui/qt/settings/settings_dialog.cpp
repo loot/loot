@@ -67,13 +67,13 @@ std::vector<std::string> getGameFolderNames(
 std::string deriveFolderName(
     loot::GameId gameId,
     const std::vector<std::string>& existingFolderNames) {
-  const auto baseName = GetDefaultLootFolderName(gameId);
+  const auto baseName = getDefaultLootFolderName(gameId);
   std::string name = baseName;
   int suffixIndex = 1;
   while (std::any_of(existingFolderNames.begin(),
                      existingFolderNames.end(),
                      [&](const std::string& existingName) {
-                       return loot::CompareFilenames(name, existingName) == 0;
+                       return loot::compareFilenames(name, existingName) == 0;
                      })) {
     name = baseName + " (" + std::to_string(suffixIndex) + ")";
     suffixIndex += 1;
@@ -101,7 +101,7 @@ void SettingsDialog::initialiseInputs(
   }
 
   for (const auto& game : settings.getGameSettings()) {
-    auto isCurrentGame = game.FolderName() == currentGameFolder;
+    auto isCurrentGame = game.folderName() == currentGameFolder;
 
     addGameTab(game, isCurrentGame);
   }
@@ -117,7 +117,7 @@ void SettingsDialog::recordInputValues(LootState& state) {
     gameSettings.push_back(gameTab->getGameSettings());
   }
 
-  gameSettings = state.LoadInstalledGames(gameSettings);
+  gameSettings = state.loadInstalledGames(gameSettings);
 
   state.getSettings().storeGameSettings(gameSettings);
 }
@@ -226,7 +226,7 @@ void SettingsDialog::on_addGameButton_clicked() {
   auto lootFolder = deriveFolderName(gameId, existingFolders);
 
   GameSettings game(gameId, lootFolder);
-  game.SetName(name);
+  game.setName(name);
 
   addGameTab(game, false);
 

@@ -35,7 +35,7 @@ along with LOOT.  If not, see
 namespace loot::test {
 class TestRegistry : public RegistryInterface {
 public:
-  std::optional<std::string> GetStringValue(
+  std::optional<std::string> getStringValue(
       const RegistryValue& value) const override {
     const auto it = stringValues_.find(value.subKey);
     if (it != stringValues_.end()) {

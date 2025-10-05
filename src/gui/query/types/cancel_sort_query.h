@@ -43,8 +43,8 @@ public:
       logger->trace("User has rejected sorted load order, discarding it.");
     }
 
-    counter_->Decrement();
-    game_->GetSortCount().Decrement();
+    counter_->decrement();
+    game_->getSortCount().decrement();
 
     const std::function<std::pair<std::string, std::optional<short>>(
         std::shared_ptr<const PluginInterface>, std::optional<short>, bool)>
@@ -54,7 +54,7 @@ public:
           return std::make_pair(plugin->GetName(), loadOrderIndex);
         };
 
-    return MapFromLoadOrderData(*game_, game_->GetLoadOrder(), mapper);
+    return mapFromLoadOrderData(*game_, game_->getLoadOrder(), mapper);
   }
 
 private:

@@ -43,7 +43,7 @@ static constexpr float FONV_MINIMUM_HEADER_VERSION = 1.32f;
 static constexpr float FO4_MINIMUM_HEADER_VERSION = 0.95f;
 static constexpr float STARFIELD_MINIMUM_HEADER_VERSION = 0.96f;
 
-float GetMinimumHeaderVersion(const GameId gameId) {
+float getMinimumHeaderVersion(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
     case GameId::openmw:
@@ -73,7 +73,7 @@ float GetMinimumHeaderVersion(const GameId gameId) {
   }
 }
 
-std::string GetDefaultMasterlistRepositoryName(const GameId gameId) {
+std::string getDefaultMasterlistRepositoryName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
     case GameId::openmw:
@@ -106,15 +106,15 @@ std::string GetDefaultMasterlistRepositoryName(const GameId gameId) {
 }
 
 namespace loot {
-std::string GetDefaultMasterlistUrl(const std::string& repositoryName) {
+std::string getDefaultMasterlistUrl(const std::string& repositoryName) {
   return std::string("https://raw.githubusercontent.com/loot/") +
          repositoryName + "/" + DEFAULT_MASTERLIST_BRANCH + "/masterlist.yaml";
 }
 
-std::string GetDefaultMasterlistUrl(const GameId gameId) {
-  const auto repoName = GetDefaultMasterlistRepositoryName(gameId);
+std::string getDefaultMasterlistUrl(const GameId gameId) {
+  const auto repoName = getDefaultMasterlistRepositoryName(gameId);
 
-  return GetDefaultMasterlistUrl(repoName);
+  return getDefaultMasterlistUrl(repoName);
 }
 
 bool operator==(const HiddenMessage& lhs, const HiddenMessage& rhs) {
@@ -123,84 +123,84 @@ bool operator==(const HiddenMessage& lhs, const HiddenMessage& rhs) {
 
 GameSettings::GameSettings(const GameId gameId, const std::string& lootFolder) :
     id_(gameId),
-    name_(GetGameName(gameId)),
-    masterFile_(GetMasterFilename(gameId)),
-    minimumHeaderVersion_(GetMinimumHeaderVersion(gameId)),
+    name_(getGameName(gameId)),
+    masterFile_(getMasterFilename(gameId)),
+    minimumHeaderVersion_(getMinimumHeaderVersion(gameId)),
     lootFolderName_(lootFolder),
-    masterlistSource_(GetDefaultMasterlistUrl(gameId)) {}
+    masterlistSource_(getDefaultMasterlistUrl(gameId)) {}
 
-GameId GameSettings::Id() const { return id_; }
+GameId GameSettings::id() const { return id_; }
 
-std::string GameSettings::Name() const { return name_; }
+std::string GameSettings::name() const { return name_; }
 
-std::string GameSettings::FolderName() const { return lootFolderName_; }
+std::string GameSettings::folderName() const { return lootFolderName_; }
 
-std::string GameSettings::Master() const { return masterFile_; }
+std::string GameSettings::master() const { return masterFile_; }
 
-float GameSettings::MinimumHeaderVersion() const {
+float GameSettings::minimumHeaderVersion() const {
   return minimumHeaderVersion_;
 }
 
-std::string GameSettings::MasterlistSource() const { return masterlistSource_; }
+std::string GameSettings::masterlistSource() const { return masterlistSource_; }
 
-std::filesystem::path GameSettings::GamePath() const { return gamePath_; }
+std::filesystem::path GameSettings::gamePath() const { return gamePath_; }
 
-std::filesystem::path GameSettings::GameLocalPath() const {
+std::filesystem::path GameSettings::gameLocalPath() const {
   return gameLocalPath_;
 }
 
-std::filesystem::path GameSettings::DataPath() const {
-  return GetDataPath(id_, gamePath_);
+std::filesystem::path GameSettings::dataPath() const {
+  return getDataPath(id_, gamePath_);
 }
 
-const std::vector<HiddenMessage>& GameSettings::HiddenMessages() const {
+const std::vector<HiddenMessage>& GameSettings::hiddenMessages() const {
   return hiddenMessages_;
 }
 
-GameSettings& GameSettings::SetName(const std::string& name) {
+GameSettings& GameSettings::setName(const std::string& name) {
   name_ = name;
   return *this;
 }
 
-GameSettings& GameSettings::SetMaster(const std::string& masterFile) {
+GameSettings& GameSettings::setMaster(const std::string& masterFile) {
   masterFile_ = masterFile;
   return *this;
 }
 
-GameSettings& GameSettings::SetMinimumHeaderVersion(
+GameSettings& GameSettings::setMinimumHeaderVersion(
     float minimumHeaderVersion) {
   minimumHeaderVersion_ = minimumHeaderVersion;
   return *this;
 }
 
-GameSettings& GameSettings::SetMasterlistSource(const std::string& source) {
+GameSettings& GameSettings::setMasterlistSource(const std::string& source) {
   masterlistSource_ = source;
   return *this;
 }
 
-GameSettings& GameSettings::SetGamePath(const std::filesystem::path& path) {
+GameSettings& GameSettings::setGamePath(const std::filesystem::path& path) {
   gamePath_ = path;
   return *this;
 }
 
-GameSettings& GameSettings::SetGameLocalPath(
+GameSettings& GameSettings::setGameLocalPath(
     const std::filesystem::path& path) {
   gameLocalPath_ = path;
   return *this;
 }
 
-GameSettings& GameSettings::SetGameLocalFolder(const std::string& folderName) {
+GameSettings& GameSettings::setGameLocalFolder(const std::string& folderName) {
   gameLocalPath_ = getLocalAppDataPath() / std::filesystem::u8path(folderName);
   return *this;
 }
 
-GameSettings& GameSettings::SetHiddenMessages(
+GameSettings& GameSettings::setHiddenMessages(
     const std::vector<HiddenMessage>& hiddenMessages) {
   hiddenMessages_ = hiddenMessages;
   return *this;
 }
 
-void GameSettings::HideMessage(const std::string& pluginName,
+void GameSettings::hideMessage(const std::string& pluginName,
                                const std::string& messageText) {
   HiddenMessage message;
   if (!pluginName.empty()) {
@@ -214,7 +214,7 @@ void GameSettings::HideMessage(const std::string& pluginName,
   }
 }
 
-bool GameSettings::HasHiddenGeneralMessages() {
+bool GameSettings::hasHiddenGeneralMessages() {
   for (const auto& hiddenMessage : hiddenMessages_) {
     if (!hiddenMessage.pluginName.has_value()) {
       return true;
@@ -224,7 +224,7 @@ bool GameSettings::HasHiddenGeneralMessages() {
   return false;
 }
 
-bool GameSettings::PluginHasHiddenMessages(const std::string& pluginName) const {
+bool GameSettings::pluginHasHiddenMessages(const std::string& pluginName) const {
   for (const auto& hiddenMessage : hiddenMessages_) {
     if (hiddenMessage.pluginName == pluginName) {
       return true;

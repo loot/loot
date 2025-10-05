@@ -59,7 +59,7 @@ struct EgsManifestData {
   std::string installLocation;
 };
 
-std::optional<std::string> GetEgsAppName(GameId gameId) {
+std::optional<std::string> getEgsAppName(GameId gameId) {
   switch (gameId) {
     case GameId::tes5se:
       // The Anniversary Edition "DLC" has an AppName of
@@ -89,7 +89,7 @@ std::optional<std::string> GetEgsAppName(GameId gameId) {
   }
 }
 
-std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
+std::vector<loot::LocalisedGameInstallPath> getGameLocalisationDirectories(
     GameId gameId,
     const std::filesystem::path& basePath) {
   switch (gameId) {
@@ -129,7 +129,7 @@ std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
 };
 
 #ifdef _WIN32
-std::filesystem::path GetProgramDataPath() {
+std::filesystem::path getProgramDataPath() {
   PWSTR path;
 
   if (SHGetKnownFolderPath(FOLDERID_ProgramData, 0, NULL, &path) != S_OK)
@@ -144,11 +144,11 @@ std::filesystem::path GetProgramDataPath() {
 }
 #endif
 
-std::optional<std::filesystem::path> GetEgsManifestsPath(
+std::optional<std::filesystem::path> getEgsManifestsPath(
     const loot::RegistryInterface& registry) {
   // Try using Registry key first.
   const auto appDataPath =
-      registry.GetStringValue({loot::RegistryRootKey::LOCAL_MACHINE,
+      registry.getStringValue({loot::RegistryRootKey::LOCAL_MACHINE,
                                "Software\\Epic Games\\EpicGamesLauncher",
                                "AppDataPath"});
 
@@ -167,14 +167,14 @@ std::optional<std::filesystem::path> GetEgsManifestsPath(
         "so assuming it's in %ProgramData%.");
   }
 
-  return GetProgramDataPath() / "Epic" / "EpicGamesLauncher" / "Data" /
+  return getProgramDataPath() / "Epic" / "EpicGamesLauncher" / "Data" /
          "Manifests";
 #else
   return std::nullopt;
 #endif
 }
 
-EgsManifestData GetEgsManifestData(const std::filesystem::path& manifestPath) {
+EgsManifestData getEgsManifestData(const std::filesystem::path& manifestPath) {
   const auto logger = getLogger();
 
   if (logger) {
@@ -218,19 +218,19 @@ EgsManifestData GetEgsManifestData(const std::filesystem::path& manifestPath) {
   return data;
 }
 
-std::optional<std::filesystem::path> GetEgsGameInstallPath(
+std::optional<std::filesystem::path> getEgsGameInstallPath(
     const loot::RegistryInterface& registry,
     const loot::GameId gameId) {
   // Unfortunately we don't know which is the right manifest file, so iterate
   // over them until the one containing the correct AppName is found.
-  const auto expectedAppName = GetEgsAppName(gameId);
+  const auto expectedAppName = getEgsAppName(gameId);
 
   if (!expectedAppName.has_value()) {
     // Short-circuit to avoid unnecessary directory scanning.
     return std::nullopt;
   }
 
-  const auto egsManifestsPath = GetEgsManifestsPath(registry);
+  const auto egsManifestsPath = getEgsManifestsPath(registry);
   if (!egsManifestsPath.has_value() ||
       !std::filesystem::exists(egsManifestsPath.value())) {
     return std::nullopt;
@@ -242,14 +242,14 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
     logger->trace(
         "Checking if game \"{}\" is installed through the Epic Games "
         "Store.",
-        loot::GetGameName(gameId));
+        loot::getGameName(gameId));
   }
 
   for (const auto& entry :
        std::filesystem::directory_iterator(egsManifestsPath.value())) {
     if (entry.is_regular_file() &&
         boost::iends_with(entry.path().filename().u8string(), ".item")) {
-      const auto manifestData = GetEgsManifestData(entry.path());
+      const auto manifestData = getEgsManifestData(entry.path());
 
       if (manifestData.appName == expectedAppName) {
         if (logger) {
@@ -269,11 +269,11 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
 }
 
 namespace loot::epic {
-std::optional<std::string> GetEgsAppName(const GameId gameId) {
-  return ::GetEgsAppName(gameId);
+std::optional<std::string> getEgsAppName(const GameId gameId) {
+  return ::getEgsAppName(gameId);
 }
 
-std::string GetAppDataFolderName(const GameId gameId) {
+std::string getAppDataFolderName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes5se:
       return "Skyrim Special Edition EPIC";
@@ -300,7 +300,7 @@ std::string GetAppDataFolderName(const GameId gameId) {
   }
 }
 
-std::optional<std::filesystem::path> FindGameInstallPath(
+std::optional<std::filesystem::path> findGameInstallPath(
     const GameId gameId,
     const std::filesystem::path& rootInstallPath,
     const std::vector<std::string>& preferredUILanguages) {
@@ -308,21 +308,21 @@ std::optional<std::filesystem::path> FindGameInstallPath(
   // subdirectories of its installLocation, so get the best match for the
   // user's current language.
   const auto pathsToCheck =
-      GetGameLocalisationDirectories(gameId, rootInstallPath);
+      getGameLocalisationDirectories(gameId, rootInstallPath);
 
-  return GetLocalisedGameInstallPath(
+  return getLocalisedGameInstallPath(
       gameId, preferredUILanguages, pathsToCheck);
 }
 
-std::optional<GameInstall> FindGameInstalls(
+std::optional<GameInstall> findGameInstalls(
     const RegistryInterface& registry,
     const GameId gameId,
     const std::vector<std::string>& preferredUILanguages) {
   try {
-    const auto installPath = GetEgsGameInstallPath(registry, gameId);
+    const auto installPath = getEgsGameInstallPath(registry, gameId);
 
     if (installPath.has_value()) {
-      const auto localisedInstallPath = FindGameInstallPath(
+      const auto localisedInstallPath = findGameInstallPath(
           gameId, installPath.value(), preferredUILanguages);
 
       if (localisedInstallPath.has_value()) {
@@ -341,7 +341,7 @@ std::optional<GameInstall> FindGameInstalls(
       logger->error(
           "Error while checking if game \"{}\" is installed through the Epic "
           "Games Store: {}",
-          GetGameName(gameId),
+          getGameName(gameId),
           e.what());
     }
   }

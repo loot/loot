@@ -57,11 +57,11 @@ struct LocalisedGameInstallPath {
   std::string language;
 };
 
-bool IsValidGamePath(const GameId gameId,
+bool isValidGamePath(const GameId gameId,
                      const std::string& masterFilename,
                      const std::filesystem::path& pathToCheck);
 
-std::optional<std::filesystem::path> GetLocalisedGameInstallPath(
+std::optional<std::filesystem::path> getLocalisedGameInstallPath(
     const GameId gameId,
     const std::vector<std::string>& uiPreferredLanguages,
     const std::vector<LocalisedGameInstallPath>& paths);

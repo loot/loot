@@ -161,7 +161,7 @@ private:
                              state.getSettings().getLanguage())};
 
   SettingsDialog *settingsDialog{
-      new SettingsDialog(this, state.GetPaths().getLootDataPath())};
+      new SettingsDialog(this, state.getPaths().getLootDataPath())};
   SearchDialog *searchDialog{new SearchDialog(this)};
   BackUpLoadOrderDialog *backupDialog{new BackUpLoadOrderDialog(this)};
   RestoreLoadOrderDialog *restoreBackupDialog{new RestoreLoadOrderDialog(this)};

@@ -38,9 +38,9 @@ namespace loot {
 static constexpr const char* MASTERLIST_FILENAME = "masterlist.yaml";
 static constexpr const char* DEFAULT_MASTERLIST_BRANCH = "v0.26";
 
-std::string GetDefaultMasterlistUrl(const std::string& repositoryName);
+std::string getDefaultMasterlistUrl(const std::string& repositoryName);
 
-std::string GetDefaultMasterlistUrl(const GameId gameId);
+std::string getDefaultMasterlistUrl(const GameId gameId);
 
 struct HiddenMessage {
   std::optional<std::string> pluginName;
@@ -54,35 +54,35 @@ public:
   GameSettings() = default;
   GameSettings(const GameId gameId, const std::string& lootFolder);
 
-  GameId Id() const;
-  std::string Name() const;  // Returns the game's name, eg. "TES IV: Oblivion".
-  std::string FolderName() const;
-  std::string Master() const;
-  float MinimumHeaderVersion() const;
-  std::string MasterlistSource() const;
-  std::filesystem::path GamePath() const;
-  std::filesystem::path GameLocalPath() const;
-  std::filesystem::path DataPath() const;
+  GameId id() const;
+  std::string name() const;  // Returns the game's name, eg. "TES IV: Oblivion".
+  std::string folderName() const;
+  std::string master() const;
+  float minimumHeaderVersion() const;
+  std::string masterlistSource() const;
+  std::filesystem::path gamePath() const;
+  std::filesystem::path gameLocalPath() const;
+  std::filesystem::path dataPath() const;
 
-  const std::vector<HiddenMessage>& HiddenMessages() const;
+  const std::vector<HiddenMessage>& hiddenMessages() const;
 
-  bool PluginHasHiddenMessages(const std::string& pluginName) const;
+  bool pluginHasHiddenMessages(const std::string& pluginName) const;
 
-  GameSettings& SetName(const std::string& name);
-  GameSettings& SetMaster(const std::string& masterFile);
-  GameSettings& SetMinimumHeaderVersion(float minimumHeaderVersion);
-  GameSettings& SetMasterlistSource(const std::string& source);
-  GameSettings& SetGamePath(const std::filesystem::path& path);
-  GameSettings& SetGameLocalPath(const std::filesystem::path& GameLocalPath);
-  GameSettings& SetGameLocalFolder(const std::string& folderName);
+  GameSettings& setName(const std::string& name);
+  GameSettings& setMaster(const std::string& masterFile);
+  GameSettings& setMinimumHeaderVersion(float minimumHeaderVersion);
+  GameSettings& setMasterlistSource(const std::string& source);
+  GameSettings& setGamePath(const std::filesystem::path& path);
+  GameSettings& setGameLocalPath(const std::filesystem::path& gameLocalPath);
+  GameSettings& setGameLocalFolder(const std::string& folderName);
 
-  GameSettings& SetHiddenMessages(
+  GameSettings& setHiddenMessages(
       const std::vector<HiddenMessage>& hiddenMessages);
 
-  void HideMessage(const std::string& pluginName,
+  void hideMessage(const std::string& pluginName,
                    const std::string& messageText);
 
-  bool HasHiddenGeneralMessages();
+  bool hasHiddenGeneralMessages();
 
 private:
   GameId id_{GameId::tes4};

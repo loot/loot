@@ -36,7 +36,8 @@
 
 namespace {
 using loot::GameId;
-std::string GetExecutableName(GameId gameId) {
+
+std::string getExecutableName(GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
       return "Morrowind.exe";
@@ -77,7 +78,7 @@ std::string GetExecutableName(GameId gameId) {
   }
 }
 
-bool ExecutableExists(const GameId& gameType,
+bool executableExists(const GameId& gameType,
                       const std::filesystem::path& gamePath) {
   switch (gameType) {
     case GameId::tes5:
@@ -92,7 +93,7 @@ bool ExecutableExists(const GameId& gameType,
       // /usr/games may have the same data path, leading to two installs being
       // recorded when there's actually only one.
       return std::filesystem::exists(
-          gamePath / std::filesystem::u8path(GetExecutableName(gameType)));
+          gamePath / std::filesystem::u8path(getExecutableName(gameType)));
     case GameId::tes3:
     case GameId::tes4:
     case GameId::nehrim:
@@ -108,7 +109,7 @@ bool ExecutableExists(const GameId& gameType,
   }
 }
 
-void SortPathsByPreferredLanguage(
+void sortPathsByPreferredLanguage(
     std::vector<loot::LocalisedGameInstallPath>& paths,
     const std::vector<std::string>& uiPreferredLanguages) {
   const auto findPreferredLanguageIndex = [&](const std::string& language) {
@@ -142,16 +143,16 @@ void SortPathsByPreferredLanguage(
 }
 
 namespace loot {
-bool IsValidGamePath(const GameId gameId,
+bool isValidGamePath(const GameId gameId,
                      const std::string& masterFilename,
                      const std::filesystem::path& pathToCheck) {
   return !pathToCheck.empty() &&
-         std::filesystem::exists(GetDataPath(gameId, pathToCheck) /
+         std::filesystem::exists(getDataPath(gameId, pathToCheck) /
                                  std::filesystem::u8path(masterFilename)) &&
-         ExecutableExists(gameId, pathToCheck);
+         executableExists(gameId, pathToCheck);
 }
 
-std::optional<std::filesystem::path> GetLocalisedGameInstallPath(
+std::optional<std::filesystem::path> getLocalisedGameInstallPath(
     const GameId gameId,
     const std::vector<std::string>& uiPreferredLanguages,
     const std::vector<LocalisedGameInstallPath>& paths) {
@@ -160,7 +161,7 @@ std::optional<std::filesystem::path> GetLocalisedGameInstallPath(
   // Sort the given paths so they're in the same order as the preferred
   // languages.
   std::vector<LocalisedGameInstallPath> pathsToCheck = paths;
-  SortPathsByPreferredLanguage(pathsToCheck, uiPreferredLanguages);
+  sortPathsByPreferredLanguage(pathsToCheck, uiPreferredLanguages);
 
   // Now check each of the sorted paths in turn and return the first
   // valid path.
@@ -171,8 +172,8 @@ std::optional<std::filesystem::path> GetLocalisedGameInstallPath(
                     pathToCheck.language);
     }
 
-    if (IsValidGamePath(
-            gameId, GetMasterFilename(gameId), pathToCheck.installPath)) {
+    if (isValidGamePath(
+            gameId, getMasterFilename(gameId), pathToCheck.installPath)) {
       return pathToCheck.installPath;
     }
   }

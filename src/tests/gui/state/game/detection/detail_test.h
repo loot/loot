@@ -44,7 +44,7 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(GetDefaultLootFolderNameTest, shouldNotThrowForAnyValidGameId) {
-  EXPECT_NO_THROW(GetDefaultLootFolderName(GetParam()));
+  EXPECT_NO_THROW(getDefaultLootFolderName(GetParam()));
 }
 
 class GetSourceDescriptionTest
@@ -55,7 +55,7 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_INSTALL_SOURCES));
 
 TEST_P(GetSourceDescriptionTest, shouldNotThrowForAnyValidGameId) {
-  EXPECT_NO_THROW(GetSourceDescription(GetParam()));
+  EXPECT_NO_THROW(getSourceDescription(GetParam()));
 }
 
 class GetNameSourceSuffixTest : public ::testing::TestWithParam<InstallSource> {
@@ -66,7 +66,7 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_INSTALL_SOURCES));
 
 TEST_P(GetNameSourceSuffixTest, shouldNotThrowForAnyValidGameId) {
-  EXPECT_NO_THROW(GetNameSourceSuffix(GetParam()));
+  EXPECT_NO_THROW(getNameSourceSuffix(GetParam()));
 }
 
 class FindGameInstallsTest : public CommonGameTestFixture {
@@ -88,25 +88,25 @@ protected:
         genericInstallPath.u8string());
 
     // Create Steam install.
-    CopyInstall(steamInstallPath);
+    copyInstall(steamInstallPath);
     registry.SetStringValue(
         "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
         "489830",
         steamInstallPath.u8string());
 
     // Create GOG install.
-    CopyInstall(gogInstallPath);
+    copyInstall(gogInstallPath);
     registry.SetStringValue("Software\\GOG.com\\Games\\1801825368",
                             gogInstallPath.u8string());
 
     // Create Epic install.
-    CreateEpicManifest();
-    CopyInstall(epicInstallPath);
+    createEpicManifest();
+    copyInstall(epicInstallPath);
     registry.SetStringValue("Software\\Epic Games\\EpicGamesLauncher",
                             epicManifestsPath.parent_path().u8string());
 
     // Create MS Store install.
-    CopyInstall(msInstallPath);
+    copyInstall(msInstallPath);
   }
 
   std::filesystem::path epicManifestsPath;
@@ -121,7 +121,7 @@ protected:
   TestRegistry registry;
 
 private:
-  void CreateEpicManifest() {
+  void createEpicManifest() {
     std::filesystem::create_directory(epicManifestsPath);
 
     std::ofstream out(epicManifestsPath / "manifest.item");
@@ -133,7 +133,7 @@ private:
     out.close();
   }
 
-  void CopyInstall(const std::filesystem::path& destination) {
+  void copyInstall(const std::filesystem::path& destination) {
     std::filesystem::create_directories(destination.parent_path());
 
     std::filesystem::copy(
@@ -142,12 +142,12 @@ private:
 };
 
 TEST_F(FindGameInstallsTest, shouldReturnAnEmptyVectorIfNoGamesAreInstalled) {
-  EXPECT_TRUE(FindGameInstalls(TestRegistry(), {}, {}, {}).empty());
+  EXPECT_TRUE(findGameInstalls(TestRegistry(), {}, {}, {}).empty());
 }
 
 TEST_F(FindGameInstallsTest, shouldFindInstallsFromAllSupportedSources) {
   const auto installs =
-      FindGameInstalls(registry, {}, {xboxGamingRootPath}, {});
+      findGameInstalls(registry, {}, {xboxGamingRootPath}, {});
 
   ASSERT_EQ(5, installs.size());
 
@@ -183,7 +183,7 @@ TEST_F(FindGameInstallsTest, shouldDeduplicateFoundInstalls) {
       steamInstallPath.u8string());
 
   const auto installs =
-      FindGameInstalls(registry, {}, {xboxGamingRootPath}, {});
+      findGameInstalls(registry, {}, {xboxGamingRootPath}, {});
 
   ASSERT_EQ(4, installs.size());
 
@@ -218,7 +218,7 @@ TEST(CountGameInstalls, shouldCountConfiguredAndNewInstallsByGameAndSource) {
       {GameId::tes3, InstallSource::epic},
       {GameId::tes5, InstallSource::microsoft}};
 
-  const auto counts = CountGameInstalls(configuredInstalls, newInstalls);
+  const auto counts = countGameInstalls(configuredInstalls, newInstalls);
 
   EXPECT_EQ(3, counts.size());
   EXPECT_EQ(1, counts.at(GameId::tes3).size());
@@ -232,7 +232,7 @@ TEST(CountGameInstalls, shouldCountConfiguredAndNewInstallsByGameAndSource) {
 
 TEST(DeriveName, shouldUseBaseNameIfItDoesNotAlreadyExist) {
   const auto baseName = "Morrowind";
-  const auto name = DeriveName({GameId::tes3, InstallSource::unknown},
+  const auto name = deriveName({GameId::tes3, InstallSource::unknown},
                                baseName,
                                {{GameId::tes3, {{InstallSource::gog, 1}}},
                                 {GameId::tes4, {{InstallSource::steam, 1}}}},
@@ -243,7 +243,7 @@ TEST(DeriveName, shouldUseBaseNameIfItDoesNotAlreadyExist) {
 
 TEST(DeriveName, shouldAddSourceToNameIfAnotherSourceForTheSameGameExists) {
   const std::string baseName = "Morrowind";
-  const auto name = DeriveName(
+  const auto name = deriveName(
       {GameId::tes3, InstallSource::gog},
       baseName,
       {{GameId::tes3, {{InstallSource::gog, 1}, {InstallSource::steam, 1}}},
@@ -255,7 +255,7 @@ TEST(DeriveName, shouldAddSourceToNameIfAnotherSourceForTheSameGameExists) {
 
 TEST(DeriveName, shouldAddIndexToNameIfItAlreadyExists) {
   const std::string baseName = "Morrowind";
-  const auto name = DeriveName({GameId::tes3, InstallSource::unknown},
+  const auto name = deriveName({GameId::tes3, InstallSource::unknown},
                                baseName,
                                {{GameId::tes3, {{InstallSource::gog, 1}}},
                                 {GameId::tes4, {{InstallSource::steam, 1}}}},
@@ -266,7 +266,7 @@ TEST(DeriveName, shouldAddIndexToNameIfItAlreadyExists) {
 
 TEST(DeriveName, shouldAddIndexToNameWithSourceIfItAlreadyExists) {
   const std::string baseName = "Morrowind";
-  const auto name = DeriveName(
+  const auto name = deriveName(
       {GameId::tes3, InstallSource::gog},
       baseName,
       {{GameId::tes3, {{InstallSource::gog, 1}, {InstallSource::steam, 1}}},
@@ -278,7 +278,7 @@ TEST(DeriveName, shouldAddIndexToNameWithSourceIfItAlreadyExists) {
 
 TEST(DeriveName, shouldIncrementIndexIfNameWithIndexAlreadyExists) {
   const std::string baseName = "Morrowind";
-  const auto name = DeriveName({GameId::tes3, InstallSource::gog},
+  const auto name = deriveName({GameId::tes3, InstallSource::gog},
                                baseName,
                                {{GameId::tes3, {{InstallSource::gog, 1}}},
                                 {GameId::tes4, {{InstallSource::steam, 1}}}},
@@ -292,25 +292,25 @@ TEST(UpdateSettingsPaths, shouldUpdateInstallPathIfItIsCurrentlyEmpty) {
   GameInstall install;
   install.installPath = "test";
 
-  ASSERT_TRUE(settings.GamePath().empty());
+  ASSERT_TRUE(settings.gamePath().empty());
 
-  UpdateSettingsPaths(settings, install);
+  updateSettingsPaths(settings, install);
 
-  EXPECT_EQ(install.installPath, settings.GamePath());
+  EXPECT_EQ(install.installPath, settings.gamePath());
 }
 
 TEST(UpdateSettingsPaths, shouldNotUpdateInstallPathIfItIsNotCurrentlyEmpty) {
   const std::filesystem::path initialPath = "initial";
 
   GameSettings settings;
-  settings.SetGamePath(initialPath);
+  settings.setGamePath(initialPath);
 
   GameInstall install;
   install.installPath = "test";
 
-  UpdateSettingsPaths(settings, install);
+  updateSettingsPaths(settings, install);
 
-  EXPECT_EQ(initialPath, settings.GamePath());
+  EXPECT_EQ(initialPath, settings.gamePath());
 }
 
 TEST(UpdateSettingsPaths, shouldUpdateLocalPathIfItIsCurrentlyEmpty) {
@@ -318,25 +318,25 @@ TEST(UpdateSettingsPaths, shouldUpdateLocalPathIfItIsCurrentlyEmpty) {
   GameInstall install;
   install.localPath = "test";
 
-  ASSERT_TRUE(settings.GameLocalPath().empty());
+  ASSERT_TRUE(settings.gameLocalPath().empty());
 
-  UpdateSettingsPaths(settings, install);
+  updateSettingsPaths(settings, install);
 
-  EXPECT_EQ(install.localPath, settings.GameLocalPath());
+  EXPECT_EQ(install.localPath, settings.gameLocalPath());
 }
 
 TEST(UpdateSettingsPaths, shouldNotUpdateLocalPathIfItIsNotCurrentlyEmpty) {
   const std::filesystem::path initialPath = "initial";
 
   GameSettings settings;
-  settings.SetGameLocalPath(initialPath);
+  settings.setGameLocalPath(initialPath);
 
   GameInstall install;
   install.localPath = "test";
 
-  UpdateSettingsPaths(settings, install);
+  updateSettingsPaths(settings, install);
 
-  EXPECT_EQ(initialPath, settings.GameLocalPath());
+  EXPECT_EQ(initialPath, settings.gameLocalPath());
 }
 
 TEST(
@@ -345,22 +345,22 @@ TEST(
   const std::filesystem::path installPath = "install";
   const std::filesystem::path localPath = "local";
   std::vector<GameSettings> gamesSettings{
-      GameSettings(), GameSettings().SetGamePath(installPath)};
+      GameSettings(), GameSettings().setGamePath(installPath)};
   const std::vector<GameInstall> gameInstalls{GameInstall{
       GameId::tes5, InstallSource::unknown, installPath, localPath}};
   const auto comparator = [](const GameSettings& settings,
                              const GameInstall& install) {
-    return settings.GamePath() == install.installPath;
+    return settings.gamePath() == install.installPath;
   };
 
   const auto newInstalls =
-      UpdateMatchingSettings(gamesSettings, gameInstalls, comparator);
+      updateMatchingSettings(gamesSettings, gameInstalls, comparator);
 
   EXPECT_TRUE(newInstalls.empty());
-  EXPECT_TRUE(gamesSettings[0].GamePath().empty());
-  EXPECT_TRUE(gamesSettings[0].GameLocalPath().empty());
-  EXPECT_EQ(installPath, gamesSettings[1].GamePath());
-  EXPECT_EQ(localPath, gamesSettings[1].GameLocalPath());
+  EXPECT_TRUE(gamesSettings[0].gamePath().empty());
+  EXPECT_TRUE(gamesSettings[0].gameLocalPath().empty());
+  EXPECT_EQ(installPath, gamesSettings[1].gamePath());
+  EXPECT_EQ(localPath, gamesSettings[1].gameLocalPath());
 }
 
 TEST(
@@ -377,13 +377,13 @@ TEST(
   };
 
   const auto newInstalls =
-      UpdateMatchingSettings(gamesSettings, gameInstalls, comparator);
+      updateMatchingSettings(gamesSettings, gameInstalls, comparator);
 
   EXPECT_TRUE(newInstalls.empty());
-  EXPECT_TRUE(gamesSettings[0].GamePath().empty());
-  EXPECT_TRUE(gamesSettings[0].GameLocalPath().empty());
-  EXPECT_EQ(installPath, gamesSettings[1].GamePath());
-  EXPECT_EQ(localPath, gamesSettings[1].GameLocalPath());
+  EXPECT_TRUE(gamesSettings[0].gamePath().empty());
+  EXPECT_TRUE(gamesSettings[0].gameLocalPath().empty());
+  EXPECT_EQ(installPath, gamesSettings[1].gamePath());
+  EXPECT_EQ(localPath, gamesSettings[1].gameLocalPath());
 }
 
 TEST(UpdateMatchingSettings, shouldTrySecondaryMatchingByGameId) {
@@ -404,15 +404,15 @@ TEST(UpdateMatchingSettings, shouldTrySecondaryMatchingByGameId) {
   };
 
   const auto newInstalls =
-      UpdateMatchingSettings(gamesSettings, gameInstalls, comparator);
+      updateMatchingSettings(gamesSettings, gameInstalls, comparator);
 
   EXPECT_TRUE(newInstalls.empty());
-  EXPECT_EQ(installPath1, gamesSettings[0].GamePath());
-  EXPECT_EQ(localPath1, gamesSettings[0].GameLocalPath());
-  EXPECT_EQ(installPath2, gamesSettings[1].GamePath());
-  EXPECT_EQ(localPath2, gamesSettings[1].GameLocalPath());
-  EXPECT_TRUE(gamesSettings[2].GamePath().empty());
-  EXPECT_TRUE(gamesSettings[2].GameLocalPath().empty());
+  EXPECT_EQ(installPath1, gamesSettings[0].gamePath());
+  EXPECT_EQ(localPath1, gamesSettings[0].gameLocalPath());
+  EXPECT_EQ(installPath2, gamesSettings[1].gamePath());
+  EXPECT_EQ(localPath2, gamesSettings[1].gameLocalPath());
+  EXPECT_TRUE(gamesSettings[2].gamePath().empty());
+  EXPECT_TRUE(gamesSettings[2].gameLocalPath().empty());
 }
 
 TEST(UpdateMatchingSettings,
@@ -427,7 +427,7 @@ TEST(UpdateMatchingSettings,
   };
 
   const auto newInstalls =
-      UpdateMatchingSettings(gamesSettings, gameInstalls, comparator);
+      updateMatchingSettings(gamesSettings, gameInstalls, comparator);
 
   ASSERT_EQ(1, newInstalls.size());
   EXPECT_EQ(gameInstalls[0].gameId, newInstalls[0].gameId);
@@ -435,8 +435,8 @@ TEST(UpdateMatchingSettings,
   EXPECT_EQ(gameInstalls[0].installPath, newInstalls[0].installPath);
   EXPECT_EQ(gameInstalls[0].localPath, newInstalls[0].localPath);
 
-  EXPECT_TRUE(gamesSettings[0].GamePath().empty());
-  EXPECT_TRUE(gamesSettings[0].GameLocalPath().empty());
+  EXPECT_TRUE(gamesSettings[0].gamePath().empty());
+  EXPECT_TRUE(gamesSettings[0].gameLocalPath().empty());
 }
 
 TEST(AppendNewGamesSettings,
@@ -445,7 +445,7 @@ TEST(AppendNewGamesSettings,
   const std::filesystem::path localPath = "local";
   std::vector<GameSettings> gamesSettings;
 
-  AppendNewGamesSettings(
+  appendNewGamesSettings(
       gamesSettings,
       {{GameId::enderal, {{InstallSource::unknown, 1}}}},
       {{GameId::enderal, InstallSource::unknown, installPath, localPath},
@@ -453,42 +453,42 @@ TEST(AppendNewGamesSettings,
 
   ASSERT_EQ(2, gamesSettings.size());
 
-  EXPECT_EQ(GameId::enderal, gamesSettings[0].Id());
-  EXPECT_EQ("Enderal", gamesSettings[0].FolderName());
-  EXPECT_EQ("Enderal: Forgotten Stories", gamesSettings[0].Name());
-  EXPECT_EQ("Skyrim.esm", gamesSettings[0].Master());
+  EXPECT_EQ(GameId::enderal, gamesSettings[0].id());
+  EXPECT_EQ("Enderal", gamesSettings[0].folderName());
+  EXPECT_EQ("Enderal: Forgotten Stories", gamesSettings[0].name());
+  EXPECT_EQ("Skyrim.esm", gamesSettings[0].master());
   EXPECT_EQ(
       "https://raw.githubusercontent.com/loot/enderal/v0.26/masterlist.yaml",
-      gamesSettings[0].MasterlistSource());
-  EXPECT_EQ(installPath, gamesSettings[0].GamePath());
-  EXPECT_EQ(localPath, gamesSettings[0].GameLocalPath());
+      gamesSettings[0].masterlistSource());
+  EXPECT_EQ(installPath, gamesSettings[0].gamePath());
+  EXPECT_EQ(localPath, gamesSettings[0].gameLocalPath());
 
-  EXPECT_EQ(GameId::nehrim, gamesSettings[1].Id());
-  EXPECT_EQ("Nehrim", gamesSettings[1].FolderName());
-  EXPECT_EQ("Nehrim - At Fate's Edge", gamesSettings[1].Name());
-  EXPECT_EQ("Nehrim.esm", gamesSettings[1].Master());
+  EXPECT_EQ(GameId::nehrim, gamesSettings[1].id());
+  EXPECT_EQ("Nehrim", gamesSettings[1].folderName());
+  EXPECT_EQ("Nehrim - At Fate's Edge", gamesSettings[1].name());
+  EXPECT_EQ("Nehrim.esm", gamesSettings[1].master());
   EXPECT_EQ(
       "https://raw.githubusercontent.com/loot/oblivion/v0.26/masterlist.yaml",
-      gamesSettings[1].MasterlistSource());
+      gamesSettings[1].masterlistSource());
 }
 
 TEST(AppendNewGamesSettings,
      shouldDeriveGameAndFolderNamesUsingTheExistingNamesOfPreviousSettings) {
   std::vector<GameSettings> gamesSettings{
-      GameSettings(GameId::tes3, "Morrowind").SetName("TES III: Morrowind")};
+      GameSettings(GameId::tes3, "Morrowind").setName("TES III: Morrowind")};
 
-  AppendNewGamesSettings(
+  appendNewGamesSettings(
       gamesSettings,
       {{GameId::tes3, {{InstallSource::gog, 3}}}},
       {{GameId::tes3, InstallSource::gog}, {GameId::tes3, InstallSource::gog}});
 
   ASSERT_EQ(3, gamesSettings.size());
-  EXPECT_EQ("Morrowind", gamesSettings[0].FolderName());
-  EXPECT_EQ("TES III: Morrowind", gamesSettings[0].Name());
-  EXPECT_EQ("Morrowind (1)", gamesSettings[1].FolderName());
-  EXPECT_EQ("TES III: Morrowind (1)", gamesSettings[1].Name());
-  EXPECT_EQ("Morrowind (2)", gamesSettings[2].FolderName());
-  EXPECT_EQ("TES III: Morrowind (2)", gamesSettings[2].Name());
+  EXPECT_EQ("Morrowind", gamesSettings[0].folderName());
+  EXPECT_EQ("TES III: Morrowind", gamesSettings[0].name());
+  EXPECT_EQ("Morrowind (1)", gamesSettings[1].folderName());
+  EXPECT_EQ("TES III: Morrowind (1)", gamesSettings[1].name());
+  EXPECT_EQ("Morrowind (2)", gamesSettings[2].folderName());
+  EXPECT_EQ("TES III: Morrowind (2)", gamesSettings[2].name());
 }
 
 class UpdateInstalledGamesSettingsTest : public CommonGameTestFixture {
@@ -522,13 +522,13 @@ private:
 TEST_F(UpdateInstalledGamesSettingsTest,
        shouldReturnSettingsForGameInParentOfCurrentDirectory) {
   std::vector<GameSettings> gamesSettings;
-  UpdateInstalledGamesSettings(gamesSettings, TestRegistry(), {}, {}, {});
+  updateInstalledGamesSettings(gamesSettings, TestRegistry(), {}, {}, {});
 
   ASSERT_EQ(1, gamesSettings.size());
-  EXPECT_EQ(GameId::tes3, gamesSettings[0].Id());
+  EXPECT_EQ(GameId::tes3, gamesSettings[0].id());
   EXPECT_EQ(std::filesystem::current_path().parent_path(),
-            gamesSettings[0].GamePath());
-  EXPECT_EQ("", gamesSettings[0].GameLocalPath());
+            gamesSettings[0].gamePath());
+  EXPECT_EQ("", gamesSettings[0].gameLocalPath());
 }
 #endif
 }

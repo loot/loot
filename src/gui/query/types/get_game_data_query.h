@@ -48,14 +48,14 @@ public:
 
     /* If the game's plugins object is empty, this is the first time loading
        the game data, so also load the metadata lists. */
-    bool isFirstLoad = game_.GetPlugins().empty();
+    bool isFirstLoad = game_.getPlugins().empty();
 
     std::exception_ptr exceptionPointer;
     std::vector<std::thread> threads;
 
     threads.push_back(std::thread([&]() {
       try {
-        game_.LoadAllInstalledPlugins(true);
+        game_.loadAllInstalledPlugins(true);
       } catch (...) {
         if (exceptionPointer == nullptr) {
           exceptionPointer = std::current_exception();
@@ -66,7 +66,7 @@ public:
     if (isFirstLoad) {
       threads.push_back(std::thread([&]() {
         try {
-          game_.LoadMetadata();
+          game_.loadMetadata();
         } catch (...) {
           if (exceptionPointer == nullptr) {
             exceptionPointer = std::current_exception();
@@ -77,8 +77,8 @@ public:
 
     threads.push_back(std::thread([&]() {
       try {
-        game_.GetCreationClubPlugins().Load(game_.GetSettings().Id(),
-                                            game_.GetSettings().GamePath());
+        game_.getCreationClubPlugins().load(game_.getSettings().id(),
+                                            game_.getSettings().gamePath());
       } catch (...) {
         if (exceptionPointer == nullptr) {
           exceptionPointer = std::current_exception();
@@ -96,7 +96,7 @@ public:
     }
 
     // Sort plugins into their load order.
-    return GetPluginItems(game_.GetLoadOrder(), game_, language_);
+    return getPluginItems(game_.getLoadOrder(), game_, language_);
   }
 
 private:

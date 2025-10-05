@@ -349,16 +349,16 @@ TEST_F(ReadOldMessagesTest, shouldReadOldMessagesFromAJsonFile) {
 
   std::ofstream out(jsonPath);
   out << "{\"messages\":["
-   << "{\"text\":\"general message\"}," 
+   << "{\"text\":\"general message\"},"
       << "{\"pluginName\":\"plugin name\",\"text\":\"plugin message\"}"
    << "]}";
   out.close();
-  
+
   std::vector<HiddenMessage> expectedMessages{
       HiddenMessage{std::nullopt, "general message"},
       HiddenMessage{"plugin name", "plugin message"}};
 
-  EXPECT_EQ(expectedMessages, ReadOldMessages(jsonPath));
+  EXPECT_EQ(expectedMessages, readOldMessages(jsonPath));
 }
 
 TEST_F(WriteOldMessagesTest, shouldWriteOldMessagesToAJsonFile) {
@@ -368,7 +368,7 @@ TEST_F(WriteOldMessagesTest, shouldWriteOldMessagesToAJsonFile) {
       HiddenMessage{std::nullopt, "general message"},
       HiddenMessage{"plugin name", "plugin message"}};
 
-  WriteOldMessages(jsonPath, messages);
+  writeOldMessages(jsonPath, messages);
 
   std::stringstream expected;
   expected << "{\n"

@@ -87,7 +87,7 @@ struct PluginItem {
   std::string loadOrderIndexText() const;
 };
 
-std::vector<PluginItem> GetPluginItems(
+std::vector<PluginItem> getPluginItems(
     const std::vector<std::string>& pluginNames,
     const gui::Game& game,
     const std::string& language);

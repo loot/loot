@@ -45,8 +45,8 @@ public:
     auto userlistPlugins = getUserlistPluginNames();
 
     // Clear the user metadata.
-    game_.ClearAllUserMetadata();
-    game_.SaveUserMetadata();
+    game_.clearAllUserMetadata();
+    game_.saveUserMetadata();
 
     if (logger) {
       logger->trace(
@@ -64,8 +64,8 @@ private:
 
   std::vector<std::string> getUserlistPluginNames() const {
     std::vector<std::string> pluginNames;
-    for (const auto& pluginName : game_.GetLoadOrder()) {
-      if (game_.GetUserMetadata(pluginName).has_value()) {
+    for (const auto& pluginName : game_.getLoadOrder()) {
+      if (game_.getUserMetadata(pluginName).has_value()) {
         pluginNames.push_back(pluginName);
       }
     }
@@ -75,7 +75,7 @@ private:
 
   std::vector<PluginItem> getDerivedMetadata(
       const std::vector<std::string>& userlistPlugins) const {
-    return GetPluginItems(userlistPlugins, game_, language_);
+    return getPluginItems(userlistPlugins, game_, language_);
   }
 };
 }

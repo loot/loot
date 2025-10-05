@@ -194,7 +194,7 @@ void CheckForUpdateTask::onGetTagCommitReplyFinished() {
     const auto json = QJsonDocument::fromJson(responseData.value());
     const auto commitHash = json["sha"].toString().toStdString();
 
-    if (boost::istarts_with(commitHash, GetLootRevision())) {
+    if (boost::istarts_with(commitHash, getLootRevision())) {
       emit finished(false);
       return;
     }
@@ -209,7 +209,7 @@ void CheckForUpdateTask::onGetTagCommitReplyFinished() {
 
     // Now get the build commit ID to do the final comparison.
     const auto url =
-        "https://api.github.com/repos/loot/loot/commits/" + GetLootRevision();
+        "https://api.github.com/repos/loot/loot/commits/" + getLootRevision();
     sendHttpRequest(url, &CheckForUpdateTask::onGetBuildCommitReplyFinished);
   } catch (const std::exception &e) {
     handleException(e);
@@ -239,7 +239,7 @@ void CheckForUpdateTask::onGetBuildCommitReplyFinished() {
     }
 
     const auto json = QJsonDocument::fromJson(responseData.value());
-    const auto buildCommitDate = getDateFromCommitJson(json, GetLootRevision());
+    const auto buildCommitDate = getDateFromCommitJson(json, getLootRevision());
 
     if (!buildCommitDate.has_value()) {
       emit error("Build commit date not found");

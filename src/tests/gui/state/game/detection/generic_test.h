@@ -51,16 +51,16 @@ protected:
 
   void TearDown() override {
     // Restore the previous current path.
-    RestoreCurrentPath();
+    restoreCurrentPath();
 
     CommonGameTestFixture::TearDown();
   }
 
-  void RestoreCurrentPath() const {
+  void restoreCurrentPath() const {
     std::filesystem::current_path(initialCurrentPath);
   }
 
-  std::optional<std::string> GetSubKey() const {
+  std::optional<std::string> getSubKey() const {
     switch (GetParam()) {
       case GameId::tes3:
         return "Software\\Bethesda Softworks\\Morrowind";
@@ -97,7 +97,7 @@ protected:
     }
   }
 
-  void CreateSteamFile() const {
+  void createSteamFile() const {
     if (GetParam() == GameId::tes3) {
       touch(gamePath / "steam_autocloud.vdf");
     } else if (GetParam() == GameId::nehrim) {
@@ -126,7 +126,7 @@ TEST_P(Generic_FindGameInstallsTest, shouldNotFindInvalidSiblingGame) {
   std::filesystem::remove_all(dataPath);
 
   const auto gameInstalls =
-      loot::generic::FindGameInstalls(TestRegistry(), GetParam());
+      loot::generic::findGameInstalls(TestRegistry(), GetParam());
 
   EXPECT_TRUE(gameInstalls.empty());
 }
@@ -135,7 +135,7 @@ TEST_P(Generic_FindGameInstallsTest, shouldNotFindInvalidSiblingGame) {
 TEST_P(Generic_FindGameInstallsTest, shouldFindGameInParentOfCurrentDirectory) {
   const auto gameId = GetParam();
   const auto gameInstalls =
-      loot::generic::FindGameInstalls(TestRegistry(), gameId);
+      loot::generic::findGameInstalls(TestRegistry(), gameId);
 
   auto expectedSource = InstallSource::unknown;
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
@@ -152,11 +152,11 @@ TEST_P(Generic_FindGameInstallsTest, shouldFindGameInParentOfCurrentDirectory) {
 }
 
 TEST_P(Generic_FindGameInstallsTest, shouldIdentifySteamSiblingGame) {
-  CreateSteamFile();
+  createSteamFile();
 
   const auto gameId = GetParam();
   const auto gameInstalls =
-      loot::generic::FindGameInstalls(TestRegistry(), gameId);
+      loot::generic::findGameInstalls(TestRegistry(), gameId);
 
   const auto expectedSource = GetParam() == GameId::openmw
                                   ? InstallSource::unknown
@@ -171,14 +171,14 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifySteamSiblingGame) {
 }
 
 TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogSiblingGame) {
-  const auto gogGameIds = gog::GetGogGameIds(GetParam());
+  const auto gogGameIds = gog::getGogGameIds(GetParam());
   if (!gogGameIds.empty()) {
     touch(gamePath / ("goggame-" + gogGameIds[0] + ".ico"));
   }
 
   const auto gameId = GetParam();
   const auto gameInstalls =
-      loot::generic::FindGameInstalls(TestRegistry(), gameId);
+      loot::generic::findGameInstalls(TestRegistry(), gameId);
 
   auto expectedSource = InstallSource::gog;
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
@@ -210,7 +210,7 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyEpicSiblingGame) {
   }
 
   const auto gameInstalls =
-      loot::generic::FindGameInstalls(TestRegistry(), gameId);
+      loot::generic::findGameInstalls(TestRegistry(), gameId);
 
   auto expectedSource = InstallSource::unknown;
   if (gameId == GameId::tes5 || gameId == GameId::tes5vr ||
@@ -239,7 +239,7 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyMsStoreSiblingGame) {
 
   const auto gameId = GetParam();
   const auto gameInstalls =
-      loot::generic::FindGameInstalls(TestRegistry(), gameId);
+      loot::generic::findGameInstalls(TestRegistry(), gameId);
 
   auto expectedSource = InstallSource::microsoft;
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
@@ -263,23 +263,23 @@ TEST_P(Generic_FindGameInstallsTest,
        shouldNotFindGameInParentOfCurrentDirectory) {
   const auto gameId = GetParam();
   const auto gameInstalls =
-      loot::generic::FindGameInstalls(TestRegistry(), gameId);
+      loot::generic::findGameInstalls(TestRegistry(), gameId);
 
   EXPECT_TRUE(gameInstalls.empty());
 }
 #endif
 
 TEST_P(Generic_FindGameInstallsTest, shouldFindGameUsingGenericRegistryValue) {
-  RestoreCurrentPath();
+  restoreCurrentPath();
 
   TestRegistry registry;
-  const auto subKey = GetSubKey();
+  const auto subKey = getSubKey();
   if (subKey.has_value()) {
     registry.SetStringValue(subKey.value(), gamePath.u8string());
   }
 
   const auto gameInstalls =
-      loot::generic::FindGameInstalls(registry, GetParam());
+      loot::generic::findGameInstalls(registry, GetParam());
 
   auto expectedSource = InstallSource::unknown;
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
@@ -301,32 +301,32 @@ TEST_P(Generic_FindGameInstallsTest, shouldFindGameUsingGenericRegistryValue) {
 
 TEST_P(Generic_FindGameInstallsTest,
        shouldNotFindGameIfPathInRegistryIsInvalid) {
-  RestoreCurrentPath();
+  restoreCurrentPath();
 
   TestRegistry registry;
-  const auto subKey = GetSubKey();
+  const auto subKey = getSubKey();
   if (subKey.has_value()) {
     registry.SetStringValue(subKey.value(), "invalid");
   }
 
   const auto gameInstalls =
-      loot::generic::FindGameInstalls(registry, GetParam());
+      loot::generic::findGameInstalls(registry, GetParam());
 
   EXPECT_TRUE(gameInstalls.empty());
 }
 
 TEST_P(Generic_FindGameInstallsTest, shouldIdentifySteamRegistryGame) {
-  RestoreCurrentPath();
-  CreateSteamFile();
+  restoreCurrentPath();
+  createSteamFile();
 
   TestRegistry registry;
-  const auto subKey = GetSubKey();
+  const auto subKey = getSubKey();
   if (subKey.has_value()) {
     registry.SetStringValue(subKey.value(), gamePath.u8string());
   }
 
   const auto gameInstalls =
-      loot::generic::FindGameInstalls(registry, GetParam());
+      loot::generic::findGameInstalls(registry, GetParam());
 
   if (GetParam() == GameId::starfield ||
       GetParam() == GameId::oblivionRemastered) {
@@ -345,21 +345,21 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifySteamRegistryGame) {
 }
 
 TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogRegistryGame) {
-  RestoreCurrentPath();
+  restoreCurrentPath();
 
-  const auto gogGameIds = gog::GetGogGameIds(GetParam());
+  const auto gogGameIds = gog::getGogGameIds(GetParam());
   if (!gogGameIds.empty()) {
     touch(gamePath / ("goggame-" + gogGameIds[0] + ".ico"));
   }
 
   TestRegistry registry;
-  const auto subKey = GetSubKey();
+  const auto subKey = getSubKey();
   if (subKey.has_value()) {
     registry.SetStringValue(subKey.value(), gamePath.u8string());
   }
 
   const auto gameInstalls =
-      loot::generic::FindGameInstalls(registry, GetParam());
+      loot::generic::findGameInstalls(registry, GetParam());
 
   auto expectedSource = InstallSource::gog;
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
@@ -393,10 +393,10 @@ protected:
     }
   }
 
-  GameSettings GetSettings() const {
-    GameSettings settings = GameSettings(GetParam(), "").SetGamePath(gamePath);
+  GameSettings getSettings() const {
+    GameSettings settings = GameSettings(GetParam(), "").setGamePath(gamePath);
     if (GetParam() == GameId::nehrim) {
-      settings.SetMaster("Nehrim.esm");
+      settings.setMaster("Nehrim.esm");
     }
 
     return settings;
@@ -410,13 +410,13 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(DetectGameInstallTest, shouldNotDetectAGameInstallThatIsNotValid) {
-  const auto install = generic::DetectGameInstall(GameSettings(GetParam(), ""));
+  const auto install = generic::detectGameInstall(GameSettings(GetParam(), ""));
 
   EXPECT_FALSE(install.has_value());
 }
 
 TEST_P(DetectGameInstallTest, shouldDetectAValidGameInstall) {
-  const auto install = generic::DetectGameInstall(GetSettings());
+  const auto install = generic::detectGameInstall(getSettings());
 
   auto expectedSource = InstallSource::unknown;
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
@@ -445,7 +445,7 @@ TEST_P(DetectGameInstallTest, shouldDetectASteamInstall) {
     touch(gamePath / "installscript.vdf");
   }
 
-  const auto install = generic::DetectGameInstall(GetSettings());
+  const auto install = generic::detectGameInstall(getSettings());
 
   const auto expectedSource = GetParam() == GameId::openmw
                                   ? InstallSource::unknown
@@ -459,12 +459,12 @@ TEST_P(DetectGameInstallTest, shouldDetectASteamInstall) {
 }
 
 TEST_P(DetectGameInstallTest, shouldDetectAGogInstall) {
-  const auto gogGameIds = gog::GetGogGameIds(GetParam());
+  const auto gogGameIds = gog::getGogGameIds(GetParam());
   if (!gogGameIds.empty()) {
     touch(gamePath / ("goggame-" + gogGameIds[0] + ".ico"));
   }
 
-  const auto install = generic::DetectGameInstall(GetSettings());
+  const auto install = generic::detectGameInstall(getSettings());
 
   auto expectedSource = InstallSource::gog;
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
@@ -492,7 +492,7 @@ TEST_P(DetectGameInstallTest, shouldDetectAnEpicInstall) {
     touch(gamePath / "EOSSDK-Win32-Shipping.dll");
   }
 
-  const auto install = generic::DetectGameInstall(GetSettings());
+  const auto install = generic::detectGameInstall(getSettings());
 
   auto expectedSource = InstallSource::unknown;
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
@@ -519,7 +519,7 @@ TEST_P(DetectGameInstallTest, shouldDetectAMicrosoftInstall) {
     touch(gamePath.parent_path() / "appxmanifest.xml");
   }
 
-  const auto install = generic::DetectGameInstall(GetSettings());
+  const auto install = generic::detectGameInstall(getSettings());
 
   auto expectedSource = InstallSource::microsoft;
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||

@@ -38,7 +38,7 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(ShouldAllowRedatingTest, shouldReturnTrueForOnlySkyrimAndSkyrimSE) {
-  const auto result = ShouldAllowRedating(GetParam());
+  const auto result = shouldAllowRedating(GetParam());
   if (GetParam() == GameId::tes5 || GetParam() == GameId::enderal ||
       GetParam() == GameId::tes5se || GetParam() == GameId::enderalse ||
       GetParam() == GameId::oblivionRemastered) {
@@ -55,7 +55,7 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(GetDefaultMasterlistUrlTest, shouldNotThrowForAnyValidGameId) {
-  EXPECT_NO_THROW(GetDefaultMasterlistUrl(GetParam()));
+  EXPECT_NO_THROW(getDefaultMasterlistUrl(GetParam()));
 }
 
 class GameSettingsTest : public CommonGameTestFixture,
@@ -83,14 +83,14 @@ INSTANTIATE_TEST_SUITE_P(,
 TEST_P(
     GameSettingsTest,
     defaultConstructorShouldInitialiseIdToTes4AndAllOtherSettingsToEmptyStrings) {
-  EXPECT_EQ(GameId::tes4, settings_.Id());
-  EXPECT_EQ("", settings_.Name());
-  EXPECT_EQ("", settings_.FolderName());
-  EXPECT_EQ("", settings_.Master());
-  EXPECT_EQ(0.0, settings_.MinimumHeaderVersion());
-  EXPECT_EQ("", settings_.MasterlistSource());
+  EXPECT_EQ(GameId::tes4, settings_.id());
+  EXPECT_EQ("", settings_.name());
+  EXPECT_EQ("", settings_.folderName());
+  EXPECT_EQ("", settings_.master());
+  EXPECT_EQ(0.0, settings_.minimumHeaderVersion());
+  EXPECT_EQ("", settings_.masterlistSource());
 
-  EXPECT_EQ("", settings_.GamePath());
+  EXPECT_EQ("", settings_.gamePath());
 }
 
 TEST_P(GameSettingsTest,
@@ -98,103 +98,103 @@ TEST_P(GameSettingsTest,
   const auto folder = "folder";
   settings_ = GameSettings(GetParam(), folder);
 
-  EXPECT_EQ(GetParam(), settings_.Id());
-  EXPECT_EQ(folder, settings_.FolderName());
+  EXPECT_EQ(GetParam(), settings_.id());
+  EXPECT_EQ(folder, settings_.folderName());
 
   // Repo branch changes between LOOT versions, so don't check an exact value.
-  EXPECT_NE("", settings_.MasterlistSource());
+  EXPECT_NE("", settings_.masterlistSource());
 
   switch (GetParam()) {
     case GameId::fo3:
-      EXPECT_EQ("Fallout 3", settings_.Name());
-      EXPECT_EQ("Fallout3.esm", settings_.Master());
-      EXPECT_EQ(0.94f, settings_.MinimumHeaderVersion());
+      EXPECT_EQ("Fallout 3", settings_.name());
+      EXPECT_EQ("Fallout3.esm", settings_.master());
+      EXPECT_EQ(0.94f, settings_.minimumHeaderVersion());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/fallout3/v0.26/"
           "masterlist.yaml",
-          settings_.MasterlistSource());
+          settings_.masterlistSource());
       break;
     case GameId::fonv:
-      EXPECT_EQ("Fallout: New Vegas", settings_.Name());
-      EXPECT_EQ("FalloutNV.esm", settings_.Master());
-      EXPECT_EQ(1.32f, settings_.MinimumHeaderVersion());
+      EXPECT_EQ("Fallout: New Vegas", settings_.name());
+      EXPECT_EQ("FalloutNV.esm", settings_.master());
+      EXPECT_EQ(1.32f, settings_.minimumHeaderVersion());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/falloutnv/v0.26/"
           "masterlist.yaml",
-          settings_.MasterlistSource());
+          settings_.masterlistSource());
       break;
     case GameId::fo4:
-      EXPECT_EQ("Fallout 4", settings_.Name());
-      EXPECT_EQ("Fallout4.esm", settings_.Master());
-      EXPECT_EQ(0.95f, settings_.MinimumHeaderVersion());
+      EXPECT_EQ("Fallout 4", settings_.name());
+      EXPECT_EQ("Fallout4.esm", settings_.master());
+      EXPECT_EQ(0.95f, settings_.minimumHeaderVersion());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/fallout4/v0.26/"
           "masterlist.yaml",
-          settings_.MasterlistSource());
+          settings_.masterlistSource());
       break;
     case GameId::fo4vr:
-      EXPECT_EQ("Fallout 4 VR", settings_.Name());
-      EXPECT_EQ("Fallout4.esm", settings_.Master());
+      EXPECT_EQ("Fallout 4 VR", settings_.name());
+      EXPECT_EQ("Fallout4.esm", settings_.master());
       // TODO: Get the real value off someone who owns Fallout 4 VR.
-      EXPECT_EQ(0.95f, settings_.MinimumHeaderVersion());
+      EXPECT_EQ(0.95f, settings_.minimumHeaderVersion());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/fallout4/v0.26/"
           "masterlist.yaml",
-          settings_.MasterlistSource());
+          settings_.masterlistSource());
       break;
     case GameId::tes3:
-      EXPECT_EQ("TES III: Morrowind", settings_.Name());
-      EXPECT_EQ("Morrowind.esm", settings_.Master());
-      EXPECT_EQ(1.2f, settings_.MinimumHeaderVersion());
+      EXPECT_EQ("TES III: Morrowind", settings_.name());
+      EXPECT_EQ("Morrowind.esm", settings_.master());
+      EXPECT_EQ(1.2f, settings_.minimumHeaderVersion());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/morrowind/v0.26/"
           "masterlist.yaml",
-          settings_.MasterlistSource());
+          settings_.masterlistSource());
       break;
     case GameId::tes4:
-      EXPECT_EQ("TES IV: Oblivion", settings_.Name());
-      EXPECT_EQ("Oblivion.esm", settings_.Master());
-      EXPECT_EQ(0.8f, settings_.MinimumHeaderVersion());
+      EXPECT_EQ("TES IV: Oblivion", settings_.name());
+      EXPECT_EQ("Oblivion.esm", settings_.master());
+      EXPECT_EQ(0.8f, settings_.minimumHeaderVersion());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/oblivion/v0.26/"
           "masterlist.yaml",
-          settings_.MasterlistSource());
+          settings_.masterlistSource());
       break;
     case GameId::tes5:
-      EXPECT_EQ("TES V: Skyrim", settings_.Name());
-      EXPECT_EQ("Skyrim.esm", settings_.Master());
-      EXPECT_EQ(0.94f, settings_.MinimumHeaderVersion());
+      EXPECT_EQ("TES V: Skyrim", settings_.name());
+      EXPECT_EQ("Skyrim.esm", settings_.master());
+      EXPECT_EQ(0.94f, settings_.minimumHeaderVersion());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/skyrim/v0.26/masterlist.yaml",
-          settings_.MasterlistSource());
+          settings_.masterlistSource());
       break;
     case GameId::tes5se:
-      EXPECT_EQ("TES V: Skyrim Special Edition", settings_.Name());
-      EXPECT_EQ("Skyrim.esm", settings_.Master());
-      EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
+      EXPECT_EQ("TES V: Skyrim Special Edition", settings_.name());
+      EXPECT_EQ("Skyrim.esm", settings_.master());
+      EXPECT_EQ(1.7f, settings_.minimumHeaderVersion());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/skyrimse/v0.26/"
           "masterlist.yaml",
-          settings_.MasterlistSource());
+          settings_.masterlistSource());
       break;
     case GameId::tes5vr:
-      EXPECT_EQ("TES V: Skyrim VR", settings_.Name());
-      EXPECT_EQ("Skyrim.esm", settings_.Master());
+      EXPECT_EQ("TES V: Skyrim VR", settings_.name());
+      EXPECT_EQ("Skyrim.esm", settings_.master());
       // TODO: Get the real value off someone who owns Skyrim VR.
-      EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
+      EXPECT_EQ(1.7f, settings_.minimumHeaderVersion());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/skyrimse/v0.26/"
           "masterlist.yaml",
-          settings_.MasterlistSource());
+          settings_.masterlistSource());
       break;
     case GameId::oblivionRemastered:
-      EXPECT_EQ("TES IV: Oblivion Remastered", settings_.Name());
-      EXPECT_EQ("Oblivion.esm", settings_.Master());
-      EXPECT_EQ(0.8f, settings_.MinimumHeaderVersion());
+      EXPECT_EQ("TES IV: Oblivion Remastered", settings_.name());
+      EXPECT_EQ("Oblivion.esm", settings_.master());
+      EXPECT_EQ(0.8f, settings_.minimumHeaderVersion());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/oblivion/v0.26/"
           "masterlist.yaml",
-          settings_.MasterlistSource());
+          settings_.masterlistSource());
       break;
     default:
       FAIL();
@@ -204,45 +204,45 @@ TEST_P(GameSettingsTest,
 TEST_P(GameSettingsTest, idConstructorShouldSetGameFolderIfGiven) {
   settings_ = GameSettings(GameId::tes5, "folder");
 
-  EXPECT_EQ("folder", settings_.FolderName());
+  EXPECT_EQ("folder", settings_.folderName());
 }
 
 TEST_P(GameSettingsTest, setNameShouldStoreGivenValue) {
-  settings_.SetName("name");
-  EXPECT_EQ("name", settings_.Name());
+  settings_.setName("name");
+  EXPECT_EQ("name", settings_.name());
 }
 
 TEST_P(GameSettingsTest, setMasterShouldStoreGivenValue) {
-  settings_.SetMaster("master");
-  EXPECT_EQ("master", settings_.Master());
+  settings_.setMaster("master");
+  EXPECT_EQ("master", settings_.master());
 }
 
 TEST_P(GameSettingsTest, setMinimumHeaderVersionShouldStoreGivenValue) {
-  settings_.SetMinimumHeaderVersion(1.34f);
-  EXPECT_EQ(1.34f, settings_.MinimumHeaderVersion());
+  settings_.setMinimumHeaderVersion(1.34f);
+  EXPECT_EQ(1.34f, settings_.minimumHeaderVersion());
 }
 
 TEST_P(GameSettingsTest, setMasterlistSourceShouldStoreGivenValue) {
-  settings_.SetMasterlistSource("url");
-  EXPECT_EQ("url", settings_.MasterlistSource());
+  settings_.setMasterlistSource("url");
+  EXPECT_EQ("url", settings_.masterlistSource());
 }
 
 TEST_P(GameSettingsTest, setGamePathShouldStoreGivenValue) {
   std::string pathValue = u8"p\u00E1th";
 
-  settings_.SetGamePath(std::filesystem::u8path(pathValue));
-  EXPECT_EQ(pathValue, settings_.GamePath().u8string());
+  settings_.setGamePath(std::filesystem::u8path(pathValue));
+  EXPECT_EQ(pathValue, settings_.gamePath().u8string());
 }
 
 TEST_P(GameSettingsTest,
        setGameLocalFolderShouldSetLocalPathToTheNamedFolderInLocalAppData) {
   std::string folderName = u8"p\u00E1th";
 
-  settings_.SetGameLocalFolder(folderName);
+  settings_.setGameLocalFolder(folderName);
 
   auto expectedPath =
       getLocalAppDataPath() / std::filesystem::u8path(folderName);
-  EXPECT_EQ(expectedPath, settings_.GameLocalPath());
+  EXPECT_EQ(expectedPath, settings_.gameLocalPath());
 }
 
 TEST_P(GameSettingsTest, setHiddenMessagesShouldStoreGivenValue) {
@@ -250,9 +250,9 @@ TEST_P(GameSettingsTest, setHiddenMessagesShouldStoreGivenValue) {
       HiddenMessage{std::nullopt, "general message"},
       HiddenMessage{"plugin name", "plugin message"}};
 
-  settings_.SetHiddenMessages(messages);
+  settings_.setHiddenMessages(messages);
 
-  EXPECT_EQ(messages, settings_.HiddenMessages());
+  EXPECT_EQ(messages, settings_.hiddenMessages());
 }
 
 TEST_P(GameSettingsTest, hideMessageShouldAppendNewHiddenMessage) {
@@ -260,10 +260,10 @@ TEST_P(GameSettingsTest, hideMessageShouldAppendNewHiddenMessage) {
       HiddenMessage{std::nullopt, "general message"},
       HiddenMessage{"plugin name", "plugin message"}};
 
-  settings_.HideMessage("", messages[0].text);
-  settings_.HideMessage(messages[1].pluginName.value(), messages[1].text);
+  settings_.hideMessage("", messages[0].text);
+  settings_.hideMessage(messages[1].pluginName.value(), messages[1].text);
 
-  EXPECT_EQ(messages, settings_.HiddenMessages());
+  EXPECT_EQ(messages, settings_.hiddenMessages());
 }
 
 TEST_P(GameSettingsTest,
@@ -272,28 +272,28 @@ TEST_P(GameSettingsTest,
       HiddenMessage{std::nullopt, "general message"},
       HiddenMessage{"plugin name", "plugin message"}};
 
-  settings_.SetHiddenMessages(messages);
+  settings_.setHiddenMessages(messages);
 
-  settings_.HideMessage("", messages[0].text);
-  settings_.HideMessage(messages[1].pluginName.value(), messages[1].text);
+  settings_.hideMessage("", messages[0].text);
+  settings_.hideMessage(messages[1].pluginName.value(), messages[1].text);
 
-  EXPECT_EQ(messages, settings_.HiddenMessages());
+  EXPECT_EQ(messages, settings_.hiddenMessages());
 }
 
 TEST_P(
     GameSettingsTest,
     hasHiddenGeneralMessageShouldBeFalseIfThereAreNoMessagesWithoutAPluginName) {
-  settings_.HideMessage("plugin name", "plugin message");
+  settings_.hideMessage("plugin name", "plugin message");
 
-  EXPECT_FALSE(settings_.HasHiddenGeneralMessages());
+  EXPECT_FALSE(settings_.hasHiddenGeneralMessages());
 }
 
 TEST_P(
     GameSettingsTest,
     hasHiddenGeneralMessageShouldBeTrueIfThereIsAMessageWithoutAPluginName) {
-  settings_.HideMessage("", "plugin message");
+  settings_.hideMessage("", "plugin message");
 
-  EXPECT_TRUE(settings_.HasHiddenGeneralMessages());
+  EXPECT_TRUE(settings_.hasHiddenGeneralMessages());
 }
 
 TEST_P(
@@ -303,9 +303,9 @@ TEST_P(
       HiddenMessage{std::nullopt, "general message"},
       HiddenMessage{"other plugin name", "plugin message"}};
 
-  settings_.SetHiddenMessages(messages);
+  settings_.setHiddenMessages(messages);
 
-  EXPECT_FALSE(settings_.PluginHasHiddenMessages("plugin name"));
+  EXPECT_FALSE(settings_.pluginHasHiddenMessages("plugin name"));
 }
 
 TEST_P(GameSettingsTest,
@@ -314,9 +314,9 @@ TEST_P(GameSettingsTest,
       HiddenMessage{std::nullopt, "general message"},
       HiddenMessage{"plugin name", "plugin message"}};
 
-  settings_.SetHiddenMessages(messages);
+  settings_.setHiddenMessages(messages);
 
-  EXPECT_TRUE(settings_.PluginHasHiddenMessages("plugin name"));
+  EXPECT_TRUE(settings_.pluginHasHiddenMessages("plugin name"));
 }
 }
 }

@@ -73,7 +73,7 @@ bool shouldFilterMessage(
 
   if (filters.hideOfficialPluginsCleaningMessages &&
       message.source == loot::MessageSource::cleaningMetadata &&
-      loot::IsOfficialPlugin(filters.gameId, pluginName)) {
+      loot::isOfficialPlugin(filters.gameId, pluginName)) {
     return true;
   }
 

@@ -48,7 +48,7 @@ bool isRunningThroughModOrganiser() {
 
   for (const auto dll : dlls) {
     const bool isDllLoaded =
-        GetModuleHandle(loot::ToWinWide(dll).c_str()) != nullptr;
+        GetModuleHandle(loot::toWinWide(dll).c_str()) != nullptr;
     if (isDllLoaded) {
       return true;
     }
@@ -66,7 +66,7 @@ void logRuntimeEnvironment() {
                  QSysInfo::prettyProductName().toStdString(),
                  QSysInfo::currentCpuArchitecture().toStdString());
     logger->info(
-        "LOOT version: {}+{}", loot::GetLootVersion(), loot::GetLootRevision());
+        "LOOT version: {}+{}", loot::getLootVersion(), loot::getLootRevision());
     logger->info("libloot version: {}+{}",
                  loot::GetLiblootVersion(),
                  loot::GetLiblootRevision());
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
   // Check if LOOT is already running
   //---------------------------------
 
-  if (loot::IsApplicationMutexLocked()) {
+  if (loot::isApplicationMutexLocked()) {
     // An instance of LOOT is already running, so focus its window then quit.
     HWND hWnd = ::FindWindow(nullptr, L"LOOT");
     ::SetForegroundWindow(hWnd);

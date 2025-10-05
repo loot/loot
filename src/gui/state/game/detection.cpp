@@ -36,23 +36,23 @@
 using std::filesystem::u8path;
 
 namespace loot {
-bool IsInstalled(const GameSettings& settings) {
+bool isInstalled(const GameSettings& settings) {
   const auto logger = getLogger();
   if (logger) {
-    logger->trace("Checking if game \"{}\" is installed.", settings.Name());
+    logger->trace("Checking if game \"{}\" is installed.", settings.name());
   }
 
-  return IsValidGamePath(settings.Id(), settings.Master(), settings.GamePath());
+  return isValidGamePath(settings.id(), settings.master(), settings.gamePath());
 }
 
-std::vector<GameSettings> FindInstalledGames(
+std::vector<GameSettings> findInstalledGames(
     const std::vector<GameSettings>& gamesSettings,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths_,
     const std::vector<std::string>& preferredUILanguages_) {
-  const auto heroicConfigPaths = heroic::GetHeroicGamesLauncherConfigPaths();
+  const auto heroicConfigPaths = heroic::getHeroicGamesLauncherConfigPaths();
 
   std::vector<GameSettings> gamesSettingsToUpdate = gamesSettings;
-  UpdateInstalledGamesSettings(gamesSettingsToUpdate,
+  updateInstalledGamesSettings(gamesSettingsToUpdate,
                                Registry(),
                                heroicConfigPaths,
                                xboxGamingRootPaths_,
@@ -61,7 +61,7 @@ std::vector<GameSettings> FindInstalledGames(
   std::sort(gamesSettingsToUpdate.begin(),
             gamesSettingsToUpdate.end(),
             [](const GameSettings& lhs, const GameSettings& rhs) {
-              return lhs.Name() < rhs.Name();
+              return lhs.name() < rhs.name();
             });
 
   return gamesSettingsToUpdate;

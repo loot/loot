@@ -34,16 +34,16 @@
 #include "gui/state/game/game_settings.h"
 
 namespace loot::epic {
-std::optional<std::string> GetEgsAppName(const GameId gameId);
+std::optional<std::string> getEgsAppName(const GameId gameId);
 
-std::string GetAppDataFolderName(const GameId gameId);
+std::string getAppDataFolderName(const GameId gameId);
 
-std::optional<std::filesystem::path> FindGameInstallPath(
+std::optional<std::filesystem::path> findGameInstallPath(
     const GameId gameId,
     const std::filesystem::path& rootInstallPath,
     const std::vector<std::string>& preferredUILanguages);
 
-std::optional<GameInstall> FindGameInstalls(
+std::optional<GameInstall> findGameInstalls(
     const RegistryInterface& registry,
     const GameId gameId,
     const std::vector<std::string>& preferredUILanguages);

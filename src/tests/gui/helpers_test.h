@@ -34,7 +34,7 @@ along with LOOT.  If not, see
 namespace loot {
 namespace test {
 TEST(GetPreferredUILanguages, shouldReturnAtLeastOneLanguage) {
-  EXPECT_FALSE(GetPreferredUILanguages().empty());
+  EXPECT_FALSE(getPreferredUILanguages().empty());
 }
 
 class FindXboxGamingRootPathTest : public CommonGameTestFixture {
@@ -43,19 +43,19 @@ protected:
 };
 
 TEST(GetDriveRootPaths, shouldReturnNonEmptyVector) {
-  EXPECT_FALSE(GetDriveRootPaths().empty());
+  EXPECT_FALSE(getDriveRootPaths().empty());
 }
 
 TEST_F(FindXboxGamingRootPathTest,
        shouldReturnNulloptIfTheDotGamingRootFileDoesNotExist) {
-  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+  EXPECT_FALSE(findXboxGamingRootPath(dataPath).has_value());
 }
 
 TEST_F(FindXboxGamingRootPathTest,
        shouldReturnNulloptIfDotGamingRootIsADirectory) {
   std::filesystem::create_directory(dataPath / ".GamingRoot");
 
-  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+  EXPECT_FALSE(findXboxGamingRootPath(dataPath).has_value());
 }
 
 TEST_F(FindXboxGamingRootPathTest,
@@ -64,7 +64,7 @@ TEST_F(FindXboxGamingRootPathTest,
   out << "12345678901";
   out.close();
 
-  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+  EXPECT_FALSE(findXboxGamingRootPath(dataPath).has_value());
 }
 
 TEST_F(FindXboxGamingRootPathTest,
@@ -73,7 +73,7 @@ TEST_F(FindXboxGamingRootPathTest,
   out << "12";
   out.close();
 
-  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+  EXPECT_FALSE(findXboxGamingRootPath(dataPath).has_value());
 }
 
 TEST_F(FindXboxGamingRootPathTest,
@@ -83,7 +83,7 @@ TEST_F(FindXboxGamingRootPathTest,
   out.write(data, 28);
   out.close();
 
-  const auto gamingRootPath = FindXboxGamingRootPath(dataPath);
+  const auto gamingRootPath = findXboxGamingRootPath(dataPath);
   const auto expectedPath = dataPath / "test path";
 
   EXPECT_EQ(expectedPath, gamingRootPath);
@@ -96,7 +96,7 @@ TEST_F(FindXboxGamingRootPathTest,
   out.write(data, 28);
   out.close();
 
-  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+  EXPECT_FALSE(findXboxGamingRootPath(dataPath).has_value());
 }
 
 // MSVC interprets source files in the default code page, so
@@ -112,56 +112,56 @@ TEST(CompareFilenames, shouldBeCaseInsensitiveAndLocaleInvariant) {
   // ICU sees all three greek rhos as case-insensitively equal, unlike Windows.
   // A small enough deviation that it should hopefully be insignificant.
 
-  EXPECT_EQ(0, CompareFilenames("i", "I"));
-  EXPECT_EQ(-1, CompareFilenames("i", u8"\u0130"));
-  EXPECT_EQ(-1, CompareFilenames("i", u8"\u0131"));
-  EXPECT_EQ(-1, CompareFilenames("I", u8"\u0130"));
-  EXPECT_EQ(-1, CompareFilenames("I", u8"\u0131"));
-  EXPECT_EQ(-1, CompareFilenames(u8"\u0130", u8"\u0131"));
+  EXPECT_EQ(0, compareFilenames("i", "I"));
+  EXPECT_EQ(-1, compareFilenames("i", u8"\u0130"));
+  EXPECT_EQ(-1, compareFilenames("i", u8"\u0131"));
+  EXPECT_EQ(-1, compareFilenames("I", u8"\u0130"));
+  EXPECT_EQ(-1, compareFilenames("I", u8"\u0131"));
+  EXPECT_EQ(-1, compareFilenames(u8"\u0130", u8"\u0131"));
 #ifdef _WIN32
-  EXPECT_EQ(1, CompareFilenames(u8"\u03f1", u8"\u03a1"));
-  EXPECT_EQ(1, CompareFilenames(u8"\u03f1", u8"\u03c1"));
+  EXPECT_EQ(1, compareFilenames(u8"\u03f1", u8"\u03a1"));
+  EXPECT_EQ(1, compareFilenames(u8"\u03f1", u8"\u03c1"));
 #else
-  EXPECT_EQ(0, CompareFilenames(u8"\u03f1", u8"\u03a1"));
-  EXPECT_EQ(0, CompareFilenames(u8"\u03f1", u8"\u03c1"));
+  EXPECT_EQ(0, compareFilenames(u8"\u03f1", u8"\u03a1"));
+  EXPECT_EQ(0, compareFilenames(u8"\u03f1", u8"\u03c1"));
 #endif
-  EXPECT_EQ(0, CompareFilenames(u8"\u03a1", u8"\u03c1"));
+  EXPECT_EQ(0, compareFilenames(u8"\u03a1", u8"\u03c1"));
 
   // Set locale to Turkish.
   std::locale::global(boost::locale::generator().generate("tr_TR.UTF-8"));
 
-  EXPECT_EQ(0, CompareFilenames("i", "I"));
-  EXPECT_EQ(-1, CompareFilenames("i", u8"\u0130"));
-  EXPECT_EQ(-1, CompareFilenames("i", u8"\u0131"));
-  EXPECT_EQ(-1, CompareFilenames("I", u8"\u0130"));
-  EXPECT_EQ(-1, CompareFilenames("I", u8"\u0131"));
-  EXPECT_EQ(-1, CompareFilenames(u8"\u0130", u8"\u0131"));
+  EXPECT_EQ(0, compareFilenames("i", "I"));
+  EXPECT_EQ(-1, compareFilenames("i", u8"\u0130"));
+  EXPECT_EQ(-1, compareFilenames("i", u8"\u0131"));
+  EXPECT_EQ(-1, compareFilenames("I", u8"\u0130"));
+  EXPECT_EQ(-1, compareFilenames("I", u8"\u0131"));
+  EXPECT_EQ(-1, compareFilenames(u8"\u0130", u8"\u0131"));
 #ifdef _WIN32
-  EXPECT_EQ(1, CompareFilenames(u8"\u03f1", u8"\u03a1"));
-  EXPECT_EQ(1, CompareFilenames(u8"\u03f1", u8"\u03c1"));
+  EXPECT_EQ(1, compareFilenames(u8"\u03f1", u8"\u03a1"));
+  EXPECT_EQ(1, compareFilenames(u8"\u03f1", u8"\u03c1"));
 #else
-  EXPECT_EQ(0, CompareFilenames(u8"\u03f1", u8"\u03a1"));
-  EXPECT_EQ(0, CompareFilenames(u8"\u03f1", u8"\u03c1"));
+  EXPECT_EQ(0, compareFilenames(u8"\u03f1", u8"\u03a1"));
+  EXPECT_EQ(0, compareFilenames(u8"\u03f1", u8"\u03c1"));
 #endif
-  EXPECT_EQ(0, CompareFilenames(u8"\u03a1", u8"\u03c1"));
+  EXPECT_EQ(0, compareFilenames(u8"\u03a1", u8"\u03c1"));
 
   // Set locale to Greek.
   std::locale::global(boost::locale::generator().generate("el_GR.UTF-8"));
 
-  EXPECT_EQ(0, CompareFilenames("i", "I"));
-  EXPECT_EQ(-1, CompareFilenames("i", u8"\u0130"));
-  EXPECT_EQ(-1, CompareFilenames("i", u8"\u0131"));
-  EXPECT_EQ(-1, CompareFilenames("I", u8"\u0130"));
-  EXPECT_EQ(-1, CompareFilenames("I", u8"\u0131"));
-  EXPECT_EQ(-1, CompareFilenames(u8"\u0130", u8"\u0131"));
+  EXPECT_EQ(0, compareFilenames("i", "I"));
+  EXPECT_EQ(-1, compareFilenames("i", u8"\u0130"));
+  EXPECT_EQ(-1, compareFilenames("i", u8"\u0131"));
+  EXPECT_EQ(-1, compareFilenames("I", u8"\u0130"));
+  EXPECT_EQ(-1, compareFilenames("I", u8"\u0131"));
+  EXPECT_EQ(-1, compareFilenames(u8"\u0130", u8"\u0131"));
 #ifdef _WIN32
-  EXPECT_EQ(1, CompareFilenames(u8"\u03f1", u8"\u03a1"));
-  EXPECT_EQ(1, CompareFilenames(u8"\u03f1", u8"\u03c1"));
+  EXPECT_EQ(1, compareFilenames(u8"\u03f1", u8"\u03a1"));
+  EXPECT_EQ(1, compareFilenames(u8"\u03f1", u8"\u03c1"));
 #else
-  EXPECT_EQ(0, CompareFilenames(u8"\u03f1", u8"\u03a1"));
-  EXPECT_EQ(0, CompareFilenames(u8"\u03f1", u8"\u03c1"));
+  EXPECT_EQ(0, compareFilenames(u8"\u03f1", u8"\u03a1"));
+  EXPECT_EQ(0, compareFilenames(u8"\u03f1", u8"\u03c1"));
 #endif
-  EXPECT_EQ(0, CompareFilenames(u8"\u03a1", u8"\u03c1"));
+  EXPECT_EQ(0, compareFilenames(u8"\u03a1", u8"\u03c1"));
 
   // Reset locale.
   std::locale::global(boost::locale::generator().generate(""));

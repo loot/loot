@@ -33,7 +33,7 @@ namespace {
 using loot::GameId;
 using loot::GameInstall;
 
-std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
+std::vector<loot::LocalisedGameInstallPath> getGameLocalisationDirectories(
     GameId gameId,
     const std::filesystem::path& basePath) {
   switch (gameId) {
@@ -80,7 +80,7 @@ std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
   }
 };
 
-bool IsOnMicrosoftStore(const GameId gameId) {
+bool isOnMicrosoftStore(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
     case GameId::tes4:
@@ -104,7 +104,7 @@ bool IsOnMicrosoftStore(const GameId gameId) {
   }
 }
 
-std::filesystem::path GetGameContentPath(
+std::filesystem::path getGameContentPath(
     GameId gameId,
     const std::filesystem::path& xboxGamingRootPath) {
   switch (gameId) {
@@ -143,11 +143,11 @@ std::filesystem::path GetGameContentPath(
   }
 }
 
-std::optional<GameInstall> FindMicrosoftStoreGameInstall(
+std::optional<GameInstall> findMicrosoftStoreGameInstall(
     const GameId gameId,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
-  if (!IsOnMicrosoftStore(gameId)) {
+  if (!isOnMicrosoftStore(gameId)) {
     return std::nullopt;
   }
 
@@ -158,13 +158,13 @@ std::optional<GameInstall> FindMicrosoftStoreGameInstall(
   // location path out of that file. The game folders within that location
   // have fixed names.
   for (const auto& xboxGamingRootPath : xboxGamingRootPaths) {
-    const auto locationPath = GetGameContentPath(gameId, xboxGamingRootPath);
+    const auto locationPath = getGameContentPath(gameId, xboxGamingRootPath);
 
     const auto pathsToCheck =
-        GetGameLocalisationDirectories(gameId, locationPath);
+        getGameLocalisationDirectories(gameId, locationPath);
 
     const auto validPath =
-        GetLocalisedGameInstallPath(gameId, preferredUILanguages, pathsToCheck);
+        getLocalisedGameInstallPath(gameId, preferredUILanguages, pathsToCheck);
 
     if (validPath.has_value()) {
       // Pass a default empty path for the local path because libloot /
@@ -182,14 +182,14 @@ std::optional<GameInstall> FindMicrosoftStoreGameInstall(
 }
 
 namespace loot::microsoft {
-std::vector<GameInstall> FindGameInstalls(
+std::vector<GameInstall> findGameInstalls(
     const GameId gameId,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
   std::vector<GameInstall> installs;
 
   try {
-    auto install = FindMicrosoftStoreGameInstall(
+    auto install = findMicrosoftStoreGameInstall(
         gameId, xboxGamingRootPaths, preferredUILanguages);
 
     if (install.has_value()) {
@@ -199,7 +199,7 @@ std::vector<GameInstall> FindGameInstalls(
     const auto logger = getLogger();
     if (logger) {
       logger->error("Error while finding MS Store install of game {}: {}",
-                    GetGameName(gameId),
+                    getGameName(gameId),
                     e.what());
     }
   }

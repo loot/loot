@@ -63,7 +63,7 @@ static const std::regex GITHUB_REPO_URL_REGEX =
     std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",
                std::regex::ECMAScript | std::regex::icase);
 
-std::optional<std::string> GetLocalFolder(const toml::table& table) {
+std::optional<std::string> getLocalFolder(const toml::table& table) {
   const auto localPath = table["local_path"].value<std::string>();
   const auto localFolder = table["local_folder"].value<std::string>();
 
@@ -78,7 +78,7 @@ std::optional<std::string> GetLocalFolder(const toml::table& table) {
   return std::nullopt;
 }
 
-bool IsNehrim(const toml::table& table) {
+bool isNehrim(const toml::table& table) {
   const auto installPath = table["path"].value<std::string>();
 
   if (installPath.has_value() && !installPath.value().empty()) {
@@ -99,7 +99,7 @@ bool IsNehrim(const toml::table& table) {
       // Nehrim uses a different main master file from Oblivion.
       (masterFilename.has_value() &&
        masterFilename.value() ==
-           loot::GetMasterFilename(loot::GameId::nehrim)) ||
+           loot::getMasterFilename(loot::GameId::nehrim)) ||
       // Game name probably includes "nehrim".
       (gameName.has_value() && boost::icontains(gameName.value(), "nehrim")) ||
       // LOOT folder name probably includes "nehrim".
@@ -109,7 +109,7 @@ bool IsNehrim(const toml::table& table) {
       (isBaseGameInstance.has_value() && !isBaseGameInstance.value());
 }
 
-bool IsEnderal(const toml::table& table,
+bool isEnderal(const toml::table& table,
                const std::string& expectedLocalFolder) {
   const auto installPath = table["path"].value<std::string>();
 
@@ -124,7 +124,7 @@ bool IsEnderal(const toml::table& table,
   // Return true if any of these heuristics return a positive match.
   const auto gameName = table["name"].value<std::string>();
   const auto isBaseGameInstance = table["isBaseGameInstance"].value<bool>();
-  const auto localFolder = GetLocalFolder(table);
+  const auto localFolder = getLocalFolder(table);
   const auto folder = table["folder"].value<std::string>();
 
   return
@@ -140,10 +140,10 @@ bool IsEnderal(const toml::table& table,
       (isBaseGameInstance.has_value() && !isBaseGameInstance.value());
 }
 
-bool IsEnderal(const toml::table& table) { return IsEnderal(table, "enderal"); }
+bool isEnderal(const toml::table& table) { return isEnderal(table, "enderal"); }
 
-bool IsEnderalSE(const toml::table& table) {
-  return IsEnderal(table, "Enderal Special Edition");
+bool isEnderalSE(const toml::table& table) {
+  return isEnderal(table, "Enderal Special Edition");
 }
 std::optional<std::string> getOldDefaultRepoUrl(GameId gameId) {
   switch (gameId) {
@@ -174,7 +174,7 @@ std::optional<std::string> getOldDefaultRepoUrl(GameId gameId) {
     case GameId::openmw:
       return std::nullopt;
     default:
-      throw std::runtime_error("Unrecognised game ID: " + ToString(gameId));
+      throw std::runtime_error("Unrecognised game ID: " + toString(gameId));
   }
 }
 
@@ -464,7 +464,7 @@ std::optional<std::string> migrateMasterlistSource(std::string_view source,
     } else if (repo == "fallout4vr") {
       newRepo = "fallout4";
     }
-    const auto newSource = loot::GetDefaultMasterlistUrl(newRepo);
+    const auto newSource = loot::getDefaultMasterlistUrl(newRepo);
 
     const auto logger = getLogger();
     if (logger) {
@@ -537,35 +537,35 @@ std::string migratePreludeSource(const std::string& source) {
 }
 
 GameId mapGameId(const std::string& gameId) {
-  if (gameId == ToString(GameId::tes3)) {
+  if (gameId == toString(GameId::tes3)) {
     return GameId::tes3;
-  } else if (gameId == ToString(GameId::tes4)) {
+  } else if (gameId == toString(GameId::tes4)) {
     return GameId::tes4;
-  } else if (gameId == ToString(GameId::nehrim)) {
+  } else if (gameId == toString(GameId::nehrim)) {
     return GameId::nehrim;
-  } else if (gameId == ToString(GameId::tes5)) {
+  } else if (gameId == toString(GameId::tes5)) {
     return GameId::tes5;
-  } else if (gameId == ToString(GameId::enderal)) {
+  } else if (gameId == toString(GameId::enderal)) {
     return GameId::enderal;
-  } else if (gameId == ToString(GameId::tes5se)) {
+  } else if (gameId == toString(GameId::tes5se)) {
     return GameId::tes5se;
-  } else if (gameId == ToString(GameId::enderalse)) {
+  } else if (gameId == toString(GameId::enderalse)) {
     return GameId::enderalse;
-  } else if (gameId == ToString(GameId::tes5vr)) {
+  } else if (gameId == toString(GameId::tes5vr)) {
     return GameId::tes5vr;
-  } else if (gameId == ToString(GameId::fo3)) {
+  } else if (gameId == toString(GameId::fo3)) {
     return GameId::fo3;
-  } else if (gameId == ToString(GameId::fonv)) {
+  } else if (gameId == toString(GameId::fonv)) {
     return GameId::fonv;
-  } else if (gameId == ToString(GameId::fo4)) {
+  } else if (gameId == toString(GameId::fo4)) {
     return GameId::fo4;
-  } else if (gameId == ToString(GameId::fo4vr)) {
+  } else if (gameId == toString(GameId::fo4vr)) {
     return GameId::fo4vr;
-  } else if (gameId == ToString(GameId::starfield)) {
+  } else if (gameId == toString(GameId::starfield)) {
     return GameId::starfield;
-  } else if (gameId == ToString(GameId::openmw)) {
+  } else if (gameId == toString(GameId::openmw)) {
     return GameId::openmw;
-  } else if (gameId == ToString(GameId::oblivionRemastered)) {
+  } else if (gameId == toString(GameId::oblivionRemastered)) {
     return GameId::oblivionRemastered;
   } else {
     throw std::runtime_error(
@@ -592,13 +592,13 @@ GameId getGameId(const toml::table& table) {
     return GameId::tes3;
   } else if (gameType == "Oblivion") {
     // The Oblivion game type is shared between Oblivon and Nehrim.
-    return IsNehrim(table) ? GameId::nehrim : GameId::tes4;
+    return isNehrim(table) ? GameId::nehrim : GameId::tes4;
   } else if (gameType == "Skyrim") {
     // The Skyrim game type is shared between Skyrim and Enderal.
-    return IsEnderal(table) ? GameId::enderal : GameId::tes5;
+    return isEnderal(table) ? GameId::enderal : GameId::tes5;
   } else if (gameType == "SkyrimSE" || gameType == "Skyrim Special Edition") {
     // The Skyrim SE game type is shared between Skyrim SE and Enderal SE.
-    return IsEnderalSE(table) ? GameId::enderalse : GameId::tes5se;
+    return isEnderalSE(table) ? GameId::enderalse : GameId::tes5se;
   } else if (gameType == "Skyrim VR") {
     return GameId::tes5vr;
   } else if (gameType == "Fallout3") {
@@ -657,35 +657,35 @@ GameSettings convertGameTable(const toml::table& table) {
 
   auto name = table["name"].value<std::string>();
   if (name) {
-    game.SetName(*name);
+    game.setName(*name);
   }
 
   auto master = table["master"].value<std::string>();
   if (master) {
-    game.SetMaster(*master);
+    game.setMaster(*master);
   }
 
   const auto minimumHeaderVersion =
       table["minimumHeaderVersion"].value<double>();
   if (minimumHeaderVersion) {
-    game.SetMinimumHeaderVersion((float)*minimumHeaderVersion);
+    game.setMinimumHeaderVersion((float)*minimumHeaderVersion);
   }
 
   auto source = table["masterlistSource"].value<std::string>();
   if (source) {
-    game.SetMasterlistSource(migrateMasterlistSource(*source));
+    game.setMasterlistSource(migrateMasterlistSource(*source));
   } else {
     auto url = table["repo"].value<std::string>();
     auto branch = table["branch"].value<std::string>();
-    auto migratedSource = migrateMasterlistRepoSettings(game.Id(), url, branch);
+    auto migratedSource = migrateMasterlistRepoSettings(game.id(), url, branch);
     if (migratedSource.has_value()) {
-      game.SetMasterlistSource(migratedSource.value());
+      game.setMasterlistSource(migratedSource.value());
     }
   }
 
   auto path = table["path"].value<std::string>();
   if (path) {
-    game.SetGamePath(std::filesystem::u8path(*path));
+    game.setGamePath(std::filesystem::u8path(*path));
   }
 
   auto localPath = table["local_path"].value<std::string>();
@@ -694,9 +694,9 @@ GameSettings convertGameTable(const toml::table& table) {
     throw std::runtime_error(
         "Game settings have local_path and local_folder set, use only one.");
   } else if (localPath) {
-    game.SetGameLocalPath(std::filesystem::u8path(*localPath));
+    game.setGameLocalPath(std::filesystem::u8path(*localPath));
   } else if (localFolder) {
-    game.SetGameLocalFolder(*localFolder);
+    game.setGameLocalFolder(*localFolder);
   }
 
   auto hiddenMessagesToml = table["hiddenMessages"];
@@ -711,7 +711,7 @@ GameSettings convertGameTable(const toml::table& table) {
           convertHiddenMessageTable(*hiddenMessageToml.as_table()));
     }
 
-    game.SetHiddenMessages(hiddenMessages);
+    game.setHiddenMessages(hiddenMessages);
   }
 
   return game;
@@ -1012,7 +1012,7 @@ void LootSettings::save(const std::filesystem::path& file) {
     for (const auto& gameSettings : gameSettings_) {
       toml::array hiddenMessages;
 
-      for (const auto& hiddenMessage : gameSettings.HiddenMessages()) {
+      for (const auto& hiddenMessage : gameSettings.hiddenMessages()) {
         toml::table hiddenMessageToml{
             {"text", hiddenMessage.text},
         };
@@ -1026,14 +1026,14 @@ void LootSettings::save(const std::filesystem::path& file) {
       }
 
       toml::table game{
-          {"gameId", ToString(gameSettings.Id())},
-          {"name", gameSettings.Name()},
-          {"folder", gameSettings.FolderName()},
-          {"master", gameSettings.Master()},
-          {"minimumHeaderVersion", gameSettings.MinimumHeaderVersion()},
-          {"masterlistSource", gameSettings.MasterlistSource()},
-          {"path", gameSettings.GamePath().u8string()},
-          {"local_path", gameSettings.GameLocalPath().u8string()},
+          {"gameId", toString(gameSettings.id())},
+          {"name", gameSettings.name()},
+          {"folder", gameSettings.folderName()},
+          {"master", gameSettings.master()},
+          {"minimumHeaderVersion", gameSettings.minimumHeaderVersion()},
+          {"masterlistSource", gameSettings.masterlistSource()},
+          {"path", gameSettings.gamePath().u8string()},
+          {"local_path", gameSettings.gameLocalPath().u8string()},
           {"hiddenMessages", hiddenMessages},
       };
 
@@ -1261,7 +1261,7 @@ void LootSettings::storeFilters(const Filters& filters) {
 void LootSettings::updateLastVersion() {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  lastVersion_ = GetLootVersion();
+  lastVersion_ = getLootVersion();
 }
 
 }

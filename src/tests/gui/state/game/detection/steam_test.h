@@ -33,7 +33,7 @@ namespace loot::test {
 #ifdef _WIN32
 TEST(GetSteamInstallPaths,
      shouldReturnNulloptWhenTheRegistryEntryDoesNotExist) {
-  const auto paths = loot::steam::GetSteamInstallPaths(TestRegistry());
+  const auto paths = loot::steam::getSteamInstallPaths(TestRegistry());
 
   EXPECT_TRUE(paths.empty());
 }
@@ -44,14 +44,14 @@ TEST(GetSteamInstallPaths,
   const auto expectedPath = "C:\\Program Files (x86)\\Steam";
   registry.SetStringValue("Software\\Valve\\Steam", expectedPath);
 
-  const auto paths = loot::steam::GetSteamInstallPaths(registry);
+  const auto paths = loot::steam::getSteamInstallPaths(registry);
 
   ASSERT_EQ(1, paths.size());
   EXPECT_EQ(expectedPath, paths[0].u8string());
 }
 #else
 TEST(GetSteamInstallPaths, shouldReturnTheSteamFolderInUserLocalShare) {
-  const auto paths = loot::steam::GetSteamInstallPaths(TestRegistry());
+  const auto paths = loot::steam::getSteamInstallPaths(TestRegistry());
 
   const auto home = std::string(getenv("HOME"));
 
@@ -91,7 +91,7 @@ protected:
 
 TEST_F(GetSteamLibraryPathsTest,
        shouldReturnAnEmptyVectorIfTheLibraryFoldersVdfFileDoesNotExist) {
-  const auto paths = loot::steam::GetSteamLibraryPaths(rootPath_);
+  const auto paths = loot::steam::getSteamLibraryPaths(rootPath_);
 
   EXPECT_TRUE(paths.empty());
 }
@@ -139,7 +139,7 @@ TEST_F(GetSteamLibraryPathsTest,
 )test";
   out.close();
 
-  const auto paths = loot::steam::GetSteamLibraryPaths(rootPath_);
+  const auto paths = loot::steam::getSteamLibraryPaths(rootPath_);
 
   EXPECT_TRUE(paths.empty());
 }
@@ -186,7 +186,7 @@ TEST_F(GetSteamLibraryPathsTest, shouldSkipFoldersWithNoPathKey) {
 )test";
   out.close();
 
-  const auto paths = loot::steam::GetSteamLibraryPaths(rootPath_);
+  const auto paths = loot::steam::getSteamLibraryPaths(rootPath_);
 
   ASSERT_EQ(1, paths.size());
   EXPECT_EQ(std::filesystem::u8path("D:\\Games\\Steam"), paths[0]);
@@ -235,7 +235,7 @@ TEST_F(GetSteamLibraryPathsTest, shouldReturnAllLibraryPathsInTheVdf) {
 )test";
   out.close();
 
-  const auto paths = loot::steam::GetSteamLibraryPaths(rootPath_);
+  const auto paths = loot::steam::getSteamLibraryPaths(rootPath_);
 
   ASSERT_EQ(2, paths.size());
   EXPECT_EQ(std::filesystem::u8path("C:\\Program Files (x86)\\Steam"),
@@ -246,7 +246,7 @@ TEST_F(GetSteamLibraryPathsTest, shouldReturnAllLibraryPathsInTheVdf) {
 TEST(GetSteamAppManifestPaths, shouldReturnAPathForEachSupportedAppId) {
   const std::filesystem::path libraryPath = "test";
   const auto paths =
-      loot::steam::GetSteamAppManifestPaths(libraryPath, GameId::tes4);
+      loot::steam::getSteamAppManifestPaths(libraryPath, GameId::tes4);
 
   ASSERT_EQ(2, paths.size());
   EXPECT_EQ(libraryPath / "steamapps" / "appmanifest_22330.acf", paths[0]);
@@ -273,7 +273,7 @@ protected:
 };
 
 TEST_F(Steam_FindGameInstallTest, shouldReturnNulloptIfTheAcfFileDoesNotExist) {
-  const auto install = loot::steam::FindGameInstall(filePath_);
+  const auto install = loot::steam::findGameInstall(filePath_);
 
   EXPECT_FALSE(install.has_value());
 }
@@ -293,7 +293,7 @@ TEST_F(Steam_FindGameInstallTest,
 )test";
   out.close();
 
-  const auto install = loot::steam::FindGameInstall(filePath_);
+  const auto install = loot::steam::findGameInstall(filePath_);
 
   EXPECT_FALSE(install.has_value());
 }
@@ -313,7 +313,7 @@ TEST_F(Steam_FindGameInstallTest, shouldReturnNulloptIfTheAppIdIsEmpty) {
 )test";
   out.close();
 
-  const auto install = loot::steam::FindGameInstall(filePath_);
+  const auto install = loot::steam::findGameInstall(filePath_);
 
   EXPECT_FALSE(install.has_value());
 }
@@ -333,7 +333,7 @@ TEST_F(Steam_FindGameInstallTest,
 )test";
   out.close();
 
-  const auto install = loot::steam::FindGameInstall(filePath_);
+  const auto install = loot::steam::findGameInstall(filePath_);
 
   EXPECT_FALSE(install.has_value());
 }
@@ -349,7 +349,7 @@ TEST_F(Steam_FindGameInstallTest, shouldReturnNulloptIfTheInstallDirIsEmpty) {
 )test";
   out.close();
 
-  const auto install = loot::steam::FindGameInstall(filePath_);
+  const auto install = loot::steam::findGameInstall(filePath_);
 
   EXPECT_FALSE(install.has_value());
 }
@@ -370,7 +370,7 @@ TEST_F(Steam_FindGameInstallTest,
 )test";
   out.close();
 
-  const auto install = loot::steam::FindGameInstall(filePath_);
+  const auto install = loot::steam::findGameInstall(filePath_);
 
   EXPECT_FALSE(install.has_value());
 }
@@ -387,7 +387,7 @@ TEST_F(Steam_FindGameInstallTest,
 )test";
   out.close();
 
-  const auto install = loot::steam::FindGameInstall(filePath_);
+  const auto install = loot::steam::findGameInstall(filePath_);
 
   EXPECT_FALSE(install.has_value());
 }
@@ -404,7 +404,7 @@ TEST_F(Steam_FindGameInstallTest,
 )test";
   out.close();
 
-  const auto install = loot::steam::FindGameInstall(filePath_);
+  const auto install = loot::steam::findGameInstall(filePath_);
 
   ASSERT_TRUE(install.has_value());
   EXPECT_EQ(GameId::tes5se, install.value().gameId);
@@ -427,7 +427,7 @@ class Steam_FindGameInstallsTest
 protected:
   Steam_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
 
-  std::optional<std::string> GetSteamGameId() {
+  std::optional<std::string> getSteamGameId() {
     switch (GetParam()) {
       case GameId::tes3:
         return "22320";
@@ -472,7 +472,7 @@ INSTANTIATE_TEST_SUITE_P(,
 TEST_P(Steam_FindGameInstallsTest,
        shouldReturnAnEmptyVectorIfNoRegistryEntriesExist) {
   const auto installs =
-      loot::steam::FindGameInstalls(TestRegistry(), GetParam());
+      loot::steam::findGameInstalls(TestRegistry(), GetParam());
 
   EXPECT_TRUE(installs.empty());
 }
@@ -480,7 +480,7 @@ TEST_P(Steam_FindGameInstallsTest,
 TEST_P(
     Steam_FindGameInstallsTest,
     shouldReturnAnEmptyVectorIfARegistryEntryExistsButItIsNotAValidGamePath) {
-  const auto steamGameId = GetSteamGameId();
+  const auto steamGameId = getSteamGameId();
   if (!steamGameId.has_value()) {
     return;
   }
@@ -492,14 +492,14 @@ TEST_P(
       steamGameId.value();
   registry.SetStringValue(subKey, "invalid");
 
-  const auto installs = loot::steam::FindGameInstalls(registry, GetParam());
+  const auto installs = loot::steam::findGameInstalls(registry, GetParam());
 
   EXPECT_TRUE(installs.empty());
 }
 
 TEST_P(Steam_FindGameInstallsTest,
        shouldReturnANonEmptyVectorIfARegistryEntryExistsWithAValidGamePath) {
-  const auto steamGameId = GetSteamGameId();
+  const auto steamGameId = getSteamGameId();
   if (!steamGameId.has_value()) {
     return;
   }
@@ -521,7 +521,7 @@ TEST_P(Steam_FindGameInstallsTest,
       steamGameId.value();
   registry.SetStringValue(subKey, gamePath.u8string());
 
-  const auto installs = loot::steam::FindGameInstalls(registry, GetParam());
+  const auto installs = loot::steam::findGameInstalls(registry, GetParam());
 
   ASSERT_EQ(1, installs.size());
   EXPECT_EQ(GetParam(), installs[0].gameId);

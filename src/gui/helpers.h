@@ -35,23 +35,23 @@
 
 namespace loot {
 #ifdef _WIN32
-std::wstring ToWinWide(const std::string& str);
+std::wstring toWinWide(const std::string& str);
 
-std::string FromWinWide(const std::wstring& wstr);
+std::string fromWinWide(const std::wstring& wstr);
 #endif
 
-std::vector<std::string> GetPreferredUILanguages();
+std::vector<std::string> getPreferredUILanguages();
 
-std::vector<std::filesystem::path> GetDriveRootPaths();
+std::vector<std::filesystem::path> getDriveRootPaths();
 
-std::optional<std::filesystem::path> FindXboxGamingRootPath(
+std::optional<std::filesystem::path> findXboxGamingRootPath(
     const std::filesystem::path& driveRootPath);
 
 // Compare strings as if they're filenames, respecting filesystem case
 // insensitivity on Windows. Returns -1 if lhs < rhs, 0 if lhs == rhs, and 1 if
 // lhs > rhs. The comparison may give different results on Linux, but is still
 // locale-invariant.
-int CompareFilenames(const std::string& lhs, const std::string& rhs);
+int compareFilenames(const std::string& lhs, const std::string& rhs);
 
 std::filesystem::path getExecutableDirectory();
 

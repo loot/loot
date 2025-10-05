@@ -49,17 +49,17 @@ enum struct GameId : uint8_t {
   oblivionRemastered,
 };
 
-std::string ToString(const GameId gameId);
+std::string toString(const GameId gameId);
 
-bool ShouldAllowRedating(const GameId gameId);
+bool shouldAllowRedating(const GameId gameId);
 
-std::string GetGameName(const GameId gameId);
+std::string getGameName(const GameId gameId);
 
-std::string GetMasterFilename(const GameId gameId);
+std::string getMasterFilename(const GameId gameId);
 
-std::string GetDefaultLootFolderName(const GameId gameId);
+std::string getDefaultLootFolderName(const GameId gameId);
 
-std::filesystem::path GetDataPath(const GameId gameId,
+std::filesystem::path getDataPath(const GameId gameId,
                                   const std::filesystem::path& gamePath);
 }
 

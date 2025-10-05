@@ -40,7 +40,7 @@ public:
             bool autoSort);
   void initCurrentGame();
 
-  std::vector<GameSettings> LoadInstalledGames(
+  std::vector<GameSettings> loadInstalledGames(
       const std::vector<GameSettings>& gamesSettings);
 
   const std::vector<SourcedMessage>& getInitMessages() const;
@@ -48,9 +48,9 @@ public:
   const LootSettings& getSettings() const;
   LootSettings& getSettings();
 
-  ChangeCount& GetUnappliedChangeCount();
+  ChangeCount& getUnappliedChangeCount();
 
-  const LootPaths& GetPaths() const;
+  const LootPaths& getPaths() const;
 
 private:
   void createLootDataPath();
@@ -62,9 +62,9 @@ private:
                         const std::filesystem::path& gamePath);
   void setInitialGame(const std::string& cliGameValue);
 
-  bool IsInstalled(const GameSettings& gameSettings) const override;
+  bool isInstalled(const GameSettings& gameSettings) const override;
 
-  void InitialiseGameData(gui::Game& game) override;
+  void initialiseGameData(gui::Game& game) override;
 
   std::optional<std::string> getPreferredGameFolderName(
       const std::string& cliGameValue) const;

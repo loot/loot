@@ -62,7 +62,7 @@ private:
   HANDLE hMutex{::CreateMutex(nullptr, FALSE, MUTEX_NAME)};
 };
 
-bool IsApplicationMutexLocked() {
+bool isApplicationMutexLocked() {
   return ::OpenMutex(MUTEX_ALL_ACCESS,
                      FALSE,
                      ApplicationMutexGuard::MUTEX_NAME) != nullptr;
@@ -70,7 +70,7 @@ bool IsApplicationMutexLocked() {
 #else
 class [[maybe_unused]] ApplicationMutexGuard {};
 
-bool IsApplicationMutexLocked() { return false; }
+bool isApplicationMutexLocked() { return false; }
 #endif
 }
 #endif

@@ -38,7 +38,7 @@
 namespace {
 using loot::GameId;
 
-std::vector<std::string> GetSteamGameIds(const GameId gameId) {
+std::vector<std::string> getSteamGameIds(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
       return {"22320"};
@@ -85,7 +85,7 @@ std::vector<std::string> GetSteamGameIds(const GameId gameId) {
 }
 
 #ifndef _WIN32
-std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
+std::optional<std::string> getAppDataFolderName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
     case GameId::oblivionRemastered:
@@ -121,11 +121,11 @@ std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
 }
 #endif
 
-std::map<std::string, GameId> GetSteamGameIdMap() {
+std::map<std::string, GameId> getSteamGameIdMap() {
   std::map<std::string, GameId> map;
 
   for (const auto& gameId : loot::ALL_GAME_IDS) {
-    for (const auto& steamGameId : GetSteamGameIds(gameId)) {
+    for (const auto& steamGameId : getSteamGameIds(gameId)) {
       map.emplace(steamGameId, gameId);
     }
   }
@@ -134,10 +134,10 @@ std::map<std::string, GameId> GetSteamGameIdMap() {
 }
 
 static const std::map<std::string, GameId> STEAM_GAME_ID_MAP =
-    GetSteamGameIdMap();
+    getSteamGameIdMap();
 
-std::vector<loot::RegistryValue> GetRegistryValues(const GameId gameId) {
-  const auto steamGameIds = GetSteamGameIds(gameId);
+std::vector<loot::RegistryValue> getRegistryValues(const GameId gameId) {
+  const auto steamGameIds = getSteamGameIds(gameId);
 
   std::vector<loot::RegistryValue> registryValues;
   for (const auto& steamGameId : steamGameIds) {
@@ -153,7 +153,7 @@ std::vector<loot::RegistryValue> GetRegistryValues(const GameId gameId) {
 }
 
 // Return a list of paths to appmanifest files.
-std::vector<std::filesystem::path> ParseLibraryFoldersVdf(
+std::vector<std::filesystem::path> parseLibraryFoldersVdf(
     std::istream& stream) {
   const auto logger = loot::getLogger();
 
@@ -216,7 +216,7 @@ struct SteamAppManifest {
 };
 
 // Returns game install directory.
-std::optional<SteamAppManifest> ParseAppManifest(std::istream& stream) {
+std::optional<SteamAppManifest> parseAppManifest(std::istream& stream) {
   const auto logger = loot::getLogger();
 
   try {
@@ -260,7 +260,7 @@ std::optional<SteamAppManifest> ParseAppManifest(std::istream& stream) {
   }
 }
 
-std::filesystem::path FixNehrimInstallPath(
+std::filesystem::path fixNehrimInstallPath(
     const GameId gameId,
     const std::filesystem::path& installPath) {
   // The Steam install of Nehrim puts all the game files inside a NehrimFiles
@@ -274,14 +274,14 @@ std::filesystem::path FixNehrimInstallPath(
 }
 
 namespace loot::steam {
-std::vector<std::filesystem::path> GetSteamInstallPaths(
+std::vector<std::filesystem::path> getSteamInstallPaths(
 #ifndef _WIN32
     [[maybe_unused]]
 #endif
     const RegistryInterface& registry) {
   try {
 #ifdef _WIN32
-    const auto pathString = registry.GetStringValue(
+    const auto pathString = registry.getStringValue(
         RegistryValue{loot::RegistryRootKey::LOCAL_MACHINE,
                       "Software\\Valve\\Steam",
                       "InstallPath"});
@@ -304,7 +304,7 @@ std::vector<std::filesystem::path> GetSteamInstallPaths(
   return {};
 }
 
-std::vector<std::filesystem::path> GetSteamLibraryPaths(
+std::vector<std::filesystem::path> getSteamLibraryPaths(
     const std::filesystem::path& steamInstallPath) {
   const auto logger = getLogger();
 
@@ -324,7 +324,7 @@ std::vector<std::filesystem::path> GetSteamLibraryPaths(
       return {};
     }
 
-    return ParseLibraryFoldersVdf(stream);
+    return parseLibraryFoldersVdf(stream);
   } catch (const std::exception& e) {
     if (logger) {
       logger->error(
@@ -338,13 +338,13 @@ std::vector<std::filesystem::path> GetSteamLibraryPaths(
   }
 }
 
-std::vector<std::filesystem::path> GetSteamAppManifestPaths(
+std::vector<std::filesystem::path> getSteamAppManifestPaths(
     const std::filesystem::path& steamLibraryPath,
     const GameId gameId) {
   std::vector<std::filesystem::path> paths;
 
   try {
-    for (const auto& appId : GetSteamGameIds(gameId)) {
+    for (const auto& appId : getSteamGameIds(gameId)) {
       const auto steamAppManifestPath =
           steamLibraryPath / "steamapps" /
           std::filesystem::u8path("appmanifest_" + appId + ".acf");
@@ -357,7 +357,7 @@ std::vector<std::filesystem::path> GetSteamAppManifestPaths(
       logger->error(
           "Failed to get Steam app manifest paths for game {} and library "
           "path {}: {}",
-          GetGameName(gameId),
+          getGameName(gameId),
           steamLibraryPath.u8string(),
           e.what());
     }
@@ -367,7 +367,7 @@ std::vector<std::filesystem::path> GetSteamAppManifestPaths(
 }
 
 // Parses steamapps/appmanifest_*.acf files.
-std::optional<GameInstall> FindGameInstall(
+std::optional<GameInstall> findGameInstall(
     const std::filesystem::path& steamAppManifestPath) {
   const auto logger = getLogger();
 
@@ -391,7 +391,7 @@ std::optional<GameInstall> FindGameInstall(
       return std::nullopt;
     }
 
-    const auto result = ParseAppManifest(stream);
+    const auto result = parseAppManifest(stream);
 
     if (!result.has_value()) {
       if (logger) {
@@ -433,9 +433,9 @@ std::optional<GameInstall> FindGameInstall(
     auto installPath =
         steamAppManifestPath.parent_path() / "common" / manifest.installDir;
 
-    installPath = FixNehrimInstallPath(gameId, installPath);
+    installPath = fixNehrimInstallPath(gameId, installPath);
 
-    if (!IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
+    if (!isValidGamePath(gameId, getMasterFilename(gameId), installPath)) {
       if (logger) {
         logger->debug(
             "The install path given in the Steam app manifest at {} is not "
@@ -451,7 +451,7 @@ std::optional<GameInstall> FindGameInstall(
     install.installPath = installPath;
 
 #ifndef _WIN32
-    const auto folderName = GetAppDataFolderName(install.gameId);
+    const auto folderName = getAppDataFolderName(install.gameId);
     if (folderName.has_value()) {
       // If the game has a local path, it must be specified when running on
       // Linux.
@@ -476,18 +476,18 @@ std::optional<GameInstall> FindGameInstall(
   }
 }
 
-std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
+std::vector<GameInstall> findGameInstalls(const RegistryInterface& registry,
                                           const GameId gameId) {
   std::vector<GameInstall> installs;
 
   try {
     auto installPaths =
-        FindGameInstallPathsInRegistry(registry, GetRegistryValues(gameId));
+        findGameInstallPathsInRegistry(registry, getRegistryValues(gameId));
 
     for (auto& installPath : installPaths) {
-      installPath = FixNehrimInstallPath(gameId, installPath);
+      installPath = fixNehrimInstallPath(gameId, installPath);
 
-      if (IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
+      if (isValidGamePath(gameId, getMasterFilename(gameId), installPath)) {
         installs.push_back(GameInstall{gameId,
                                        InstallSource::steam,
                                        installPath,
@@ -500,7 +500,7 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
       logger->error(
           "Error while trying to find game installs for game {} using Steam "
           "Registry keys: {}",
-          GetGameName(gameId),
+          getGameName(gameId),
           e.what());
     }
   }

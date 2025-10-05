@@ -82,14 +82,14 @@ std::optional<QByteArray> readHttpResponse(QNetworkReply* reply);
 
 void showInvalidRegexTooltip(QWidget& widget, const std::string& details);
 
-void CopyToClipboard(const std::string& text);
+void copyToClipboard(const std::string& text);
 
-void OpenInDefaultApplication(const std::filesystem::path& path);
+void openInDefaultApplication(const std::filesystem::path& path);
 
-std::vector<HiddenMessage> ReadOldMessages(
+std::vector<HiddenMessage> readOldMessages(
     const std::filesystem::path& filePath);
 
-void WriteOldMessages(const std::filesystem::path& filePath,
+void writeOldMessages(const std::filesystem::path& filePath,
                       const std::vector<HiddenMessage>& oldMessages);
 }
 

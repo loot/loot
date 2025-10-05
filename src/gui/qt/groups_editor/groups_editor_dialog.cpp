@@ -319,7 +319,7 @@ void GroupsEditorDialog::refreshPluginLists() {
 const PluginItem* GroupsEditorDialog::getPluginItem(
     const std::string& pluginName) const {
   for (const auto& plugin : pluginItemModel->getPluginItems()) {
-    if (CompareFilenames(plugin.name, pluginName) == 0) {
+    if (compareFilenames(plugin.name, pluginName) == 0) {
       return &plugin;
     }
   }
@@ -380,7 +380,7 @@ void GroupsEditorDialog::on_actionCopyPluginNames_triggered() {
     if (groupPluginsList->count() == 1 &&
         groupPluginsList->item(0)->font().italic()) {
       // Copy an empty string because the group is empty.
-      CopyToClipboard("");
+      copyToClipboard("");
       return;
     }
 
@@ -390,7 +390,7 @@ void GroupsEditorDialog::on_actionCopyPluginNames_triggered() {
       selectedPluginNames += item->text().toStdString() + "\n";
     }
 
-    CopyToClipboard(selectedPluginNames);
+    copyToClipboard(selectedPluginNames);
   } catch (const std::exception& e) {
     handleException(e);
   }

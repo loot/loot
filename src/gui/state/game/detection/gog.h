@@ -32,11 +32,11 @@
 #include "gui/state/game/detection/registry.h"
 
 namespace loot::gog {
-std::vector<std::string> GetGogGameIds(const GameId gameId);
+std::vector<std::string> getGogGameIds(const GameId gameId);
 
-std::optional<std::string> GetAppDataFolderName(const GameId gameId);
+std::optional<std::string> getAppDataFolderName(const GameId gameId);
 
-std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
+std::vector<GameInstall> findGameInstalls(const RegistryInterface& registry,
                                           const GameId gameId);
 }
 

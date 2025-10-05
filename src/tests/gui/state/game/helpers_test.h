@@ -36,58 +36,58 @@ namespace loot {
 namespace test {
 
 TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeBackslash) {
-  EXPECT_EQ("\\\\", EscapeMarkdownASCIIPunctuation("\\"));
+  EXPECT_EQ("\\\\", escapeMarkdownASCIIPunctuation("\\"));
 }
 
 TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeBacktick) {
-  EXPECT_EQ("\\`", EscapeMarkdownASCIIPunctuation("`"));
+  EXPECT_EQ("\\`", escapeMarkdownASCIIPunctuation("`"));
 }
 
 TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeAsterisk) {
-  EXPECT_EQ("\\*", EscapeMarkdownASCIIPunctuation("*"));
+  EXPECT_EQ("\\*", escapeMarkdownASCIIPunctuation("*"));
 }
 
 TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeUnderscore) {
-  EXPECT_EQ("\\_", EscapeMarkdownASCIIPunctuation("_"));
+  EXPECT_EQ("\\_", escapeMarkdownASCIIPunctuation("_"));
 }
 
 TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeCurlyBraces) {
-  EXPECT_EQ("\\{", EscapeMarkdownASCIIPunctuation("{"));
-  EXPECT_EQ("\\}", EscapeMarkdownASCIIPunctuation("}"));
+  EXPECT_EQ("\\{", escapeMarkdownASCIIPunctuation("{"));
+  EXPECT_EQ("\\}", escapeMarkdownASCIIPunctuation("}"));
 }
 
 TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeSquareBrackets) {
-  EXPECT_EQ("\\[", EscapeMarkdownASCIIPunctuation("["));
-  EXPECT_EQ("\\]", EscapeMarkdownASCIIPunctuation("]"));
+  EXPECT_EQ("\\[", escapeMarkdownASCIIPunctuation("["));
+  EXPECT_EQ("\\]", escapeMarkdownASCIIPunctuation("]"));
 }
 
 TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeParentheses) {
-  EXPECT_EQ("\\(", EscapeMarkdownASCIIPunctuation("("));
-  EXPECT_EQ("\\)", EscapeMarkdownASCIIPunctuation(")"));
+  EXPECT_EQ("\\(", escapeMarkdownASCIIPunctuation("("));
+  EXPECT_EQ("\\)", escapeMarkdownASCIIPunctuation(")"));
 }
 
 TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeHash) {
-  EXPECT_EQ("\\#", EscapeMarkdownASCIIPunctuation("#"));
+  EXPECT_EQ("\\#", escapeMarkdownASCIIPunctuation("#"));
 }
 
 TEST(EscapeMarkdownASCIIPunctuation, shouldEscapePlus) {
-  EXPECT_EQ("\\+", EscapeMarkdownASCIIPunctuation("+"));
+  EXPECT_EQ("\\+", escapeMarkdownASCIIPunctuation("+"));
 }
 
 TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeHyphen) {
-  EXPECT_EQ("\\-", EscapeMarkdownASCIIPunctuation("-"));
+  EXPECT_EQ("\\-", escapeMarkdownASCIIPunctuation("-"));
 }
 
 TEST(EscapeMarkdownASCIIPunctuation, shouldEscapePeriod) {
-  EXPECT_EQ("\\.", EscapeMarkdownASCIIPunctuation("."));
+  EXPECT_EQ("\\.", escapeMarkdownASCIIPunctuation("."));
 }
 
 TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeExclamationMark) {
-  EXPECT_EQ("\\!", EscapeMarkdownASCIIPunctuation("!"));
+  EXPECT_EQ("\\!", escapeMarkdownASCIIPunctuation("!"));
 }
 
 TEST(CheckForRemovedPlugins, shouldCompareFilenamesBeforeAndAfter) {
-  const auto plugins = CheckForRemovedPlugins(
+  const auto plugins = checkForRemovedPlugins(
       {"test1.esp", "test2.esp", "test3.esp"}, {"test1.esp", "test3.esp"});
 
   EXPECT_EQ(std::vector<std::string>{"test2.esp"}, plugins);
@@ -118,7 +118,7 @@ C.Location, -C.LockList
 
   std::stringstream in(fileContent);
 
-  const auto tags = ReadBashTagsFile(in);
+  const auto tags = readBashTagsFile(in);
   const std::vector<Tag> expectedTags{Tag("Delev"),
                                       Tag("Relev"),
                                       Tag("C.Water", false),
@@ -130,7 +130,7 @@ C.Location, -C.LockList
 
 TEST(ReadBashTagsFile, shouldReturnAnEmptyVectorIfThePathDoesNotExist) {
   EXPECT_TRUE(
-      ReadBashTagsFile(std::filesystem::temp_directory_path() / "missing",
+      readBashTagsFile(std::filesystem::temp_directory_path() / "missing",
                        "Blank.esp")
           .empty());
 }
@@ -145,7 +145,7 @@ TEST(ReadBashTagsFile, shouldReadFromAPluginFile) {
   out << "C.Location, Delev, -Relev";
   out.close();
 
-  const auto tags = ReadBashTagsFile(dataPath, "Blank.esp");
+  const auto tags = readBashTagsFile(dataPath, "Blank.esp");
 
   const std::vector<Tag> expectedTags{
       Tag("C.Location"), Tag("Delev"), Tag("Relev", false)};
@@ -158,7 +158,7 @@ TEST(ReadBashTagsFile, shouldReadFromAPluginFile) {
 TEST(GetTagConflicts,
      shouldReturnTagNamesAddedByOneSourceAndRemovedByTheOther) {
   const auto conflicts =
-      GetTagConflicts({Tag("A", false), Tag("B"), Tag("C", false), Tag("D")},
+      getTagConflicts({Tag("A", false), Tag("B"), Tag("C", false), Tag("D")},
                       {Tag("A"), Tag("B", false), Tag("C", false)});
 
   const std::vector<std::string> expectedConflicts{"A", "B"};
@@ -182,7 +182,7 @@ TEST_P(ResolveGameFilePathTest,
   std::filesystem::copy(dataPath / blankEsm, filePath);
 
   const auto pluginPath =
-      ResolveGameFilePath(GetParam(), {localPath}, dataPath, blankEsm);
+      resolveGameFilePath(GetParam(), {localPath}, dataPath, blankEsm);
 
   EXPECT_EQ(filePath, pluginPath);
 }
@@ -195,7 +195,7 @@ TEST_P(ResolveGameFilePathTest, shouldCheckExternalDataPathsInOrder) {
   std::filesystem::create_directories(otherDataPath);
   std::filesystem::copy(dataPath / blankEsm, otherDataPath / blankEsm);
 
-  const auto pluginPath = ResolveGameFilePath(
+  const auto pluginPath = resolveGameFilePath(
       GetParam(), {localPath, otherDataPath}, dataPath, blankEsm);
 
   if (GetParam() == GameId::openmw) {
@@ -214,7 +214,7 @@ TEST_P(
   std::filesystem::copy(dataPath / blankEsm, localPath / ghostedFilename);
 
   const auto pluginPath =
-      ResolveGameFilePath(GetParam(), {localPath}, dataPath, filename);
+      resolveGameFilePath(GetParam(), {localPath}, dataPath, filename);
 
   if (GetParam() == GameId::openmw) {
     EXPECT_FALSE(pluginPath.has_value());
@@ -226,7 +226,7 @@ TEST_P(
 TEST_P(ResolveGameFilePathTest,
        shouldReturnFilenameInDataPathIfTheFileOnlyExistsThere) {
   const auto pluginPath =
-      ResolveGameFilePath(GetParam(), {localPath}, dataPath, blankEsm);
+      resolveGameFilePath(GetParam(), {localPath}, dataPath, blankEsm);
 
   EXPECT_EQ(dataPath / blankEsm, pluginPath);
 }
@@ -234,7 +234,7 @@ TEST_P(ResolveGameFilePathTest,
 TEST_P(
     ResolveGameFilePathTest,
     shouldReturnGhostedFilenameInDataPathIfTheFileOnlyExistsThereAsAGhostedPlugin) {
-  const auto pluginPath = ResolveGameFilePath(
+  const auto pluginPath = resolveGameFilePath(
       GetParam(), {localPath}, dataPath, blankMasterDependentEsm);
 
   if (GetParam() == GameId::openmw) {
@@ -247,7 +247,7 @@ TEST_P(
 TEST_P(ResolveGameFilePathTest,
        shouldReturnNulloptIfTheFileDoesNotExistInAnyOfTheDataPaths) {
   const auto pluginPath =
-      ResolveGameFilePath(GetParam(), {localPath}, dataPath, "missing.esp");
+      resolveGameFilePath(GetParam(), {localPath}, dataPath, "missing.esp");
 
   EXPECT_FALSE(pluginPath.has_value());
 }

@@ -41,13 +41,13 @@ bool operator!=(const SourcedMessage& lhs, const SourcedMessage& rhs) {
   return !(lhs == rhs);
 }
 
-SourcedMessage CreatePlainTextSourcedMessage(const MessageType type,
+SourcedMessage createPlainTextSourcedMessage(const MessageType type,
                                              const MessageSource source,
                                              const std::string& text) {
-  return SourcedMessage{type, source, EscapeMarkdownASCIIPunctuation(text)};
+  return SourcedMessage{type, source, escapeMarkdownASCIIPunctuation(text)};
 }
 
-std::string MessagesAsMarkdown(const std::vector<SourcedMessage>& messages) {
+std::string messagesAsMarkdown(const std::vector<SourcedMessage>& messages) {
   if (messages.empty()) {
     return "";
   }
@@ -71,7 +71,7 @@ std::string MessagesAsMarkdown(const std::vector<SourcedMessage>& messages) {
   return content;
 }
 
-SourcedMessage ToSourcedMessage(const PluginCleaningData& cleaningData,
+SourcedMessage toSourcedMessage(const PluginCleaningData& cleaningData,
                                 const std::string_view language) {
   using boost::locale::translate;
   using fmt::format;
@@ -154,7 +154,7 @@ SourcedMessage ToSourcedMessage(const PluginCleaningData& cleaningData,
       MessageType::warn, MessageSource::cleaningMetadata, message};
 }
 
-std::vector<SourcedMessage> ToSourcedMessages(
+std::vector<SourcedMessage> toSourcedMessages(
     const std::vector<Message>& messages,
     const MessageSource source,
     std::string_view language) {

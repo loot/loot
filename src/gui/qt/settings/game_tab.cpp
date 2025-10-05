@@ -66,21 +66,21 @@ void FolderPicker::on_browseButton_clicked() {
 }
 
 const std::map<std::string, GameId> GameTab::GAME_IDS_BY_STRING({
-    {ToString(GameId::tes3), GameId::tes3},
-    {ToString(GameId::tes4), GameId::tes4},
-    {ToString(GameId::nehrim), GameId::nehrim},
-    {ToString(GameId::tes5), GameId::tes5},
-    {ToString(GameId::enderal), GameId::enderal},
-    {ToString(GameId::tes5se), GameId::tes5se},
-    {ToString(GameId::enderalse), GameId::enderalse},
-    {ToString(GameId::tes5vr), GameId::tes5vr},
-    {ToString(GameId::fo3), GameId::fo3},
-    {ToString(GameId::fonv), GameId::fonv},
-    {ToString(GameId::fo4), GameId::fo4},
-    {ToString(GameId::fo4vr), GameId::fo4vr},
-    {ToString(GameId::starfield), GameId::starfield},
-    {ToString(GameId::openmw), GameId::openmw},
-    {ToString(GameId::oblivionRemastered), GameId::oblivionRemastered},
+    {toString(GameId::tes3), GameId::tes3},
+    {toString(GameId::tes4), GameId::tes4},
+    {toString(GameId::nehrim), GameId::nehrim},
+    {toString(GameId::tes5), GameId::tes5},
+    {toString(GameId::enderal), GameId::enderal},
+    {toString(GameId::tes5se), GameId::tes5se},
+    {toString(GameId::enderalse), GameId::enderalse},
+    {toString(GameId::tes5vr), GameId::tes5vr},
+    {toString(GameId::fo3), GameId::fo3},
+    {toString(GameId::fonv), GameId::fonv},
+    {toString(GameId::fo4), GameId::fo4},
+    {toString(GameId::fo4vr), GameId::fo4vr},
+    {toString(GameId::starfield), GameId::starfield},
+    {toString(GameId::openmw), GameId::openmw},
+    {toString(GameId::oblivionRemastered), GameId::oblivionRemastered},
 });
 
 GameTab::GameTab(const GameSettings& settings,
@@ -113,12 +113,12 @@ GameSettings GameTab::getGameSettings() const {
       std::filesystem::u8path(localDataPathInput->text().toStdString());
 
   GameSettings settings(gameId, lootFolder);
-  settings.SetName(name);
-  settings.SetMaster(masterFile);
-  settings.SetMinimumHeaderVersion(minimumHeaderVersion);
-  settings.SetMasterlistSource(masterlistSource);
-  settings.SetGamePath(installPath);
-  settings.SetGameLocalPath(localDataPath);
+  settings.setName(name);
+  settings.setMaster(masterFile);
+  settings.setMinimumHeaderVersion(minimumHeaderVersion);
+  settings.setMasterlistSource(masterlistSource);
+  settings.setGamePath(installPath);
+  settings.setGameLocalPath(localDataPath);
 
   return settings;
 }
@@ -162,16 +162,16 @@ void GameTab::translateUi() {
 
 void GameTab::initialiseInputs(const GameSettings& settings,
                                bool isCurrentGame) {
-  nameInput->setText(QString::fromStdString(settings.Name()));
-  lootFolderInput->setText(QString::fromStdString(settings.FolderName()));
-  masterFileInput->setText(QString::fromStdString(settings.Master()));
-  minimumHeaderVersionSpinBox->setValue(settings.MinimumHeaderVersion());
+  nameInput->setText(QString::fromStdString(settings.name()));
+  lootFolderInput->setText(QString::fromStdString(settings.folderName()));
+  masterFileInput->setText(QString::fromStdString(settings.master()));
+  minimumHeaderVersionSpinBox->setValue(settings.minimumHeaderVersion());
   masterlistSourceInput->setText(
-      QString::fromStdString(settings.MasterlistSource()));
+      QString::fromStdString(settings.masterlistSource()));
   installPathInput->setText(
-      QString::fromStdString(settings.GamePath().u8string()));
+      QString::fromStdString(settings.gamePath().u8string()));
   localDataPathInput->setText(
-      QString::fromStdString(settings.GameLocalPath().u8string()));
+      QString::fromStdString(settings.gameLocalPath().u8string()));
 
   while (baseGameComboBox->count() > 0) {
     baseGameComboBox->removeItem(0);
@@ -182,7 +182,7 @@ void GameTab::initialiseInputs(const GameSettings& settings,
   }
 
   auto baseGameIndex = baseGameComboBox->findText(
-      QString::fromStdString(ToString(settings.Id())));
+      QString::fromStdString(toString(settings.id())));
   baseGameComboBox->setCurrentIndex(baseGameIndex);
 
   baseGameComboBox->setEnabled(false);

@@ -41,9 +41,9 @@ using loot::PluginMetadata;
 using loot::SourcedMessage;
 using loot::gui::Game;
 
-SourcedMessage CreateEvalFailedMessage(std::string_view pluginName,
+SourcedMessage createEvalFailedMessage(std::string_view pluginName,
                                        std::string_view what) {
-  return loot::CreatePlainTextSourcedMessage(
+  return loot::createPlainTextSourcedMessage(
       loot::MessageType::error,
       loot::MessageSource::caughtException,
       fmt::format(boost::locale::translate(
@@ -57,7 +57,7 @@ SourcedMessage CreateEvalFailedMessage(std::string_view pluginName,
 std::variant<std::optional<PluginMetadata>, SourcedMessage>
 evaluateMasterlistMetadata(const Game& game, const std::string& pluginName) {
   try {
-    return game.GetMasterlistMetadata(pluginName, true);
+    return game.getMasterlistMetadata(pluginName, true);
   } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
@@ -68,14 +68,14 @@ evaluateMasterlistMetadata(const Game& game, const std::string& pluginName) {
           e.what());
     }
 
-    return CreateEvalFailedMessage(pluginName, e.what());
+    return createEvalFailedMessage(pluginName, e.what());
   }
 }
 
 std::variant<std::optional<PluginMetadata>, SourcedMessage>
 evaluateUserlistMetadata(const Game& game, const std::string& pluginName) {
   try {
-    return game.GetUserMetadata(pluginName, true);
+    return game.getUserMetadata(pluginName, true);
   } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
@@ -86,7 +86,7 @@ evaluateUserlistMetadata(const Game& game, const std::string& pluginName) {
           e.what());
     }
 
-    return CreateEvalFailedMessage(pluginName, e.what());
+    return createEvalFailedMessage(pluginName, e.what());
   }
 }
 
@@ -145,8 +145,8 @@ PluginItem::PluginItem(GameId gameId,
     isMediumPlugin(plugin.IsMediumPlugin()),
     loadsArchive(plugin.LoadsArchive()),
     isCreationClubPlugin(
-        game.GetCreationClubPlugins().IsCreationClubPlugin(plugin.GetName())) {
-  auto userMetadata = game.GetUserMetadata(plugin.GetName());
+        game.getCreationClubPlugins().isCreationClubPlugin(plugin.GetName())) {
+  auto userMetadata = game.getUserMetadata(plugin.GetName());
   if (userMetadata.has_value()) {
     hasUserMetadata = !userMetadata.value().HasNameOnly();
     hasLoadAfterUserMetadata =
@@ -167,14 +167,14 @@ PluginItem::PluginItem(GameId gameId,
   messages.insert(messages.end(), evalErrors.begin(), evalErrors.end());
 
   const auto evaluatedMessages =
-      ToSourcedMessages(evaluatedMetadata.GetMessages(),
+      toSourcedMessages(evaluatedMetadata.GetMessages(),
                         MessageSource::messageMetadata,
                         language);
   messages.insert(
       messages.end(), evaluatedMessages.begin(), evaluatedMessages.end());
 
   const auto validityMessages =
-      game.CheckInstallValidity(plugin, evaluatedMetadata, language);
+      game.checkInstallValidity(plugin, evaluatedMetadata, language);
   messages.insert(
       messages.end(), validityMessages.begin(), validityMessages.end());
 
@@ -382,7 +382,7 @@ std::string PluginItem::getMarkdownContent() const {
   }
 
   if (!messages.empty()) {
-    content += "\n" + MessagesAsMarkdown(messages);
+    content += "\n" + messagesAsMarkdown(messages);
   }
 
   if (!locations.empty()) {
@@ -415,7 +415,7 @@ std::string PluginItem::loadOrderIndexText() const {
   }
 }
 
-std::vector<PluginItem> GetPluginItems(
+std::vector<PluginItem> getPluginItems(
     const std::vector<std::string>& pluginNames,
     const gui::Game& game,
     const std::string& language) {
@@ -424,7 +424,7 @@ std::vector<PluginItem> GetPluginItems(
       mapper = [&](std::shared_ptr<const PluginInterface> plugin,
                    std::optional<short> loadOrderIndex,
                    bool isActive) {
-        return PluginItem(game.GetSettings().Id(),
+        return PluginItem(game.getSettings().id(),
                           *plugin,
                           game,
                           loadOrderIndex,
@@ -432,6 +432,6 @@ std::vector<PluginItem> GetPluginItems(
                           language);
       };
 
-  return MapFromLoadOrderData(game, pluginNames, mapper);
+  return mapFromLoadOrderData(game, pluginNames, mapper);
 }
 }

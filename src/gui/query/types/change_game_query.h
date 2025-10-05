@@ -41,11 +41,11 @@ public:
       sendProgressUpdate_(sendProgressUpdate) {}
 
   QueryResult executeLogic() override {
-    gamesManager_.SetCurrentGame(gameFolder_);
-    gamesManager_.GetCurrentGame().Init();
+    gamesManager_.setCurrentGame(gameFolder_);
+    gamesManager_.getCurrentGame().init();
 
     GetGameDataQuery subQuery(
-        gamesManager_.GetCurrentGame(), language_, sendProgressUpdate_);
+        gamesManager_.getCurrentGame(), language_, sendProgressUpdate_);
 
     return subQuery.executeLogic();
   }

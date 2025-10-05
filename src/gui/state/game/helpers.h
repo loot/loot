@@ -41,44 +41,44 @@
 #include "gui/state/game/load_order_backup.h"
 
 namespace loot {
-void BackupLoadOrder(const std::vector<std::string>& loadOrder,
+void backupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory);
 
-void BackupLoadOrder(const std::vector<std::string>& loadOrder,
+void backupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory,
                      std::string_view name);
 
-std::vector<LoadOrderBackup> FindLoadOrderBackups(
+std::vector<LoadOrderBackup> findLoadOrderBackups(
     const std::filesystem::path& backupDirectory);
 
 // Escape any Markdown special characters in the input text.
-std::string EscapeMarkdownASCIIPunctuation(const std::string& text);
+std::string escapeMarkdownASCIIPunctuation(const std::string& text);
 
-std::string DescribeCycle(const std::vector<Vertex>& cycle);
+std::string describeCycle(const std::vector<Vertex>& cycle);
 
-std::vector<std::string> CheckForRemovedPlugins(
+std::vector<std::string> checkForRemovedPlugins(
     const std::vector<std::string>& pluginNamesBefore,
     const std::vector<std::string>& pluginNamesAfter);
 
-std::vector<Tag> ReadBashTagsFile(std::istream& in);
+std::vector<Tag> readBashTagsFile(std::istream& in);
 
-std::vector<Tag> ReadBashTagsFile(const std::filesystem::path& dataPath,
+std::vector<Tag> readBashTagsFile(const std::filesystem::path& dataPath,
                                   const std::string& pluginName);
 
 // Return a list of tag names that are added by one source but removed by the
 // other.
-std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
+std::vector<std::string> getTagConflicts(const std::vector<Tag>& tags1,
                                          const std::vector<Tag>& tags2);
 
-bool HasPluginFileExtension(const std::string& filename);
+bool hasPluginFileExtension(const std::string& filename);
 
-std::optional<std::filesystem::path> ResolveGameFilePath(
+std::optional<std::filesystem::path> resolveGameFilePath(
     GameId gameId,
     const std::vector<std::filesystem::path>& externalDataPaths,
     const std::filesystem::path& dataPath,
     const std::string& filename);
 
-bool IsOfficialPlugin(const GameId gameId, const std::string& pluginName);
+bool isOfficialPlugin(const GameId gameId, const std::string& pluginName);
 }
 
 #endif

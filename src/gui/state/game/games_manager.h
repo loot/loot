@@ -52,26 +52,26 @@ public:
   GamesManager& operator=(GamesManager&&) = delete;
 
   // Updates or recreates the current game as necessary.
-  void SetInstalledGames(const std::vector<GameSettings>& gamesSettings);
+  void setInstalledGames(const std::vector<GameSettings>& gamesSettings);
 
-  bool HasCurrentGame() const;
+  bool hasCurrentGame() const;
 
-  gui::Game& GetCurrentGame();
+  gui::Game& getCurrentGame();
 
-  const gui::Game& GetCurrentGame() const;
+  const gui::Game& getCurrentGame() const;
 
-  void SetCurrentGame(const std::string& newGameFolder);
+  void setCurrentGame(const std::string& newGameFolder);
 
-  std::vector<std::string> GetInstalledGameFolderNames() const;
+  std::vector<std::string> getInstalledGameFolderNames() const;
 
-  std::optional<std::string> GetFirstInstalledGameFolderName() const;
+  std::optional<std::string> getFirstInstalledGameFolderName() const;
 
-  bool IsGameInstalled(const std::string& gameFolder) const;
+  bool isGameInstalled(const std::string& gameFolder) const;
 
 private:
-  virtual bool IsInstalled(const GameSettings& gameSettings) const = 0;
+  virtual bool isInstalled(const GameSettings& gameSettings) const = 0;
 
-  virtual void InitialiseGameData(gui::Game& game) = 0;
+  virtual void initialiseGameData(gui::Game& game) = 0;
 
   std::filesystem::path lootDataPath_;
   std::filesystem::path preludePath_;

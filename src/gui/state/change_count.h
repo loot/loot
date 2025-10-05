@@ -31,18 +31,18 @@
 namespace loot {
 class ChangeCount {
 public:
-  bool IsZero() const { return count == 0; }
-  bool IsNonZero() const { return !IsZero(); }
+  bool isZero() const { return count == 0; }
+  bool isNonZero() const { return !isZero(); }
 
-  void Increment() { ++count; }
+  void increment() { ++count; }
 
-  void Decrement() {
+  void decrement() {
     if (count > 0) {
       --count;
     }
   }
 
-  void Reset() { count = 0; }
+  void reset() { count = 0; }
 
 private:
   size_t count{0};

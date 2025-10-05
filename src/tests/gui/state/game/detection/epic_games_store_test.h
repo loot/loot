@@ -38,7 +38,7 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(Epic_FindGameInstallsExceptionTest, shouldNotThrowForAnyValidGameId) {
-  EXPECT_NO_THROW(loot::epic::FindGameInstalls(TestRegistry(), GetParam(), {}));
+  EXPECT_NO_THROW(loot::epic::findGameInstalls(TestRegistry(), GetParam(), {}));
 }
 
 class Epic_FindGameInstallsTest : public CommonGameTestFixture,
@@ -104,7 +104,7 @@ INSTANTIATE_TEST_SUITE_P(,
                                            GameId::fo4));
 
 TEST_P(Epic_FindGameInstallsTest, shouldFindAValidEpicInstall) {
-  const auto install = epic::FindGameInstalls(registry, GetParam(), {});
+  const auto install = epic::findGameInstalls(registry, GetParam(), {});
 
   const auto expectedInstallPath = GetParam() == GameId::fo3
                                        ? gamePath / "Fallout 3 GOTY English"
@@ -120,7 +120,7 @@ TEST_P(Epic_FindGameInstallsTest, shouldFindAValidEpicInstall) {
 TEST_P(Epic_FindGameInstallsTest, shouldNotFindAnEpicInstallThatIsInvalid) {
   std::filesystem::remove_all(gamePath);
 
-  const auto install = epic::FindGameInstalls(registry, GetParam(), {});
+  const auto install = epic::findGameInstalls(registry, GetParam(), {});
 
   EXPECT_FALSE(install.has_value());
 }
@@ -129,7 +129,7 @@ TEST_P(Epic_FindGameInstallsTest,
        shouldNotFindAnEpicInstallIfTheManifestsDirectoryDoesNotExist) {
   std::filesystem::remove_all(epicManifestsPath);
 
-  const auto install = epic::FindGameInstalls(registry, GetParam(), {});
+  const auto install = epic::findGameInstalls(registry, GetParam(), {});
 
   EXPECT_FALSE(install.has_value());
 }
@@ -137,7 +137,7 @@ TEST_P(Epic_FindGameInstallsTest,
 TEST_P(Epic_FindGameInstallsTest,
        shouldPickLocalisedInstallPathAccordingToPreferredUILanguageOrder) {
   const auto install =
-      epic::FindGameInstalls(registry, GetParam(), {"fr", "en"});
+      epic::findGameInstalls(registry, GetParam(), {"fr", "en"});
 
   const auto expectedInstallPath =
       GetParam() == GameId::fo3 ? gamePath / "Fallout 3 GOTY French" : gamePath;

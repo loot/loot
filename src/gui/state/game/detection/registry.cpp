@@ -38,7 +38,7 @@ namespace {
 using loot::RegistryRootKey;
 
 #ifdef _WIN32
-HKEY GetRegistryRootKey(const RegistryRootKey rootKey) {
+HKEY getRegistryRootKey(const RegistryRootKey rootKey) {
   if (rootKey == RegistryRootKey::CURRENT_USER) {
     return HKEY_CURRENT_USER;
   } else if (rootKey == RegistryRootKey::LOCAL_MACHINE) {
@@ -62,9 +62,9 @@ std::string format_as(RegistryRootKey rootKey) {
 }
 
 #ifdef _WIN32
-std::optional<std::string> Registry::GetStringValue(
+std::optional<std::string> Registry::getStringValue(
     const RegistryValue& value) const {
-  HKEY hKey = GetRegistryRootKey(value.rootKey);
+  HKEY hKey = getRegistryRootKey(value.rootKey);
   DWORD len = MAX_PATH;
   std::wstring wstr(MAX_PATH, 0);
 
@@ -79,8 +79,8 @@ std::optional<std::string> Registry::GetStringValue(
   }
 
   LONG ret = RegGetValue(hKey,
-                         ToWinWide(value.subKey).c_str(),
-                         ToWinWide(value.valueName).c_str(),
+                         toWinWide(value.subKey).c_str(),
+                         toWinWide(value.valueName).c_str(),
                          RRF_RT_REG_SZ | RRF_SUBKEY_WOW6432KEY,
                          NULL,
                          &wstr[0],
@@ -94,8 +94,8 @@ std::optional<std::string> Registry::GetStringValue(
         "Failed to get string value from 32-bit Registry view, trying 64-bit "
         "Registry view.");
     ret = RegGetValue(hKey,
-                      ToWinWide(value.subKey).c_str(),
-                      ToWinWide(value.valueName).c_str(),
+                      toWinWide(value.subKey).c_str(),
+                      toWinWide(value.valueName).c_str(),
                       RRF_RT_REG_SZ | RRF_SUBKEY_WOW6464KEY,
                       NULL,
                       &wstr[0],
@@ -104,7 +104,7 @@ std::optional<std::string> Registry::GetStringValue(
 
   if (ret == ERROR_SUCCESS) {
     // Passing c_str() cuts off any unused buffer.
-    std::string stringValue = FromWinWide(wstr.c_str());
+    std::string stringValue = fromWinWide(wstr.c_str());
     if (logger) {
       logger->debug("Found string: {}", stringValue);
     }
@@ -117,17 +117,17 @@ std::optional<std::string> Registry::GetStringValue(
   }
 }
 #else
-std::optional<std::string> Registry::GetStringValue(
+std::optional<std::string> Registry::getStringValue(
     [[maybe_unused]] const RegistryValue& value) const {
   return std::nullopt;
 }
 #endif
 
-std::optional<std::filesystem::path> ReadPathFromRegistry(
+std::optional<std::filesystem::path> readPathFromRegistry(
     const RegistryInterface& registry,
     const RegistryValue& value) {
   try {
-    const auto installedPath = registry.GetStringValue(value);
+    const auto installedPath = registry.getStringValue(value);
 
     if (installedPath.has_value()) {
       return std::filesystem::u8path(installedPath.value());
@@ -147,13 +147,13 @@ std::optional<std::filesystem::path> ReadPathFromRegistry(
   return std::nullopt;
 }
 
-std::vector<std::filesystem::path> FindGameInstallPathsInRegistry(
+std::vector<std::filesystem::path> findGameInstallPathsInRegistry(
     const RegistryInterface& registry,
     const std::vector<RegistryValue>& registryValues) {
   std::vector<std::filesystem::path> installPaths;
 
   for (const auto& registryValue : registryValues) {
-    const auto path = ReadPathFromRegistry(registry, registryValue);
+    const auto path = readPathFromRegistry(registry, registryValue);
 
     if (path.has_value()) {
       installPaths.push_back(path.value());

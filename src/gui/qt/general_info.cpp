@@ -42,7 +42,7 @@ std::string GeneralInformation::getMarkdownContent() const {
   content += "- Update Date: " + preludeRevision.date + "\n\n";
 
   if (!generalMessages.empty()) {
-    content += MessagesAsMarkdown(generalMessages);
+    content += messagesAsMarkdown(generalMessages);
   }
 
   content += "\n";

@@ -41,7 +41,7 @@ using loot::InstallSource;
 using loot::RegistryRootKey;
 using loot::RegistryValue;
 
-std::vector<RegistryValue> GetRegistryValues(const GameId gameId) {
+std::vector<RegistryValue> getRegistryValues(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
       return {RegistryValue{RegistryRootKey::LOCAL_MACHINE,
@@ -110,7 +110,7 @@ std::vector<RegistryValue> GetRegistryValues(const GameId gameId) {
   }
 }
 
-bool IsSteamInstall(const GameId gameId,
+bool isSteamInstall(const GameId gameId,
                     const std::filesystem::path& installPath) {
   switch (gameId) {
     case GameId::tes3:
@@ -144,9 +144,9 @@ bool IsSteamInstall(const GameId gameId,
   }
 }
 
-bool IsGogInstall(const GameId gameId,
+bool isGogInstall(const GameId gameId,
                   const std::filesystem::path& installPath) {
-  const auto gogGameIds = loot::gog::GetGogGameIds(gameId);
+  const auto gogGameIds = loot::gog::getGogGameIds(gameId);
 
   for (const auto& gogGameId : gogGameIds) {
     const auto iconPath =
@@ -160,7 +160,7 @@ bool IsGogInstall(const GameId gameId,
   return false;
 }
 
-bool IsEpicInstall(const GameId gameId,
+bool isEpicInstall(const GameId gameId,
                    const std::filesystem::path& installPath) {
   switch (gameId) {
     case GameId::tes5se:
@@ -187,7 +187,7 @@ bool IsEpicInstall(const GameId gameId,
   }
 }
 
-bool IsMicrosoftInstall(const GameId gameId,
+bool isMicrosoftInstall(const GameId gameId,
                         const std::filesystem::path& installPath) {
   switch (gameId) {
     case GameId::tes3:
@@ -216,24 +216,24 @@ bool IsMicrosoftInstall(const GameId gameId,
   }
 }
 
-std::optional<GameInstall> FindGameInstallInRegistry(
+std::optional<GameInstall> findGameInstallInRegistry(
     const loot::RegistryInterface& registry,
     const GameId gameId,
     const RegistryValue& registryValue) {
-  const auto path = loot::ReadPathFromRegistry(registry, registryValue);
+  const auto path = loot::readPathFromRegistry(registry, registryValue);
 
   if (path.has_value() &&
-      IsValidGamePath(gameId, GetMasterFilename(gameId), path.value())) {
+      isValidGamePath(gameId, getMasterFilename(gameId), path.value())) {
     // Need to check what source the game is from.
     // The generic registry keys are not written by EGS or the MS Store,
     // so treat anything other than Steam and GOG as unknown.
 
-    if (IsSteamInstall(gameId, path.value())) {
+    if (isSteamInstall(gameId, path.value())) {
       return GameInstall{
           gameId, InstallSource::steam, path.value(), std::filesystem::path()};
     }
 
-    if (IsGogInstall(gameId, path.value())) {
+    if (isGogInstall(gameId, path.value())) {
       return GameInstall{
           gameId, InstallSource::gog, path.value(), std::filesystem::path()};
     }
@@ -245,12 +245,12 @@ std::optional<GameInstall> FindGameInstallInRegistry(
   return std::nullopt;
 }
 
-std::optional<GameInstall> FindGameInstallInRegistry(
+std::optional<GameInstall> findGameInstallInRegistry(
     const loot::RegistryInterface& registry,
     const GameId gameId) {
-  for (const auto& registryValue : GetRegistryValues(gameId)) {
+  for (const auto& registryValue : getRegistryValues(gameId)) {
     const auto gameInstall =
-        FindGameInstallInRegistry(registry, gameId, registryValue);
+        findGameInstallInRegistry(registry, gameId, registryValue);
     if (gameInstall.has_value()) {
       return gameInstall;
     }
@@ -260,29 +260,29 @@ std::optional<GameInstall> FindGameInstallInRegistry(
 }
 
 #ifdef _WIN32
-std::optional<GameInstall> FindSiblingGameInstall(const GameId gameId) {
+std::optional<GameInstall> findSiblingGameInstall(const GameId gameId) {
   const auto path = std::filesystem::current_path().parent_path();
 
-  if (!IsValidGamePath(gameId, GetMasterFilename(gameId), path)) {
+  if (!isValidGamePath(gameId, getMasterFilename(gameId), path)) {
     return std::nullopt;
   }
 
-  if (IsSteamInstall(gameId, path)) {
+  if (isSteamInstall(gameId, path)) {
     return GameInstall{
         gameId, InstallSource::steam, path, std::filesystem::path()};
   }
 
-  if (IsGogInstall(gameId, path)) {
+  if (isGogInstall(gameId, path)) {
     return GameInstall{
         gameId, InstallSource::gog, path, std::filesystem::path()};
   }
 
-  if (IsEpicInstall(gameId, path)) {
+  if (isEpicInstall(gameId, path)) {
     return GameInstall{
         gameId, InstallSource::epic, path, std::filesystem::path()};
   }
 
-  if (IsMicrosoftInstall(gameId, path)) {
+  if (isMicrosoftInstall(gameId, path)) {
     return GameInstall{
         gameId, InstallSource::microsoft, path, std::filesystem::path()};
   }
@@ -293,7 +293,7 @@ std::optional<GameInstall> FindSiblingGameInstall(const GameId gameId) {
 #endif
 
 #ifndef _WIN32
-std::vector<GameInstall> FindOpenMWLinuxInstalls() {
+std::vector<GameInstall> findOpenMWLinuxInstalls() {
   static std::array<std::filesystem::path, 6> openmwPaths = {
       // Ubuntu, Debian
       "/usr/games",
@@ -311,9 +311,9 @@ std::vector<GameInstall> FindOpenMWLinuxInstalls() {
           "files/bin"};
 
   std::vector<GameInstall> installs;
-  const auto masterFilename = loot::GetMasterFilename(GameId::openmw);
+  const auto masterFilename = loot::getMasterFilename(GameId::openmw);
   for (const auto& path : openmwPaths) {
-    if (loot::IsValidGamePath(GameId::openmw, masterFilename, path)) {
+    if (loot::isValidGamePath(GameId::openmw, masterFilename, path)) {
       installs.push_back(GameInstall{GameId::openmw,
                                      InstallSource::unknown,
                                      path,
@@ -327,12 +327,12 @@ std::vector<GameInstall> FindOpenMWLinuxInstalls() {
 }
 
 namespace loot::generic {
-bool IsMicrosoftInstall(const GameId gameId,
+bool isMicrosoftInstall(const GameId gameId,
                         const std::filesystem::path& installPath) {
-  return ::IsMicrosoftInstall(gameId, installPath);
+  return ::isMicrosoftInstall(gameId, installPath);
 }
 
-std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
+std::vector<GameInstall> findGameInstalls(const RegistryInterface& registry,
                                           const GameId gameId) {
   std::vector<GameInstall> installs;
 
@@ -340,7 +340,7 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
   try {
     // Only run on Windows because it assumes the current user's %LOCALAPPDATA%
     // path is used.
-    const auto sibling = FindSiblingGameInstall(gameId);
+    const auto sibling = findSiblingGameInstall(gameId);
     if (sibling.has_value()) {
       installs.push_back(sibling.value());
     }
@@ -348,18 +348,18 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
     const auto logger = getLogger();
     if (logger) {
       logger->error("Error while checking for a sibling install of game {}: {}",
-                    GetGameName(gameId),
+                    getGameName(gameId),
                     e.what());
     }
   }
 #else
   if (gameId == GameId::openmw) {
-    installs = FindOpenMWLinuxInstalls();
+    installs = findOpenMWLinuxInstalls();
   }
 #endif
 
   try {
-    const auto registryInstall = FindGameInstallInRegistry(registry, gameId);
+    const auto registryInstall = findGameInstallInRegistry(registry, gameId);
     if (registryInstall.has_value()) {
       installs.push_back(registryInstall.value());
     }
@@ -368,7 +368,7 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
     if (logger) {
       logger->error(
           "Error while trying to find {} using a generic Registry key: {}",
-          GetGameName(gameId),
+          getGameName(gameId),
           e.what());
     }
   }
@@ -378,45 +378,45 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
 
 // Check if the given game settings resolve to an installed game, and
 // detect its ID and install source.
-std::optional<GameInstall> DetectGameInstall(const GameSettings& settings) {
+std::optional<GameInstall> detectGameInstall(const GameSettings& settings) {
   try {
-    if (!IsValidGamePath(
-            settings.Id(), settings.Master(), settings.GamePath())) {
+    if (!isValidGamePath(
+            settings.id(), settings.master(), settings.gamePath())) {
       return std::nullopt;
     }
 
-    const auto gameId = settings.Id();
-    const auto installPath = settings.GamePath();
+    const auto gameId = settings.id();
+    const auto installPath = settings.gamePath();
 
-    if (IsSteamInstall(gameId, installPath)) {
+    if (isSteamInstall(gameId, installPath)) {
       return GameInstall{
-          gameId, InstallSource::steam, installPath, settings.GameLocalPath()};
+          gameId, InstallSource::steam, installPath, settings.gameLocalPath()};
     }
 
-    if (IsGogInstall(gameId, installPath)) {
+    if (isGogInstall(gameId, installPath)) {
       return GameInstall{
-          gameId, InstallSource::gog, installPath, settings.GameLocalPath()};
+          gameId, InstallSource::gog, installPath, settings.gameLocalPath()};
     }
 
-    if (IsEpicInstall(gameId, installPath)) {
+    if (isEpicInstall(gameId, installPath)) {
       return GameInstall{
-          gameId, InstallSource::epic, installPath, settings.GameLocalPath()};
+          gameId, InstallSource::epic, installPath, settings.gameLocalPath()};
     }
 
-    if (::IsMicrosoftInstall(gameId, installPath)) {
+    if (::isMicrosoftInstall(gameId, installPath)) {
       return GameInstall{gameId,
                          InstallSource::microsoft,
                          installPath,
-                         settings.GameLocalPath()};
+                         settings.gameLocalPath()};
     }
 
     return GameInstall{
-        gameId, InstallSource::unknown, installPath, settings.GameLocalPath()};
+        gameId, InstallSource::unknown, installPath, settings.gameLocalPath()};
   } catch (const std::exception& e) {
     const auto logger = getLogger();
     logger->error(
         "Error while detecting install for game with folder name {}: {}",
-        settings.FolderName(),
+        settings.folderName(),
         e.what());
 
     return std::nullopt;

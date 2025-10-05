@@ -45,8 +45,8 @@ public:
       logger->trace("User has accepted sorted load order, applying it.");
     }
     try {
-      game_->SetLoadOrder(plugins_);
-      counter_->Decrement();
+      game_->setLoadOrder(plugins_);
+      counter_->decrement();
     } catch (...) {
       useSortingErrorMessage = true;
       throw;
@@ -77,7 +77,7 @@ private:
             "it isn't, you can check your LOOTDebugLog.txt (you can get to "
             "it through the main menu) for more information.")
             .str(),
-        game.GetActivePluginsFilePath().u8string());
+        game.getActivePluginsFilePath().u8string());
   }
 };
 }

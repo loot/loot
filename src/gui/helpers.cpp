@@ -56,7 +56,7 @@
 
 namespace {
 #ifdef _WIN32
-std::vector<std::wstring> SplitOnNulls(std::vector<wchar_t> nullDelimitedList) {
+std::vector<std::wstring> splitOnNulls(std::vector<wchar_t> nullDelimitedList) {
   std::vector<std::wstring> elements;
 
   auto stringStartIt = nullDelimitedList.begin();
@@ -73,7 +73,7 @@ std::vector<std::wstring> SplitOnNulls(std::vector<wchar_t> nullDelimitedList) {
   return elements;
 }
 
-std::vector<std::string> GetPreferredUILanguages(
+std::vector<std::string> getPreferredUILanguages(
     std::function<bool(DWORD, PULONG, PZZWSTR, PULONG)> win32Function,
     bool isSystem) {
   const auto logger = loot::getLogger();
@@ -111,10 +111,10 @@ std::vector<std::string> GetPreferredUILanguages(
 
   std::vector<std::string> languages;
 
-  for (const auto& languageBytes : SplitOnNulls(buffer)) {
+  for (const auto& languageBytes : splitOnNulls(buffer)) {
     std::wstring language(languageBytes.begin(), languageBytes.end());
     if (!language.empty()) {
-      languages.push_back(loot::FromWinWide(language));
+      languages.push_back(loot::fromWinWide(language));
     }
   }
 
@@ -146,7 +146,7 @@ const char* getDriveTypeText(UINT driveType) {
 
 namespace loot {
 #ifdef _WIN32
-std::wstring ToWinWide(const std::string& str) {
+std::wstring toWinWide(const std::string& str) {
   int len = MultiByteToWideChar(
       CP_UTF8, 0, str.c_str(), static_cast<int>(str.length()), 0, 0);
   std::wstring wstr(static_cast<size_t>(len), 0);
@@ -155,7 +155,7 @@ std::wstring ToWinWide(const std::string& str) {
   return wstr;
 }
 
-std::string FromWinWide(const std::wstring& wstr) {
+std::string fromWinWide(const std::wstring& wstr) {
   int len = WideCharToMultiByte(CP_UTF8,
                                 0,
                                 wstr.c_str(),
@@ -177,19 +177,19 @@ std::string FromWinWide(const std::wstring& wstr) {
 }
 #endif
 
-std::vector<std::string> GetPreferredUILanguages() {
+std::vector<std::string> getPreferredUILanguages() {
   const auto logger = loot::getLogger();
 
 #ifdef _WIN32
   const auto systemPreferredLanguages =
-      ::GetPreferredUILanguages(GetSystemPreferredUILanguages, true);
+      ::getPreferredUILanguages(GetSystemPreferredUILanguages, true);
   if (logger) {
     logger->debug("System preferred UI languages are: {}",
                   boost::join(systemPreferredLanguages, ", "));
   }
 
   const auto userPreferredLanguages =
-      ::GetPreferredUILanguages(GetUserPreferredUILanguages, false);
+      ::getPreferredUILanguages(GetUserPreferredUILanguages, false);
   if (logger) {
     logger->debug("User preferred UI languages are: {}",
                   boost::join(userPreferredLanguages, ", "));
@@ -259,7 +259,7 @@ std::vector<std::string> GetPreferredUILanguages() {
 #endif
 }
 
-std::vector<std::filesystem::path> GetDriveRootPaths() {
+std::vector<std::filesystem::path> getDriveRootPaths() {
 #ifdef _WIN32
   const auto maxBufferLength = GetLogicalDriveStrings(0, nullptr);
 
@@ -333,7 +333,7 @@ std::vector<std::filesystem::path> GetDriveRootPaths() {
 #endif
 }
 
-std::optional<std::filesystem::path> FindXboxGamingRootPath(
+std::optional<std::filesystem::path> findXboxGamingRootPath(
     const std::filesystem::path& driveRootPath) {
   const auto logger = getLogger();
   const auto gamingRootFilePath = driveRootPath / ".GamingRoot";
@@ -433,13 +433,13 @@ std::optional<std::filesystem::path> FindXboxGamingRootPath(
   return driveRootPath / relativePath;
 }
 
-int CompareFilenames(const std::string& lhs, const std::string& rhs) {
+int compareFilenames(const std::string& lhs, const std::string& rhs) {
 #ifdef _WIN32
   // On Windows, use CompareStringOrdinal as that will perform case conversion
   // using the operating system uppercase table information, which (I think)
   // will give results that match the filesystem, and is not locale-dependent.
   int result = CompareStringOrdinal(
-      ToWinWide(lhs).c_str(), -1, ToWinWide(rhs).c_str(), -1, true);
+      toWinWide(lhs).c_str(), -1, toWinWide(rhs).c_str(), -1, true);
   switch (result) {
     case CSTR_LESS_THAN:
       return -1;

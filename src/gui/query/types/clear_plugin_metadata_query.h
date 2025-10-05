@@ -43,17 +43,17 @@ public:
       logger->debug("Clearing user metadata for plugin {}", pluginName_);
     }
 
-    game_.ClearUserMetadata(pluginName_);
-    game_.SaveUserMetadata();
+    game_.clearUserMetadata(pluginName_);
+    game_.saveUserMetadata();
 
-    auto plugin = game_.GetPlugin(pluginName_);
+    auto plugin = game_.getPlugin(pluginName_);
     if (plugin) {
       return PluginItem(
-          game_.GetSettings().Id(),
+          game_.getSettings().id(),
           *plugin,
           game_,
-          game_.GetActiveLoadOrderIndex(*plugin, game_.GetLoadOrder()),
-          game_.IsPluginActive(plugin->GetName()),
+          game_.getActiveLoadOrderIndex(*plugin, game_.getLoadOrder()),
+          game_.isPluginActive(plugin->GetName()),
           language_);
     }
 

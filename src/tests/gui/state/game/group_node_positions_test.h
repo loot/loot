@@ -80,7 +80,7 @@ class SaveGroupNodePositionsTest : public GroupNodePositionsFixture {};
 
 TEST_F(LoadGroupNodePositionsTest,
        shouldReturnAnEmptyVectorIfFileDoesNotExist) {
-  const auto positions = LoadGroupNodePositions(rootPath_ / "missing.bin");
+  const auto positions = loadGroupNodePositions(rootPath_ / "missing.bin");
 
   EXPECT_TRUE(positions.empty());
 }
@@ -90,7 +90,7 @@ TEST_F(LoadGroupNodePositionsTest, shouldThrowIfFileCannotBeOpened) {
 
   std::filesystem::create_directory(path);
 
-  EXPECT_THROW(LoadGroupNodePositions(path), std::runtime_error);
+  EXPECT_THROW(loadGroupNodePositions(path), std::runtime_error);
 }
 
 TEST_F(LoadGroupNodePositionsTest, shouldThrowIfFileIsTooShort) {
@@ -98,7 +98,7 @@ TEST_F(LoadGroupNodePositionsTest, shouldThrowIfFileIsTooShort) {
 
   touch(path);
 
-  EXPECT_THROW(LoadGroupNodePositions(path), std::runtime_error);
+  EXPECT_THROW(loadGroupNodePositions(path), std::runtime_error);
 }
 
 TEST_F(LoadGroupNodePositionsTest, shouldThrowIfFileMagicNumberIsUnexpected) {
@@ -106,7 +106,7 @@ TEST_F(LoadGroupNodePositionsTest, shouldThrowIfFileMagicNumberIsUnexpected) {
 
   writeBytes(path, {'\xDE', '\xAD', '\xBE', '\xEF'});
 
-  EXPECT_THROW(LoadGroupNodePositions(path), std::runtime_error);
+  EXPECT_THROW(loadGroupNodePositions(path), std::runtime_error);
 }
 
 TEST_F(LoadGroupNodePositionsTest,
@@ -115,7 +115,7 @@ TEST_F(LoadGroupNodePositionsTest,
 
   writeBytes(path, {'\x4C', '\x47', '\x4E', '\x50', '\x0'});
 
-  EXPECT_THROW(LoadGroupNodePositions(path), std::runtime_error);
+  EXPECT_THROW(loadGroupNodePositions(path), std::runtime_error);
 }
 
 TEST_F(LoadGroupNodePositionsTest,
@@ -124,7 +124,7 @@ TEST_F(LoadGroupNodePositionsTest,
 
   writeBytes(path, {'\x4C', '\x47', '\x4E', '\x50', '\x1'});
 
-  const auto positions = LoadGroupNodePositions(path);
+  const auto positions = loadGroupNodePositions(path);
 
   EXPECT_TRUE(positions.empty());
 }
@@ -136,9 +136,9 @@ TEST_F(LoadGroupNodePositionsTest, shouldAcceptDataWrittenBySave) {
       GroupNodePosition{"default", 1.1, 2.2},
       GroupNodePosition{"DLC", -3.0, -4.5}};
 
-  SaveGroupNodePositions(path, originalPositions);
+  saveGroupNodePositions(path, originalPositions);
 
-  const auto positions = LoadGroupNodePositions(path);
+  const auto positions = loadGroupNodePositions(path);
 
   ASSERT_EQ(2, positions.size());
 
@@ -156,13 +156,13 @@ TEST_F(SaveGroupNodePositionsTest, shouldThrowIfFileCannotBeOpened) {
 
   std::filesystem::create_directory(path);
 
-  EXPECT_THROW(SaveGroupNodePositions(path, {}), std::runtime_error);
+  EXPECT_THROW(saveGroupNodePositions(path, {}), std::runtime_error);
 }
 
 TEST_F(SaveGroupNodePositionsTest, shouldWriteMagicNumberAndFormatVersion) {
   const auto path = rootPath_ / "positions.bin";
 
-  SaveGroupNodePositions(path, {});
+  saveGroupNodePositions(path, {});
 
   const auto bytes = readBytes(path);
 
@@ -182,7 +182,7 @@ TEST_F(SaveGroupNodePositionsTest, shouldWriteNamesPrefixedWithTheirLengths) {
       GroupNodePosition{"default", 1.1, 2.2},
       GroupNodePosition{"DLC", -3.0, -4.5}};
 
-  SaveGroupNodePositions(path, positions);
+  saveGroupNodePositions(path, positions);
 
   const auto bytes = readBytes(path);
 

@@ -31,8 +31,8 @@
 namespace {
 using loot::RegistryRootKey;
 
-std::vector<loot::RegistryValue> GetRegistryValues(const loot::GameId gameId) {
-  const auto gogGameIds = loot::gog::GetGogGameIds(gameId);
+std::vector<loot::RegistryValue> getRegistryValues(const loot::GameId gameId) {
+  const auto gogGameIds = loot::gog::getGogGameIds(gameId);
 
   std::vector<loot::RegistryValue> registryValues;
   for (const auto& gogGameId : gogGameIds) {
@@ -51,7 +51,7 @@ std::vector<loot::RegistryValue> GetRegistryValues(const loot::GameId gameId) {
 }
 
 namespace loot::gog {
-std::vector<std::string> GetGogGameIds(const GameId gameId) {
+std::vector<std::string> getGogGameIds(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
       return {// Game
@@ -98,7 +98,7 @@ std::vector<std::string> GetGogGameIds(const GameId gameId) {
   }
 }
 
-std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
+std::optional<std::string> getAppDataFolderName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
       return std::nullopt;
@@ -128,16 +128,16 @@ std::optional<std::string> GetAppDataFolderName(const GameId gameId) {
   }
 }
 
-std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
+std::vector<GameInstall> findGameInstalls(const RegistryInterface& registry,
                                           const GameId gameId) {
   std::vector<GameInstall> installs;
 
   try {
     const auto installPaths =
-        FindGameInstallPathsInRegistry(registry, GetRegistryValues(gameId));
+        findGameInstallPathsInRegistry(registry, getRegistryValues(gameId));
 
     for (const auto& installPath : installPaths) {
-      if (IsValidGamePath(gameId, GetMasterFilename(gameId), installPath)) {
+      if (isValidGamePath(gameId, getMasterFilename(gameId), installPath)) {
         installs.push_back(GameInstall{
             gameId, InstallSource::gog, installPath, std::filesystem::path()});
       }
@@ -148,7 +148,7 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
       logger->error(
           "Error while detecting game installs for game {} using GOG Registry "
           "keys: {}",
-          GetGameName(gameId),
+          getGameName(gameId),
           e.what());
     }
   }

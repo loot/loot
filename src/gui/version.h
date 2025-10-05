@@ -33,9 +33,9 @@ inline constexpr unsigned int LOOT_VERSION_MAJOR = 0;
 inline constexpr unsigned int LOOT_VERSION_MINOR = 26;
 inline constexpr unsigned int LOOT_VERSION_PATCH = 1;
 
-std::string GetLootVersion();
+std::string getLootVersion();
 
-std::string GetLootRevision();
+std::string getLootRevision();
 }
 
 #endif

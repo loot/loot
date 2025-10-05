@@ -59,8 +59,8 @@ namespace fs = std::filesystem;
 namespace {
 using loot::LogLevel;
 
-loot::SourcedMessage CreateInitErrorMessage(const std::string& text) {
-  return loot::CreatePlainTextSourcedMessage(
+loot::SourcedMessage createInitErrorMessage(const std::string& text) {
+  return loot::createPlainTextSourcedMessage(
       loot::MessageType::error, loot::MessageSource::init, text);
 }
 
@@ -129,7 +129,7 @@ void LootState::init(const std::string& cmdLineGame,
   // Microsoft Store / Xbox app.
   findXboxGamingRootPaths();
 
-  preferredUILanguages_ = GetPreferredUILanguages();
+  preferredUILanguages_ = getPreferredUILanguages();
   if (preferredUILanguages_.empty() && settings_.getLanguage().size() > 1) {
     preferredUILanguages_ = {settings_.getLanguage()};
   }
@@ -144,7 +144,7 @@ void LootState::init(const std::string& cmdLineGame,
   //-----------------------------------
 
   // Detect installed games.
-  const auto gameSettings = LoadInstalledGames(settings_.getGameSettings());
+  const auto gameSettings = loadInstalledGames(settings_.getGameSettings());
 
   settings_.storeGameSettings(gameSettings);
 
@@ -155,29 +155,29 @@ void LootState::initCurrentGame() {
   auto logger = getLogger();
 
   try {
-    GetCurrentGame().Init();
+    getCurrentGame().init();
     if (logger) {
       logger->debug("Game named {} has been initialised",
-                    GetCurrentGame().GetSettings().Name());
+                    getCurrentGame().getSettings().name());
     }
   } catch (const exception& e) {
     if (logger) {
       logger->error("Game-specific settings could not be initialised: {}",
                     e.what());
     }
-    initMessages_.push_back(CreateInitErrorMessage(format(
+    initMessages_.push_back(createInitErrorMessage(format(
         translate("Error: Game-specific settings could not be initialised. {0}")
             .str(),
         e.what())));
   }
 }
 
-std::vector<GameSettings> LootState::LoadInstalledGames(
+std::vector<GameSettings> LootState::loadInstalledGames(
     const std::vector<GameSettings>& gamesSettings) {
-  auto allGamesSettings = FindInstalledGames(
+  auto allGamesSettings = findInstalledGames(
       gamesSettings, xboxGamingRootPaths_, preferredUILanguages_);
 
-  SetInstalledGames(allGamesSettings);
+  setInstalledGames(allGamesSettings);
 
   return allGamesSettings;
 }
@@ -190,11 +190,11 @@ const LootSettings& LootState::getSettings() const { return settings_; }
 
 LootSettings& LootState::getSettings() { return settings_; }
 
-ChangeCount& LootState::GetUnappliedChangeCount() {
+ChangeCount& LootState::getUnappliedChangeCount() {
   return unappliedChangeCount_;
 }
 
-const LootPaths& LootState::GetPaths() const { return paths_; }
+const LootPaths& LootState::getPaths() const { return paths_; }
 
 void LootState::createLootDataPath() {
   if (fs::exists(paths_.getLootDataPath())) {
@@ -204,7 +204,7 @@ void LootState::createLootDataPath() {
   try {
     fs::create_directory(paths_.getLootDataPath());
   } catch (const exception& e) {
-    initMessages_.push_back(CreateInitErrorMessage(format(
+    initMessages_.push_back(createInitErrorMessage(format(
         translate("Error: Could not create LOOT data directory. {0}").str(),
         e.what())));
   }
@@ -215,7 +215,7 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
     try {
       settings_.load(paths_.getSettingsPath());
     } catch (const exception& e) {
-      initMessages_.push_back(CreateInitErrorMessage(format(
+      initMessages_.push_back(createInitErrorMessage(format(
           /* translators: This error is displayed when LOOT is unable to
              load its own settings file. The placeholder is for additional
              detail about what went wrong. */
@@ -225,7 +225,7 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
   }
 
   if (autoSort && cmdLineGame.empty()) {
-    initMessages_.push_back(CreateInitErrorMessage(
+    initMessages_.push_back(createInitErrorMessage(
         /* translators: --auto-sort and --game are command-line arguments and
            shouldn't be translated. */
         translate("Error: --auto-sort was passed but no --game parameter was "
@@ -266,7 +266,7 @@ void LootState::checkSettingsFile() {
     const auto result = loot::checkSettingsFile(paths_.getSettingsPath());
 
     if (result.preludeMigrationFailed) {
-      initMessages_.push_back(CreatePlainTextSourcedMessage(
+      initMessages_.push_back(createPlainTextSourcedMessage(
           MessageType::warn,
           MessageSource::init,
           boost::locale::translate(
@@ -276,7 +276,7 @@ void LootState::checkSettingsFile() {
     }
 
     if (result.masterlistMigrationFailed) {
-      initMessages_.push_back(CreatePlainTextSourcedMessage(
+      initMessages_.push_back(createPlainTextSourcedMessage(
           MessageType::warn,
           MessageSource::init,
           boost::locale::translate(
@@ -285,7 +285,7 @@ void LootState::checkSettingsFile() {
               "it through the File menu) for more information.")));
     }
   } catch (const exception& e) {
-    initMessages_.push_back(CreateInitErrorMessage(format(
+    initMessages_.push_back(createInitErrorMessage(format(
         /* translators: This error is displayed when LOOT is unable to
            load its own settings file. The placeholder is for additional
            detail about what went wrong. */
@@ -297,8 +297,8 @@ void LootState::checkSettingsFile() {
 void LootState::findXboxGamingRootPaths() {
 #ifdef _WIN32
   try {
-    for (const auto& driveRootPath : GetDriveRootPaths()) {
-      const auto xboxGamingRootPath = FindXboxGamingRootPath(driveRootPath);
+    for (const auto& driveRootPath : getDriveRootPaths()) {
+      const auto xboxGamingRootPath = findXboxGamingRootPath(driveRootPath);
       if (xboxGamingRootPath.has_value()) {
         xboxGamingRootPaths_.push_back(xboxGamingRootPath.value());
       }
@@ -329,7 +329,7 @@ void LootState::createPreludeDirectory() {
     try {
       fs::create_directory(preludeDir);
     } catch (const exception& e) {
-      initMessages_.push_back(CreateInitErrorMessage(format(
+      initMessages_.push_back(createInitErrorMessage(format(
           translate("Error: Could not create LOOT prelude directory. {0}")
               .str(),
           e.what())));
@@ -344,7 +344,7 @@ void LootState::overrideGamePath(const std::string& gameFolderName,
   }
 
   if (gameFolderName.empty()) {
-    initMessages_.push_back(CreateInitErrorMessage(
+    initMessages_.push_back(createInitErrorMessage(
         /* translators: --game and --game-path are command-line arguments and
            shouldn't be translated. */
         translate("Error: --game-path was passed but no --game parameter was "
@@ -355,11 +355,11 @@ void LootState::overrideGamePath(const std::string& gameFolderName,
   auto it = std::find_if(gamesSettings.begin(),
                          gamesSettings.end(),
                          [&](const GameSettings& settings) {
-                           return settings.FolderName() == gameFolderName;
+                           return settings.folderName() == gameFolderName;
                          });
 
   if (it == gamesSettings.end()) {
-    initMessages_.push_back(CreateInitErrorMessage(format(
+    initMessages_.push_back(createInitErrorMessage(format(
         translate("Error: failed to override game path, the game {0} was not "
                   "recognised.")
             .str(),
@@ -369,10 +369,10 @@ void LootState::overrideGamePath(const std::string& gameFolderName,
     if (logger) {
       logger->info("Overriding path for game {} from {} to {}",
                    gameFolderName,
-                   it->GamePath().u8string(),
+                   it->gamePath().u8string(),
                    gamePath.u8string());
     }
-    it->SetGamePath(gamePath);
+    it->setGamePath(gamePath);
     settings_.storeGameSettings(gamesSettings);
   }
 }
@@ -383,7 +383,7 @@ void LootState::setInitialGame(const std::string& cliGameValue) {
   auto gameFolderName = getPreferredGameFolderName(cliGameValue);
 
   if (!gameFolderName.has_value()) {
-    gameFolderName = GetFirstInstalledGameFolderName();
+    gameFolderName = getFirstInstalledGameFolderName();
   }
 
   if (!gameFolderName.has_value()) {
@@ -393,7 +393,7 @@ void LootState::setInitialGame(const std::string& cliGameValue) {
           "detected");
     }
 
-    initMessages_.push_back(CreateInitErrorMessage(translate(
+    initMessages_.push_back(createInitErrorMessage(translate(
         "No supported games were detected. Try running the launcher(s) "
         "for the supported game(s) that you have installed (e.g. press "
         "\"Play\" in Steam or GOG Galaxy), then restarting LOOT.")));
@@ -402,16 +402,16 @@ void LootState::setInitialGame(const std::string& cliGameValue) {
   }
 
   try {
-    SetCurrentGame(gameFolderName.value());
+    setCurrentGame(gameFolderName.value());
     if (logger) {
       logger->debug("Game selected is {}",
-                    GetCurrentGame().GetSettings().Name());
+                    getCurrentGame().getSettings().name());
     }
   } catch (const exception& e) {
     if (logger) {
       logger->error("Initial game could not be set: {}", e.what());
     }
-    initMessages_.push_back(CreateInitErrorMessage(format(
+    initMessages_.push_back(createInitErrorMessage(format(
         translate(
             "The initial game with folder name \"{0}\" could not be set. If it "
             "is installed, try running its launcher then restarting LOOT.")
@@ -420,11 +420,11 @@ void LootState::setInitialGame(const std::string& cliGameValue) {
   }
 }
 
-bool LootState::IsInstalled(const GameSettings& gameSettings) const {
-  return loot::IsInstalled(gameSettings);
+bool LootState::isInstalled(const GameSettings& gameSettings) const {
+  return loot::isInstalled(gameSettings);
 }
 
-void LootState::InitialiseGameData(gui::Game& game) { game.Init(); }
+void LootState::initialiseGameData(gui::Game& game) { game.init(); }
 
 std::optional<std::string> LootState::getPreferredGameFolderName(
     const std::string& cliGameValue) const {
@@ -439,7 +439,7 @@ std::optional<std::string> LootState::getPreferredGameFolderName(
     }
   }
 
-  if (!preferredGame.empty() && IsGameInstalled(preferredGame)) {
+  if (!preferredGame.empty() && isGameInstalled(preferredGame)) {
     return preferredGame;
   }
 

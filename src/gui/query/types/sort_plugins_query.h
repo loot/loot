@@ -52,14 +52,14 @@ public:
 
     // Sort plugins into their load order.
     sendProgressUpdate_(boost::locale::translate("Sorting load order…"));
-    std::vector<std::string> plugins = game_->SortPlugins();
+    std::vector<std::string> plugins = game_->sortPlugins();
 
     auto result = getResult(plugins);
 
     // plugins will be empty if there was a sorting error.
     if (!plugins.empty()) {
-      game_->GetSortCount().Increment();
-      unappliedChangeCount_->Increment();
+      game_->getSortCount().increment();
+      unappliedChangeCount_->increment();
     }
 
     if (logger) {
@@ -71,7 +71,7 @@ public:
 
 private:
   std::vector<PluginItem> getResult(const std::vector<std::string>& plugins) {
-    return GetPluginItems(plugins, *game_, language_);
+    return getPluginItems(plugins, *game_, language_);
   }
 
   gui::Game* game_;

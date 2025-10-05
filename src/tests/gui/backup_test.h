@@ -73,7 +73,7 @@ protected:
 
 class CompressDirectoryTest : public BackupTest {
 protected:
-  static size_t GetStreamSize(std::istream& stream) {
+  static size_t getStreamSize(std::istream& stream) {
     std::streampos startingPosition = stream.tellg();
 
     stream.seekg(0, std::ios_base::end);

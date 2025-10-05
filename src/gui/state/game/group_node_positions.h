@@ -37,10 +37,10 @@ struct GroupNodePosition {
   double y{0.0};
 };
 
-std::vector<GroupNodePosition> LoadGroupNodePositions(
+std::vector<GroupNodePosition> loadGroupNodePositions(
     const std ::filesystem::path& filePath);
 
-void SaveGroupNodePositions(const std ::filesystem::path& filePath,
+void saveGroupNodePositions(const std ::filesystem::path& filePath,
                             const std::vector<GroupNodePosition>& positions);
 }
 

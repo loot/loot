@@ -60,22 +60,22 @@
 #include "loot/api.h"
 
 namespace loot {
-std::filesystem::path GetMasterlistPath(
+std::filesystem::path getMasterlistPath(
     const std::filesystem::path& lootDataPath,
     const GameSettings& settings);
 
-void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
+void initLootGameFolder(const std::filesystem::path& lootDataPath_,
                         const GameSettings& settings);
 
 // The Creation Club has been replaced, but while it was active it was
 // available for Skyrim SE and Fallout 4.
-bool HadCreationClub(GameId gameId);
+bool hadCreationClub(GameId gameId);
 
 class CreationClubPlugins {
 public:
-  void Load(GameId gameId, const std::filesystem::path& gamePath);
+  void load(GameId gameId, const std::filesystem::path& gamePath);
 
-  bool IsCreationClubPlugin(const std::string& name) const;
+  bool isCreationClubPlugin(const std::string& name) const;
 
 private:
   // Use Filename to benefit from libloot's case-insensitive comparisons.
@@ -95,97 +95,97 @@ public:
   Game& operator=(const Game& game) = delete;
   Game& operator=(Game&& game) noexcept;
 
-  const GameSettings& GetSettings() const;
-  GameSettings& GetSettings();
+  const GameSettings& getSettings() const;
+  GameSettings& getSettings();
 
-  const CreationClubPlugins& GetCreationClubPlugins() const;
-  CreationClubPlugins& GetCreationClubPlugins();
+  const CreationClubPlugins& getCreationClubPlugins() const;
+  CreationClubPlugins& getCreationClubPlugins();
 
-  void Init();
-  bool IsInitialised() const;
+  void init();
+  bool isInitialised() const;
 
-  std::shared_ptr<const PluginInterface> GetPlugin(
+  std::shared_ptr<const PluginInterface> getPlugin(
       const std::string& name) const;
-  std::vector<std::shared_ptr<const PluginInterface>> GetPlugins() const;
-  std::vector<SourcedMessage> CheckInstallValidity(
+  std::vector<std::shared_ptr<const PluginInterface>> getPlugins() const;
+  std::vector<SourcedMessage> checkInstallValidity(
       const PluginInterface& plugin,
       const PluginMetadata& metadata,
       const std::string& language) const;
 
-  void RedatePlugins();  // Change timestamps to match load order (Skyrim only).
+  void redatePlugins();  // Change timestamps to match load order (Skyrim only).
 
-  void BackUpCurrentLoadOrder(std::string_view name) const;
-  std::vector<LoadOrderBackup> FindLoadOrderBackups() const;
+  void backUpCurrentLoadOrder(std::string_view name) const;
+  std::vector<LoadOrderBackup> findLoadOrderBackups() const;
 
-  void LoadAllInstalledPlugins(
+  void loadAllInstalledPlugins(
       bool headersOnly);  // Loads all installed plugins.
-  bool ArePluginsFullyLoaded()
+  bool arePluginsFullyLoaded()
       const;  // Checks if the game's plugins have already been loaded.
-  bool SupportsLightPlugins() const;
-  bool SupportsMediumPlugins() const;
+  bool supportsLightPlugins() const;
+  bool supportsMediumPlugins() const;
 
-  std::filesystem::path MasterlistPath() const;
-  std::filesystem::path UserlistPath() const;
-  std::filesystem::path GroupNodePositionsPath() const;
-  std::filesystem::path GetActivePluginsFilePath() const;
-  std::filesystem::path OldMessagesPath() const;
+  std::filesystem::path masterlistPath() const;
+  std::filesystem::path userlistPath() const;
+  std::filesystem::path groupNodePositionsPath() const;
+  std::filesystem::path getActivePluginsFilePath() const;
+  std::filesystem::path oldMessagesPath() const;
 
-  std::vector<std::string> GetLoadOrder() const;
-  void SetLoadOrder(const std::vector<std::string>& loadOrder);
+  std::vector<std::string> getLoadOrder() const;
+  void setLoadOrder(const std::vector<std::string>& loadOrder);
 
-  bool IsPluginActive(const std::string& pluginName) const;
-  std::optional<short> GetActiveLoadOrderIndex(
+  bool isPluginActive(const std::string& pluginName) const;
+  std::optional<short> getActiveLoadOrderIndex(
       const PluginInterface& plugin,
       const std::vector<std::string>& loadOrder) const;
 
-  bool IsLoadOrderAmbiguous() const;
+  bool isLoadOrderAmbiguous() const;
 
-  std::vector<std::string> SortPlugins();
-  ChangeCount& GetSortCount();
+  std::vector<std::string> sortPlugins();
+  ChangeCount& getSortCount();
 
-  std::vector<SourcedMessage> GetMessages(std::string_view language,
+  std::vector<SourcedMessage> getMessages(std::string_view language,
                                           bool warnOnCaseSensitivePaths) const;
-  void AppendMessage(const SourcedMessage& message);
-  void ClearMessages();
+  void appendMessage(const SourcedMessage& message);
+  void clearMessages();
 
-  void LoadMetadata();
-  std::vector<std::string> GetKnownBashTags() const;
+  void loadMetadata();
+  std::vector<std::string> getKnownBashTags() const;
 
-  std::vector<Group> GetGroups() const;
-  std::vector<Group> GetMasterlistGroups() const;
-  std::vector<Group> GetUserGroups() const;
+  std::vector<Group> getGroups() const;
+  std::vector<Group> getMasterlistGroups() const;
+  std::vector<Group> getUserGroups() const;
 
-  std::optional<PluginMetadata> GetMasterlistMetadata(
+  std::optional<PluginMetadata> getMasterlistMetadata(
       const std::string& pluginName,
       bool evaluateConditions = false) const;
-  std::optional<PluginMetadata> GetUserMetadata(
+  std::optional<PluginMetadata> getUserMetadata(
       const std::string& pluginName,
       bool evaluateConditions = false) const;
-  std::optional<PluginMetadata> GetNonUserMetadata(
+  std::optional<PluginMetadata> getNonUserMetadata(
       const PluginInterface& plugin) const;
 
-  bool EvaluateConstraint(const File& file) const;
+  bool evaluateConstraint(const File& file) const;
 
-  void SetUserGroups(const std::vector<Group>& groups);
-  void AddUserMetadata(const PluginMetadata& metadata);
-  void ClearUserMetadata(const std::string& pluginName);
-  void ClearAllUserMetadata();
-  void SaveUserMetadata();
+  void setUserGroups(const std::vector<Group>& groups);
+  void addUserMetadata(const PluginMetadata& metadata);
+  void clearUserMetadata(const std::string& pluginName);
+  void clearAllUserMetadata();
+  void saveUserMetadata();
 
-  std::string GetLoadOrderAsTextTable() const;
+  std::string getLoadOrderAsTextTable() const;
 
-  bool FileExists(const std::string& file) const;
+  bool fileExists(const std::string& file) const;
 
 private:
-  std::filesystem::path GetLOOTGamePath() const;
-  std::filesystem::path GetBackupsPath() const;
-  std::vector<std::filesystem::path> GetInstalledPluginPaths() const;
-  std::optional<std::filesystem::path> ResolveGameFilePath(
+  std::filesystem::path getLOOTGamePath() const;
+  std::filesystem::path getBackupsPath() const;
+  std::vector<std::filesystem::path> getInstalledPluginPaths() const;
+  std::optional<std::filesystem::path> resolveGameFilePath(
       const std::string& pluginName) const;
 
-  void AppendMessages(std::vector<SourcedMessage> messages);
+  void appendMessages(std::vector<SourcedMessage> messages);
 
-  void LoadCurrentLoadOrderState();
+  void loadCurrentLoadOrderState();
 
   GameSettings settings_;
   CreationClubPlugins creationClubPlugins_;
@@ -199,24 +199,24 @@ private:
 };
 }
 
-std::string GetMetadataAsBBCodeYaml(const gui::Game& game,
+std::string getMetadataAsBBCodeYaml(const gui::Game& game,
                                     const std::string& pluginName);
 
 typedef std::
     tuple<std::shared_ptr<const PluginInterface>, std::optional<short>, bool>
                                     LoadOrderTuple;
 
-std::vector<LoadOrderTuple> MapToLoadOrderTuples(
+std::vector<LoadOrderTuple> mapToLoadOrderTuples(
     const gui::Game& game,
     const std::vector<std::string>& loadOrder);
 
 template<typename T>
-std::vector<T> MapFromLoadOrderData(
+std::vector<T> mapFromLoadOrderData(
     const gui::Game& game,
     const std::vector<std::string>& loadOrder,
     const std::function<
         T(std::shared_ptr<const PluginInterface>, std::optional<short>, bool)>& mapper) {
-  const auto data = MapToLoadOrderTuples(game, loadOrder);
+  const auto data = mapToLoadOrderTuples(game, loadOrder);
 
   // Now perform the mapping in a second loop that can be parallelised
   // (because sometimes the mapper is slow).

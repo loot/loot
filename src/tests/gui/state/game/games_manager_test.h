@@ -35,7 +35,7 @@ public:
   TestGamesManager() :
       GamesManager(std::filesystem::path(), std::filesystem::path()) {}
 
-  int GetInitialiseCount(const std::string& folderName) {
+  int getInitialiseCount(const std::string& folderName) {
     auto it = initialiseCounts_.find(folderName);
     if (it == initialiseCounts_.end()) {
       return 0;
@@ -45,15 +45,15 @@ public:
   }
 
 private:
-  bool IsInstalled(const GameSettings& gameSettings) const override {
-    return gameSettings.Id() == GameId::tes5 ||
-           gameSettings.Id() == GameId::fonv;
+  bool isInstalled(const GameSettings& gameSettings) const override {
+    return gameSettings.id() == GameId::tes5 ||
+           gameSettings.id() == GameId::fonv;
   }
 
-  void InitialiseGameData(gui::Game& game) override {
-    auto it = initialiseCounts_.find(game.GetSettings().FolderName());
+  void initialiseGameData(gui::Game& game) override {
+    auto it = initialiseCounts_.find(game.getSettings().folderName());
     if (it == initialiseCounts_.end()) {
-      initialiseCounts_.emplace(game.GetSettings().FolderName(), 1);
+      initialiseCounts_.emplace(game.getSettings().folderName(), 1);
     } else {
       it->second++;
     }
@@ -63,7 +63,7 @@ private:
 };
 
 GameSettings createSettings(GameId gameId) {
-  return GameSettings(gameId, GetDefaultLootFolderName(gameId));
+  return GameSettings(gameId, getDefaultLootFolderName(gameId));
 }
 
 static const std::vector<GameSettings> TEST_GAMES_SETTINGS = {
@@ -75,180 +75,180 @@ static const std::vector<GameSettings> TEST_GAMES_SETTINGS = {
 TEST(GamesManager,
      setInstalledGamesShouldNotInitialiseAnyGamesThatAreNotInstalled) {
   TestGamesManager manager;
-  manager.SetInstalledGames(TEST_GAMES_SETTINGS);
+  manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
   ASSERT_EQ(std::vector<std::string>({"Skyrim", "FalloutNV"}),
-            manager.GetInstalledGameFolderNames());
+            manager.getInstalledGameFolderNames());
 }
 
 TEST(
     GamesManager,
     setInstalledGamesShouldThrowAnExceptionIfTheCurrentGameIsNoLongerInstalled) {
   TestGamesManager manager;
-  manager.SetInstalledGames(TEST_GAMES_SETTINGS);
+  manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  manager.SetCurrentGame(TEST_GAMES_SETTINGS[1].FolderName());
+  manager.setCurrentGame(TEST_GAMES_SETTINGS[1].folderName());
 
   std::vector<GameSettings> newGames(
       {TEST_GAMES_SETTINGS[0], TEST_GAMES_SETTINGS[2]});
 
-  EXPECT_THROW(manager.SetInstalledGames(newGames), GameDetectionError);
+  EXPECT_THROW(manager.setInstalledGames(newGames), GameDetectionError);
 }
 
 TEST(
     GamesManager,
     setInstalledGamesShouldReinitialiseTheCurrentGameObjectIfItsPathHasChanged) {
   TestGamesManager manager;
-  manager.SetInstalledGames(TEST_GAMES_SETTINGS);
+  manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  auto currentFolderName = TEST_GAMES_SETTINGS[1].FolderName();
-  manager.SetCurrentGame(currentFolderName);
+  auto currentFolderName = TEST_GAMES_SETTINGS[1].folderName();
+  manager.setCurrentGame(currentFolderName);
 
-  manager.SetInstalledGames(
+  manager.setInstalledGames(
       {
-          createSettings(GameId::tes5).SetGamePath("different"),
+          createSettings(GameId::tes5).setGamePath("different"),
       });
 
   EXPECT_EQ(currentFolderName,
-            manager.GetCurrentGame().GetSettings().FolderName());
-  EXPECT_EQ(1, manager.GetInitialiseCount(currentFolderName));
+            manager.getCurrentGame().getSettings().folderName());
+  EXPECT_EQ(1, manager.getInitialiseCount(currentFolderName));
 }
 
 TEST(
     GamesManager,
     setInstalledGamesShouldReinitialiseTheCurrentGameObjectIfItsLocalPathHasChanged) {
   TestGamesManager manager;
-  manager.SetInstalledGames(TEST_GAMES_SETTINGS);
+  manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  auto currentFolderName = TEST_GAMES_SETTINGS[1].FolderName();
-  manager.SetCurrentGame(currentFolderName);
+  auto currentFolderName = TEST_GAMES_SETTINGS[1].folderName();
+  manager.setCurrentGame(currentFolderName);
 
-  manager.SetInstalledGames(
+  manager.setInstalledGames(
       {
-          createSettings(GameId::tes5).SetGameLocalPath("different"),
+          createSettings(GameId::tes5).setGameLocalPath("different"),
       });
 
   EXPECT_EQ(currentFolderName,
-            manager.GetCurrentGame().GetSettings().FolderName());
-  EXPECT_EQ(1, manager.GetInitialiseCount(currentFolderName));
+            manager.getCurrentGame().getSettings().folderName());
+  EXPECT_EQ(1, manager.getInitialiseCount(currentFolderName));
 }
 
 TEST(
     GamesManager,
     setInstalledGamesShouldReinitialiseTheCurrentGameObjectIfItsMasterHasChanged) {
   TestGamesManager manager;
-  manager.SetInstalledGames(TEST_GAMES_SETTINGS);
+  manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  auto currentFolderName = TEST_GAMES_SETTINGS[1].FolderName();
-  manager.SetCurrentGame(currentFolderName);
+  auto currentFolderName = TEST_GAMES_SETTINGS[1].folderName();
+  manager.setCurrentGame(currentFolderName);
 
-  manager.SetInstalledGames(
+  manager.setInstalledGames(
       {
-          createSettings(GameId::tes5).SetMaster("different"),
+          createSettings(GameId::tes5).setMaster("different"),
       });
 
   EXPECT_EQ(currentFolderName,
-            manager.GetCurrentGame().GetSettings().FolderName());
-  EXPECT_EQ(1, manager.GetInitialiseCount(currentFolderName));
+            manager.getCurrentGame().getSettings().folderName());
+  EXPECT_EQ(1, manager.getInitialiseCount(currentFolderName));
 }
 
 TEST(
     GamesManager,
     setInstalledGamesShouldUpdateTheCurrentGameIfItsPathsAndMasterAreUnchanged) {
   TestGamesManager manager;
-  manager.SetInstalledGames(TEST_GAMES_SETTINGS);
+  manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  auto currentFolderName = TEST_GAMES_SETTINGS[1].FolderName();
-  manager.SetCurrentGame(currentFolderName);
+  auto currentFolderName = TEST_GAMES_SETTINGS[1].folderName();
+  manager.setCurrentGame(currentFolderName);
 
   GameSettings newGameSettings = createSettings(GameId::tes5)
-                             .SetName("different")
-                             .SetMinimumHeaderVersion(100.0f)
-                             .SetMasterlistSource("different");
-  manager.SetInstalledGames({newGameSettings});
+                             .setName("different")
+                             .setMinimumHeaderVersion(100.0f)
+                             .setMasterlistSource("different");
+  manager.setInstalledGames({newGameSettings});
 
   EXPECT_EQ(currentFolderName,
-            manager.GetCurrentGame().GetSettings().FolderName());
-  EXPECT_EQ(0, manager.GetInitialiseCount(currentFolderName));
+            manager.getCurrentGame().getSettings().folderName());
+  EXPECT_EQ(0, manager.getInitialiseCount(currentFolderName));
 
-  EXPECT_EQ(newGameSettings.Name(),
-            manager.GetCurrentGame().GetSettings().Name());
-  EXPECT_EQ(newGameSettings.MinimumHeaderVersion(),
-            manager.GetCurrentGame().GetSettings().MinimumHeaderVersion());
-  EXPECT_EQ(newGameSettings.MasterlistSource(),
-            manager.GetCurrentGame().GetSettings().MasterlistSource());
+  EXPECT_EQ(newGameSettings.name(),
+            manager.getCurrentGame().getSettings().name());
+  EXPECT_EQ(newGameSettings.minimumHeaderVersion(),
+            manager.getCurrentGame().getSettings().minimumHeaderVersion());
+  EXPECT_EQ(newGameSettings.masterlistSource(),
+            manager.getCurrentGame().getSettings().masterlistSource());
 }
 
 TEST(GamesManager, getCurrentGameShouldThrowIfNoGamesAreInstalled) {
   TestGamesManager manager;
-  EXPECT_THROW(manager.GetCurrentGame(), std::runtime_error);
+  EXPECT_THROW(manager.getCurrentGame(), std::runtime_error);
 }
 
 TEST(GamesManager, getCurrentGameShouldThrowIfNoCurrentGameIsSet) {
   TestGamesManager manager;
-  manager.SetInstalledGames({TEST_GAMES_SETTINGS[1]});
+  manager.setInstalledGames({TEST_GAMES_SETTINGS[1]});
 
-  EXPECT_THROW(manager.GetCurrentGame(), std::runtime_error);
+  EXPECT_THROW(manager.getCurrentGame(), std::runtime_error);
 }
 
 TEST(GamesManager, setCurrentGameShouldThrowIfTheGivenGameIsNotInstalled) {
   TestGamesManager manager;
 
-  EXPECT_THROW(manager.SetCurrentGame("invalid"), GameDetectionError);
+  EXPECT_THROW(manager.setCurrentGame("invalid"), GameDetectionError);
 }
 
 TEST(GamesManager, setCurrentGameShouldUpdateStoredReference) {
   TestGamesManager manager;
-  manager.SetInstalledGames(TEST_GAMES_SETTINGS);
+  manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  manager.SetCurrentGame(TEST_GAMES_SETTINGS[1].FolderName());
+  manager.setCurrentGame(TEST_GAMES_SETTINGS[1].folderName());
 
-  EXPECT_EQ(TEST_GAMES_SETTINGS[1].FolderName(),
-            manager.GetCurrentGame().GetSettings().FolderName());
+  EXPECT_EQ(TEST_GAMES_SETTINGS[1].folderName(),
+            manager.getCurrentGame().getSettings().folderName());
 }
 
 TEST(GamesManager, setCurrentGameShouldNotInitialiseGameData) {
   TestGamesManager manager;
-  manager.SetInstalledGames(TEST_GAMES_SETTINGS);
+  manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  manager.SetCurrentGame(TEST_GAMES_SETTINGS[1].FolderName());
+  manager.setCurrentGame(TEST_GAMES_SETTINGS[1].folderName());
 
-  EXPECT_EQ(0, manager.GetInitialiseCount(TEST_GAMES_SETTINGS[1].FolderName()));
+  EXPECT_EQ(0, manager.getInitialiseCount(TEST_GAMES_SETTINGS[1].folderName()));
 }
 
 TEST(GamesManager,
      getFirstInstalledGameFolderNameShouldReturnNulloptIfNoGamesAreInstalled) {
   TestGamesManager manager;
-  EXPECT_EQ(std::nullopt, manager.GetFirstInstalledGameFolderName());
+  EXPECT_EQ(std::nullopt, manager.getFirstInstalledGameFolderName());
 }
 
 TEST(GamesManager,
      getFirstInstalledGameFolderNameShouldReturnAFolderNameIfAGameIsInstalled) {
   TestGamesManager manager;
-  manager.SetInstalledGames(TEST_GAMES_SETTINGS);
+  manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  EXPECT_EQ(TEST_GAMES_SETTINGS[1].FolderName(),
-            manager.GetFirstInstalledGameFolderName());
+  EXPECT_EQ(TEST_GAMES_SETTINGS[1].folderName(),
+            manager.getFirstInstalledGameFolderName());
 }
 
 TEST(
     GamesManager,
     getInstalledGameFolderNamesShouldReturnAnEmptyVectorIfNoGamesAreInstalled) {
   TestGamesManager manager;
-  EXPECT_TRUE(manager.GetInstalledGameFolderNames().empty());
+  EXPECT_TRUE(manager.getInstalledGameFolderNames().empty());
 }
 
 TEST(
     GamesManager,
     getInstalledGameFolderNamesShouldReturnANonEmptyVectorIfNoGamesAreInstalled) {
   TestGamesManager manager;
-  manager.SetInstalledGames(TEST_GAMES_SETTINGS);
+  manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
   std::vector<std::string> expectedFolderNames({
-      TEST_GAMES_SETTINGS[1].FolderName(),
-      TEST_GAMES_SETTINGS[2].FolderName(),
+      TEST_GAMES_SETTINGS[1].folderName(),
+      TEST_GAMES_SETTINGS[2].folderName(),
   });
-  EXPECT_EQ(expectedFolderNames, manager.GetInstalledGameFolderNames());
+  EXPECT_EQ(expectedFolderNames, manager.getInstalledGameFolderNames());
 }
 }
 }

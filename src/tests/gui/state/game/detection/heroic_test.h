@@ -31,7 +31,7 @@ along with LOOT.  If not, see
 namespace loot::test {
 #ifdef _WIN32
 TEST(GetHeroicGamesLauncherConfigPaths, shouldReturnTheHeroicAppDataPath) {
-  const auto paths = loot::heroic::GetHeroicGamesLauncherConfigPaths();
+  const auto paths = loot::heroic::getHeroicGamesLauncherConfigPaths();
   const auto expectedPath =
       getLocalAppDataPath().parent_path() / "Roaming" / "heroic";
 
@@ -41,7 +41,7 @@ TEST(GetHeroicGamesLauncherConfigPaths, shouldReturnTheHeroicAppDataPath) {
 #else
 TEST(GetHeroicGamesLauncherConfigPaths,
      shouldReturnTheHeroicFolderInUserConfig) {
-  const auto paths = loot::heroic::GetHeroicGamesLauncherConfigPaths();
+  const auto paths = loot::heroic::getHeroicGamesLauncherConfigPaths();
 
   const auto home = std::string(getenv("HOME"));
 
@@ -80,7 +80,7 @@ class Heroic_GetInstalledGogGamesTest : public HeroicTest {};
 
 TEST_F(Heroic_GetInstalledGogGamesTest,
        shouldReturnNoInstallsIfTheInstalledJsonFileDoesNotExist) {
-  const auto installs = loot::heroic::GetInstalledGogGames(rootPath_);
+  const auto installs = loot::heroic::getInstalledGogGames(rootPath_);
 
   EXPECT_TRUE(installs.empty());
 }
@@ -95,7 +95,7 @@ TEST_F(
 }]})test";
   out.close();
 
-  const auto installs = loot::heroic::GetInstalledGogGames(rootPath_);
+  const auto installs = loot::heroic::getInstalledGogGames(rootPath_);
 
   EXPECT_TRUE(installs.empty());
 }
@@ -118,7 +118,7 @@ TEST_F(Heroic_GetInstalledGogGamesTest, shouldReturnAllSupportedGameInstalls) {
 ]})test";
   out.close();
 
-  const auto installs = loot::heroic::GetInstalledGogGames(rootPath_);
+  const auto installs = loot::heroic::getInstalledGogGames(rootPath_);
 
   ASSERT_EQ(2, installs.size());
   EXPECT_EQ(GameId::tes3, installs[0].gameId);
@@ -135,7 +135,7 @@ class Heroic_GetInstalledEgsGamesTest : public HeroicTest {};
 
 TEST_F(Heroic_GetInstalledEgsGamesTest,
        shouldReturnNoInstallsIfTheInstalledJsonFileDoesNotExist) {
-  const auto installs = loot::heroic::GetInstalledEgsGames(rootPath_);
+  const auto installs = loot::heroic::getInstalledEgsGames(rootPath_);
 
   EXPECT_TRUE(installs.empty());
 }
@@ -150,7 +150,7 @@ TEST_F(
 }]})test";
   out.close();
 
-  const auto installs = loot::heroic::GetInstalledEgsGames(rootPath_);
+  const auto installs = loot::heroic::getInstalledEgsGames(rootPath_);
 
   EXPECT_TRUE(installs.empty());
 }
@@ -173,7 +173,7 @@ TEST_F(Heroic_GetInstalledEgsGamesTest, shouldReturnAllSupportedGameInstalls) {
 })test";
   out.close();
 
-  const auto installs = loot::heroic::GetInstalledEgsGames(rootPath_);
+  const auto installs = loot::heroic::getInstalledEgsGames(rootPath_);
 
   ASSERT_EQ(2, installs.size());
   EXPECT_EQ(GameId::tes5se, installs[0].gameId);
@@ -192,7 +192,7 @@ class Heroic_GetGameLocalPathTest : public HeroicTest {};
 TEST_F(Heroic_GetGameLocalPathTest,
        shouldThrowIfTheGameConfigPathDoesNotExist) {
   EXPECT_THROW(
-      loot::heroic::GetGameLocalPath(rootPath_, "1454315831", "Fallout3"),
+      loot::heroic::getGameLocalPath(rootPath_, "1454315831", "Fallout3"),
       std::runtime_error);
 }
 
@@ -204,7 +204,7 @@ TEST_F(Heroic_GetGameLocalPathTest, shouldThrowIfTheExpectedAppNameIsNotFound) {
   out.close();
 
   EXPECT_THROW(
-      loot::heroic::GetGameLocalPath(rootPath_, "1454315831", "Fallout3"),
+      loot::heroic::getGameLocalPath(rootPath_, "1454315831", "Fallout3"),
       std::runtime_error);
 }
 
@@ -214,7 +214,7 @@ TEST_F(Heroic_GetGameLocalPathTest, shouldThrowIfThereIsNoWinePrefix) {
   out.close();
 
   EXPECT_THROW(
-      loot::heroic::GetGameLocalPath(rootPath_, "1454315831", "Fallout3"),
+      loot::heroic::getGameLocalPath(rootPath_, "1454315831", "Fallout3"),
       std::runtime_error);
 }
 
@@ -228,7 +228,7 @@ TEST_F(Heroic_GetGameLocalPathTest,
 
   const auto folder = "Fallout3";
   const auto path =
-      loot::heroic::GetGameLocalPath(rootPath_, "1454315831", folder);
+      loot::heroic::getGameLocalPath(rootPath_, "1454315831", folder);
 
   const auto expectedPath = std::filesystem::u8path(
                                 "/home/user/Games/Heroic/default/pfx/drive_c/"
@@ -247,7 +247,7 @@ TEST_F(Heroic_FindGameInstallsTest,
 }]})test";
   out.close();
 
-  const auto installs = loot::heroic::FindGameInstalls(rootPath_, {});
+  const auto installs = loot::heroic::findGameInstalls(rootPath_, {});
 
   EXPECT_TRUE(installs.empty());
 }
@@ -263,7 +263,7 @@ TEST_F(Heroic_FindGameInstallsTest,
 })test";
   out.close();
 
-  const auto installs = loot::heroic::FindGameInstalls(rootPath_, {});
+  const auto installs = loot::heroic::findGameInstalls(rootPath_, {});
 
   EXPECT_TRUE(installs.empty());
 }
@@ -325,7 +325,7 @@ TEST_F(Heroic_FindGameInstallsTest, shouldReturnValidGogAndEgsInstalls) {
   out.close();
 #endif
 
-  const auto installs = loot::heroic::FindGameInstalls(rootPath_, {});
+  const auto installs = loot::heroic::findGameInstalls(rootPath_, {});
 
   ASSERT_EQ(2, installs.size());
   EXPECT_EQ(GameId::tes4, installs[0].gameId);
@@ -381,7 +381,7 @@ TEST_F(Heroic_FindGameInstallsTest,
   out.close();
 #endif
 
-  const auto installs = loot::heroic::FindGameInstalls(rootPath_, {"fr", "en"});
+  const auto installs = loot::heroic::findGameInstalls(rootPath_, {"fr", "en"});
 
   ASSERT_EQ(1, installs.size());
   EXPECT_EQ(GameId::fo3, installs[0].gameId);

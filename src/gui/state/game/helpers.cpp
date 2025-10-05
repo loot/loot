@@ -58,7 +58,7 @@ using loot::LoadOrderBackup;
 
 constexpr const char* GHOST_EXTENSION = ".ghost";
 
-std::optional<std::filesystem::path> GetPathThatExists(
+std::optional<std::filesystem::path> getPathThatExists(
     GameId gameId,
     std::filesystem::path&& path) {
   if (std::filesystem::exists(path)) {
@@ -66,7 +66,7 @@ std::optional<std::filesystem::path> GetPathThatExists(
   }
 
   if (gameId != GameId::openmw &&
-      loot::HasPluginFileExtension(path.filename().u8string())) {
+      loot::hasPluginFileExtension(path.filename().u8string())) {
     path += GHOST_EXTENSION;
 
     if (std::filesystem::exists(path)) {
@@ -78,13 +78,13 @@ std::optional<std::filesystem::path> GetPathThatExists(
 }
 
 template<typename I>
-std::optional<std::filesystem::path> ResolveGameFilePath(
+std::optional<std::filesystem::path> resolveGameFilePath(
     GameId gameId,
     const std::filesystem::path& filePath,
     const I begin,
     const I end) {
   for (auto it = begin; it != end; ++it) {
-    const auto path = GetPathThatExists(gameId, *it / filePath);
+    const auto path = getPathThatExists(gameId, *it / filePath);
     if (path.has_value()) {
       return path;
     }
@@ -93,7 +93,7 @@ std::optional<std::filesystem::path> ResolveGameFilePath(
   return std::nullopt;
 }
 
-void CreateBackup(const std::vector<std::string>& loadOrder,
+void createBackup(const std::vector<std::string>& loadOrder,
                   const std::filesystem::path& backupDirectory,
                   std::string_view name,
                   bool autoDelete) {
@@ -119,7 +119,7 @@ void CreateBackup(const std::vector<std::string>& loadOrder,
   out << QJsonDocument(json).toJson().toStdString();
 }
 
-std::optional<LoadOrderBackup> ReadLoadOrder(const std::filesystem::path& path,
+std::optional<LoadOrderBackup> readLoadOrder(const std::filesystem::path& path,
                                              bool includePlugins) {
   const auto filename = path.filename().u8string();
 
@@ -163,7 +163,7 @@ std::optional<LoadOrderBackup> ReadLoadOrder(const std::filesystem::path& path,
   return backup;
 }
 
-std::vector<LoadOrderBackup> FindLoadOrderBackups(
+std::vector<LoadOrderBackup> findLoadOrderBackups(
     const std::filesystem::path& backupDirectory) {
   std::vector<LoadOrderBackup> backups;
 
@@ -173,7 +173,7 @@ std::vector<LoadOrderBackup> FindLoadOrderBackups(
 
   for (const auto& entry :
        std::filesystem::directory_iterator(backupDirectory)) {
-    const auto loadOrder = ReadLoadOrder(entry.path(), true);
+    const auto loadOrder = readLoadOrder(entry.path(), true);
 
     if (loadOrder.has_value()) {
       backups.push_back(loadOrder.value());
@@ -183,7 +183,7 @@ std::vector<LoadOrderBackup> FindLoadOrderBackups(
   return backups;
 }
 
-void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
+void removeOldBackups(const std::filesystem::path& backupDirectory) {
   using std::filesystem::u8path;
 
   constexpr size_t MAX_BACKUPS = 10;
@@ -211,7 +211,7 @@ void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
 
   for (const auto& entry :
        std::filesystem::directory_iterator(backupDirectory)) {
-    const auto loadOrder = ReadLoadOrder(entry.path(), false);
+    const auto loadOrder = readLoadOrder(entry.path(), false);
 
     if (loadOrder.has_value() && loadOrder.value().autoDelete) {
       backupFiles.emplace(loadOrder.value().unixTimestampMs, entry.path());
@@ -226,7 +226,7 @@ void RemoveOldBackups(const std::filesystem::path& backupDirectory) {
   }
 }
 
-std::string DescribeEdgeType(const EdgeType edgeType) {
+std::string describeEdgeType(const EdgeType edgeType) {
   switch (edgeType) {
     case EdgeType::hardcoded:
       return "Hardcoded";
@@ -261,41 +261,41 @@ std::string DescribeEdgeType(const EdgeType edgeType) {
 }
 
 namespace loot {
-void BackupLoadOrder(const std::vector<std::string>& loadOrder,
+void backupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory) {
-  CreateBackup(loadOrder,
+  createBackup(loadOrder,
                backupDirectory,
                boost::locale::translate("Automatic Load Order Backup").str(),
                true);
-  RemoveOldBackups(backupDirectory);
+  removeOldBackups(backupDirectory);
 }
 
-void BackupLoadOrder(const std::vector<std::string>& loadOrder,
+void backupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory,
                      std::string_view name) {
-  CreateBackup(loadOrder, backupDirectory, name, false);
-  RemoveOldBackups(backupDirectory);
+  createBackup(loadOrder, backupDirectory, name, false);
+  removeOldBackups(backupDirectory);
 }
 
-std::vector<LoadOrderBackup> FindLoadOrderBackups(
+std::vector<LoadOrderBackup> findLoadOrderBackups(
     const std::filesystem::path& backupDirectory) {
-  return ::FindLoadOrderBackups(backupDirectory);
+  return ::findLoadOrderBackups(backupDirectory);
 }
 
-std::string EscapeMarkdownASCIIPunctuation(const std::string& text) {
+std::string escapeMarkdownASCIIPunctuation(const std::string& text) {
   // As defined by <https://github.github.com/gfm/#ascii-punctuation-character>.
   static const std::regex asciiPunctuationCharacters(
       "([!\"#$%&'()*+,\\-./:;<=>?@\\[\\\\\\]^_`{|}~])");
   return std::regex_replace(text, asciiPunctuationCharacters, "\\$1");
 }
 
-std::string DescribeCycle(const std::vector<Vertex>& cycle) {
+std::string describeCycle(const std::vector<Vertex>& cycle) {
   std::string text = "\n\n";
   for (const auto& vertex : cycle) {
     text += vertex.GetName() + "\\\n";
     if (vertex.GetTypeOfEdgeToNextVertex().has_value()) {
       text += "&emsp;[" +
-              DescribeEdgeType(vertex.GetTypeOfEdgeToNextVertex().value()) +
+              describeEdgeType(vertex.GetTypeOfEdgeToNextVertex().value()) +
               "]\\\n";
     }
   }
@@ -306,7 +306,7 @@ std::string DescribeCycle(const std::vector<Vertex>& cycle) {
   return text;
 }
 
-std::vector<std::string> CheckForRemovedPlugins(
+std::vector<std::string> checkForRemovedPlugins(
     const std::vector<std::string>& pluginNamesBefore,
     const std::vector<std::string>& pluginNamesAfter) {
   static constexpr size_t GHOST_EXTENSION_LENGTH =
@@ -332,7 +332,7 @@ std::vector<std::string> CheckForRemovedPlugins(
   return removedPlugins;
 }
 
-std::vector<Tag> ReadBashTagsFile(std::istream& in) {
+std::vector<Tag> readBashTagsFile(std::istream& in) {
   std::vector<Tag> tags;
   for (std::string line; std::getline(in, line);) {
     if (line.empty() || line[0] == '#') {
@@ -362,7 +362,7 @@ std::vector<Tag> ReadBashTagsFile(std::istream& in) {
   return tags;
 }
 
-std::vector<Tag> ReadBashTagsFile(const std::filesystem::path& dataPath,
+std::vector<Tag> readBashTagsFile(const std::filesystem::path& dataPath,
                                   const std::string& pluginName) {
   static constexpr size_t PLUGIN_EXTENSION_LENGTH = 4;
   const auto filename =
@@ -376,10 +376,10 @@ std::vector<Tag> ReadBashTagsFile(const std::filesystem::path& dataPath,
 
   std::ifstream in(filePath);
 
-  return ReadBashTagsFile(in);
+  return readBashTagsFile(in);
 }
 
-std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
+std::vector<std::string> getTagConflicts(const std::vector<Tag>& tags1,
                                          const std::vector<Tag>& tags2) {
   std::set<std::string> additions1;
   std::set<std::string> additions2;
@@ -421,7 +421,7 @@ std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
   return conflicts;
 }
 
-bool HasPluginFileExtension(const std::string& filename) {
+bool hasPluginFileExtension(const std::string& filename) {
   return boost::iends_with(filename, ".esp") ||
          boost::iends_with(filename, ".esm") ||
          boost::iends_with(filename, ".esl") ||
@@ -430,7 +430,7 @@ bool HasPluginFileExtension(const std::string& filename) {
          boost::iends_with(filename, ".omwscripts");
 }
 
-std::optional<std::filesystem::path> ResolveGameFilePath(
+std::optional<std::filesystem::path> resolveGameFilePath(
     GameId gameId,
     const std::vector<std::filesystem::path>& externalDataPaths,
     const std::filesystem::path& dataPath,
@@ -439,11 +439,11 @@ std::optional<std::filesystem::path> ResolveGameFilePath(
 
   const auto externalPath =
       gameId == GameId::openmw
-          ? ::ResolveGameFilePath(gameId,
+          ? ::resolveGameFilePath(gameId,
                                   filePath,
                                   externalDataPaths.rbegin(),
                                   externalDataPaths.rend())
-          : ::ResolveGameFilePath(gameId,
+          : ::resolveGameFilePath(gameId,
                                   filePath,
                                   externalDataPaths.begin(),
                                   externalDataPaths.end());
@@ -452,7 +452,7 @@ std::optional<std::filesystem::path> ResolveGameFilePath(
     return externalPath;
   }
 
-  return GetPathThatExists(gameId, dataPath / filePath);
+  return getPathThatExists(gameId, dataPath / filePath);
 }
 
 // Taken from
@@ -750,7 +750,7 @@ static constexpr std::array<const char*, 15>
                                           "tamrielleveledregion.esp",
                                           "oblivion.esm"}};
 
-bool IsOfficialPlugin(const GameId gameId, const std::string& pluginName) {
+bool isOfficialPlugin(const GameId gameId, const std::string& pluginName) {
   const auto lowercased = boost::locale::to_lower(pluginName);
 
   switch (gameId) {

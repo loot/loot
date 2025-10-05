@@ -46,20 +46,20 @@ class RegistryInterface {
 public:
   virtual ~RegistryInterface() = default;
 
-  virtual std::optional<std::string> GetStringValue(
+  virtual std::optional<std::string> getStringValue(
       const RegistryValue& value) const = 0;
 };
 
 class Registry : public RegistryInterface {
-  std::optional<std::string> GetStringValue(
+  std::optional<std::string> getStringValue(
       const RegistryValue& value) const override;
 };
 
-std::optional<std::filesystem::path> ReadPathFromRegistry(
+std::optional<std::filesystem::path> readPathFromRegistry(
     const RegistryInterface& registry,
     const RegistryValue& value);
 
-std::vector<std::filesystem::path> FindGameInstallPathsInRegistry(
+std::vector<std::filesystem::path> findGameInstallPathsInRegistry(
     const RegistryInterface& registry,
     const std::vector<RegistryValue>& registryValues);
 }

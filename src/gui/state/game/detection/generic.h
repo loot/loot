@@ -34,13 +34,13 @@
 #include "gui/state/game/game_settings.h"
 
 namespace loot::generic {
-bool IsMicrosoftInstall(const GameId gameId,
+bool isMicrosoftInstall(const GameId gameId,
                         const std::filesystem::path& installPath);
 
-std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
+std::vector<GameInstall> findGameInstalls(const RegistryInterface& registry,
                                           const GameId gameId);
 
-std::optional<GameInstall> DetectGameInstall(const GameSettings& settings);
+std::optional<GameInstall> detectGameInstall(const GameSettings& settings);
 }
 
 #endif

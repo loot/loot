@@ -37,7 +37,7 @@ class Microsoft_FindGameInstallsTest
 protected:
   Microsoft_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
 
-  static std::filesystem::path GetGamePath(
+  static std::filesystem::path getGamePath(
       const std::filesystem::path& xboxGamingRootPath) {
     switch (GetParam()) {
       case GameId::tes3:
@@ -65,7 +65,7 @@ protected:
     }
   }
 
-  std::vector<std::filesystem::path> SetUpLocalisedGamePaths(
+  std::vector<std::filesystem::path> setUpLocalisedGamePaths(
       const std::filesystem::path& xboxGamingRootPath,
       const std::initializer_list<const char*>& gameFolders) {
     std::vector<std::filesystem::path> gamesPaths;
@@ -100,14 +100,14 @@ INSTANTIATE_TEST_SUITE_P(,
 
 TEST_P(Microsoft_FindGameInstallsTest, shouldFindNewMSGamePathIfPresent) {
   const auto xboxGamingRootPath = gamePath.parent_path();
-  const auto xboxGamePath = GetGamePath(xboxGamingRootPath);
+  const auto xboxGamePath = getGamePath(xboxGamingRootPath);
   std::filesystem::create_directories(xboxGamePath.parent_path());
   std::filesystem::copy(
       gamePath, xboxGamePath, std::filesystem::copy_options::recursive);
 
   const auto gameId = GetParam();
   const auto gameInstalls =
-      loot::microsoft::FindGameInstalls(gameId, {xboxGamingRootPath}, {});
+      loot::microsoft::findGameInstalls(gameId, {xboxGamingRootPath}, {});
 
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
@@ -124,12 +124,12 @@ TEST_P(Microsoft_FindGameInstallsTest,
 
   const auto xboxGamingRootPath = gamePath.parent_path();
 
-  const auto gamesPaths = SetUpLocalisedGamePaths(
+  const auto gamesPaths = setUpLocalisedGamePaths(
       xboxGamingRootPath, {"Oblivion GOTY Spanish", "Oblivion GOTY Italian"});
 
   const auto gameId = GetParam();
   const auto gameInstalls =
-      loot::microsoft::FindGameInstalls(gameId, {xboxGamingRootPath}, {});
+      loot::microsoft::findGameInstalls(gameId, {xboxGamingRootPath}, {});
 
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
@@ -146,11 +146,11 @@ TEST_P(Microsoft_FindGameInstallsTest,
 
   const auto xboxGamingRootPath = gamePath.parent_path();
 
-  const auto gamesPaths = SetUpLocalisedGamePaths(
+  const auto gamesPaths = setUpLocalisedGamePaths(
       xboxGamingRootPath, {"Oblivion GOTY Spanish", "Oblivion GOTY Italian"});
 
   const auto gameId = GetParam();
-  const auto gameInstalls = loot::microsoft::FindGameInstalls(
+  const auto gameInstalls = loot::microsoft::findGameInstalls(
       gameId, {xboxGamingRootPath}, {"es", "it"});
 
   ASSERT_EQ(1, gameInstalls.size());
@@ -168,12 +168,12 @@ TEST_P(Microsoft_FindGameInstallsTest,
 
   const auto xboxGamingRootPath = gamePath.parent_path();
 
-  const auto gamesPaths = SetUpLocalisedGamePaths(
+  const auto gamesPaths = setUpLocalisedGamePaths(
       xboxGamingRootPath, {"Oblivion GOTY English", "Oblivion GOTY Spanish"});
 
   const auto gameId = GetParam();
   const auto gameInstalls =
-      loot::microsoft::FindGameInstalls(gameId, {xboxGamingRootPath}, {"es"});
+      loot::microsoft::findGameInstalls(gameId, {xboxGamingRootPath}, {"es"});
 
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);

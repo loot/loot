@@ -35,24 +35,24 @@ namespace loot::steam {
 // Finds Steam's install path using the Registry on Windows and using
 // XDG_DATA_HOME or HOME/.local/share on Linux. The path returned may
 // not exist.
-std::vector<std::filesystem::path> GetSteamInstallPaths(
+std::vector<std::filesystem::path> getSteamInstallPaths(
     const RegistryInterface& registry);
 
 // Given the path to a Steam install, get the Steam install's library paths.
-std::vector<std::filesystem::path> GetSteamLibraryPaths(
+std::vector<std::filesystem::path> getSteamLibraryPaths(
     const std::filesystem::path& steamInstallPath);
 
 // Gets app manifest paths for the given game and library path. The
 // returned paths may not exist.
-std::vector<std::filesystem::path> GetSteamAppManifestPaths(
+std::vector<std::filesystem::path> getSteamAppManifestPaths(
     const std::filesystem::path& steamLibraryPath,
     const GameId gameId);
 
 // Parses a Steam app manifest file to determine a game's install path.
-std::optional<GameInstall> FindGameInstall(
+std::optional<GameInstall> findGameInstall(
     const std::filesystem::path& steamAppManifestPath);
 
-std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
+std::vector<GameInstall> findGameInstalls(const RegistryInterface& registry,
                                           const GameId gameId);
 }
 

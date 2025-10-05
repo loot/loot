@@ -55,7 +55,7 @@ void writeStringLength(std::ostream& out, size_t length) {
 }
 
 namespace loot {
-std::vector<GroupNodePosition> LoadGroupNodePositions(
+std::vector<GroupNodePosition> loadGroupNodePositions(
     const std ::filesystem::path& filePath) {
   if (!std::filesystem::exists(filePath)) {
     return {};
@@ -107,7 +107,7 @@ std::vector<GroupNodePosition> LoadGroupNodePositions(
   return nodePositions;
 }
 
-void SaveGroupNodePositions(const std ::filesystem::path& filePath,
+void saveGroupNodePositions(const std ::filesystem::path& filePath,
                             const std::vector<GroupNodePosition>& positions) {
   // Don't care about endianness because the files don't need to be portable.
 

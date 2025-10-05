@@ -68,16 +68,16 @@ bool operator==(const SourcedMessage& lhs, const SourcedMessage& rhs);
 
 bool operator!=(const SourcedMessage& lhs, const SourcedMessage& rhs);
 
-SourcedMessage CreatePlainTextSourcedMessage(const MessageType type,
+SourcedMessage createPlainTextSourcedMessage(const MessageType type,
                                              const MessageSource source,
                                              const std::string& text);
 
-std::string MessagesAsMarkdown(const std::vector<SourcedMessage>& messages);
+std::string messagesAsMarkdown(const std::vector<SourcedMessage>& messages);
 
-SourcedMessage ToSourcedMessage(const PluginCleaningData& cleaningData,
+SourcedMessage toSourcedMessage(const PluginCleaningData& cleaningData,
                                 std::string_view language);
 
-std::vector<SourcedMessage> ToSourcedMessages(
+std::vector<SourcedMessage> toSourcedMessages(
     const std::vector<Message>& messages,
     const MessageSource source,
     std::string_view language);

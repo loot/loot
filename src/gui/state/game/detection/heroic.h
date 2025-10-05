@@ -39,20 +39,20 @@ struct HeroicGame {
   std::filesystem::path installPath;
 };
 
-std::vector<std::filesystem::path> GetHeroicGamesLauncherConfigPaths();
+std::vector<std::filesystem::path> getHeroicGamesLauncherConfigPaths();
 
-std::vector<HeroicGame> GetInstalledGogGames(
+std::vector<HeroicGame> getInstalledGogGames(
     const std::filesystem::path& heroicConfigPath);
 
-std::vector<HeroicGame> GetInstalledEgsGames(
+std::vector<HeroicGame> getInstalledEgsGames(
     const std::filesystem::path& heroicConfigPath);
 
-std::filesystem::path GetGameLocalPath(
+std::filesystem::path getGameLocalPath(
     const std::filesystem::path& heroicConfigPath,
     const std::string& appName,
     const std::string& gameFolderName);
 
-std::vector<GameInstall> FindGameInstalls(
+std::vector<GameInstall> findGameInstalls(
     const std::filesystem::path& heroicConfigPath,
     const std::vector<std::string>& preferredUILanguages);
 }

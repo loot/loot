@@ -33,55 +33,55 @@ namespace loot {
 namespace test {
 TEST(ChangeCount, isNonZeroShouldBeFalseByDefault) {
   ChangeCount counter;
-  EXPECT_FALSE(counter.IsNonZero());
+  EXPECT_FALSE(counter.isNonZero());
 }
 
 TEST(ChangeCount, isNonZeroShouldBeFalseIfCounterIsDecremented) {
   ChangeCount counter;
-  counter.Decrement();
+  counter.decrement();
 
-  EXPECT_FALSE(counter.IsNonZero());
+  EXPECT_FALSE(counter.isNonZero());
 }
 
 TEST(ChangeCount, isNonZeroShouldBeTrueIfCounterIsIncremented) {
   ChangeCount counter;
-  counter.Increment();
+  counter.increment();
 
-  EXPECT_TRUE(counter.IsNonZero());
+  EXPECT_TRUE(counter.isNonZero());
 }
 
 TEST(
     ChangeCount,
     isNonZeroShouldBeTrueIfIncrementingTheChangeCounterMoreThanItIsDecremented) {
   ChangeCount counter;
-  counter.Increment();
-  counter.Increment();
-  counter.Decrement();
+  counter.increment();
+  counter.increment();
+  counter.decrement();
 
-  EXPECT_TRUE(counter.IsNonZero());
+  EXPECT_TRUE(counter.isNonZero());
 }
 
 TEST(
     ChangeCount,
     isNonZeroShouldBeFalseIfIncrementingTheChangeCounterLessThanItIsDecremented) {
   ChangeCount counter;
-  counter.Increment();
-  counter.Decrement();
-  counter.Decrement();
+  counter.increment();
+  counter.decrement();
+  counter.decrement();
 
-  EXPECT_FALSE(counter.IsNonZero());
+  EXPECT_FALSE(counter.isNonZero());
 }
 
 TEST(
     ChangeCount,
     isNonZeroShouldBeFalseIfIncrementingTheChangeCounterThenDecrementingItEqually) {
   ChangeCount counter;
-  counter.Increment();
-  counter.Increment();
-  counter.Decrement();
-  counter.Decrement();
+  counter.increment();
+  counter.increment();
+  counter.decrement();
+  counter.decrement();
 
-  EXPECT_FALSE(counter.IsNonZero());
+  EXPECT_FALSE(counter.isNonZero());
 }
 }
 }

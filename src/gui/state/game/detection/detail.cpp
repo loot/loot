@@ -41,9 +41,9 @@
 namespace {
 using loot::GameId;
 using loot::GameInstall;
-using loot::GetGameName;
+using loot::getGameName;
 using loot::getLogger;
-using loot::GetSourceDescription;
+using loot::getSourceDescription;
 using loot::InstallSource;
 
 // Unfortunately std::filesystem::equivalent() requires paths to exist and
@@ -81,7 +81,7 @@ bool equivalent(const std::filesystem::path& path1,
 
 // Deduplicate GameInstall objects by checking for equivalent install paths,
 // keeping the first of each duplicate.
-std::vector<GameInstall> DeduplicateGameInstalls(
+std::vector<GameInstall> deduplicateGameInstalls(
     const std::vector<GameInstall>& gameInstalls) {
   std::vector<GameInstall> uniqueGameInstalls;
 
@@ -100,11 +100,11 @@ std::vector<GameInstall> DeduplicateGameInstalls(
       logger->warn(
           "Discarding game install for {} installed from {} to {} as a "
           "duplicate of the install for {} installed from {} to {}",
-          GetGameName(gameInstall.gameId),
-          GetSourceDescription(gameInstall.source),
+          getGameName(gameInstall.gameId),
+          getSourceDescription(gameInstall.source),
           gameInstall.installPath.u8string(),
-          GetGameName(duplicate->gameId),
-          GetSourceDescription(duplicate->source),
+          getGameName(duplicate->gameId),
+          getSourceDescription(duplicate->source),
           duplicate->installPath.u8string());
     }
   }
@@ -113,43 +113,43 @@ std::vector<GameInstall> DeduplicateGameInstalls(
 }
 
 // Search for installed copies of the given game, and return all those found.
-std::vector<GameInstall> FindGameInstalls(
+std::vector<GameInstall> findGameInstalls(
     const loot::RegistryInterface& registry,
     const GameId gameId,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
   const auto logger = getLogger();
   if (logger) {
-    logger->trace("Checking if game \"{}\" is installed.", GetGameName(gameId));
+    logger->trace("Checking if game \"{}\" is installed.", getGameName(gameId));
   }
 
   std::vector<GameInstall> installs;
 
-  const auto steamInstalls = loot::steam::FindGameInstalls(registry, gameId);
+  const auto steamInstalls = loot::steam::findGameInstalls(registry, gameId);
   installs.insert(installs.end(), steamInstalls.begin(), steamInstalls.end());
 
-  const auto gogInstalls = loot::gog::FindGameInstalls(registry, gameId);
+  const auto gogInstalls = loot::gog::findGameInstalls(registry, gameId);
   installs.insert(installs.end(), gogInstalls.begin(), gogInstalls.end());
 
   const auto genericInstalls =
-      loot::generic::FindGameInstalls(registry, gameId);
+      loot::generic::findGameInstalls(registry, gameId);
   installs.insert(
       installs.end(), genericInstalls.begin(), genericInstalls.end());
 
   const auto epicInstall =
-      loot::epic::FindGameInstalls(registry, gameId, preferredUILanguages);
+      loot::epic::findGameInstalls(registry, gameId, preferredUILanguages);
   if (epicInstall.has_value()) {
     installs.push_back(epicInstall.value());
   }
 
-  const auto msInstalls = loot::microsoft::FindGameInstalls(
+  const auto msInstalls = loot::microsoft::findGameInstalls(
       gameId, xboxGamingRootPaths, preferredUILanguages);
   installs.insert(installs.end(), msInstalls.begin(), msInstalls.end());
 
   return installs;
 }
 
-void IncrementGameSourceCount(
+void incrementGameSourceCount(
     std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>&
         gameSourceCounts,
     const GameInstall& install) {
@@ -170,7 +170,7 @@ void IncrementGameSourceCount(
 }
 
 namespace loot {
-std::string GetSourceDescription(const InstallSource source) {
+std::string getSourceDescription(const InstallSource source) {
   switch (source) {
     case InstallSource::steam:
       return "Steam";
@@ -187,7 +187,7 @@ std::string GetSourceDescription(const InstallSource source) {
   }
 }
 
-std::string GetNameSourceSuffix(const InstallSource source) {
+std::string getNameSourceSuffix(const InstallSource source) {
   switch (source) {
     case InstallSource::steam:
       return " (Steam)";
@@ -204,20 +204,20 @@ std::string GetNameSourceSuffix(const InstallSource source) {
   }
 }
 
-std::vector<GameInstall> FindGameInstalls(
+std::vector<GameInstall> findGameInstalls(
     const RegistryInterface& registry,
     const std::vector<std::filesystem::path>& heroicConfigPaths,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
   std::vector<GameInstall> installs;
 
-  for (const auto& steamInstallPath : steam::GetSteamInstallPaths(registry)) {
+  for (const auto& steamInstallPath : steam::getSteamInstallPaths(registry)) {
     for (const auto& libraryPath :
-         steam::GetSteamLibraryPaths(steamInstallPath)) {
+         steam::getSteamLibraryPaths(steamInstallPath)) {
       for (const auto& gameId : ALL_GAME_IDS) {
         for (const auto& manifestPath :
-             steam::GetSteamAppManifestPaths(libraryPath, gameId)) {
-          const auto install = steam::FindGameInstall(manifestPath);
+             steam::getSteamAppManifestPaths(libraryPath, gameId)) {
+          const auto install = steam::findGameInstall(manifestPath);
           if (install.has_value()) {
             installs.push_back(install.value());
           }
@@ -228,33 +228,33 @@ std::vector<GameInstall> FindGameInstalls(
 
   for (const auto& heroicConfigPath : heroicConfigPaths) {
     const auto heroicGameInstalls =
-        heroic::FindGameInstalls(heroicConfigPath, preferredUILanguages);
+        heroic::findGameInstalls(heroicConfigPath, preferredUILanguages);
     installs.insert(
         installs.end(), heroicGameInstalls.begin(), heroicGameInstalls.end());
   }
 
   for (const auto& gameId : ALL_GAME_IDS) {
-    const auto gameInstalls = ::FindGameInstalls(
+    const auto gameInstalls = ::findGameInstalls(
         registry, gameId, xboxGamingRootPaths, preferredUILanguages);
     installs.insert(installs.end(), gameInstalls.begin(), gameInstalls.end());
   }
 
   // The installs may duplicate Steam or GOG installs, so deduplicate them.
-  return DeduplicateGameInstalls(installs);
+  return deduplicateGameInstalls(installs);
 }
 
 std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>
-CountGameInstalls(const std::vector<GameInstall>& configuredInstalls,
+countGameInstalls(const std::vector<GameInstall>& configuredInstalls,
                   const std::vector<GameInstall>& newInstalls) {
   std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>
       gameSourceCounts;
 
   for (const auto& gameInstall : configuredInstalls) {
-    IncrementGameSourceCount(gameSourceCounts, gameInstall);
+    incrementGameSourceCount(gameSourceCounts, gameInstall);
   }
 
   for (const auto& gameInstall : newInstalls) {
-    IncrementGameSourceCount(gameSourceCounts, gameInstall);
+    incrementGameSourceCount(gameSourceCounts, gameInstall);
   }
 
   return gameSourceCounts;
@@ -269,7 +269,7 @@ CountGameInstalls(const std::vector<GameInstall>& configuredInstalls,
 // case-insensitively: technically this could be done using ASCII-only case
 // folding as all the base names and suffixes are ASCII-only, but this function
 // doesn't know that.
-std::string DeriveName(
+std::string deriveName(
     const GameInstall& gameInstall,
     std::string baseName,
     const std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>&
@@ -281,7 +281,7 @@ std::string DeriveName(
     if (sourceIt != gameIt->second.end()) {
       if (gameIt->second.size() > 1) {
         // More than one source, add suffix.
-        baseName += GetNameSourceSuffix(gameInstall.source);
+        baseName += getNameSourceSuffix(gameInstall.source);
       } else {
         // Only one source, no need for source suffix.
       }
@@ -297,7 +297,7 @@ std::string DeriveName(
   while (std::any_of(existingNames.begin(),
                      existingNames.end(),
                      [&](const std::string& existingName) {
-                       return CompareFilenames(name, existingName) == 0;
+                       return compareFilenames(name, existingName) == 0;
                      })) {
     name = baseName + " (" + std::to_string(suffixIndex) + ")";
     suffixIndex += 1;
@@ -306,23 +306,23 @@ std::string DeriveName(
   return name;
 };
 
-void UpdateSettingsPaths(GameSettings& settings, const GameInstall& install) {
+void updateSettingsPaths(GameSettings& settings, const GameInstall& install) {
   const auto logger = getLogger();
 
   // Update the existing settings object's paths.
-  if (settings.GamePath().empty()) {
+  if (settings.gamePath().empty()) {
     if (logger) {
       logger->info(
           "Setting the install path for the game with LOOT folder name {} "
           "to \"{}\"",
-          settings.FolderName(),
+          settings.folderName(),
           install.installPath.u8string());
     }
 
-    settings.SetGamePath(install.installPath);
+    settings.setGamePath(install.installPath);
   }
 
-  if (settings.GameLocalPath().empty() && !install.localPath.empty()) {
+  if (settings.gameLocalPath().empty() && !install.localPath.empty()) {
     // It's the same install path but the detected local path is different
     // from the empty configured local path, so replace the latter.
     // Don't replace a non-empty configured local path.
@@ -330,21 +330,21 @@ void UpdateSettingsPaths(GameSettings& settings, const GameInstall& install) {
       logger->info(
           "Setting the local path for the game with LOOT folder name {} "
           "to \"{}\"",
-          settings.FolderName(),
+          settings.folderName(),
           install.localPath.u8string());
     }
 
-    settings.SetGameLocalPath(install.localPath);
+    settings.setGameLocalPath(install.localPath);
   }
 }
 
-bool ArePathsEquivalent(const GameSettings& settings,
+bool arePathsEquivalent(const GameSettings& settings,
                         const GameInstall& install) {
-  return ::equivalent(install.installPath, settings.GamePath());
+  return ::equivalent(install.installPath, settings.gamePath());
 }
 
 // Returns the installs that matched no settings.
-std::vector<GameInstall> UpdateMatchingSettings(
+std::vector<GameInstall> updateMatchingSettings(
     std::vector<GameSettings>& gamesSettings,
     const std::vector<GameInstall>& gameInstalls,
     const std::function<bool(const GameSettings& settings,
@@ -364,29 +364,29 @@ std::vector<GameInstall> UpdateMatchingSettings(
       match = std::find_if(gamesSettings.begin(),
                            gamesSettings.end(),
                            [&](const GameSettings& settings) {
-                             return settings.GamePath().empty() &&
-                                    settings.Id() == gameInstall.gameId;
+                             return settings.gamePath().empty() &&
+                                    settings.id() == gameInstall.gameId;
                            });
     }
 
     if (match == gamesSettings.end()) {
       newGameInstalls.push_back(gameInstall);
     } else {
-      UpdateSettingsPaths(*match, gameInstall);
+      updateSettingsPaths(*match, gameInstall);
     }
   }
 
   return newGameInstalls;
 }
 
-std::vector<GameInstall> DetectConfiguredInstalls(
+std::vector<GameInstall> detectConfiguredInstalls(
     const std::vector<GameSettings>& gamesSettings) {
   std::vector<GameInstall> installs;
 
   for (const auto& settings : gamesSettings) {
     // The game may not be currently installed, but if it is, detect its
     // game ID and source to improve the naming of new game instances.
-    const auto install = generic::DetectGameInstall(settings);
+    const auto install = generic::detectGameInstall(settings);
     if (install.has_value()) {
       installs.push_back(install.value());
     }
@@ -395,7 +395,7 @@ std::vector<GameInstall> DetectConfiguredInstalls(
   return installs;
 }
 
-void AppendNewGamesSettings(
+void appendNewGamesSettings(
     std::vector<GameSettings>& gamesSettings,
     const std::unordered_map<GameId, std::unordered_map<InstallSource, size_t>>&
         gameSourceCounts,
@@ -407,29 +407,29 @@ void AppendNewGamesSettings(
   std::vector<std::string> folderNames;
 
   for (const auto& settings : gamesSettings) {
-    gameNames.push_back(settings.Name());
-    folderNames.push_back(settings.FolderName());
+    gameNames.push_back(settings.name());
+    folderNames.push_back(settings.folderName());
   }
 
   for (const auto& gameInstall : newGameInstalls) {
-    const auto gameName = DeriveName(gameInstall,
-                                     GetGameName(gameInstall.gameId),
+    const auto gameName = deriveName(gameInstall,
+                                     getGameName(gameInstall.gameId),
                                      gameSourceCounts,
                                      gameNames);
 
     const auto folderName =
-        DeriveName(gameInstall,
-                   GetDefaultLootFolderName(gameInstall.gameId),
+        deriveName(gameInstall,
+                   getDefaultLootFolderName(gameInstall.gameId),
                    gameSourceCounts,
                    folderNames);
 
     const GameSettings gameSettings =
         GameSettings(gameInstall.gameId, folderName)
-            .SetName(gameName)
-            .SetMaster(GetMasterFilename(gameInstall.gameId))
-            .SetMasterlistSource(GetDefaultMasterlistUrl(gameInstall.gameId))
-            .SetGamePath(gameInstall.installPath)
-            .SetGameLocalPath(gameInstall.localPath);
+            .setName(gameName)
+            .setMaster(getMasterFilename(gameInstall.gameId))
+            .setMasterlistSource(getDefaultMasterlistUrl(gameInstall.gameId))
+            .setGamePath(gameInstall.installPath)
+            .setGameLocalPath(gameInstall.localPath);
 
     gamesSettings.push_back(gameSettings);
     gameNames.push_back(gameName);
@@ -437,23 +437,23 @@ void AppendNewGamesSettings(
   }
 }
 
-void UpdateInstalledGamesSettings(
+void updateInstalledGamesSettings(
     std::vector<GameSettings>& gamesSettings,
     const RegistryInterface& registry,
     const std::vector<std::filesystem::path>& heroicConfigPaths,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
-  const auto gameInstalls = FindGameInstalls(
+  const auto gameInstalls = findGameInstalls(
       registry, heroicConfigPaths, xboxGamingRootPaths, preferredUILanguages);
 
   const auto newGameInstalls =
-      UpdateMatchingSettings(gamesSettings, gameInstalls, ArePathsEquivalent);
+      updateMatchingSettings(gamesSettings, gameInstalls, arePathsEquivalent);
 
-  const auto configuredInstalls = DetectConfiguredInstalls(gamesSettings);
+  const auto configuredInstalls = detectConfiguredInstalls(gamesSettings);
 
   const auto gameSourceCounts =
-      CountGameInstalls(configuredInstalls, newGameInstalls);
+      countGameInstalls(configuredInstalls, newGameInstalls);
 
-  AppendNewGamesSettings(gamesSettings, gameSourceCounts, newGameInstalls);
+  appendNewGamesSettings(gamesSettings, gameSourceCounts, newGameInstalls);
 }
 }

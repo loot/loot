@@ -45,20 +45,20 @@ constexpr size_t MWSE_SAFE_MAX_ACTIVE_FULL_PLUGINS = 1023;
 constexpr size_t SAFE_MAX_ACTIVE_MEDIUM_PLUGINS = 255;
 constexpr size_t SAFE_MAX_ACTIVE_LIGHT_PLUGINS = 4096;
 
-std::string EscapeFileName(const loot::File& file) {
-  return loot::EscapeMarkdownASCIIPunctuation(std::string(file.GetName()));
+std::string escapeFileName(const loot::File& file) {
+  return loot::escapeMarkdownASCIIPunctuation(std::string(file.GetName()));
 }
 
-std::string GetDisplayName(const loot::File& file) {
+std::string getDisplayName(const loot::File& file) {
   auto displayName = file.GetDisplayName();
   if (displayName.empty()) {
-    return EscapeFileName(file);
+    return escapeFileName(file);
   }
 
   return displayName;
 }
 
-bool IsGroupDefined(std::string_view groupName,
+bool isGroupDefined(std::string_view groupName,
                     const std::vector<loot::Group> groups) {
   return std::any_of(
       groups.cbegin(), groups.cend(), [&](const loot::Group& group) {
@@ -66,7 +66,7 @@ bool IsGroupDefined(std::string_view groupName,
       });
 }
 
-SourcedMessage CreateMissingMasterMessage(const PluginInterface& plugin,
+SourcedMessage createMissingMasterMessage(const PluginInterface& plugin,
                                           std::string_view masterName,
                                           MessageType messageType) {
   auto logger = getLogger();
@@ -76,7 +76,7 @@ SourcedMessage CreateMissingMasterMessage(const PluginInterface& plugin,
                   masterName);
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       messageType,
       MessageSource::missingMaster,
       fmt::format(boost::locale::translate("This plugin requires \"{0}\" to be "
@@ -85,7 +85,7 @@ SourcedMessage CreateMissingMasterMessage(const PluginInterface& plugin,
                   masterName));
 }
 
-SourcedMessage CreateInactiveMasterMessage(const PluginInterface& plugin,
+SourcedMessage createInactiveMasterMessage(const PluginInterface& plugin,
                                            std::string_view masterName) {
   auto logger = getLogger();
   if (logger) {
@@ -94,7 +94,7 @@ SourcedMessage CreateInactiveMasterMessage(const PluginInterface& plugin,
                   masterName);
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::inactiveMaster,
       fmt::format(boost::locale::translate("This plugin requires \"{0}\" to be "
@@ -103,7 +103,7 @@ SourcedMessage CreateInactiveMasterMessage(const PluginInterface& plugin,
                   masterName));
 }
 
-SourcedMessage CreateMissingRequirementMessage(const loot::File& requirement,
+SourcedMessage createMissingRequirementMessage(const loot::File& requirement,
                                                const std::string& language) {
   std::string localisedText;
   const auto displayName = requirement.GetDisplayName();
@@ -112,7 +112,7 @@ SourcedMessage CreateMissingRequirementMessage(const loot::File& requirement,
         boost::locale::translate(
             "This plugin requires \"{0}\" to be installed, but it is missing.")
             .str(),
-        EscapeFileName(requirement));
+        escapeFileName(requirement));
   } else {
     localisedText = fmt::format(
         boost::locale::translate(
@@ -129,7 +129,7 @@ SourcedMessage CreateMissingRequirementMessage(const loot::File& requirement,
       MessageType::error, MessageSource::requirementMetadata, messageText};
 }
 
-SourcedMessage CreatePresentIncompatibilityMessage(
+SourcedMessage createPresentIncompatibilityMessage(
     const loot::File& incompatibility,
     const std::string& language) {
   std::string localisedText;
@@ -139,7 +139,7 @@ SourcedMessage CreatePresentIncompatibilityMessage(
         boost::locale::translate(
             "This plugin is incompatible with \"{0}\", but both are present.")
             .str(),
-        EscapeFileName(incompatibility));
+        escapeFileName(incompatibility));
   } else {
     localisedText = fmt::format(
         boost::locale::translate(
@@ -157,7 +157,7 @@ SourcedMessage CreatePresentIncompatibilityMessage(
       MessageType::error, MessageSource::incompatibilityMetadata, messageText};
 }
 
-SourcedMessage CreateLightMasterWithNonMasterMasterMessage(
+SourcedMessage createLightMasterWithNonMasterMasterMessage(
     const PluginInterface& plugin,
     std::string_view masterName,
     GameId gameId) {
@@ -175,7 +175,7 @@ SourcedMessage CreateLightMasterWithNonMasterMasterMessage(
                               ? boost::locale::translate("small master").str()
                               : boost::locale::translate("light master").str();
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::lightPluginRequiresNonMaster,
       fmt::format(
@@ -188,7 +188,7 @@ SourcedMessage CreateLightMasterWithNonMasterMasterMessage(
           masterName));
 }
 
-SourcedMessage CreateInvalidLightPluginMessage(const PluginInterface& plugin) {
+SourcedMessage createInvalidLightPluginMessage(const PluginInterface& plugin) {
   auto logger = getLogger();
   if (logger) {
     logger->error(
@@ -198,7 +198,7 @@ SourcedMessage CreateInvalidLightPluginMessage(const PluginInterface& plugin) {
         plugin.GetName());
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::invalidLightPlugin,
       boost::locale::translate(
@@ -207,7 +207,7 @@ SourcedMessage CreateInvalidLightPluginMessage(const PluginInterface& plugin) {
           "will cause irreversible damage to your game saves."));
 }
 
-SourcedMessage CreateInvalidMediumPluginMessage(const PluginInterface& plugin) {
+SourcedMessage createInvalidMediumPluginMessage(const PluginInterface& plugin) {
   auto logger = getLogger();
   if (logger) {
     logger->error(
@@ -217,7 +217,7 @@ SourcedMessage CreateInvalidMediumPluginMessage(const PluginInterface& plugin) {
         plugin.GetName());
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::invalidMediumPlugin,
       boost::locale::translate(
@@ -226,7 +226,7 @@ SourcedMessage CreateInvalidMediumPluginMessage(const PluginInterface& plugin) {
           "will cause irreversible damage to your game saves."));
 }
 
-SourcedMessage CreateInvalidUpdatePluginMessage(const PluginInterface& plugin) {
+SourcedMessage createInvalidUpdatePluginMessage(const PluginInterface& plugin) {
   auto logger = getLogger();
   if (logger) {
     logger->error(
@@ -235,7 +235,7 @@ SourcedMessage CreateInvalidUpdatePluginMessage(const PluginInterface& plugin) {
         plugin.GetName());
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::invalidUpdatePlugin,
       boost::locale::translate(
@@ -243,7 +243,7 @@ SourcedMessage CreateInvalidUpdatePluginMessage(const PluginInterface& plugin) {
           "this plugin may cause irreversible damage to your game saves."));
 }
 
-SourcedMessage CreateUnsupportedLightPluginMessage(
+SourcedMessage createUnsupportedLightPluginMessage(
     const std::string& pluginName,
     GameId gameId) {
   auto logger = getLogger();
@@ -272,7 +272,7 @@ SourcedMessage CreateUnsupportedLightPluginMessage(
                 "ensure you have correctly installed {2} and all its "
                 "requirements.")
                 .str(),
-            loot::EscapeMarkdownASCIIPunctuation(pluginName),
+            loot::escapeMarkdownASCIIPunctuation(pluginName),
             pluginType.str(),
             "[Skyrim VR ESL "
             "Support](https://www.nexusmods.com/skyrimspecialedition/"
@@ -280,7 +280,7 @@ SourcedMessage CreateUnsupportedLightPluginMessage(
   }
 
   if (boost::iends_with(pluginName, ".esl")) {
-    return CreatePlainTextSourcedMessage(
+    return createPlainTextSourcedMessage(
         MessageType::error,
         MessageSource::lightPluginNotSupported,
         fmt::format(boost::locale::translate("\"{0}\" is a .esl plugin, but "
@@ -290,7 +290,7 @@ SourcedMessage CreateUnsupportedLightPluginMessage(
                     pluginName));
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::lightPluginNotSupported,
       fmt::format(
@@ -304,7 +304,7 @@ SourcedMessage CreateUnsupportedLightPluginMessage(
           pluginType.str()));
 }
 
-SourcedMessage CreateBlueprintMasterMessage(const PluginInterface& plugin,
+SourcedMessage createBlueprintMasterMessage(const PluginInterface& plugin,
                                             std::string_view masterName) {
   auto logger = getLogger();
   if (logger) {
@@ -315,7 +315,7 @@ SourcedMessage CreateBlueprintMasterMessage(const PluginInterface& plugin,
         masterName);
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::blueprintMasterMaster,
       fmt::format(boost::locale::translate(
@@ -327,7 +327,7 @@ SourcedMessage CreateBlueprintMasterMessage(const PluginInterface& plugin,
                   masterName));
 }
 
-SourcedMessage CreateInvalidHeaderVersionMessage(const PluginInterface& plugin,
+SourcedMessage createInvalidHeaderVersionMessage(const PluginInterface& plugin,
                                                  float minimumVersion) {
   auto logger = getLogger();
   if (logger) {
@@ -339,7 +339,7 @@ SourcedMessage CreateInvalidHeaderVersionMessage(const PluginInterface& plugin,
         minimumVersion);
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::invalidHeaderVersion,
       fmt::format(
@@ -353,20 +353,20 @@ SourcedMessage CreateInvalidHeaderVersionMessage(const PluginInterface& plugin,
           minimumVersion));
 }
 
-SourcedMessage CreateSelfMasterMessage(const PluginInterface& plugin) {
+SourcedMessage createSelfMasterMessage(const PluginInterface& plugin) {
   auto logger = getLogger();
   if (logger) {
     logger->error("\"{}\" has itself as a master.", plugin.GetName());
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::selfMaster,
       boost::locale::translate("This plugin has itself as a master."));
 }
 
-SourcedMessage CreateUndefinedGroupMessage(std::string_view groupName) {
-  return CreatePlainTextSourcedMessage(
+SourcedMessage createUndefinedGroupMessage(std::string_view groupName) {
+  return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::missingGroup,
       fmt::format(boost::locale::translate("This plugin belongs to the group "
@@ -375,7 +375,7 @@ SourcedMessage CreateUndefinedGroupMessage(std::string_view groupName) {
                   groupName));
 }
 
-SourcedMessage CreateOverriddenBashTagsMessage(
+SourcedMessage createOverriddenBashTagsMessage(
     const PluginInterface& plugin,
     const std::vector<std::string>& conflictingTags) {
   const auto commaSeparatedTags = boost::join(conflictingTags, ", ");
@@ -389,7 +389,7 @@ SourcedMessage CreateOverriddenBashTagsMessage(
         commaSeparatedTags);
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::say,
       MessageSource::bashTagsOverride,
       fmt::format(
@@ -400,7 +400,7 @@ SourcedMessage CreateOverriddenBashTagsMessage(
           commaSeparatedTags));
 }
 
-void ValidateFiles(
+void validateFiles(
     std::vector<SourcedMessage>& messages,
     const std::vector<loot::File>& files,
     const PluginInterface& plugin,
@@ -426,7 +426,7 @@ void ValidateFiles(
                 .GetText());
       }
 
-      const auto displayName = GetDisplayName(file);
+      const auto displayName = getDisplayName(file);
 
       if (displayNamesWithMessages.count(displayName) > 0) {
         continue;
@@ -439,19 +439,19 @@ void ValidateFiles(
   }
 }
 
-bool ContainsFilterTag(const std::vector<loot::Tag>& tags) {
+bool containsFilterTag(const std::vector<loot::Tag>& tags) {
   return std::any_of(tags.cbegin(), tags.cend(), [](const loot::Tag& tag) {
     return tag.GetName() == "Filter";
   });
 }
 
-bool ContainsFilterTag(const std::vector<std::string>& tags) {
+bool containsFilterTag(const std::vector<std::string>& tags) {
   return std::any_of(tags.cbegin(), tags.cend(), [](const std::string& tag) {
     return tag == "Filter";
   });
 }
 
-void ValidateMasters(
+void validateMasters(
     std::vector<SourcedMessage>& messages,
     const loot::gui::Game& game,
     const PluginInterface& plugin,
@@ -459,22 +459,22 @@ void ValidateMasters(
     std::function<bool(const std::string& filename)> fileExists) {
   const auto logger = getLogger();
 
-  const auto expectActiveMasters = game.IsPluginActive(plugin.GetName()) &&
-                                   !(ContainsFilterTag(plugin.GetBashTags()) ||
-                                     ContainsFilterTag(metadata.GetTags()));
+  const auto expectActiveMasters = game.isPluginActive(plugin.GetName()) &&
+                                   !(containsFilterTag(plugin.GetBashTags()) ||
+                                     containsFilterTag(metadata.GetTags()));
 
   // Morrowind and Starfield require all plugins' masters to be present for
   // sorting to work, even if the plugins are inactive.
   const auto expectInstalledMasters =
-      game.GetSettings().Id() == GameId::tes3 ||
-      game.GetSettings().Id() == GameId::openmw ||
-      game.GetSettings().Id() == GameId::starfield;
+      game.getSettings().id() == GameId::tes3 ||
+      game.getSettings().id() == GameId::openmw ||
+      game.getSettings().id() == GameId::starfield;
 
   const auto isLightMaster =
       plugin.IsLightPlugin() && !boost::iends_with(plugin.GetName(), ".esp");
 
   const auto checkForNonBlueprintMasters =
-      game.GetSettings().Id() == GameId::starfield &&
+      game.getSettings().id() == GameId::starfield &&
       !plugin.IsBlueprintPlugin();
 
   for (const auto& masterName : plugin.GetMasters()) {
@@ -484,20 +484,20 @@ void ValidateMasters(
           expectActiveMasters ? MessageType::error : MessageType::warn;
 
       messages.push_back(
-          CreateMissingMasterMessage(plugin, masterName, messageType));
-    } else if (expectActiveMasters && !game.IsPluginActive(masterName)) {
-      messages.push_back(CreateInactiveMasterMessage(plugin, masterName));
+          createMissingMasterMessage(plugin, masterName, messageType));
+    } else if (expectActiveMasters && !game.isPluginActive(masterName)) {
+      messages.push_back(createInactiveMasterMessage(plugin, masterName));
     }
 
     if (Filename(plugin.GetName()) == Filename(masterName)) {
-      messages.push_back(CreateSelfMasterMessage(plugin));
+      messages.push_back(createSelfMasterMessage(plugin));
     }
 
     if (!isLightMaster && !checkForNonBlueprintMasters) {
       continue;
     }
 
-    auto master = game.GetPlugin(masterName);
+    auto master = game.getPlugin(masterName);
     if (!master) {
       if (logger) {
         logger->debug(
@@ -510,18 +510,18 @@ void ValidateMasters(
     }
 
     if (isLightMaster && (!master->IsLightPlugin() && !master->IsMaster())) {
-      messages.push_back(CreateLightMasterWithNonMasterMasterMessage(
-          plugin, masterName, game.GetSettings().Id()));
+      messages.push_back(createLightMasterWithNonMasterMasterMessage(
+          plugin, masterName, game.getSettings().id()));
     }
 
     if (checkForNonBlueprintMasters &&
         (master->IsBlueprintPlugin() && master->IsMaster())) {
-      messages.push_back(CreateBlueprintMasterMessage(plugin, masterName));
+      messages.push_back(createBlueprintMasterMessage(plugin, masterName));
     }
   }
 }
 
-size_t GetSafeMaxActiveFullPlugins(GameId gameId, bool isMWSEInstalled) {
+size_t getSafeMaxActiveFullPlugins(GameId gameId, bool isMWSEInstalled) {
   static constexpr size_t OPENMW_SAFE_MAX_ACTIVE_FULL_PLUGINS = 2147483646;
 
   if (gameId == GameId::openmw) {
@@ -543,7 +543,7 @@ size_t GetSafeMaxActiveFullPlugins(GameId gameId, bool isMWSEInstalled) {
   return SAFE_MAX_ACTIVE_FULL_PLUGINS;
 }
 
-SourcedMessage CreateActiveFullPluginsWarning(const loot::Counters& counters,
+SourcedMessage createActiveFullPluginsWarning(const loot::Counters& counters,
                                               size_t safeMaxActiveFullPlugins) {
   const auto logger = getLogger();
   if (logger) {
@@ -554,7 +554,7 @@ SourcedMessage CreateActiveFullPluginsWarning(const loot::Counters& counters,
   }
 
   if (counters.activeLightPlugins > 0 || counters.activeMediumPlugins > 0) {
-    return CreatePlainTextSourcedMessage(
+    return createPlainTextSourcedMessage(
         MessageType::warn,
         MessageSource::activePluginsCountCheck,
         fmt::format(
@@ -564,7 +564,7 @@ SourcedMessage CreateActiveFullPluginsWarning(const loot::Counters& counters,
             counters.activeFullPlugins,
             safeMaxActiveFullPlugins));
   }
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::activePluginsCountCheck,
       fmt::format(
@@ -575,7 +575,7 @@ SourcedMessage CreateActiveFullPluginsWarning(const loot::Counters& counters,
           safeMaxActiveFullPlugins));
 }
 
-SourcedMessage CreateMWSEActiveFullPluginsWarning(
+SourcedMessage createMWSEActiveFullPluginsWarning(
     size_t activeFullPluginCount) {
   const auto logger = getLogger();
   if (logger) {
@@ -587,7 +587,7 @@ SourcedMessage CreateMWSEActiveFullPluginsWarning(
         SAFE_MAX_ACTIVE_FULL_PLUGINS);
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::activePluginsCountCheck,
       boost::locale::translate(
@@ -595,7 +595,7 @@ SourcedMessage CreateMWSEActiveFullPluginsWarning(
           "cause severe damage to your game."));
 }
 
-SourcedMessage CreateActiveLightPluginsWarning(
+SourcedMessage createActiveLightPluginsWarning(
     size_t activeLightPluginCount,
     std::string_view lightPluginType) {
   const auto logger = getLogger();
@@ -606,7 +606,7 @@ SourcedMessage CreateActiveLightPluginsWarning(
         SAFE_MAX_ACTIVE_LIGHT_PLUGINS);
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::activePluginsCountCheck,
       fmt::format(boost::locale::translate("You have {0} active {1} but the "
@@ -617,7 +617,7 @@ SourcedMessage CreateActiveLightPluginsWarning(
                   SAFE_MAX_ACTIVE_LIGHT_PLUGINS));
 }
 
-SourcedMessage CreateLightPluginSlotWarning(const loot::Counters& counters,
+SourcedMessage createLightPluginSlotWarning(const loot::Counters& counters,
                                             std::string_view lightPluginType) {
   const auto logger = getLogger();
   if (logger) {
@@ -627,7 +627,7 @@ SourcedMessage CreateLightPluginSlotWarning(const loot::Counters& counters,
         counters.activeFullPlugins);
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::activePluginsCountCheck,
       fmt::format(boost::locale::translate(
@@ -639,7 +639,7 @@ SourcedMessage CreateLightPluginSlotWarning(const loot::Counters& counters,
                   lightPluginType));
 }
 
-SourcedMessage CreateActiveMediumPluginsWarning(
+SourcedMessage createActiveMediumPluginsWarning(
     size_t activeMediumPluginCount) {
   const auto logger = getLogger();
   if (logger) {
@@ -649,7 +649,7 @@ SourcedMessage CreateActiveMediumPluginsWarning(
         SAFE_MAX_ACTIVE_MEDIUM_PLUGINS);
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::activePluginsCountCheck,
       fmt::format(
@@ -660,7 +660,7 @@ SourcedMessage CreateActiveMediumPluginsWarning(
           SAFE_MAX_ACTIVE_MEDIUM_PLUGINS));
 }
 
-SourcedMessage CreateMediumPluginSlotWarning(size_t activeFullPluginCount) {
+SourcedMessage createMediumPluginSlotWarning(size_t activeFullPluginCount) {
   const auto logger = getLogger();
   if (logger) {
     logger->warn(
@@ -669,7 +669,7 @@ SourcedMessage CreateMediumPluginSlotWarning(size_t activeFullPluginCount) {
         activeFullPluginCount);
   }
 
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::activePluginsCountCheck,
       boost::locale::translate(
@@ -678,8 +678,8 @@ SourcedMessage CreateMediumPluginSlotWarning(size_t activeFullPluginCount) {
           "medium plugins to avoid potential issues."));
 }
 
-SourcedMessage CreateCaseSensitiveGamePathWarning(std::string_view gameName) {
-  return CreatePlainTextSourcedMessage(
+SourcedMessage createCaseSensitiveGamePathWarning(std::string_view gameName) {
+  return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::caseSensitivePathCheck,
       fmt::format(
@@ -694,9 +694,9 @@ SourcedMessage CreateCaseSensitiveGamePathWarning(std::string_view gameName) {
           gameName));
 }
 
-SourcedMessage CreateCaseSensitiveGameLocalPathWarning(
+SourcedMessage createCaseSensitiveGameLocalPathWarning(
     std::string_view gameName) {
-  return CreatePlainTextSourcedMessage(
+  return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::caseSensitivePathCheck,
       fmt::format(
@@ -711,7 +711,7 @@ SourcedMessage CreateCaseSensitiveGameLocalPathWarning(
           gameName));
 }
 
-bool IsPathCaseSensitive(const std::filesystem::path& path) {
+bool isPathCaseSensitive(const std::filesystem::path& path) {
   const auto lowercased =
       path.parent_path() / std::filesystem::u8path(boost::locale::to_lower(
                                path.filename().u8string()));
@@ -727,7 +727,7 @@ bool IsPathCaseSensitive(const std::filesystem::path& path) {
 }
 
 namespace loot {
-std::vector<SourcedMessage> CheckInstallValidity(const gui::Game& game,
+std::vector<SourcedMessage> checkInstallValidity(const gui::Game& game,
                                                  const PluginInterface& plugin,
                                                  const PluginMetadata& metadata,
                                                  const std::string& language) {
@@ -740,20 +740,20 @@ std::vector<SourcedMessage> CheckInstallValidity(const gui::Game& game,
   }
   std::vector<SourcedMessage> messages;
 
-  if (game.IsPluginActive(plugin.GetName())) {
-    ValidateFiles(
+  if (game.isPluginActive(plugin.GetName())) {
+    validateFiles(
         messages,
         metadata.GetRequirements(),
         plugin,
         language,
         "\"{}\" requires \"{}\", but it is missing. {}",
         [&game](auto file) {
-          return !(game.FileExists(std::string(file.GetName())) &&
-                   game.EvaluateConstraint(file));
+          return !(game.fileExists(std::string(file.GetName())) &&
+                   game.evaluateConstraint(file));
         },
-        CreateMissingRequirementMessage);
+        createMissingRequirementMessage);
 
-    ValidateFiles(
+    validateFiles(
         messages,
         metadata.GetIncompatibilities(),
         plugin,
@@ -761,84 +761,84 @@ std::vector<SourcedMessage> CheckInstallValidity(const gui::Game& game,
         "\"{}\" is incompatible with \"{}\", but both are present. {}",
         [&game](auto file) {
           const auto filename = std::string(file.GetName());
-          return game.FileExists(filename) &&
-                 (!HasPluginFileExtension(filename) ||
-                  game.IsPluginActive(filename));
+          return game.fileExists(filename) &&
+                 (!hasPluginFileExtension(filename) ||
+                  game.isPluginActive(filename));
         },
-        CreatePresentIncompatibilityMessage);
+        createPresentIncompatibilityMessage);
   }
 
-  ValidateMasters(
+  validateMasters(
       messages, game, plugin, metadata, [&game](const auto filename) {
-        return game.FileExists(filename);
+        return game.fileExists(filename);
       });
 
   if (plugin.IsLightPlugin() && !plugin.IsValidAsLightPlugin()) {
-    messages.push_back(CreateInvalidLightPluginMessage(plugin));
+    messages.push_back(createInvalidLightPluginMessage(plugin));
   }
 
   if (plugin.IsMediumPlugin() && !plugin.IsValidAsMediumPlugin()) {
-    messages.push_back(CreateInvalidMediumPluginMessage(plugin));
+    messages.push_back(createInvalidMediumPluginMessage(plugin));
   }
 
   if (plugin.IsUpdatePlugin() && !plugin.IsValidAsUpdatePlugin()) {
-    messages.push_back(CreateInvalidUpdatePluginMessage(plugin));
+    messages.push_back(createInvalidUpdatePluginMessage(plugin));
   }
 
-  if (!game.SupportsLightPlugins() && plugin.IsLightPlugin()) {
-    messages.push_back(CreateUnsupportedLightPluginMessage(
-        plugin.GetName(), game.GetSettings().Id()));
+  if (!game.supportsLightPlugins() && plugin.IsLightPlugin()) {
+    messages.push_back(createUnsupportedLightPluginMessage(
+        plugin.GetName(), game.getSettings().id()));
   }
 
   if (plugin.GetHeaderVersion().has_value() &&
       plugin.GetHeaderVersion().value() <
-          game.GetSettings().MinimumHeaderVersion()) {
-    messages.push_back(CreateInvalidHeaderVersionMessage(
-        plugin, game.GetSettings().MinimumHeaderVersion()));
+          game.getSettings().minimumHeaderVersion()) {
+    messages.push_back(createInvalidHeaderVersionMessage(
+        plugin, game.getSettings().minimumHeaderVersion()));
   }
 
   const auto group = metadata.GetGroup();
-  if (group.has_value() && !IsGroupDefined(group.value(), game.GetGroups())) {
-    messages.push_back(CreateUndefinedGroupMessage(group.value()));
+  if (group.has_value() && !isGroupDefined(group.value(), game.getGroups())) {
+    messages.push_back(createUndefinedGroupMessage(group.value()));
   }
 
   const auto lootTags = metadata.GetTags();
   if (!lootTags.empty()) {
     const auto bashTagFileTags =
-        ReadBashTagsFile(game.GetSettings().DataPath(), metadata.GetName());
-    const auto conflictingTags = GetTagConflicts(lootTags, bashTagFileTags);
+        readBashTagsFile(game.getSettings().dataPath(), metadata.GetName());
+    const auto conflictingTags = getTagConflicts(lootTags, bashTagFileTags);
 
     if (!conflictingTags.empty()) {
       messages.push_back(
-          CreateOverriddenBashTagsMessage(plugin, conflictingTags));
+          createOverriddenBashTagsMessage(plugin, conflictingTags));
     }
   }
 
   // Also generate dirty messages.
   for (const auto& element : metadata.GetDirtyInfo()) {
-    messages.push_back(ToSourcedMessage(element, language));
+    messages.push_back(toSourcedMessage(element, language));
   }
 
   return messages;
 }
 
-void ValidateActivePluginCounts(std::vector<SourcedMessage>& output,
+void validateActivePluginCounts(std::vector<SourcedMessage>& output,
                                 GameId gameId,
                                 const Counters& counters,
                                 bool isMWSEInstalled) {
   const auto safeMaxActiveFullPlugins =
-      GetSafeMaxActiveFullPlugins(gameId, isMWSEInstalled);
+      getSafeMaxActiveFullPlugins(gameId, isMWSEInstalled);
 
   if (counters.activeFullPlugins > safeMaxActiveFullPlugins) {
     output.push_back(
-        CreateActiveFullPluginsWarning(counters, safeMaxActiveFullPlugins));
+        createActiveFullPluginsWarning(counters, safeMaxActiveFullPlugins));
   }
 
   if (isMWSEInstalled &&
       counters.activeFullPlugins > SAFE_MAX_ACTIVE_FULL_PLUGINS &&
       counters.activeFullPlugins <= MWSE_SAFE_MAX_ACTIVE_FULL_PLUGINS) {
     output.push_back(
-        CreateMWSEActiveFullPluginsWarning(counters.activeFullPlugins));
+        createMWSEActiveFullPluginsWarning(counters.activeFullPlugins));
   }
 
   const auto lightPluginType =
@@ -855,33 +855,33 @@ void ValidateActivePluginCounts(std::vector<SourcedMessage>& output,
                 .str();
 
   if (counters.activeLightPlugins > SAFE_MAX_ACTIVE_LIGHT_PLUGINS) {
-    output.push_back(CreateActiveLightPluginsWarning(
+    output.push_back(createActiveLightPluginsWarning(
         counters.activeLightPlugins, lightPluginType));
   }
 
   if (counters.activeFullPlugins >= SAFE_MAX_ACTIVE_FULL_PLUGINS &&
       counters.activeLightPlugins > 0) {
-    output.push_back(CreateLightPluginSlotWarning(counters, lightPluginType));
+    output.push_back(createLightPluginSlotWarning(counters, lightPluginType));
   }
 
   if (counters.activeMediumPlugins > SAFE_MAX_ACTIVE_MEDIUM_PLUGINS) {
     output.push_back(
-        CreateActiveMediumPluginsWarning(counters.activeMediumPlugins));
+        createActiveMediumPluginsWarning(counters.activeMediumPlugins));
   }
 
   if (counters.activeFullPlugins >= (SAFE_MAX_ACTIVE_FULL_PLUGINS - 1) &&
       counters.activeMediumPlugins > 0) {
-    output.push_back(CreateMediumPluginSlotWarning(counters.activeFullPlugins));
+    output.push_back(createMediumPluginSlotWarning(counters.activeFullPlugins));
   }
 }
 
-void ValidateGamePaths(std::vector<SourcedMessage>& output,
+void validateGamePaths(std::vector<SourcedMessage>& output,
                        std::string_view gameName,
                        const std::filesystem::path& dataPath,
                        const std::filesystem::path& gameLocalPath,
                        bool warnOnCaseSensitivePaths) {
-  if (warnOnCaseSensitivePaths && IsPathCaseSensitive(dataPath)) {
-    output.push_back(CreateCaseSensitiveGamePathWarning(gameName));
+  if (warnOnCaseSensitivePaths && isPathCaseSensitive(dataPath)) {
+    output.push_back(createCaseSensitiveGamePathWarning(gameName));
   }
 
   const auto logger = getLogger();
@@ -889,7 +889,7 @@ void ValidateGamePaths(std::vector<SourcedMessage>& output,
     if (!std::filesystem::exists(gameLocalPath)) {
       // The directory does not exist. It might be because the parent directory
       // is case-sensitive and LOOT's configuration uses the wrong case, or it
-      // might just be because the directory has not yet been created. Create
+      // might just be because the directory has not yet been created. create
       // the directory as doing so is usually harmless either way, and means we
       // can then check its case-sensitivity.
       if (logger) {
@@ -900,8 +900,8 @@ void ValidateGamePaths(std::vector<SourcedMessage>& output,
       std::filesystem::create_directories(gameLocalPath);
     }
 
-    if (warnOnCaseSensitivePaths && IsPathCaseSensitive(gameLocalPath)) {
-      output.push_back(CreateCaseSensitiveGameLocalPathWarning(gameName));
+    if (warnOnCaseSensitivePaths && isPathCaseSensitive(gameLocalPath)) {
+      output.push_back(createCaseSensitiveGameLocalPathWarning(gameName));
     }
   } else if (logger) {
     // This is probably fine because the path shouldn't be empty on Linux and on

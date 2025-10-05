@@ -65,11 +65,11 @@ using loot::getLogger;
 using loot::InstallSource;
 using loot::heroic::HeroicGame;
 
-std::map<std::string, GameId> GetGogGameIdMap() {
+std::map<std::string, GameId> getGogGameIdMap() {
   std::map<std::string, GameId> map;
 
   for (const auto& gameId : loot::ALL_GAME_IDS) {
-    for (const auto& gogGameId : loot::gog::GetGogGameIds(gameId)) {
+    for (const auto& gogGameId : loot::gog::getGogGameIds(gameId)) {
       map.emplace(gogGameId, gameId);
     }
   }
@@ -77,11 +77,11 @@ std::map<std::string, GameId> GetGogGameIdMap() {
   return map;
 }
 
-std::map<std::string, GameId> GetEgsGameIdMap() {
+std::map<std::string, GameId> getEgsGameIdMap() {
   std::map<std::string, GameId> map;
 
   for (const auto& gameId : loot::ALL_GAME_IDS) {
-    const auto appName = loot::epic::GetEgsAppName(gameId);
+    const auto appName = loot::epic::getEgsAppName(gameId);
     if (appName.has_value()) {
       map.emplace(appName.value(), gameId);
     }
@@ -90,11 +90,11 @@ std::map<std::string, GameId> GetEgsGameIdMap() {
   return map;
 }
 
-static const std::map<std::string, GameId> GOG_GAME_ID_MAP = GetGogGameIdMap();
+static const std::map<std::string, GameId> GOG_GAME_ID_MAP = getGogGameIdMap();
 
-static const std::map<std::string, GameId> EGS_GAME_ID_MAP = GetEgsGameIdMap();
+static const std::map<std::string, GameId> EGS_GAME_ID_MAP = getEgsGameIdMap();
 
-std::filesystem::path GetUserConfigPath() {
+std::filesystem::path getUserConfigPath() {
 #ifdef _WIN32
   PWSTR path;
 
@@ -120,7 +120,7 @@ std::filesystem::path GetUserConfigPath() {
 #endif
 }
 
-QJsonObject ReadJsonObjectFromFile(const std::filesystem::path& path) {
+QJsonObject readJsonObjectFromFile(const std::filesystem::path& path) {
   if (!std::filesystem::exists(path)) {
     // No point trying to read it, this silences a QIODevice::read error that Qt
     // prints to stdout.
@@ -143,7 +143,7 @@ QJsonObject ReadJsonObjectFromFile(const std::filesystem::path& path) {
   return QJsonDocument::fromJson(content).object();
 }
 
-std::optional<HeroicGame> GetGameMetdata(
+std::optional<HeroicGame> getGameMetdata(
     const QJsonValueConstRef& ref,
     const char* appNameKey,
     const std::map<std::string, GameId>& gameIdMap) {
@@ -170,23 +170,23 @@ std::optional<HeroicGame> GetGameMetdata(
   return game;
 }
 
-std::optional<GameInstall> FindGogGameInstall(
+std::optional<GameInstall> findGogGameInstall(
 #ifdef _WIN32
     [[maybe_unused]]
 #endif
     const std::filesystem::path& heroicConfigPath,
     const HeroicGame& game) {
-  if (!IsValidGamePath(
-          game.gameId, GetMasterFilename(game.gameId), game.installPath)) {
+  if (!isValidGamePath(
+          game.gameId, getMasterFilename(game.gameId), game.installPath)) {
     return std::nullopt;
   }
 
   std::filesystem::path localPath;
 #ifndef _WIN32
   // The game's config file does not hold the game's local path on Windows.
-  const auto folderName = loot::gog::GetAppDataFolderName(game.gameId);
+  const auto folderName = loot::gog::getAppDataFolderName(game.gameId);
   if (folderName.has_value()) {
-    localPath = loot::heroic::GetGameLocalPath(
+    localPath = loot::heroic::getGameLocalPath(
         heroicConfigPath, game.appName, folderName.value());
   }
 #endif
@@ -195,14 +195,14 @@ std::optional<GameInstall> FindGogGameInstall(
       game.gameId, InstallSource::gog, game.installPath, localPath};
 }
 
-std::optional<GameInstall> FindEgsGameInstall(
+std::optional<GameInstall> findEgsGameInstall(
 #ifdef _WIN32
     [[maybe_unused]]
 #endif
     const std::filesystem::path& heroicConfigPath,
     const std::vector<std::string>& preferredUILanguages,
     const HeroicGame& game) {
-  const auto localisedInstallPath = loot::epic::FindGameInstallPath(
+  const auto localisedInstallPath = loot::epic::findGameInstallPath(
       game.gameId, game.installPath, preferredUILanguages);
 
   if (!localisedInstallPath.has_value()) {
@@ -212,8 +212,8 @@ std::optional<GameInstall> FindEgsGameInstall(
 #ifdef _WIN32
   std::filesystem::path localPath;
 #else
-  const auto folderName = loot::epic::GetAppDataFolderName(game.gameId);
-  const auto localPath = loot::heroic::GetGameLocalPath(
+  const auto folderName = loot::epic::getAppDataFolderName(game.gameId);
+  const auto localPath = loot::heroic::getGameLocalPath(
       heroicConfigPath, game.appName, folderName);
 #endif
 
@@ -225,28 +225,28 @@ std::optional<GameInstall> FindEgsGameInstall(
 }
 
 namespace loot::heroic {
-std::vector<std::filesystem::path> GetHeroicGamesLauncherConfigPaths() {
+std::vector<std::filesystem::path> getHeroicGamesLauncherConfigPaths() {
 #ifdef _WIN32
-  return {GetUserConfigPath() / "heroic"};
+  return {getUserConfigPath() / "heroic"};
 #else
-  return {GetUserConfigPath() / "heroic",
+  return {getUserConfigPath() / "heroic",
           loot::getUserProfilePath() / ".var" / "app" /
               "com.heroicgameslauncher.hgl" / "config" / "heroic"};
 #endif
 }
 
-std::vector<HeroicGame> GetInstalledGogGames(
+std::vector<HeroicGame> getInstalledGogGames(
     const std::filesystem::path& heroicConfigPath) {
   const auto installedGamesPath =
       heroicConfigPath / "gog_store" / "installed.json";
 
-  const auto json = ReadJsonObjectFromFile(installedGamesPath);
+  const auto json = readJsonObjectFromFile(installedGamesPath);
 
   std::vector<HeroicGame> games;
 
   const auto installedGames = json.value("installed").toArray();
   for (const auto& installedGame : installedGames) {
-    const auto game = GetGameMetdata(installedGame, "appName", GOG_GAME_ID_MAP);
+    const auto game = getGameMetdata(installedGame, "appName", GOG_GAME_ID_MAP);
     if (game.has_value()) {
       games.push_back(game.value());
     }
@@ -255,18 +255,18 @@ std::vector<HeroicGame> GetInstalledGogGames(
   return games;
 }
 
-std::vector<HeroicGame> GetInstalledEgsGames(
+std::vector<HeroicGame> getInstalledEgsGames(
     const std::filesystem::path& heroicConfigPath) {
   const auto installedGamesPath =
       heroicConfigPath / "legendaryConfig" / "legendary" / "installed.json";
 
-  const auto json = ReadJsonObjectFromFile(installedGamesPath);
+  const auto json = readJsonObjectFromFile(installedGamesPath);
 
   std::vector<HeroicGame> games;
 
   for (const auto& installedGame : json) {
     const auto game =
-        GetGameMetdata(installedGame, "app_name", EGS_GAME_ID_MAP);
+        getGameMetdata(installedGame, "app_name", EGS_GAME_ID_MAP);
     if (game.has_value()) {
       games.push_back(game.value());
     }
@@ -275,7 +275,7 @@ std::vector<HeroicGame> GetInstalledEgsGames(
   return games;
 }
 
-std::filesystem::path GetGameLocalPath(
+std::filesystem::path getGameLocalPath(
     const std::filesystem::path& heroicConfigPath,
     const std::string& appName,
     const std::string& gameFolderName) {
@@ -284,7 +284,7 @@ std::filesystem::path GetGameLocalPath(
   const auto gameConfigPath =
       heroicConfigPath / "GamesConfig" / (appName + ".json");
 
-  const auto json = ReadJsonObjectFromFile(gameConfigPath);
+  const auto json = readJsonObjectFromFile(gameConfigPath);
 
   const auto config = json.value(QString::fromStdString(appName));
 
@@ -314,7 +314,7 @@ std::filesystem::path GetGameLocalPath(
          std::filesystem::u8path(gameFolderName);
 }
 
-std::vector<GameInstall> FindGameInstalls(
+std::vector<GameInstall> findGameInstalls(
     const std::filesystem::path& heroicConfigPath,
     const std::vector<std::string>& preferredUILanguages) {
   const auto logger = getLogger();
@@ -322,9 +322,9 @@ std::vector<GameInstall> FindGameInstalls(
   std::vector<GameInstall> installs;
 
   try {
-    for (const auto& game : GetInstalledGogGames(heroicConfigPath)) {
+    for (const auto& game : getInstalledGogGames(heroicConfigPath)) {
       try {
-        const auto install = FindGogGameInstall(heroicConfigPath, game);
+        const auto install = findGogGameInstall(heroicConfigPath, game);
         if (install.has_value()) {
           installs.push_back(install.value());
         }
@@ -350,10 +350,10 @@ std::vector<GameInstall> FindGameInstalls(
   }
 
   try {
-    for (const auto& game : GetInstalledEgsGames(heroicConfigPath)) {
+    for (const auto& game : getInstalledEgsGames(heroicConfigPath)) {
       try {
         const auto install =
-            FindEgsGameInstall(heroicConfigPath, preferredUILanguages, game);
+            findEgsGameInstall(heroicConfigPath, preferredUILanguages, game);
         if (install.has_value()) {
           installs.push_back(install.value());
         }

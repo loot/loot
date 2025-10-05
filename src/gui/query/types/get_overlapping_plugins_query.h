@@ -46,8 +46,8 @@ public:
     // Checking for FormID overlap will only work if the plugins have been
     // loaded, so check if the plugins have been fully loaded, and if not load
     // all plugins.
-    if (!game_.ArePluginsFullyLoaded())
-      game_.LoadAllInstalledPlugins(false);
+    if (!game_.arePluginsFullyLoaded())
+      game_.loadAllInstalledPlugins(false);
 
     return getResult();
   }
@@ -56,7 +56,7 @@ private:
   std::vector<std::pair<PluginItem, bool>> getResult() {
     std::vector<std::pair<PluginItem, bool>> result;
 
-    auto plugin = game_.GetPlugin(pluginName_);
+    auto plugin = game_.getPlugin(pluginName_);
     if (!plugin) {
       throw std::runtime_error("The plugin \"" + pluginName_ +
                                "\" is not loaded.");
@@ -67,7 +67,7 @@ private:
         mapper = [&](std::shared_ptr<const PluginInterface> otherPlugin,
                      std::optional<short> loadOrderIndex,
                      bool isActive) {
-          const auto pluginItem = PluginItem(game_.GetSettings().Id(),
+          const auto pluginItem = PluginItem(game_.getSettings().id(),
                                              *otherPlugin,
                                              game_,
                                              loadOrderIndex,
@@ -78,7 +78,7 @@ private:
           return std::make_pair(pluginItem, overlap);
         };
 
-    return MapFromLoadOrderData(game_, game_.GetLoadOrder(), mapper);
+    return mapFromLoadOrderData(game_, game_.getLoadOrder(), mapper);
   }
 
   gui::Game& game_;

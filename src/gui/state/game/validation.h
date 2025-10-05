@@ -38,17 +38,17 @@ struct Counters {
   size_t activeMediumPlugins = 0;
 };
 
-std::vector<SourcedMessage> CheckInstallValidity(const gui::Game& game,
+std::vector<SourcedMessage> checkInstallValidity(const gui::Game& game,
                                                  const PluginInterface& plugin,
                                                  const PluginMetadata& metadata,
                                                  const std::string& language);
 
-void ValidateActivePluginCounts(std::vector<SourcedMessage>& output,
+void validateActivePluginCounts(std::vector<SourcedMessage>& output,
                                 GameId gameId,
                                 const Counters& counters,
                                 bool isMWSEInstalled);
 
-void ValidateGamePaths(std::vector<SourcedMessage>& output,
+void validateGamePaths(std::vector<SourcedMessage>& output,
                        std::string_view gameName,
                        const std::filesystem::path& dataPath,
                        const std::filesystem::path& gameLocalPath,

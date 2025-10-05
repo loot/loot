@@ -370,7 +370,7 @@ void showInvalidRegexTooltip(QWidget& widget, const std::string& details) {
                      &widget);
 }
 
-void CopyToClipboard(const std::string& text) {
+void copyToClipboard(const std::string& text) {
   const auto clipboard = QGuiApplication::clipboard();
   if (!clipboard) {
     const auto logger = getLogger();
@@ -384,7 +384,7 @@ void CopyToClipboard(const std::string& text) {
   clipboard->setText(QString::fromStdString(text));
 }
 
-void OpenInDefaultApplication(const std::filesystem::path& path) {
+void openInDefaultApplication(const std::filesystem::path& path) {
 #ifdef _WIN32
   const auto urlString = "file:///" + path.u8string();
 
@@ -424,7 +424,7 @@ void OpenInDefaultApplication(const std::filesystem::path& path) {
 #endif
 }
 
-std::vector<HiddenMessage> ReadOldMessages(
+std::vector<HiddenMessage> readOldMessages(
     const std::filesystem::path& filePath) {
   if (!std::filesystem::exists(filePath)) {
     return {};
@@ -455,7 +455,7 @@ std::vector<HiddenMessage> ReadOldMessages(
   return messages;
 }
 
-void WriteOldMessages(const std::filesystem::path& filePath,
+void writeOldMessages(const std::filesystem::path& filePath,
                       const std::vector<HiddenMessage>& oldMessages) {
   QFile file(QString::fromStdString(filePath.u8string()));
 

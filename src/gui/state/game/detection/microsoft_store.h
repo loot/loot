@@ -34,7 +34,7 @@
 #include "gui/state/game/game_settings.h"
 
 namespace loot::microsoft {
-std::vector<GameInstall> FindGameInstalls(
+std::vector<GameInstall> findGameInstalls(
     const GameId gameId,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages);
