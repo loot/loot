@@ -46,14 +46,14 @@ public:
 
 private:
   bool isInstalled(const GameSettings& gameSettings) const override {
-    return gameSettings.id() == GameId::tes5 ||
-           gameSettings.id() == GameId::fonv;
+    return gameSettings.getId() == GameId::tes5 ||
+           gameSettings.getId() == GameId::fonv;
   }
 
   void initialiseGameData(gui::Game& game) override {
-    auto it = initialiseCounts_.find(game.getSettings().folderName());
+    auto it = initialiseCounts_.find(game.getSettings().getFolderName());
     if (it == initialiseCounts_.end()) {
-      initialiseCounts_.emplace(game.getSettings().folderName(), 1);
+      initialiseCounts_.emplace(game.getSettings().getFolderName(), 1);
     } else {
       it->second++;
     }
@@ -87,7 +87,7 @@ TEST(
   TestGamesManager manager;
   manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  manager.setCurrentGame(TEST_GAMES_SETTINGS[1].folderName());
+  manager.setCurrentGame(TEST_GAMES_SETTINGS[1].getFolderName());
 
   std::vector<GameSettings> newGames(
       {TEST_GAMES_SETTINGS[0], TEST_GAMES_SETTINGS[2]});
@@ -101,7 +101,7 @@ TEST(
   TestGamesManager manager;
   manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  auto currentFolderName = TEST_GAMES_SETTINGS[1].folderName();
+  auto currentFolderName = TEST_GAMES_SETTINGS[1].getFolderName();
   manager.setCurrentGame(currentFolderName);
 
   manager.setInstalledGames(
@@ -110,7 +110,7 @@ TEST(
       });
 
   EXPECT_EQ(currentFolderName,
-            manager.getCurrentGame().getSettings().folderName());
+            manager.getCurrentGame().getSettings().getFolderName());
   EXPECT_EQ(1, manager.getInitialiseCount(currentFolderName));
 }
 
@@ -120,7 +120,7 @@ TEST(
   TestGamesManager manager;
   manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  auto currentFolderName = TEST_GAMES_SETTINGS[1].folderName();
+  auto currentFolderName = TEST_GAMES_SETTINGS[1].getFolderName();
   manager.setCurrentGame(currentFolderName);
 
   manager.setInstalledGames(
@@ -129,7 +129,7 @@ TEST(
       });
 
   EXPECT_EQ(currentFolderName,
-            manager.getCurrentGame().getSettings().folderName());
+            manager.getCurrentGame().getSettings().getFolderName());
   EXPECT_EQ(1, manager.getInitialiseCount(currentFolderName));
 }
 
@@ -139,7 +139,7 @@ TEST(
   TestGamesManager manager;
   manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  auto currentFolderName = TEST_GAMES_SETTINGS[1].folderName();
+  auto currentFolderName = TEST_GAMES_SETTINGS[1].getFolderName();
   manager.setCurrentGame(currentFolderName);
 
   manager.setInstalledGames(
@@ -148,7 +148,7 @@ TEST(
       });
 
   EXPECT_EQ(currentFolderName,
-            manager.getCurrentGame().getSettings().folderName());
+            manager.getCurrentGame().getSettings().getFolderName());
   EXPECT_EQ(1, manager.getInitialiseCount(currentFolderName));
 }
 
@@ -158,7 +158,7 @@ TEST(
   TestGamesManager manager;
   manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  auto currentFolderName = TEST_GAMES_SETTINGS[1].folderName();
+  auto currentFolderName = TEST_GAMES_SETTINGS[1].getFolderName();
   manager.setCurrentGame(currentFolderName);
 
   GameSettings newGameSettings = createSettings(GameId::tes5)
@@ -168,15 +168,15 @@ TEST(
   manager.setInstalledGames({newGameSettings});
 
   EXPECT_EQ(currentFolderName,
-            manager.getCurrentGame().getSettings().folderName());
+            manager.getCurrentGame().getSettings().getFolderName());
   EXPECT_EQ(0, manager.getInitialiseCount(currentFolderName));
 
-  EXPECT_EQ(newGameSettings.name(),
-            manager.getCurrentGame().getSettings().name());
-  EXPECT_EQ(newGameSettings.minimumHeaderVersion(),
-            manager.getCurrentGame().getSettings().minimumHeaderVersion());
-  EXPECT_EQ(newGameSettings.masterlistSource(),
-            manager.getCurrentGame().getSettings().masterlistSource());
+  EXPECT_EQ(newGameSettings.getName(),
+            manager.getCurrentGame().getSettings().getName());
+  EXPECT_EQ(newGameSettings.getMinimumHeaderVersion(),
+            manager.getCurrentGame().getSettings().getMinimumHeaderVersion());
+  EXPECT_EQ(newGameSettings.getMasterlistSource(),
+            manager.getCurrentGame().getSettings().getMasterlistSource());
 }
 
 TEST(GamesManager, getCurrentGameShouldThrowIfNoGamesAreInstalled) {
@@ -201,19 +201,19 @@ TEST(GamesManager, setCurrentGameShouldUpdateStoredReference) {
   TestGamesManager manager;
   manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  manager.setCurrentGame(TEST_GAMES_SETTINGS[1].folderName());
+  manager.setCurrentGame(TEST_GAMES_SETTINGS[1].getFolderName());
 
-  EXPECT_EQ(TEST_GAMES_SETTINGS[1].folderName(),
-            manager.getCurrentGame().getSettings().folderName());
+  EXPECT_EQ(TEST_GAMES_SETTINGS[1].getFolderName(),
+            manager.getCurrentGame().getSettings().getFolderName());
 }
 
 TEST(GamesManager, setCurrentGameShouldNotInitialiseGameData) {
   TestGamesManager manager;
   manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  manager.setCurrentGame(TEST_GAMES_SETTINGS[1].folderName());
+  manager.setCurrentGame(TEST_GAMES_SETTINGS[1].getFolderName());
 
-  EXPECT_EQ(0, manager.getInitialiseCount(TEST_GAMES_SETTINGS[1].folderName()));
+  EXPECT_EQ(0, manager.getInitialiseCount(TEST_GAMES_SETTINGS[1].getFolderName()));
 }
 
 TEST(GamesManager,
@@ -227,7 +227,7 @@ TEST(GamesManager,
   TestGamesManager manager;
   manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
-  EXPECT_EQ(TEST_GAMES_SETTINGS[1].folderName(),
+  EXPECT_EQ(TEST_GAMES_SETTINGS[1].getFolderName(),
             manager.getFirstInstalledGameFolderName());
 }
 
@@ -245,8 +245,8 @@ TEST(
   manager.setInstalledGames(TEST_GAMES_SETTINGS);
 
   std::vector<std::string> expectedFolderNames({
-      TEST_GAMES_SETTINGS[1].folderName(),
-      TEST_GAMES_SETTINGS[2].folderName(),
+      TEST_GAMES_SETTINGS[1].getFolderName(),
+      TEST_GAMES_SETTINGS[2].getFolderName(),
   });
   EXPECT_EQ(expectedFolderNames, manager.getInstalledGameFolderNames());
 }

@@ -77,8 +77,8 @@ public:
 
     threads.push_back(std::thread([&]() {
       try {
-        game_.getCreationClubPlugins().load(game_.getSettings().id(),
-                                            game_.getSettings().gamePath());
+        game_.getCreationClubPlugins().load(game_.getSettings().getId(),
+                                            game_.getSettings().getGamePath());
       } catch (...) {
         if (exceptionPointer == nullptr) {
           exceptionPointer = std::current_exception();

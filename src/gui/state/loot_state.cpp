@@ -158,7 +158,7 @@ void LootState::initCurrentGame() {
     getCurrentGame().init();
     if (logger) {
       logger->debug("Game named {} has been initialised",
-                    getCurrentGame().getSettings().name());
+                    getCurrentGame().getSettings().getName());
     }
   } catch (const exception& e) {
     if (logger) {
@@ -355,7 +355,7 @@ void LootState::overrideGamePath(const std::string& gameFolderName,
   auto it = std::find_if(gamesSettings.begin(),
                          gamesSettings.end(),
                          [&](const GameSettings& settings) {
-                           return settings.folderName() == gameFolderName;
+                           return settings.getFolderName() == gameFolderName;
                          });
 
   if (it == gamesSettings.end()) {
@@ -369,7 +369,7 @@ void LootState::overrideGamePath(const std::string& gameFolderName,
     if (logger) {
       logger->info("Overriding path for game {} from {} to {}",
                    gameFolderName,
-                   it->gamePath().u8string(),
+                   it->getGamePath().u8string(),
                    gamePath.u8string());
     }
     it->setGamePath(gamePath);
@@ -405,7 +405,7 @@ void LootState::setInitialGame(const std::string& cliGameValue) {
     setCurrentGame(gameFolderName.value());
     if (logger) {
       logger->debug("Game selected is {}",
-                    getCurrentGame().getSettings().name());
+                    getCurrentGame().getSettings().getName());
     }
   } catch (const exception& e) {
     if (logger) {

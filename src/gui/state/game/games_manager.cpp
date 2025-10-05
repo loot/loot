@@ -28,9 +28,9 @@
 namespace {
 bool gameNeedsRecreating(const loot::gui::Game& game,
                          const loot::GameSettings& newSettings) {
-  return game.getSettings().gamePath() != newSettings.gamePath() ||
-         game.getSettings().gameLocalPath() != newSettings.gameLocalPath() ||
-         game.getSettings().master() != newSettings.master();
+  return game.getSettings().getGamePath() != newSettings.getGamePath() ||
+         game.getSettings().getGameLocalPath() != newSettings.getGameLocalPath() ||
+         game.getSettings().getMasterFilename() != newSettings.getMasterFilename();
 }
 }
 
@@ -50,7 +50,7 @@ void GamesManager::setInstalledGames(
 
   std::optional<std::string> currentGameFolder;
   if (currentGame_ != installedGames_.end()) {
-    currentGameFolder = currentGame_->getSettings().folderName();
+    currentGameFolder = currentGame_->getSettings().getFolderName();
   }
 
   bool currentGameUpdated = false;
@@ -60,30 +60,30 @@ void GamesManager::setInstalledGames(
       if (logger) {
         logger->info(
             "Could not find paths for game with LOOT folder name \"{}\".",
-            gameSettings.folderName());
+            gameSettings.getFolderName());
       }
       continue;
     }
 
     if (currentGameFolder.has_value() &&
-        currentGameFolder.value() == gameSettings.folderName() &&
+        currentGameFolder.value() == gameSettings.getFolderName() &&
         !gameNeedsRecreating(getCurrentGame(), gameSettings)) {
       if (logger) {
-        logger->trace("Updating game entry for: {}", gameSettings.folderName());
+        logger->trace("Updating game entry for: {}", gameSettings.getFolderName());
       }
 
       getCurrentGame()
           .getSettings()
-          .setName(gameSettings.name())
-          .setMinimumHeaderVersion(gameSettings.minimumHeaderVersion())
-          .setMasterlistSource(gameSettings.masterlistSource());
+          .setName(gameSettings.getName())
+          .setMinimumHeaderVersion(gameSettings.getMinimumHeaderVersion())
+          .setMasterlistSource(gameSettings.getMasterlistSource());
 
       installedGames.push_back(std::move(getCurrentGame()));
       currentGameUpdated = true;
     } else {
       if (logger) {
         logger->trace("Adding new installed game entry for: {}",
-                      gameSettings.folderName());
+                      gameSettings.getFolderName());
       }
 
       installedGames.push_back(
@@ -141,7 +141,7 @@ void GamesManager::setCurrentGame(const std::string& newGameFolder) {
       find_if(installedGames_.begin(),
               installedGames_.end(),
               [&](const gui::Game& game) {
-                return newGameFolder == game.getSettings().folderName();
+                return newGameFolder == game.getSettings().getFolderName();
               });
 
   if (currentGame_ == installedGames_.end()) {
@@ -154,7 +154,7 @@ void GamesManager::setCurrentGame(const std::string& newGameFolder) {
   }
 
   if (logger) {
-    logger->debug("New game is: {}", currentGame_->getSettings().name());
+    logger->debug("New game is: {}", currentGame_->getSettings().getName());
   }
 }
 
@@ -163,7 +163,7 @@ std::vector<std::string> GamesManager::getInstalledGameFolderNames() const {
 
   std::vector<std::string> installedGames;
   for (const auto& game : installedGames_) {
-    installedGames.push_back(game.getSettings().folderName());
+    installedGames.push_back(game.getSettings().getFolderName());
   }
 
   return installedGames;
@@ -174,7 +174,7 @@ std::optional<std::string> GamesManager::getFirstInstalledGameFolderName()
   std::lock_guard<std::recursive_mutex> guard(mutex_);
 
   if (!installedGames_.empty()) {
-    return installedGames_.front().getSettings().folderName();
+    return installedGames_.front().getSettings().getFolderName();
   }
 
   return std::nullopt;
@@ -186,7 +186,7 @@ bool GamesManager::isGameInstalled(const std::string& gameFolder) const {
   return std::any_of(installedGames_.cbegin(),
                      installedGames_.cend(),
                      [&](const gui::Game& game) {
-                       return gameFolder == game.getSettings().folderName();
+                       return gameFolder == game.getSettings().getFolderName();
                      });
 }
 

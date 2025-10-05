@@ -262,7 +262,7 @@ bool PluginItem::containsText(const std::string& text) const {
   return false;
 }
 
-std::string PluginItem::contentToSearch() const {
+std::string PluginItem::getContentToSearch() const {
   std::string text = name;
 
   if (version.has_value()) {
@@ -308,7 +308,7 @@ std::string PluginItem::getMarkdownContent() const {
   }
 
   if (loadOrderIndex.has_value()) {
-    content += "- Load Order Index: " + loadOrderIndexText() + "\n";
+    content += "- Load Order Index: " + getLoadOrderIndexText() + "\n";
   }
 
   std::vector<std::string> attributes;
@@ -398,7 +398,7 @@ std::string PluginItem::getMarkdownContent() const {
   return content;
 }
 
-std::string PluginItem::loadOrderIndexText() const {
+std::string PluginItem::getLoadOrderIndexText() const {
   if (loadOrderIndex.has_value()) {
     std::string formatString;
     if (isLightPlugin) {
@@ -424,7 +424,7 @@ std::vector<PluginItem> getPluginItems(
       mapper = [&](std::shared_ptr<const PluginInterface> plugin,
                    std::optional<short> loadOrderIndex,
                    bool isActive) {
-        return PluginItem(game.getSettings().id(),
+        return PluginItem(game.getSettings().getId(),
                           *plugin,
                           game,
                           loadOrderIndex,

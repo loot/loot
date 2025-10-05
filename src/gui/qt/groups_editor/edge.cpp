@@ -47,9 +47,9 @@ Edge::Edge(Node *sourceNode, Node *destNode, bool isUserMetadata) :
   adjust();
 }
 
-Node *Edge::sourceNode() const { return source; }
+Node *Edge::getSourceNode() const { return source; }
 
-Node *Edge::destNode() const { return dest; }
+Node *Edge::getDestNode() const { return dest; }
 
 bool Edge::isUserMetadata() const { return isUserMetadata_; }
 

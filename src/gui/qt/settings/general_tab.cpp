@@ -69,8 +69,8 @@ void GeneralTab::initialiseInputs(const LootSettings& settings,
 
   for (const auto& game : settings.getGameSettings()) {
     defaultGameComboBox->addItem(
-        QString::fromStdString(game.name()),
-        QVariant(QString::fromStdString(game.folderName())));
+        QString::fromStdString(game.getName()),
+        QVariant(QString::fromStdString(game.getFolderName())));
   }
 
   auto gameIndex = defaultGameComboBox->findData(

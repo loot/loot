@@ -102,13 +102,13 @@ void Node::addEdge(Edge *edge) {
 
 void Node::removeEdge(Edge *edge) { edgeList.removeOne(edge); }
 
-QList<Edge *> Node::edges() const { return edgeList; }
+QList<Edge *> Node::getEdges() const { return edgeList; }
 
-QList<Edge *> Node::inEdges() const {
+QList<Edge *> Node::getInEdges() const {
   QList<Edge *> inEdges;
 
   for (const auto edge : edgeList) {
-    if (edge->sourceNode() != this) {
+    if (edge->getSourceNode() != this) {
       inEdges.append(edge);
     }
   }
@@ -116,11 +116,11 @@ QList<Edge *> Node::inEdges() const {
   return inEdges;
 }
 
-QList<Edge *> Node::outEdges() const {
+QList<Edge *> Node::getOutEdges() const {
   QList<Edge *> outEdges;
 
   for (const auto edge : edgeList) {
-    if (edge->destNode() != this) {
+    if (edge->getDestNode() != this) {
       outEdges.append(edge);
     }
   }
@@ -130,7 +130,7 @@ QList<Edge *> Node::outEdges() const {
 
 bool Node::isRootNode() const {
   for (const auto edge : edgeList) {
-    if (edge->destNode() == this) {
+    if (edge->getDestNode() == this) {
       return false;
     }
   }
@@ -217,7 +217,7 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     while (!edgeList.isEmpty()) {
       auto edge = edgeList[0];
       auto otherNode =
-          edge->sourceNode() == this ? edge->destNode() : edge->sourceNode();
+          edge->getSourceNode() == this ? edge->getDestNode() : edge->getSourceNode();
 
       removeEdge(edge);
       otherNode->removeEdge(edge);
@@ -336,10 +336,10 @@ QColor Node::getNodeColor() const {
   bool hasIncomingEdges = false;
 
   for (const auto edge : edgeList) {
-    if (edge->sourceNode() == this) {
+    if (edge->getSourceNode() == this) {
       hasOutgoingEdges = true;
     }
-    if (edge->destNode() == this) {
+    if (edge->getDestNode() == this) {
       hasIncomingEdges = true;
     }
   }

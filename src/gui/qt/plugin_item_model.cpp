@@ -283,7 +283,7 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
       }
       case SIDEBAR_INDEX_COLUMN: {
         if (role == Qt::DisplayRole) {
-          return QString::fromStdString(plugin.loadOrderIndexText());
+          return QString::fromStdString(plugin.getLoadOrderIndexText());
         }
 
         break;
@@ -324,7 +324,7 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
       }
       case CARDS_COLUMN: {
         if (role == ContentSearchRole) {
-          return QString::fromStdString(plugin.contentToSearch());
+          return QString::fromStdString(plugin.getContentToSearch());
         } else if (role == SearchResultRole) {
           const size_t searchResultsIndex =
               static_cast<size_t>(index.row()) - 1;

@@ -466,15 +466,15 @@ void validateMasters(
   // Morrowind and Starfield require all plugins' masters to be present for
   // sorting to work, even if the plugins are inactive.
   const auto expectInstalledMasters =
-      game.getSettings().id() == GameId::tes3 ||
-      game.getSettings().id() == GameId::openmw ||
-      game.getSettings().id() == GameId::starfield;
+      game.getSettings().getId() == GameId::tes3 ||
+      game.getSettings().getId() == GameId::openmw ||
+      game.getSettings().getId() == GameId::starfield;
 
   const auto isLightMaster =
       plugin.IsLightPlugin() && !boost::iends_with(plugin.GetName(), ".esp");
 
   const auto checkForNonBlueprintMasters =
-      game.getSettings().id() == GameId::starfield &&
+      game.getSettings().getId() == GameId::starfield &&
       !plugin.IsBlueprintPlugin();
 
   for (const auto& masterName : plugin.GetMasters()) {
@@ -511,7 +511,7 @@ void validateMasters(
 
     if (isLightMaster && (!master->IsLightPlugin() && !master->IsMaster())) {
       messages.push_back(createLightMasterWithNonMasterMasterMessage(
-          plugin, masterName, game.getSettings().id()));
+          plugin, masterName, game.getSettings().getId()));
     }
 
     if (checkForNonBlueprintMasters &&
@@ -787,14 +787,14 @@ std::vector<SourcedMessage> checkInstallValidity(const gui::Game& game,
 
   if (!game.supportsLightPlugins() && plugin.IsLightPlugin()) {
     messages.push_back(createUnsupportedLightPluginMessage(
-        plugin.GetName(), game.getSettings().id()));
+        plugin.GetName(), game.getSettings().getId()));
   }
 
   if (plugin.GetHeaderVersion().has_value() &&
       plugin.GetHeaderVersion().value() <
-          game.getSettings().minimumHeaderVersion()) {
+          game.getSettings().getMinimumHeaderVersion()) {
     messages.push_back(createInvalidHeaderVersionMessage(
-        plugin, game.getSettings().minimumHeaderVersion()));
+        plugin, game.getSettings().getMinimumHeaderVersion()));
   }
 
   const auto group = metadata.GetGroup();
@@ -805,7 +805,7 @@ std::vector<SourcedMessage> checkInstallValidity(const gui::Game& game,
   const auto lootTags = metadata.GetTags();
   if (!lootTags.empty()) {
     const auto bashTagFileTags =
-        readBashTagsFile(game.getSettings().dataPath(), metadata.GetName());
+        readBashTagsFile(game.getSettings().getDataPath(), metadata.GetName());
     const auto conflictingTags = getTagConflicts(lootTags, bashTagFileTags);
 
     if (!conflictingTags.empty()) {

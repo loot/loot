@@ -310,19 +310,19 @@ void updateSettingsPaths(GameSettings& settings, const GameInstall& install) {
   const auto logger = getLogger();
 
   // Update the existing settings object's paths.
-  if (settings.gamePath().empty()) {
+  if (settings.getGamePath().empty()) {
     if (logger) {
       logger->info(
           "Setting the install path for the game with LOOT folder name {} "
           "to \"{}\"",
-          settings.folderName(),
+          settings.getFolderName(),
           install.installPath.u8string());
     }
 
     settings.setGamePath(install.installPath);
   }
 
-  if (settings.gameLocalPath().empty() && !install.localPath.empty()) {
+  if (settings.getGameLocalPath().empty() && !install.localPath.empty()) {
     // It's the same install path but the detected local path is different
     // from the empty configured local path, so replace the latter.
     // Don't replace a non-empty configured local path.
@@ -330,7 +330,7 @@ void updateSettingsPaths(GameSettings& settings, const GameInstall& install) {
       logger->info(
           "Setting the local path for the game with LOOT folder name {} "
           "to \"{}\"",
-          settings.folderName(),
+          settings.getFolderName(),
           install.localPath.u8string());
     }
 
@@ -340,7 +340,7 @@ void updateSettingsPaths(GameSettings& settings, const GameInstall& install) {
 
 bool arePathsEquivalent(const GameSettings& settings,
                         const GameInstall& install) {
-  return ::equivalent(install.installPath, settings.gamePath());
+  return ::equivalent(install.installPath, settings.getGamePath());
 }
 
 // Returns the installs that matched no settings.
@@ -364,8 +364,8 @@ std::vector<GameInstall> updateMatchingSettings(
       match = std::find_if(gamesSettings.begin(),
                            gamesSettings.end(),
                            [&](const GameSettings& settings) {
-                             return settings.gamePath().empty() &&
-                                    settings.id() == gameInstall.gameId;
+                             return settings.getGamePath().empty() &&
+                                    settings.getId() == gameInstall.gameId;
                            });
     }
 
@@ -407,8 +407,8 @@ void appendNewGamesSettings(
   std::vector<std::string> folderNames;
 
   for (const auto& settings : gamesSettings) {
-    gameNames.push_back(settings.name());
-    folderNames.push_back(settings.folderName());
+    gameNames.push_back(settings.getName());
+    folderNames.push_back(settings.getFolderName());
   }
 
   for (const auto& gameInstall : newGameInstalls) {

@@ -39,10 +39,10 @@ namespace loot {
 bool isInstalled(const GameSettings& settings) {
   const auto logger = getLogger();
   if (logger) {
-    logger->trace("Checking if game \"{}\" is installed.", settings.name());
+    logger->trace("Checking if game \"{}\" is installed.", settings.getName());
   }
 
-  return isValidGamePath(settings.id(), settings.master(), settings.gamePath());
+  return isValidGamePath(settings.getId(), settings.getMasterFilename(), settings.getGamePath());
 }
 
 std::vector<GameSettings> findInstalledGames(
@@ -61,7 +61,7 @@ std::vector<GameSettings> findInstalledGames(
   std::sort(gamesSettingsToUpdate.begin(),
             gamesSettingsToUpdate.end(),
             [](const GameSettings& lhs, const GameSettings& rhs) {
-              return lhs.name() < rhs.name();
+              return lhs.getName() < rhs.getName();
             });
 
   return gamesSettingsToUpdate;

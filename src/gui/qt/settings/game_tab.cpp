@@ -34,7 +34,7 @@
 namespace loot {
 FolderPicker::FolderPicker(QWidget* parent) : QFrame(parent) { setupUi(); }
 
-QString FolderPicker::text() const { return textInput->text(); }
+QString FolderPicker::getText() const { return textInput->text(); }
 
 void FolderPicker::setText(const QString& text) { textInput->setText(text); }
 
@@ -107,10 +107,10 @@ GameSettings GameTab::getGameSettings() const {
       static_cast<float>(minimumHeaderVersionSpinBox->value());
   auto masterlistSource = masterlistSourceInput->text().toStdString();
   auto installPath =
-      std::filesystem::u8path(installPathInput->text().toStdString());
+      std::filesystem::u8path(installPathInput->getText().toStdString());
 
   auto localDataPath =
-      std::filesystem::u8path(localDataPathInput->text().toStdString());
+      std::filesystem::u8path(localDataPathInput->getText().toStdString());
 
   GameSettings settings(gameId, lootFolder);
   settings.setName(name);
@@ -162,16 +162,16 @@ void GameTab::translateUi() {
 
 void GameTab::initialiseInputs(const GameSettings& settings,
                                bool isCurrentGame) {
-  nameInput->setText(QString::fromStdString(settings.name()));
-  lootFolderInput->setText(QString::fromStdString(settings.folderName()));
-  masterFileInput->setText(QString::fromStdString(settings.master()));
-  minimumHeaderVersionSpinBox->setValue(settings.minimumHeaderVersion());
+  nameInput->setText(QString::fromStdString(settings.getName()));
+  lootFolderInput->setText(QString::fromStdString(settings.getFolderName()));
+  masterFileInput->setText(QString::fromStdString(settings.getMasterFilename()));
+  minimumHeaderVersionSpinBox->setValue(settings.getMinimumHeaderVersion());
   masterlistSourceInput->setText(
-      QString::fromStdString(settings.masterlistSource()));
+      QString::fromStdString(settings.getMasterlistSource()));
   installPathInput->setText(
-      QString::fromStdString(settings.gamePath().u8string()));
+      QString::fromStdString(settings.getGamePath().u8string()));
   localDataPathInput->setText(
-      QString::fromStdString(settings.gameLocalPath().u8string()));
+      QString::fromStdString(settings.getGameLocalPath().u8string()));
 
   while (baseGameComboBox->count() > 0) {
     baseGameComboBox->removeItem(0);
@@ -182,7 +182,7 @@ void GameTab::initialiseInputs(const GameSettings& settings,
   }
 
   auto baseGameIndex = baseGameComboBox->findText(
-      QString::fromStdString(toString(settings.id())));
+      QString::fromStdString(toString(settings.getId())));
   baseGameComboBox->setCurrentIndex(baseGameIndex);
 
   baseGameComboBox->setEnabled(false);

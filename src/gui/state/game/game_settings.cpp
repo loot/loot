@@ -124,36 +124,36 @@ bool operator==(const HiddenMessage& lhs, const HiddenMessage& rhs) {
 GameSettings::GameSettings(const GameId gameId, const std::string& lootFolder) :
     id_(gameId),
     name_(getGameName(gameId)),
-    masterFile_(getMasterFilename(gameId)),
-    minimumHeaderVersion_(getMinimumHeaderVersion(gameId)),
+    masterFile_(loot::getMasterFilename(gameId)),
+    minimumHeaderVersion_(::getMinimumHeaderVersion(gameId)),
     lootFolderName_(lootFolder),
     masterlistSource_(getDefaultMasterlistUrl(gameId)) {}
 
-GameId GameSettings::id() const { return id_; }
+GameId GameSettings::getId() const { return id_; }
 
-std::string GameSettings::name() const { return name_; }
+std::string GameSettings::getName() const { return name_; }
 
-std::string GameSettings::folderName() const { return lootFolderName_; }
+std::string GameSettings::getFolderName() const { return lootFolderName_; }
 
-std::string GameSettings::master() const { return masterFile_; }
+std::string GameSettings::getMasterFilename() const { return masterFile_; }
 
-float GameSettings::minimumHeaderVersion() const {
+float GameSettings::getMinimumHeaderVersion() const {
   return minimumHeaderVersion_;
 }
 
-std::string GameSettings::masterlistSource() const { return masterlistSource_; }
+std::string GameSettings::getMasterlistSource() const { return masterlistSource_; }
 
-std::filesystem::path GameSettings::gamePath() const { return gamePath_; }
+std::filesystem::path GameSettings::getGamePath() const { return gamePath_; }
 
-std::filesystem::path GameSettings::gameLocalPath() const {
+std::filesystem::path GameSettings::getGameLocalPath() const {
   return gameLocalPath_;
 }
 
-std::filesystem::path GameSettings::dataPath() const {
-  return getDataPath(id_, gamePath_);
+std::filesystem::path GameSettings::getDataPath() const {
+  return loot::getDataPath(id_, gamePath_);
 }
 
-const std::vector<HiddenMessage>& GameSettings::hiddenMessages() const {
+const std::vector<HiddenMessage>& GameSettings::getHiddenMessages() const {
   return hiddenMessages_;
 }
 

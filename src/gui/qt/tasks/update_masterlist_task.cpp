@@ -30,7 +30,7 @@
 namespace loot {
 UpdatePreludeTask::UpdatePreludeTask(const LootState &state) :
     preludeSource(state.getSettings().getPreludeSource()),
-    preludePath(state.GetPaths().getPreludePath()) {}
+    preludePath(state.getPaths().getPreludePath()) {}
 
 void UpdatePreludeTask::execute() {
   try {
@@ -102,9 +102,9 @@ void UpdatePreludeTask::onReplyFinished() {
 }
 
 UpdateMasterlistTask::UpdateMasterlistTask(const gui::Game &game) :
-    UpdateMasterlistTask(game.GetSettings().FolderName(),
-                         game.GetSettings().MasterlistSource(),
-                         game.MasterlistPath()) {}
+    UpdateMasterlistTask(game.getSettings().getFolderName(),
+                         game.getSettings().getMasterlistSource(),
+                         game.getMasterlistPath()) {}
 
 UpdateMasterlistTask::UpdateMasterlistTask(
     const std::string &gameFolderName,

@@ -358,7 +358,7 @@ namespace loot {
 std::filesystem::path getMasterlistPath(
     const std::filesystem::path& lootDataPath,
     const GameSettings& settings) {
-  return ::getLOOTGamePath(lootDataPath, settings.folderName()) /
+  return ::getLOOTGamePath(lootDataPath, settings.getFolderName()) /
          MASTERLIST_FILENAME;
 }
 
@@ -370,7 +370,7 @@ void initLootGameFolder(const std::filesystem::path& lootDataPath,
 
   // Make sure that the LOOT game path exists.
   const auto lootGamePath =
-      getLOOTGamePath(lootDataPath, settings.folderName());
+      getLOOTGamePath(lootDataPath, settings.getFolderName());
   if (!fs::is_directory(lootGamePath)) {
     if (fs::exists(lootGamePath)) {
       throw std::runtime_error(
@@ -379,9 +379,9 @@ void initLootGameFolder(const std::filesystem::path& lootDataPath,
     }
 
     std::vector<fs::path> legacyGamePaths{lootDataPath /
-                                          u8path(settings.folderName())};
+                                          u8path(settings.getFolderName())};
 
-    if (settings.id() == GameId::tes5se) {
+    if (settings.getId() == GameId::tes5se) {
       // LOOT v0.10.0 used SkyrimSE as its folder name for Skyrim SE, so
       // migrate from that if it's present.
       legacyGamePaths.insert(legacyGamePaths.begin(),
@@ -415,7 +415,7 @@ void initLootGameFolder(const std::filesystem::path& lootDataPath,
     // in the default game folder for this game's ID, so try copying it from
     // there.
     copyMasterlistFromDefaultGameFolder(
-        masterlistPath, lootGamePath.parent_path(), settings.id());
+        masterlistPath, lootGamePath.parent_path(), settings.getId());
   }
 }
 
@@ -550,7 +550,7 @@ Game::Game(const GameSettings& gameSettings,
     lootDataPath_(lootDataPath),
     preludePath_(preludePath),
     supportsLightPlugins_(
-        ::supportsLightPlugins(settings_.id(), settings_.dataPath())) {}
+        ::supportsLightPlugins(settings_.getId(), settings_.getDataPath())) {}
 
 Game::Game(Game&& game) noexcept {
   settings_ = std::move(game.settings_);
@@ -596,7 +596,7 @@ void Game::init() {
   auto logger = getLogger();
   if (logger) {
     logger->info("Initialising filesystem-related data for game: {}",
-                 settings_.name());
+                 settings_.getName());
   }
 
   // Reset data that is dependent on the libloot game handle.
@@ -604,11 +604,11 @@ void Game::init() {
   sortCount_.reset();
   pluginsFullyLoaded_ = false;
   supportsLightPlugins_ =
-      ::supportsLightPlugins(settings_.id(), settings_.dataPath());
+      ::supportsLightPlugins(settings_.getId(), settings_.getDataPath());
 
-  gameHandle_ = CreateGameHandle(getGameType(settings_.id()),
-                                 settings_.gamePath(),
-                                 settings_.gameLocalPath());
+  gameHandle_ = CreateGameHandle(getGameType(settings_.getId()),
+                                 settings_.getGamePath(),
+                                 settings_.getGameLocalPath());
 
   initLootGameFolder(lootDataPath_, settings_);
 }
@@ -634,9 +634,9 @@ std::vector<SourcedMessage> Game::checkInstallValidity(
 void Game::redatePlugins() {
   auto logger = getLogger();
 
-  if (!shouldAllowRedating(settings_.id())) {
+  if (!shouldAllowRedating(settings_.getId())) {
     if (logger) {
-      logger->warn("Cannot redate plugins for game {}.", settings_.name());
+      logger->warn("Cannot redate plugins for game {}.", settings_.getName());
     }
     return;
   }
@@ -708,7 +708,7 @@ void Game::loadAllInstalledPlugins(bool headersOnly) {
   pluginsFullyLoaded_ = !headersOnly;
 
   supportsLightPlugins_ =
-      ::supportsLightPlugins(settings_.id(), settings_.dataPath());
+      ::supportsLightPlugins(settings_.getId(), settings_.getDataPath());
 }
 
 bool Game::arePluginsFullyLoaded() const { return pluginsFullyLoaded_; }
@@ -716,26 +716,26 @@ bool Game::arePluginsFullyLoaded() const { return pluginsFullyLoaded_; }
 bool Game::supportsLightPlugins() const { return supportsLightPlugins_; }
 
 bool Game::supportsMediumPlugins() const {
-  return settings_.id() == GameId::starfield;
+  return settings_.getId() == GameId::starfield;
 }
 
-fs::path Game::masterlistPath() const {
-  return getMasterlistPath(lootDataPath_, settings_);
+fs::path Game::getMasterlistPath() const {
+  return loot::getMasterlistPath(lootDataPath_, settings_);
 }
 
 std::filesystem::path Game::getActivePluginsFilePath() const {
   return gameHandle_->GetActivePluginsFilePath();
 }
 
-std::filesystem::path Game::oldMessagesPath() const {
+std::filesystem::path Game::getOldMessagesPath() const {
   return getLOOTGamePath() / "old_messages.json";
 }
 
-fs::path Game::userlistPath() const {
+fs::path Game::getUserlistPath() const {
   return getLOOTGamePath() / "userlist.yaml";
 }
 
-fs::path Game::groupNodePositionsPath() const {
+fs::path Game::getGroupNodePositionsPath() const {
   return getLOOTGamePath() / "group_node_positions.bin";
 }
 
@@ -831,8 +831,8 @@ std::vector<std::string> Game::sortPlugins() {
 
     std::vector<std::filesystem::path> pluginPaths;
     for (const auto& pluginName : loadOrder) {
-      if (pluginName != settings_.master() ||
-          (settings_.id() == GameId::openmw && pluginName == "Morrowind.esm")) {
+      if (pluginName != settings_.getMasterFilename() ||
+          (settings_.getId() == GameId::openmw && pluginName == "Morrowind.esm")) {
         const auto resolvedPath = resolveGameFilePath(pluginName);
         if (resolvedPath.has_value()) {
           pluginPaths.push_back(resolvedPath.value());
@@ -910,15 +910,15 @@ std::vector<SourcedMessage> Game::getMessages(
   }
 
   const auto isMWSEInstalled =
-      settings_.id() == GameId::tes3 &&
-      std::filesystem::exists(settings_.gamePath() / "MWSE.dll");
+      settings_.getId() == GameId::tes3 &&
+      std::filesystem::exists(settings_.getGamePath() / "MWSE.dll");
 
-  validateActivePluginCounts(output, settings_.id(), counters, isMWSEInstalled);
+  validateActivePluginCounts(output, settings_.getId(), counters, isMWSEInstalled);
 
   validateGamePaths(output,
-                    settings_.name(),
-                    settings_.dataPath(),
-                    settings_.gameLocalPath(),
+                    settings_.getName(),
+                    settings_.getDataPath(),
+                    settings_.getGameLocalPath(),
                     warnOnCaseSensitivePaths);
 
   return output;
@@ -930,7 +930,7 @@ void Game::loadMetadata() {
   const auto logger = getLogger();
 
   try {
-    const auto masterlistPath = this->masterlistPath();
+    const auto masterlistPath = getMasterlistPath();
     if (std::filesystem::exists(masterlistPath)) {
       if (std::filesystem::exists(preludePath_)) {
         if (logger) {
@@ -963,7 +963,7 @@ void Game::loadMetadata() {
   }
 
   try {
-    const auto userlistPath = this->userlistPath();
+    const auto userlistPath = getUserlistPath();
     if (std::filesystem::exists(userlistPath)) {
       if (logger) {
         logger->debug("Parsing the userlist.");
@@ -1078,11 +1078,11 @@ void Game::clearAllUserMetadata() {
 }
 
 void Game::saveUserMetadata() {
-  gameHandle_->GetDatabase().WriteUserMetadata(userlistPath(), true);
+  gameHandle_->GetDatabase().WriteUserMetadata(getUserlistPath(), true);
 }
 
 std::filesystem::path Game::getLOOTGamePath() const {
-  return ::getLOOTGamePath(lootDataPath_, settings_.folderName());
+  return ::getLOOTGamePath(lootDataPath_, settings_.getFolderName());
 }
 
 std::filesystem::path Game::getBackupsPath() const {
@@ -1109,11 +1109,11 @@ std::vector<std::filesystem::path> Game::getInstalledPluginPaths() const {
   // Scan external data paths first, as the game checks them before the main
   // data path.
   const auto processDirectory = [&](const std::filesystem::path& directory) {
-    findFiles(settings_.id(), directory, recordPath);
+    findFiles(settings_.getId(), directory, recordPath);
   };
 
   const auto additionalDataPaths = gameHandle_->GetAdditionalDataPaths();
-  if (settings_.id() == GameId::openmw) {
+  if (settings_.getId() == GameId::openmw) {
     std::for_each(additionalDataPaths.rbegin(),
                   additionalDataPaths.rend(),
                   processDirectory);
@@ -1124,18 +1124,18 @@ std::vector<std::filesystem::path> Game::getInstalledPluginPaths() const {
   }
 
   std::set<Filename> dataPathFilenames;
-  findFiles(settings_.id(),
-            settings_.dataPath(),
+  findFiles(settings_.getId(),
+            settings_.getDataPath(),
             [&](const std::filesystem::path& filePath) {
               const auto filename = recordPath(filePath);
 
-              if (settings_.id() == GameId::starfield) {
+              if (settings_.getId() == GameId::starfield) {
                 dataPathFilenames.insert(filename);
               }
             });
 
   return filterForPlugins(std::move(foundFilePaths),
-                          settings_.id(),
+                          settings_.getId(),
                           gameHandle_.get(),
                           dataPathFilenames);
 }
@@ -1148,9 +1148,9 @@ void Game::appendMessages(std::vector<SourcedMessage> messages) {
 
 std::optional<std::filesystem::path> Game::resolveGameFilePath(
     const std::string& filePath) const {
-  return loot::resolveGameFilePath(settings_.id(),
+  return loot::resolveGameFilePath(settings_.getId(),
                                    gameHandle_->GetAdditionalDataPaths(),
-                                   settings_.dataPath(),
+                                   settings_.getDataPath(),
                                    filePath);
 }
 

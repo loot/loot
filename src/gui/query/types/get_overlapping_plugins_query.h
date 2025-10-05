@@ -67,7 +67,7 @@ private:
         mapper = [&](std::shared_ptr<const PluginInterface> otherPlugin,
                      std::optional<short> loadOrderIndex,
                      bool isActive) {
-          const auto pluginItem = PluginItem(game_.getSettings().id(),
+          const auto pluginItem = PluginItem(game_.getSettings().getId(),
                                              *otherPlugin,
                                              game_,
                                              loadOrderIndex,

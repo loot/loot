@@ -73,9 +73,9 @@ public:
 
   void addEdge(Edge *edge);
   void removeEdge(Edge *edge);
-  QList<Edge *> edges() const;
-  QList<Edge *> inEdges() const;
-  QList<Edge *> outEdges() const;
+  QList<Edge *> getEdges() const;
+  QList<Edge *> getInEdges() const;
+  QList<Edge *> getOutEdges() const;
 
   bool isRootNode() const;
 

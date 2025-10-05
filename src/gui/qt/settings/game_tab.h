@@ -44,7 +44,7 @@ class FolderPicker : public QFrame {
 public:
   explicit FolderPicker(QWidget *parent);
 
-  QString text() const;
+  QString getText() const;
 
   void setText(const QString &text);
 

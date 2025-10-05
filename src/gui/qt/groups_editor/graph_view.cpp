@@ -247,9 +247,9 @@ std::vector<Group> GraphView::getUserGroups() const {
     // after metadata.
 
     std::vector<std::string> afterGroups;
-    for (const auto edge : node->inEdges()) {
+    for (const auto edge : node->getInEdges()) {
       if (node->isUserMetadata() || edge->isUserMetadata()) {
-        afterGroups.push_back(edge->sourceNode()->getName().toStdString());
+        afterGroups.push_back(edge->getSourceNode()->getName().toStdString());
       }
     }
 

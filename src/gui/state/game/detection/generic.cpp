@@ -381,42 +381,42 @@ std::vector<GameInstall> findGameInstalls(const RegistryInterface& registry,
 std::optional<GameInstall> detectGameInstall(const GameSettings& settings) {
   try {
     if (!isValidGamePath(
-            settings.id(), settings.master(), settings.gamePath())) {
+            settings.getId(), settings.getMasterFilename(), settings.getGamePath())) {
       return std::nullopt;
     }
 
-    const auto gameId = settings.id();
-    const auto installPath = settings.gamePath();
+    const auto gameId = settings.getId();
+    const auto installPath = settings.getGamePath();
 
     if (isSteamInstall(gameId, installPath)) {
       return GameInstall{
-          gameId, InstallSource::steam, installPath, settings.gameLocalPath()};
+          gameId, InstallSource::steam, installPath, settings.getGameLocalPath()};
     }
 
     if (isGogInstall(gameId, installPath)) {
       return GameInstall{
-          gameId, InstallSource::gog, installPath, settings.gameLocalPath()};
+          gameId, InstallSource::gog, installPath, settings.getGameLocalPath()};
     }
 
     if (isEpicInstall(gameId, installPath)) {
       return GameInstall{
-          gameId, InstallSource::epic, installPath, settings.gameLocalPath()};
+          gameId, InstallSource::epic, installPath, settings.getGameLocalPath()};
     }
 
     if (::isMicrosoftInstall(gameId, installPath)) {
       return GameInstall{gameId,
                          InstallSource::microsoft,
                          installPath,
-                         settings.gameLocalPath()};
+                         settings.getGameLocalPath()};
     }
 
     return GameInstall{
-        gameId, InstallSource::unknown, installPath, settings.gameLocalPath()};
+        gameId, InstallSource::unknown, installPath, settings.getGameLocalPath()};
   } catch (const std::exception& e) {
     const auto logger = getLogger();
     logger->error(
         "Error while detecting install for game with folder name {}: {}",
-        settings.folderName(),
+        settings.getFolderName(),
         e.what());
 
     return std::nullopt;

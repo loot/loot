@@ -40,8 +40,8 @@ class Edge : public QGraphicsItem {
 public:
   Edge(Node *sourceNode, Node *destNode, bool isUserMetadata);
 
-  Node *sourceNode() const;
-  Node *destNode() const;
+  Node *getSourceNode() const;
+  Node *getDestNode() const;
   bool isUserMetadata() const;
 
   void adjust();

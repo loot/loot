@@ -134,7 +134,7 @@ protected:
     using std::filesystem::u8path;
 
     const auto parentPath = lootDataPath / u8path("games") /
-                            u8path(game.getSettings().folderName()) / "backups";
+                            u8path(game.getSettings().getFolderName()) / "backups";
 
     if (!std::filesystem::exists(parentPath)) {
       return {};
@@ -206,23 +206,23 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   settings.setMasterlistSource("foo");
   Game game(settings, lootDataPath, "");
 
-  EXPECT_EQ(settings.id(), game.getSettings().id());
-  EXPECT_EQ(settings.name(), game.getSettings().name());
-  EXPECT_EQ(settings.folderName(), game.getSettings().folderName());
-  EXPECT_EQ(settings.master(), game.getSettings().master());
-  EXPECT_EQ(settings.minimumHeaderVersion(),
-            game.getSettings().minimumHeaderVersion());
-  EXPECT_EQ(settings.masterlistSource(), game.getSettings().masterlistSource());
-  EXPECT_EQ(settings.gamePath(), game.getSettings().gamePath());
-  EXPECT_EQ(settings.gameLocalPath(), game.getSettings().gameLocalPath());
+  EXPECT_EQ(settings.getId(), game.getSettings().getId());
+  EXPECT_EQ(settings.getName(), game.getSettings().getName());
+  EXPECT_EQ(settings.getFolderName(), game.getSettings().getFolderName());
+  EXPECT_EQ(settings.getMasterFilename(), game.getSettings().getMasterFilename());
+  EXPECT_EQ(settings.getMinimumHeaderVersion(),
+            game.getSettings().getMinimumHeaderVersion());
+  EXPECT_EQ(settings.getMasterlistSource(), game.getSettings().getMasterlistSource());
+  EXPECT_EQ(settings.getGamePath(), game.getSettings().getGamePath());
+  EXPECT_EQ(settings.getGameLocalPath(), game.getSettings().getGameLocalPath());
 
   auto lootGamePath =
-      lootDataPath / "games" / u8path(defaultGameSettings.folderName());
-  EXPECT_EQ(lootGamePath / "masterlist.yaml", game.masterlistPath());
-  EXPECT_EQ(lootGamePath / "userlist.yaml", game.userlistPath());
+      lootDataPath / "games" / u8path(defaultGameSettings.getFolderName());
+  EXPECT_EQ(lootGamePath / "masterlist.yaml", game.getMasterlistPath());
+  EXPECT_EQ(lootGamePath / "userlist.yaml", game.getUserlistPath());
   EXPECT_EQ(lootGamePath / "group_node_positions.bin",
-            game.groupNodePositionsPath());
-  EXPECT_EQ(lootGamePath / "old_messages.json", game.oldMessagesPath());
+            game.getGroupNodePositionsPath());
+  EXPECT_EQ(lootGamePath / "old_messages.json", game.getOldMessagesPath());
 }
 
 TEST_P(GameTest, initShouldThrowIfGamePathWasNotGiven) {
@@ -259,7 +259,7 @@ TEST_P(GameTest, initShouldThrowIfTheLootDataPathIsEmpty) {
   Game game(defaultGameSettings, "", "");
 
   auto lootGamePath =
-      lootDataPath / "games" / u8path(game.getSettings().folderName());
+      lootDataPath / "games" / u8path(game.getSettings().getFolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
   EXPECT_THROW(game.init(), std::runtime_error);
 
@@ -271,7 +271,7 @@ TEST_P(GameTest, initShouldCreateAGameFolderIfTheLootDataPathIsNotEmpty) {
   Game game(defaultGameSettings, lootDataPath, "");
 
   auto lootGamePath =
-      lootDataPath / "games" / u8path(game.getSettings().folderName());
+      lootDataPath / "games" / u8path(game.getSettings().getFolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
   EXPECT_NO_THROW(game.init());
 
@@ -284,7 +284,7 @@ TEST_P(GameTest, initShouldThrowIfTheLootGamePathExistsAndIsNotADirectory) {
 
   std::filesystem::create_directory(lootDataPath / "games");
   auto lootGamePath =
-      lootDataPath / "games" / u8path(game.getSettings().folderName());
+      lootDataPath / "games" / u8path(game.getSettings().getFolderName());
   std::ofstream out(lootGamePath);
   out << "";
   out.close();
@@ -298,14 +298,14 @@ TEST_P(GameTest, initShouldMoveTheLegacyGameFolderIfItExists) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto legacyGamePath = lootDataPath / u8path(game.getSettings().folderName());
+  auto legacyGamePath = lootDataPath / u8path(game.getSettings().getFolderName());
   std::filesystem::create_directory(legacyGamePath);
   std::ofstream out(legacyGamePath / "file.txt");
   out << "";
   out.close();
 
   auto lootGamePath =
-      lootDataPath / "games" / u8path(game.getSettings().folderName());
+      lootDataPath / "games" / u8path(game.getSettings().getFolderName());
 
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
   EXPECT_NO_THROW(game.init());
@@ -319,13 +319,13 @@ TEST_P(GameTest, initShouldNotMoveAFileWithTheSamePathAsTheLegacyGameFolder) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto legacyGamePath = lootDataPath / u8path(game.getSettings().folderName());
+  auto legacyGamePath = lootDataPath / u8path(game.getSettings().getFolderName());
   std::ofstream out(legacyGamePath);
   out << "";
   out.close();
 
   auto lootGamePath =
-      lootDataPath / "games" / u8path(game.getSettings().folderName());
+      lootDataPath / "games" / u8path(game.getSettings().getFolderName());
 
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
   EXPECT_NO_THROW(game.init());
@@ -340,7 +340,7 @@ TEST_P(
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto legacyGamePath = lootDataPath / u8path(game.getSettings().folderName());
+  auto legacyGamePath = lootDataPath / u8path(game.getSettings().getFolderName());
   std::filesystem::create_directory(legacyGamePath);
   std::ofstream out(legacyGamePath / "file.txt");
   out << "";
@@ -352,7 +352,7 @@ TEST_P(
   ASSERT_FALSE(std::filesystem::exists(lootGamesPath));
   EXPECT_NO_THROW(game.init());
 
-  auto lootGamePath = lootGamesPath / u8path(game.getSettings().folderName());
+  auto lootGamePath = lootGamesPath / u8path(game.getSettings().getFolderName());
 
   EXPECT_FALSE(std::filesystem::exists(legacyGamePath));
   EXPECT_TRUE(std::filesystem::exists(lootGamePath));
@@ -381,7 +381,7 @@ TEST_P(GameTest, initShouldMigrateTheSkyrimSEGameFolder) {
   EXPECT_NO_THROW(game.init());
 
   const auto lootGamePath =
-      lootGamesPath / u8path(game.getSettings().folderName());
+      lootGamesPath / u8path(game.getSettings().getFolderName());
 
   EXPECT_FALSE(std::filesystem::exists(legacyGamePath));
   EXPECT_TRUE(std::filesystem::exists(lootGamePath));
@@ -1083,7 +1083,7 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
 TEST_P(GameTest,
        supportsLightPluginsShouldReturnTrueForSkyrimVRIfSKSEPluginIsInstalled) {
   Game game = createInitialisedGame();
-  const auto gameId = game.getSettings().id();
+  const auto gameId = game.getSettings().getId();
 
   if (gameId == GameId::tes5se || gameId == GameId::fo4 ||
       gameId == GameId::starfield) {

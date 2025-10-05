@@ -65,9 +65,9 @@ using loot::translate;
 
 void showAmbiguousLoadOrderSetWarning(QWidget* parent, const LootState& state) {
   const auto maybeSTestFile =
-      state.getCurrentGame().getSettings().id() == GameId::fo4 ||
-      state.getCurrentGame().getSettings().id() == GameId::fo4vr ||
-      state.getCurrentGame().getSettings().id() == GameId::starfield;
+      state.getCurrentGame().getSettings().getId() == GameId::fo4 ||
+      state.getCurrentGame().getSettings().getId() == GameId::fo4vr ||
+      state.getCurrentGame().getSettings().getId() == GameId::starfield;
 
   const auto message =
       maybeSTestFile
@@ -96,12 +96,12 @@ bool isColorSchemeDark() {
 void recordCurrentGameHiddenMessages(
     loot::LootSettings& lootSettings,
     const loot::GameSettings& currentGameSettings) {
-  auto currentFolderName = currentGameSettings.folderName();
+  auto currentFolderName = currentGameSettings.getFolderName();
   std::vector<loot::GameSettings> gamesSettings =
       lootSettings.getGameSettings();
   for (auto& gameSettings : gamesSettings) {
-    if (gameSettings.folderName() == currentFolderName) {
-      gameSettings.setHiddenMessages(currentGameSettings.hiddenMessages());
+    if (gameSettings.getFolderName() == currentFolderName) {
+      gameSettings.setHiddenMessages(currentGameSettings.getHiddenMessages());
       break;
     }
   }
@@ -310,7 +310,7 @@ void MainWindow::initialise() {
     }
 
     const auto& filters = state.getSettings().getFilters();
-    filtersWidget->setGameId(state.getCurrentGame().getSettings().id());
+    filtersWidget->setGameId(state.getCurrentGame().getSettings().getId());
     filtersWidget->setFilterStates(filters);
 
     // Apply the filters before loading the game because that avoids having
@@ -318,11 +318,11 @@ void MainWindow::initialise() {
     pluginItemModel->setCardContentFiltersState(
         filtersWidget->getCardContentFiltersState());
     pluginItemModel->setHiddenMessages(
-        state.getCurrentGame().getSettings().hiddenMessages());
+        state.getCurrentGame().getSettings().getHiddenMessages());
     proxyModel->setFiltersState(filtersWidget->getPluginFiltersState(), {});
 
     gameComboBox->setCurrentText(
-        QString::fromStdString(state.getCurrentGame().getSettings().name()));
+        QString::fromStdString(state.getCurrentGame().getSettings().getName()));
 
     loadGame(true);
 
@@ -917,11 +917,11 @@ void MainWindow::enableGameActions() {
   actionSearch->setEnabled(true);
 
   const auto enableRedatePlugins =
-      shouldAllowRedating(state.getCurrentGame().getSettings().id());
+      shouldAllowRedating(state.getCurrentGame().getSettings().getId());
   actionRedatePlugins->setEnabled(enableRedatePlugins);
 
   const auto enableUnhideMessages =
-      !state.getCurrentGame().getSettings().hiddenMessages().empty();
+      !state.getCurrentGame().getSettings().getHiddenMessages().empty();
   actionUnhideMessages->setEnabled(enableUnhideMessages);
   actionUnhideGeneralMessages->setEnabled(
       state.getCurrentGame().getSettings().hasHiddenGeneralMessages());
@@ -1048,7 +1048,7 @@ void MainWindow::updateGeneralInformation() {
   }
 
   const auto masterlistInfo = getFileRevisionSummary(
-      state.getCurrentGame().masterlistPath(), FileType::Masterlist);
+      state.getCurrentGame().getMasterlistPath(), FileType::Masterlist);
 
   const auto gameMessages = state.getCurrentGame().getMessages(
       state.getSettings().getLanguage(),
@@ -1159,7 +1159,7 @@ void MainWindow::refreshPluginRawData(const std::string& pluginName) {
     if (pluginItem.name == pluginName) {
       const auto plugin = state.getCurrentGame().getPlugin(pluginName);
       const auto newPluginItem = PluginItem(
-          state.getCurrentGame().getSettings().id(),
+          state.getCurrentGame().getSettings().getId(),
           *plugin,
           state.getCurrentGame(),
           state.getCurrentGame().getActiveLoadOrderIndex(*plugin, loadOrder),
@@ -1409,7 +1409,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 
   try {
     state.getSettings().storeLastGame(
-        state.getCurrentGame().getSettings().folderName());
+        state.getCurrentGame().getSettings().getFolderName());
   } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
@@ -1429,7 +1429,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    writeOldMessages(state.getCurrentGame().oldMessagesPath(),
+    writeOldMessages(state.getCurrentGame().getOldMessagesPath(),
                      pluginItemModel->getCurrentMessages());
   } catch (const std::exception& e) {
     auto logger = getLogger();
@@ -1513,13 +1513,13 @@ void MainWindow::handleGameDataLoaded(QueryResult result) {
 
   pluginItemModel->setPluginItems(std::move(std::get<PluginItems>(result)));
   pluginItemModel->setOldMessages(
-      readOldMessages(state.getCurrentGame().oldMessagesPath()));
+      readOldMessages(state.getCurrentGame().getOldMessagesPath()));
 
   updateGeneralInformation();
 
   filtersWidget->setGroups(GetGroupNames(state.getCurrentGame()));
   filtersWidget->showCreationClubPluginsFilter(
-      hadCreationClub(state.getCurrentGame().getSettings().id()));
+      hadCreationClub(state.getCurrentGame().getSettings().getId()));
 
   pluginEditorWidget->setBashTagCompletions(
       state.getCurrentGame().getKnownBashTags());
@@ -1627,17 +1627,17 @@ void MainWindow::refreshGamesDropdown() {
   for (const auto& gameSettings : state.getSettings().getGameSettings()) {
     auto installedGame = std::find(installedGames.cbegin(),
                                    installedGames.cend(),
-                                   gameSettings.folderName());
+                                   gameSettings.getFolderName());
 
     if (installedGame != installedGames.cend()) {
-      gameComboBox->addItem(QString::fromStdString(gameSettings.name()),
-                            QString::fromStdString(gameSettings.folderName()));
+      gameComboBox->addItem(QString::fromStdString(gameSettings.getName()),
+                            QString::fromStdString(gameSettings.getFolderName()));
     }
   }
 
   if (state.hasCurrentGame()) {
     gameComboBox->setCurrentText(
-        QString::fromStdString(state.getCurrentGame().getSettings().name()));
+        QString::fromStdString(state.getCurrentGame().getSettings().getName()));
   }
 }
 
@@ -1655,7 +1655,7 @@ void MainWindow::on_actionSettings_triggered() {
   try {
     auto currentGameFolder =
         state.hasCurrentGame()
-            ? std::optional(state.getCurrentGame().getSettings().folderName())
+            ? std::optional(state.getCurrentGame().getSettings().getFolderName())
             : std::nullopt;
 
     settingsDialog->initialiseInputs(
@@ -1688,8 +1688,8 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
       initLootGameFolder(state.getPaths().getLootDataPath(), settings);
 
       const auto task = new UpdateMasterlistTask(
-          settings.folderName(),
-          settings.masterlistSource(),
+          settings.getFolderName(),
+          settings.getMasterlistSource(),
           getMasterlistPath(state.getPaths().getLootDataPath(), settings));
 
       tasks.push_back(task);
@@ -1755,7 +1755,7 @@ void MainWindow::on_actionOpenGroupsEditor_triggered() {
     }
 
     const auto groupNodePositions =
-        loadGroupNodePositions(state.getCurrentGame().groupNodePositionsPath());
+        loadGroupNodePositions(state.getCurrentGame().getGroupNodePositionsPath());
 
     groupsEditor->setGroups(state.getCurrentGame().getMasterlistGroups(),
                             state.getCurrentGame().getUserGroups(),
@@ -1844,7 +1844,7 @@ void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
 
 void MainWindow::on_actionRefreshContent_triggered() {
   try {
-    writeOldMessages(state.getCurrentGame().oldMessagesPath(),
+    writeOldMessages(state.getCurrentGame().getOldMessagesPath(),
                      pluginItemModel->getCurrentMessages());
 
     loadGame(false);
@@ -1866,7 +1866,7 @@ void MainWindow::on_actionUnhideGeneralMessages_triggered() {
   try {
     std::vector<HiddenMessage> hiddenMessages;
     for (const auto& hiddenMessage :
-         state.getCurrentGame().getSettings().hiddenMessages()) {
+         state.getCurrentGame().getSettings().getHiddenMessages()) {
       if (hiddenMessage.pluginName.has_value()) {
         hiddenMessages.push_back(hiddenMessage);
       }
@@ -2087,7 +2087,7 @@ void MainWindow::on_actionUnhidePluginMessages_triggered() {
     const std::string selectedPluginName = getSelectedPlugin().name;
     std::vector<HiddenMessage> hiddenMessages;
     for (const auto& hiddenMessage :
-         state.getCurrentGame().getSettings().hiddenMessages()) {
+         state.getCurrentGame().getSettings().getHiddenMessages()) {
       if (hiddenMessage.pluginName != selectedPluginName) {
         hiddenMessages.push_back(hiddenMessage);
       }
@@ -2266,11 +2266,11 @@ void MainWindow::on_gameComboBox_activated(int index) {
     auto folderName = gameComboBox->currentData().toString().toStdString();
     if (folderName.empty() ||
         (state.hasCurrentGame() &&
-         folderName == state.getCurrentGame().getSettings().folderName())) {
+         folderName == state.getCurrentGame().getSettings().getFolderName())) {
       return;
     }
 
-    writeOldMessages(state.getCurrentGame().oldMessagesPath(),
+    writeOldMessages(state.getCurrentGame().getOldMessagesPath(),
                      pluginItemModel->getCurrentMessages());
 
     auto progressUpdater = new ProgressUpdater();
@@ -2652,7 +2652,7 @@ void MainWindow::on_groupsEditor_accepted() {
 
     state.getCurrentGame().saveUserMetadata();
 
-    saveGroupNodePositions(state.getCurrentGame().groupNodePositionsPath(),
+    saveGroupNodePositions(state.getCurrentGame().getGroupNodePositionsPath(),
                            groupsEditor->getNodePositions());
   } catch (const std::exception& e) {
     handleException(e);
@@ -2758,7 +2758,7 @@ void MainWindow::on_restoreBackupDialog_accepted() {
 
 void MainWindow::handleGameChanged(QueryResult result) {
   try {
-    filtersWidget->setGameId(state.getCurrentGame().getSettings().id());
+    filtersWidget->setGameId(state.getCurrentGame().getSettings().getId());
     filtersWidget->resetOverlapAndGroupsFilters();
     disablePluginActions();
 
@@ -2863,7 +2863,7 @@ void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
       return;
     }
 
-    writeOldMessages(state.getCurrentGame().oldMessagesPath(),
+    writeOldMessages(state.getCurrentGame().getOldMessagesPath(),
                      pluginItemModel->getCurrentMessages());
 
     state.getCurrentGame().loadMetadata();
@@ -2876,7 +2876,7 @@ void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
     handleGameDataLoaded(pluginItems);
 
     auto masterlistInfo = getFileRevisionSummary(
-        state.getCurrentGame().masterlistPath(), FileType::Masterlist);
+        state.getCurrentGame().getMasterlistPath(), FileType::Masterlist);
     auto infoText = fmt::format(
         boost::locale::translate("Masterlist updated to revision {0}.").str(),
         masterlistInfo.id);
@@ -2920,11 +2920,11 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
             std::find_if(gamesSettings.begin(),
                          gamesSettings.end(),
                          [&](const GameSettings& settings) {
-                           return settings.folderName() == updateResult.first;
+                           return settings.getFolderName() == updateResult.first;
                          });
 
         if (it != gamesSettings.end()) {
-          updatedGameNames.push_back(it->name());
+          updatedGameNames.push_back(it->getName());
         } else if (logger) {
           logger->error(
               "Unrecognised game folder name {} encountered while "
@@ -2934,7 +2934,7 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
 
         if (state.hasCurrentGame() &&
             updateResult.first ==
-                state.getCurrentGame().getSettings().folderName()) {
+                state.getCurrentGame().getSettings().getFolderName()) {
           wasCurrentGameMasterlistUpdated = true;
         }
       }
@@ -2951,7 +2951,7 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
     }
 
     if (wasCurrentGameMasterlistUpdated) {
-      writeOldMessages(state.getCurrentGame().oldMessagesPath(),
+      writeOldMessages(state.getCurrentGame().getOldMessagesPath(),
                        pluginItemModel->getCurrentMessages());
 
       // Need to reload the current game data.

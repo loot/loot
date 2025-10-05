@@ -101,7 +101,7 @@ void SettingsDialog::initialiseInputs(
   }
 
   for (const auto& game : settings.getGameSettings()) {
-    auto isCurrentGame = game.folderName() == currentGameFolder;
+    auto isCurrentGame = game.getFolderName() == currentGameFolder;
 
     addGameTab(game, isCurrentGame);
   }

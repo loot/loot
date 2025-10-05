@@ -124,11 +124,11 @@ public:
   bool supportsLightPlugins() const;
   bool supportsMediumPlugins() const;
 
-  std::filesystem::path masterlistPath() const;
-  std::filesystem::path userlistPath() const;
-  std::filesystem::path groupNodePositionsPath() const;
+  std::filesystem::path getMasterlistPath() const;
+  std::filesystem::path getUserlistPath() const;
+  std::filesystem::path getGroupNodePositionsPath() const;
   std::filesystem::path getActivePluginsFilePath() const;
-  std::filesystem::path oldMessagesPath() const;
+  std::filesystem::path getOldMessagesPath() const;
 
   std::vector<std::string> getLoadOrder() const;
   void setLoadOrder(const std::vector<std::string>& loadOrder);

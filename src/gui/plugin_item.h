@@ -80,11 +80,11 @@ struct PluginItem {
   // QAbstractItemModel has a match() function that operates on items' strings,
   // so build a string that contains all the text that would be displayed for
   // the plugin's card.
-  std::string contentToSearch() const;
+  std::string getContentToSearch() const;
 
   std::string getMarkdownContent() const;
 
-  std::string loadOrderIndexText() const;
+  std::string getLoadOrderIndexText() const;
 };
 
 std::vector<PluginItem> getPluginItems(

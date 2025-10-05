@@ -49,7 +49,7 @@ public:
     auto plugin = game_.getPlugin(pluginName_);
     if (plugin) {
       return PluginItem(
-          game_.getSettings().id(),
+          game_.getSettings().getId(),
           *plugin,
           game_,
           game_.getActiveLoadOrderIndex(*plugin, game_.getLoadOrder()),

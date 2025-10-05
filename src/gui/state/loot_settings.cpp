@@ -677,7 +677,7 @@ GameSettings convertGameTable(const toml::table& table) {
   } else {
     auto url = table["repo"].value<std::string>();
     auto branch = table["branch"].value<std::string>();
-    auto migratedSource = migrateMasterlistRepoSettings(game.id(), url, branch);
+    auto migratedSource = migrateMasterlistRepoSettings(game.getId(), url, branch);
     if (migratedSource.has_value()) {
       game.setMasterlistSource(migratedSource.value());
     }
@@ -1012,7 +1012,7 @@ void LootSettings::save(const std::filesystem::path& file) {
     for (const auto& gameSettings : gameSettings_) {
       toml::array hiddenMessages;
 
-      for (const auto& hiddenMessage : gameSettings.hiddenMessages()) {
+      for (const auto& hiddenMessage : gameSettings.getHiddenMessages()) {
         toml::table hiddenMessageToml{
             {"text", hiddenMessage.text},
         };
@@ -1026,14 +1026,14 @@ void LootSettings::save(const std::filesystem::path& file) {
       }
 
       toml::table game{
-          {"gameId", toString(gameSettings.id())},
-          {"name", gameSettings.name()},
-          {"folder", gameSettings.folderName()},
-          {"master", gameSettings.master()},
-          {"minimumHeaderVersion", gameSettings.minimumHeaderVersion()},
-          {"masterlistSource", gameSettings.masterlistSource()},
-          {"path", gameSettings.gamePath().u8string()},
-          {"local_path", gameSettings.gameLocalPath().u8string()},
+          {"gameId", toString(gameSettings.getId())},
+          {"name", gameSettings.getName()},
+          {"folder", gameSettings.getFolderName()},
+          {"master", gameSettings.getMasterFilename()},
+          {"minimumHeaderVersion", gameSettings.getMinimumHeaderVersion()},
+          {"masterlistSource", gameSettings.getMasterlistSource()},
+          {"path", gameSettings.getGamePath().u8string()},
+          {"local_path", gameSettings.getGameLocalPath().u8string()},
           {"hiddenMessages", hiddenMessages},
       };
 

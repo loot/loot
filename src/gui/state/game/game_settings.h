@@ -54,17 +54,17 @@ public:
   GameSettings() = default;
   GameSettings(const GameId gameId, const std::string& lootFolder);
 
-  GameId id() const;
-  std::string name() const;  // Returns the game's name, eg. "TES IV: Oblivion".
-  std::string folderName() const;
-  std::string master() const;
-  float minimumHeaderVersion() const;
-  std::string masterlistSource() const;
-  std::filesystem::path gamePath() const;
-  std::filesystem::path gameLocalPath() const;
-  std::filesystem::path dataPath() const;
+  GameId getId() const;
+  std::string getName() const;  // Returns the game's name, eg. "TES IV: Oblivion".
+  std::string getFolderName() const;
+  std::string getMasterFilename() const;
+  float getMinimumHeaderVersion() const;
+  std::string getMasterlistSource() const;
+  std::filesystem::path getGamePath() const;
+  std::filesystem::path getGameLocalPath() const;
+  std::filesystem::path getDataPath() const;
 
-  const std::vector<HiddenMessage>& hiddenMessages() const;
+  const std::vector<HiddenMessage>& getHiddenMessages() const;
 
   bool pluginHasHiddenMessages(const std::string& pluginName) const;
 

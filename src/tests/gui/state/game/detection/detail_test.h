@@ -292,11 +292,11 @@ TEST(UpdateSettingsPaths, shouldUpdateInstallPathIfItIsCurrentlyEmpty) {
   GameInstall install;
   install.installPath = "test";
 
-  ASSERT_TRUE(settings.gamePath().empty());
+  ASSERT_TRUE(settings.getGamePath().empty());
 
   updateSettingsPaths(settings, install);
 
-  EXPECT_EQ(install.installPath, settings.gamePath());
+  EXPECT_EQ(install.installPath, settings.getGamePath());
 }
 
 TEST(UpdateSettingsPaths, shouldNotUpdateInstallPathIfItIsNotCurrentlyEmpty) {
@@ -310,7 +310,7 @@ TEST(UpdateSettingsPaths, shouldNotUpdateInstallPathIfItIsNotCurrentlyEmpty) {
 
   updateSettingsPaths(settings, install);
 
-  EXPECT_EQ(initialPath, settings.gamePath());
+  EXPECT_EQ(initialPath, settings.getGamePath());
 }
 
 TEST(UpdateSettingsPaths, shouldUpdateLocalPathIfItIsCurrentlyEmpty) {
@@ -318,11 +318,11 @@ TEST(UpdateSettingsPaths, shouldUpdateLocalPathIfItIsCurrentlyEmpty) {
   GameInstall install;
   install.localPath = "test";
 
-  ASSERT_TRUE(settings.gameLocalPath().empty());
+  ASSERT_TRUE(settings.getGameLocalPath().empty());
 
   updateSettingsPaths(settings, install);
 
-  EXPECT_EQ(install.localPath, settings.gameLocalPath());
+  EXPECT_EQ(install.localPath, settings.getGameLocalPath());
 }
 
 TEST(UpdateSettingsPaths, shouldNotUpdateLocalPathIfItIsNotCurrentlyEmpty) {
@@ -336,7 +336,7 @@ TEST(UpdateSettingsPaths, shouldNotUpdateLocalPathIfItIsNotCurrentlyEmpty) {
 
   updateSettingsPaths(settings, install);
 
-  EXPECT_EQ(initialPath, settings.gameLocalPath());
+  EXPECT_EQ(initialPath, settings.getGameLocalPath());
 }
 
 TEST(
@@ -350,17 +350,17 @@ TEST(
       GameId::tes5, InstallSource::unknown, installPath, localPath}};
   const auto comparator = [](const GameSettings& settings,
                              const GameInstall& install) {
-    return settings.gamePath() == install.installPath;
+    return settings.getGamePath() == install.installPath;
   };
 
   const auto newInstalls =
       updateMatchingSettings(gamesSettings, gameInstalls, comparator);
 
   EXPECT_TRUE(newInstalls.empty());
-  EXPECT_TRUE(gamesSettings[0].gamePath().empty());
-  EXPECT_TRUE(gamesSettings[0].gameLocalPath().empty());
-  EXPECT_EQ(installPath, gamesSettings[1].gamePath());
-  EXPECT_EQ(localPath, gamesSettings[1].gameLocalPath());
+  EXPECT_TRUE(gamesSettings[0].getGamePath().empty());
+  EXPECT_TRUE(gamesSettings[0].getGameLocalPath().empty());
+  EXPECT_EQ(installPath, gamesSettings[1].getGamePath());
+  EXPECT_EQ(localPath, gamesSettings[1].getGameLocalPath());
 }
 
 TEST(
@@ -380,10 +380,10 @@ TEST(
       updateMatchingSettings(gamesSettings, gameInstalls, comparator);
 
   EXPECT_TRUE(newInstalls.empty());
-  EXPECT_TRUE(gamesSettings[0].gamePath().empty());
-  EXPECT_TRUE(gamesSettings[0].gameLocalPath().empty());
-  EXPECT_EQ(installPath, gamesSettings[1].gamePath());
-  EXPECT_EQ(localPath, gamesSettings[1].gameLocalPath());
+  EXPECT_TRUE(gamesSettings[0].getGamePath().empty());
+  EXPECT_TRUE(gamesSettings[0].getGameLocalPath().empty());
+  EXPECT_EQ(installPath, gamesSettings[1].getGamePath());
+  EXPECT_EQ(localPath, gamesSettings[1].getGameLocalPath());
 }
 
 TEST(UpdateMatchingSettings, shouldTrySecondaryMatchingByGameId) {
@@ -407,12 +407,12 @@ TEST(UpdateMatchingSettings, shouldTrySecondaryMatchingByGameId) {
       updateMatchingSettings(gamesSettings, gameInstalls, comparator);
 
   EXPECT_TRUE(newInstalls.empty());
-  EXPECT_EQ(installPath1, gamesSettings[0].gamePath());
-  EXPECT_EQ(localPath1, gamesSettings[0].gameLocalPath());
-  EXPECT_EQ(installPath2, gamesSettings[1].gamePath());
-  EXPECT_EQ(localPath2, gamesSettings[1].gameLocalPath());
-  EXPECT_TRUE(gamesSettings[2].gamePath().empty());
-  EXPECT_TRUE(gamesSettings[2].gameLocalPath().empty());
+  EXPECT_EQ(installPath1, gamesSettings[0].getGamePath());
+  EXPECT_EQ(localPath1, gamesSettings[0].getGameLocalPath());
+  EXPECT_EQ(installPath2, gamesSettings[1].getGamePath());
+  EXPECT_EQ(localPath2, gamesSettings[1].getGameLocalPath());
+  EXPECT_TRUE(gamesSettings[2].getGamePath().empty());
+  EXPECT_TRUE(gamesSettings[2].getGameLocalPath().empty());
 }
 
 TEST(UpdateMatchingSettings,
@@ -435,8 +435,8 @@ TEST(UpdateMatchingSettings,
   EXPECT_EQ(gameInstalls[0].installPath, newInstalls[0].installPath);
   EXPECT_EQ(gameInstalls[0].localPath, newInstalls[0].localPath);
 
-  EXPECT_TRUE(gamesSettings[0].gamePath().empty());
-  EXPECT_TRUE(gamesSettings[0].gameLocalPath().empty());
+  EXPECT_TRUE(gamesSettings[0].getGamePath().empty());
+  EXPECT_TRUE(gamesSettings[0].getGameLocalPath().empty());
 }
 
 TEST(AppendNewGamesSettings,
@@ -453,23 +453,23 @@ TEST(AppendNewGamesSettings,
 
   ASSERT_EQ(2, gamesSettings.size());
 
-  EXPECT_EQ(GameId::enderal, gamesSettings[0].id());
-  EXPECT_EQ("Enderal", gamesSettings[0].folderName());
-  EXPECT_EQ("Enderal: Forgotten Stories", gamesSettings[0].name());
-  EXPECT_EQ("Skyrim.esm", gamesSettings[0].master());
+  EXPECT_EQ(GameId::enderal, gamesSettings[0].getId());
+  EXPECT_EQ("Enderal", gamesSettings[0].getFolderName());
+  EXPECT_EQ("Enderal: Forgotten Stories", gamesSettings[0].getName());
+  EXPECT_EQ("Skyrim.esm", gamesSettings[0].getMasterFilename());
   EXPECT_EQ(
       "https://raw.githubusercontent.com/loot/enderal/v0.26/masterlist.yaml",
-      gamesSettings[0].masterlistSource());
-  EXPECT_EQ(installPath, gamesSettings[0].gamePath());
-  EXPECT_EQ(localPath, gamesSettings[0].gameLocalPath());
+      gamesSettings[0].getMasterlistSource());
+  EXPECT_EQ(installPath, gamesSettings[0].getGamePath());
+  EXPECT_EQ(localPath, gamesSettings[0].getGameLocalPath());
 
-  EXPECT_EQ(GameId::nehrim, gamesSettings[1].id());
-  EXPECT_EQ("Nehrim", gamesSettings[1].folderName());
-  EXPECT_EQ("Nehrim - At Fate's Edge", gamesSettings[1].name());
-  EXPECT_EQ("Nehrim.esm", gamesSettings[1].master());
+  EXPECT_EQ(GameId::nehrim, gamesSettings[1].getId());
+  EXPECT_EQ("Nehrim", gamesSettings[1].getFolderName());
+  EXPECT_EQ("Nehrim - At Fate's Edge", gamesSettings[1].getName());
+  EXPECT_EQ("Nehrim.esm", gamesSettings[1].getMasterFilename());
   EXPECT_EQ(
       "https://raw.githubusercontent.com/loot/oblivion/v0.26/masterlist.yaml",
-      gamesSettings[1].masterlistSource());
+      gamesSettings[1].getMasterlistSource());
 }
 
 TEST(AppendNewGamesSettings,
@@ -483,12 +483,12 @@ TEST(AppendNewGamesSettings,
       {{GameId::tes3, InstallSource::gog}, {GameId::tes3, InstallSource::gog}});
 
   ASSERT_EQ(3, gamesSettings.size());
-  EXPECT_EQ("Morrowind", gamesSettings[0].folderName());
-  EXPECT_EQ("TES III: Morrowind", gamesSettings[0].name());
-  EXPECT_EQ("Morrowind (1)", gamesSettings[1].folderName());
-  EXPECT_EQ("TES III: Morrowind (1)", gamesSettings[1].name());
-  EXPECT_EQ("Morrowind (2)", gamesSettings[2].folderName());
-  EXPECT_EQ("TES III: Morrowind (2)", gamesSettings[2].name());
+  EXPECT_EQ("Morrowind", gamesSettings[0].getFolderName());
+  EXPECT_EQ("TES III: Morrowind", gamesSettings[0].getName());
+  EXPECT_EQ("Morrowind (1)", gamesSettings[1].getFolderName());
+  EXPECT_EQ("TES III: Morrowind (1)", gamesSettings[1].getName());
+  EXPECT_EQ("Morrowind (2)", gamesSettings[2].getFolderName());
+  EXPECT_EQ("TES III: Morrowind (2)", gamesSettings[2].getName());
 }
 
 class UpdateInstalledGamesSettingsTest : public CommonGameTestFixture {
@@ -525,10 +525,10 @@ TEST_F(UpdateInstalledGamesSettingsTest,
   updateInstalledGamesSettings(gamesSettings, TestRegistry(), {}, {}, {});
 
   ASSERT_EQ(1, gamesSettings.size());
-  EXPECT_EQ(GameId::tes3, gamesSettings[0].id());
+  EXPECT_EQ(GameId::tes3, gamesSettings[0].getId());
   EXPECT_EQ(std::filesystem::current_path().parent_path(),
-            gamesSettings[0].gamePath());
-  EXPECT_EQ("", gamesSettings[0].gameLocalPath());
+            gamesSettings[0].getGamePath());
+  EXPECT_EQ("", gamesSettings[0].getGameLocalPath());
 }
 #endif
 }
