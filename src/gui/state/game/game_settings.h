@@ -52,7 +52,7 @@ bool operator==(const HiddenMessage& lhs, const HiddenMessage& rhs);
 class GameSettings {
 public:
   GameSettings() = default;
-  explicit GameSettings(const GameId gameId, const std::string& lootFolder);
+  GameSettings(const GameId gameId, const std::string& lootFolder);
 
   GameId Id() const;
   std::string Name() const;  // Returns the game's name, eg. "TES IV: Oblivion".

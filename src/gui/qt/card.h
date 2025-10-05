@@ -35,7 +35,7 @@ class Card : public QFrame {
   Q_PROPERTY(QColor shadowNearColor MEMBER shadowNearColor_)
   Q_PROPERTY(QColor shadowFarColor MEMBER shadowFarColor_)
 public:
-  explicit Card(QWidget* parent, bool paintTopShadow);
+  Card(QWidget* parent, bool paintTopShadow);
 
 protected:
   static constexpr int ATTRIBUTE_ICON_HEIGHT = 18;

@@ -37,7 +37,7 @@ namespace loot {
 class NewGameDialog : public QDialog {
   Q_OBJECT
 public:
-  NewGameDialog(QWidget *parent);
+  explicit NewGameDialog(QWidget *parent);
 
   QString getGameName() const;
   QString getBaseGame() const;

@@ -96,7 +96,7 @@ private:
 class CardDelegate : public QStyledItemDelegate {
   Q_OBJECT
 public:
-  explicit CardDelegate(QListView* parent, CardSizingCache& cardSizingCache);
+  CardDelegate(QListView* parent, CardSizingCache& cardSizingCache);
 
   void setIcons();
   void refreshMessages();

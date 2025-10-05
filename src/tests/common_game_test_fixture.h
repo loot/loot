@@ -41,7 +41,7 @@ namespace loot {
 namespace test {
 class CommonGameTestFixture : public ::testing::Test {
 protected:
-  CommonGameTestFixture(const GameId gameId) :
+  explicit CommonGameTestFixture(const GameId gameId) :
       gameId_(gameId),
       rootTestPath(getTempPath()),
       missingPath(rootTestPath / "missing"),

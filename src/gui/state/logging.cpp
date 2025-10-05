@@ -63,7 +63,7 @@ static const char* LOGGER_NAME = "loot_logger";
 
 class CensoringFileSink : public spdlog::sinks::sink {
 public:
-  explicit CensoringFileSink(
+  CensoringFileSink(
       const spdlog::filename_t& filename,
       const std::vector<std::pair<std::string, std::string>>& stringsToCensor) :
       sink(filename), stringsToCensor_(stringsToCensor) {}

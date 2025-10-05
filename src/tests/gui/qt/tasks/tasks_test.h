@@ -44,7 +44,7 @@ static const int THREAD_TIMEOUT_MS = 50;
 
 class TestQuery : public Query {
 public:
-  TestQuery(int value) : value(value) {}
+  explicit TestQuery(int value) : value(value) {}
 
   QueryResult executeLogic() override {
     if (value < 0) {

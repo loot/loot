@@ -41,8 +41,7 @@ namespace loot {
 class SettingsDialog : public QDialog {
   Q_OBJECT
 public:
-  explicit SettingsDialog(QWidget *parent,
-                          const std::filesystem::path &lootDataPath);
+  SettingsDialog(QWidget *parent, const std::filesystem::path &lootDataPath);
 
   void initialiseInputs(const LootSettings &settings,
                         const std::vector<std::string> &themes,
