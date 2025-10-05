@@ -33,6 +33,9 @@
 namespace loot {
 class LocationTableModel : public MetadataTableModel<Location> {
 public:
+  static constexpr int URL_COLUMN = 0;
+  static constexpr int NAME_COLUMN = 1;
+
   LocationTableModel(QObject* parent,
                      std::vector<Location> nonUserMetadata,
                      std::vector<Location> userMetadata);
@@ -40,9 +43,6 @@ public:
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
   using MetadataTableModel::setData;
-
-  static constexpr int URL_COLUMN = 0;
-  static constexpr int NAME_COLUMN = 1;
 
 private:
   QVariant data(const Location& element, int column, int role) const override;

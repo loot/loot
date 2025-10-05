@@ -33,6 +33,10 @@
 namespace loot {
 class MessageTableModel : public MetadataTableModel<Message> {
 public:
+  static constexpr int TYPE_COLUMN = 0;
+  static constexpr int CONTENT_COLUMN = 1;
+  static constexpr int CONDITION_COLUMN = 2;
+
   MessageTableModel(
       QObject* parent,
       std::vector<Message> nonUserMetadata,
@@ -43,10 +47,6 @@ public:
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
   using MetadataTableModel::setData;
-
-  static constexpr int TYPE_COLUMN = 0;
-  static constexpr int CONTENT_COLUMN = 1;
-  static constexpr int CONDITION_COLUMN = 2;
 
 private:
   const std::map<MessageType, std::pair<QString, QVariant>> typeDisplayDataMap;

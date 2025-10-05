@@ -33,6 +33,13 @@
 namespace loot {
 class CleaningDataTableModel : public MetadataTableModel<PluginCleaningData> {
 public:
+  static constexpr int CRC_COLUMN = 0;
+  static constexpr int ITM_COLUMN = 1;
+  static constexpr int DELETED_REFERENCE_COLUMN = 2;
+  static constexpr int DELETED_NAVMESH_COLUMN = 3;
+  static constexpr int CLEANING_UTILITY_COLUMN = 4;
+  static constexpr int DETAIL_COLUMN = 5;
+
   CleaningDataTableModel(QObject* parent,
                          std::vector<PluginCleaningData> nonUserMetadata,
                          std::vector<PluginCleaningData> userMetadata,
@@ -41,13 +48,6 @@ public:
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
   using MetadataTableModel::setData;
-
-  static constexpr int CRC_COLUMN = 0;
-  static constexpr int ITM_COLUMN = 1;
-  static constexpr int DELETED_REFERENCE_COLUMN = 2;
-  static constexpr int DELETED_NAVMESH_COLUMN = 3;
-  static constexpr int CLEANING_UTILITY_COLUMN = 4;
-  static constexpr int DETAIL_COLUMN = 5;
 
 private:
   const std::string& language;

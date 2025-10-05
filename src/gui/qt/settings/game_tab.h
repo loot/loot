@@ -62,13 +62,14 @@ private slots:
 class GameTab : public QFrame {
   Q_OBJECT
 public:
+  static const std::map<std::string, GameId> GAME_IDS_BY_STRING;
+
   GameTab(const GameSettings &settings, QWidget *parent, bool isCurrentGame);
 
   QString getName() const;
   QString getLootFolder() const;
   GameSettings getGameSettings() const;
 
-  static const std::map<std::string, GameId> GAME_IDS_BY_STRING;
 signals:
   void gameSettingsDeleted();
   void gameNameChanged(const QString &name);

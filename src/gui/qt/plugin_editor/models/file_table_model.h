@@ -33,6 +33,12 @@
 namespace loot {
 class FileTableModel : public MetadataTableModel<File> {
 public:
+  static constexpr int NAME_COLUMN = 0;
+  static constexpr int DISPLAY_NAME_COLUMN = 1;
+  static constexpr int DETAIL_COLUMN = 2;
+  static constexpr int CONDITION_COLUMN = 3;
+  static constexpr int CONSTRAINT_COLUMN = 4;
+
   FileTableModel(QObject* parent,
                  std::vector<File> nonUserMetadata,
                  std::vector<File> userMetadata,
@@ -51,12 +57,6 @@ public:
                     const QModelIndex& parent) override;
 
   using MetadataTableModel::setData;
-
-  static constexpr int NAME_COLUMN = 0;
-  static constexpr int DISPLAY_NAME_COLUMN = 1;
-  static constexpr int DETAIL_COLUMN = 2;
-  static constexpr int CONDITION_COLUMN = 3;
-  static constexpr int CONSTRAINT_COLUMN = 4;
 
 private:
   const std::string& language;

@@ -36,9 +36,9 @@ namespace test {
 class NonBlockingTestTask : public Task {
   Q_OBJECT
 public:
-  NonBlockingTestTask(bool fail, const QElapsedTimer& timer);
-
   static constexpr const char* ERROR_MESSAGE = "Task errored";
+
+  NonBlockingTestTask(bool fail, const QElapsedTimer& timer);
 
 public slots:
   void execute() override;
