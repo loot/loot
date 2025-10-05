@@ -105,12 +105,12 @@ void CrcLineEditDelegate::setModelData(QWidget* editor,
 MessageContentDelegate::MessageContentDelegate(
     QObject* parent,
     const std::vector<LootSettings::Language>& languages) :
-    QStyledItemDelegate(parent), languages(languages) {}
+    QStyledItemDelegate(parent), languages(&languages) {}
 
 QWidget* MessageContentDelegate::createEditor(QWidget* parent,
                                               const QStyleOptionViewItem&,
                                               const QModelIndex&) const {
-  auto editor = new MessageContentEditor(parent, languages);
+  auto editor = new MessageContentEditor(parent, *languages);
   editor->setFocusPolicy(Qt::StrongFocus);
 
   return editor;
@@ -164,13 +164,13 @@ bool MessageContentDelegate::eventFilter(QObject* editor, QEvent* event) {
 AutocompletingLineEditDelegate::AutocompletingLineEditDelegate(
     QObject* parent,
     const QStringList& completions) :
-    QStyledItemDelegate(parent), completions(completions) {}
+    QStyledItemDelegate(parent), completions(&completions) {}
 
 QWidget* AutocompletingLineEditDelegate::createEditor(
     QWidget* parent,
     const QStyleOptionViewItem&,
     const QModelIndex&) const {
-  auto completer = new QCompleter(completions, parent);
+  auto completer = new QCompleter(*completions, parent);
   completer->setCaseSensitivity(Qt::CaseInsensitive);
 
   QLineEdit* lineEdit = new QLineEdit(parent);

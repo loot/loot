@@ -50,7 +50,7 @@ public:
 
 private:
   const std::map<MessageType, std::pair<QString, QVariant>> typeDisplayDataMap;
-  const std::string& language;
+  const std::string* language;
 
   QVariant data(const Message& element, int column, int role) const override;
 

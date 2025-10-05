@@ -35,7 +35,7 @@ CleaningDataTableModel::CleaningDataTableModel(
     std::vector<PluginCleaningData> userMetadata,
     const std::string& language) :
     MetadataTableModel(parent, nonUserMetadata, userMetadata),
-    language(language) {}
+    language(&language) {}
 
 int CleaningDataTableModel::columnCount(const QModelIndex&) const {
   static constexpr int COLUMN_COUNT = std::max({CRC_COLUMN,
@@ -64,7 +64,7 @@ QVariant CleaningDataTableModel::data(const PluginCleaningData& element,
       return QVariant(QString::fromStdString(element.GetCleaningUtility()));
     case DETAIL_COLUMN: {
       if (role == Qt::DisplayRole) {
-        auto contentText = SelectMessageContent(element.GetDetail(), language)
+        auto contentText = SelectMessageContent(element.GetDetail(), *language)
                                .value_or(MessageContent())
                                .GetText();
         return QVariant(QString::fromStdString(contentText));

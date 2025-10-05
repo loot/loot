@@ -45,7 +45,7 @@ public slots:
 
 private:
   const bool fail;
-  const QElapsedTimer& timer;
+  const QElapsedTimer* timer;
 };
 }
 }

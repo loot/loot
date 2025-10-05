@@ -51,7 +51,7 @@ MessageTableModel::MessageTableModel(
     const std::string& language) :
     MetadataTableModel(parent, nonUserMetadata, userMetadata),
     typeDisplayDataMap(typeDisplayDataMap),
-    language(language) {}
+    language(&language) {}
 
 int MessageTableModel::columnCount(const QModelIndex&) const {
   static constexpr int COLUMN_COUNT =
@@ -74,7 +74,7 @@ QVariant MessageTableModel::data(const Message& element,
     }
     case CONTENT_COLUMN: {
       if (role == Qt::DisplayRole) {
-        auto contentText = SelectMessageContent(element.GetContent(), language)
+        auto contentText = SelectMessageContent(element.GetContent(), *language)
                                .value_or(MessageContent())
                                .GetText();
         return QVariant(QString::fromStdString(contentText));

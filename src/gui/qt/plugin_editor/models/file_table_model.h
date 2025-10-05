@@ -59,7 +59,7 @@ public:
   using MetadataTableModel::setData;
 
 private:
-  const std::string& language;
+  const std::string* language;
 
   QVariant data(const File& element, int column, int role) const override;
 

@@ -88,7 +88,7 @@ public:
   bool eventFilter(QObject* editor, QEvent* event) override;
 
 private:
-  const std::vector<LootSettings::Language>& languages;
+  const std::vector<LootSettings::Language>* languages;
 };
 
 class AutocompletingLineEditDelegate : public QStyledItemDelegate {
@@ -107,7 +107,7 @@ public:
                     const QModelIndex& index) const override;
 
 private:
-  const QStringList& completions;
+  const QStringList* completions;
 };
 }
 

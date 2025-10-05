@@ -31,10 +31,10 @@ namespace loot {
 namespace test {
 NonBlockingTestTask::NonBlockingTestTask(bool fail,
                                          const QElapsedTimer& timer) :
-    fail(fail), timer(timer) {}
+    fail(fail), timer(&timer) {}
 
 void NonBlockingTestTask::execute() {
-  auto start = QString::number(timer.nsecsElapsed()).toStdString();
+  auto start = QString::number(timer->nsecsElapsed()).toStdString();
 
   // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDeleteLeaks)
   QTimer::singleShot(5, [this, start]() {
@@ -43,7 +43,7 @@ void NonBlockingTestTask::execute() {
       return;
     }
 
-    auto end = QString::number(timer.nsecsElapsed()).toStdString();
+    auto end = QString::number(timer->nsecsElapsed()).toStdString();
 
     std::vector<std::pair<std::string, std::optional<short>>> result(
         {{start, std::nullopt}, {end, std::nullopt}});

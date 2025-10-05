@@ -39,7 +39,7 @@ PluginEditorWidget::PluginEditorWidget(
     QWidget *parent,
     const std::vector<LootSettings::Language> &languages,
     const std::string &language) :
-    QWidget(parent), languages(languages), language(language) {
+    QWidget(parent), languages(&languages), language(language) {
   setupUi();
 }
 

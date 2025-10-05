@@ -59,7 +59,7 @@ signals:
   void rejected();
 
 private:
-  const std::vector<LootSettings::Language> &languages;
+  const std::vector<LootSettings::Language> *languages;
   const std::string language;
 
   QStringList bashTagCompletions;
@@ -70,19 +70,19 @@ private:
   GroupTab *groupTab{new GroupTab(this)};
   LoadAfterFileTableTab *loadAfterTab{
       new LoadAfterFileTableTab(this,
-                                languages,
+                                *languages,
                                 language,
                                 filenameCompletions)};
   FileTableTab *requirementsTab{
-      new FileTableTab(this, languages, language, filenameCompletions)};
+      new FileTableTab(this, *languages, language, filenameCompletions)};
   FileTableTab *incompatibilitiesTab{
-      new FileTableTab(this, languages, language, filenameCompletions)};
-  MessageTableTab *messagesTab{new MessageTableTab(this, languages, language)};
+      new FileTableTab(this, *languages, language, filenameCompletions)};
+  MessageTableTab *messagesTab{new MessageTableTab(this, *languages, language)};
   TagTableTab *tagsTab{new TagTableTab(this, bashTagCompletions)};
   CleaningDataTableTab *dirtyTab{
-      new CleaningDataTableTab(this, languages, language)};
+      new CleaningDataTableTab(this, *languages, language)};
   CleaningDataTableTab *cleanTab{
-      new CleaningDataTableTab(this, languages, language)};
+      new CleaningDataTableTab(this, *languages, language)};
   LocationTableTab *locationsTab{new LocationTableTab(this)};
 
   void setupUi();

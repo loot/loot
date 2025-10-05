@@ -107,9 +107,9 @@ public:
   bool hasUserMetadata() const override;
 
 private:
-  const std::vector<LootSettings::Language>& languages;
-  const std::string& language;
-  const QStringList& completions;
+  const std::vector<LootSettings::Language>* languages;
+  const std::string* language;
+  const QStringList* completions;
 };
 
 class LoadAfterFileTableTab : public FileTableTab {
@@ -155,8 +155,8 @@ public:
   bool hasUserMetadata() const override;
 
 private:
-  const std::vector<LootSettings::Language>& languages;
-  const std::string& language;
+  const std::vector<LootSettings::Language>* languages;
+  const std::string* language;
 };
 
 class LocationTableTab : public MetadataTableTab<Location> {
@@ -190,8 +190,8 @@ public:
   bool hasUserMetadata() const override;
 
 private:
-  const std::vector<LootSettings::Language>& languages;
-  const std::string& language;
+  const std::vector<LootSettings::Language>* languages;
+  const std::string* language;
 };
 
 class TagTableTab : public MetadataTableTab<Tag> {
@@ -207,7 +207,7 @@ public:
   bool hasUserMetadata() const override;
 
 private:
-  const QStringList& completions;
+  const QStringList* completions;
 };
 }
 

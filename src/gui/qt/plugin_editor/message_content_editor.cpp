@@ -33,7 +33,7 @@ namespace loot {
 MessageContentEditor::MessageContentEditor(
     QWidget* parent,
     const std::vector<LootSettings::Language>& languages) :
-    QDialog(parent), languages(languages) {
+    QDialog(parent), languages(&languages) {
   setupUi();
 }
 

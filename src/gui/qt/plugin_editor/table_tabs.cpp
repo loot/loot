@@ -339,21 +339,21 @@ FileTableTab::FileTableTab(QWidget* parent,
                            const std::string& language,
                            const QStringList& completions) :
     MetadataTableTab(parent),
-    languages(languages),
-    language(language),
-    completions(completions) {
+    languages(&languages),
+    language(&language),
+    completions(&completions) {
   configureAsDropTarget();
 }
 
 void FileTableTab::initialiseInputs(const std::vector<File>& nonUserMetadata,
                                     const std::vector<File>& userMetadata) {
   auto tableModel =
-      new FileTableModel(this, nonUserMetadata, userMetadata, language);
+      new FileTableModel(this, nonUserMetadata, userMetadata, *language);
 
   setTableModel(tableModel);
 
-  auto filenameDelegate = new AutocompletingLineEditDelegate(this, completions);
-  auto detailDelegate = new MessageContentDelegate(this, languages);
+  auto filenameDelegate = new AutocompletingLineEditDelegate(this, *completions);
+  auto detailDelegate = new MessageContentDelegate(this, *languages);
 
   setItemDelegateForColumn(tableModel->NAME_COLUMN, filenameDelegate);
   setItemDelegateForColumn(tableModel->DETAIL_COLUMN, detailDelegate);
@@ -424,7 +424,7 @@ MessageTableTab::MessageTableTab(
     QWidget* parent,
     const std::vector<LootSettings::Language>& languages,
     const std::string& language) :
-    MetadataTableTab(parent), languages(languages), language(language) {}
+    MetadataTableTab(parent), languages(&languages), language(&language) {}
 
 void MessageTableTab::initialiseInputs(
     const std::vector<Message>& nonUserMetadata,
@@ -435,7 +435,7 @@ void MessageTableTab::initialiseInputs(
       {MessageType::error, {translate("Error"), QString("error")}}};
 
   auto tableModel = new MessageTableModel(
-      this, nonUserMetadata, userMetadata, messageTypeMap, language);
+      this, nonUserMetadata, userMetadata, messageTypeMap, *language);
 
   setTableModel(tableModel);
 
@@ -448,7 +448,7 @@ void MessageTableTab::initialiseInputs(
                       calculateMinimumColumnWidth(tableModel, 0, messageTypes));
 
   auto messageTypeDelegate = new ComboBoxDelegate(this, messageTypes);
-  auto contentDelegate = new MessageContentDelegate(this, languages);
+  auto contentDelegate = new MessageContentDelegate(this, *languages);
 
   setItemDelegateForColumn(tableModel->TYPE_COLUMN, messageTypeDelegate);
   setItemDelegateForColumn(tableModel->CONTENT_COLUMN, contentDelegate);
@@ -482,13 +482,13 @@ CleaningDataTableTab::CleaningDataTableTab(
     QWidget* parent,
     const std::vector<LootSettings::Language>& languages,
     const std::string& language) :
-    MetadataTableTab(parent), languages(languages), language(language) {}
+    MetadataTableTab(parent), languages(&languages), language(&language) {}
 
 void CleaningDataTableTab::initialiseInputs(
     const std::vector<PluginCleaningData>& nonUserMetadata,
     const std::vector<PluginCleaningData>& userMetadata) {
   auto tableModel =
-      new CleaningDataTableModel(this, nonUserMetadata, userMetadata, language);
+      new CleaningDataTableModel(this, nonUserMetadata, userMetadata, *language);
 
   setTableModel(tableModel);
 
@@ -496,7 +496,7 @@ void CleaningDataTableTab::initialiseInputs(
 
   setItemDelegateForColumn(tableModel->CRC_COLUMN, crcDelegate);
 
-  auto detailDelegate = new MessageContentDelegate(this, languages);
+  auto detailDelegate = new MessageContentDelegate(this, *languages);
 
   setItemDelegateForColumn(tableModel->DETAIL_COLUMN, detailDelegate);
 }
@@ -518,7 +518,7 @@ bool CleaningDataTableTab::hasUserMetadata() const {
 }
 
 TagTableTab::TagTableTab(QWidget* parent, const QStringList& completions) :
-    MetadataTableTab(parent), completions(completions) {}
+    MetadataTableTab(parent), completions(&completions) {}
 
 void TagTableTab::initialiseInputs(const std::vector<Tag>& nonUserMetadata,
                                    const std::vector<Tag>& userMetadata) {
@@ -540,7 +540,7 @@ void TagTableTab::initialiseInputs(const std::vector<Tag>& nonUserMetadata,
           tableModel, tableModel->TYPE_COLUMN, suggestionTypes));
 
   auto addRemoveDelegate = new ComboBoxDelegate(this, suggestionTypes);
-  auto nameDelegate = new AutocompletingLineEditDelegate(this, completions);
+  auto nameDelegate = new AutocompletingLineEditDelegate(this, *completions);
 
   setItemDelegateForColumn(tableModel->TYPE_COLUMN, addRemoveDelegate);
   setItemDelegateForColumn(tableModel->NAME_COLUMN, nameDelegate);

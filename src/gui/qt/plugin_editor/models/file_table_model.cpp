@@ -35,7 +35,7 @@ FileTableModel::FileTableModel(QObject* parent,
                                std::vector<File> userMetadata,
                                const std::string& language) :
     MetadataTableModel(parent, nonUserMetadata, userMetadata),
-    language(language) {}
+    language(&language) {}
 
 int FileTableModel::columnCount(const QModelIndex&) const {
   static constexpr int COLUMN_COUNT =
@@ -53,7 +53,7 @@ QVariant FileTableModel::data(const File& element, int column, int role) const {
       return QVariant(QString::fromStdString(element.GetDisplayName()));
     case DETAIL_COLUMN: {
       if (role == Qt::DisplayRole) {
-        auto contentText = SelectMessageContent(element.GetDetail(), language)
+        auto contentText = SelectMessageContent(element.GetDetail(), *language)
                                .value_or(MessageContent())
                                .GetText();
         return QVariant(QString::fromStdString(contentText));
