@@ -33,9 +33,9 @@
 
 namespace loot {
 struct Counters {
-  size_t activeFullPlugins = 0;
-  size_t activeLightPlugins = 0;
-  size_t activeMediumPlugins = 0;
+  size_t activeFullPlugins{0};
+  size_t activeLightPlugins{0};
+  size_t activeMediumPlugins{0};
 };
 
 std::vector<SourcedMessage> checkInstallValidity(const gui::Game& game,
