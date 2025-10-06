@@ -271,15 +271,75 @@ TEST_F(Heroic_FindGameInstallsTest,
 
 #ifndef _WIN32
 TEST_F(Heroic_FindGameInstallsTest,
-       shouldReturnValidMorrowindInstallEvenIfThereIsNoGameConfigFile) {}
+       shouldReturnValidMorrowindInstallEvenIfThereIsNoGameConfigFile) {
+  const auto morrowindPath = rootPath_ / "Morrowind";
+  const auto morrowindEsmPath = morrowindPath / "Data Files" / "Morrowind.esm";
+  std::filesystem::create_directories(morrowindEsmPath.parent_path());
+  touch(morrowindEsmPath);
+  touch(morrowindPath / "Morrowind.exe");
+
+  std::ofstream out(gogInstalledPath_);
+  out << R"test({"installed": [{
+	"appName": "1435828767",
+	"install_path": ")test";
+  out << morrowindPath.generic_u8string() << "\"}]}";
+  out.close();
+
+  const auto installs = loot::heroic::findGameInstalls(rootPath_, {});
+
+  ASSERT_EQ(1, installs.size());
+  EXPECT_EQ(GameId::tes3, installs[0].gameId);
+  EXPECT_EQ(InstallSource::gog, installs[0].source);
+  EXPECT_EQ(morrowindPath, installs[0].installPath);
+  EXPECT_TRUE(installs[0].localPath.empty());
+}
 
 TEST_F(
     Heroic_FindGameInstallsTest,
-    shouldReturnNoInstallsIfThereIsANonMorrowindInstallWithNoGameConfigFile) {}
+    shouldReturnNoInstallsIfThereIsANonMorrowindInstallWithNoGameConfigFile) {
+  const auto oblivionPath = rootPath_ / "Oblivion";
+  const auto oblivionEsmPath = oblivionPath / "Data" / "Oblivion.esm";
+  std::filesystem::create_directories(oblivionEsmPath.parent_path());
+  touch(oblivionEsmPath);
+  touch(oblivionPath / "Oblivion.exe");
+
+  std::ofstream out(gogInstalledPath_);
+  out << R"test({"installed": [{
+	"appName": "1458058109",
+	"install_path": ")test";
+  out << oblivionPath.generic_u8string() << "\"}]}";
+  out.close();
+
+  const auto installs = loot::heroic::findGameInstalls(rootPath_, {});
+
+  EXPECT_TRUE(installs.empty());
+}
+
 TEST_F(
     Heroic_FindGameInstallsTest,
     shouldReturnNoInstallsIfThereIsANonMorrowindInstallWithAnInvalidGameConfigFile) {
+  const auto oblivionPath = rootPath_ / "Oblivion";
+  const auto oblivionEsmPath = oblivionPath / "Data" / "Oblivion.esm";
+  std::filesystem::create_directories(oblivionEsmPath.parent_path());
+  touch(oblivionEsmPath);
+  touch(oblivionPath / "Oblivion.exe");
 
+  std::ofstream out(gogInstalledPath_);
+  out << R"test({"installed": [{
+	"appName": "1458058109",
+	"install_path": ")test";
+  out << oblivionPath.generic_u8string() << "\"}]}";
+  out.close();
+
+  out = std::ofstream(gamesConfigPath_ / "1458058109.json");
+  out << R"test({"invalid": {
+"winePrefix": "/home/user/Games/Heroic/Oblivion"
+}})test";
+  out.close();
+
+  const auto installs = loot::heroic::findGameInstalls(rootPath_, {});
+
+  EXPECT_TRUE(installs.empty());
 }
 #endif
 

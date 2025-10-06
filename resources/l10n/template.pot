@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.26.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-10-04 11:39+0100\n"
+"POT-Creation-Date: 2025-10-06 21:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1190,11 +1190,11 @@ msgid ""
 "information."
 msgstr ""
 
-#: src/gui/query/types/get_game_data_query.h:47
+#: src/gui/query/types/get_game_data_query.h:48
 msgid "Parsing, merging and evaluating metadata…"
 msgstr ""
 
-#: src/gui/query/types/sort_plugins_query.h:54
+#: src/gui/query/types/sort_plugins_query.h:55
 msgid "Sorting load order…"
 msgstr ""
 
