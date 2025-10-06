@@ -102,7 +102,7 @@ signals:
   void linkColorChanged();
 
 private:
-  LootState &state;
+  LootState *state;
 
   QAction *actionSort{new QAction(this)};
   QAction *actionApplySort{new QAction(this)};
@@ -157,11 +157,11 @@ private:
   QListView *pluginCardsView{new QListView(editorSplitter)};
   PluginEditorWidget *pluginEditorWidget{
       new PluginEditorWidget(editorSplitter,
-                             state.getSettings().getLanguages(),
-                             state.getSettings().getLanguage())};
+                             state->getSettings().getLanguages(),
+                             state->getSettings().getLanguage())};
 
   SettingsDialog *settingsDialog{
-      new SettingsDialog(this, state.getPaths().getLootDataPath())};
+      new SettingsDialog(this, state->getPaths().getLootDataPath())};
   SearchDialog *searchDialog{new SearchDialog(this)};
   BackUpLoadOrderDialog *backupDialog{new BackUpLoadOrderDialog(this)};
   RestoreLoadOrderDialog *restoreBackupDialog{new RestoreLoadOrderDialog(this)};

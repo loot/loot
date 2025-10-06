@@ -33,7 +33,7 @@ namespace loot {
 class ClearAllMetadataQuery : public Query {
 public:
   ClearAllMetadataQuery(gui::Game& game, std::string language) :
-      game_(game), language_(language) {}
+      game_(&game), language_(language) {}
 
   QueryResult executeLogic() override {
     auto logger = getLogger();
@@ -45,8 +45,8 @@ public:
     auto userlistPlugins = getUserlistPluginNames();
 
     // Clear the user metadata.
-    game_.clearAllUserMetadata();
-    game_.saveUserMetadata();
+    game_->clearAllUserMetadata();
+    game_->saveUserMetadata();
 
     if (logger) {
       logger->trace(
@@ -59,13 +59,13 @@ public:
   }
 
 private:
-  gui::Game& game_;
+  gui::Game* game_;
   std::string language_;
 
   std::vector<std::string> getUserlistPluginNames() const {
     std::vector<std::string> pluginNames;
-    for (const auto& pluginName : game_.getLoadOrder()) {
-      if (game_.getUserMetadata(pluginName).has_value()) {
+    for (const auto& pluginName : game_->getLoadOrder()) {
+      if (game_->getUserMetadata(pluginName).has_value()) {
         pluginNames.push_back(pluginName);
       }
     }
@@ -75,7 +75,7 @@ private:
 
   std::vector<PluginItem> getDerivedMetadata(
       const std::vector<std::string>& userlistPlugins) const {
-    return getPluginItems(userlistPlugins, game_, language_);
+    return getPluginItems(userlistPlugins, *game_, language_);
   }
 };
 }

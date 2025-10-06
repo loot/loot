@@ -35,7 +35,7 @@ public:
   ClearPluginMetadataQuery(gui::Game& game,
                            std::string language,
                            std::string pluginName) :
-      game_(game), language_(language), pluginName_(pluginName) {}
+      game_(&game), language_(language), pluginName_(pluginName) {}
 
   QueryResult executeLogic() override {
     auto logger = getLogger();
@@ -43,17 +43,17 @@ public:
       logger->debug("Clearing user metadata for plugin {}", pluginName_);
     }
 
-    game_.clearUserMetadata(pluginName_);
-    game_.saveUserMetadata();
+    game_->clearUserMetadata(pluginName_);
+    game_->saveUserMetadata();
 
-    auto plugin = game_.getPlugin(pluginName_);
+    auto plugin = game_->getPlugin(pluginName_);
     if (plugin) {
       return PluginItem(
-          game_.getSettings().getId(),
+          game_->getSettings().getId(),
           *plugin,
-          game_,
-          game_.getActiveLoadOrderIndex(*plugin, game_.getLoadOrder()),
-          game_.isPluginActive(plugin->GetName()),
+          *game_,
+          game_->getActiveLoadOrderIndex(*plugin, game_->getLoadOrder()),
+          game_->isPluginActive(plugin->GetName()),
           language_);
     }
 
@@ -61,7 +61,7 @@ public:
   }
 
 private:
-  gui::Game& game_;
+  gui::Game* game_;
   std::string language_;
   const std::string pluginName_;
 };

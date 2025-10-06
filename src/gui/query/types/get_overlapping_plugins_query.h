@@ -35,7 +35,7 @@ public:
   GetOverlappingPluginsQuery(gui::Game& game,
                              std::string language,
                              std::string pluginName) :
-      game_(game), language_(language), pluginName_(pluginName) {}
+      game_(&game), language_(language), pluginName_(pluginName) {}
 
   QueryResult executeLogic() override {
     auto logger = getLogger();
@@ -46,8 +46,8 @@ public:
     // Checking for FormID overlap will only work if the plugins have been
     // loaded, so check if the plugins have been fully loaded, and if not load
     // all plugins.
-    if (!game_.arePluginsFullyLoaded())
-      game_.loadAllInstalledPlugins(false);
+    if (!game_->arePluginsFullyLoaded())
+      game_->loadAllInstalledPlugins(false);
 
     return getResult();
   }
@@ -56,7 +56,7 @@ private:
   std::vector<std::pair<PluginItem, bool>> getResult() {
     std::vector<std::pair<PluginItem, bool>> result;
 
-    auto plugin = game_.getPlugin(pluginName_);
+    auto plugin = game_->getPlugin(pluginName_);
     if (!plugin) {
       throw std::runtime_error("The plugin \"" + pluginName_ +
                                "\" is not loaded.");
@@ -67,9 +67,9 @@ private:
         mapper = [&](std::shared_ptr<const PluginInterface> otherPlugin,
                      std::optional<short> loadOrderIndex,
                      bool isActive) {
-          const auto pluginItem = PluginItem(game_.getSettings().getId(),
+          const auto pluginItem = PluginItem(game_->getSettings().getId(),
                                              *otherPlugin,
-                                             game_,
+                                             *game_,
                                              loadOrderIndex,
                                              isActive,
                                              language_);
@@ -78,10 +78,10 @@ private:
           return std::make_pair(pluginItem, overlap);
         };
 
-    return mapFromLoadOrderData(game_, game_.getLoadOrder(), mapper);
+    return mapFromLoadOrderData(*game_, game_->getLoadOrder(), mapper);
   }
 
-  gui::Game& game_;
+  gui::Game* game_;
   std::string language_;
   const std::string pluginName_;
 };

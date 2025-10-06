@@ -35,23 +35,23 @@ public:
                   std::string language,
                   std::string gameFolder,
                   std::function<void(std::string)> sendProgressUpdate) :
-      gamesManager_(gamesManager),
+      gamesManager_(&gamesManager),
       gameFolder_(gameFolder),
       language_(language),
       sendProgressUpdate_(sendProgressUpdate) {}
 
   QueryResult executeLogic() override {
-    gamesManager_.setCurrentGame(gameFolder_);
-    gamesManager_.getCurrentGame().init();
+    gamesManager_->setCurrentGame(gameFolder_);
+    gamesManager_->getCurrentGame().init();
 
     GetGameDataQuery subQuery(
-        gamesManager_.getCurrentGame(), language_, sendProgressUpdate_);
+        gamesManager_->getCurrentGame(), language_, sendProgressUpdate_);
 
     return subQuery.executeLogic();
   }
 
 private:
-  GamesManager& gamesManager_;
+  GamesManager* gamesManager_;
   const std::string gameFolder_;
   const std::string language_;
   const std::function<void(std::string)> sendProgressUpdate_;

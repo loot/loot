@@ -265,7 +265,7 @@ void setWindowPosition(QWidget& window,
 
 namespace loot {
 MainWindow::MainWindow(LootState& state, QWidget* parent) :
-    QMainWindow(parent), state(state) {
+    QMainWindow(parent), state(&state) {
   qRegisterMetaType<QueryResult>("QueryResult");
   qRegisterMetaType<std::string>("std::string");
 
@@ -286,17 +286,17 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
 void MainWindow::initialise() {
   try {
-    themes = findThemes(state.getPaths().getThemesPath());
+    themes = findThemes(state->getPaths().getThemesPath());
 
-    if (state.getSettings().getLastVersion() != getLootVersion()) {
+    if (state->getSettings().getLastVersion() != getLootVersion()) {
       showFirstRunDialog();
     }
 
-    if (state.hasCurrentGame()) {
-      state.initCurrentGame();
+    if (state->hasCurrentGame()) {
+      state->initCurrentGame();
     }
 
-    std::vector<SourcedMessage> initMessages = state.getInitMessages();
+    std::vector<SourcedMessage> initMessages = state->getInitMessages();
     const auto initHasErrored =
         std::any_of(initMessages.begin(),
                     initMessages.end(),
@@ -309,8 +309,8 @@ void MainWindow::initialise() {
       return;
     }
 
-    const auto& filters = state.getSettings().getFilters();
-    filtersWidget->setGameId(state.getCurrentGame().getSettings().getId());
+    const auto& filters = state->getSettings().getFilters();
+    filtersWidget->setGameId(state->getCurrentGame().getSettings().getId());
     filtersWidget->setFilterStates(filters);
 
     // Apply the filters before loading the game because that avoids having
@@ -318,16 +318,16 @@ void MainWindow::initialise() {
     pluginItemModel->setCardContentFiltersState(
         filtersWidget->getCardContentFiltersState());
     pluginItemModel->setHiddenMessages(
-        state.getCurrentGame().getSettings().getHiddenMessages());
+        state->getCurrentGame().getSettings().getHiddenMessages());
     proxyModel->setFiltersState(filtersWidget->getPluginFiltersState(), {});
 
     gameComboBox->setCurrentText(
-        QString::fromStdString(state.getCurrentGame().getSettings().getName()));
+        QString::fromStdString(state->getCurrentGame().getSettings().getName()));
 
     loadGame(true);
 
     // Check for updates.
-    if (state.getSettings().isLootUpdateCheckEnabled()) {
+    if (state->getSettings().isLootUpdateCheckEnabled()) {
       // This task can be run in the main thread because it's non-blocking.
       const auto task = new CheckForUpdateTask();
 
@@ -345,8 +345,8 @@ void MainWindow::initialise() {
 }
 
 void MainWindow::applyTheme() {
-  const auto themesPath = state.getPaths().getThemesPath();
-  const auto theme = state.getSettings().getTheme();
+  const auto themesPath = state->getPaths().getThemesPath();
+  const auto theme = state->getSettings().getTheme();
 
   const auto logger = getLogger();
   if (logger) {
@@ -431,7 +431,7 @@ void MainWindow::applyTheme() {
 void MainWindow::setupUi() {
   setWindowIcon(QIcon(":/icons/loot.svg"));
 
-  auto lastWindowPosition = state.getSettings().getMainWindowPosition();
+  auto lastWindowPosition = state->getSettings().getMainWindowPosition();
   if (lastWindowPosition.has_value()) {
     setWindowPosition(*this, lastWindowPosition.value());
   } else {
@@ -441,7 +441,7 @@ void MainWindow::setupUi() {
   }
 
   const auto groupsEditorWindowPosition =
-      state.getSettings().getGroupsEditorWindowPosition();
+      state->getSettings().getGroupsEditorWindowPosition();
   if (groupsEditorWindowPosition.has_value()) {
     setWindowPosition(*groupsEditor, groupsEditorWindowPosition.value());
 
@@ -917,14 +917,14 @@ void MainWindow::enableGameActions() {
   actionSearch->setEnabled(true);
 
   const auto enableRedatePlugins =
-      shouldAllowRedating(state.getCurrentGame().getSettings().getId());
+      shouldAllowRedating(state->getCurrentGame().getSettings().getId());
   actionRedatePlugins->setEnabled(enableRedatePlugins);
 
   const auto enableUnhideMessages =
-      !state.getCurrentGame().getSettings().getHiddenMessages().empty();
+      !state->getCurrentGame().getSettings().getHiddenMessages().empty();
   actionUnhideMessages->setEnabled(enableUnhideMessages);
   actionUnhideGeneralMessages->setEnabled(
-      state.getCurrentGame().getSettings().hasHiddenGeneralMessages());
+      state->getCurrentGame().getSettings().hasHiddenGeneralMessages());
 
   actionFixAmbiguousLoadOrder->setEnabled(false);
 }
@@ -1013,8 +1013,8 @@ void MainWindow::loadGame(bool isOnLOOTStartup) {
   };
 
   std::unique_ptr<Query> query =
-      std::make_unique<GetGameDataQuery>(state.getCurrentGame(),
-                                         state.getSettings().getLanguage(),
+      std::make_unique<GetGameDataQuery>(state->getCurrentGame(),
+                                         state->getSettings().getLanguage(),
                                          sendProgressUpdate);
 
   const auto handler = isOnLOOTStartup
@@ -1038,37 +1038,37 @@ void MainWindow::updateCounts(
 
 void MainWindow::updateGeneralInformation() {
   const auto preludeInfo = getFileRevisionSummary(
-      state.getPaths().getPreludePath(), FileType::MasterlistPrelude);
-  std::vector<SourcedMessage> initMessages = state.getInitMessages();
+      state->getPaths().getPreludePath(), FileType::MasterlistPrelude);
+  std::vector<SourcedMessage> initMessages = state->getInitMessages();
 
-  if (!state.hasCurrentGame()) {
+  if (!state->hasCurrentGame()) {
     pluginItemModel->setGeneralInformation(
         false, false, FileRevisionSummary(), preludeInfo, initMessages);
     return;
   }
 
   const auto masterlistInfo = getFileRevisionSummary(
-      state.getCurrentGame().getMasterlistPath(), FileType::Masterlist);
+      state->getCurrentGame().getMasterlistPath(), FileType::Masterlist);
 
-  const auto gameMessages = state.getCurrentGame().getMessages(
-      state.getSettings().getLanguage(),
-      state.getSettings().isWarnOnCaseSensitiveGamePathsEnabled());
+  const auto gameMessages = state->getCurrentGame().getMessages(
+      state->getSettings().getLanguage(),
+      state->getSettings().isWarnOnCaseSensitiveGamePathsEnabled());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
   pluginItemModel->setGeneralInformation(
-      state.getCurrentGame().supportsLightPlugins(),
-      state.getCurrentGame().supportsMediumPlugins(),
+      state->getCurrentGame().supportsLightPlugins(),
+      state->getCurrentGame().supportsMediumPlugins(),
       masterlistInfo,
       preludeInfo,
       initMessages);
 }
 
 void MainWindow::updateGeneralMessages() {
-  std::vector<SourcedMessage> initMessages = state.getInitMessages();
-  auto gameMessages = state.getCurrentGame().getMessages(
-      state.getSettings().getLanguage(),
-      state.getSettings().isWarnOnCaseSensitiveGamePathsEnabled());
+  std::vector<SourcedMessage> initMessages = state->getInitMessages();
+  auto gameMessages = state->getCurrentGame().getMessages(
+      state->getSettings().getLanguage(),
+      state->getSettings().isWarnOnCaseSensitiveGamePathsEnabled());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
@@ -1087,9 +1087,9 @@ void MainWindow::updateSidebarColumnWidths() {
   static constexpr size_t DEFAULT_LOAD_ORDER_SIZE_ESTIMATE = 255;
 
   const auto positionSectionWidth =
-      state.hasCurrentGame() && state.getCurrentGame().isInitialised()
+      state->hasCurrentGame() && state->getCurrentGame().isInitialised()
           ? calculateSidebarPositionSectionWidth(
-                state.getCurrentGame().getPlugins().size())
+                state->getCurrentGame().getPlugins().size())
           : calculateSidebarPositionSectionWidth(
                 DEFAULT_LOAD_ORDER_SIZE_ESTIMATE);
 
@@ -1100,7 +1100,7 @@ void MainWindow::updateSidebarColumnWidths() {
   // to calculate the load order section width because that's one of the games
   // that uses the wider width.
   const auto gameSupportsLightPlugins =
-      state.hasCurrentGame() ? state.getCurrentGame().supportsLightPlugins()
+      state->hasCurrentGame() ? state->getCurrentGame().supportsLightPlugins()
                              : false;
   const auto indexSectionWidth =
       calculateSidebarIndexSectionWidth(gameSupportsLightPlugins);
@@ -1150,21 +1150,21 @@ void MainWindow::refreshSearch() {
 }
 
 void MainWindow::refreshPluginRawData(const std::string& pluginName) {
-  const auto loadOrder = state.getCurrentGame().getLoadOrder();
+  const auto loadOrder = state->getCurrentGame().getLoadOrder();
 
   for (int i = 1; i < pluginItemModel->rowCount(); i += 1) {
     const auto index = pluginItemModel->index(i, 0);
     const auto pluginItem = index.data(RawDataRole).value<PluginItem>();
 
     if (pluginItem.name == pluginName) {
-      const auto plugin = state.getCurrentGame().getPlugin(pluginName);
+      const auto plugin = state->getCurrentGame().getPlugin(pluginName);
       const auto newPluginItem = PluginItem(
-          state.getCurrentGame().getSettings().getId(),
+          state->getCurrentGame().getSettings().getId(),
           *plugin,
-          state.getCurrentGame(),
-          state.getCurrentGame().getActiveLoadOrderIndex(*plugin, loadOrder),
-          state.getCurrentGame().isPluginActive(plugin->GetName()),
-          state.getSettings().getLanguage());
+          state->getCurrentGame(),
+          state->getCurrentGame().getActiveLoadOrderIndex(*plugin, loadOrder),
+          state->getCurrentGame().isPluginActive(plugin->GetName()),
+          state->getSettings().getLanguage());
 
       const auto indexData = QVariant::fromValue(newPluginItem);
       pluginItemModel->setData(index, indexData, RawDataRole);
@@ -1183,15 +1183,15 @@ bool MainWindow::hasErrorMessages() const {
 void MainWindow::sortPlugins(bool isAutoSort) {
   std::vector<Task*> updateTasks;
 
-  if (state.getSettings().isMasterlistUpdateBeforeSortEnabled()) {
+  if (state->getSettings().isMasterlistUpdateBeforeSortEnabled()) {
     handleProgressUpdate(translate("Updating and parsing masterlist…"));
 
-    const auto preludeTask = new UpdatePreludeTask(state);
+    const auto preludeTask = new UpdatePreludeTask(*state);
 
     updateTasks.push_back(preludeTask);
 
     const auto masterlistTask =
-        new UpdateMasterlistTask(state.getCurrentGame());
+        new UpdateMasterlistTask(state->getCurrentGame());
 
     updateTasks.push_back(masterlistTask);
   }
@@ -1208,9 +1208,9 @@ void MainWindow::sortPlugins(bool isAutoSort) {
   };
 
   std::unique_ptr<Query> sortPluginsQuery =
-      std::make_unique<SortPluginsQuery>(state.getCurrentGame(),
-                                         state.getUnappliedChangeCount(),
-                                         state.getSettings().getLanguage(),
+      std::make_unique<SortPluginsQuery>(state->getCurrentGame(),
+                                         state->getUnappliedChangeCount(),
+                                         state->getSettings().getLanguage(),
                                          sendProgressUpdate);
 
   auto sortTask = new QueryTask(std::move(sortPluginsQuery));
@@ -1359,7 +1359,7 @@ PluginItem MainWindow::getSelectedPlugin() const {
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
-  if (state.getUnappliedChangeCount().isNonZero()) {
+  if (state->getUnappliedChangeCount().isNonZero()) {
     auto changeType = pluginEditorWidget->isVisible()
                           ? boost::locale::translate("metadata edits")
                           : boost::locale::translate("sorted load order");
@@ -1386,11 +1386,11 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   try {
     const auto position = getWindowPosition(*this);
 
-    state.getSettings().storeMainWindowPosition(position);
+    state->getSettings().storeMainWindowPosition(position);
 
     const auto groupsEditorPosition = getWindowPosition(*groupsEditor);
 
-    state.getSettings().storeGroupsEditorWindowPosition(groupsEditorPosition);
+    state->getSettings().storeGroupsEditorWindowPosition(groupsEditorPosition);
   } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
@@ -1399,7 +1399,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    state.getSettings().storeFilters(filtersWidget->getFilterSettings());
+    state->getSettings().storeFilters(filtersWidget->getFilterSettings());
   } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
@@ -1408,8 +1408,8 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    state.getSettings().storeLastGame(
-        state.getCurrentGame().getSettings().getFolderName());
+    state->getSettings().storeLastGame(
+        state->getCurrentGame().getSettings().getFolderName());
   } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
@@ -1418,8 +1418,8 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    recordCurrentGameHiddenMessages(state.getSettings(),
-                                    state.getCurrentGame().getSettings());
+    recordCurrentGameHiddenMessages(state->getSettings(),
+                                    state->getCurrentGame().getSettings());
   } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
@@ -1429,7 +1429,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    writeOldMessages(state.getCurrentGame().getOldMessagesPath(),
+    writeOldMessages(state->getCurrentGame().getOldMessagesPath(),
                      pluginItemModel->getCurrentMessages());
   } catch (const std::exception& e) {
     auto logger = getLogger();
@@ -1440,8 +1440,8 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    state.getSettings().updateLastVersion();
-    state.getSettings().save(state.getPaths().getSettingsPath());
+    state->getSettings().updateLastVersion();
+    state->getSettings().save(state->getPaths().getSettingsPath());
   } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
@@ -1513,16 +1513,16 @@ void MainWindow::handleGameDataLoaded(QueryResult result) {
 
   pluginItemModel->setPluginItems(std::move(std::get<PluginItems>(result)));
   pluginItemModel->setOldMessages(
-      readOldMessages(state.getCurrentGame().getOldMessagesPath()));
+      readOldMessages(state->getCurrentGame().getOldMessagesPath()));
 
   updateGeneralInformation();
 
-  filtersWidget->setGroups(GetGroupNames(state.getCurrentGame()));
+  filtersWidget->setGroups(GetGroupNames(state->getCurrentGame()));
   filtersWidget->showCreationClubPluginsFilter(
-      hadCreationClub(state.getCurrentGame().getSettings().getId()));
+      hadCreationClub(state->getCurrentGame().getSettings().getId()));
 
   pluginEditorWidget->setBashTagCompletions(
-      state.getCurrentGame().getKnownBashTags());
+      state->getCurrentGame().getKnownBashTags());
 
   enableGameActions();
 }
@@ -1547,19 +1547,19 @@ bool MainWindow::handlePluginsSorted(QueryResult result) {
     return false;
   }
 
-  auto currentLoadOrder = state.getCurrentGame().getLoadOrder();
+  auto currentLoadOrder = state->getCurrentGame().getLoadOrder();
   const auto loadOrderHasChanged =
       hasLoadOrderChanged(currentLoadOrder, sortedPlugins);
 
   if (loadOrderHasChanged) {
     enterSortingState();
   } else {
-    state.getUnappliedChangeCount().decrement();
+    state->getUnappliedChangeCount().decrement();
 
     const auto message =
         translate("Sorting made no changes to the load order.");
 
-    if (state.getSettings().isNoSortingChangesDialogEnabled()) {
+    if (state->getSettings().isNoSortingChangesDialogEnabled()) {
       QMessageBox::information(this, "LOOT", message);
     } else {
       showNotification(message);
@@ -1583,9 +1583,9 @@ std::optional<std::filesystem::path> MainWindow::createBackup() {
       "LOOT-backup-" +
       QDateTime::currentDateTime().toString("yyyyMMddThhmmss").toStdString();
 
-  auto sourceDir = state.getPaths().getLootDataPath();
+  auto sourceDir = state->getPaths().getLootDataPath();
   auto destDir =
-      state.getPaths().getLootDataPath() / "backups" / backupBasename;
+      state->getPaths().getLootDataPath() / "backups" / backupBasename;
 
   loot::createBackup(sourceDir, destDir);
 
@@ -1601,7 +1601,7 @@ std::optional<std::filesystem::path> MainWindow::createBackup() {
 }
 
 void MainWindow::checkForAmbiguousLoadOrder() {
-  if (!state.getCurrentGame().isLoadOrderAmbiguous()) {
+  if (!state->getCurrentGame().isLoadOrderAmbiguous()) {
     actionFixAmbiguousLoadOrder->setEnabled(false);
     return;
   }
@@ -1620,11 +1620,11 @@ void MainWindow::checkForAmbiguousLoadOrder() {
 }
 
 void MainWindow::refreshGamesDropdown() {
-  const auto installedGames = state.getInstalledGameFolderNames();
+  const auto installedGames = state->getInstalledGameFolderNames();
 
   gameComboBox->clear();
 
-  for (const auto& gameSettings : state.getSettings().getGameSettings()) {
+  for (const auto& gameSettings : state->getSettings().getGameSettings()) {
     auto installedGame = std::find(installedGames.cbegin(),
                                    installedGames.cend(),
                                    gameSettings.getFolderName());
@@ -1635,17 +1635,17 @@ void MainWindow::refreshGamesDropdown() {
     }
   }
 
-  if (state.hasCurrentGame()) {
+  if (state->hasCurrentGame()) {
     gameComboBox->setCurrentText(
-        QString::fromStdString(state.getCurrentGame().getSettings().getName()));
+        QString::fromStdString(state->getCurrentGame().getSettings().getName()));
   }
 }
 
 void MainWindow::setHiddenMessages(
     const std::vector<HiddenMessage>& hiddenMessages) {
-  state.getCurrentGame().getSettings().setHiddenMessages(hiddenMessages);
-  recordCurrentGameHiddenMessages(state.getSettings(),
-                                  state.getCurrentGame().getSettings());
+  state->getCurrentGame().getSettings().setHiddenMessages(hiddenMessages);
+  recordCurrentGameHiddenMessages(state->getSettings(),
+                                  state->getCurrentGame().getSettings());
 
   pluginItemModel->setHiddenMessages(hiddenMessages);
   actionUnhideMessages->setEnabled(!hiddenMessages.empty());
@@ -1654,12 +1654,12 @@ void MainWindow::setHiddenMessages(
 void MainWindow::on_actionSettings_triggered() {
   try {
     auto currentGameFolder =
-        state.hasCurrentGame()
-            ? std::optional(state.getCurrentGame().getSettings().getFolderName())
+        state->hasCurrentGame()
+            ? std::optional(state->getCurrentGame().getSettings().getFolderName())
             : std::nullopt;
 
     settingsDialog->initialiseInputs(
-        state.getSettings(), themes, currentGameFolder);
+        state->getSettings(), themes, currentGameFolder);
     settingsDialog->show();
 
     // Adjust size because otherwise the size is slightly too small the first
@@ -1674,23 +1674,23 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
   try {
     handleProgressUpdate(translate("Updating and parsing masterlist…"));
 
-    const auto preludeSource = state.getSettings().getPreludeSource();
-    const auto preludePath = state.getPaths().getPreludePath();
+    const auto preludeSource = state->getSettings().getPreludeSource();
+    const auto preludePath = state->getPaths().getPreludePath();
 
     std::vector<Task*> tasks;
 
-    const auto preludeTask = new UpdatePreludeTask(state);
+    const auto preludeTask = new UpdatePreludeTask(*state);
 
     tasks.push_back(preludeTask);
 
-    for (const auto& settings : state.getSettings().getGameSettings()) {
+    for (const auto& settings : state->getSettings().getGameSettings()) {
       // Masterlist update assumes that the game folder exists, so ensure that.
-      initLootGameFolder(state.getPaths().getLootDataPath(), settings);
+      initLootGameFolder(state->getPaths().getLootDataPath(), settings);
 
       const auto task = new UpdateMasterlistTask(
           settings.getFolderName(),
           settings.getMasterlistSource(),
-          getMasterlistPath(state.getPaths().getLootDataPath(), settings));
+          getMasterlistPath(state->getPaths().getLootDataPath(), settings));
 
       tasks.push_back(task);
     }
@@ -1755,10 +1755,10 @@ void MainWindow::on_actionOpenGroupsEditor_triggered() {
     }
 
     const auto groupNodePositions =
-        loadGroupNodePositions(state.getCurrentGame().getGroupNodePositionsPath());
+        loadGroupNodePositions(state->getCurrentGame().getGroupNodePositionsPath());
 
-    groupsEditor->setGroups(state.getCurrentGame().getMasterlistGroups(),
-                            state.getCurrentGame().getUserGroups(),
+    groupsEditor->setGroups(state->getCurrentGame().getMasterlistGroups(),
+                            state->getCurrentGame().getUserGroups(),
                             installedPluginGroups,
                             groupNodePositions);
 
@@ -1772,7 +1772,7 @@ void MainWindow::on_actionSearch_triggered() { searchDialog->show(); }
 
 void MainWindow::on_actionCopyLoadOrder_triggered() {
   try {
-    const auto text = state.getCurrentGame().getLoadOrderAsTextTable();
+    const auto text = state->getCurrentGame().getLoadOrderAsTextTable();
 
     copyToClipboard(text);
 
@@ -1813,9 +1813,9 @@ void MainWindow::on_actionBackUpLoadOrder_triggered() {
 
 void MainWindow::on_actionRestoreLoadOrder_triggered() {
   try {
-    const auto backups = state.getCurrentGame().findLoadOrderBackups();
+    const auto backups = state->getCurrentGame().findLoadOrderBackups();
     restoreBackupDialog->setCurrentLoadOrder(
-        state.getCurrentGame().getLoadOrder());
+        state->getCurrentGame().getLoadOrder());
     restoreBackupDialog->setLoadOrderBackups(backups);
     restoreBackupDialog->open();
 
@@ -1826,14 +1826,14 @@ void MainWindow::on_actionRestoreLoadOrder_triggered() {
 
 void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
   try {
-    auto loadOrder = state.getCurrentGame().getLoadOrder();
-    state.getCurrentGame().setLoadOrder(loadOrder);
+    auto loadOrder = state->getCurrentGame().getLoadOrder();
+    state->getCurrentGame().setLoadOrder(loadOrder);
 
     showNotification(
         translate("The load order displayed by LOOT has been set."));
 
-    if (state.getCurrentGame().isLoadOrderAmbiguous()) {
-      showAmbiguousLoadOrderSetWarning(this, state);
+    if (state->getCurrentGame().isLoadOrderAmbiguous()) {
+      showAmbiguousLoadOrderSetWarning(this, *state);
     } else {
       actionFixAmbiguousLoadOrder->setEnabled(false);
     }
@@ -1844,7 +1844,7 @@ void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
 
 void MainWindow::on_actionRefreshContent_triggered() {
   try {
-    writeOldMessages(state.getCurrentGame().getOldMessagesPath(),
+    writeOldMessages(state->getCurrentGame().getOldMessagesPath(),
                      pluginItemModel->getCurrentMessages());
 
     loadGame(false);
@@ -1866,7 +1866,7 @@ void MainWindow::on_actionUnhideGeneralMessages_triggered() {
   try {
     std::vector<HiddenMessage> hiddenMessages;
     for (const auto& hiddenMessage :
-         state.getCurrentGame().getSettings().getHiddenMessages()) {
+         state->getCurrentGame().getSettings().getHiddenMessages()) {
       if (hiddenMessage.pluginName.has_value()) {
         hiddenMessages.push_back(hiddenMessage);
       }
@@ -1895,7 +1895,7 @@ void MainWindow::on_actionRedatePlugins_triggered() {
         QMessageBox::StandardButton::No);
 
     if (button == QMessageBox::StandardButton::Yes) {
-      state.getCurrentGame().redatePlugins();
+      state->getCurrentGame().redatePlugins();
       showNotification(
           /* translators: Notification text. */
           translate("Plugins were successfully redated."));
@@ -1919,8 +1919,8 @@ void MainWindow::on_actionClearAllUserMetadata_triggered() {
       return;
     }
 
-    ClearAllMetadataQuery query(state.getCurrentGame(),
-                                state.getSettings().getLanguage());
+    ClearAllMetadataQuery query(state->getCurrentGame(),
+                                state->getSettings().getLanguage());
 
     auto result = query.executeLogic();
 
@@ -1932,10 +1932,10 @@ void MainWindow::on_actionClearAllUserMetadata_triggered() {
     // is probably a small fraction of the total number, so doing a full refresh
     // of the game-related UI would be overkill.
 
-    filtersWidget->setGroups(GetGroupNames(state.getCurrentGame()));
+    filtersWidget->setGroups(GetGroupNames(state->getCurrentGame()));
 
     pluginEditorWidget->setBashTagCompletions(
-        state.getCurrentGame().getKnownBashTags());
+        state->getCurrentGame().getKnownBashTags());
 
     updateGeneralMessages();
 
@@ -1977,18 +1977,18 @@ void MainWindow::on_actionEditMetadata_triggered() {
     }
 
     const std::string selectedPluginName = getSelectedPlugin().name;
-    const auto groups = GetGroupNames(state.getCurrentGame());
+    const auto groups = GetGroupNames(state->getCurrentGame());
 
     pluginEditorWidget->initialiseInputs(
         groups,
         selectedPluginName,
-        state.getCurrentGame().getNonUserMetadata(
-            *state.getCurrentGame().getPlugin(selectedPluginName)),
-        state.getCurrentGame().getUserMetadata(selectedPluginName));
+        state->getCurrentGame().getNonUserMetadata(
+            *state->getCurrentGame().getPlugin(selectedPluginName)),
+        state->getCurrentGame().getUserMetadata(selectedPluginName));
 
     pluginEditorWidget->show();
 
-    state.getUnappliedChangeCount().increment();
+    state->getUnappliedChangeCount().increment();
 
     // Refresh the sidebar items so that all their groups are displayed.
     pluginItemModel->setEditorPluginName(selectedPluginName);
@@ -2022,7 +2022,7 @@ void MainWindow::on_actionCopyMetadata_triggered() {
     const std::string selectedPluginName = getSelectedPlugin().name;
 
     const auto text =
-        getMetadataAsBBCodeYaml(state.getCurrentGame(), selectedPluginName);
+        getMetadataAsBBCodeYaml(state->getCurrentGame(), selectedPluginName);
 
     copyToClipboard(text);
 
@@ -2087,7 +2087,7 @@ void MainWindow::on_actionUnhidePluginMessages_triggered() {
     const std::string selectedPluginName = getSelectedPlugin().name;
     std::vector<HiddenMessage> hiddenMessages;
     for (const auto& hiddenMessage :
-         state.getCurrentGame().getSettings().getHiddenMessages()) {
+         state->getCurrentGame().getSettings().getHiddenMessages()) {
       if (hiddenMessage.pluginName != selectedPluginName) {
         hiddenMessages.push_back(hiddenMessage);
       }
@@ -2120,8 +2120,8 @@ void MainWindow::on_actionClearMetadata_triggered() {
       return;
     }
 
-    ClearPluginMetadataQuery query(state.getCurrentGame(),
-                                   state.getSettings().getLanguage(),
+    ClearPluginMetadataQuery query(state->getCurrentGame(),
+                                   state->getSettings().getLanguage(),
                                    selectedPluginName);
 
     auto result = query.executeLogic();
@@ -2161,7 +2161,7 @@ void MainWindow::on_actionViewDocs_triggered() {
       logger->trace("Opening LOOT's readme.");
     }
 
-    const auto readmePath = state.getPaths().getReadmePath();
+    const auto readmePath = state->getPaths().getReadmePath();
     const auto canonicalPath =
         std::filesystem::canonical(readmePath / "index.html");
     const auto canonicalReadmePath = std::filesystem::canonical(readmePath);
@@ -2200,7 +2200,7 @@ void MainWindow::on_actionOpenLOOTDataFolder_triggered() {
       logger->trace("Opening LOOT's local appdata folder.");
     }
 
-    openInDefaultApplication(state.getPaths().getLogPath().parent_path());
+    openInDefaultApplication(state->getPaths().getLogPath().parent_path());
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2265,12 +2265,12 @@ void MainWindow::on_gameComboBox_activated(int index) {
 
     auto folderName = gameComboBox->currentData().toString().toStdString();
     if (folderName.empty() ||
-        (state.hasCurrentGame() &&
-         folderName == state.getCurrentGame().getSettings().getFolderName())) {
+        (state->hasCurrentGame() &&
+         folderName == state->getCurrentGame().getSettings().getFolderName())) {
       return;
     }
 
-    writeOldMessages(state.getCurrentGame().getOldMessagesPath(),
+    writeOldMessages(state->getCurrentGame().getOldMessagesPath(),
                      pluginItemModel->getCurrentMessages());
 
     auto progressUpdater = new ProgressUpdater();
@@ -2281,8 +2281,8 @@ void MainWindow::on_gameComboBox_activated(int index) {
     };
 
     std::unique_ptr<Query> query =
-        std::make_unique<ChangeGameQuery>(state,
-                                          state.getSettings().getLanguage(),
+        std::make_unique<ChangeGameQuery>(*state,
+                                          state->getSettings().getLanguage(),
                                           folderName,
                                           sendProgressUpdate);
 
@@ -2305,8 +2305,8 @@ void MainWindow::on_actionApplySort_triggered() {
   try {
     auto sortedPluginNames = pluginItemModel->getPluginNames();
 
-    auto query = ApplySortQuery(state.getCurrentGame(),
-                                state.getUnappliedChangeCount(),
+    auto query = ApplySortQuery(state->getCurrentGame(),
+                                state->getUnappliedChangeCount(),
                                 sortedPluginNames);
 
     try {
@@ -2314,10 +2314,10 @@ void MainWindow::on_actionApplySort_triggered() {
 
       exitSortingState();
 
-      if (state.getCurrentGame().isLoadOrderAmbiguous()) {
+      if (state->getCurrentGame().isLoadOrderAmbiguous()) {
         actionFixAmbiguousLoadOrder->setEnabled(true);
 
-        showAmbiguousLoadOrderSetWarning(this, state);
+        showAmbiguousLoadOrderSetWarning(this, *state);
       }
     } catch (const std::exception& e) {
       handleQueryException(query, e);
@@ -2329,8 +2329,8 @@ void MainWindow::on_actionApplySort_triggered() {
 
 void MainWindow::on_actionDiscardSort_triggered() {
   try {
-    auto query = CancelSortQuery(state.getCurrentGame(),
-                                 state.getUnappliedChangeCount());
+    auto query = CancelSortQuery(state->getCurrentGame(),
+                                 state->getUnappliedChangeCount());
 
     auto result = query.executeLogic();
 
@@ -2372,9 +2372,9 @@ void MainWindow::on_actionUpdateMasterlist_triggered() {
   try {
     handleProgressUpdate(translate("Updating and parsing masterlist…"));
 
-    const auto preludeTask = new UpdatePreludeTask(state);
+    const auto preludeTask = new UpdatePreludeTask(*state);
     const auto masterlistTask =
-        new UpdateMasterlistTask(state.getCurrentGame());
+        new UpdateMasterlistTask(state->getCurrentGame());
 
     const std::vector<Task*> tasks{preludeTask, masterlistTask};
 
@@ -2444,7 +2444,7 @@ void MainWindow::handleSidebarPluginsSelectionChanged(
     enablePluginActions();
 
     const auto enableUnhidePluginMessages =
-        state.getCurrentGame().getSettings().pluginHasHiddenMessages(
+        state->getCurrentGame().getSettings().pluginHasHiddenMessages(
             getSelectedPlugin().name);
     actionUnhidePluginMessages->setEnabled(enableUnhidePluginMessages);
   } else {
@@ -2539,24 +2539,24 @@ void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {
     if (logger) {
       logger->trace("Erasing the existing userlist entry.");
     }
-    state.getCurrentGame().clearUserMetadata(pluginName);
+    state->getCurrentGame().clearUserMetadata(pluginName);
 
     // Add a new userlist entry if necessary.
     if (!userMetadata.HasNameOnly()) {
       if (logger) {
         logger->trace("Adding new metadata to new userlist entry.");
       }
-      state.getCurrentGame().addUserMetadata(userMetadata);
+      state->getCurrentGame().addUserMetadata(userMetadata);
     }
 
     // Save edited userlist.
-    state.getCurrentGame().saveUserMetadata();
+    state->getCurrentGame().saveUserMetadata();
 
     pluginItemModel->setEditorPluginName(std::nullopt);
 
     refreshPluginRawData(pluginName);
 
-    state.getUnappliedChangeCount().decrement();
+    state->getUnappliedChangeCount().decrement();
 
     exitEditingState();
   } catch (const std::exception& e) {
@@ -2565,7 +2565,7 @@ void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {
 }
 
 void MainWindow::on_pluginEditorWidget_rejected() {
-  state.getUnappliedChangeCount().decrement();
+  state->getUnappliedChangeCount().decrement();
 
   pluginItemModel->setEditorPluginName(std::nullopt);
 
@@ -2585,15 +2585,15 @@ void MainWindow::on_filtersWidget_overlapFilterChanged(
       return;
     }
 
-    if (!state.hasCurrentGame()) {
+    if (!state->hasCurrentGame()) {
       return;
     }
 
     handleProgressUpdate(translate("Identifying overlapping plugins…"));
 
     std::unique_ptr<Query> query = std::make_unique<GetOverlappingPluginsQuery>(
-        state.getCurrentGame(),
-        state.getSettings().getLanguage(),
+        state->getCurrentGame(),
+        state->getSettings().getLanguage(),
         targetPluginName.value());
 
     executeBackgroundQuery(
@@ -2610,17 +2610,17 @@ void MainWindow::on_filtersWidget_cardContentFilterChanged(
 
 void MainWindow::on_settingsDialog_accepted() {
   try {
-    const auto currentTheme = state.getSettings().getTheme();
-    settingsDialog->recordInputValues(state);
-    recordCurrentGameHiddenMessages(state.getSettings(),
-                                    state.getCurrentGame().getSettings());
+    const auto currentTheme = state->getSettings().getTheme();
+    settingsDialog->recordInputValues(*state);
+    recordCurrentGameHiddenMessages(state->getSettings(),
+                                    state->getCurrentGame().getSettings());
 
-    state.getSettings().save(state.getPaths().getSettingsPath());
+    state->getSettings().save(state->getPaths().getSettingsPath());
 
     // Update the games dropdown in case names have changed.
     refreshGamesDropdown();
 
-    if (state.getSettings().getTheme() != currentTheme) {
+    if (state->getSettings().getTheme() != currentTheme) {
       applyTheme();
     }
   } catch (const std::exception& e) {
@@ -2630,29 +2630,29 @@ void MainWindow::on_settingsDialog_accepted() {
 
 void MainWindow::on_groupsEditor_accepted() {
   try {
-    state.getCurrentGame().setUserGroups(groupsEditor->getUserGroups());
+    state->getCurrentGame().setUserGroups(groupsEditor->getUserGroups());
 
     for (const auto& [pluginName, groupName] :
          groupsEditor->getNewPluginGroups()) {
       // Update the plugin's group in user metadata.
-      auto userMetadata = state.getCurrentGame().getUserMetadata(pluginName);
+      auto userMetadata = state->getCurrentGame().getUserMetadata(pluginName);
 
       if (userMetadata.has_value()) {
         userMetadata.value().SetGroup(groupName);
-        state.getCurrentGame().addUserMetadata(userMetadata.value());
+        state->getCurrentGame().addUserMetadata(userMetadata.value());
       } else {
         PluginMetadata metadata(pluginName);
         metadata.SetGroup(groupName);
-        state.getCurrentGame().addUserMetadata(metadata);
+        state->getCurrentGame().addUserMetadata(metadata);
       }
 
       // Now update the plugin in the UI's plugin item model.
       refreshPluginRawData(pluginName);
     }
 
-    state.getCurrentGame().saveUserMetadata();
+    state->getCurrentGame().saveUserMetadata();
 
-    saveGroupNodePositions(state.getCurrentGame().getGroupNodePositionsPath(),
+    saveGroupNodePositions(state->getCurrentGame().getGroupNodePositionsPath(),
                            groupsEditor->getNodePositions());
   } catch (const std::exception& e) {
     handleException(e);
@@ -2706,7 +2706,7 @@ void MainWindow::on_backupDialog_accepted() {
       name = QString::fromUtf8("Manual Backup");
     }
 
-    state.getCurrentGame().backUpCurrentLoadOrder(name.toStdString());
+    state->getCurrentGame().backUpCurrentLoadOrder(name.toStdString());
 
     showNotification(
         translate("A backup of the current load order has been created."));
@@ -2737,14 +2737,14 @@ void MainWindow::on_restoreBackupDialog_accepted() {
       // installed.
       std::vector<std::string> loadOrder = backup.value().loadOrder;
       for (auto it = loadOrder.begin(); it != loadOrder.end();) {
-        if (!state.getCurrentGame().fileExists(*it)) {
+        if (!state->getCurrentGame().fileExists(*it)) {
           it = loadOrder.erase(it);
         } else {
           ++it;
         }
       }
 
-      state.getCurrentGame().setLoadOrder(loadOrder);
+      state->getCurrentGame().setLoadOrder(loadOrder);
       loadGame(false);
 
       showNotification(translate("Restored load order from backup."));
@@ -2758,7 +2758,7 @@ void MainWindow::on_restoreBackupDialog_accepted() {
 
 void MainWindow::handleGameChanged(QueryResult result) {
   try {
-    filtersWidget->setGameId(state.getCurrentGame().getSettings().getId());
+    filtersWidget->setGameId(state->getCurrentGame().getSettings().getId());
     filtersWidget->resetOverlapAndGroupsFilters();
     disablePluginActions();
 
@@ -2790,9 +2790,9 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
   try {
     handleGameDataLoaded(result);
 
-    if (state.getSettings().isAutoSortEnabled()) {
+    if (state->getSettings().isAutoSortEnabled()) {
       if (hasErrorMessages()) {
-        state.getCurrentGame().appendMessage(createPlainTextSourcedMessage(
+        state->getCurrentGame().appendMessage(createPlainTextSourcedMessage(
             MessageType::error,
             MessageSource::autoSortCancellation,
             boost::locale::translate(
@@ -2863,20 +2863,20 @@ void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
       return;
     }
 
-    writeOldMessages(state.getCurrentGame().getOldMessagesPath(),
+    writeOldMessages(state->getCurrentGame().getOldMessagesPath(),
                      pluginItemModel->getCurrentMessages());
 
-    state.getCurrentGame().loadMetadata();
+    state->getCurrentGame().loadMetadata();
 
     const auto pluginItems =
-        getPluginItems(state.getCurrentGame().getLoadOrder(),
-                       state.getCurrentGame(),
-                       state.getSettings().getLanguage());
+        getPluginItems(state->getCurrentGame().getLoadOrder(),
+                       state->getCurrentGame(),
+                       state->getSettings().getLanguage());
 
     handleGameDataLoaded(pluginItems);
 
     auto masterlistInfo = getFileRevisionSummary(
-        state.getCurrentGame().getMasterlistPath(), FileType::Masterlist);
+        state->getCurrentGame().getMasterlistPath(), FileType::Masterlist);
     auto infoText = fmt::format(
         boost::locale::translate("Masterlist updated to revision {0}.").str(),
         masterlistInfo.id);
@@ -2904,7 +2904,7 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
     }
 
     const auto logger = getLogger();
-    const auto& gamesSettings = state.getSettings().getGameSettings();
+    const auto& gamesSettings = state->getSettings().getGameSettings();
 
     std::vector<std::string> updatedGameNames;
     bool wasCurrentGameMasterlistUpdated{false};
@@ -2932,9 +2932,9 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
               updateResult.first);
         }
 
-        if (state.hasCurrentGame() &&
+        if (state->hasCurrentGame() &&
             updateResult.first ==
-                state.getCurrentGame().getSettings().getFolderName()) {
+                state->getCurrentGame().getSettings().getFolderName()) {
           wasCurrentGameMasterlistUpdated = true;
         }
       }
@@ -2951,16 +2951,16 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
     }
 
     if (wasCurrentGameMasterlistUpdated) {
-      writeOldMessages(state.getCurrentGame().getOldMessagesPath(),
+      writeOldMessages(state->getCurrentGame().getOldMessagesPath(),
                        pluginItemModel->getCurrentMessages());
 
       // Need to reload the current game data.
-      state.getCurrentGame().loadMetadata();
+      state->getCurrentGame().loadMetadata();
 
       const auto pluginItems =
-          getPluginItems(state.getCurrentGame().getLoadOrder(),
-                         state.getCurrentGame(),
-                         state.getSettings().getLanguage());
+          getPluginItems(state->getCurrentGame().getLoadOrder(),
+                         state->getCurrentGame(),
+                         state->getSettings().getLanguage());
 
       handleGameDataLoaded(pluginItems);
     } else {
@@ -3034,7 +3034,7 @@ void MainWindow::handleUpdateCheckFinished(QueryResult result) {
               .str(),
           "https://github.com/loot/loot/releases/latest");
 
-      state.getCurrentGame().appendMessage(
+      state->getCurrentGame().appendMessage(
           SourcedMessage{MessageType::error, MessageSource::updateCheck, text});
       updateGeneralMessages();
     }
@@ -3059,7 +3059,7 @@ void MainWindow::handleUpdateCheckError(const std::string&) {
       }
     }
 
-    state.getCurrentGame().appendMessage(
+    state->getCurrentGame().appendMessage(
         SourcedMessage{MessageType::error, MessageSource::updateCheck, text});
     updateGeneralMessages();
   } catch (const std::exception& e) {
@@ -3112,9 +3112,9 @@ void MainWindow::handleColorSchemeChanged() { applyTheme(); }
 void MainWindow::handleHideMessage(const std::string& pluginName,
                                    const std::string& messageText) {
   try {
-    state.getCurrentGame().getSettings().hideMessage(pluginName, messageText);
-    recordCurrentGameHiddenMessages(state.getSettings(),
-                                    state.getCurrentGame().getSettings());
+    state->getCurrentGame().getSettings().hideMessage(pluginName, messageText);
+    recordCurrentGameHiddenMessages(state->getSettings(),
+                                    state->getCurrentGame().getSettings());
 
     pluginItemModel->handleHideMessage(pluginName, messageText);
 
