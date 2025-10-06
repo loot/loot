@@ -36,13 +36,12 @@
 #include "gui/state/game/game_settings.h"
 
 namespace loot {
-    struct CheckSettingsResult {
+struct CheckSettingsResult {
   bool preludeMigrationFailed{false};
-      bool masterlistMigrationFailed{false};
-    };
+  bool masterlistMigrationFailed{false};
+};
 
-CheckSettingsResult checkSettingsFile(
-    const std::filesystem::path& filePath);
+CheckSettingsResult checkSettingsFile(const std::filesystem::path& filePath);
 
 std::string getDefaultPreludeSource();
 
