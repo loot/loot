@@ -71,7 +71,7 @@ protected:
 
   void TearDown() override { std::filesystem::remove_all(rootPath_); }
 
-  const std::filesystem::path rootPath_;
+  std::filesystem::path rootPath_;
 };
 
 class GetSteamLibraryPathsTest : public FilesystemTest {
@@ -86,7 +86,7 @@ protected:
     std::filesystem::create_directories(filePath_.parent_path());
   }
 
-  const std::filesystem::path filePath_;
+  std::filesystem::path filePath_;
 };
 
 TEST_F(GetSteamLibraryPathsTest,
@@ -268,8 +268,8 @@ protected:
     touch(dataPath_.parent_path() / "SkyrimSE.exe");
   }
 
-  const std::filesystem::path dataPath_;
-  const std::filesystem::path filePath_;
+  std::filesystem::path dataPath_;
+  std::filesystem::path filePath_;
 };
 
 TEST_F(Steam_FindGameInstallTest, shouldReturnNulloptIfTheAcfFileDoesNotExist) {

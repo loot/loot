@@ -66,7 +66,7 @@ public:
 private:
   gui::Game* game_;
   ChangeCount* counter_;
-  const std::vector<std::string> plugins_;
+  std::vector<std::string> plugins_;
   bool useSortingErrorMessage{false};
 
   std::string getSortingErrorMessage(const gui::Game& game) const {

@@ -240,7 +240,8 @@ TEST_P(
   if (GetParam() == GameId::openmw) {
     EXPECT_FALSE(pluginPath.has_value());
   } else {
-    EXPECT_EQ(dataPath / (blankMasterDependentEsm + ".ghost"), pluginPath);
+    EXPECT_EQ(dataPath / (std::string(blankMasterDependentEsm) + ".ghost"),
+              pluginPath);
   }
 }
 

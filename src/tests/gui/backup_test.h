@@ -67,8 +67,8 @@ protected:
     std::filesystem::remove_all(destRoot);
   }
 
-  const std::filesystem::path sourceRoot;
-  const std::filesystem::path destRoot;
+  std::filesystem::path sourceRoot;
+  std::filesystem::path destRoot;
 };
 
 class CompressDirectoryTest : public BackupTest {

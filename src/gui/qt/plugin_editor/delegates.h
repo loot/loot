@@ -48,7 +48,7 @@ public:
                     const QModelIndex& index) const override;
 
 private:
-  const std::vector<std::pair<QString, QVariant>> textAndData;
+  std::vector<std::pair<QString, QVariant>> textAndData;
 };
 
 class CrcLineEditDelegate : public QStyledItemDelegate {

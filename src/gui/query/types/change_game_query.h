@@ -52,9 +52,9 @@ public:
 
 private:
   GamesManager* gamesManager_;
-  const std::string gameFolder_;
-  const std::string language_;
-  const std::function<void(std::string)> sendProgressUpdate_;
+  std::string gameFolder_;
+  std::string language_;
+  std::function<void(std::string)> sendProgressUpdate_;
 };
 }
 

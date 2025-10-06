@@ -49,23 +49,7 @@ protected:
       dataPath(gamePath / getPluginsFolder()),
       localPath(rootTestPath / "local" / "game"),
       lootDataPath(rootTestPath / "local" / "LOOT"),
-      masterFile(getMasterFile()),
-      missingEsp("Blank.missing.esp"),
-      blankEsm("Blank.esm"),
-      blankDifferentEsm("Blank - Different.esm"),
-      blankMasterDependentEsm("Blank - Master Dependent.esm"),
-      blankDifferentMasterDependentEsm(
-          "Blank - Different Master Dependent.esm"),
-      blankEsp("Blank.esp"),
-      blankDifferentEsp("Blank - Different.esp"),
-      blankMasterDependentEsp("Blank - Master Dependent.esp"),
-      blankDifferentMasterDependentEsp(
-          "Blank - Different Master Dependent.esp"),
-      blankPluginDependentEsp("Blank - Plugin Dependent.esp"),
-      blankDifferentPluginDependentEsp(
-          "Blank - Different Plugin Dependent.esp"),
-      nonAsciiEsp(u8"non\u00C1scii.esp"),
-      blankEsmCrc(getBlankEsmCrc()) {
+      masterFile(getMasterFile()) {
     assertInitialState();
   }
 
@@ -116,9 +100,10 @@ protected:
     // Ghost a plugin.
     ASSERT_NO_THROW(std::filesystem::rename(
         dataPath / blankMasterDependentEsm,
-        dataPath / (blankMasterDependentEsm + ".ghost")));
+        dataPath / (std::string(blankMasterDependentEsm) + ".ghost")));
     ASSERT_FALSE(exists(dataPath / blankMasterDependentEsm));
-    ASSERT_TRUE(exists(dataPath / (blankMasterDependentEsm + ".ghost")));
+    ASSERT_TRUE(
+        exists(dataPath / (std::string(blankMasterDependentEsm) + ".ghost")));
 
     ASSERT_FALSE(exists(missingPath));
     ASSERT_FALSE(exists(dataPath / missingEsp));
@@ -227,30 +212,34 @@ protected:
 
 private:
   GameId gameId_;
-  const std::filesystem::path rootTestPath;
+  std::filesystem::path rootTestPath;
 
 protected:
-  const std::filesystem::path missingPath;
-  const std::filesystem::path gamePath;
-  const std::filesystem::path dataPath;
-  const std::filesystem::path localPath;
-  const std::filesystem::path lootDataPath;
+  static constexpr const char* missingEsp{"Blank.missing.esp"};
+  static constexpr const char* blankEsm{"Blank.esm"};
+  static constexpr const char* blankDifferentEsm{"Blank - Different.esm"};
+  static constexpr const char* blankMasterDependentEsm{
+      "Blank - Master Dependent.esm"};
+  static constexpr const char* blankDifferentMasterDependentEsm{
+      "Blank - Different Master Dependent.esm"};
+  static constexpr const char* blankEsp{"Blank.esp"};
+  static constexpr const char* blankDifferentEsp{"Blank - Different.esp"};
+  static constexpr const char* blankMasterDependentEsp{"Blank - Master Dependent.esp"};
+  static constexpr const char* blankDifferentMasterDependentEsp{
+      "Blank - Different Master Dependent.esp"};
+  static constexpr const char* blankPluginDependentEsp{
+      "Blank - Plugin Dependent.esp"};
+  static constexpr const char* blankDifferentPluginDependentEsp{
+      "Blank - Different Plugin Dependent.esp"};
+  static constexpr const char* nonAsciiEsp{u8"non\u00C1scii.esp"};
 
-  const std::string masterFile;
-  const std::string missingEsp;
-  const std::string blankEsm;
-  const std::string blankDifferentEsm;
-  const std::string blankMasterDependentEsm;
-  const std::string blankDifferentMasterDependentEsm;
-  const std::string blankEsp;
-  const std::string blankDifferentEsp;
-  const std::string blankMasterDependentEsp;
-  const std::string blankDifferentMasterDependentEsp;
-  const std::string blankPluginDependentEsp;
-  const std::string blankDifferentPluginDependentEsp;
-  const std::string nonAsciiEsp;
+  std::filesystem::path missingPath;
+  std::filesystem::path gamePath;
+  std::filesystem::path dataPath;
+  std::filesystem::path localPath;
+  std::filesystem::path lootDataPath;
 
-  const uint32_t blankEsmCrc;
+  std::string masterFile;
 
 private:
   std::string getMasterFile() const {
@@ -293,20 +282,6 @@ private:
       return "OblivionRemastered/Content/Dev/ObvData/Data";
     } else {
       return "Data";
-    }
-  }
-
-  inline uint32_t getBlankEsmCrc() const {
-    switch (gameId_) {
-      case GameId::tes3:
-      case GameId::openmw:
-        return 0x790DC6FB;
-      case GameId::tes4:
-      case GameId::nehrim:
-      case GameId::oblivionRemastered:
-        return 0x374E2A6F;
-      default:
-        return 0x6A1273DC;
     }
   }
 

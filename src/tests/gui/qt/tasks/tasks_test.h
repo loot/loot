@@ -58,7 +58,7 @@ public:
   }
 
 private:
-  const int value;
+  int value;
 };
 
 TEST(QueryTask, executeShouldEmitAnErrorIfQueryIsANullPointer) {

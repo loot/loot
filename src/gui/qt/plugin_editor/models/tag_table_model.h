@@ -47,7 +47,7 @@ public:
   using MetadataTableModel::setData;
 
 private:
-  const std::map<bool, std::pair<QString, QVariant>> suggestionTypeMap;
+  std::map<bool, std::pair<QString, QVariant>> suggestionTypeMap;
 
   QVariant data(const Tag& element, int column, int role) const override;
 

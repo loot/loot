@@ -44,7 +44,7 @@ public slots:
   void execute() override;
 
 private:
-  const bool fail;
+  bool fail;
   const QElapsedTimer* timer;
 };
 }

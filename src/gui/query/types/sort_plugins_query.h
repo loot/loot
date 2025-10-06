@@ -77,7 +77,7 @@ private:
   gui::Game* game_;
   std::string language_;
   ChangeCount* unappliedChangeCount_;
-  const std::function<void(std::string)> sendProgressUpdate_;
+  std::function<void(std::string)> sendProgressUpdate_;
 };
 }
 

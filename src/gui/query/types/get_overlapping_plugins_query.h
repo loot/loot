@@ -83,7 +83,7 @@ private:
 
   gui::Game* game_;
   std::string language_;
-  const std::string pluginName_;
+  std::string pluginName_;
 };
 }
 

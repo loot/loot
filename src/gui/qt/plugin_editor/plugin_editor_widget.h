@@ -60,7 +60,7 @@ signals:
 
 private:
   const std::vector<LootSettings::Language> *languages;
-  const std::string language;
+  std::string language;
 
   QStringList bashTagCompletions;
   QStringList filenameCompletions;

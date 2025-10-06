@@ -134,7 +134,8 @@ protected:
     using std::filesystem::u8path;
 
     const auto parentPath = lootDataPath / u8path("games") /
-                            u8path(game.getSettings().getFolderName()) / "backups";
+                            u8path(game.getSettings().getFolderName()) /
+                            "backups";
 
     if (!std::filesystem::exists(parentPath)) {
       return {};
@@ -177,11 +178,25 @@ protected:
     return loadOrder;
   }
 
+  uint32_t getBlankEsmCrc() const {
+    switch (GetParam()) {
+      case GameId::tes3:
+      case GameId::openmw:
+        return 0x790DC6FB;
+      case GameId::tes4:
+      case GameId::nehrim:
+      case GameId::oblivionRemastered:
+        return 0x374E2A6F;
+      default:
+        return 0x6A1273DC;
+    }
+  }
+
   std::vector<std::string> loadOrderToSet_;
 
-  const std::vector<MessageContent> detail_;
+  std::vector<MessageContent> detail_;
 
-  const GameSettings defaultGameSettings;
+  GameSettings defaultGameSettings;
 };
 
 // Pass an empty first argument, as it's a prefix for the test instantiation,
@@ -209,10 +224,12 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   EXPECT_EQ(settings.getId(), game.getSettings().getId());
   EXPECT_EQ(settings.getName(), game.getSettings().getName());
   EXPECT_EQ(settings.getFolderName(), game.getSettings().getFolderName());
-  EXPECT_EQ(settings.getMasterFilename(), game.getSettings().getMasterFilename());
+  EXPECT_EQ(settings.getMasterFilename(),
+            game.getSettings().getMasterFilename());
   EXPECT_EQ(settings.getMinimumHeaderVersion(),
             game.getSettings().getMinimumHeaderVersion());
-  EXPECT_EQ(settings.getMasterlistSource(), game.getSettings().getMasterlistSource());
+  EXPECT_EQ(settings.getMasterlistSource(),
+            game.getSettings().getMasterlistSource());
   EXPECT_EQ(settings.getGamePath(), game.getSettings().getGamePath());
   EXPECT_EQ(settings.getGameLocalPath(), game.getSettings().getGameLocalPath());
 
@@ -298,7 +315,8 @@ TEST_P(GameTest, initShouldMoveTheLegacyGameFolderIfItExists) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto legacyGamePath = lootDataPath / u8path(game.getSettings().getFolderName());
+  auto legacyGamePath =
+      lootDataPath / u8path(game.getSettings().getFolderName());
   std::filesystem::create_directory(legacyGamePath);
   std::ofstream out(legacyGamePath / "file.txt");
   out << "";
@@ -319,7 +337,8 @@ TEST_P(GameTest, initShouldNotMoveAFileWithTheSamePathAsTheLegacyGameFolder) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto legacyGamePath = lootDataPath / u8path(game.getSettings().getFolderName());
+  auto legacyGamePath =
+      lootDataPath / u8path(game.getSettings().getFolderName());
   std::ofstream out(legacyGamePath);
   out << "";
   out.close();
@@ -340,7 +359,8 @@ TEST_P(
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto legacyGamePath = lootDataPath / u8path(game.getSettings().getFolderName());
+  auto legacyGamePath =
+      lootDataPath / u8path(game.getSettings().getFolderName());
   std::filesystem::create_directory(legacyGamePath);
   std::ofstream out(legacyGamePath / "file.txt");
   out << "";
@@ -352,7 +372,8 @@ TEST_P(
   ASSERT_FALSE(std::filesystem::exists(lootGamesPath));
   EXPECT_NO_THROW(game.init());
 
-  auto lootGamePath = lootGamesPath / u8path(game.getSettings().getFolderName());
+  auto lootGamePath =
+      lootGamesPath / u8path(game.getSettings().getFolderName());
 
   EXPECT_FALSE(std::filesystem::exists(legacyGamePath));
   EXPECT_TRUE(std::filesystem::exists(lootGamePath));
@@ -597,21 +618,22 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
   });
 
   metadata.SetDirtyInfo({
-      PluginCleaningData(blankEsmCrc, "utility1", detail, 0, 1, 2),
+      PluginCleaningData(getBlankEsmCrc(), "utility1", detail, 0, 1, 2),
       PluginCleaningData(0xDEADBEEF, "utility2", detail, 0, 5, 10),
   });
 
   auto messages =
       game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
-  EXPECT_EQ(std::vector<SourcedMessage>({
-                toSourcedMessage(PluginCleaningData(
-                                     blankEsmCrc, "utility1", detail, 0, 1, 2),
-                                 MessageContent::DEFAULT_LANGUAGE),
-                toSourcedMessage(PluginCleaningData(
-                                     0xDEADBEEF, "utility2", detail, 0, 5, 10),
-                                 MessageContent::DEFAULT_LANGUAGE),
-            }),
-            messages);
+  EXPECT_EQ(
+      std::vector<SourcedMessage>({
+          toSourcedMessage(
+              PluginCleaningData(getBlankEsmCrc(), "utility1", detail, 0, 1, 2),
+              MessageContent::DEFAULT_LANGUAGE),
+          toSourcedMessage(
+              PluginCleaningData(0xDEADBEEF, "utility2", detail, 0, 5, 10),
+              MessageContent::DEFAULT_LANGUAGE),
+      }),
+      messages);
 }
 
 TEST_P(
@@ -985,7 +1007,7 @@ TEST_P(
   EXPECT_EQ("5.0", plugin->GetVersion().value());
 
   // Check that not only the header has been read.
-  EXPECT_EQ(blankEsmCrc, plugin->GetCRC().value());
+  EXPECT_EQ(getBlankEsmCrc(), plugin->GetCRC().value());
 }
 
 TEST_P(GameTest,

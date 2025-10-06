@@ -54,9 +54,9 @@ protected:
 
   void TearDown() override { std::filesystem::remove_all(rootPath_); }
 
-  const std::filesystem::path rootPath_;
-  const std::filesystem::path filePath_;
-  const std::filesystem::path fileMetadataPath_;
+  std::filesystem::path rootPath_;
+  std::filesystem::path filePath_;
+  std::filesystem::path fileMetadataPath_;
 };
 
 class CalculateGitBlobHashTest : public QtHelpersFixture {};

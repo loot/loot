@@ -70,8 +70,8 @@ protected:
     return bytes;
   }
 
-  const std::filesystem::path rootPath_;
-  const std::filesystem::path filePath_;
+  std::filesystem::path rootPath_;
+  std::filesystem::path filePath_;
 };
 
 class LoadGroupNodePositionsTest : public GroupNodePositionsFixture {};

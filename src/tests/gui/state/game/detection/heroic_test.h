@@ -70,10 +70,10 @@ protected:
 
   void TearDown() override { std::filesystem::remove_all(rootPath_); }
 
-  const std::filesystem::path rootPath_;
-  const std::filesystem::path gogInstalledPath_;
-  const std::filesystem::path egsInstalledPath_;
-  const std::filesystem::path gamesConfigPath_;
+  std::filesystem::path rootPath_;
+  std::filesystem::path gogInstalledPath_;
+  std::filesystem::path egsInstalledPath_;
+  std::filesystem::path gamesConfigPath_;
 };
 
 class Heroic_GetInstalledGogGamesTest : public HeroicTest {};
@@ -238,6 +238,7 @@ TEST_F(Heroic_GetGameLocalPathTest,
 }
 
 class Heroic_FindGameInstallsTest : public HeroicTest {};
+
 TEST_F(Heroic_FindGameInstallsTest,
        shouldReturnNoInstallsIfThereIsAGogGameInstallPathButItIsInvalid) {
   std::ofstream out(gogInstalledPath_);

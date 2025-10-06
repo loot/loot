@@ -75,9 +75,9 @@ protected:
     return boost::replace_all_copy(path.u8string(), "\\", "\\\\");
   }
 
-  const std::filesystem::path settingsFile_;
-  const std::filesystem::path unicodeSettingsFile_;
-  const std::filesystem::path gitRepoPath_;
+  std::filesystem::path settingsFile_;
+  std::filesystem::path unicodeSettingsFile_;
+  std::filesystem::path gitRepoPath_;
   LootSettings settings_;
 };
 

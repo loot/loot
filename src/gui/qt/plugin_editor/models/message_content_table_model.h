@@ -47,7 +47,7 @@ public:
   using MetadataTableModel::setData;
 
 private:
-  const std::map<std::string, QVariant> languageLocaleNameMap;
+  std::map<std::string, QVariant> languageLocaleNameMap;
 
   QVariant data(const MessageContent& element,
                 int column,
