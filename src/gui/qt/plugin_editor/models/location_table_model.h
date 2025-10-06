@@ -37,8 +37,8 @@ public:
   static constexpr int NAME_COLUMN = 1;
 
   LocationTableModel(QObject* parent,
-                     std::vector<Location> nonUserMetadata,
-                     std::vector<Location> userMetadata);
+                     std::vector<Location>&& nonUserMetadata,
+                     std::vector<Location>&& userMetadata);
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 

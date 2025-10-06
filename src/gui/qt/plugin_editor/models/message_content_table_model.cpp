@@ -31,10 +31,12 @@
 namespace loot {
 MessageContentTableModel::MessageContentTableModel(
     QObject* parent,
-    std::vector<MessageContent> nonUserMetadata,
-    std::vector<MessageContent> userMetadata,
-    std::map<std::string, QVariant> languageLocaleNameMap) :
-    MetadataTableModel(parent, nonUserMetadata, userMetadata),
+    std::vector<MessageContent>&& nonUserMetadata,
+    std::vector<MessageContent>&& userMetadata,
+    const std::map<std::string, QVariant>& languageLocaleNameMap) :
+    MetadataTableModel(parent,
+                       std::move(nonUserMetadata),
+                       std::move(userMetadata)),
     languageLocaleNameMap(languageLocaleNameMap) {}
 
 int MessageContentTableModel::columnCount(const QModelIndex&) const {

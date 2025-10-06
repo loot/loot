@@ -37,12 +37,12 @@ class SortPluginsQuery : public Query {
 public:
   SortPluginsQuery(gui::Game& game,
                    ChangeCount& unappliedChangeCount,
-                   std::string language,
-                   std::function<void(std::string)> sendProgressUpdate) :
+                   std::string&& language,
+                   std::function<void(std::string)>&& sendProgressUpdate) :
       game_(&game),
-      language_(language),
+      language_(std::move(language)),
       unappliedChangeCount_(&unappliedChangeCount),
-      sendProgressUpdate_(sendProgressUpdate) {}
+      sendProgressUpdate_(std::move(sendProgressUpdate)) {}
 
   QueryResult executeLogic() override {
     auto logger = getLogger();

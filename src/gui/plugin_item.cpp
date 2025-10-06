@@ -131,7 +131,7 @@ PluginItem::PluginItem(GameId gameId,
                        const gui::Game& game,
                        const std::optional<short>& loadOrderIndex,
                        const bool isActive,
-                       std::string language) :
+                       std::string_view language) :
     gameId(gameId),
     name(plugin.GetName()),
     loadOrderIndex(loadOrderIndex),

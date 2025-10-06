@@ -104,7 +104,7 @@ SourcedMessage createInactiveMasterMessage(const PluginInterface& plugin,
 }
 
 SourcedMessage createMissingRequirementMessage(const loot::File& requirement,
-                                               const std::string& language) {
+                                               std::string_view language) {
   std::string localisedText;
   const auto displayName = requirement.GetDisplayName();
   if (displayName.empty()) {
@@ -131,7 +131,7 @@ SourcedMessage createMissingRequirementMessage(const loot::File& requirement,
 
 SourcedMessage createPresentIncompatibilityMessage(
     const loot::File& incompatibility,
-    const std::string& language) {
+    std::string_view language) {
   std::string localisedText;
   const auto displayName = incompatibility.GetDisplayName();
   if (displayName.empty()) {
@@ -404,10 +404,10 @@ void validateFiles(
     std::vector<SourcedMessage>& messages,
     const std::vector<loot::File>& files,
     const PluginInterface& plugin,
-    const std::string& language,
+    std::string_view language,
     std::string_view logMessage,
     std::function<bool(const loot::File&)> isInvalid,
-    std::function<SourcedMessage(const loot::File&, const std::string&)>
+    std::function<SourcedMessage(const loot::File&, std::string_view)>
         createMessage) {
   const auto logger = getLogger();
 
@@ -730,7 +730,7 @@ namespace loot {
 std::vector<SourcedMessage> checkInstallValidity(const gui::Game& game,
                                                  const PluginInterface& plugin,
                                                  const PluginMetadata& metadata,
-                                                 const std::string& language) {
+                                                 std::string_view language) {
   auto logger = getLogger();
 
   if (logger) {

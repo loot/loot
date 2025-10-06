@@ -41,7 +41,7 @@ public:
   MessageContentEditor(QWidget *parent,
                        const std::vector<LootSettings::Language> &languages);
 
-  void initialiseInputs(const std::vector<MessageContent> &metadata);
+  void initialiseInputs(std::vector<MessageContent> &&metadata);
 
   std::vector<MessageContent> getMetadata() const;
 

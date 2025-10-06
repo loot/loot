@@ -41,8 +41,8 @@ public:
   static constexpr int DETAIL_COLUMN = 5;
 
   CleaningDataTableModel(QObject* parent,
-                         std::vector<PluginCleaningData> nonUserMetadata,
-                         std::vector<PluginCleaningData> userMetadata,
+                         std::vector<PluginCleaningData>&& nonUserMetadata,
+                         std::vector<PluginCleaningData>&& userMetadata,
                          const std::string& language);
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;

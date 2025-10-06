@@ -345,14 +345,15 @@ FileTableTab::FileTableTab(QWidget* parent,
   configureAsDropTarget();
 }
 
-void FileTableTab::initialiseInputs(const std::vector<File>& nonUserMetadata,
-                                    const std::vector<File>& userMetadata) {
-  auto tableModel =
-      new FileTableModel(this, nonUserMetadata, userMetadata, *language);
+void FileTableTab::initialiseInputs(std::vector<File>&& nonUserMetadata,
+                                    std::vector<File>&& userMetadata) {
+  auto tableModel = new FileTableModel(
+      this, std::move(nonUserMetadata), std::move(userMetadata), *language);
 
   setTableModel(tableModel);
 
-  auto filenameDelegate = new AutocompletingLineEditDelegate(this, *completions);
+  auto filenameDelegate =
+      new AutocompletingLineEditDelegate(this, *completions);
   auto detailDelegate = new MessageContentDelegate(this, *languages);
 
   setItemDelegateForColumn(tableModel->NAME_COLUMN, filenameDelegate);
@@ -368,9 +369,10 @@ bool FileTableTab::hasUserMetadata() const {
 }
 
 void LoadAfterFileTableTab::initialiseInputs(
-    const std::vector<File>& nonUserMetadata,
-    const std::vector<File>& userMetadata) {
-  FileTableTab::initialiseInputs(nonUserMetadata, userMetadata);
+    std::vector<File>&& nonUserMetadata,
+    std::vector<File>&& userMetadata) {
+  FileTableTab::initialiseInputs(std::move(nonUserMetadata),
+                                 std::move(userMetadata));
 
   setColumnHidden(FileTableModel::DISPLAY_NAME_COLUMN, true);
   setColumnHidden(FileTableModel::DETAIL_COLUMN, true);
@@ -390,15 +392,15 @@ MessageContentTableWidget::MessageContentTableWidget(
 }
 
 void MessageContentTableWidget::initialiseInputs(
-    const std::vector<MessageContent>& nonUserMetadata,
-    const std::vector<MessageContent>& userMetadata) {
+    std::vector<MessageContent>&& nonUserMetadata,
+    std::vector<MessageContent>&& userMetadata) {
   std::map<MessageType, std::pair<QString, QVariant>> messageTypeMap = {
       {MessageType::say, {translate("Note"), QString("say")}},
       {MessageType::warn, {translate("Warning"), QString("warn")}},
       {MessageType::error, {translate("Error"), QString("error")}}};
 
   auto tableModel = new MessageContentTableModel(
-      this, nonUserMetadata, userMetadata, languageMap);
+      this, std::move(nonUserMetadata), std::move(userMetadata), languageMap);
 
   setTableModel(tableModel);
   setColumnFixedWidth(
@@ -426,23 +428,25 @@ MessageTableTab::MessageTableTab(
     const std::string& language) :
     MetadataTableTab(parent), languages(&languages), language(&language) {}
 
-void MessageTableTab::initialiseInputs(
-    const std::vector<Message>& nonUserMetadata,
-    const std::vector<Message>& userMetadata) {
+void MessageTableTab::initialiseInputs(std::vector<Message>&& nonUserMetadata,
+                                       std::vector<Message>&& userMetadata) {
   std::map<MessageType, std::pair<QString, QVariant>> messageTypeMap = {
       {MessageType::say, {translate("Note"), QString("say")}},
       {MessageType::warn, {translate("Warning"), QString("warn")}},
       {MessageType::error, {translate("Error"), QString("error")}}};
 
-  auto tableModel = new MessageTableModel(
-      this, nonUserMetadata, userMetadata, messageTypeMap, *language);
-
-  setTableModel(tableModel);
-
   std::vector<std::pair<QString, QVariant>> messageTypes;
   for (const auto& entry : messageTypeMap) {
     messageTypes.push_back(entry.second);
   }
+
+  auto tableModel = new MessageTableModel(this,
+                                          std::move(nonUserMetadata),
+                                          std::move(userMetadata),
+                                          std::move(messageTypeMap),
+                                          *language);
+
+  setTableModel(tableModel);
 
   setColumnFixedWidth(0,
                       calculateMinimumColumnWidth(tableModel, 0, messageTypes));
@@ -462,10 +466,10 @@ bool MessageTableTab::hasUserMetadata() const {
   return !getUserMetadata().empty();
 }
 
-void LocationTableTab::initialiseInputs(
-    const std::vector<Location>& nonUserMetadata,
-    const std::vector<Location>& userMetadata) {
-  auto tableModel = new LocationTableModel(this, nonUserMetadata, userMetadata);
+void LocationTableTab::initialiseInputs(std::vector<Location>&& nonUserMetadata,
+                                        std::vector<Location>&& userMetadata) {
+  auto tableModel = new LocationTableModel(
+      this, std::move(nonUserMetadata), std::move(userMetadata));
 
   setTableModel(tableModel);
 }
@@ -485,10 +489,10 @@ CleaningDataTableTab::CleaningDataTableTab(
     MetadataTableTab(parent), languages(&languages), language(&language) {}
 
 void CleaningDataTableTab::initialiseInputs(
-    const std::vector<PluginCleaningData>& nonUserMetadata,
-    const std::vector<PluginCleaningData>& userMetadata) {
-  auto tableModel =
-      new CleaningDataTableModel(this, nonUserMetadata, userMetadata, *language);
+    std::vector<PluginCleaningData>&& nonUserMetadata,
+    std::vector<PluginCleaningData>&& userMetadata) {
+  auto tableModel = new CleaningDataTableModel(
+      this, std::move(nonUserMetadata), std::move(userMetadata), *language);
 
   setTableModel(tableModel);
 
@@ -520,8 +524,8 @@ bool CleaningDataTableTab::hasUserMetadata() const {
 TagTableTab::TagTableTab(QWidget* parent, const QStringList& completions) :
     MetadataTableTab(parent), completions(&completions) {}
 
-void TagTableTab::initialiseInputs(const std::vector<Tag>& nonUserMetadata,
-                                   const std::vector<Tag>& userMetadata) {
+void TagTableTab::initialiseInputs(std::vector<Tag>&& nonUserMetadata,
+                                   std::vector<Tag>&& userMetadata) {
   std::map<bool, std::pair<QString, QVariant>> suggestionTypeMap = {
       {true, {translate("Add"), true}}, {false, {translate("Remove"), false}}};
 
@@ -530,8 +534,10 @@ void TagTableTab::initialiseInputs(const std::vector<Tag>& nonUserMetadata,
     suggestionTypes.push_back(entry.second);
   }
 
-  auto tableModel =
-      new TagTableModel(this, nonUserMetadata, userMetadata, suggestionTypeMap);
+  auto tableModel = new TagTableModel(this,
+                                      std::move(nonUserMetadata),
+                                      std::move(userMetadata),
+                                      std::move(suggestionTypeMap));
 
   setTableModel(tableModel);
   setColumnFixedWidth(

@@ -37,10 +37,11 @@ public:
   static constexpr int NAME_COLUMN = 1;
   static constexpr int CONDITION_COLUMN = 2;
 
-  TagTableModel(QObject* parent,
-                std::vector<Tag> nonUserMetadata,
-                std::vector<Tag> userMetadata,
-                std::map<bool, std::pair<QString, QVariant>> suggestionTypeMap);
+  TagTableModel(
+      QObject* parent,
+      std::vector<Tag>&& nonUserMetadata,
+      std::vector<Tag>&& userMetadata,
+      std::map<bool, std::pair<QString, QVariant>>&& suggestionTypeMap);
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 

@@ -36,11 +36,11 @@ namespace loot {
 class GetGameDataQuery : public Query {
 public:
   GetGameDataQuery(gui::Game& game,
-                   std::string language,
-                   std::function<void(std::string)> sendProgressUpdate) :
+                   std::string&& language,
+                   std::function<void(std::string)>&& sendProgressUpdate) :
       game_(&game),
-      language_(language),
-      sendProgressUpdate_(sendProgressUpdate) {}
+      language_(std::move(language)),
+      sendProgressUpdate_(std::move(sendProgressUpdate)) {}
 
   QueryResult executeLogic() override {
     sendProgressUpdate_(

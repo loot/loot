@@ -29,9 +29,11 @@
 
 namespace loot {
 LocationTableModel::LocationTableModel(QObject* parent,
-                                       std::vector<Location> nonUserMetadata,
-                                       std::vector<Location> userMetadata) :
-    MetadataTableModel(parent, nonUserMetadata, userMetadata) {}
+                                       std::vector<Location>&& nonUserMetadata,
+                                       std::vector<Location>&& userMetadata) :
+    MetadataTableModel(parent,
+                       std::move(nonUserMetadata),
+                       std::move(userMetadata)) {}
 
 int LocationTableModel::columnCount(const QModelIndex&) const {
   static constexpr int COLUMN_COUNT = std::max({URL_COLUMN, NAME_COLUMN}) + 1;

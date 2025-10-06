@@ -32,20 +32,21 @@ namespace loot {
 class ChangeGameQuery : public Query {
 public:
   ChangeGameQuery(GamesManager& gamesManager,
-                  std::string language,
-                  std::string gameFolder,
-                  std::function<void(std::string)> sendProgressUpdate) :
+                  std::string&& language,
+                  std::string&& gameFolder,
+                  std::function<void(std::string)>&& sendProgressUpdate) :
       gamesManager_(&gamesManager),
-      gameFolder_(gameFolder),
-      language_(language),
-      sendProgressUpdate_(sendProgressUpdate) {}
+      gameFolder_(std::move(gameFolder)),
+      language_(std::move(language)),
+      sendProgressUpdate_(std::move(sendProgressUpdate)) {}
 
   QueryResult executeLogic() override {
     gamesManager_->setCurrentGame(gameFolder_);
     gamesManager_->getCurrentGame().init();
 
-    GetGameDataQuery subQuery(
-        gamesManager_->getCurrentGame(), language_, sendProgressUpdate_);
+    GetGameDataQuery subQuery(gamesManager_->getCurrentGame(),
+                              std::move(language_),
+                              std::move(sendProgressUpdate_));
 
     return subQuery.executeLogic();
   }

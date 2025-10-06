@@ -627,7 +627,7 @@ std::vector<std::shared_ptr<const PluginInterface>> Game::getPlugins() const {
 std::vector<SourcedMessage> Game::checkInstallValidity(
     const PluginInterface& plugin,
     const PluginMetadata& metadata,
-    const std::string& language) const {
+    std::string_view language) const {
   return loot::checkInstallValidity(*this, plugin, metadata, language);
 }
 

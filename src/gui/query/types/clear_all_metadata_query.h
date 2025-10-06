@@ -32,8 +32,8 @@ along with LOOT.  If not, see
 namespace loot {
 class ClearAllMetadataQuery : public Query {
 public:
-  ClearAllMetadataQuery(gui::Game& game, std::string language) :
-      game_(&game), language_(language) {}
+  ClearAllMetadataQuery(gui::Game& game, std::string&& language) :
+      game_(&game), language_(std::move(language)) {}
 
   QueryResult executeLogic() override {
     auto logger = getLogger();

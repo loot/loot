@@ -45,12 +45,14 @@ MessageType MapMessageType(const std::string& type) {
 namespace loot {
 MessageTableModel::MessageTableModel(
     QObject* parent,
-    std::vector<Message> nonUserMetadata,
-    std::vector<Message> userMetadata,
-    std::map<MessageType, std::pair<QString, QVariant>> typeDisplayDataMap,
+    std::vector<Message>&& nonUserMetadata,
+    std::vector<Message>&& userMetadata,
+    std::map<MessageType, std::pair<QString, QVariant>>&& typeDisplayDataMap,
     const std::string& language) :
-    MetadataTableModel(parent, nonUserMetadata, userMetadata),
-    typeDisplayDataMap(typeDisplayDataMap),
+    MetadataTableModel(parent,
+                       std::move(nonUserMetadata),
+                       std::move(userMetadata)),
+    typeDisplayDataMap(std::move(typeDisplayDataMap)),
     language(&language) {}
 
 int MessageTableModel::columnCount(const QModelIndex&) const {

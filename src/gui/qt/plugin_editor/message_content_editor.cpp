@@ -38,8 +38,8 @@ MessageContentEditor::MessageContentEditor(
 }
 
 void MessageContentEditor::initialiseInputs(
-    const std::vector<MessageContent>& metadata) {
-  tableWidget->initialiseInputs({}, metadata);
+    std::vector<MessageContent>&& metadata) {
+  tableWidget->initialiseInputs({}, std::move(metadata));
 }
 
 std::vector<MessageContent> MessageContentEditor::getMetadata() const {

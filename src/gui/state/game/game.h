@@ -110,7 +110,7 @@ public:
   std::vector<SourcedMessage> checkInstallValidity(
       const PluginInterface& plugin,
       const PluginMetadata& metadata,
-      const std::string& language) const;
+      std::string_view language) const;
 
   void redatePlugins();  // Change timestamps to match load order (Skyrim only).
 

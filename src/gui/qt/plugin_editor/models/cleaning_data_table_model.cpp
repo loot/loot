@@ -31,10 +31,12 @@
 namespace loot {
 CleaningDataTableModel::CleaningDataTableModel(
     QObject* parent,
-    std::vector<PluginCleaningData> nonUserMetadata,
-    std::vector<PluginCleaningData> userMetadata,
+    std::vector<PluginCleaningData>&& nonUserMetadata,
+    std::vector<PluginCleaningData>&& userMetadata,
     const std::string& language) :
-    MetadataTableModel(parent, nonUserMetadata, userMetadata),
+    MetadataTableModel(parent,
+                       std::move(nonUserMetadata),
+                       std::move(userMetadata)),
     language(&language) {}
 
 int CleaningDataTableModel::columnCount(const QModelIndex&) const {
@@ -102,7 +104,8 @@ void CleaningDataTableModel::setData(PluginCleaningData& element,
     static constexpr int CRC_BASE = 16;
 
     element = PluginCleaningData(
-        static_cast<uint32_t>(std::stoul(value.toString().toStdString(), nullptr, CRC_BASE)),
+        static_cast<uint32_t>(
+            std::stoul(value.toString().toStdString(), nullptr, CRC_BASE)),
         element.GetCleaningUtility(),
         element.GetDetail(),
         element.GetITMCount(),

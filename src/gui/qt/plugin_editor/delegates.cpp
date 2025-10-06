@@ -37,7 +37,7 @@
 namespace loot {
 ComboBoxDelegate::ComboBoxDelegate(
     QObject* parent,
-    std::vector<std::pair<QString, QVariant>> textAndData) :
+    const std::vector<std::pair<QString, QVariant>>& textAndData) :
     QStyledItemDelegate(parent), textAndData(textAndData) {}
 
 QWidget* ComboBoxDelegate::createEditor(QWidget* parent,

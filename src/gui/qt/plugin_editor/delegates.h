@@ -35,7 +35,7 @@ class ComboBoxDelegate : public QStyledItemDelegate {
   Q_OBJECT
 public:
   ComboBoxDelegate(QObject* parent,
-                   std::vector<std::pair<QString, QVariant>> textAndData);
+                   const std::vector<std::pair<QString, QVariant>>& textAndData);
 
   QWidget* createEditor(QWidget* parent,
                         const QStyleOptionViewItem& option,

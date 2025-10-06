@@ -170,11 +170,11 @@ public:
 
 protected:
   MetadataTableModel(QObject* parent,
-                     const std::vector<T>& nonUserMetadata,
-                     const std::vector<T>& userMetadata) :
+                     std::vector<T>&& nonUserMetadata,
+                     std::vector<T>&& userMetadata) :
       QAbstractTableModel(parent),
-      nonUserMetadata(nonUserMetadata),
-      userMetadata(userMetadata) {}
+      nonUserMetadata(std::move(nonUserMetadata)),
+      userMetadata(std::move(userMetadata)) {}
 
   virtual QVariant data(const T& element, int column, int role) const = 0;
 

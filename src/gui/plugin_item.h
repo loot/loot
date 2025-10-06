@@ -44,7 +44,7 @@ struct PluginItem {
              const gui::Game& game,
              const std::optional<short>& loadOrderIndex,
              const bool isActive,
-             std::string language);
+             std::string_view language);
 
   GameId gameId{GameId::tes4};
   std::string name;

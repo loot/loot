@@ -30,11 +30,13 @@
 namespace loot {
 TagTableModel::TagTableModel(
     QObject* parent,
-    std::vector<Tag> nonUserMetadata,
-    std::vector<Tag> userMetadata,
-    std::map<bool, std::pair<QString, QVariant>> suggestionTypeMap) :
-    MetadataTableModel(parent, nonUserMetadata, userMetadata),
-    suggestionTypeMap(suggestionTypeMap) {}
+    std::vector<Tag>&& nonUserMetadata,
+    std::vector<Tag>&& userMetadata,
+    std::map<bool, std::pair<QString, QVariant>>&& suggestionTypeMap) :
+    MetadataTableModel(parent,
+                       std::move(nonUserMetadata),
+                       std::move(userMetadata)),
+    suggestionTypeMap(std::move(suggestionTypeMap)) {}
 
 int TagTableModel::columnCount(const QModelIndex&) const { return 3; }
 

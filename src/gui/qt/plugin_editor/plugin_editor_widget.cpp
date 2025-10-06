@@ -111,15 +111,21 @@ void PluginEditorWidget::initialiseInputs(
   }
 
   groupTab->initialiseInputs(groups, nonUserGroupName, userGroupName);
-  loadAfterTab->initialiseInputs(nonUserLoadAfter, userLoadAfter);
-  requirementsTab->initialiseInputs(nonUserRequirements, userRequirements);
-  incompatibilitiesTab->initialiseInputs(nonUserIncompatibilities,
-                                         userIncompatibilities);
-  messagesTab->initialiseInputs(nonUserMessages, userMessages);
-  tagsTab->initialiseInputs(nonUserTags, userTags);
-  dirtyTab->initialiseInputs(nonUserDirtyData, userDirtyData);
-  cleanTab->initialiseInputs(nonUserCleanData, userCleanData);
-  locationsTab->initialiseInputs(nonUserLocations, userLocations);
+  loadAfterTab->initialiseInputs(std::move(nonUserLoadAfter),
+                                 std::move(userLoadAfter));
+  requirementsTab->initialiseInputs(std::move(nonUserRequirements),
+                                    std::move(userRequirements));
+  incompatibilitiesTab->initialiseInputs(std::move(nonUserIncompatibilities),
+                                         std::move(userIncompatibilities));
+  messagesTab->initialiseInputs(std::move(nonUserMessages),
+                                std::move(userMessages));
+  tagsTab->initialiseInputs(std::move(nonUserTags), std::move(userTags));
+  dirtyTab->initialiseInputs(std::move(nonUserDirtyData),
+                             std::move(userDirtyData));
+  cleanTab->initialiseInputs(std::move(nonUserCleanData),
+                             std::move(userCleanData));
+  locationsTab->initialiseInputs(std::move(nonUserLocations),
+                                 std::move(userLocations));
 
   cleanTab->hideCounts(true);
 }

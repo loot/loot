@@ -85,8 +85,8 @@ class MetadataTableTab : public BaseTableTab {
 public:
   using BaseTableTab::BaseTableTab;
 
-  virtual void initialiseInputs(const std::vector<T>& nonUserMetadata,
-                                const std::vector<T>& userMetadata) = 0;
+  virtual void initialiseInputs(std::vector<T>&& nonUserMetadata,
+                                std::vector<T>&& userMetadata) = 0;
 
   virtual std::vector<T> getUserMetadata() const = 0;
 };
@@ -99,8 +99,8 @@ public:
                const std::string& language,
                const QStringList& completions);
 
-  void initialiseInputs(const std::vector<File>& nonUserMetadata,
-                        const std::vector<File>& userMetadata) override;
+  void initialiseInputs(std::vector<File>&& nonUserMetadata,
+                        std::vector<File>&& userMetadata) override;
 
   std::vector<File> getUserMetadata() const override;
 
@@ -116,8 +116,8 @@ class LoadAfterFileTableTab : public FileTableTab {
 public:
   using FileTableTab::FileTableTab;
 
-  void initialiseInputs(const std::vector<File>& nonUserMetadata,
-                        const std::vector<File>& userMetadata) override;
+  void initialiseInputs(std::vector<File>&& nonUserMetadata,
+                        std::vector<File>&& userMetadata) override;
 };
 
 class MessageContentTableWidget : public MetadataTableTab<MessageContent> {
@@ -127,9 +127,8 @@ public:
       QWidget* parent,
       const std::vector<LootSettings::Language>& languages);
 
-  void initialiseInputs(
-      const std::vector<MessageContent>& nonUserMetadata,
-      const std::vector<MessageContent>& userMetadata) override;
+  void initialiseInputs(std::vector<MessageContent>&& nonUserMetadata,
+                        std::vector<MessageContent>&& userMetadata) override;
 
   std::vector<MessageContent> getUserMetadata() const override;
 
@@ -147,8 +146,8 @@ public:
                   const std::vector<LootSettings::Language>& languages,
                   const std::string& language);
 
-  void initialiseInputs(const std::vector<Message>& nonUserMetadata,
-                        const std::vector<Message>& userMetadata) override;
+  void initialiseInputs(std::vector<Message>&& nonUserMetadata,
+                        std::vector<Message>&& userMetadata) override;
 
   std::vector<Message> getUserMetadata() const override;
 
@@ -164,8 +163,8 @@ class LocationTableTab : public MetadataTableTab<Location> {
 public:
   using MetadataTableTab::MetadataTableTab;
 
-  void initialiseInputs(const std::vector<Location>& nonUserMetadata,
-                        const std::vector<Location>& userMetadata) override;
+  void initialiseInputs(std::vector<Location>&& nonUserMetadata,
+                        std::vector<Location>&& userMetadata) override;
 
   std::vector<Location> getUserMetadata() const override;
 
@@ -180,8 +179,8 @@ public:
                        const std::string& language);
 
   void initialiseInputs(
-      const std::vector<PluginCleaningData>& nonUserMetadata,
-      const std::vector<PluginCleaningData>& userMetadata) override;
+      std::vector<PluginCleaningData>&& nonUserMetadata,
+      std::vector<PluginCleaningData>&& userMetadata) override;
 
   void hideCounts(bool hide);
 
@@ -199,8 +198,8 @@ class TagTableTab : public MetadataTableTab<Tag> {
 public:
   TagTableTab(QWidget* parent, const QStringList& completions);
 
-  void initialiseInputs(const std::vector<Tag>& nonUserMetadata,
-                        const std::vector<Tag>& userMetadata) override;
+  void initialiseInputs(std::vector<Tag>&& nonUserMetadata,
+                        std::vector<Tag>&& userMetadata) override;
 
   std::vector<Tag> getUserMetadata() const override;
 

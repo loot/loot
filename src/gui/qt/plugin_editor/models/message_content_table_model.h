@@ -38,9 +38,9 @@ public:
 
   MessageContentTableModel(
       QObject* parent,
-      std::vector<MessageContent> nonUserMetadata,
-      std::vector<MessageContent> userMetadata,
-      std::map<std::string, QVariant> languageLocaleNameMap);
+      std::vector<MessageContent>&& nonUserMetadata,
+      std::vector<MessageContent>&& userMetadata,
+      const std::map<std::string, QVariant>& languageLocaleNameMap);
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 

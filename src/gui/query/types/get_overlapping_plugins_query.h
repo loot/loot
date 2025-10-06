@@ -33,9 +33,9 @@ namespace loot {
 class GetOverlappingPluginsQuery : public Query {
 public:
   GetOverlappingPluginsQuery(gui::Game& game,
-                             std::string language,
-                             std::string pluginName) :
-      game_(&game), language_(language), pluginName_(pluginName) {}
+                             std::string&& language,
+                             std::string_view pluginName) :
+      game_(&game), language_(std::move(language)), pluginName_(pluginName) {}
 
   QueryResult executeLogic() override {
     auto logger = getLogger();

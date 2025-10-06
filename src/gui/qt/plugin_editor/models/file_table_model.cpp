@@ -31,17 +31,21 @@
 
 namespace loot {
 FileTableModel::FileTableModel(QObject* parent,
-                               std::vector<File> nonUserMetadata,
-                               std::vector<File> userMetadata,
+                               std::vector<File>&& nonUserMetadata,
+                               std::vector<File>&& userMetadata,
                                const std::string& language) :
-    MetadataTableModel(parent, nonUserMetadata, userMetadata),
+    MetadataTableModel(parent,
+                       std::move(nonUserMetadata),
+                       std::move(userMetadata)),
     language(&language) {}
 
 int FileTableModel::columnCount(const QModelIndex&) const {
-  static constexpr int COLUMN_COUNT =
-      std::max(
-          {NAME_COLUMN, DISPLAY_NAME_COLUMN, DETAIL_COLUMN, CONDITION_COLUMN, CONSTRAINT_COLUMN}) +
-      1;
+  static constexpr int COLUMN_COUNT = std::max({NAME_COLUMN,
+                                                DISPLAY_NAME_COLUMN,
+                                                DETAIL_COLUMN,
+                                                CONDITION_COLUMN,
+                                                CONSTRAINT_COLUMN}) +
+                                      1;
   return COLUMN_COUNT;
 }
 
@@ -108,7 +112,7 @@ void FileTableModel::setData(File& element, int column, const QVariant& value) {
                    element.GetDisplayName(),
                    element.GetCondition(),
                    element.GetDetail(),
-        element.GetConstraint());
+                   element.GetConstraint());
   } else if (column == DISPLAY_NAME_COLUMN) {
     element = File(std::string(element.GetName()),
                    value.toString().toStdString(),

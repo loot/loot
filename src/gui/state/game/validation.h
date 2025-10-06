@@ -41,7 +41,7 @@ struct Counters {
 std::vector<SourcedMessage> checkInstallValidity(const gui::Game& game,
                                                  const PluginInterface& plugin,
                                                  const PluginMetadata& metadata,
-                                                 const std::string& language);
+                                                 std::string_view language);
 
 void validateActivePluginCounts(std::vector<SourcedMessage>& output,
                                 GameId gameId,

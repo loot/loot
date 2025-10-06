@@ -40,8 +40,8 @@ public:
   static constexpr int CONSTRAINT_COLUMN = 4;
 
   FileTableModel(QObject* parent,
-                 std::vector<File> nonUserMetadata,
-                 std::vector<File> userMetadata,
+                 std::vector<File>&& nonUserMetadata,
+                 std::vector<File>&& userMetadata,
                  const std::string& language);
 
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;

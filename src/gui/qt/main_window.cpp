@@ -2283,7 +2283,7 @@ void MainWindow::on_gameComboBox_activated(int index) {
     std::unique_ptr<Query> query =
         std::make_unique<ChangeGameQuery>(*state,
                                           state->getSettings().getLanguage(),
-                                          folderName,
+                                          std::move(folderName),
                                           sendProgressUpdate);
 
     executeBackgroundQuery(
