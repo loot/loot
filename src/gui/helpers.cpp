@@ -461,20 +461,39 @@ int compareFilenames(const std::string& lhs, const std::string& rhs) {
 std::filesystem::path getExecutableDirectory() {
 #ifdef _WIN32
   // Despite its name, paths can be longer than MAX_PATH, just not by default.
-  // FIXME: Make this work with long paths.
-  std::wstring executablePathString(MAX_PATH, 0);
+  constexpr size_t MAX_BUFFER_SIZE = size_t{MAX_PATH} * 2 << 6;
 
-  if (GetModuleFileName(NULL, &executablePathString[0], MAX_PATH) == 0) {
-    auto logger = getLogger();
-    if (logger) {
-      logger->error("Failed to get LOOT executable path.");
+  size_t bufferSize = MAX_PATH;
+
+  while (bufferSize <= MAX_BUFFER_SIZE) {
+    std::wstring executablePathString(bufferSize, 0);
+
+    DWORD pathLength = GetModuleFileName(
+        NULL, &executablePathString[0], executablePathString.size());
+
+    if (pathLength == 0) {
+      auto logger = getLogger();
+      if (logger) {
+        logger->error("Failed to get LOOT executable path.");
+      }
+      throw std::system_error(static_cast<int>(GetLastError()),
+                              std::system_category(),
+                              "Failed to get LOOT executable path.");
+    } else if (pathLength < bufferSize) {
+      executablePathString.resize(pathLength);
+      return std::filesystem::path(executablePathString).parent_path();
+    } else {
+      // Either the path length is exactly equal to the buffer size, or it's
+      // been truncated. Double the buffer size and try again in case it's the
+      // latter.
+      bufferSize *= 2;
+      continue;
     }
-    throw std::system_error(static_cast<int>(GetLastError()),
-                            std::system_category(),
-                            "Failed to get LOOT executable path.");
   }
 
-  return std::filesystem::path(executablePathString).parent_path();
+  throw std::runtime_error("Executable path is larger than " +
+                           std::to_string(MAX_BUFFER_SIZE) + " characters");
+
 #else
   std::array<char, PATH_MAX> result{};
 
