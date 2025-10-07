@@ -30,7 +30,7 @@ along with LOOT.  If not, see
 #include "tests/gui/state/game/detection/test_registry.h"
 
 namespace loot::test {
-static const std::array<InstallSource, 5> ALL_INSTALL_SOURCES = {
+static constexpr std::array<InstallSource, 5> ALL_INSTALL_SOURCES = {
     InstallSource::steam,
     InstallSource::gog,
     InstallSource::epic,

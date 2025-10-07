@@ -40,7 +40,7 @@ static constexpr const char* GENERIC_QUERY_ERROR_MESSAGE =
     "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
     "get to it through the main menu) for more information.";
 
-static const int THREAD_TIMEOUT_MS = 50;
+static constexpr int THREAD_TIMEOUT_MS = 50;
 
 class TestQuery : public Query {
 public:

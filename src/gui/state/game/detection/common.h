@@ -36,7 +36,7 @@
 #include "gui/state/game/game_id.h"
 
 namespace loot {
-static const std::array<GameId, 15> ALL_GAME_IDS = {GameId::tes3,
+static constexpr std::array<GameId, 15> ALL_GAME_IDS = {GameId::tes3,
                                                     GameId::tes4,
                                                     GameId::nehrim,
                                                     GameId::tes5,
