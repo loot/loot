@@ -54,7 +54,7 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(IsValidGamePathTest, shouldSupportNonAsciiGameMasters) {
-  EXPECT_TRUE(isValidGamePath(GetParam(), nonAsciiEsp, gamePath));
+  EXPECT_TRUE(isValidGamePath(GetParam(), NON_ASCII_ESP, gamePath));
 }
 
 }

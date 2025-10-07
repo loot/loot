@@ -87,16 +87,16 @@ protected:
       CommonGameTestFixture(GetParam()),
       loadOrderToSet_({
           masterFile,
-          blankEsm,
-          blankMasterDependentEsm,
-          blankDifferentEsm,
-          blankDifferentMasterDependentEsm,
-          blankDifferentEsp,
-          blankDifferentPluginDependentEsp,
-          blankEsp,
-          blankMasterDependentEsp,
-          blankDifferentMasterDependentEsp,
-          blankPluginDependentEsp,
+          BLANK_ESM,
+          BLANK_MASTER_DEPENDENT_ESM,
+          BLANK_DIFFERENT_ESM,
+          BLANK_DIFFERENT_MASTER_DEPENDENT_ESM,
+          BLANK_DIFFERENT_ESP,
+          BLANK_DIFFERENT_PLUGIN_DEPENDENT_ESP,
+          BLANK_ESP,
+          BLANK_MASTER_DEPENDENT_ESP,
+          BLANK_DIFFERENT_MASTER_DEPENDENT_ESP,
+          BLANK_PLUGIN_DEPENDENT_ESP,
       }),
       detail_(std::vector<MessageContent>({
           MessageContent("detail"),
@@ -217,7 +217,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   using std::filesystem::u8path;
   GameSettings settings = defaultGameSettings;
   settings.setName("foo");
-  settings.setMaster(blankEsm);
+  settings.setMaster(BLANK_ESM);
   settings.setMasterlistSource("foo");
   Game game(settings, lootDataPath, "");
 
@@ -419,19 +419,19 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  PluginMetadata metadata(blankEsm);
+  PluginMetadata metadata(BLANK_ESM);
   metadata.SetRequirements({
-      File(missingEsp),
-      File(blankEsp),
+      File(MISSING_ESP),
+      File(BLANK_ESP),
   });
 
   auto messages =
-      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(BLANK_ESM), metadata, "en");
   EXPECT_EQ(std::vector<SourcedMessage>({
                 SourcedMessage{MessageType::error,
                                MessageSource::requirementMetadata,
                                "This plugin requires \"" +
-                                   escapeMarkdownASCIIPunctuation(missingEsp) +
+                                   escapeMarkdownASCIIPunctuation(MISSING_ESP) +
                                    "\" to be installed, but it is missing."},
             }),
             messages);
@@ -441,19 +441,19 @@ TEST_P(GameTest,
        checkInstallValidityShouldHandleNonAsciiFileMetadataCorrectly) {
   using std::filesystem::u8path;
   ASSERT_NO_THROW(std::filesystem::rename(
-      dataPath / blankEsp, dataPath / u8path(u8"nonAsc\u00EDi.esp.ghost")));
+      dataPath / BLANK_ESP, dataPath / u8path(u8"nonAsc\u00EDi.esp.ghost")));
 
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  PluginMetadata metadata(blankEsm);
+  PluginMetadata metadata(BLANK_ESM);
   metadata.SetRequirements({
-      File(nonAsciiEsp),
+      File(NON_ASCII_ESP),
       File(u8"nonAsc\u00EDi.esp"),
   });
 
   auto messages =
-      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(BLANK_ESM), metadata, "en");
   EXPECT_TRUE(messages.empty());
 }
 
@@ -463,14 +463,14 @@ TEST_P(
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  PluginMetadata metadata(blankEsm);
+  PluginMetadata metadata(BLANK_ESM);
   metadata.SetRequirements({
-      File(missingEsp, "foo"),
-      File(blankEsp),
+      File(MISSING_ESP, "foo"),
+      File(BLANK_ESP),
   });
 
   auto messages =
-      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(BLANK_ESM), metadata, "en");
   EXPECT_EQ(
       std::vector<SourcedMessage>({
           SourcedMessage{MessageType::error,
@@ -487,15 +487,15 @@ TEST_P(
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  PluginMetadata metadata(blankEsm);
+  PluginMetadata metadata(BLANK_ESM);
   metadata.SetRequirements({
-      File(missingEsp, "foo"),
-      File(missingEsp, "foo", "file(\"master.esm\")"),
-      File(blankEsp),
+      File(MISSING_ESP, "foo"),
+      File(MISSING_ESP, "foo", "file(\"master.esm\")"),
+      File(BLANK_ESP),
   });
 
   auto messages =
-      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(BLANK_ESM), metadata, "en");
   EXPECT_EQ(
       std::vector<SourcedMessage>({
           SourcedMessage{MessageType::error,
@@ -511,14 +511,14 @@ TEST_P(GameTest,
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  PluginMetadata metadata(blankEsm);
+  PluginMetadata metadata(BLANK_ESM);
   metadata.SetIncompatibilities({
-      File(missingEsp),
+      File(MISSING_ESP),
       File(masterFile),
   });
 
   auto messages =
-      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(BLANK_ESM), metadata, "en");
   EXPECT_EQ(std::vector<SourcedMessage>({
                 SourcedMessage{MessageType::error,
                                MessageSource::incompatibilityMetadata,
@@ -539,13 +539,13 @@ TEST_P(
   std::ofstream out(dataPath / incompatibleFilename);
   out.close();
 
-  PluginMetadata metadata(blankEsm);
+  PluginMetadata metadata(BLANK_ESM);
   metadata.SetIncompatibilities({
       File(incompatibleFilename),
   });
 
   auto messages =
-      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(BLANK_ESM), metadata, "en");
   EXPECT_EQ(std::vector<SourcedMessage>({
                 SourcedMessage{
                     MessageType::error,
@@ -563,14 +563,14 @@ TEST_P(
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  PluginMetadata metadata(blankEsm);
+  PluginMetadata metadata(BLANK_ESM);
   metadata.SetIncompatibilities({
-      File(missingEsp),
+      File(MISSING_ESP),
       File(masterFile, "foo"),
   });
 
   auto messages =
-      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(BLANK_ESM), metadata, "en");
   EXPECT_EQ(std::vector<SourcedMessage>({
                 SourcedMessage{MessageType::error,
                                MessageSource::incompatibilityMetadata,
@@ -590,14 +590,14 @@ TEST_P(
   std::ofstream out(dataPath / incompatibleFilename);
   out.close();
 
-  PluginMetadata metadata(blankEsm);
+  PluginMetadata metadata(BLANK_ESM);
   metadata.SetIncompatibilities({
       File(incompatibleFilename, "test file"),
       File(incompatibleFilename, "test file", "file(\"master.esm\")"),
   });
 
   auto messages =
-      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(BLANK_ESM), metadata, "en");
   EXPECT_EQ(
       std::vector<SourcedMessage>({
           SourcedMessage{MessageType::error,
@@ -612,7 +612,7 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  PluginMetadata metadata(blankEsm);
+  PluginMetadata metadata(BLANK_ESM);
   const std::vector<MessageContent> detail = std::vector<MessageContent>({
       MessageContent("detail", MessageContent::DEFAULT_LANGUAGE),
   });
@@ -623,7 +623,7 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
   });
 
   auto messages =
-      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(BLANK_ESM), metadata, "en");
   EXPECT_EQ(
       std::vector<SourcedMessage>({
           toSourcedMessage(
@@ -642,16 +642,16 @@ TEST_P(
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  PluginMetadata metadata(blankDifferentMasterDependentEsp);
+  PluginMetadata metadata(BLANK_DIFFERENT_MASTER_DEPENDENT_ESP);
 
   auto messages = game.checkInstallValidity(
-      *game.getPlugin(blankDifferentMasterDependentEsp), metadata, "en");
+      *game.getPlugin(BLANK_DIFFERENT_MASTER_DEPENDENT_ESP), metadata, "en");
   EXPECT_EQ(
       std::vector<SourcedMessage>({
           SourcedMessage{MessageType::error,
                          MessageSource::inactiveMaster,
                          "This plugin requires \\\"" +
-                             escapeMarkdownASCIIPunctuation(blankDifferentEsm) +
+                             escapeMarkdownASCIIPunctuation(BLANK_DIFFERENT_ESM) +
                              "\\\" to be active\\, but it is inactive\\."},
       }),
       messages);
@@ -663,11 +663,11 @@ TEST_P(
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  PluginMetadata metadata(blankDifferentMasterDependentEsp);
+  PluginMetadata metadata(BLANK_DIFFERENT_MASTER_DEPENDENT_ESP);
   metadata.SetTags({Tag("Filter")});
 
   auto messages = game.checkInstallValidity(
-      *game.getPlugin(blankDifferentMasterDependentEsp), metadata, "en");
+      *game.getPlugin(BLANK_DIFFERENT_MASTER_DEPENDENT_ESP), metadata, "en");
   EXPECT_TRUE(messages.empty());
 }
 
@@ -677,11 +677,11 @@ TEST_P(
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  PluginMetadata metadata(blankDifferentMasterDependentEsp);
+  PluginMetadata metadata(BLANK_DIFFERENT_MASTER_DEPENDENT_ESP);
   metadata.SetTags({Tag("Filter", true, "file(\"master.esm\")")});
 
   auto messages = game.checkInstallValidity(
-      *game.getPlugin(blankDifferentMasterDependentEsp), metadata, "en");
+      *game.getPlugin(BLANK_DIFFERENT_MASTER_DEPENDENT_ESP), metadata, "en");
   EXPECT_TRUE(messages.empty());
 }
 
@@ -691,7 +691,7 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
   }
 
   std::string blankEsl = "blank.esl";
-  std::filesystem::copy(dataPath / blankEsm, dataPath / blankEsl);
+  std::filesystem::copy(dataPath / BLANK_ESM, dataPath / blankEsl);
   std::fstream out(
       dataPath / blankEsl,
       std::ios_base::in | std::ios_base::out | std::ios_base::binary);
@@ -722,7 +722,7 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAMediumPluginIsValid) {
   }
 
   std::fstream out(
-      dataPath / blankEsm,
+      dataPath / BLANK_ESM,
       std::ios_base::in | std::ios_base::out | std::ios_base::binary);
   out.seekp(0x09, std::ios_base::beg);
   out.put('\x04');
@@ -734,7 +734,7 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAMediumPluginIsValid) {
   game.loadAllInstalledPlugins(false);
 
   auto messages = game.checkInstallValidity(
-      *game.getPlugin(blankEsm), PluginMetadata(blankEsm), "en");
+      *game.getPlugin(BLANK_ESM), PluginMetadata(BLANK_ESM), "en");
   EXPECT_EQ(
       std::vector<SourcedMessage>({
           SourcedMessage{
@@ -755,7 +755,7 @@ TEST_P(
   game.loadAllInstalledPlugins(false);
 
   auto messages = game.checkInstallValidity(
-      *game.getPlugin(blankEsm), PluginMetadata(blankEsm), "en");
+      *game.getPlugin(BLANK_ESM), PluginMetadata(BLANK_ESM), "en");
 
   std::string messageText;
   if (GetParam() == GameId::tes3) {
@@ -783,11 +783,11 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAPluginGroupExists) {
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  PluginMetadata metadata(blankEsm);
+  PluginMetadata metadata(BLANK_ESM);
   metadata.SetGroup("missing group");
 
   auto messages =
-      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(BLANK_ESM), metadata, "en");
   EXPECT_EQ(std::vector<SourcedMessage>({
                 SourcedMessage{
                     MessageType::error,
@@ -814,14 +814,14 @@ TEST_P(GameTest, checkInstallValidityShouldResolveExternalPluginPaths) {
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  PluginMetadata metadata(blankEsm);
+  PluginMetadata metadata(BLANK_ESM);
   metadata.SetRequirements({
       File(dlcPluginName),
-      File(blankEsp),
+      File(BLANK_ESP),
   });
 
   const auto messages =
-      game.checkInstallValidity(*game.getPlugin(blankEsm), metadata, "en");
+      game.checkInstallValidity(*game.getPlugin(BLANK_ESM), metadata, "en");
   EXPECT_TRUE(messages.empty());
 }
 
@@ -835,17 +835,17 @@ TEST_P(
   }
 
   std::string blankEsl = "Blank.esl";
-  std::filesystem::copy(dataPath / blankEsm, dataPath / blankEsl);
+  std::filesystem::copy(dataPath / BLANK_ESM, dataPath / blankEsl);
 
   // Light-flag esm
   std::fstream out(
-      dataPath / blankEsm,
+      dataPath / BLANK_ESM,
       std::ios_base::in | std::ios_base::out | std::ios_base::binary);
   out.seekp(0x09, std::ios_base::beg);
   out.put('\x02');
   out.close();
   // Light-flag esp
-  out.open(dataPath / blankEsp,
+  out.open(dataPath / BLANK_ESP,
            std::ios_base::in | std::ios_base::out | std::ios_base::binary);
   out.seekp(0x09, std::ios_base::beg);
   out.put('\x02');
@@ -857,9 +857,9 @@ TEST_P(
   const auto eslMessages = game.checkInstallValidity(
       *game.getPlugin(blankEsl), PluginMetadata(blankEsl), "en");
   const auto esmMessages = game.checkInstallValidity(
-      *game.getPlugin(blankEsm), PluginMetadata(blankEsm), "en");
+      *game.getPlugin(BLANK_ESM), PluginMetadata(BLANK_ESM), "en");
   const auto espMessages = game.checkInstallValidity(
-      *game.getPlugin(blankEsp), PluginMetadata(blankEsp), "en");
+      *game.getPlugin(BLANK_ESP), PluginMetadata(BLANK_ESP), "en");
 
   if (GetParam() == GameId::tes5vr) {
     ASSERT_EQ(1, eslMessages.size());
@@ -1002,8 +1002,8 @@ TEST_P(
   EXPECT_EQ(12, game.getPlugins().size());
 
   // Check that one plugin's header has been read.
-  ASSERT_NO_THROW(game.getPlugin(blankEsm));
-  auto plugin = game.getPlugin(blankEsm);
+  ASSERT_NO_THROW(game.getPlugin(BLANK_ESM));
+  auto plugin = game.getPlugin(BLANK_ESM);
   EXPECT_EQ("5.0", plugin->GetVersion().value());
 
   // Check that not only the header has been read.
@@ -1035,7 +1035,7 @@ TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsAtExternalPaths) {
   const auto dlcDataPath = gamePath.parent_path().parent_path() /
                            "Fallout 4- Far Harbor (PC)" / "Content" / "Data";
   std::filesystem::create_directories(dlcDataPath);
-  std::filesystem::copy(dataPath / blankEsm, dlcDataPath / dlcPluginName);
+  std::filesystem::copy(dataPath / BLANK_ESM, dlcDataPath / dlcPluginName);
 
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
@@ -1050,7 +1050,7 @@ TEST_P(
     GameTest,
     loadAllInstalledPluginsShouldLoadPluginsThatAreSymlinksForOnlyOpenMWAndOblivionRemastered) {
   const auto symlinkPluginName = "Blank.symlink.esm";
-  std::filesystem::create_symlink(getSourcePluginsPath() / blankEsm,
+  std::filesystem::create_symlink(getSourcePluginsPath() / BLANK_ESM,
                                   dataPath / symlinkPluginName);
 
   Game game = createInitialisedGame();
@@ -1068,7 +1068,7 @@ TEST_P(
 #else
 TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsThatAreSymlinks) {
   const auto symlinkPluginName = "Blank.symlink.esm";
-  std::filesystem::create_symlink(dataPath / blankEsm,
+  std::filesystem::create_symlink(dataPath / BLANK_ESM,
                                   dataPath / symlinkPluginName);
 
   Game game = createInitialisedGame();
@@ -1130,7 +1130,7 @@ TEST_P(GameTest,
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  auto index = game.getActiveLoadOrderIndex(*game.getPlugin(blankEsp),
+  auto index = game.getActiveLoadOrderIndex(*game.getPlugin(BLANK_ESP),
                                             game.getLoadOrder());
   EXPECT_FALSE(index.has_value());
 }
@@ -1145,12 +1145,12 @@ TEST_P(
                                             game.getLoadOrder());
   EXPECT_EQ(0, index);
 
-  index = game.getActiveLoadOrderIndex(*game.getPlugin(blankEsm),
+  index = game.getActiveLoadOrderIndex(*game.getPlugin(BLANK_ESM),
                                        game.getLoadOrder());
   EXPECT_EQ(1, index.value());
 
   index = game.getActiveLoadOrderIndex(
-      *game.getPlugin(blankDifferentMasterDependentEsp), game.getLoadOrder());
+      *game.getPlugin(BLANK_DIFFERENT_MASTER_DEPENDENT_ESP), game.getLoadOrder());
   EXPECT_EQ(2, index.value());
 }
 
@@ -1160,7 +1160,7 @@ TEST_P(
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
-  auto index = game.getActiveLoadOrderIndex(*game.getPlugin(nonAsciiEsp),
+  auto index = game.getActiveLoadOrderIndex(*game.getPlugin(NON_ASCII_ESP),
                                             {u8"non\u00E1scii.esp"});
   EXPECT_EQ(0, index.value());
 }
@@ -1252,7 +1252,7 @@ TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
   const auto dlcDataPath = gamePath.parent_path().parent_path() /
                            "Fallout 4- Far Harbor (PC)" / "Content" / "Data";
   std::filesystem::create_directories(dlcDataPath);
-  std::filesystem::copy(dataPath / blankEsm, dlcDataPath / dlcPluginName);
+  std::filesystem::copy(dataPath / BLANK_ESM, dlcDataPath / dlcPluginName);
 
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
@@ -1261,17 +1261,17 @@ TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
 
   EXPECT_EQ(std::vector<std::string>({masterFile,
                                       dlcPluginName,
-                                      blankEsm,
-                                      blankDifferentEsm,
-                                      blankMasterDependentEsm,
-                                      blankDifferentMasterDependentEsm,
-                                      blankEsp,
-                                      blankDifferentEsp,
-                                      blankMasterDependentEsp,
-                                      blankDifferentMasterDependentEsp,
-                                      blankPluginDependentEsp,
-                                      blankDifferentPluginDependentEsp,
-                                      nonAsciiEsp}),
+                                      BLANK_ESM,
+                                      BLANK_DIFFERENT_ESM,
+                                      BLANK_MASTER_DEPENDENT_ESM,
+                                      BLANK_DIFFERENT_MASTER_DEPENDENT_ESM,
+                                      BLANK_ESP,
+                                      BLANK_DIFFERENT_ESP,
+                                      BLANK_MASTER_DEPENDENT_ESP,
+                                      BLANK_DIFFERENT_MASTER_DEPENDENT_ESP,
+                                      BLANK_PLUGIN_DEPENDENT_ESP,
+                                      BLANK_DIFFERENT_PLUGIN_DEPENDENT_ESP,
+                                      NON_ASCII_ESP}),
             loadOrder);
 }
 

@@ -178,29 +178,29 @@ INSTANTIATE_TEST_SUITE_P(,
 
 TEST_P(ResolveGameFilePathTest,
        shouldReturnFilenameInExternalDataPathIfItExistsThere) {
-  const auto filePath = localPath / blankEsm;
-  std::filesystem::copy(dataPath / blankEsm, filePath);
+  const auto filePath = localPath / BLANK_ESM;
+  std::filesystem::copy(dataPath / BLANK_ESM, filePath);
 
   const auto pluginPath =
-      resolveGameFilePath(GetParam(), {localPath}, dataPath, blankEsm);
+      resolveGameFilePath(GetParam(), {localPath}, dataPath, BLANK_ESM);
 
   EXPECT_EQ(filePath, pluginPath);
 }
 
 TEST_P(ResolveGameFilePathTest, shouldCheckExternalDataPathsInOrder) {
-  const auto filePath = localPath / blankEsm;
-  std::filesystem::copy(dataPath / blankEsm, filePath);
+  const auto filePath = localPath / BLANK_ESM;
+  std::filesystem::copy(dataPath / BLANK_ESM, filePath);
 
   const auto otherDataPath = localPath.parent_path() / "other";
   std::filesystem::create_directories(otherDataPath);
-  std::filesystem::copy(dataPath / blankEsm, otherDataPath / blankEsm);
+  std::filesystem::copy(dataPath / BLANK_ESM, otherDataPath / BLANK_ESM);
 
   const auto pluginPath = resolveGameFilePath(
-      GetParam(), {localPath, otherDataPath}, dataPath, blankEsm);
+      GetParam(), {localPath, otherDataPath}, dataPath, BLANK_ESM);
 
   if (GetParam() == GameId::openmw) {
     // Should check in reverse order for OpenMW.
-    EXPECT_EQ(otherDataPath / blankEsm, pluginPath);
+    EXPECT_EQ(otherDataPath / BLANK_ESM, pluginPath);
   } else {
     EXPECT_EQ(filePath, pluginPath);
   }
@@ -211,7 +211,7 @@ TEST_P(
     shouldReturnGhostedPluginNameInExternalDataPathIfItExistsAsAGhostedPluginThere) {
   const std::string filename = "external.esp";
   const auto ghostedFilename = filename + ".ghost";
-  std::filesystem::copy(dataPath / blankEsm, localPath / ghostedFilename);
+  std::filesystem::copy(dataPath / BLANK_ESM, localPath / ghostedFilename);
 
   const auto pluginPath =
       resolveGameFilePath(GetParam(), {localPath}, dataPath, filename);
@@ -226,21 +226,21 @@ TEST_P(
 TEST_P(ResolveGameFilePathTest,
        shouldReturnFilenameInDataPathIfTheFileOnlyExistsThere) {
   const auto pluginPath =
-      resolveGameFilePath(GetParam(), {localPath}, dataPath, blankEsm);
+      resolveGameFilePath(GetParam(), {localPath}, dataPath, BLANK_ESM);
 
-  EXPECT_EQ(dataPath / blankEsm, pluginPath);
+  EXPECT_EQ(dataPath / BLANK_ESM, pluginPath);
 }
 
 TEST_P(
     ResolveGameFilePathTest,
     shouldReturnGhostedFilenameInDataPathIfTheFileOnlyExistsThereAsAGhostedPlugin) {
   const auto pluginPath = resolveGameFilePath(
-      GetParam(), {localPath}, dataPath, blankMasterDependentEsm);
+      GetParam(), {localPath}, dataPath, BLANK_MASTER_DEPENDENT_ESM);
 
   if (GetParam() == GameId::openmw) {
     EXPECT_FALSE(pluginPath.has_value());
   } else {
-    EXPECT_EQ(dataPath / (std::string(blankMasterDependentEsm) + ".ghost"),
+    EXPECT_EQ(dataPath / (std::string(BLANK_MASTER_DEPENDENT_ESM) + ".ghost"),
               pluginPath);
   }
 }

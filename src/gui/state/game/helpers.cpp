@@ -284,9 +284,9 @@ std::vector<LoadOrderBackup> findLoadOrderBackups(
 
 std::string escapeMarkdownASCIIPunctuation(const std::string& text) {
   // As defined by <https://github.github.com/gfm/#ascii-punctuation-character>.
-  static const std::regex asciiPunctuationCharacters(
+  static const std::regex ASCII_PUNCTUATION_CHARACTERS(
       "([!\"#$%&'()*+,\\-./:;<=>?@\\[\\\\\\]^_`{|}~])");
-  return std::regex_replace(text, asciiPunctuationCharacters, "\\$1");
+  return std::regex_replace(text, ASCII_PUNCTUATION_CHARACTERS, "\\$1");
 }
 
 std::string describeCycle(const std::vector<Vertex>& cycle) {

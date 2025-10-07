@@ -73,40 +73,40 @@ protected:
 
     auto sourcePluginsPath = getSourcePluginsPath();
 
-    copyPlugin(sourcePluginsPath, blankEsm);
-    copyPlugin(sourcePluginsPath, blankDifferentEsm);
-    copyPlugin(sourcePluginsPath, blankMasterDependentEsm);
-    copyPlugin(sourcePluginsPath, blankDifferentMasterDependentEsm);
-    copyPlugin(sourcePluginsPath, blankEsp);
-    copyPlugin(sourcePluginsPath, blankDifferentEsp);
-    copyPlugin(sourcePluginsPath, blankMasterDependentEsp);
-    copyPlugin(sourcePluginsPath, blankDifferentMasterDependentEsp);
-    copyPlugin(sourcePluginsPath, blankPluginDependentEsp);
-    copyPlugin(sourcePluginsPath, blankDifferentPluginDependentEsp);
+    copyPlugin(sourcePluginsPath, BLANK_ESM);
+    copyPlugin(sourcePluginsPath, BLANK_DIFFERENT_ESM);
+    copyPlugin(sourcePluginsPath, BLANK_MASTER_DEPENDENT_ESM);
+    copyPlugin(sourcePluginsPath, BLANK_DIFFERENT_MASTER_DEPENDENT_ESM);
+    copyPlugin(sourcePluginsPath, BLANK_ESP);
+    copyPlugin(sourcePluginsPath, BLANK_DIFFERENT_ESP);
+    copyPlugin(sourcePluginsPath, BLANK_MASTER_DEPENDENT_ESP);
+    copyPlugin(sourcePluginsPath, BLANK_DIFFERENT_MASTER_DEPENDENT_ESP);
+    copyPlugin(sourcePluginsPath, BLANK_PLUGIN_DEPENDENT_ESP);
+    copyPlugin(sourcePluginsPath, BLANK_DIFFERENT_PLUGIN_DEPENDENT_ESP);
 
     // Make sure the game master plugin exists.
     ASSERT_NO_THROW(
-        std::filesystem::copy_file(dataPath / blankEsm, dataPath / masterFile));
+        std::filesystem::copy_file(dataPath / BLANK_ESM, dataPath / masterFile));
     ASSERT_TRUE(exists(dataPath / masterFile));
 
     // Create the non-ASCII plugin.
     ASSERT_NO_THROW(std::filesystem::copy_file(
-        dataPath / blankEsp, dataPath / std::filesystem::u8path(nonAsciiEsp)));
-    ASSERT_TRUE(exists(dataPath / std::filesystem::u8path(nonAsciiEsp)));
+        dataPath / BLANK_ESP, dataPath / std::filesystem::u8path(NON_ASCII_ESP)));
+    ASSERT_TRUE(exists(dataPath / std::filesystem::u8path(NON_ASCII_ESP)));
 
     // Set initial load order and active plugins.
     setLoadOrder(getInitialLoadOrder());
 
     // Ghost a plugin.
     ASSERT_NO_THROW(std::filesystem::rename(
-        dataPath / blankMasterDependentEsm,
-        dataPath / (std::string(blankMasterDependentEsm) + ".ghost")));
-    ASSERT_FALSE(exists(dataPath / blankMasterDependentEsm));
+        dataPath / BLANK_MASTER_DEPENDENT_ESM,
+        dataPath / (std::string(BLANK_MASTER_DEPENDENT_ESM) + ".ghost")));
+    ASSERT_FALSE(exists(dataPath / BLANK_MASTER_DEPENDENT_ESM));
     ASSERT_TRUE(
-        exists(dataPath / (std::string(blankMasterDependentEsm) + ".ghost")));
+        exists(dataPath / (std::string(BLANK_MASTER_DEPENDENT_ESM) + ".ghost")));
 
     ASSERT_FALSE(exists(missingPath));
-    ASSERT_FALSE(exists(dataPath / missingEsp));
+    ASSERT_FALSE(exists(dataPath / MISSING_ESP));
   }
 
   void TearDown() override {
@@ -192,17 +192,17 @@ protected:
   inline std::vector<std::pair<std::string, bool>> getInitialLoadOrder() const {
     return std::vector<std::pair<std::string, bool>>({
         {masterFile, true},
-        {blankEsm, true},
-        {blankDifferentEsm, false},
-        {blankMasterDependentEsm, false},
-        {blankDifferentMasterDependentEsm, false},
-        {blankEsp, false},
-        {blankDifferentEsp, false},
-        {blankMasterDependentEsp, false},
-        {blankDifferentMasterDependentEsp, true},
-        {blankPluginDependentEsp, false},
-        {blankDifferentPluginDependentEsp, false},
-        {nonAsciiEsp, true},
+        {BLANK_ESM, true},
+        {BLANK_DIFFERENT_ESM, false},
+        {BLANK_MASTER_DEPENDENT_ESM, false},
+        {BLANK_DIFFERENT_MASTER_DEPENDENT_ESM, false},
+        {BLANK_ESP, false},
+        {BLANK_DIFFERENT_ESP, false},
+        {BLANK_MASTER_DEPENDENT_ESP, false},
+        {BLANK_DIFFERENT_MASTER_DEPENDENT_ESP, true},
+        {BLANK_PLUGIN_DEPENDENT_ESP, false},
+        {BLANK_DIFFERENT_PLUGIN_DEPENDENT_ESP, false},
+        {NON_ASCII_ESP, true},
     });
   }
 
@@ -215,23 +215,23 @@ private:
   std::filesystem::path rootTestPath;
 
 protected:
-  static constexpr const char* missingEsp{"Blank.missing.esp"};
-  static constexpr const char* blankEsm{"Blank.esm"};
-  static constexpr const char* blankDifferentEsm{"Blank - Different.esm"};
-  static constexpr const char* blankMasterDependentEsm{
+  static constexpr const char* MISSING_ESP{"Blank.missing.esp"};
+  static constexpr const char* BLANK_ESM{"Blank.esm"};
+  static constexpr const char* BLANK_DIFFERENT_ESM{"Blank - Different.esm"};
+  static constexpr const char* BLANK_MASTER_DEPENDENT_ESM{
       "Blank - Master Dependent.esm"};
-  static constexpr const char* blankDifferentMasterDependentEsm{
+  static constexpr const char* BLANK_DIFFERENT_MASTER_DEPENDENT_ESM{
       "Blank - Different Master Dependent.esm"};
-  static constexpr const char* blankEsp{"Blank.esp"};
-  static constexpr const char* blankDifferentEsp{"Blank - Different.esp"};
-  static constexpr const char* blankMasterDependentEsp{"Blank - Master Dependent.esp"};
-  static constexpr const char* blankDifferentMasterDependentEsp{
+  static constexpr const char* BLANK_ESP{"Blank.esp"};
+  static constexpr const char* BLANK_DIFFERENT_ESP{"Blank - Different.esp"};
+  static constexpr const char* BLANK_MASTER_DEPENDENT_ESP{"Blank - Master Dependent.esp"};
+  static constexpr const char* BLANK_DIFFERENT_MASTER_DEPENDENT_ESP{
       "Blank - Different Master Dependent.esp"};
-  static constexpr const char* blankPluginDependentEsp{
+  static constexpr const char* BLANK_PLUGIN_DEPENDENT_ESP{
       "Blank - Plugin Dependent.esp"};
-  static constexpr const char* blankDifferentPluginDependentEsp{
+  static constexpr const char* BLANK_DIFFERENT_PLUGIN_DEPENDENT_ESP{
       "Blank - Different Plugin Dependent.esp"};
-  static constexpr const char* nonAsciiEsp{u8"non\u00C1scii.esp"};
+  static constexpr const char* NON_ASCII_ESP{u8"non\u00C1scii.esp"};
 
   std::filesystem::path missingPath;
   std::filesystem::path gamePath;

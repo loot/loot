@@ -44,7 +44,7 @@ INSTANTIATE_TEST_SUITE_P(, IsInstalledTest, ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(IsInstalledTest, shouldSupportNonAsciiGameMasters) {
   const GameSettings settings =
-      GameSettings(GetParam(), "").setMaster(nonAsciiEsp).setGamePath(gamePath);
+      GameSettings(GetParam(), "").setMaster(NON_ASCII_ESP).setGamePath(gamePath);
   EXPECT_TRUE(isInstalled(settings));
 }
 }

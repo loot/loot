@@ -40,24 +40,24 @@ using std::lock_guard;
 using std::recursive_mutex;
 
 namespace {
+using loot::DEFAULT_MASTERLIST_BRANCH;
 using loot::GameId;
 using loot::GameSettings;
+using loot::getLogger;
 using loot::HiddenMessage;
 using loot::LootSettings;
-using loot::getLogger;
-using loot::DEFAULT_MASTERLIST_BRANCH;
 using loot::MASTERLIST_FILENAME;
 
 static const std::set<std::string> OLD_DEFAULT_BRANCHES({"master",
-                                                       "v0.7",
-                                                       "v0.8",
-                                                       "v0.10",
-                                                       "v0.13",
-                                                       "v0.14",
-                                                       "v0.15",
-                                                       "v0.17",
-                                                       "v0.18",
-                                                       "v0.21"});
+                                                         "v0.7",
+                                                         "v0.8",
+                                                         "v0.10",
+                                                         "v0.13",
+                                                         "v0.14",
+                                                         "v0.15",
+                                                         "v0.17",
+                                                         "v0.18",
+                                                         "v0.21"});
 
 static const std::regex GITHUB_REPO_URL_REGEX =
     std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",
@@ -479,19 +479,20 @@ std::optional<std::string> migrateMasterlistSource(std::string_view source,
 }
 
 std::string migrateMasterlistSource(const std::string& source) {
-  static const std::vector<std::string> officialMasterlistRepos = {"morrowind",
-                                                                   "oblivion",
-                                                                   "skyrim",
-                                                                   "skyrimse",
-                                                                   "skyrimvr",
-                                                                   "fallout3",
-                                                                   "falloutnv",
-                                                                   "fallout4",
-                                                                   "fallout4vr",
-                                                                   "enderal",
-                                                                   "starfield"};
+  static const std::vector<std::string> OFFICIAL_MASTERLIST_REPOS = {
+      "morrowind",
+      "oblivion",
+      "skyrim",
+      "skyrimse",
+      "skyrimvr",
+      "fallout3",
+      "falloutnv",
+      "fallout4",
+      "fallout4vr",
+      "enderal",
+      "starfield"};
 
-  for (const auto& repo : officialMasterlistRepos) {
+  for (const auto& repo : OFFICIAL_MASTERLIST_REPOS) {
     for (const auto& branch : OLD_DEFAULT_BRANCHES) {
       auto migrated = migrateMasterlistSource(source, repo, branch);
       if (migrated.has_value()) {
@@ -677,7 +678,8 @@ GameSettings convertGameTable(const toml::table& table) {
   } else {
     auto url = table["repo"].value<std::string>();
     auto branch = table["branch"].value<std::string>();
-    auto migratedSource = migrateMasterlistRepoSettings(game.getId(), url, branch);
+    auto migratedSource =
+        migrateMasterlistRepoSettings(game.getId(), url, branch);
     if (migratedSource.has_value()) {
       game.setMasterlistSource(migratedSource.value());
     }
