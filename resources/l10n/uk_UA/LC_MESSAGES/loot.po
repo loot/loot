@@ -4,18 +4,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-10-04 11:39+0100\n"
+"POT-Creation-Date: 2025-10-07 18:37+0100\n"
 "PO-Revision-Date: 2025-10-05 19:02+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
-"Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/>"
-"\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/"
+">\n"
 "Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural="
-"(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? "
-"1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14-dev\n"
 
 #: src/gui/plugin_item.cpp:50
@@ -151,7 +150,8 @@ msgstr "Показати лише плагіни з метаданими пор�
 
 #: src/gui/qt/filters_widget.cpp:312
 msgid "Show only plugins with load after user metadata"
-msgstr "Показати лише плагіни з користувацькими метаданими порядку завантаження"
+msgstr ""
+"Показати лише плагіни з користувацькими метаданими порядку завантаження"
 
 #: src/gui/qt/filters_widget.cpp:314
 msgid "Show only plugins without load order metadata"
@@ -255,26 +255,26 @@ msgstr "Всього плагінів"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:131
+#: src/gui/qt/helpers.cpp:132
 msgid "(edited)"
 msgstr "(змінено)"
 
-#: src/gui/qt/helpers.cpp:246
+#: src/gui/qt/helpers.cpp:247
 msgid "N/A: No masterlist present"
 msgstr "N/A: Правила сортування відсутні"
 
 #. translators: N/A is an abbreviation for Not Applicable.
 #. A masterlist is a database that contains information
 #. for various mods.
-#: src/gui/qt/helpers.cpp:251
+#: src/gui/qt/helpers.cpp:252
 msgid "N/A: No masterlist prelude present"
 msgstr "N/A: Prelude-файл відсутній"
 
-#: src/gui/qt/helpers.cpp:259
+#: src/gui/qt/helpers.cpp:260
 msgid "Unknown: No revision metadata found"
 msgstr "Невідомо: Дані ревізії не знайдені"
 
-#: src/gui/qt/helpers.cpp:365
+#: src/gui/qt/helpers.cpp:366
 msgid "Invalid regular expression: {0}"
 msgstr "Невірний regex вираз: {0}"
 
@@ -559,8 +559,8 @@ msgstr "Ви усе ще не застосували чи не відмінил�
 
 #: src/gui/qt/main_window.cpp:1483 src/gui/qt/restore_load_order_dialog.cpp:224
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:371
-#: src/gui/qt/plugin_editor/table_tabs.cpp:398
-#: src/gui/qt/plugin_editor/table_tabs.cpp:435
+#: src/gui/qt/plugin_editor/table_tabs.cpp:400
+#: src/gui/qt/plugin_editor/table_tabs.cpp:436
 msgid "Error"
 msgstr "Помилка"
 
@@ -714,15 +714,15 @@ msgstr "Про LOOT"
 msgid "Identifying overlapping plugins…"
 msgstr "Визначення конфліктних плагінів…"
 
-#: src/gui/qt/main_window.cpp:2712
+#: src/gui/qt/main_window.cpp:2714
 msgid "A backup of the current load order has been created."
 msgstr "Створено резервну копію поточного порядку завантаження."
 
-#: src/gui/qt/main_window.cpp:2750
+#: src/gui/qt/main_window.cpp:2752
 msgid "Restored load order from backup."
 msgstr "Відновлено порядок завантаження з резервної копії."
 
-#: src/gui/qt/main_window.cpp:2799
+#: src/gui/qt/main_window.cpp:2801
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
@@ -730,19 +730,19 @@ msgstr ""
 "Автосортування скасовано, так як відображається як мінімум одне повідомлення "
 "про помилку."
 
-#: src/gui/qt/main_window.cpp:2858
+#: src/gui/qt/main_window.cpp:2860
 msgid "No masterlist update was necessary."
 msgstr "Оновлення правил сортування не потрібно."
 
-#: src/gui/qt/main_window.cpp:2881
+#: src/gui/qt/main_window.cpp:2883
 msgid "Masterlist updated to revision {0}."
 msgstr "Список правил сортування оновлено до версії {0}."
 
-#: src/gui/qt/main_window.cpp:2945
+#: src/gui/qt/main_window.cpp:2947
 msgid "No masterlist updates were necessary."
 msgstr "Оновлення правил сортування не потрібне."
 
-#: src/gui/qt/main_window.cpp:2971
+#: src/gui/qt/main_window.cpp:2973
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -750,11 +750,11 @@ msgstr ""
 "Правила сортування оновлено для ігор:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:3033
+#: src/gui/qt/main_window.cpp:3035
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "Доступна [нова версія]({0}) LOOT."
 
-#: src/gui/qt/main_window.cpp:3050
+#: src/gui/qt/main_window.cpp:3052
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -762,7 +762,7 @@ msgstr ""
 "Не вдалося перевірити оновлення LOOT! Для інформації дивіться файл "
 "LOOTDebugLog.txt (доступ через меню \"Файл\")."
 
-#: src/gui/qt/messages_widget.cpp:199
+#: src/gui/qt/messages_widget.cpp:200
 msgid "Hide message"
 msgstr "Сховати повідомлення"
 
@@ -815,7 +815,7 @@ msgid "Has User Metadata"
 msgstr "Має користувацькі метадані"
 
 #: src/gui/qt/plugin_card.cpp:291
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:202
 msgid "Bash Tags"
 msgstr "Bash-теги"
 
@@ -823,11 +823,11 @@ msgstr "Bash-теги"
 msgid "Current"
 msgstr "Поточний"
 
-#: src/gui/qt/plugin_card.cpp:293 src/gui/qt/plugin_editor/table_tabs.cpp:526
+#: src/gui/qt/plugin_card.cpp:293 src/gui/qt/plugin_editor/table_tabs.cpp:530
 msgid "Add"
 msgstr "Додати"
 
-#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/plugin_editor/table_tabs.cpp:526
+#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/plugin_editor/table_tabs.cpp:530
 msgid "Remove"
 msgstr "Видалити"
 
@@ -864,7 +864,7 @@ msgid "Selected backup's load order"
 msgstr "Порядок завантаження обраної резервної копії"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:171
-#: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:61
 #: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
@@ -972,40 +972,40 @@ msgid "{0} (Group does not exist)"
 msgstr "{0} (група не існує)"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:103
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:197
 msgid "Group"
 msgstr "Група"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:188
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:198
 msgid "Load After"
 msgstr "Завантажувати після"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:189
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
 msgid "Requirements"
 msgstr "Вимоги"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:190
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
 msgid "Incompatibilities"
 msgstr "Несумісності"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:191
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:201
 msgid "Messages"
 msgstr "Повідомлення"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:193
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
 msgid "Dirty Plugin Info"
 msgstr "Дані брудного плагіну"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:194
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:204
 msgid "Clean Plugin Info"
 msgstr "Дані чистого плагіну"
 
 # Used as mod location. In other words: "go downoad mod from here and here"
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:205
 msgid "Locations"
 msgstr "Джерело"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:247
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:257
 msgid "This tab contains user metadata."
 msgstr "Ця вкладка містить користувацькі метадані."
 
@@ -1017,85 +1017,85 @@ msgstr "Додати новий рядок"
 msgid "Delete row"
 msgstr "Видалити рядок"
 
-#: src/gui/qt/plugin_editor/table_tabs.cpp:396
-#: src/gui/qt/plugin_editor/table_tabs.cpp:433
+#: src/gui/qt/plugin_editor/table_tabs.cpp:398
+#: src/gui/qt/plugin_editor/table_tabs.cpp:434
 msgid "Note"
 msgstr "Замітка"
 
-#: src/gui/qt/plugin_editor/table_tabs.cpp:397
-#: src/gui/qt/plugin_editor/table_tabs.cpp:434
+#: src/gui/qt/plugin_editor/table_tabs.cpp:399
+#: src/gui/qt/plugin_editor/table_tabs.cpp:435
 msgid "Warning"
 msgstr "Попередження"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:82
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
 msgid "CRC"
 msgstr "CRC"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
 msgid "ITM Count"
 msgstr "Кількість ITM"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
 msgid "Deleted References"
 msgstr "Видалені посилання"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
 msgid "Deleted Navmeshes"
 msgstr "Видалені навмеші"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
 msgid "Cleaning Utility"
 msgstr "Програма очистки"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
 msgid "Detail"
 msgstr "Деталі"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 msgid "Filename"
 msgstr "Назва файлу"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
 msgid "Display Name"
 msgstr "Показуване ім'я"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:85
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:100
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:69
 msgid "Condition"
 msgstr "Вираз"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:87
 msgid "Constraint"
 msgstr "Обмеження"
 
-#: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 msgid "URL"
 msgstr "URL"
 
-#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:69
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:71
 #: src/gui/qt/settings/general_tab.cpp:187
 msgid "Language"
 msgstr "Мова"
 
-#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:71
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:73
 msgid "Text"
 msgstr "Текст"
 
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:96
 msgid "Type"
 msgstr "Тип"
 
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:96
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
 msgid "Content"
 msgstr "Зміст"
 
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:63
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:65
 msgid "Add/Remove"
 msgstr "Додати/видалити"
 
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:65
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
 msgid "Bash Tag"
 msgstr "Bash-тег"
 

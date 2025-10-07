@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-10-04 11:39+0100\n"
+"POT-Creation-Date: 2025-10-07 18:37+0100\n"
 "PO-Revision-Date: 2024-05-22 20:02+0100\n"
 "Last-Translator: SteamB23 <steamb23@gmail.com>\n"
 "Language-Team: SteamB23 <steamb23@gmail.com>\n"
@@ -251,26 +251,26 @@ msgstr "전체 플러그인"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:131
+#: src/gui/qt/helpers.cpp:132
 msgid "(edited)"
 msgstr "(편집됨)"
 
-#: src/gui/qt/helpers.cpp:246
+#: src/gui/qt/helpers.cpp:247
 msgid "N/A: No masterlist present"
 msgstr "N/A: 마스터 리스트가 존재하지 않음"
 
 #. translators: N/A is an abbreviation for Not Applicable.
 #. A masterlist is a database that contains information
 #. for various mods.
-#: src/gui/qt/helpers.cpp:251
+#: src/gui/qt/helpers.cpp:252
 msgid "N/A: No masterlist prelude present"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:259
+#: src/gui/qt/helpers.cpp:260
 msgid "Unknown: No revision metadata found"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:365
+#: src/gui/qt/helpers.cpp:366
 msgid "Invalid regular expression: {0}"
 msgstr ""
 
@@ -547,8 +547,8 @@ msgstr "아직 {0}을/를 적용하거나 취소하지 않았습니다. 종료�
 
 #: src/gui/qt/main_window.cpp:1483 src/gui/qt/restore_load_order_dialog.cpp:224
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:371
-#: src/gui/qt/plugin_editor/table_tabs.cpp:398
-#: src/gui/qt/plugin_editor/table_tabs.cpp:435
+#: src/gui/qt/plugin_editor/table_tabs.cpp:400
+#: src/gui/qt/plugin_editor/table_tabs.cpp:436
 msgid "Error"
 msgstr "오류"
 
@@ -685,43 +685,43 @@ msgstr "LOOT 정보"
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2712
+#: src/gui/qt/main_window.cpp:2714
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2750
+#: src/gui/qt/main_window.cpp:2752
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2799
+#: src/gui/qt/main_window.cpp:2801
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr "하나 이상의 오류 메시지가 표시되어 자동 정렬이 취소되었습니다."
 
-#: src/gui/qt/main_window.cpp:2858
+#: src/gui/qt/main_window.cpp:2860
 msgid "No masterlist update was necessary."
 msgstr "마스터 리스트를 갱신할 필요가 없었습니다."
 
-#: src/gui/qt/main_window.cpp:2881
+#: src/gui/qt/main_window.cpp:2883
 msgid "Masterlist updated to revision {0}."
 msgstr "마스터 리스트를 {0}버전으로 갱신되었습니다."
 
-#: src/gui/qt/main_window.cpp:2945
+#: src/gui/qt/main_window.cpp:2947
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2971
+#: src/gui/qt/main_window.cpp:2973
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3033
+#: src/gui/qt/main_window.cpp:3035
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "LOOT의 [새 버전]({0})을 사용할 수 있습니다."
 
-#: src/gui/qt/main_window.cpp:3050
+#: src/gui/qt/main_window.cpp:3052
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -729,7 +729,7 @@ msgstr ""
 "LOOT 업데이트를 확인하지 못했습니다! 자세한 내용은 LOOTDebugLog.txt (메인 메"
 "뉴를 통해 얻을 수 있음)에서 확인할 수 있습니다."
 
-#: src/gui/qt/messages_widget.cpp:199
+#: src/gui/qt/messages_widget.cpp:200
 msgid "Hide message"
 msgstr ""
 
@@ -782,7 +782,7 @@ msgid "Has User Metadata"
 msgstr "사용자 메타데이터를 가짐"
 
 #: src/gui/qt/plugin_card.cpp:291
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:202
 msgid "Bash Tags"
 msgstr "배쉬 태그"
 
@@ -790,11 +790,11 @@ msgstr "배쉬 태그"
 msgid "Current"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:293 src/gui/qt/plugin_editor/table_tabs.cpp:526
+#: src/gui/qt/plugin_card.cpp:293 src/gui/qt/plugin_editor/table_tabs.cpp:530
 msgid "Add"
 msgstr "추가"
 
-#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/plugin_editor/table_tabs.cpp:526
+#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/plugin_editor/table_tabs.cpp:530
 msgid "Remove"
 msgstr "제거"
 
@@ -831,7 +831,7 @@ msgid "Selected backup's load order"
 msgstr ""
 
 #: src/gui/qt/restore_load_order_dialog.cpp:171
-#: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:61
 #: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
@@ -934,39 +934,39 @@ msgid "{0} (Group does not exist)"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:103
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:197
 msgid "Group"
 msgstr "그루"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:188
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:198
 msgid "Load After"
 msgstr "선행 로드"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:189
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
 msgid "Requirements"
 msgstr "요구 사항"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:190
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
 msgid "Incompatibilities"
 msgstr "비호환성"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:191
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:201
 msgid "Messages"
 msgstr "메시지"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:193
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
 msgid "Dirty Plugin Info"
 msgstr "지저분한 플러그인 정보"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:194
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:204
 msgid "Clean Plugin Info"
 msgstr "정리된 플러그인 정보"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:205
 msgid "Locations"
 msgstr "위치"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:247
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:257
 msgid "This tab contains user metadata."
 msgstr ""
 
@@ -978,85 +978,85 @@ msgstr ""
 msgid "Delete row"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/table_tabs.cpp:396
-#: src/gui/qt/plugin_editor/table_tabs.cpp:433
+#: src/gui/qt/plugin_editor/table_tabs.cpp:398
+#: src/gui/qt/plugin_editor/table_tabs.cpp:434
 msgid "Note"
 msgstr "노트"
 
-#: src/gui/qt/plugin_editor/table_tabs.cpp:397
-#: src/gui/qt/plugin_editor/table_tabs.cpp:434
+#: src/gui/qt/plugin_editor/table_tabs.cpp:399
+#: src/gui/qt/plugin_editor/table_tabs.cpp:435
 msgid "Warning"
 msgstr "경고"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:82
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
 msgid "CRC"
 msgstr "CRC"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
 msgid "ITM Count"
 msgstr "ITM 개수"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
 msgid "Deleted References"
 msgstr "삭제된 참조"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
 msgid "Deleted Navmeshes"
 msgstr "삭제된 Navmesh"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
 msgid "Cleaning Utility"
 msgstr "청소 유틸리티"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
 msgid "Detail"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 msgid "Filename"
 msgstr "파일 이름"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
 msgid "Display Name"
 msgstr "표시되는 이름"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:85
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:100
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:69
 msgid "Condition"
 msgstr "상태"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:87
 msgid "Constraint"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 msgid "URL"
 msgstr "URL"
 
-#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:69
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:71
 #: src/gui/qt/settings/general_tab.cpp:187
 msgid "Language"
 msgstr "언어"
 
-#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:71
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:73
 msgid "Text"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:96
 msgid "Type"
 msgstr "형식"
 
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:96
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
 msgid "Content"
 msgstr "내용"
 
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:63
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:65
 msgid "Add/Remove"
 msgstr "추가/제거"
 
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:65
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
 msgid "Bash Tag"
 msgstr "배쉬 태그"
 
