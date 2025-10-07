@@ -7,16 +7,17 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-10-04 11:39+0100\n"
-"PO-Revision-Date: 2025-06-21 20:02+0000\n"
+"PO-Revision-Date: 2025-10-07 06:01+0000\n"
 "Last-Translator: xsSplater <xssplater@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.13-dev\n"
+"Plural-Forms: nplurals=3; plural="
+"(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? "
+"1 : 2);\n"
+"X-Generator: Weblate 5.14-dev\n"
 
 #: src/gui/plugin_item.cpp:50
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -140,7 +141,7 @@ msgstr "Скрыть плагины Creation Club"
 
 #: src/gui/qt/filters_widget.cpp:307
 msgid "Show only new messages"
-msgstr ""
+msgstr "Показывать только новые сообщения"
 
 #: src/gui/qt/filters_widget.cpp:308
 msgid "Show only empty plugins"
@@ -201,7 +202,7 @@ msgstr "Основная информация"
 
 #: src/gui/qt/general_info_card.cpp:228 src/gui/qt/plugin_card.cpp:289
 msgid "Has Hidden Messages"
-msgstr ""
+msgstr "Имеет скрытые сообщения"
 
 #: src/gui/qt/general_info_card.cpp:230
 msgid "Masterlist Revision ID"
@@ -378,11 +379,11 @@ msgstr "О&бновить содержимое"
 
 #: src/gui/qt/main_window.cpp:829
 msgid "U&nhide all individually-hidden messages"
-msgstr ""
+msgstr "Показа&ть все индивидуально скрытые сообщения"
 
 #: src/gui/qt/main_window.cpp:831
 msgid "Unhide all individually-hidden &general messages"
-msgstr ""
+msgstr "Показать все индивидуально скрытые об&щие сообщения"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:833
@@ -436,7 +437,7 @@ msgstr "&Редактировать метаданные…"
 
 #: src/gui/qt/main_window.cpp:855
 msgid "Un&hide individually-hidden messages"
-msgstr ""
+msgstr "&Показать индивидуально скрытые сообщения"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:857
@@ -765,7 +766,7 @@ msgstr ""
 
 #: src/gui/qt/messages_widget.cpp:199
 msgid "Hide message"
-msgstr ""
+msgstr "Скрыть сообщение"
 
 #: src/gui/qt/plugin_card.cpp:135
 msgid "Source:"
