@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.28.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-10-04 11:39+0100\n"
+"POT-Creation-Date: 2025-10-07 18:37+0100\n"
 "PO-Revision-Date: 2025-09-16 19:07+0200\n"
 "Last-Translator: pStyl3 <qp-git@pm.me>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/loot/loot/de/>\n"
@@ -255,26 +255,26 @@ msgstr "Plugins insgesamt"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:131
+#: src/gui/qt/helpers.cpp:132
 msgid "(edited)"
 msgstr "(bearbeitet)"
 
-#: src/gui/qt/helpers.cpp:246
+#: src/gui/qt/helpers.cpp:247
 msgid "N/A: No masterlist present"
 msgstr "N.z.: Keine Masterliste präsent"
 
 #. translators: N/A is an abbreviation for Not Applicable.
 #. A masterlist is a database that contains information
 #. for various mods.
-#: src/gui/qt/helpers.cpp:251
+#: src/gui/qt/helpers.cpp:252
 msgid "N/A: No masterlist prelude present"
 msgstr "N.z.: Kein Masterliste-Prelude präsent"
 
-#: src/gui/qt/helpers.cpp:259
+#: src/gui/qt/helpers.cpp:260
 msgid "Unknown: No revision metadata found"
 msgstr "Unbekannt: Keine Revisions-Metadaten gefunden"
 
-#: src/gui/qt/helpers.cpp:365
+#: src/gui/qt/helpers.cpp:366
 msgid "Invalid regular expression: {0}"
 msgstr "Ungültiger Regulärer Ausdruck: {0}"
 
@@ -565,8 +565,8 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1483 src/gui/qt/restore_load_order_dialog.cpp:224
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:371
-#: src/gui/qt/plugin_editor/table_tabs.cpp:398
-#: src/gui/qt/plugin_editor/table_tabs.cpp:435
+#: src/gui/qt/plugin_editor/table_tabs.cpp:400
+#: src/gui/qt/plugin_editor/table_tabs.cpp:436
 msgid "Error"
 msgstr "Fehler"
 
@@ -721,15 +721,15 @@ msgstr "Über LOOT"
 msgid "Identifying overlapping plugins…"
 msgstr "Identifiziere überlappende Plugins…"
 
-#: src/gui/qt/main_window.cpp:2712
+#: src/gui/qt/main_window.cpp:2714
 msgid "A backup of the current load order has been created."
 msgstr "Ein Backup der aktuellen Ladereihenfolge wurde erstellt."
 
-#: src/gui/qt/main_window.cpp:2750
+#: src/gui/qt/main_window.cpp:2752
 msgid "Restored load order from backup."
 msgstr "Ladereihenfolge wurde aus Backup wiederhergestellt."
 
-#: src/gui/qt/main_window.cpp:2799
+#: src/gui/qt/main_window.cpp:2801
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
@@ -737,19 +737,19 @@ msgstr ""
 "Automatische Sortierung wurde abgebrochen da mindestens eine Fehlermeldung "
 "aufgetreten ist."
 
-#: src/gui/qt/main_window.cpp:2858
+#: src/gui/qt/main_window.cpp:2860
 msgid "No masterlist update was necessary."
 msgstr "Aktualisierung der Masterlist war nicht von Nöten."
 
-#: src/gui/qt/main_window.cpp:2881
+#: src/gui/qt/main_window.cpp:2883
 msgid "Masterlist updated to revision {0}."
 msgstr "Masterliste wurde zur Version {0} aktualisiert."
 
-#: src/gui/qt/main_window.cpp:2945
+#: src/gui/qt/main_window.cpp:2947
 msgid "No masterlist updates were necessary."
 msgstr "Aktualisierung der Masterlisten war nicht von Nöten."
 
-#: src/gui/qt/main_window.cpp:2971
+#: src/gui/qt/main_window.cpp:2973
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -757,11 +757,11 @@ msgstr ""
 "Masterlisten für die folgenden Spiele aktualisiert:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:3033
+#: src/gui/qt/main_window.cpp:3035
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "Eine [neue Version]({0}) von LOOT ist verfügbar."
 
-#: src/gui/qt/main_window.cpp:3050
+#: src/gui/qt/main_window.cpp:3052
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -770,7 +770,7 @@ msgstr ""
 "txt (Sie können es über das Hauptmenü erreichen) für mehr Informationen "
 "nachsehen."
 
-#: src/gui/qt/messages_widget.cpp:199
+#: src/gui/qt/messages_widget.cpp:200
 msgid "Hide message"
 msgstr "Verstecke Nachricht"
 
@@ -823,7 +823,7 @@ msgid "Has User Metadata"
 msgstr "Hat Benutzer-Metadaten"
 
 #: src/gui/qt/plugin_card.cpp:291
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:202
 msgid "Bash Tags"
 msgstr "Bash Tags"
 
@@ -831,11 +831,11 @@ msgstr "Bash Tags"
 msgid "Current"
 msgstr "Aktuell"
 
-#: src/gui/qt/plugin_card.cpp:293 src/gui/qt/plugin_editor/table_tabs.cpp:526
+#: src/gui/qt/plugin_card.cpp:293 src/gui/qt/plugin_editor/table_tabs.cpp:530
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/plugin_editor/table_tabs.cpp:526
+#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/plugin_editor/table_tabs.cpp:530
 msgid "Remove"
 msgstr "Entfernen"
 
@@ -872,7 +872,7 @@ msgid "Selected backup's load order"
 msgstr "Ladereihenfolge des gewählten Backups"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:171
-#: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:61
 #: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
@@ -978,39 +978,39 @@ msgid "{0} (Group does not exist)"
 msgstr "{0} (Gruppe existiert nicht)"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:103
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:197
 msgid "Group"
 msgstr "Gruppe"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:188
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:198
 msgid "Load After"
 msgstr "Lade Nach"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:189
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
 msgid "Requirements"
 msgstr "Voraussetzungen"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:190
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
 msgid "Incompatibilities"
 msgstr "Inkompatibilitäten"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:191
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:201
 msgid "Messages"
 msgstr "Nachrichten"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:193
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
 msgid "Dirty Plugin Info"
 msgstr "Schmutzige Plugin Informationen"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:194
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:204
 msgid "Clean Plugin Info"
 msgstr "Saubere Plugin Informationen"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:205
 msgid "Locations"
 msgstr "Orte"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:247
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:257
 msgid "This tab contains user metadata."
 msgstr "Dieser Reiter enthält Metadaten."
 
@@ -1022,85 +1022,85 @@ msgstr "Neue Reihe hinzügen"
 msgid "Delete row"
 msgstr "Reihe löschen"
 
-#: src/gui/qt/plugin_editor/table_tabs.cpp:396
-#: src/gui/qt/plugin_editor/table_tabs.cpp:433
+#: src/gui/qt/plugin_editor/table_tabs.cpp:398
+#: src/gui/qt/plugin_editor/table_tabs.cpp:434
 msgid "Note"
 msgstr "Notiz"
 
-#: src/gui/qt/plugin_editor/table_tabs.cpp:397
-#: src/gui/qt/plugin_editor/table_tabs.cpp:434
+#: src/gui/qt/plugin_editor/table_tabs.cpp:399
+#: src/gui/qt/plugin_editor/table_tabs.cpp:435
 msgid "Warning"
 msgstr "Warnung"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:82
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
 msgid "CRC"
 msgstr "CRC"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
 msgid "ITM Count"
 msgstr "ITM Anzahl"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
 msgid "Deleted References"
 msgstr "Gelöschte Referenzen"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
 msgid "Deleted Navmeshes"
 msgstr "Gelöschte Navmeshes"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
 msgid "Cleaning Utility"
 msgstr "Bereinigungs-Tool"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
 msgid "Detail"
 msgstr "Details"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 msgid "Filename"
 msgstr "Dateiname"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
 msgid "Display Name"
 msgstr "Anzeigename"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:85
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:100
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:69
 msgid "Condition"
 msgstr "Kondition"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:87
 msgid "Constraint"
 msgstr "Einschränkung"
 
-#: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 msgid "URL"
 msgstr "URL"
 
-#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:69
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:71
 #: src/gui/qt/settings/general_tab.cpp:187
 msgid "Language"
 msgstr "Sprache"
 
-#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:71
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:73
 msgid "Text"
 msgstr "Text"
 
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:96
 msgid "Type"
 msgstr "Typ"
 
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:96
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
 msgid "Content"
 msgstr "Inhalt"
 
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:63
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:65
 msgid "Add/Remove"
 msgstr "Hinzufügen/Entfernen"
 
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:65
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
 msgid "Bash Tag"
 msgstr "Bash Tag"
 

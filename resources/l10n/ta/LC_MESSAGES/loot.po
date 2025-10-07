@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-10-04 11:39+0100\n"
+"POT-Creation-Date: 2025-10-07 18:37+0100\n"
 "PO-Revision-Date: 2025-06-30 02:01+0000\n"
 "Last-Translator: Ortham <weblate@ortham.net>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
@@ -248,26 +248,26 @@ msgstr "மொத்த செருகுநிரல்கள்"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:131
+#: src/gui/qt/helpers.cpp:132
 msgid "(edited)"
 msgstr "(திருத்தப்பட்டது)"
 
-#: src/gui/qt/helpers.cpp:246
+#: src/gui/qt/helpers.cpp:247
 msgid "N/A: No masterlist present"
 msgstr "N/A: மாச்டர்லிச்ட் இல்லை"
 
 #. translators: N/A is an abbreviation for Not Applicable.
 #. A masterlist is a database that contains information
 #. for various mods.
-#: src/gui/qt/helpers.cpp:251
+#: src/gui/qt/helpers.cpp:252
 msgid "N/A: No masterlist prelude present"
 msgstr "N/A: மாச்டர்லிச்ட் முன்னுரை இல்லை"
 
-#: src/gui/qt/helpers.cpp:259
+#: src/gui/qt/helpers.cpp:260
 msgid "Unknown: No revision metadata found"
 msgstr "தெரியவில்லை: திருத்த மேனிலை தரவு எதுவும் கிடைக்கவில்லை"
 
-#: src/gui/qt/helpers.cpp:365
+#: src/gui/qt/helpers.cpp:366
 msgid "Invalid regular expression: {0}"
 msgstr "தவறான வழக்கமான வெளிப்பாடு: {0}"
 
@@ -552,8 +552,8 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1483 src/gui/qt/restore_load_order_dialog.cpp:224
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:371
-#: src/gui/qt/plugin_editor/table_tabs.cpp:398
-#: src/gui/qt/plugin_editor/table_tabs.cpp:435
+#: src/gui/qt/plugin_editor/table_tabs.cpp:400
+#: src/gui/qt/plugin_editor/table_tabs.cpp:436
 msgid "Error"
 msgstr "பிழை"
 
@@ -705,33 +705,33 @@ msgstr "கொள்ளை பற்றி"
 msgid "Identifying overlapping plugins…"
 msgstr "ஒன்றுடன் ஒன்று செருகுநிரல்களை அடையாளம் காணுதல்…"
 
-#: src/gui/qt/main_window.cpp:2712
+#: src/gui/qt/main_window.cpp:2714
 msgid "A backup of the current load order has been created."
 msgstr "தற்போதைய சுமை வரிசையின் காப்புப்பிரதி உருவாக்கப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:2750
+#: src/gui/qt/main_window.cpp:2752
 msgid "Restored load order from backup."
 msgstr "காப்புப்பிரதியிலிருந்து சுமை ஆர்டர் மீட்டெடுக்கப்பட்டது."
 
-#: src/gui/qt/main_window.cpp:2799
+#: src/gui/qt/main_window.cpp:2801
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr "குறைந்தது ஒரு பிழை செய்தி காண்பிக்கப்படுவதால் ஆட்டோ-சார்ட் ரத்து செய்யப்பட்டுள்ளது."
 
-#: src/gui/qt/main_window.cpp:2858
+#: src/gui/qt/main_window.cpp:2860
 msgid "No masterlist update was necessary."
 msgstr "மாச்டர்லிச்ட் புதுப்பிப்பு தேவையில்லை."
 
-#: src/gui/qt/main_window.cpp:2881
+#: src/gui/qt/main_window.cpp:2883
 msgid "Masterlist updated to revision {0}."
 msgstr "மாச்டர்லிச்ட் திருத்தம் {0} பெறுநர் க்கு புதுப்பிக்கப்பட்டது."
 
-#: src/gui/qt/main_window.cpp:2945
+#: src/gui/qt/main_window.cpp:2947
 msgid "No masterlist updates were necessary."
 msgstr "மாச்டர்லிச்ட் புதுப்பிப்புகள் தேவையில்லை."
 
-#: src/gui/qt/main_window.cpp:2971
+#: src/gui/qt/main_window.cpp:2973
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -739,11 +739,11 @@ msgstr ""
 "பின்வரும் விளையாட்டுகளுக்கு மாச்ட்லிச்ட்கள் புதுப்பிக்கப்பட்டன:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:3033
+#: src/gui/qt/main_window.cpp:3035
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "கொள்ளை ஒரு [புதிய வெளியீடு]({0}) கிடைக்கிறது."
 
-#: src/gui/qt/main_window.cpp:3050
+#: src/gui/qt/main_window.cpp:3052
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -751,7 +751,7 @@ msgstr ""
 "கொள்ளை புதுப்பிப்புகளை சரிபார்க்கத் தவறிவிட்டது! மேலும் தகவலுக்கு உங்கள் lootdebuglog."
 "txt (பிரதான பட்டியல் மூலம் நீங்கள் அதைப் பெறலாம்) சரிபார்க்கலாம்."
 
-#: src/gui/qt/messages_widget.cpp:199
+#: src/gui/qt/messages_widget.cpp:200
 msgid "Hide message"
 msgstr ""
 
@@ -804,7 +804,7 @@ msgid "Has User Metadata"
 msgstr "பயனர் மேனிலை தரவு உள்ளது"
 
 #: src/gui/qt/plugin_card.cpp:291
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:202
 msgid "Bash Tags"
 msgstr "பாச் குறிச்சொற்கள்"
 
@@ -812,11 +812,11 @@ msgstr "பாச் குறிச்சொற்கள்"
 msgid "Current"
 msgstr "மின்னோட்ட்ம், ஓட்டம்"
 
-#: src/gui/qt/plugin_card.cpp:293 src/gui/qt/plugin_editor/table_tabs.cpp:526
+#: src/gui/qt/plugin_card.cpp:293 src/gui/qt/plugin_editor/table_tabs.cpp:530
 msgid "Add"
 msgstr "கூட்டு"
 
-#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/plugin_editor/table_tabs.cpp:526
+#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/plugin_editor/table_tabs.cpp:530
 msgid "Remove"
 msgstr "அகற்று"
 
@@ -853,7 +853,7 @@ msgid "Selected backup's load order"
 msgstr "தேர்ந்தெடுக்கப்பட்ட காப்புப்பிரதியின் சுமை வரிசை"
 
 #: src/gui/qt/restore_load_order_dialog.cpp:171
-#: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:61
 #: src/gui/qt/settings/game_tab.cpp:151
 #: src/gui/qt/settings/new_game_dialog.cpp:74
 msgid "Name"
@@ -956,39 +956,39 @@ msgid "{0} (Group does not exist)"
 msgstr "{0} (குழு இல்லை)"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:103
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:197
 msgid "Group"
 msgstr "குழு"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:188
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:198
 msgid "Load After"
 msgstr "பிறகு ஏற்றவும்"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:189
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
 msgid "Requirements"
 msgstr "தேவைகள்"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:190
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
 msgid "Incompatibilities"
 msgstr "பொருந்தாத தன்மைகள்"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:191
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:201
 msgid "Messages"
 msgstr "செய்திகள்"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:193
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
 msgid "Dirty Plugin Info"
 msgstr "அழுக்கு சொருகி செய்தி"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:194
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:204
 msgid "Clean Plugin Info"
 msgstr "தூய்மையான சொருகி செய்தி"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:205
 msgid "Locations"
 msgstr "இருப்பிடங்கள்"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:247
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:257
 msgid "This tab contains user metadata."
 msgstr "இந்த தாவலில் பயனர் மேனிலை தரவு உள்ளது."
 
@@ -1000,85 +1000,85 @@ msgstr "புதிய வரிசையைச் சேர்க்கவு�
 msgid "Delete row"
 msgstr "வரிசையை நீக்கு"
 
-#: src/gui/qt/plugin_editor/table_tabs.cpp:396
-#: src/gui/qt/plugin_editor/table_tabs.cpp:433
+#: src/gui/qt/plugin_editor/table_tabs.cpp:398
+#: src/gui/qt/plugin_editor/table_tabs.cpp:434
 msgid "Note"
 msgstr "குறிப்பு"
 
-#: src/gui/qt/plugin_editor/table_tabs.cpp:397
-#: src/gui/qt/plugin_editor/table_tabs.cpp:434
+#: src/gui/qt/plugin_editor/table_tabs.cpp:399
+#: src/gui/qt/plugin_editor/table_tabs.cpp:435
 msgid "Warning"
 msgstr "எச்சரிக்கை"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:82
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
 msgid "CRC"
 msgstr "சி.ஆர்.சி."
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
 msgid "ITM Count"
 msgstr "Itm எண்ணிக்கை"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
 msgid "Deleted References"
 msgstr "குறிப்புகளை நீக்கியது"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
 msgid "Deleted Navmeshes"
 msgstr "நேவிம்ச்களை நீக்கியது"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
 msgid "Cleaning Utility"
 msgstr "பயன்பாட்டை தூய்மை செய்தல்"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
 msgid "Detail"
 msgstr "விவரம்"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 msgid "Filename"
 msgstr "கோப்புப்பெயர்"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
 msgid "Display Name"
 msgstr "காட்சி பெயர்"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:85
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:100
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:69
 msgid "Condition"
 msgstr "நிபந்தனை"
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:87
 msgid "Constraint"
 msgstr "தடை"
 
-#: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
 msgid "URL"
 msgstr "முகவரி"
 
-#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:69
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:71
 #: src/gui/qt/settings/general_tab.cpp:187
 msgid "Language"
 msgstr "மொழி"
 
-#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:71
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:73
 msgid "Text"
 msgstr "உரை"
 
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:96
 msgid "Type"
 msgstr "வகை"
 
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:96
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
 msgid "Content"
 msgstr "உள்ளடக்கம்"
 
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:63
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:65
 msgid "Add/Remove"
 msgstr "சேர்க்க/அகற்று"
 
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:65
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
 msgid "Bash Tag"
 msgstr "பாச் நாள்"
 
