@@ -43,6 +43,10 @@ PluginEditorWidget::PluginEditorWidget(
   setupUi();
 }
 
+void PluginEditorWidget::setLanguage(std::string &&newLanguage) {
+  language = std::move(newLanguage);
+}
+
 void PluginEditorWidget::setBashTagCompletions(
     const std::vector<std::string> &knownBashTags) {
   bashTagCompletions.clear();

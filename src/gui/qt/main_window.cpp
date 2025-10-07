@@ -2612,6 +2612,8 @@ void MainWindow::on_settingsDialog_accepted() {
   try {
     const auto currentTheme = state->getSettings().getTheme();
     settingsDialog->recordInputValues(*state);
+
+    pluginEditorWidget->setLanguage(state->getSettings().getLanguage());
     recordCurrentGameHiddenMessages(state->getSettings(),
                                     state->getCurrentGame().getSettings());
 

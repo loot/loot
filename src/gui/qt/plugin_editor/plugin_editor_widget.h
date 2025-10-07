@@ -44,6 +44,7 @@ public:
                      const std::vector<LootSettings::Language> &languages,
                      const std::string &language);
 
+  void setLanguage(std::string&& language);
   void setBashTagCompletions(const std::vector<std::string> &knownBashTags);
   void setFilenameCompletions(const std::vector<std::string> &knownFilenames);
 
