@@ -56,7 +56,7 @@ using loot::EdgeType;
 using loot::GameId;
 using loot::LoadOrderBackup;
 
-constexpr const char* GHOST_EXTENSION = ".ghost";
+constexpr std::string_view GHOST_EXTENSION = ".ghost";
 
 std::optional<std::filesystem::path> getPathThatExists(
     GameId gameId,
@@ -309,9 +309,6 @@ std::string describeCycle(const std::vector<Vertex>& cycle) {
 std::vector<std::string> checkForRemovedPlugins(
     const std::vector<std::string>& pluginNamesBefore,
     const std::vector<std::string>& pluginNamesAfter) {
-  static constexpr size_t GHOST_EXTENSION_LENGTH =
-      std::char_traits<char>::length(GHOST_EXTENSION);
-
   // Plugin name case won't change, so can compare strings
   // without normalising case.
   std::set<std::string> pluginsSet(pluginNamesAfter.cbegin(),
@@ -321,7 +318,7 @@ std::vector<std::string> checkForRemovedPlugins(
   for (std::string pluginName : pluginNamesBefore) {
     if (boost::iends_with(pluginName, GHOST_EXTENSION)) {
       pluginName =
-          pluginName.substr(0, pluginName.size() - GHOST_EXTENSION_LENGTH);
+          pluginName.substr(0, pluginName.size() - GHOST_EXTENSION.size());
     }
 
     if (pluginsSet.count(pluginName) == 0) {

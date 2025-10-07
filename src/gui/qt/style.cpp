@@ -34,9 +34,7 @@
 #include "gui/state/loot_paths.h"
 
 namespace {
-static constexpr const char* QSS_SUFFIX = ".theme.qss";
-static constexpr size_t QSS_SUFFIX_LENGTH =
-    std::char_traits<char>::length(QSS_SUFFIX);
+static constexpr std::string_view QSS_SUFFIX = ".theme.qss";
 
 std::optional<QString> loadStyleSheet(const QString& resourcePath) {
   QFile file(resourcePath);
@@ -62,7 +60,7 @@ std::optional<QString> loadStyleSheet(const std::filesystem::path& themesPath,
     logger->debug("Loading style sheet for the \"{}\" theme...", themeName);
   }
 
-  const auto filesystemPath = (themesPath / (themeName + QSS_SUFFIX));
+  const auto filesystemPath = (themesPath / (themeName + std::string(QSS_SUFFIX)));
   auto styleSheet =
       ::loadStyleSheet(QString::fromStdString(filesystemPath.u8string()));
   if (styleSheet.has_value()) {
@@ -117,7 +115,7 @@ std::vector<std::string> findThemes(const std::filesystem::path& themesPath) {
     }
 
     const auto themeFullName =
-        filename.substr(0, filename.size() - QSS_SUFFIX_LENGTH);
+        filename.substr(0, filename.size() - QSS_SUFFIX.size());
 
     std::string themeName;
     if (boost::ends_with(themeFullName, LIGHT_THEME_SUFFIX)) {
