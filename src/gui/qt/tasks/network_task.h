@@ -34,7 +34,7 @@ namespace loot {
 class NetworkTask : public Task {
   Q_OBJECT
 protected:
-  static inline constexpr int TRANSFER_TIMEOUT_MS{30000};
+  static constexpr int TRANSFER_TIMEOUT_MS{30000};
 
   void handleException(const std::exception &exception);
 

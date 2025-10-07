@@ -189,7 +189,7 @@ protected:
     return actual;
   }
 
-  inline std::vector<std::pair<std::string, bool>> getInitialLoadOrder() const {
+  std::vector<std::pair<std::string, bool>> getInitialLoadOrder() const {
     return std::vector<std::pair<std::string, bool>>({
         {masterFile, true},
         {BLANK_ESM, true},
@@ -342,7 +342,7 @@ private:
     }
   }
 
-  inline static bool isLoadOrderTimestampBased(GameId gameId) {
+  static bool isLoadOrderTimestampBased(GameId gameId) {
     return gameId == GameId::tes3 || gameId == GameId::tes4 ||
            gameId == GameId::nehrim || gameId == GameId::fo3 ||
            gameId == GameId::fonv;
