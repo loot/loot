@@ -29,9 +29,6 @@
 #include "gui/qt/icon_factory.h"
 
 namespace {
-constexpr auto CARD_TOP_SHADOW_HEIGHT = 3;
-constexpr auto CARD_BOTTOM_SHADOW_HEIGHT = 3;
-
 QBrush GetCardTopBorderShadowBrush(QColor near, QColor far) {
   auto gradient = QLinearGradient(QPointF(0, 2), QPointF(0, 26));
   gradient.setColorAt(0, far);
@@ -57,6 +54,9 @@ void Card::setIcon(QLabel* label, QIcon icon) {
 
 void Card::paintEvent(QPaintEvent* event) {
   QFrame::paintEvent(event);
+
+  constexpr auto CARD_TOP_SHADOW_HEIGHT = 3;
+  constexpr auto CARD_BOTTOM_SHADOW_HEIGHT = 3;
 
   QPainter painter(this);
 

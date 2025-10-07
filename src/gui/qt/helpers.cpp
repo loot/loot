@@ -54,12 +54,13 @@
 namespace {
 using loot::getLogger;
 
-static constexpr const char* METADATA_PATH_SUFFIX = ".metadata.toml";
 static constexpr const char* METADATA_ID_KEY = "blob_sha1";
 static constexpr const char* METADATA_DATE_KEY = "update_timestamp";
 static constexpr int SHORT_HASH_LENGTH = 7;
 
 std::filesystem::path getFileMetadataPath(std::filesystem::path filePath) {
+  static constexpr const char* METADATA_PATH_SUFFIX = ".metadata.toml";
+
   filePath += METADATA_PATH_SUFFIX;
   return filePath;
 }

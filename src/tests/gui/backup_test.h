@@ -41,15 +41,17 @@ public:
 protected:
   static constexpr const char* EMPTY_FOLDER = "emptyFolder";
   static constexpr const char* GIT_FOLDER = ".git";
-  static constexpr const char* GIT_CONFIG = "config";
   static constexpr const char* DEBUG_LOG = "LOOTDebugLog.txt";
   static constexpr const char* BACKUPS_FOLDER = "backups";
-  static constexpr const char* BACKUP_FILE = "LOOT-backup-19700101T000000.zip";
   static constexpr const char* ROOT_DIR_FILE = "rootFile.txt";
   static constexpr const char* SUB_FOLDER = "subFolder";
   static constexpr const char* SUB_FOLDER_FILE = "subFolderFile.txt";
 
   void SetUp() override {
+    static constexpr const char* GIT_CONFIG = "config";
+    static constexpr const char* BACKUP_FILE =
+        "LOOT-backup-19700101T000000.zip";
+
     std::filesystem::create_directories(destRoot);
     std::filesystem::create_directories(sourceRoot / EMPTY_FOLDER);
     std::filesystem::create_directories(sourceRoot / BACKUPS_FOLDER);

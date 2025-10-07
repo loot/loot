@@ -39,7 +39,6 @@ namespace {
 using loot::BareMessage;
 using loot::MessageType;
 
-static constexpr const char* MESSAGE_TYPE_PROPERTY = "messageType";
 static constexpr int COLUMN_COUNT = 2;
 static constexpr int BULLET_POINT_COLUMN = 0;
 static constexpr int MESSAGE_LABEL_COLUMN = 1;
@@ -117,6 +116,8 @@ QLabel* createMessageLabel() {
 }
 
 void updateMessageLabel(QLabel* label, const BareMessage& message) {
+  static constexpr const char* MESSAGE_TYPE_PROPERTY = "messageType";
+
   auto oldPropertyValue = label->property(MESSAGE_TYPE_PROPERTY);
   auto newPropertyValue = getPropertyValue(message.first);
   auto propertyChanged =

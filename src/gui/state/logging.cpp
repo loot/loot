@@ -47,6 +47,8 @@
 #endif
 
 namespace {
+static constexpr const char* LOGGER_NAME = "loot_logger";
+
 std::vector<std::pair<std::string, std::string>> getStringsToCensor() {
   const auto userProfilePath = loot::getUserProfilePath();
 
@@ -59,7 +61,6 @@ std::vector<std::pair<std::string, std::string>> getStringsToCensor() {
 }
 
 namespace loot {
-static const char* LOGGER_NAME = "loot_logger";
 
 class CensoringFileSink : public spdlog::sinks::sink {
 public:
