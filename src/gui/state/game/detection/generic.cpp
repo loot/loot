@@ -294,7 +294,7 @@ std::optional<GameInstall> findSiblingGameInstall(const GameId gameId) {
 
 #ifndef _WIN32
 std::vector<GameInstall> findOpenMWLinuxInstalls() {
-  static std::array<std::filesystem::path, 6> openmwPaths = {
+  static const std::array<std::filesystem::path, 6> OPENMW_PATHS = {
       // Ubuntu, Debian
       "/usr/games",
       // Ubuntu, Debian from inside a Flatpak sandbox
@@ -312,7 +312,7 @@ std::vector<GameInstall> findOpenMWLinuxInstalls() {
 
   std::vector<GameInstall> installs;
   const auto masterFilename = loot::getMasterFilename(GameId::openmw);
-  for (const auto& path : openmwPaths) {
+  for (const auto& path : OPENMW_PATHS) {
     if (loot::isValidGamePath(GameId::openmw, masterFilename, path)) {
       installs.push_back(GameInstall{GameId::openmw,
                                      InstallSource::unknown,
