@@ -103,6 +103,7 @@ jobs:
       - name: Download & build Boost
         run: |
           wget https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.1/install_boost.py
+          sha256sum -c <<< 'a6e3f965d31cf45ff80a28d932b011359a45d7154398807e296a9e08f27e67e7 install_boost.py'
           python install_boost.py --directory ~ --boost-version $BOOST_VERSION -a 64 locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
