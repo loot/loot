@@ -73,12 +73,16 @@ Building the Flatpak needs the following installed:
 - `flatpak`
 - `flatpak-builder`
 - `jq`
-- `python`, `pip` and `venv`
+- `python`
+- `uv`
 
 For example, on Ubuntu 24.04:
 
 ```sh
-sudo apt-get install curl git flatpak flatpak-builder jq python3 python3-pip python3-venv
+sudo apt-get install curl git flatpak flatpak-builder jq pipx
+pipx install uv
+pipx ensurepath
+. ~/.bashrc
 git clone https://github.com/loot/loot.git
 cd loot
 ./scripts/generate_manifests.sh
