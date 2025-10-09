@@ -127,11 +127,11 @@ jobs:
       - name: Install packages for building docs
         run: |
           pipx install uv==0.9.0
-          uv sync --project docs
+          uv sync --locked --project docs
 
       - name: Build docs
         working-directory: docs
-        run: uv run -- sphinx-build -b html . ..\build\docs\html
+        run: uv run --locked -- sphinx-build -b html . ..\build\docs\html
 
       - name: Install Gettext
         run: |
