@@ -1,0 +1,13 @@
+version: 2
+updates:
+- package-ecosystem: uv
+  directories:
+    - /docs
+    - /resources/linux
+  schedule:
+    interval: weekly
+
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: weekly
