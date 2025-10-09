@@ -66,7 +66,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-aqtinstall-${{ env.AQTINSTALL_VERSION }}
 
       - name: Get Boost metadata
         id: boost-metadata
