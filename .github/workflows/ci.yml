@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -117,7 +117,7 @@ jobs:
           echo "root=${{ github.workspace }}/$QT_VERSION/gcc_64" >> $GITHUB_OUTPUT
 
       - name: Checkout libloot repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: loot/libloot
           ref: ${{ env.LIBLOOT_VERSION }}
@@ -155,7 +155,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -241,7 +241,7 @@ jobs:
     runs-on: windows-2022
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -337,7 +337,7 @@ jobs:
           echo "root=${{ github.workspace }}/${env:QT_VERSION}/msvc2022_64" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Checkout libloot repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: loot/libloot
           ref: ${{ env.LIBLOOT_VERSION }}
