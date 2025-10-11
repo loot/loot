@@ -66,6 +66,7 @@ int compareLOOTVersion(const std::string &version) {
   }
 
   const auto givenPatch = std::stoul(parts.at(2));
+#pragma warning(suppress : 4296, justification : "The minor version may not be zero at some point in the future.")
   if (LOOT_VERSION_PATCH > givenPatch) {
     return 1;
   }

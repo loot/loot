@@ -36,21 +36,22 @@
 #include "gui/state/game/game_id.h"
 
 namespace loot {
-static constexpr std::array<GameId, 15> ALL_GAME_IDS = {GameId::tes3,
-                                                    GameId::tes4,
-                                                    GameId::nehrim,
-                                                    GameId::tes5,
-                                                    GameId::enderal,
-                                                    GameId::tes5se,
-                                                    GameId::enderalse,
-                                                    GameId::tes5vr,
-                                                    GameId::fo3,
-                                                    GameId::fonv,
-                                                    GameId::fo4,
-                                                    GameId::fo4vr,
-                                                    GameId::starfield,
-                                                    GameId::openmw,
-                                                    GameId::oblivionRemastered};
+static constexpr std::array<GameId, 15> ALL_GAME_IDS = {
+    {GameId::tes3,
+     GameId::tes4,
+     GameId::nehrim,
+     GameId::tes5,
+     GameId::enderal,
+     GameId::tes5se,
+     GameId::enderalse,
+     GameId::tes5vr,
+     GameId::fo3,
+     GameId::fonv,
+     GameId::fo4,
+     GameId::fo4vr,
+     GameId::starfield,
+     GameId::openmw,
+     GameId::oblivionRemastered}};
 
 struct LocalisedGameInstallPath {
   std::filesystem::path installPath;

@@ -468,8 +468,10 @@ std::filesystem::path getExecutableDirectory() {
   while (bufferSize <= MAX_BUFFER_SIZE) {
     std::wstring executablePathString(bufferSize, 0);
 
-    DWORD pathLength = GetModuleFileName(
-        NULL, &executablePathString[0], executablePathString.size());
+    DWORD pathLength =
+        GetModuleFileName(NULL,
+                          &executablePathString[0],
+                          static_cast<DWORD>(executablePathString.size()));
 
     if (pathLength == 0) {
       auto logger = getLogger();
