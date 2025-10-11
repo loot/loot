@@ -57,7 +57,7 @@ Changed
 - It's now possible to build libloot from source as part of building LOOT.
 - Updated fmt to v12.0.0.
 - Updated libloot to v0.28.2.
-- Updated Qt to v6.9.3.
+- Updated Qt to v6.9.1.
 - Updated Brazilian Portuguese translation.
 - Updated Bulgarian translation.
 - Updated German translation.
