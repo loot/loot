@@ -4,7 +4,7 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.28.0 - Unreleased
+0.28.0 - 2025-10-11
 ===================
 
 Version 0.27.x was skipped to keep LOOT's minor version equal to libloot's.
