@@ -66,6 +66,7 @@ Changed
 - Updated Simplified Chinese translation.
 - Updated Swedish translation.
 - Updated Tamil translation.
+- Updated Ukrainian translation.
 
 .. |empty_plugin_icon| image:: ../../resources/icons/material-icons/draft_black_48dp.svg
   :scale: 45%
