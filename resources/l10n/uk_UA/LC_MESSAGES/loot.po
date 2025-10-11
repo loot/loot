@@ -380,11 +380,11 @@ msgstr "Оновити з&міст"
 
 #: src/gui/qt/main_window.cpp:829
 msgid "U&nhide all individually-hidden messages"
-msgstr "Показати всі окремо приховані повідомлення"
+msgstr "Показати всі &окремо приховані повідомлення"
 
 #: src/gui/qt/main_window.cpp:831
 msgid "Unhide all individually-hidden &general messages"
-msgstr "Показати всі окремо приховані та загальні повідомлення"
+msgstr "Показати всі окремо приховані та загаль&ні повідомлення"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:833
@@ -394,11 +394,11 @@ msgstr "П&ередатувати плагіни…"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:835
 msgid "Back Up Load &Order…"
-msgstr "Резервне копіювання порядку завантаження…"
+msgstr "Резервне копіювання порядку &завантаження…"
 
 #: src/gui/qt/main_window.cpp:836
 msgid "Res&tore Load Order…"
-msgstr "Відновити порядок завантаження…"
+msgstr "Відновити поря&док завантаження…"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:838
@@ -438,7 +438,7 @@ msgstr "&Редагувати метадані…"
 
 #: src/gui/qt/main_window.cpp:855
 msgid "Un&hide individually-hidden messages"
-msgstr "Відобразити та приховати окремо приховані повідомлення"
+msgstr "Відобразити та &приховати окремо приховані повідомлення"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:857
