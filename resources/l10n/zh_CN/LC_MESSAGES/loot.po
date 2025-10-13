@@ -4,9 +4,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2025-10-07 18:37+0100\n"
-"PO-Revision-Date: 2025-06-30 02:01+0000\n"
-"Last-Translator: YanJun Sun <yanjun.sun@mail.ru>\n"
+"POT-Creation-Date: 2025-10-11 10:28+0100\n"
+"PO-Revision-Date: 2025-10-13 03:07+0000\n"
+"Last-Translator: YanJun Sun <zxvf6aj@sina.cn>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/loot/loot/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.14-dev\n"
 
 #: src/gui/plugin_item.cpp:50
 msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
@@ -131,7 +131,7 @@ msgstr "隐藏 Creation Club 插件"
 
 #: src/gui/qt/filters_widget.cpp:307
 msgid "Show only new messages"
-msgstr ""
+msgstr "仅显示新讯息"
 
 #: src/gui/qt/filters_widget.cpp:308
 msgid "Show only empty plugins"
@@ -191,7 +191,7 @@ msgstr "一般信息"
 
 #: src/gui/qt/general_info_card.cpp:228 src/gui/qt/plugin_card.cpp:289
 msgid "Has Hidden Messages"
-msgstr ""
+msgstr "含有隐藏讯息"
 
 #: src/gui/qt/general_info_card.cpp:230
 msgid "Masterlist Revision ID"
@@ -367,11 +367,11 @@ msgstr "刷新内容"
 
 #: src/gui/qt/main_window.cpp:829
 msgid "U&nhide all individually-hidden messages"
-msgstr ""
+msgstr "取消隐藏所有独立隐藏的讯息(&N)"
 
 #: src/gui/qt/main_window.cpp:831
 msgid "Unhide all individually-hidden &general messages"
-msgstr ""
+msgstr "取消隐藏所有独立隐藏的普通讯息(&G)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:833
@@ -425,7 +425,7 @@ msgstr "编辑元数据(&E)…"
 
 #: src/gui/qt/main_window.cpp:855
 msgid "Un&hide individually-hidden messages"
-msgstr ""
+msgstr "取消隐藏独立隐藏的讯息(&H)"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:857
@@ -515,7 +515,8 @@ msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
 "using {0}."
-msgstr ""
+msgstr "LOOT 为免费软件，但如您想通过一些钱财表达感谢之情，可使用 {0} 向 WrinklyNinja"
+"（LOOT的创建者兼主要开发者）进行捐赠。"
 
 #: src/gui/qt/main_window.cpp:1329
 msgid "First-Time Tips"
@@ -693,7 +694,7 @@ msgstr "已从备份恢复加载顺序。"
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
-msgstr ""
+msgstr "自动排序已取消，因至少显示有一个错误讯息。"
 
 #: src/gui/qt/main_window.cpp:2860
 msgid "No masterlist update was necessary."
@@ -729,7 +730,7 @@ msgstr ""
 
 #: src/gui/qt/messages_widget.cpp:200
 msgid "Hide message"
-msgstr ""
+msgstr "隐藏讯息"
 
 #: src/gui/qt/plugin_card.cpp:135
 msgid "Source:"
@@ -757,11 +758,11 @@ msgstr ""
 
 #: src/gui/qt/plugin_card.cpp:282
 msgid "Master Plugin"
-msgstr ""
+msgstr "主（前置）插件"
 
 #: src/gui/qt/plugin_card.cpp:283
 msgid "Blueprint Master Plugin"
-msgstr ""
+msgstr "蓝图主（前置）插件"
 
 #: src/gui/qt/plugin_card.cpp:285
 msgid "Medium Plugin"
@@ -942,7 +943,7 @@ msgstr ""
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
 msgid "Requirements"
-msgstr ""
+msgstr "需求"
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
 msgid "Incompatibilities"
@@ -1073,11 +1074,11 @@ msgstr "LOOT 文件夹"
 
 #: src/gui/qt/settings/game_tab.cpp:154
 msgid "Main Master Plugin"
-msgstr ""
+msgstr "主要主（前置）插件"
 
 #: src/gui/qt/settings/game_tab.cpp:155
 msgid "Minimum Header Version"
-msgstr ""
+msgstr "最低头部版本"
 
 #: src/gui/qt/settings/game_tab.cpp:156
 msgid "Masterlist Source"
@@ -1348,7 +1349,7 @@ msgstr ""
 
 #: src/gui/state/game/validation.cpp:176
 msgid "light master"
-msgstr ""
+msgstr "轻量主（前置）插件"
 
 #: src/gui/state/game/validation.cpp:183
 msgid ""
@@ -1363,7 +1364,8 @@ msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
-msgstr ""
+msgstr "此插件包含有 FormID 超出 ESL 插件有效范围的记录。使用此插件将不可逆的损坏您的"
+"游戏存档。"
 
 #: src/gui/state/game/validation.cpp:224
 msgid ""
@@ -1389,7 +1391,7 @@ msgstr "插件"
 #. loaded as if its master flag is set.
 #: src/gui/state/game/validation.cpp:261
 msgid "master"
-msgstr ""
+msgstr "主（前置）"
 
 #: src/gui/state/game/validation.cpp:271
 msgid ""
@@ -1424,7 +1426,7 @@ msgstr ""
 msgid ""
 "This plugin has a header version of {0}, which is less than the game's "
 "minimum supported header version of {1}."
-msgstr ""
+msgstr "此插件的 {0} 头部版本低于游戏的 {1} 所需求的最低头部版本。"
 
 #: src/gui/state/game/validation.cpp:365
 msgid "This plugin has itself as a master."
@@ -1452,11 +1454,11 @@ msgstr "您已激活 {0} 个插件，但游戏仅支持最多 {1} 个。"
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
-msgstr ""
+msgstr "请不要使用 MWSE 启动 Morrowind（晨风），否则会严重损坏您的游戏。"
 
 #: src/gui/state/game/validation.cpp:612
 msgid "You have {0} active {1} but the game only supports up to {2}."
-msgstr ""
+msgstr "您有 {0} 个 活动的 {1}，但游戏仅支持最多 {2} 个。"
 
 #: src/gui/state/game/validation.cpp:634
 msgid ""
@@ -1467,7 +1469,7 @@ msgstr ""
 #: src/gui/state/game/validation.cpp:656
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
-msgstr ""
+msgstr "您有 {0} 个活动的中型插件，但游戏最多支持 {1} 个。"
 
 #: src/gui/state/game/validation.cpp:676
 msgid ""
@@ -1484,6 +1486,8 @@ msgid ""
 "game, mods and LOOT may assume that filesystem paths are not case-sensitive, "
 "which is the default on Windows."
 msgstr ""
+"{0} 是安装在区分大小写的位置。这可能会引起问题，因为在默认文件系统路径不区分"
+"大小写的 Windows 操作系统上游戏，模组和 LOOT 可能会猜测路径。"
 
 #. translators: The placeholder is for the current game's
 #. name.
@@ -1497,12 +1501,12 @@ msgstr ""
 #: src/gui/state/game/validation.cpp:846
 msgid "small plugin"
 msgid_plural "small plugins"
-msgstr[0] ""
+msgstr[0] "小型插件"
 
 #: src/gui/state/game/validation.cpp:851
 msgid "light plugin"
 msgid_plural "light plugins"
-msgstr[0] ""
+msgstr[0] "轻型插件"
 
 #~ msgid ""
 #~ "An error occurred while parsing the metadata list(s): {0}.\n"
