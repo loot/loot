@@ -480,17 +480,17 @@ std::optional<std::string> migrateMasterlistSource(std::string_view source,
 
 std::string migrateMasterlistSource(const std::string& source) {
   static constexpr std::array<std::string_view, 11> OFFICIAL_MASTERLIST_REPOS =
-      {"morrowind",
-       "oblivion",
-       "skyrim",
-       "skyrimse",
-       "skyrimvr",
-       "fallout3",
-       "falloutnv",
-       "fallout4",
-       "fallout4vr",
-       "enderal",
-       "starfield"};
+      {{"morrowind",
+        "oblivion",
+        "skyrim",
+        "skyrimse",
+        "skyrimvr",
+        "fallout3",
+        "falloutnv",
+        "fallout4",
+        "fallout4vr",
+        "enderal",
+        "starfield"}};
 
   for (const auto& repo : OFFICIAL_MASTERLIST_REPOS) {
     for (const auto& branch : OLD_DEFAULT_BRANCHES) {
