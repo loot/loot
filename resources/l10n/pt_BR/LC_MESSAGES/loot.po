@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-10-11 10:28+0100\n"
-"PO-Revision-Date: 2025-07-01 14:49+0000\n"
+"PO-Revision-Date: 2025-11-02 15:20+0000\n"
 "Last-Translator: Carlos Gabriel <carlos2324feitosa@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/loot/"
 "loot/pt_BR/>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.14.1-dev\n"
 "X-Poedit-Basepath: .\n"
 
 #: src/gui/plugin_item.cpp:50
@@ -135,7 +135,7 @@ msgstr "Ocultar plugins do Creation Club"
 
 #: src/gui/qt/filters_widget.cpp:307
 msgid "Show only new messages"
-msgstr ""
+msgstr "Mostrar apenas novas mensagens"
 
 #: src/gui/qt/filters_widget.cpp:308
 msgid "Show only empty plugins"
@@ -197,7 +197,7 @@ msgstr "Informação Geral"
 
 #: src/gui/qt/general_info_card.cpp:228 src/gui/qt/plugin_card.cpp:289
 msgid "Has Hidden Messages"
-msgstr ""
+msgstr "Tem mensagens ocultas"
 
 #: src/gui/qt/general_info_card.cpp:230
 msgid "Masterlist Revision ID"
@@ -375,11 +375,11 @@ msgstr "At&ualizar Conteúdo"
 
 #: src/gui/qt/main_window.cpp:829
 msgid "U&nhide all individually-hidden messages"
-msgstr ""
+msgstr "Exibir e ocultar todas as mensagens ocultadas individualmente"
 
 #: src/gui/qt/main_window.cpp:831
 msgid "Unhide all individually-hidden &general messages"
-msgstr ""
+msgstr "Revelar todas as mensagens ocultadas individualmente e gerais"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:833
@@ -433,7 +433,7 @@ msgstr "&Editar Metadados…"
 
 #: src/gui/qt/main_window.cpp:855
 msgid "Un&hide individually-hidden messages"
-msgstr ""
+msgstr "Exibir e ocultar mensagens ocultadas individualmente"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:857
@@ -762,7 +762,7 @@ msgstr ""
 
 #: src/gui/qt/messages_widget.cpp:200
 msgid "Hide message"
-msgstr ""
+msgstr "Ocultar mensagem"
 
 #: src/gui/qt/plugin_card.cpp:135
 msgid "Source:"
