@@ -15,6 +15,9 @@ env:
   QT_VERSION: 6.9.1
   UV_VERSION: 0.8.20
 
+permissions:
+  contents: read
+
 jobs:
   # Check if the template.pot file is up to date. Run this as a separate job
   # so that an outdated POT file causes a visible error but does not block the

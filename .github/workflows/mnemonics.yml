@@ -6,6 +6,9 @@ on:
   pull_request:
     paths: ['resources/l10n/*/LC_MESSAGES/loot.po']
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-24.04
