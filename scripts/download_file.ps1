@@ -9,7 +9,7 @@ $ErrorActionPreference = "Stop"
 
 $filename = Split-Path $url -Leaf
 
-Start-BitsTransfer -Source $url -Destination $filename
+Start-BitsTransfer -Source $url -Destination $filename -Dynamic
 
 $hash = Get-FileHash -Algorithm SHA256 $filename
 

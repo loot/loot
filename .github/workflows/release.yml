@@ -6,7 +6,7 @@ on:
 
 env:
   BOOST_VERSION: 1.87.0
-  OGDF_VERSION: elderberry-202309
+  OGDF_VERSION: foxglove-202510
   QT_VERSION: 6.9.1
 
 jobs:
@@ -96,7 +96,7 @@ jobs:
         run: |
           $filename = scripts\download_file.ps1 `
             "https://github.com/ogdf/ogdf/archive/refs/tags/${env:OGDF_VERSION}.zip" `
-            'b3ae408c95ea79e36fb4bd0ad54f145dde564132e3c849edf9f992c3ba411ab4'
+            '76770ea566fdab4727b51534fefecd2ef4ebc947e03a7614e605be33624275bf'
 
           Expand-Archive -Path "${env:OGDF_VERSION}.zip" -DestinationPath .
 

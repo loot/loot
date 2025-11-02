@@ -135,8 +135,8 @@ modules:
       - -DCMAKE_BUILD_TYPE=Release
     sources:
       - type: archive
-        url: https://ogdf.uos.de/wp-content/uploads/2023/09/ogdf.v2023.09.zip
-        sha256: a82298cfbcd9365d9650f3e5c09b49dc3e6cdf7ff80483133d02b9d371165436
+        url: https://ogdf.uos.de/wp-content/uploads/2025/10/ogdf.v2025.10.zip
+        sha256: 54f8fc9c2b44b3e4f34ca85be3ae77ce2a309337397662c1432a960367522ccb
 
   - name: libloot
     buildsystem: cmake-ninja
