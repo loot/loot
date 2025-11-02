@@ -158,11 +158,11 @@ target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(loot_gui_tests SYSTEM PRIVATE
     ${VALVE_FILE_VDF_INCLUDE_DIRS})
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(WIN32)
     target_compile_definitions(loot_gui_tests PRIVATE
         UNICODE _UNICODE NOMINMAX BOOST_UUID_FORCE_AUTO_LINK)
 
-    if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    if(CMAKE_HOST_LINUX)
         target_compile_definitions(loot_gui_tests PRIVATE LOOT_STATIC)
 
         target_link_libraries(loot_gui_tests PRIVATE tbb_static bz2)
@@ -200,8 +200,8 @@ endif()
 # Post-Build Steps
 ##############################
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+if(WIN32)
+    if(CMAKE_HOST_WIN32)
         # Copy Qt binaries and resources.
         add_custom_command(TARGET loot_gui_tests POST_BUILD
             COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:loot_gui_tests>

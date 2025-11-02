@@ -61,7 +61,7 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 
 find_package(Boost REQUIRED COMPONENTS locale CONFIG)
 
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(LINUX)
     find_package(ICU REQUIRED COMPONENTS data uc i18n)
     find_package(TBB REQUIRED)
 endif()
@@ -229,9 +229,9 @@ else()
 
     # minizip-ng can't find zlib if they're both being built for the first time, so explicitly
     # provide the library path.
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    if(WIN32 AND CMAKE_HOST_WIN32)
         set(ZLIB_LIB_NAME "zlibstatic$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
-    elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    elseif(WIN32)
         set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}zlibstatic$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
     else()
         set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}z${CMAKE_STATIC_LIBRARY_SUFFIX}")
@@ -305,7 +305,7 @@ find_package(OGDF CONFIG)
 if(NOT OGDF_FOUND)
     set(OGDF_CONFIG $<IF:$<CONFIG:Release,RelWithDebInfo>,Release,Debug>)
 
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    if(WIN32)
         set(OGDF_BUILD_COMMAND
             ${CMAKE_COMMAND}
             --build .
@@ -341,7 +341,7 @@ if(NOT OGDF_FOUND)
         "${SOURCE_DIR}/include"
         "${BINARY_DIR}/include")
 
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    if(WIN32 AND CMAKE_HOST_WIN32)
         set(OGDF_LIBRARY_DIR "${BINARY_DIR}/${OGDF_CONFIG}")
     else()
         set(OGDF_LIBRARY_DIR "${BINARY_DIR}")
@@ -574,10 +574,10 @@ endif()
 # Include source and library directories.
 target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(WIN32)
     target_compile_definitions(LOOT PRIVATE UNICODE _UNICODE NOMINMAX)
 
-    if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    if(CMAKE_HOST_LINUX)
         target_compile_definitions(LOOT PRIVATE LOOT_STATIC)
 
         target_link_libraries(LOOT PRIVATE tbb_static bz2)
@@ -590,7 +590,7 @@ else()
     target_link_libraries(LOOT PRIVATE X11 ${ICU_TARGETS})
 endif()
 
-if(CMAKE_COMPILER_IS_GNUCXX)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(LOOT PRIVATE
         "-Wall"
         "-Wextra"
@@ -689,7 +689,7 @@ endif()
 
 set(QT_DIR ${Qt6_DIR}/../../..)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+if(WIN32 AND CMAKE_HOST_WIN32)
     # Copy Qt binaries and resources.
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
