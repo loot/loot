@@ -352,6 +352,43 @@ std::vector<SourcedMessage> createMessagesForRemovedPlugins(
 
   return messages;
 }
+
+std::string getLoadOrderAsTextTable(
+    const std::vector<std::string>& loadOrder,
+    const std::unique_ptr<loot::GameInterface>& gameHandle) {
+  loot::Counters counters;
+  std::stringstream stream;
+
+  for (const auto& pluginName : loadOrder) {
+    const auto plugin = gameHandle->GetPlugin(pluginName);
+    if (!plugin) {
+      continue;
+    }
+
+    const auto isActive = gameHandle->IsPluginActive(pluginName);
+
+    if (isActive && plugin->IsLightPlugin()) {
+      stream << "254 FE " << std::setw(3) << std::hex
+             << counters.activeLightPlugins << std::dec << " ";
+      counters.activeLightPlugins += 1;
+    } else if (isActive && plugin->IsMediumPlugin()) {
+      stream << "253 FD " << std::setw(2) << std::hex
+             << counters.activeMediumPlugins << std::dec << " ";
+      counters.activeMediumPlugins += 1;
+    } else if (isActive) {
+      stream << std::setw(3) << counters.activeFullPlugins << " " << std::hex
+             << std::setw(2) << counters.activeFullPlugins << std::dec
+             << "     ";
+      counters.activeFullPlugins += 1;
+    } else {
+      stream << "           ";
+    }
+
+    stream << pluginName << "\r\n";
+  }
+
+  return stream.str();
+}
 }
 
 namespace loot {
@@ -749,38 +786,12 @@ void Game::setLoadOrder(const std::vector<std::string>& loadOrder) {
 }
 
 std::string Game::getLoadOrderAsTextTable() const {
-  Counters counters;
-  std::stringstream stream;
+  return ::getLoadOrderAsTextTable(getLoadOrder(), gameHandle_);
+}
 
-  for (const auto& pluginName : getLoadOrder()) {
-    const auto plugin = getPlugin(pluginName);
-    if (!plugin) {
-      continue;
-    }
-
-    const auto isActive = isPluginActive(pluginName);
-
-    if (isActive && plugin->IsLightPlugin()) {
-      stream << "254 FE " << std::setw(3) << std::hex
-             << counters.activeLightPlugins << std::dec << " ";
-      counters.activeLightPlugins += 1;
-    } else if (isActive && plugin->IsMediumPlugin()) {
-      stream << "253 FD " << std::setw(2) << std::hex
-             << counters.activeMediumPlugins << std::dec << " ";
-      counters.activeMediumPlugins += 1;
-    } else if (isActive) {
-      stream << std::setw(3) << counters.activeFullPlugins << " " << std::hex
-             << std::setw(2) << counters.activeFullPlugins << std::dec
-             << "     ";
-      counters.activeFullPlugins += 1;
-    } else {
-      stream << "           ";
-    }
-
-    stream << pluginName << "\r\n";
-  }
-
-  return stream.str();
+std::string Game::getLoadOrderAsTextTable(
+    const std::vector<std::string>& loadOrder) const {
+  return ::getLoadOrderAsTextTable(loadOrder, gameHandle_);
 }
 
 bool Game::isPluginActive(const std::string& pluginName) const {
@@ -832,7 +843,8 @@ std::vector<std::string> Game::sortPlugins() {
     std::vector<std::filesystem::path> pluginPaths;
     for (const auto& pluginName : loadOrder) {
       if (pluginName != settings_.getMasterFilename() ||
-          (settings_.getId() == GameId::openmw && pluginName == "Morrowind.esm")) {
+          (settings_.getId() == GameId::openmw &&
+           pluginName == "Morrowind.esm")) {
         const auto resolvedPath = resolveGameFilePath(pluginName);
         if (resolvedPath.has_value()) {
           pluginPaths.push_back(resolvedPath.value());
@@ -913,7 +925,8 @@ std::vector<SourcedMessage> Game::getMessages(
       settings_.getId() == GameId::tes3 &&
       std::filesystem::exists(settings_.getGamePath() / "MWSE.dll");
 
-  validateActivePluginCounts(output, settings_.getId(), counters, isMWSEInstalled);
+  validateActivePluginCounts(
+      output, settings_.getId(), counters, isMWSEInstalled);
 
   validateGamePaths(output,
                     settings_.getName(),

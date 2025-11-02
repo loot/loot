@@ -321,8 +321,8 @@ void MainWindow::initialise() {
         state->getCurrentGame().getSettings().getHiddenMessages());
     proxyModel->setFiltersState(filtersWidget->getPluginFiltersState(), {});
 
-    gameComboBox->setCurrentText(
-        QString::fromStdString(state->getCurrentGame().getSettings().getName()));
+    gameComboBox->setCurrentText(QString::fromStdString(
+        state->getCurrentGame().getSettings().getName()));
 
     loadGame(true);
 
@@ -987,7 +987,6 @@ void MainWindow::enterSortingState() {
   actionUpdateMasterlists->setDisabled(true);
   gameComboBox->setDisabled(true);
   actionRefreshContent->setDisabled(true);
-  actionCopyLoadOrder->setDisabled(true);
 }
 
 void MainWindow::exitSortingState() {
@@ -1001,7 +1000,6 @@ void MainWindow::exitSortingState() {
   actionUpdateMasterlists->setDisabled(false);
   gameComboBox->setDisabled(false);
   actionRefreshContent->setDisabled(false);
-  actionCopyLoadOrder->setDisabled(false);
 }
 
 void MainWindow::loadGame(bool isOnLOOTStartup) {
@@ -1101,7 +1099,7 @@ void MainWindow::updateSidebarColumnWidths() {
   // that uses the wider width.
   const auto gameSupportsLightPlugins =
       state->hasCurrentGame() ? state->getCurrentGame().supportsLightPlugins()
-                             : false;
+                              : false;
   const auto indexSectionWidth =
       calculateSidebarIndexSectionWidth(gameSupportsLightPlugins);
 
@@ -1468,7 +1466,8 @@ void MainWindow::executeBackgroundQuery(
             [this, onComplete](QueryResult result) {
               (this->*onComplete)(result);
             })
-      .onFailed(this, [this](const std::exception& e) { handleError(e.what()); })
+      .onFailed(this,
+                [this](const std::exception& e) { handleError(e.what()); })
       .then(this, [progressUpdater]() {
         if (progressUpdater) {
           progressUpdater->deleteLater();
@@ -1630,14 +1629,15 @@ void MainWindow::refreshGamesDropdown() {
                                    gameSettings.getFolderName());
 
     if (installedGame != installedGames.cend()) {
-      gameComboBox->addItem(QString::fromStdString(gameSettings.getName()),
-                            QString::fromStdString(gameSettings.getFolderName()));
+      gameComboBox->addItem(
+          QString::fromStdString(gameSettings.getName()),
+          QString::fromStdString(gameSettings.getFolderName()));
     }
   }
 
   if (state->hasCurrentGame()) {
-    gameComboBox->setCurrentText(
-        QString::fromStdString(state->getCurrentGame().getSettings().getName()));
+    gameComboBox->setCurrentText(QString::fromStdString(
+        state->getCurrentGame().getSettings().getName()));
   }
 }
 
@@ -1655,7 +1655,8 @@ void MainWindow::on_actionSettings_triggered() {
   try {
     auto currentGameFolder =
         state->hasCurrentGame()
-            ? std::optional(state->getCurrentGame().getSettings().getFolderName())
+            ? std::optional(
+                  state->getCurrentGame().getSettings().getFolderName())
             : std::nullopt;
 
     settingsDialog->initialiseInputs(
@@ -1754,8 +1755,8 @@ void MainWindow::on_actionOpenGroupsEditor_triggered() {
       }
     }
 
-    const auto groupNodePositions =
-        loadGroupNodePositions(state->getCurrentGame().getGroupNodePositionsPath());
+    const auto groupNodePositions = loadGroupNodePositions(
+        state->getCurrentGame().getGroupNodePositionsPath());
 
     groupsEditor->setGroups(state->getCurrentGame().getMasterlistGroups(),
                             state->getCurrentGame().getUserGroups(),
@@ -1772,7 +1773,10 @@ void MainWindow::on_actionSearch_triggered() { searchDialog->show(); }
 
 void MainWindow::on_actionCopyLoadOrder_triggered() {
   try {
-    const auto text = state->getCurrentGame().getLoadOrderAsTextTable();
+    const auto text = actionApplySort->isVisible()
+                          ? state->getCurrentGame().getLoadOrderAsTextTable(
+                                pluginItemModel->getPluginNames())
+                          : state->getCurrentGame().getLoadOrderAsTextTable();
 
     copyToClipboard(text);
 
@@ -2918,12 +2922,12 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
       const auto& updateResult = std::get<MasterlistUpdateResult>(result);
 
       if (wasPreludeUpdated || updateResult.second) {
-        const auto it =
-            std::find_if(gamesSettings.begin(),
-                         gamesSettings.end(),
-                         [&](const GameSettings& settings) {
-                           return settings.getFolderName() == updateResult.first;
-                         });
+        const auto it = std::find_if(gamesSettings.begin(),
+                                     gamesSettings.end(),
+                                     [&](const GameSettings& settings) {
+                                       return settings.getFolderName() ==
+                                              updateResult.first;
+                                     });
 
         if (it != gamesSettings.end()) {
           updatedGameNames.push_back(it->getName());

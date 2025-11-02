@@ -173,6 +173,8 @@ public:
   void saveUserMetadata();
 
   std::string getLoadOrderAsTextTable() const;
+  std::string getLoadOrderAsTextTable(
+      const std::vector<std::string>& loadOrder) const;
 
   bool fileExists(const std::string& file) const;
 
@@ -204,7 +206,7 @@ std::string getMetadataAsBBCodeYaml(const gui::Game& game,
 
 typedef std::
     tuple<std::shared_ptr<const PluginInterface>, std::optional<short>, bool>
-                                    LoadOrderTuple;
+        LoadOrderTuple;
 
 std::vector<LoadOrderTuple> mapToLoadOrderTuples(
     const gui::Game& game,
@@ -214,8 +216,9 @@ template<typename T>
 std::vector<T> mapFromLoadOrderData(
     const gui::Game& game,
     const std::vector<std::string>& loadOrder,
-    const std::function<
-        T(std::shared_ptr<const PluginInterface>, std::optional<short>, bool)>& mapper) {
+    const std::function<T(std::shared_ptr<const PluginInterface>,
+                          std::optional<short>,
+                          bool)>& mapper) {
   const auto data = mapToLoadOrderTuples(game, loadOrder);
 
   // Now perform the mapping in a second loop that can be parallelised
