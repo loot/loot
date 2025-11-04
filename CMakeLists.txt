@@ -203,7 +203,7 @@ if(ZLIB_FOUND)
         MINIZIP
         URL ${MINIZIP_NG_URL}
         URL_HASH ${MINIZIP_NG_HASH}
-        FIND_PACKAGE_ARGS)
+        FIND_PACKAGE_ARGS NAMES MINIZIP minizip-ng)
 
     FetchContent_MakeAvailable(MINIZIP)
 else()
@@ -555,8 +555,10 @@ target_link_libraries(LOOT PRIVATE
 # Set Target-Specific Flags
 ##############################
 
-if(ZLIB_FOUND)
+if(TARGET MINIZIP::minizip)
     target_link_libraries(LOOT PRIVATE MINIZIP::minizip)
+elseif(TARGET MINIZIP::minizip-ng)
+    target_link_libraries(LOOT PRIVATE MINIZIP::minizip-ng)
 else()
     add_dependencies(LOOT minizip-ng)
     target_link_libraries(LOOT PRIVATE ${MINIZIP_NG_LIBRARIES})
