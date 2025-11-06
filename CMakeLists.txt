@@ -115,7 +115,6 @@ if(NOT libloot_FOUND)
     message(DEBUG "LIBLOOT_DOWNLOAD_ARGS: ${LIBLOOT_DOWNLOAD_ARGS}")
 endif()
 
-
 if(MSVC)
     if(libloot_FOUND)
         # Use the already-installed binary: because it's already been built it won't appear as part of the Visual Studio solution, so the name collision mentioned below isn't a problem.
@@ -130,7 +129,7 @@ if(MSVC)
         FetchContent_MakeAvailable(libloot)
 
         find_package(libloot REQUIRED CONFIG
-            PATHS "${CMAKE_BINARY_DIR}/_deps/libloot-src/lib/cmake/libloot")
+            PATHS "${FETCHCONTENT_BASE_DIR}/libloot-src/lib/cmake/libloot")
 
         add_library(libloot::libloot ALIAS libloot::loot)
     else()

@@ -146,8 +146,10 @@ target_link_libraries(loot_gui_tests PRIVATE
 # Set Target-Specific Flags
 ##############################
 
-if(ZLIB_FOUND)
+if(TARGET MINIZIP::minizip)
     target_link_libraries(loot_gui_tests PRIVATE MINIZIP::minizip)
+elseif(TARGET MINIZIP::minizip-ng)
+    target_link_libraries(loot_gui_tests PRIVATE MINIZIP::minizip-ng)
 else()
     add_dependencies(loot_gui_tests minizip-ng)
     target_link_libraries(loot_gui_tests PRIVATE ${MINIZIP_NG_LIBRARIES})
