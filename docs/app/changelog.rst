@@ -4,6 +4,27 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.28.1 - Unreleased
+===================
+
+Added
+-----
+
+- Support for detecting OpenMW v0.50.0 using its Windows Registry key.
+- Support for building LOOT using a prebuilt copy of minizip-ng without its
+  minizip compatibility layer. minizip and minizip-ng with its minizip
+  compatibility layer were already supported.
+
+Changed
+-------
+
+- The "Copy Load Order" Game menu action is no longer disabled while there is an
+  unapplied sorted load order. In that state, the action copies the unapplied
+  load order, rather than the game's current saved load order.
+- Updated OGDF to foxglove-202510.
+- Updated spdlog to v1.16.0.
+- Updated the Simplified Chinese translation.
+
 0.28.0 - 2025-10-11
 ===================
 
