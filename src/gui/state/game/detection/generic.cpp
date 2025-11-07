@@ -104,6 +104,9 @@ std::vector<RegistryValue> getRegistryValues(const GameId gameId) {
                             ""},
               RegistryValue{RegistryRootKey::LOCAL_MACHINE,
                             "Software\\OpenMW.org\\OpenMW 0.49.0",
+                            ""},
+              RegistryValue{RegistryRootKey::LOCAL_MACHINE,
+                            "Software\\OpenMW.org\\OpenMW 0.50.0",
                             ""}};
     default:
       throw std::logic_error("Unrecognised game ID");
