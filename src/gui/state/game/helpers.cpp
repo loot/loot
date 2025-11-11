@@ -491,7 +491,7 @@ static constexpr std::array<const char*, 8> TES5_OFFICIAL_PLUGINS{
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/skyrimse/__init__.py#L104>
-static constexpr std::array<const char*, 79> TES5SE_OFFICIAL_PLUGINS{
+static constexpr std::array<const char*, 80> TES5SE_OFFICIAL_PLUGINS{
     {"skyrim.esm",
      "update.esm",
      "dawnguard.esm",
@@ -570,7 +570,8 @@ static constexpr std::array<const char*, 79> TES5SE_OFFICIAL_PLUGINS{
      "ccvsvsse001-winter.esl",
      "ccvsvsse002-pets.esl",
      "ccvsvsse003-necroarts.esl",
-     "ccvsvsse004-beafarmer.esl"}};
+     "ccvsvsse004-beafarmer.esl",
+     "_ResourcePack.esl"}};
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/skyrimvr/__init__.py#L70>
