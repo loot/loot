@@ -900,11 +900,17 @@ static constexpr std::array<const char*, 8> FO4VR_OFFICIAL_PLUGINS{
      "fallout4.esm",
      "fallout4_vr.esm"}};
 
-static constexpr std::array<const char*, 4> STARFIELD_OFFICIAL_PLUGINS{
+static constexpr std::array<const char*, 10> STARFIELD_OFFICIAL_PLUGINS{
     {"starfield.esm",
      "blueprintships-starfield.esm",
      "constellation.esm",
-     "oldmars.esm"}};
+     "oldmars.esm",
+     "shatteredspace.esm",
+     "sfbgs003.esm",
+     "sfbgs004.esm",
+     "sfbgs006.esm",
+     "sfbgs007.esm",
+     "sfbgs008.esm"}};
 
 static constexpr std::array<const char*, 15>
     OBLIVION_REMASTERED_OFFICIAL_PLUGINS{{"altardeluxe.esp",
