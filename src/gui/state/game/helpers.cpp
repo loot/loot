@@ -987,7 +987,6 @@ bool isOfficialPlugin(const GameId gameId, const std::string& pluginName) {
                        STARFIELD_OFFICIAL_PLUGINS.end(),
                        lowercased) != STARFIELD_OFFICIAL_PLUGINS.end();
     case GameId::oblivionRemastered:
-      // TODO: Add the oblivon plugins plus the new ones.
       return std::find(OBLIVION_REMASTERED_OFFICIAL_PLUGINS.begin(),
                        OBLIVION_REMASTERED_OFFICIAL_PLUGINS.end(),
                        lowercased) !=
