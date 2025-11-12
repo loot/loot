@@ -824,10 +824,11 @@ void MainWindow::translateUi() {
   actionCopyContent->setText(translate("&Copy Content"));
   /* translators: This string is an action in the Game menu. */
   actionRefreshContent->setText(translate("&Refresh Content"));
-  /* translators: This string is an action in the Game menu. */
   actionUnhideMessages->setText(
+      /* translators: This string is an action in the Game menu. */
       translate("U&nhide all individually-hidden messages"));
   actionUnhideGeneralMessages->setText(
+      /* translators: This string is an action in the Game menu. */
       translate("Unhide all individually-hidden &general messages"));
   /* translators: This string is an action in the Game menu. */
   actionRedatePlugins->setText(translate("Redate &Plugins…"));
@@ -850,8 +851,8 @@ void MainWindow::translateUi() {
   actionCopyMetadata->setText(translate("Copy &Metadata"));
   /* translators: This string is an action in the Plugin menu. */
   actionEditMetadata->setText(translate("&Edit Metadata…"));
-  /* translators: This string is an action in the Plugin menu. */
   actionUnhidePluginMessages->setText(
+      /* translators: This string is an action in the Plugin menu. */
       translate("Un&hide individually-hidden messages"));
   /* translators: This string is an action in the Plugin menu. */
   actionClearMetadata->setText(translate("Clear &User Metadata…"));
