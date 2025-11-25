@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2025-11-12 18:46+0000\n"
-"PO-Revision-Date: 2025-11-02 15:20+0000\n"
-"Last-Translator: Carlos Gabriel <carlos2324feitosa@gmail.com>\n"
+"PO-Revision-Date: 2025-11-26 11:51+0000\n"
+"Last-Translator: Ortham <weblate@ortham.net>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/loot/"
 "loot/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.14.1-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 "X-Poedit-Basepath: .\n"
 
 #: src/gui/plugin_item.cpp:50
@@ -386,12 +386,12 @@ msgstr "At&ualizar Conteúdo"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:829
 msgid "U&nhide all individually-hidden messages"
-msgstr "Exibir e ocultar todas as mensagens ocultadas individualmente"
+msgstr ""
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:832
 msgid "Unhide all individually-hidden &general messages"
-msgstr "Revelar todas as mensagens ocultadas individualmente e gerais"
+msgstr ""
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:834
@@ -446,7 +446,7 @@ msgstr "&Editar Metadados…"
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:856
 msgid "Un&hide individually-hidden messages"
-msgstr "Exibir e ocultar mensagens ocultadas individualmente"
+msgstr ""
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:858
