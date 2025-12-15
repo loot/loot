@@ -66,7 +66,7 @@ jobs:
           python-version: '3.10'
 
       - name: pip cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-aqtinstall-${{ env.AQTINSTALL_VERSION }}
@@ -82,7 +82,7 @@ jobs:
 
       - name: Boost cache
         id: boost-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ${{ steps.boost-metadata.outputs.root }}/boost
@@ -91,7 +91,7 @@ jobs:
 
       - name: libloot cache
         id: libloot-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.LIBLOOT_INSTALL_PATH }}
           key: ${{ runner.os }}-libloot-${{ env.LIBLOOT_VERSION }}
@@ -172,7 +172,7 @@ jobs:
           version: ${{ env.UV_VERSION }}
 
       - name: flatpak-builder cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/build/.flatpak-builder
           key: ${{ runner.os }}-flatpak-builder-${{ hashFiles('resources/linux/io.github.loot.loot.yml') }}
@@ -273,7 +273,7 @@ jobs:
 
       - name: Boost cache
         id: boost-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ${{ steps.boost-metadata.outputs.root }}/boost
@@ -282,14 +282,14 @@ jobs:
 
       - name: libloot cache
         id: libloot-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.LIBLOOT_INSTALL_PATH }}
           key: ${{ runner.os }}-libloot-${{ env.LIBLOOT_VERSION }}
 
       - name: OGDF cache
         id: ogdf-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.OGDF_INSTALL_PATH }}
           key: ${{ runner.os }}-x64-ogdf-${{ env.OGDF_VERSION }}
