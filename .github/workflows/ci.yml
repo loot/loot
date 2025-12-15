@@ -232,7 +232,7 @@ jobs:
         if: github.event_name == 'push'
 
       - name: Upload Flatpak package
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ steps.build-flatpak.outputs.filename }}
           path: |
@@ -440,7 +440,7 @@ jobs:
         if: github.event_name == 'push'
 
       - name: Upload archive
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ steps.get-artifact-basename.outputs.basename }}.7z
           path: |
@@ -449,7 +449,7 @@ jobs:
         if: github.event_name == 'push'
 
       - name: Upload installer
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ steps.get-artifact-basename.outputs.basename }}.exe
           path: |
