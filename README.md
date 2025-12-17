@@ -106,6 +106,19 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel
 ```
 
+On Fedora 43:
+
+```sh
+sudo apt-get install cmake gcc-c++ git boost-devel libicu-devel tbb-devel qt6-qtbase-devel rustup
+rustup default stable
+git clone https://github.com/loot/loot.git
+cd loot
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=OFF
+cmake --build build
+```
+
+`--parallel` is omitted on Fedora 43 because it causes memory usage to exceed 48 GB while building OGDF (vs. ~ 3.2 GB without it).
+
 ### CMake Variables
 
 LOOT uses the following CMake variables to set build parameters:
