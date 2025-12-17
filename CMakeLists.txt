@@ -303,6 +303,7 @@ FetchContent_MakeAvailable(fmt spdlog tomlplusplus ValveFileVDF)
 find_package(OGDF CONFIG)
 if(NOT OGDF_FOUND)
     set(OGDF_CONFIG $<IF:$<CONFIG:Release,RelWithDebInfo>,Release,Debug>)
+    set(OGDF_CONFIG_LOWERCASE $<IF:$<CONFIG:Release,RelWithDebInfo>,release,debug>)
 
     if(WIN32)
         set(OGDF_BUILD_COMMAND
@@ -332,7 +333,7 @@ if(NOT OGDF_FOUND)
     ExternalProject_Get_Property(OGDF SOURCE_DIR BINARY_DIR)
     set(OGDF_INCLUDE_DIRS
         "${SOURCE_DIR}/include"
-        "${BINARY_DIR}/include")
+        "${BINARY_DIR}/include/ogdf-${OGDF_CONFIG_LOWERCASE}")
 
     if(WIN32 AND CMAKE_HOST_WIN32)
         set(OGDF_LIBRARY_DIR "${BINARY_DIR}/${OGDF_CONFIG}")
