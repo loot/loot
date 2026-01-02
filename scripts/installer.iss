@@ -16,10 +16,8 @@
 
 #if FileExists(AddBackslash(SourcePath) + '..\build\Release\LOOT.exe')
 #define ArtifactsDir "build\Release"
-#define LiblootDll "loot.dll"
 #else
 #define ArtifactsDir "build"
-#define LiblootDll "libloot.dll"
 #endif
 
 [Setup]
@@ -83,7 +81,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "{#ArtifactsDir}\LOOT.exe"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ArtifactsDir}\{#LiblootDll}"; \
+Source: "{#ArtifactsDir}\libloot.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 
 #if FileExists(AddBackslash(SourcePath) + '..\' + AddBackslash(ArtifactsDir) + 'Qt6Core.dll')

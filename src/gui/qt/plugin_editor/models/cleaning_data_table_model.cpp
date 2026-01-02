@@ -45,7 +45,8 @@ int CleaningDataTableModel::columnCount(const QModelIndex&) const {
                                                 DELETED_REFERENCE_COLUMN,
                                                 DELETED_NAVMESH_COLUMN,
                                                 CLEANING_UTILITY_COLUMN,
-                                                DETAIL_COLUMN}) +
+                                                DETAIL_COLUMN,
+                                                CONDITION_COLUMN}) +
                                       1;
   return COLUMN_COUNT;
 }
@@ -73,6 +74,8 @@ QVariant CleaningDataTableModel::data(const PluginCleaningData& element,
       }
       return QVariant::fromValue(element.GetDetail());
     }
+    case CONDITION_COLUMN:
+      return QVariant(QString::fromStdString(element.GetCondition()));
     default:
       return QVariant();
   }
@@ -92,6 +95,8 @@ QVariant CleaningDataTableModel::headerText(int section) const {
       return QVariant(qTranslate("Cleaning Utility"));
     case DETAIL_COLUMN:
       return QVariant(qTranslate("Detail"));
+    case CONDITION_COLUMN:
+      return QVariant(qTranslate("Condition"));
     default:
       return QVariant();
   }
@@ -110,42 +115,56 @@ void CleaningDataTableModel::setData(PluginCleaningData& element,
         element.GetDetail(),
         element.GetITMCount(),
         element.GetDeletedReferenceCount(),
-        element.GetDeletedNavmeshCount());
+        element.GetDeletedNavmeshCount(),
+        element.GetCondition());
   } else if (column == ITM_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  element.GetCleaningUtility(),
                                  element.GetDetail(),
                                  value.toUInt(),
                                  element.GetDeletedReferenceCount(),
-                                 element.GetDeletedNavmeshCount());
+                                 element.GetDeletedNavmeshCount(),
+                                 element.GetCondition());
   } else if (column == DELETED_REFERENCE_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  element.GetCleaningUtility(),
                                  element.GetDetail(),
                                  element.GetITMCount(),
                                  value.toUInt(),
-                                 element.GetDeletedNavmeshCount());
+                                 element.GetDeletedNavmeshCount(),
+                                 element.GetCondition());
   } else if (column == DELETED_NAVMESH_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  element.GetCleaningUtility(),
                                  element.GetDetail(),
                                  element.GetITMCount(),
                                  element.GetDeletedReferenceCount(),
-                                 value.toUInt());
+                                 value.toUInt(),
+                                 element.GetCondition());
   } else if (column == CLEANING_UTILITY_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  value.toString().toStdString(),
                                  element.GetDetail(),
                                  element.GetITMCount(),
                                  element.GetDeletedReferenceCount(),
-                                 element.GetDeletedNavmeshCount());
+                                 element.GetDeletedNavmeshCount(),
+                                 element.GetCondition());
+  } else if (column == CONDITION_COLUMN) {
+    element = PluginCleaningData(element.GetCRC(),
+                                 element.GetCleaningUtility(),
+                                 element.GetDetail(),
+                                 element.GetITMCount(),
+                                 element.GetDeletedReferenceCount(),
+                                 element.GetDeletedNavmeshCount(),
+                                 value.toString().toStdString());
   } else {
     element = PluginCleaningData(element.GetCRC(),
                                  element.GetCleaningUtility(),
                                  value.value<std::vector<MessageContent>>(),
                                  element.GetITMCount(),
                                  element.GetDeletedReferenceCount(),
-                                 element.GetDeletedNavmeshCount());
+                                 element.GetDeletedNavmeshCount(),
+                                 element.GetCondition());
   }
 }
 }
