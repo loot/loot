@@ -26,7 +26,6 @@
 #include "gui/state/game/detection/common.h"
 
 #include <algorithm>
-#include <boost/algorithm/string.hpp>
 #include <functional>
 
 #include "gui/helpers.h"

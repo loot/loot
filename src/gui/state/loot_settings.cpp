@@ -27,8 +27,8 @@
 
 #include <toml++/toml.h>
 
-#include <boost/algorithm/string.hpp>
-#include <boost/locale.hpp>
+#include <array>
+#include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
 #include <regex>
 

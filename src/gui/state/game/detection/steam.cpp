@@ -25,7 +25,6 @@
 
 #include "gui/state/game/detection/steam.h"
 
-#include <boost/algorithm/string.hpp>
 #include <fstream>
 #include <map>
 #include <vdf_parser.hpp>

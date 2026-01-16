@@ -31,7 +31,7 @@
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QToolTip>
 #include <QtWidgets/QVBoxLayout>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/locale.hpp>
 
 #include "gui/qt/helpers.h"

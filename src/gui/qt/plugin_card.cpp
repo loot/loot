@@ -30,7 +30,7 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QStyle>
 #include <QtWidgets/QVBoxLayout>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/join.hpp>
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"

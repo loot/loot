@@ -26,6 +26,9 @@ along with LOOT.  If not, see
 #define LOOT_TESTS_GUI_STATE_GAME_DETECTION_DETAIL_TEST
 
 #include "gui/state/game/detection/detail.h"
+
+#include <boost/algorithm/string/replace.hpp>
+
 #include "tests/common_game_test_fixture.h"
 #include "tests/gui/state/game/detection/test_registry.h"
 

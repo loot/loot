@@ -28,7 +28,8 @@ along with LOOT.  If not, see
 #include <gtest/gtest.h>
 
 #include <array>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/locale.hpp>
 #include <filesystem>
 #include <fstream>
 #include <map>

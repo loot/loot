@@ -27,7 +27,7 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <set>
 
 #include "gui/state/logging.h"

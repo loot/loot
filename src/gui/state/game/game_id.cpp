@@ -25,8 +25,11 @@
 
 #include "gui/state/game/game_id.h"
 
-#include <boost/algorithm/string.hpp>
 #include <stdexcept>
+
+#ifndef _WIN32
+#include <boost/algorithm/string/predicate.hpp>
+#endif
 
 namespace {
 std::filesystem::path getOpenMWDataPath(const std::filesystem::path& gamePath) {

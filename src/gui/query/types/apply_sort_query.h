@@ -28,6 +28,8 @@ along with LOOT.  If not, see
 
 #include <fmt/base.h>
 
+#include <boost/locale.hpp>
+
 #include "gui/helpers.h"
 #include "gui/query/query.h"
 

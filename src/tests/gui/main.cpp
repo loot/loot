@@ -35,7 +35,6 @@
 #endif
 
 #include <QtCore/QCoreApplication>
-#include <boost/locale.hpp>
 
 #include "tests/gui/backup_test.h"
 #include "tests/gui/helpers_test.h"

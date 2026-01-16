@@ -40,7 +40,6 @@
 
 #include <fmt/base.h>
 
-#include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"

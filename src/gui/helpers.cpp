@@ -43,12 +43,14 @@
 #include <unicode/uchar.h>
 #include <unicode/unistr.h>
 
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
 #include <cstdio>
 #endif
 
 #include <fmt/ranges.h>
 
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/join.hpp>
 #include <boost/locale.hpp>
 #include <fstream>
 

@@ -29,6 +29,7 @@ along with LOOT.  If not, see
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
+#include <boost/locale.hpp>
 #include <fstream>
 
 #include "gui/state/game/game.h"
@@ -646,15 +647,15 @@ TEST_P(
 
   auto messages = game.checkInstallValidity(
       *game.getPlugin(BLANK_DIFFERENT_MASTER_DEPENDENT_ESP), metadata, "en");
-  EXPECT_EQ(
-      std::vector<SourcedMessage>({
-          SourcedMessage{MessageType::error,
-                         MessageSource::inactiveMaster,
-                         "This plugin requires \\\"" +
-                             escapeMarkdownASCIIPunctuation(BLANK_DIFFERENT_ESM) +
-                             "\\\" to be active\\, but it is inactive\\."},
-      }),
-      messages);
+  EXPECT_EQ(std::vector<SourcedMessage>({
+                SourcedMessage{
+                    MessageType::error,
+                    MessageSource::inactiveMaster,
+                    "This plugin requires \\\"" +
+                        escapeMarkdownASCIIPunctuation(BLANK_DIFFERENT_ESM) +
+                        "\\\" to be active\\, but it is inactive\\."},
+            }),
+            messages);
 }
 
 TEST_P(
@@ -1150,7 +1151,8 @@ TEST_P(
   EXPECT_EQ(1, index.value());
 
   index = game.getActiveLoadOrderIndex(
-      *game.getPlugin(BLANK_DIFFERENT_MASTER_DEPENDENT_ESP), game.getLoadOrder());
+      *game.getPlugin(BLANK_DIFFERENT_MASTER_DEPENDENT_ESP),
+      game.getLoadOrder());
   EXPECT_EQ(2, index.value());
 }
 

@@ -37,7 +37,8 @@
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QScrollBar>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/locale.hpp>
 
 #include "gui/backup.h"
 #include "gui/qt/helpers.h"

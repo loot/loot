@@ -27,7 +27,8 @@
 
 #include <fmt/base.h>
 
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/join.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/locale.hpp>
 #include <variant>
 

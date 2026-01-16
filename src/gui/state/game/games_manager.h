@@ -26,7 +26,6 @@
 #ifndef LOOT_GUI_STATE_GAME_GAMES_MANAGER
 #define LOOT_GUI_STATE_GAME_GAMES_MANAGER
 
-#include <boost/locale.hpp>
 #include <filesystem>
 #include <mutex>
 #include <optional>

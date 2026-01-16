@@ -27,7 +27,9 @@
 
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonValue>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/split.hpp>
 
 #include "gui/qt/helpers.h"
 #include "gui/version.h"

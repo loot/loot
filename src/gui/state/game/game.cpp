@@ -48,7 +48,6 @@
 
 #include <fmt/ranges.h>
 
-#include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"

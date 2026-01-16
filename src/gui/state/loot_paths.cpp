@@ -25,27 +25,7 @@
 
 #include "loot_paths.h"
 
-#include <locale>
-
-#ifdef _WIN32
-#ifndef UNICODE
-#define UNICODE
-#endif
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#include <shlobj.h>
-#include <windows.h>
-#endif
-
-#include <boost/locale.hpp>
-
 #include "gui/helpers.h"
-#include "gui/state/logging.h"
-#include "loot/api.h"
 
 namespace {
 std::filesystem::path getAppPath(const std::filesystem::path& givenPath) {
