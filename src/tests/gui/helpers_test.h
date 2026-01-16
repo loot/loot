@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 
 #include <gtest/gtest.h>
 
-#include <boost/locale.hpp>
+#include <boost/locale/generator.hpp>
 
 #include "gui/helpers.h"
 #include "tests/common_game_test_fixture.h"

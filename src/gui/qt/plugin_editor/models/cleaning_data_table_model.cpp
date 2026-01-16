@@ -81,17 +81,17 @@ QVariant CleaningDataTableModel::data(const PluginCleaningData& element,
 QVariant CleaningDataTableModel::headerText(int section) const {
   switch (section) {
     case CRC_COLUMN:
-      return QVariant(translate("CRC"));
+      return QVariant(qTranslate("CRC"));
     case ITM_COLUMN:
-      return QVariant(translate("ITM Count"));
+      return QVariant(qTranslate("ITM Count"));
     case DELETED_REFERENCE_COLUMN:
-      return QVariant(translate("Deleted References"));
+      return QVariant(qTranslate("Deleted References"));
     case DELETED_NAVMESH_COLUMN:
-      return QVariant(translate("Deleted Navmeshes"));
+      return QVariant(qTranslate("Deleted Navmeshes"));
     case CLEANING_UTILITY_COLUMN:
-      return QVariant(translate("Cleaning Utility"));
+      return QVariant(qTranslate("Cleaning Utility"));
     case DETAIL_COLUMN:
-      return QVariant(translate("Detail"));
+      return QVariant(qTranslate("Detail"));
     default:
       return QVariant();
   }

@@ -7,6 +7,7 @@
 set -e
 
 xgettext \
+  --keyword="qTranslate:1,1t" \
   --keyword="translate:1,1t" \
   --keyword="translate:1,2,3t" \
   --add-location=full \

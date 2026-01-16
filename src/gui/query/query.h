@@ -26,7 +26,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_QUERY
 #define LOOT_GUI_QUERY_QUERY
 
-#include <boost/locale.hpp>
 #include <optional>
 #include <string>
 #include <variant>
@@ -36,6 +35,7 @@ along with LOOT.  If not, see
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 #include "gui/state/loot_state.h"
+#include "gui/translate.h"
 
 namespace loot {
 typedef std::vector<std::pair<std::string, std::optional<short>>>
@@ -65,11 +65,10 @@ public:
 
   virtual QueryResult executeLogic() = 0;
   virtual std::string getErrorMessage() const {
-    return boost::locale::translate(
-               "Oh no, something went wrong! You can check your "
-               "LOOTDebugLog.txt (you can get to it through the "
-               "main menu) for more information.")
-        .str();
+    return translate(
+        "Oh no, something went wrong! You can check your "
+        "LOOTDebugLog.txt (you can get to it through the "
+        "main menu) for more information.");
   };
 };
 }

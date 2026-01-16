@@ -160,11 +160,11 @@ void SettingsDialog::setupUi() {
 }
 
 void SettingsDialog::translateUi() {
-  setWindowTitle(translate("Settings"));
+  setWindowTitle(qTranslate("Settings"));
 
-  listWidget->item(0)->setText(translate("General"));
+  listWidget->item(0)->setText(qTranslate("General"));
 
-  addGameButton->setText(translate("Add new game…"));
+  addGameButton->setText(qTranslate("Add new game…"));
 }
 
 void SettingsDialog::addGameTab(const GameSettings& settings,

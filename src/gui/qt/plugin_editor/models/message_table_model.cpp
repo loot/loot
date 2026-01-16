@@ -93,11 +93,11 @@ QVariant MessageTableModel::data(const Message& element,
 QVariant MessageTableModel::headerText(int section) const {
   switch (section) {
     case TYPE_COLUMN:
-      return QVariant(translate("Type"));
+      return QVariant(qTranslate("Type"));
     case CONTENT_COLUMN:
-      return QVariant(translate("Content"));
+      return QVariant(qTranslate("Content"));
     case CONDITION_COLUMN:
-      return QVariant(translate("Condition"));
+      return QVariant(qTranslate("Condition"));
     default:
       return QVariant();
   }

@@ -46,7 +46,8 @@ void BackUpLoadOrderDialog::reset() { nameInput->clear(); }
 void BackUpLoadOrderDialog::setupUi() {
   const auto buttonBox =
       new QDialogButtonBox(QDialogButtonBox::StandardButton::Save |
-                           QDialogButtonBox::StandardButton::Cancel, this);
+                               QDialogButtonBox::StandardButton::Cancel,
+                           this);
 
   auto dialogLayout = new QVBoxLayout();
   auto inputLayout = new QFormLayout();
@@ -65,9 +66,9 @@ void BackUpLoadOrderDialog::setupUi() {
 }
 
 void BackUpLoadOrderDialog::translateUi() {
-  setWindowTitle(translate("Back Up Load Order"));
+  setWindowTitle(qTranslate("Back Up Load Order"));
 
-  nameInput->setPlaceholderText(translate("Manual Backup"));
-  nameLabel->setText(translate("Backup name:"));
+  nameInput->setPlaceholderText(qTranslate("Manual Backup"));
+  nameLabel->setText(qTranslate("Backup name:"));
 }
 }

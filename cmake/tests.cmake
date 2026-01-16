@@ -96,6 +96,7 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/translate.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/backup.h"
     "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
     "${CMAKE_SOURCE_DIR}/src/gui/plugin_item.h"
@@ -123,7 +124,8 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/validation.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h")
+    "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/translate.h")
 
 ##############################
 # Define Targets

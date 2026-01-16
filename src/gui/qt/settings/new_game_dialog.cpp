@@ -69,12 +69,12 @@ void NewGameDialog::setupUi() {
   QMetaObject::connectSlotsByName(this);
 }
 void NewGameDialog::translateUi() {
-  setWindowTitle(translate("Add new game"));
+  setWindowTitle(qTranslate("Add new game"));
 
-  nameLabel->setText(translate("Name"));
-  baseGameLabel->setText(translate("Base Game"));
+  nameLabel->setText(qTranslate("Name"));
+  baseGameLabel->setText(qTranslate("Base Game"));
 
-  nameInput->setToolTip(translate("A name is required."));
+  nameInput->setToolTip(qTranslate("A name is required."));
 }
 
 void NewGameDialog::on_dialogButtons_accepted() {

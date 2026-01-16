@@ -41,7 +41,10 @@ QVariant SearchDialog::getSearchText() const {
   const auto text = searchInput->text();
 
   if (regexCheckbox->isChecked()) {
-    return QRegularExpression(text, QRegularExpression::CaseInsensitiveOption | QRegularExpression::UseUnicodePropertiesOption);
+    return QRegularExpression(
+        text,
+        QRegularExpression::CaseInsensitiveOption |
+            QRegularExpression::UseUnicodePropertiesOption);
   }
 
   return text;
@@ -106,17 +109,17 @@ void SearchDialog::setupUi() {
 }
 
 void SearchDialog::translateUi() {
-  setWindowTitle(translate("Search Cards"));
+  setWindowTitle(qTranslate("Search Cards"));
 
-  searchInput->setPlaceholderText(translate("Search cards"));
+  searchInput->setPlaceholderText(qTranslate("Search cards"));
 
-  regexCheckbox->setText(translate("Use regular expression"));
-  regexCheckbox->setToolTip(
-      translate("If checked, interprets the search text as a Perl-like regular "
-                "expression."));
+  regexCheckbox->setText(qTranslate("Use regular expression"));
+  regexCheckbox->setToolTip(qTranslate(
+      "If checked, interprets the search text as a Perl-like regular "
+      "expression."));
 
-  previousButton->setText(translate("Find Previous"));
-  nextButton->setText(translate("Find Next"));
+  previousButton->setText(qTranslate("Find Previous"));
+  nextButton->setText(qTranslate("Find Next"));
 }
 
 void SearchDialog::updateCountLabel() {

@@ -31,12 +31,12 @@
 #include <QtWidgets/QStyle>
 #include <QtWidgets/QVBoxLayout>
 #include <boost/algorithm/string/join.hpp>
-#include <boost/locale.hpp>
 
 #include "gui/helpers.h"
 #include "gui/qt/counters.h"
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
+#include "gui/translate.h"
 
 namespace loot {
 QString getTagsText(const std::vector<std::string> tags) {
@@ -132,8 +132,8 @@ void PluginCard::setContent(const PluginItem& plugin, bool hasHiddenMessages) {
                    });
 
     std::string locationsText = plugin.locations.size() == 1
-                                    ? boost::locale::translate("Source:")
-                                    : boost::locale::translate("Sources:");
+                                    ? translate("Source:")
+                                    : translate("Sources:");
     locationsText += "  " + boost::join(locationLinks, u8" \uFF5C ");
 
     locationsLabel->setText(QString::fromStdString(locationsText));
@@ -144,19 +144,18 @@ void PluginCard::setContent(const PluginItem& plugin, bool hasHiddenMessages) {
   messagesWidget->setMessages(plugin.messages);
 
   if (plugin.cleaningUtility.has_value()) {
-    auto cleanText =
-        fmt::format(boost::locale::translate("Verified clean by {0}").str(),
-                    plugin.cleaningUtility.value());
+    auto cleanText = fmt::format(translate("Verified clean by {0}"),
+                                 plugin.cleaningUtility.value());
     isCleanLabel->setToolTip(QString::fromStdString(cleanText));
   } else {
     isCleanLabel->setToolTip(QString());
   }
 
   if (plugin.gameId == GameId::starfield) {
-    lightPluginLabel->setToolTip(translate("Small Plugin"));
+    lightPluginLabel->setToolTip(qTranslate("Small Plugin"));
     setIcon(lightPluginLabel, IconFactory::getSmallPluginIcon());
   } else {
-    lightPluginLabel->setToolTip(translate("Light Plugin"));
+    lightPluginLabel->setToolTip(qTranslate("Light Plugin"));
     setIcon(lightPluginLabel, IconFactory::getLightPluginIcon());
   }
 
@@ -278,20 +277,20 @@ void PluginCard::setupUi() {
 }
 
 void PluginCard::translateUi() {
-  isActiveLabel->setToolTip(translate("Active Plugin"));
-  masterFileLabel->setToolTip(translate("Master Plugin"));
-  blueprintMasterLabel->setToolTip(translate("Blueprint Master Plugin"));
-  lightPluginLabel->setToolTip(translate("Light Plugin"));
-  mediumPluginLabel->setToolTip(translate("Medium Plugin"));
-  emptyPluginLabel->setToolTip(translate("Empty Plugin"));
-  loadsArchiveLabel->setToolTip(translate("Loads Archive"));
-  hasUserEditsLabel->setToolTip(translate("Has User Metadata"));
-  hasHiddenMessagesLabel->setToolTip(translate("Has Hidden Messages"));
+  isActiveLabel->setToolTip(qTranslate("Active Plugin"));
+  masterFileLabel->setToolTip(qTranslate("Master Plugin"));
+  blueprintMasterLabel->setToolTip(qTranslate("Blueprint Master Plugin"));
+  lightPluginLabel->setToolTip(qTranslate("Light Plugin"));
+  mediumPluginLabel->setToolTip(qTranslate("Medium Plugin"));
+  emptyPluginLabel->setToolTip(qTranslate("Empty Plugin"));
+  loadsArchiveLabel->setToolTip(qTranslate("Loads Archive"));
+  hasUserEditsLabel->setToolTip(qTranslate("Has User Metadata"));
+  hasHiddenMessagesLabel->setToolTip(qTranslate("Has Hidden Messages"));
 
-  tagsGroupBox->setTitle(translate("Bash Tags"));
-  currentTagsHeaderLabel->setText(translate("Current"));
-  addTagsHeaderLabel->setText(translate("Add"));
-  removeTagsHeaderLabel->setText(translate("Remove"));
+  tagsGroupBox->setTitle(qTranslate("Bash Tags"));
+  currentTagsHeaderLabel->setText(qTranslate("Current"));
+  addTagsHeaderLabel->setText(qTranslate("Add"));
+  removeTagsHeaderLabel->setText(qTranslate("Remove"));
 }
 
 void PluginCard::onHideMessage(const std::string& messageText) {

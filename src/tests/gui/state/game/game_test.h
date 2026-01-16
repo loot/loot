@@ -29,7 +29,7 @@ along with LOOT.  If not, see
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
-#include <boost/locale.hpp>
+#include <boost/locale/generator.hpp>
 #include <fstream>
 
 #include "gui/state/game/game.h"

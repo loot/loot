@@ -37,11 +37,12 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/trim.hpp>
-#include <boost/locale.hpp>
+#include <boost/locale/conversion.hpp>
 #include <fstream>
 #include <regex>
 
 #include "gui/state/logging.h"
+#include "gui/translate.h"
 
 #ifdef _WIN32
 #ifndef UNICODE
@@ -267,7 +268,7 @@ void backupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory) {
   createBackup(loadOrder,
                backupDirectory,
-               boost::locale::translate("Automatic Load Order Backup").str(),
+               translate("Automatic Load Order Backup"),
                true);
   removeOldBackups(backupDirectory);
 }

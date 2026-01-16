@@ -32,24 +32,25 @@
 #include <QtWidgets/QToolTip>
 #include <QtWidgets/QVBoxLayout>
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/locale.hpp>
 
 #include "gui/qt/helpers.h"
 #include "gui/qt/style.h"
+#include "gui/translate.h"
 
 namespace {
 using loot::DARK_THEME_SUFFIX;
 using loot::LIGHT_THEME_SUFFIX;
+using loot::translate;
 
 std::string getThemeLabel(const std::string& theme) {
   if (boost::ends_with(theme, DARK_THEME_SUFFIX)) {
     const auto name = theme.substr(0, theme.size() - DARK_THEME_SUFFIX.size());
-    return fmt::format(boost::locale::translate("{0} (Dark)").str(), name);
+    return fmt::format(translate("{0} (Dark)"), name);
   }
 
   if (boost::ends_with(theme, LIGHT_THEME_SUFFIX)) {
     const auto name = theme.substr(0, theme.size() - LIGHT_THEME_SUFFIX.size());
-    return fmt::format(boost::locale::translate("{0} (Light)").str(), name);
+    return fmt::format(translate("{0} (Light)"), name);
   }
 
   return theme;
@@ -183,26 +184,27 @@ void GeneralTab::setupUi() {
 }
 
 void GeneralTab::translateUi() {
-  defaultGameLabel->setText(translate("Default Game"));
-  languageLabel->setText(translate("Language"));
-  themeLabel->setText(translate("Theme"));
-  updateMasterlistLabel->setText(translate("Update masterlist before sorting"));
-  checkUpdatesLabel->setText(translate("Check for LOOT updates on startup"));
-  loggingLabel->setText(translate("Enable debug logging"));
-  preludeSourceLabel->setText(translate("Masterlist prelude source"));
+  defaultGameLabel->setText(qTranslate("Default Game"));
+  languageLabel->setText(qTranslate("Language"));
+  themeLabel->setText(qTranslate("Theme"));
+  updateMasterlistLabel->setText(
+      qTranslate("Update masterlist before sorting"));
+  checkUpdatesLabel->setText(qTranslate("Check for LOOT updates on startup"));
+  loggingLabel->setText(qTranslate("Enable debug logging"));
+  preludeSourceLabel->setText(qTranslate("Masterlist prelude source"));
   useNoSortingChangesDialogLabel->setText(
-      translate("Display dialog when sorting makes no changes"));
-  warnOnCaseSensitiveGamePathsLabel->setText(
-      translate("Warn if the game's paths are in a case-sensitive filesystem"));
+      qTranslate("Display dialog when sorting makes no changes"));
+  warnOnCaseSensitiveGamePathsLabel->setText(qTranslate(
+      "Warn if the game's paths are in a case-sensitive filesystem"));
 
   loggingLabel->setToolTip(
-      translate("The output is logged to the LOOTDebugLog.txt file."));
+      qTranslate("The output is logged to the LOOTDebugLog.txt file."));
 
-  preludeSourceInput->setToolTip(translate("A prelude source is required."));
+  preludeSourceInput->setToolTip(qTranslate("A prelude source is required."));
 
   descriptionLabel->setText(
-      translate("Language changes will be applied after LOOT is restarted."));
+      qTranslate("Language changes will be applied after LOOT is restarted."));
 
-  defaultGameComboBox->setItemText(0, translate("Autodetect"));
+  defaultGameComboBox->setItemText(0, qTranslate("Autodetect"));
 }
 }

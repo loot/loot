@@ -76,15 +76,15 @@ QVariant FileTableModel::data(const File& element, int column, int role) const {
 QVariant FileTableModel::headerText(int section) const {
   switch (section) {
     case NAME_COLUMN:
-      return QVariant(translate("Filename"));
+      return QVariant(qTranslate("Filename"));
     case DISPLAY_NAME_COLUMN:
-      return QVariant(translate("Display Name"));
+      return QVariant(qTranslate("Display Name"));
     case DETAIL_COLUMN:
-      return QVariant(translate("Detail"));
+      return QVariant(qTranslate("Detail"));
     case CONDITION_COLUMN:
-      return QVariant(translate("Condition"));
+      return QVariant(qTranslate("Condition"));
     case CONSTRAINT_COLUMN:
-      return QVariant(translate("Constraint"));
+      return QVariant(qTranslate("Constraint"));
     default:
       return QVariant();
   }

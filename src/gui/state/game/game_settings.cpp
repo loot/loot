@@ -25,6 +25,8 @@
 
 #include "gui/state/game/game_settings.h"
 
+#include <algorithm>
+
 #include "gui/helpers.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
@@ -138,7 +140,9 @@ float GameSettings::getMinimumHeaderVersion() const {
   return minimumHeaderVersion_;
 }
 
-std::string GameSettings::getMasterlistSource() const { return masterlistSource_; }
+std::string GameSettings::getMasterlistSource() const {
+  return masterlistSource_;
+}
 
 std::filesystem::path GameSettings::getGamePath() const { return gamePath_; }
 
@@ -221,7 +225,8 @@ bool GameSettings::hasHiddenGeneralMessages() {
   return false;
 }
 
-bool GameSettings::pluginHasHiddenMessages(const std::string& pluginName) const {
+bool GameSettings::pluginHasHiddenMessages(
+    const std::string& pluginName) const {
   for (const auto& hiddenMessage : hiddenMessages_) {
     if (hiddenMessage.pluginName == pluginName) {
       return true;

@@ -161,19 +161,19 @@ void RestoreLoadOrderDialog::setupUi() {
 }
 
 void RestoreLoadOrderDialog::translateUi() {
-  setWindowTitle(translate("Restore Load Order"));
+  setWindowTitle(qTranslate("Restore Load Order"));
 
-  selectLabel->setText(translate("Select a load order backup to restore."));
-  currentLoadOrderLabel->setText(translate("Current load order"));
-  selectedLoadOrderLabel->setText(translate("Selected backup's load order"));
+  selectLabel->setText(qTranslate("Select a load order backup to restore."));
+  currentLoadOrderLabel->setText(qTranslate("Current load order"));
+  selectedLoadOrderLabel->setText(qTranslate("Selected backup's load order"));
 
   backupsTable->setHorizontalHeaderLabels(
-      {translate("Name"), translate("Created At")});
+      {qTranslate("Name"), qTranslate("Created At")});
 
-  deleteButton->setText(translate("Delete Backup"));
+  deleteButton->setText(qTranslate("Delete Backup"));
 
   identicalLabel->setText(
-      translate("The current and selected backup load orders are identical."));
+      qTranslate("The current and selected backup load orders are identical."));
 }
 
 void RestoreLoadOrderDialog::handleBackupSelectionChanged(
@@ -221,7 +221,7 @@ void RestoreLoadOrderDialog::handleDeleteButtonClicked() {
     }
 
     QMessageBox::critical(
-        this, translate("Error"), translate("Failed to delete backup."));
+        this, qTranslate("Error"), qTranslate("Failed to delete backup."));
   }
 }
 }

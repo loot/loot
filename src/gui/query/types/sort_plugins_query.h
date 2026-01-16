@@ -26,11 +26,10 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_SORT_PLUGINS_QUERY
 #define LOOT_GUI_QUERY_SORT_PLUGINS_QUERY
 
-#include <boost/locale.hpp>
-
 #include "gui/query/query.h"
 #include "gui/state/change_count.h"
 #include "gui/state/game/game.h"
+#include "gui/translate.h"
 
 namespace loot {
 class SortPluginsQuery : public Query {
@@ -51,7 +50,7 @@ public:
     }
 
     // Sort plugins into their load order.
-    sendProgressUpdate_(boost::locale::translate("Sorting load order…"));
+    sendProgressUpdate_(translate("Sorting load order…"));
     std::vector<std::string> plugins = game_->sortPlugins();
 
     auto result = getResult(plugins);

@@ -29,7 +29,7 @@ along with LOOT.  If not, see
 
 #include <array>
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/locale.hpp>
+#include <boost/locale/encoding.hpp>
 #include <filesystem>
 #include <fstream>
 #include <map>
@@ -86,13 +86,14 @@ protected:
     copyPlugin(sourcePluginsPath, BLANK_DIFFERENT_PLUGIN_DEPENDENT_ESP);
 
     // Make sure the game master plugin exists.
-    ASSERT_NO_THROW(
-        std::filesystem::copy_file(dataPath / BLANK_ESM, dataPath / masterFile));
+    ASSERT_NO_THROW(std::filesystem::copy_file(dataPath / BLANK_ESM,
+                                               dataPath / masterFile));
     ASSERT_TRUE(exists(dataPath / masterFile));
 
     // Create the non-ASCII plugin.
     ASSERT_NO_THROW(std::filesystem::copy_file(
-        dataPath / BLANK_ESP, dataPath / std::filesystem::u8path(NON_ASCII_ESP)));
+        dataPath / BLANK_ESP,
+        dataPath / std::filesystem::u8path(NON_ASCII_ESP)));
     ASSERT_TRUE(exists(dataPath / std::filesystem::u8path(NON_ASCII_ESP)));
 
     // Set initial load order and active plugins.
@@ -103,8 +104,8 @@ protected:
         dataPath / BLANK_MASTER_DEPENDENT_ESM,
         dataPath / (std::string(BLANK_MASTER_DEPENDENT_ESM) + ".ghost")));
     ASSERT_FALSE(exists(dataPath / BLANK_MASTER_DEPENDENT_ESM));
-    ASSERT_TRUE(
-        exists(dataPath / (std::string(BLANK_MASTER_DEPENDENT_ESM) + ".ghost")));
+    ASSERT_TRUE(exists(dataPath /
+                       (std::string(BLANK_MASTER_DEPENDENT_ESM) + ".ghost")));
 
     ASSERT_FALSE(exists(missingPath));
     ASSERT_FALSE(exists(dataPath / MISSING_ESP));
@@ -225,7 +226,8 @@ protected:
       "Blank - Different Master Dependent.esm"};
   static constexpr const char* BLANK_ESP{"Blank.esp"};
   static constexpr const char* BLANK_DIFFERENT_ESP{"Blank - Different.esp"};
-  static constexpr const char* BLANK_MASTER_DEPENDENT_ESP{"Blank - Master Dependent.esp"};
+  static constexpr const char* BLANK_MASTER_DEPENDENT_ESP{
+      "Blank - Master Dependent.esp"};
   static constexpr const char* BLANK_DIFFERENT_MASTER_DEPENDENT_ESP{
       "Blank - Different Master Dependent.esp"};
   static constexpr const char* BLANK_PLUGIN_DEPENDENT_ESP{

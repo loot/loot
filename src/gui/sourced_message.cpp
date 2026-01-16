@@ -27,9 +27,8 @@
 
 #include <fmt/format.h>
 
-#include <boost/locale.hpp>
-
 #include "gui/state/game/helpers.h"
+#include "gui/translate.h"
 
 namespace loot {
 bool operator==(const SourcedMessage& lhs, const SourcedMessage& rhs) {
@@ -73,33 +72,28 @@ std::string messagesAsMarkdown(const std::vector<SourcedMessage>& messages) {
 
 SourcedMessage toSourcedMessage(const PluginCleaningData& cleaningData,
                                 const std::string_view language) {
-  using boost::locale::translate;
   using fmt::format;
 
-  const std::string itmRecords =
-      format(translate("{0} ITM record",
-                       "{0} ITM records",
-                       static_cast<int>(cleaningData.GetITMCount()))
-                 .str(),
-             cleaningData.GetITMCount());
-  const std::string deletedReferences = format(
-      translate("{0} deleted reference",
-                "{0} deleted references",
-                static_cast<int>(cleaningData.GetDeletedReferenceCount()))
-          .str(),
-      cleaningData.GetDeletedReferenceCount());
+  const std::string itmRecords = format(
+      translate(
+          "{0} ITM record", "{0} ITM records", cleaningData.GetITMCount()),
+      cleaningData.GetITMCount());
+  const std::string deletedReferences =
+      format(translate("{0} deleted reference",
+                       "{0} deleted references",
+                       cleaningData.GetDeletedReferenceCount()),
+             cleaningData.GetDeletedReferenceCount());
   const std::string deletedNavmeshes =
       format(translate("{0} deleted navmesh",
                        "{0} deleted navmeshes",
-                       static_cast<int>(cleaningData.GetDeletedNavmeshCount()))
-                 .str(),
+                       cleaningData.GetDeletedNavmeshCount()),
              cleaningData.GetDeletedNavmeshCount());
 
   std::string message;
   if (cleaningData.GetITMCount() > 0 &&
       cleaningData.GetDeletedReferenceCount() > 0 &&
       cleaningData.GetDeletedNavmeshCount() > 0) {
-    message = format(translate("{0} found {1}, {2} and {3}.").str(),
+    message = format(translate("{0} found {1}, {2} and {3}."),
                      cleaningData.GetCleaningUtility(),
                      itmRecords,
                      deletedReferences,
@@ -107,39 +101,39 @@ SourcedMessage toSourcedMessage(const PluginCleaningData& cleaningData,
   } else if (cleaningData.GetITMCount() == 0 &&
              cleaningData.GetDeletedReferenceCount() == 0 &&
              cleaningData.GetDeletedNavmeshCount() == 0) {
-    message = format(translate("{0} found dirty edits.").str(),
+    message = format(translate("{0} found dirty edits."),
                      cleaningData.GetCleaningUtility());
   } else if (cleaningData.GetITMCount() == 0 &&
              cleaningData.GetDeletedReferenceCount() > 0 &&
              cleaningData.GetDeletedNavmeshCount() > 0) {
-    message = format(translate("{0} found {1} and {2}.").str(),
+    message = format(translate("{0} found {1} and {2}."),
                      cleaningData.GetCleaningUtility(),
                      deletedReferences,
                      deletedNavmeshes);
   } else if (cleaningData.GetITMCount() > 0 &&
              cleaningData.GetDeletedReferenceCount() == 0 &&
              cleaningData.GetDeletedNavmeshCount() > 0) {
-    message = format(translate("{0} found {1} and {2}.").str(),
+    message = format(translate("{0} found {1} and {2}."),
                      cleaningData.GetCleaningUtility(),
                      itmRecords,
                      deletedNavmeshes);
   } else if (cleaningData.GetITMCount() > 0 &&
              cleaningData.GetDeletedReferenceCount() > 0 &&
              cleaningData.GetDeletedNavmeshCount() == 0) {
-    message = format(translate("{0} found {1} and {2}.").str(),
+    message = format(translate("{0} found {1} and {2}."),
                      cleaningData.GetCleaningUtility(),
                      itmRecords,
                      deletedReferences);
   } else if (cleaningData.GetITMCount() > 0)
-    message = format(translate("{0} found {1}.").str(),
+    message = format(translate("{0} found {1}."),
                      cleaningData.GetCleaningUtility(),
                      itmRecords);
   else if (cleaningData.GetDeletedReferenceCount() > 0)
-    message = format(translate("{0} found {1}.").str(),
+    message = format(translate("{0} found {1}."),
                      cleaningData.GetCleaningUtility(),
                      deletedReferences);
   else if (cleaningData.GetDeletedNavmeshCount() > 0)
-    message = format(translate("{0} found {1}.").str(),
+    message = format(translate("{0} found {1}."),
                      cleaningData.GetCleaningUtility(),
                      deletedNavmeshes);
 

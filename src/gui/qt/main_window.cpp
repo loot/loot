@@ -38,7 +38,6 @@
 #include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QScrollBar>
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/locale.hpp>
 
 #include "gui/backup.h"
 #include "gui/qt/helpers.h"
@@ -56,13 +55,14 @@
 #include "gui/query/types/get_game_data_query.h"
 #include "gui/query/types/get_overlapping_plugins_query.h"
 #include "gui/query/types/sort_plugins_query.h"
+#include "gui/translate.h"
 #include "gui/version.h"
 
 namespace {
 using loot::GameId;
 using loot::LootSettings;
 using loot::LootState;
-using loot::translate;
+using loot::qTranslate;
 
 void showAmbiguousLoadOrderSetWarning(QWidget* parent, const LootState& state) {
   const auto maybeSTestFile =
@@ -72,15 +72,15 @@ void showAmbiguousLoadOrderSetWarning(QWidget* parent, const LootState& state) {
 
   const auto message =
       maybeSTestFile
-          ? translate(
+          ? qTranslate(
                 "LOOT could not unambiguously set the load order. "
                 "This may be due to the presence of one or more sTestFile "
                 "properties in the game's ini files. Remove all such "
                 "properties and then restart LOOT.")
-          : translate("LOOT could not unambiguously set the load order.");
+          : qTranslate("LOOT could not unambiguously set the load order.");
 
   QMessageBox::warning(
-      parent, translate("Ambiguous load order detected"), message);
+      parent, qTranslate("Ambiguous load order detected"), message);
 }
 
 bool isColorSchemeDark() {
@@ -789,94 +789,94 @@ void MainWindow::translateUi() {
 
   // Translate toolbar items.
   /* translators: This string is also an action in the Game menu. */
-  actionSort->setText(translate("&Sort Plugins"));
+  actionSort->setText(qTranslate("&Sort Plugins"));
   /* translators: This string is also an action in the Game menu. */
-  actionUpdateMasterlist->setText(translate("Update &Masterlist"));
+  actionUpdateMasterlist->setText(qTranslate("Update &Masterlist"));
   /* translators: This string is also an action in the Game menu. */
-  actionApplySort->setText(translate("&Apply Sorted Load Order"));
+  actionApplySort->setText(qTranslate("&Apply Sorted Load Order"));
   /* translators: This string is also an action in the Game menu. */
-  actionDiscardSort->setText(translate("&Discard Sorted Load Order"));
+  actionDiscardSort->setText(qTranslate("&Discard Sorted Load Order"));
 
   // Translate menu bar items.
   /* translators: The mnemonic in this string shouldn't conflict with other
      menus or sidebar sections. */
-  menuFile->setTitle(translate("&File"));
+  menuFile->setTitle(qTranslate("&File"));
   /* translators: This string is an action in the File menu. */
-  actionSettings->setText(translate("&Settings…"));
+  actionSettings->setText(qTranslate("&Settings…"));
   /* translators: This string is an action in the File menu. */
-  actionUpdateMasterlists->setText(translate("&Update All Masterlists"));
+  actionUpdateMasterlists->setText(qTranslate("&Update All Masterlists"));
   /* translators: This string is an action in the File menu. */
-  actionBackupData->setText(translate("&Backup LOOT Data"));
+  actionBackupData->setText(qTranslate("&Backup LOOT Data"));
   /* translators: This string is an action in the File menu. */
-  actionOpenLOOTDataFolder->setText(translate("&Open LOOT Data Folder"));
+  actionOpenLOOTDataFolder->setText(qTranslate("&Open LOOT Data Folder"));
   /* translators: This string is an action in the File menu. */
-  actionQuit->setText(translate("&Quit"));
+  actionQuit->setText(qTranslate("&Quit"));
 
   /* translators: The mnemonic in this string shouldn't conflict with other
      menus or sidebar sections. */
-  menuGame->setTitle(translate("&Game"));
+  menuGame->setTitle(qTranslate("&Game"));
   /* translators: This string is an action in the Game menu. */
-  actionOpenGroupsEditor->setText(translate("&Edit Groups…"));
+  actionOpenGroupsEditor->setText(qTranslate("&Edit Groups…"));
   /* translators: This string is an action in the Game menu. */
-  actionSearch->setText(translate("Searc&h Cards…"));
+  actionSearch->setText(qTranslate("Searc&h Cards…"));
   /* translators: This string is an action in the Game menu. */
-  actionCopyLoadOrder->setText(translate("Copy &Load Order"));
+  actionCopyLoadOrder->setText(qTranslate("Copy &Load Order"));
   /* translators: This string is an action in the Game menu. */
-  actionCopyContent->setText(translate("&Copy Content"));
+  actionCopyContent->setText(qTranslate("&Copy Content"));
   /* translators: This string is an action in the Game menu. */
-  actionRefreshContent->setText(translate("&Refresh Content"));
+  actionRefreshContent->setText(qTranslate("&Refresh Content"));
   actionUnhideMessages->setText(
       /* translators: This string is an action in the Game menu. */
-      translate("U&nhide all individually-hidden messages"));
+      qTranslate("U&nhide all individually-hidden messages"));
   actionUnhideGeneralMessages->setText(
       /* translators: This string is an action in the Game menu. */
-      translate("Unhide all individually-hidden &general messages"));
+      qTranslate("Unhide all individually-hidden &general messages"));
   /* translators: This string is an action in the Game menu. */
-  actionRedatePlugins->setText(translate("Redate &Plugins…"));
+  actionRedatePlugins->setText(qTranslate("Redate &Plugins…"));
   /* translators: This string is an action in the Game menu. */
-  actionBackUpLoadOrder->setText(translate("Back Up Load &Order…"));
-  actionRestoreLoadOrder->setText(translate("Res&tore Load Order…"));
+  actionBackUpLoadOrder->setText(qTranslate("Back Up Load &Order…"));
+  actionRestoreLoadOrder->setText(qTranslate("Res&tore Load Order…"));
   /* translators: This string is an action in the Game menu. */
-  actionFixAmbiguousLoadOrder->setText(translate("&Fix Ambiguous Load Order"));
+  actionFixAmbiguousLoadOrder->setText(qTranslate("&Fix Ambiguous Load Order"));
   /* translators: This string is an action in the Game menu. */
-  actionClearAllUserMetadata->setText(translate("Clear All &User Metadata…"));
+  actionClearAllUserMetadata->setText(qTranslate("Clear All &User Metadata…"));
 
   /* translators: The mnemonic in this string shouldn't conflict with other
      menus or sidebar sections. */
-  menuPlugin->setTitle(translate("&Plugin"));
+  menuPlugin->setTitle(qTranslate("&Plugin"));
   /* translators: This string is an action in the Plugin menu. */
-  actionCopyPluginName->setText(translate("Copy &Plugin Name"));
+  actionCopyPluginName->setText(qTranslate("Copy &Plugin Name"));
   /* translators: This string is an action in the Plugin menu. */
-  actionCopyCardContent->setText(translate("Copy &Card Content"));
+  actionCopyCardContent->setText(qTranslate("Copy &Card Content"));
   /* translators: This string is an action in the Plugin menu. */
-  actionCopyMetadata->setText(translate("Copy &Metadata"));
+  actionCopyMetadata->setText(qTranslate("Copy &Metadata"));
   /* translators: This string is an action in the Plugin menu. */
-  actionEditMetadata->setText(translate("&Edit Metadata…"));
+  actionEditMetadata->setText(qTranslate("&Edit Metadata…"));
   actionUnhidePluginMessages->setText(
       /* translators: This string is an action in the Plugin menu. */
-      translate("Un&hide individually-hidden messages"));
+      qTranslate("Un&hide individually-hidden messages"));
   /* translators: This string is an action in the Plugin menu. */
-  actionClearMetadata->setText(translate("Clear &User Metadata…"));
+  actionClearMetadata->setText(qTranslate("Clear &User Metadata…"));
 
   /* translators: The mnemonic in this string shouldn't conflict with other
      menus or sidebar sections. */
-  menuHelp->setTitle(translate("&Help"));
+  menuHelp->setTitle(qTranslate("&Help"));
   /* translators: This string is an action in the Help menu. */
-  actionViewDocs->setText(translate("&View Documentation"));
+  actionViewDocs->setText(qTranslate("&View Documentation"));
   /* translators: This string is an action in the Help menu. */
-  actionOpenFAQs->setText(translate("&Open FAQs"));
+  actionOpenFAQs->setText(qTranslate("&Open FAQs"));
   /* translators: This string is an action in the Help menu. */
-  actionJoinDiscordServer->setText(translate("&Join Discord Server"));
+  actionJoinDiscordServer->setText(qTranslate("&Join Discord Server"));
   /* translators: This string is an action in the Help menu. */
-  actionAbout->setText(translate("&About"));
+  actionAbout->setText(qTranslate("&About"));
 
   // Translate sidebar.
   /* translators: The mnemonic in this string shouldn't conflict with other
      menus or sidebar sections. */
-  toolBox->setItemText(0, translate("P&lugins"));
+  toolBox->setItemText(0, qTranslate("P&lugins"));
   /* translators: The mnemonic in this string shouldn't conflict with other
      menus or sidebar sections. */
-  toolBox->setItemText(1, translate("F&ilters"));
+  toolBox->setItemText(1, qTranslate("F&ilters"));
 }
 
 void MainWindow::setIcons() {
@@ -1184,7 +1184,7 @@ void MainWindow::sortPlugins(bool isAutoSort) {
   std::vector<Task*> updateTasks;
 
   if (state->getSettings().isMasterlistUpdateBeforeSortEnabled()) {
-    handleProgressUpdate(translate("Updating and parsing masterlist…"));
+    handleProgressUpdate(qTranslate("Updating and parsing masterlist…"));
 
     const auto preludeTask = new UpdatePreludeTask(*state);
 
@@ -1271,50 +1271,39 @@ void MainWindow::showFirstRunDialog() {
                 "</a></pre>";
 
     paragraph1 = fmt::format(
-        boost::locale::translate(
+        translate(
             "This appears to be the first time you have run LOOT v{0}. Your "
-            "current LOOT data has been backed up to: {1}")
-            .str(),
+            "current LOOT data has been backed up to: {1}"),
         getLootVersion(),
         link);
   } else {
     paragraph1 = fmt::format(
-        boost::locale::translate(
-            "This appears to be the first time you have run LOOT v{0}.")
-            .str(),
+        translate("This appears to be the first time you have run LOOT v{0}."),
         getLootVersion());
   }
 
-  auto paragraph2 =
-      boost::locale::translate(
-          "Here are some tips to help you get started with the interface.")
-          .str();
+  auto paragraph2 = translate(
+      "Here are some tips to help you get started with the interface.");
 
-  auto listItem1 =
-      boost::locale::translate(
-          "CRCs are only displayed after plugins have been loaded, either by "
-          "overlap filtering, or by sorting.")
-          .str();
+  auto listItem1 = translate(
+      "CRCs are only displayed after plugins have been loaded, either by "
+      "overlap filtering, or by sorting.");
 
-  auto listItem2 =
-      boost::locale::translate(
-          "Plugins can be drag and dropped from the sidebar into the metadata "
-          "editor's \"load after\", \"requirements\" and \"incompatibility\" "
-          "tables.")
-          .str();
+  auto listItem2 = translate(
+      "Plugins can be drag and dropped from the sidebar into the metadata "
+      "editor's \"load after\", \"requirements\" and \"incompatibility\" "
+      "tables.");
 
-  auto listItem3 = boost::locale::translate(
-                       "Some features are disabled while the metadata editor "
-                       "is open, or while there is a sorted load order that "
-                       "has not been applied or discarded.")
-                       .str();
+  auto listItem3 = translate(
+      "Some features are disabled while the metadata editor "
+      "is open, or while there is a sorted load order that "
+      "has not been applied or discarded.");
 
   auto paragraph3 = fmt::format(
-      boost::locale::translate(
+      translate(
           "LOOT is free, but if you want to show your appreciation with some "
           "money, donations may be made to WrinklyNinja (LOOT's creator and "
-          "main developer) using {0}.")
-          .str(),
+          "main developer) using {0}."),
       "<a href=\"https://www.paypal.me/OliverHamlet\">PayPal</a>");
 
   std::string text = fmt::format(textTemplate,
@@ -1326,7 +1315,7 @@ void MainWindow::showFirstRunDialog() {
                                  paragraph3);
 
   auto messageBox = QMessageBox(QMessageBox::NoIcon,
-                                translate("First-Time Tips"),
+                                qTranslate("First-Time Tips"),
                                 QString::fromStdString(text),
                                 QMessageBox::Ok,
                                 this);
@@ -1361,14 +1350,12 @@ PluginItem MainWindow::getSelectedPlugin() const {
 void MainWindow::closeEvent(QCloseEvent* event) {
   if (state->getUnappliedChangeCount().isNonZero()) {
     auto changeType = pluginEditorWidget->isVisible()
-                          ? boost::locale::translate("metadata edits")
-                          : boost::locale::translate("sorted load order");
+                          ? translate("metadata edits")
+                          : translate("sorted load order");
     auto questionText =
-        fmt::format(boost::locale::translate(
-                        "You have not yet applied or cancelled your {0}. "
-                        "Are you sure you want to quit?")
-                        .str(),
-                    changeType.str());
+        fmt::format(translate("You have not yet applied or cancelled your {0}. "
+                              "Are you sure you want to quit?"),
+                    changeType);
 
     auto button = QMessageBox::question(
         this,
@@ -1481,7 +1468,7 @@ void MainWindow::handleError(const std::string& message) {
   progressDialog->reset();
 
   QMessageBox::critical(
-      this, translate("Error"), QString::fromStdString(message));
+      this, qTranslate("Error"), QString::fromStdString(message));
 }
 
 void MainWindow::handleException(const std::exception& exception) {
@@ -1490,11 +1477,10 @@ void MainWindow::handleException(const std::exception& exception) {
     logger->error("Caught an exception: {}", exception.what());
   }
 
-  auto message = boost::locale::translate(
-                     "Oh no, something went wrong! You can check your "
-                     "LOOTDebugLog.txt (you can get to it through the "
-                     "main menu) for more information.")
-                     .str();
+  auto message = translate(
+      "Oh no, something went wrong! You can check your "
+      "LOOTDebugLog.txt (you can get to it through the "
+      "main menu) for more information.");
 
   handleError(message);
 }
@@ -1540,8 +1526,8 @@ bool MainWindow::handlePluginsSorted(QueryResult result) {
     QMessageBox::critical(
         this,
         "LOOT",
-        translate("Failed to sort plugins. Details may be provided in the "
-                  "General Information section."));
+        qTranslate("Failed to sort plugins. Details may be provided in the "
+                   "General Information section."));
 
     // Plugins didn't change but general messages may have.
     updateGeneralMessages();
@@ -1558,7 +1544,7 @@ bool MainWindow::handlePluginsSorted(QueryResult result) {
     state->getUnappliedChangeCount().decrement();
 
     const auto message =
-        translate("Sorting made no changes to the load order.");
+        qTranslate("Sorting made no changes to the load order.");
 
     if (state->getSettings().isNoSortingChangesDialogEnabled()) {
       QMessageBox::information(this, "LOOT", message);
@@ -1609,13 +1595,13 @@ void MainWindow::checkForAmbiguousLoadOrder() {
 
   QMessageBox::warning(
       this,
-      translate("Ambiguous load order detected"),
-      translate("LOOT has detected that the current load order is ambiguous, "
-                "which means that other applications might use a different "
-                "load order than what LOOT displays.\n\n"
-                "You can use the \"Fix Ambiguous Load Order\" action in the "
-                "Game menu to unambiguously set the load order to what is "
-                "displayed by LOOT."));
+      qTranslate("Ambiguous load order detected"),
+      qTranslate("LOOT has detected that the current load order is ambiguous, "
+                 "which means that other applications might use a different "
+                 "load order than what LOOT displays.\n\n"
+                 "You can use the \"Fix Ambiguous Load Order\" action in the "
+                 "Game menu to unambiguously set the load order to what is "
+                 "displayed by LOOT."));
 
   actionFixAmbiguousLoadOrder->setEnabled(true);
 }
@@ -1675,7 +1661,7 @@ void MainWindow::on_actionSettings_triggered() {
 
 void MainWindow::on_actionUpdateMasterlists_triggered() {
   try {
-    handleProgressUpdate(translate("Updating and parsing masterlist…"));
+    handleProgressUpdate(qTranslate("Updating and parsing masterlist…"));
 
     const auto preludeSource = state->getSettings().getPreludeSource();
     const auto preludePath = state->getPaths().getPreludePath();
@@ -1698,7 +1684,7 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
       tasks.push_back(task);
     }
 
-    handleProgressUpdate(translate("Updating all masterlists…"));
+    handleProgressUpdate(qTranslate("Updating all masterlists…"));
 
     auto whenAll = whenAllTasks(tasks)
                        .then(this,
@@ -1730,13 +1716,11 @@ void MainWindow::on_actionBackupData_triggered() {
                   "\" style=\"white-space: nowrap\">" + zipPathString +
                   "</a></pre>";
       auto message = fmt::format(
-          boost::locale::translate("Your LOOT data has been backed up to: {0}")
-              .str(),
-          link);
+          translate("Your LOOT data has been backed up to: {0}"), link);
 
       QMessageBox::information(this, "LOOT", QString::fromStdString(message));
     } else {
-      auto message = translate(
+      auto message = qTranslate(
           "No backup has been created as LOOT has no data to backup.");
 
       QMessageBox::information(this, "LOOT", message);
@@ -1783,7 +1767,7 @@ void MainWindow::on_actionCopyLoadOrder_triggered() {
     copyToClipboard(text);
 
     showNotification(
-        translate("The load order has been copied to the clipboard."));
+        qTranslate("The load order has been copied to the clipboard."));
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1801,7 +1785,7 @@ void MainWindow::on_actionCopyContent_triggered() {
     copyToClipboard(content);
 
     showNotification(
-        translate("LOOT's content has been copied to the clipboard."));
+        qTranslate("LOOT's content has been copied to the clipboard."));
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1836,7 +1820,7 @@ void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
     state->getCurrentGame().setLoadOrder(loadOrder);
 
     showNotification(
-        translate("The load order displayed by LOOT has been set."));
+        qTranslate("The load order displayed by LOOT has been set."));
 
     if (state->getCurrentGame().isLoadOrderAmbiguous()) {
       showAmbiguousLoadOrderSetWarning(this, *state);
@@ -1890,8 +1874,8 @@ void MainWindow::on_actionRedatePlugins_triggered() {
     auto button = QMessageBox::question(
         this,
         /* translators: Title of a dialog box. */
-        translate("Redate Plugins?"),
-        translate(
+        qTranslate("Redate Plugins?"),
+        qTranslate(
             "This feature is provided so that modders using the Creation Kit "
             "may "
             "set the load order it uses. A side-effect is that any subscribed "
@@ -1904,7 +1888,7 @@ void MainWindow::on_actionRedatePlugins_triggered() {
       state->getCurrentGame().redatePlugins();
       showNotification(
           /* translators: Notification text. */
-          translate("Plugins were successfully redated."));
+          qTranslate("Plugins were successfully redated."));
     }
   } catch (const std::exception& e) {
     handleException(e);
@@ -1916,8 +1900,8 @@ void MainWindow::on_actionClearAllUserMetadata_triggered() {
     auto button = QMessageBox::question(
         this,
         "LOOT",
-        translate("Are you sure you want to clear all existing user-added "
-                  "metadata from all plugins?"),
+        qTranslate("Are you sure you want to clear all existing user-added "
+                   "metadata from all plugins?"),
         QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No,
         QMessageBox::StandardButton::No);
 
@@ -1964,7 +1948,7 @@ void MainWindow::on_actionClearAllUserMetadata_triggered() {
       pluginItemModel->setData(index, QVariant::fromValue(item), RawDataRole);
     }
 
-    showNotification(translate("All user-added metadata has been cleared."));
+    showNotification(qTranslate("All user-added metadata has been cleared."));
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1976,7 +1960,7 @@ void MainWindow::on_actionEditMetadata_triggered() {
       QMessageBox::warning(
           this,
           "LOOT",
-          translate(
+          qTranslate(
               "The plugin metadata editor is already open, first close the "
               "editor before attempting to edit another plugin's metadata."));
       return;
@@ -2040,9 +2024,7 @@ void MainWindow::on_actionCopyMetadata_triggered() {
     }
 
     const auto message = fmt::format(
-        boost::locale::translate(
-            "The metadata for \"{0}\" has been copied to the clipboard.")
-            .str(),
+        translate("The metadata for \"{0}\" has been copied to the clipboard."),
         selectedPluginName);
 
     showNotification(QString::fromStdString(message));
@@ -2058,9 +2040,7 @@ void MainWindow::on_actionCopyPluginName_triggered() {
     copyToClipboard(selectedPluginName);
 
     const auto text = fmt::format(
-        boost::locale::translate(
-            "The plugin name \"{0}\" has been copied to the clipboard.")
-            .str(),
+        translate("The plugin name \"{0}\" has been copied to the clipboard."),
         selectedPluginName);
 
     showNotification(QString::fromStdString(text));
@@ -2077,9 +2057,8 @@ void MainWindow::on_actionCopyCardContent_triggered() {
     copyToClipboard(content);
 
     auto text = fmt::format(
-        boost::locale::translate(
-            "The card content for \"{0}\" has been copied to the clipboard.")
-            .str(),
+        translate(
+            "The card content for \"{0}\" has been copied to the clipboard."),
         selectedPlugin.name);
 
     showNotification(QString::fromStdString(text));
@@ -2109,11 +2088,10 @@ void MainWindow::on_actionClearMetadata_triggered() {
   try {
     const std::string selectedPluginName = getSelectedPlugin().name;
 
-    auto questionText = fmt::format(
-        boost::locale::translate("Are you sure you want to clear all existing "
-                                 "user-added metadata from \"{0}\"?")
-            .str(),
-        selectedPluginName);
+    auto questionText =
+        fmt::format(translate("Are you sure you want to clear all existing "
+                              "user-added metadata from \"{0}\"?"),
+                    selectedPluginName);
 
     auto button = QMessageBox::question(
         this,
@@ -2148,11 +2126,9 @@ void MainWindow::on_actionClearMetadata_triggered() {
       }
     }
 
-    auto notificationText =
-        fmt::format(boost::locale::translate(
-                        "The user-added metadata for \"{0}\" has been cleared.")
-                        .str(),
-                    selectedPluginName);
+    auto notificationText = fmt::format(
+        translate("The user-added metadata for \"{0}\" has been cleared."),
+        selectedPluginName);
 
     showNotification(QString::fromStdString(notificationText));
   } catch (const std::exception& e) {
@@ -2232,32 +2208,28 @@ void MainWindow::on_actionAbout_triggered() {
 </blockquote>
 )";
 
-    auto paragraph1 =
-        fmt::format(boost::locale::translate("Version {0} (build {1})").str(),
-                    getLootVersion(),
-                    getLootRevision());
+    auto paragraph1 = fmt::format(translate("Version {0} (build {1})"),
+                                  getLootVersion(),
+                                  getLootRevision());
 
-    auto paragraph2 =
-        boost::locale::translate(
-            "Load order optimisation for Starfield, Morrowind, Oblivion, "
-            "Nehrim, Skyrim, Enderal, Skyrim Special Edition, Enderal Special "
-            "Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and "
-            "Fallout 4 VR.")
-            .str();
+    auto paragraph2 = translate(
+        "Load order optimisation for Starfield, Morrowind, Oblivion, "
+        "Nehrim, Skyrim, Enderal, Skyrim Special Edition, Enderal Special "
+        "Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and "
+        "Fallout 4 VR.");
 
     auto paragraph3 = fmt::format(
-        boost::locale::translate(
+        translate(
             "LOOT is free, but if you want to show your appreciation with "
             "some money, donations may be made to WrinklyNinja (LOOT's "
-            "creator and main developer) using {0}.")
-            .str(),
+            "creator and main developer) using {0}."),
         "<a href=\"https://www.paypal.me/OliverHamlet\">PayPal</a>");
 
     std::string text =
         fmt::format(textTemplate, paragraph1, paragraph2, paragraph3);
 
     QMessageBox::about(
-        this, translate("About LOOT"), QString::fromStdString(text));
+        this, qTranslate("About LOOT"), QString::fromStdString(text));
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2376,7 +2348,7 @@ void MainWindow::on_actionDiscardSort_triggered() {
 
 void MainWindow::on_actionUpdateMasterlist_triggered() {
   try {
-    handleProgressUpdate(translate("Updating and parsing masterlist…"));
+    handleProgressUpdate(qTranslate("Updating and parsing masterlist…"));
 
     const auto preludeTask = new UpdatePreludeTask(*state);
     const auto masterlistTask =
@@ -2595,7 +2567,7 @@ void MainWindow::on_filtersWidget_overlapFilterChanged(
       return;
     }
 
-    handleProgressUpdate(translate("Identifying overlapping plugins…"));
+    handleProgressUpdate(qTranslate("Identifying overlapping plugins…"));
 
     std::unique_ptr<Query> query = std::make_unique<GetOverlappingPluginsQuery>(
         state->getCurrentGame(),
@@ -2717,7 +2689,7 @@ void MainWindow::on_backupDialog_accepted() {
     state->getCurrentGame().backUpCurrentLoadOrder(name.toStdString());
 
     showNotification(
-        translate("A backup of the current load order has been created."));
+        qTranslate("A backup of the current load order has been created."));
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2755,7 +2727,7 @@ void MainWindow::on_restoreBackupDialog_accepted() {
       state->getCurrentGame().setLoadOrder(loadOrder);
       loadGame(false);
 
-      showNotification(translate("Restored load order from backup."));
+      showNotification(qTranslate("Restored load order from backup."));
     } else if (logger) {
       logger->debug("No backup selected to restore.");
     }
@@ -2803,9 +2775,8 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
         state->getCurrentGame().appendMessage(createPlainTextSourcedMessage(
             MessageType::error,
             MessageSource::autoSortCancellation,
-            boost::locale::translate(
-                "Auto-sort has been cancelled as there is at "
-                "least one error message displayed.")));
+            translate("Auto-sort has been cancelled as there is at "
+                      "least one error message displayed.")));
 
         updateGeneralMessages();
       } else {
@@ -2863,7 +2834,7 @@ void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
 
     if (!wasPreludeUpdated && !wasMasterlistUpdated) {
       progressDialog->reset();
-      showNotification(translate("No masterlist update was necessary."));
+      showNotification(qTranslate("No masterlist update was necessary."));
 
       // Update general info as the timestamp may have changed and if metadata
       // was previously missing it can now be displayed.
@@ -2886,8 +2857,7 @@ void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
     auto masterlistInfo = getFileRevisionSummary(
         state->getCurrentGame().getMasterlistPath(), FileType::Masterlist);
     auto infoText = fmt::format(
-        boost::locale::translate("Masterlist updated to revision {0}.").str(),
-        masterlistInfo.id);
+        translate("Masterlist updated to revision {0}."), masterlistInfo.id);
 
     showNotification(QString::fromStdString(infoText));
   } catch (const std::exception& e) {
@@ -2950,7 +2920,7 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
 
     if (updatedGameNames.empty()) {
       progressDialog->reset();
-      showNotification(translate("No masterlist updates were necessary."));
+      showNotification(qTranslate("No masterlist updates were necessary."));
 
       // Update general info as the timestamp may have changed and if
       // metadata was previously missing it can now be displayed.
@@ -2976,7 +2946,7 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
     }
 
     auto message =
-        translate("Masterlists updated for the following games:\n\n");
+        qTranslate("Masterlists updated for the following games:\n\n");
     for (const auto& gameName : updatedGameNames) {
       message += QString::fromStdString(gameName + "\n");
     }
@@ -3037,10 +3007,9 @@ void MainWindow::handleUpdateCheckFinished(QueryResult result) {
         logger->info("LOOT update is available.");
       }
 
-      const auto text = fmt::format(
-          boost::locale::translate("A [new release]({0}) of LOOT is available.")
-              .str(),
-          "https://github.com/loot/loot/releases/latest");
+      const auto text =
+          fmt::format(translate("A [new release]({0}) of LOOT is available."),
+                      "https://github.com/loot/loot/releases/latest");
 
       state->getCurrentGame().appendMessage(
           SourcedMessage{MessageType::error, MessageSource::updateCheck, text});
@@ -3053,12 +3022,10 @@ void MainWindow::handleUpdateCheckFinished(QueryResult result) {
 
 void MainWindow::handleUpdateCheckError(const std::string&) {
   try {
-    const auto text =
-        boost::locale::translate(
-            "Failed to check for LOOT updates! You can check your "
-            "LOOTDebugLog.txt "
-            "(you can get to it through the main menu) for more information.")
-            .str();
+    const auto text = translate(
+        "Failed to check for LOOT updates! You can check your "
+        "LOOTDebugLog.txt "
+        "(you can get to it through the main menu) for more information.");
 
     const auto& generalMessages = pluginItemModel->getGeneralMessages();
     for (const auto& message : generalMessages) {

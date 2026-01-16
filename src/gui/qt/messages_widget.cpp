@@ -197,7 +197,7 @@ void MessagesWidget::setupUi() {
 }
 
 void MessagesWidget::translateUi() {
-  hideMessageAction->setText(translate("Hide message"));
+  hideMessageAction->setText(qTranslate("Hide message"));
 }
 
 void MessagesWidget::setMessages(const std::vector<BareMessage>& messages) {

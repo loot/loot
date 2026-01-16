@@ -29,6 +29,7 @@
 #include <cmath>
 #include <execution>
 #include <fstream>
+#include <sstream>
 #include <unordered_set>
 
 #ifdef _WIN32
@@ -48,13 +49,12 @@
 
 #include <fmt/ranges.h>
 
-#include <boost/locale.hpp>
-
 #include "gui/helpers.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/game/validation.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
+#include "gui/translate.h"
 #include "loot/exception/undefined_group_error.h"
 
 using std::lock_guard;
@@ -71,6 +71,7 @@ using loot::getLogger;
 using loot::MessageSource;
 using loot::MessageType;
 using loot::SourcedMessage;
+using loot::translate;
 
 GameType getGameType(const GameId gameId) {
   switch (gameId) {
@@ -203,9 +204,8 @@ SourcedMessage createSortingCyclicInteractionErrorMessage(
       MessageType::error,
       MessageSource::caughtException,
       fmt::format(
-          boost::locale::translate(
-              "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}")
-              .str(),
+          translate(
+              "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"),
           loot::escapeMarkdownASCIIPunctuation(e.GetCycle().front().GetName()),
           loot::escapeMarkdownASCIIPunctuation(e.GetCycle().back().GetName()),
           describeCycle(e.GetCycle()))};
@@ -221,9 +221,8 @@ SourcedMessage createSortingUndefinedGroupErrorMessage(
   return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::caughtException,
-      fmt::format(
-          boost::locale::translate("The group \"{0}\" does not exist.").str(),
-          e.GetGroupName()));
+      fmt::format(translate("The group \"{0}\" does not exist."),
+                  e.GetGroupName()));
 }
 
 std::set<Filename> readFilenamesInFile(const std::filesystem::path& filePath) {
@@ -342,11 +341,9 @@ std::vector<SourcedMessage> createMessagesForRemovedPlugins(
     messages.push_back(createPlainTextSourcedMessage(
         MessageType::warn,
         MessageSource::removedPluginsCheck,
-        fmt::format(
-            boost::locale::translate("LOOT has detected that \"{0}\" is "
-                                     "invalid and is now ignoring it.")
-                .str(),
-            removedPlugin)));
+        fmt::format(translate("LOOT has detected that \"{0}\" is "
+                              "invalid and is now ignoring it."),
+                    removedPlugin)));
   }
 
   return messages;
@@ -873,7 +870,7 @@ std::vector<std::string> Game::sortPlugins() {
     appendMessage(createPlainTextSourcedMessage(
         MessageType::error,
         MessageSource::caughtException,
-        boost::locale::translate(
+        translate(
             "Sorting failed because there is at least one installed plugin "
             "that depends on at least one plugin that is not installed.")));
   } catch (const std::exception& e) {
@@ -902,8 +899,7 @@ std::vector<SourcedMessage> Game::getMessages(
     output.push_back(createPlainTextSourcedMessage(
         MessageType::warn,
         MessageSource::unsortedLoadOrderCheck,
-        boost::locale::translate(
-            "You have not sorted your load order this session.")));
+        translate("You have not sorted your load order this session.")));
   }
 
   Counters counters;
@@ -965,13 +961,12 @@ void Game::loadMetadata() {
     appendMessage(SourcedMessage{
         MessageType::error,
         MessageSource::caughtException,
-        fmt::format(boost::locale::translate(
-                        "An error occurred while parsing the metadata list(s): "
-                        "{0}.\n\nTry updating your masterlist to resolve the "
-                        "error.")
-                        .str(),
-                    escapeMarkdownASCIIPunctuation(e.what()),
-                    "https://loot.github.io/")});
+        fmt::format(
+            translate("An error occurred while parsing the metadata list(s): "
+                      "{0}.\n\nTry updating your masterlist to resolve the "
+                      "error."),
+            escapeMarkdownASCIIPunctuation(e.what()),
+            "https://loot.github.io/")});
   }
 
   try {
@@ -999,7 +994,7 @@ void Game::loadMetadata() {
         MessageType::error,
         MessageSource::caughtException,
         fmt::format(
-            boost::locale::translate(
+            translate(
                 "An error occurred while parsing your userlist: {0}.\n\nThis "
                 "probably happened because an update to LOOT changed its "
                 "metadata syntax support. Your user metadata will have to be "
@@ -1007,8 +1002,7 @@ void Game::loadMetadata() {
                 "LOOT's File menu, then open your 'userlist.yaml' file in the "
                 "relevant game folder. You can then edit the metadata it "
                 "contains, with the help of the [metadata syntax "
-                "documentation]({1}).")
-                .str(),
+                "documentation]({1})."),
             escapeMarkdownASCIIPunctuation(e.what()),
             docUrl)});
   }
@@ -1185,9 +1179,8 @@ void Game::loadCurrentLoadOrderState() {
     appendMessage(createPlainTextSourcedMessage(
         MessageType::error,
         MessageSource::caughtException,
-        boost::locale::translate("Failed to load the current load order, "
-                                 "information displayed may be incorrect.")
-            .str()));
+        translate("Failed to load the current load order, "
+                  "information displayed may be incorrect.")));
   }
 }
 }

@@ -40,16 +40,16 @@
 
 #include <fmt/base.h>
 
-#include <boost/locale.hpp>
+#include <boost/locale/generator.hpp>
 
 #include "gui/helpers.h"
 #include "gui/state/game/detection.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
+#include "gui/translate.h"
 #include "loot/api.h"
 
-using boost::locale::translate;
 using fmt::format;
 using std::exception;
 
@@ -165,8 +165,8 @@ void LootState::initCurrentGame() {
                     e.what());
     }
     initMessages_.push_back(createInitErrorMessage(format(
-        translate("Error: Game-specific settings could not be initialised. {0}")
-            .str(),
+        translate(
+            "Error: Game-specific settings could not be initialised. {0}"),
         e.what())));
   }
 }
@@ -203,9 +203,9 @@ void LootState::createLootDataPath() {
   try {
     fs::create_directory(paths_.getLootDataPath());
   } catch (const exception& e) {
-    initMessages_.push_back(createInitErrorMessage(format(
-        translate("Error: Could not create LOOT data directory. {0}").str(),
-        e.what())));
+    initMessages_.push_back(createInitErrorMessage(
+        format(translate("Error: Could not create LOOT data directory. {0}"),
+               e.what())));
   }
 }
 
@@ -218,7 +218,7 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
           /* translators: This error is displayed when LOOT is unable to
              load its own settings file. The placeholder is for additional
              detail about what went wrong. */
-          translate("Error: Settings parsing failed. {0}").str(),
+          translate("Error: Settings parsing failed. {0}"),
           e.what())));
     }
   }
@@ -268,7 +268,7 @@ void LootState::checkSettingsFile() {
       initMessages_.push_back(createPlainTextSourcedMessage(
           MessageType::warn,
           MessageSource::init,
-          boost::locale::translate(
+          translate(
               "Your masterlist prelude repository URL and branch settings "
               "could not be migrated! You can check your LOOTDebugLog.txt (you "
               "can get to it through the File menu) for more information.")));
@@ -278,7 +278,7 @@ void LootState::checkSettingsFile() {
       initMessages_.push_back(createPlainTextSourcedMessage(
           MessageType::warn,
           MessageSource::init,
-          boost::locale::translate(
+          translate(
               "Your masterlist repository URL and branch settings could not be "
               "migrated! You can check your LOOTDebugLog.txt (you can get to "
               "it through the File menu) for more information.")));
@@ -288,7 +288,7 @@ void LootState::checkSettingsFile() {
         /* translators: This error is displayed when LOOT is unable to
            load its own settings file. The placeholder is for additional
            detail about what went wrong. */
-        translate("Error: Settings parsing failed. {0}").str(),
+        translate("Error: Settings parsing failed. {0}"),
         e.what())));
   }
 }
@@ -329,8 +329,7 @@ void LootState::createPreludeDirectory() {
       fs::create_directory(preludeDir);
     } catch (const exception& e) {
       initMessages_.push_back(createInitErrorMessage(format(
-          translate("Error: Could not create LOOT prelude directory. {0}")
-              .str(),
+          translate("Error: Could not create LOOT prelude directory. {0}"),
           e.what())));
     }
   }
@@ -360,8 +359,7 @@ void LootState::overrideGamePath(const std::string& gameFolderName,
   if (it == gamesSettings.end()) {
     initMessages_.push_back(createInitErrorMessage(format(
         translate("Error: failed to override game path, the game {0} was not "
-                  "recognised.")
-            .str(),
+                  "recognised."),
         gameFolderName)));
   } else {
     const auto logger = getLogger();
@@ -413,8 +411,7 @@ void LootState::setInitialGame(const std::string& cliGameValue) {
     initMessages_.push_back(createInitErrorMessage(format(
         translate(
             "The initial game with folder name \"{0}\" could not be set. If it "
-            "is installed, try running its launcher then restarting LOOT.")
-            .str(),
+            "is installed, try running its launcher then restarting LOOT."),
         gameFolderName.value())));
   }
 }

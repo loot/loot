@@ -149,8 +149,8 @@ void GeneralInfoCard::updatePluginRowsAndColumns() {
   gridLayout->addWidget(totalPluginsCountValue, row, PLUGIN_VALUE_COLUMN);
 
   const auto activeLightCountText = showSeparateMediumPluginCount
-                                        ? translate("Active Small Plugins")
-                                        : translate("Active Light Plugins");
+                                        ? qTranslate("Active Small Plugins")
+                                        : qTranslate("Active Light Plugins");
   activeLightCountLabel->setText(activeLightCountText);
 }
 
@@ -224,24 +224,24 @@ void GeneralInfoCard::setupUi() {
 }
 
 void GeneralInfoCard::translateUi() {
-  headingLabel->setText(translate("General Information"));
-  hasHiddenMessagesLabel->setToolTip(translate("Has Hidden Messages"));
+  headingLabel->setText(qTranslate("General Information"));
+  hasHiddenMessagesLabel->setToolTip(qTranslate("Has Hidden Messages"));
 
-  masterlistRevisionLabel->setText(translate("Masterlist Revision ID"));
-  masterlistDateLabel->setText(translate("Masterlist Update Date"));
-  preludeRevisionLabel->setText(translate("Masterlist Prelude Revision ID"));
-  preludeDateLabel->setText(translate("Masterlist Prelude Update Date"));
+  masterlistRevisionLabel->setText(qTranslate("Masterlist Revision ID"));
+  masterlistDateLabel->setText(qTranslate("Masterlist Update Date"));
+  preludeRevisionLabel->setText(qTranslate("Masterlist Prelude Revision ID"));
+  preludeDateLabel->setText(qTranslate("Masterlist Prelude Update Date"));
 
-  warningsCountLabel->setText(translate("Warnings"));
-  errorsCountLabel->setText(translate("Errors"));
-  totalMessagesCountLabel->setText(translate("Total Messages"));
+  warningsCountLabel->setText(qTranslate("Warnings"));
+  errorsCountLabel->setText(qTranslate("Errors"));
+  totalMessagesCountLabel->setText(qTranslate("Total Messages"));
 
-  activeCountLabel->setText(translate("Active Plugins"));
-  activeFullCountLabel->setText(translate("Active Full Plugins"));
-  activeMediumCountLabel->setText(translate("Active Medium Plugins"));
-  activeLightCountLabel->setText(translate("Active Light Plugins"));
-  dirtyCountLabel->setText(translate("Dirty Plugins"));
-  totalPluginsCountLabel->setText(translate("Total Plugins"));
+  activeCountLabel->setText(qTranslate("Active Plugins"));
+  activeFullCountLabel->setText(qTranslate("Active Full Plugins"));
+  activeMediumCountLabel->setText(qTranslate("Active Medium Plugins"));
+  activeLightCountLabel->setText(qTranslate("Active Light Plugins"));
+  dirtyCountLabel->setText(qTranslate("Dirty Plugins"));
+  totalPluginsCountLabel->setText(qTranslate("Total Plugins"));
 }
 
 void GeneralInfoCard::onHideMessage(const std::string& messageText) {

@@ -56,9 +56,9 @@ QVariant LocationTableModel::data(const Location& element,
 QVariant LocationTableModel::headerText(int section) const {
   switch (section) {
     case URL_COLUMN:
-      return QVariant(translate("URL"));
+      return QVariant(qTranslate("URL"));
     case NAME_COLUMN:
-      return QVariant(translate("Name"));
+      return QVariant(qTranslate("Name"));
     default:
       return QVariant();
   }

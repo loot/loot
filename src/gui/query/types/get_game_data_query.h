@@ -26,10 +26,9 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_GAME_DATA_QUERY
 #define LOOT_GUI_QUERY_GET_GAME_DATA_QUERY
 
-#include <boost/locale.hpp>
-
 #include "gui/query/query.h"
 #include "gui/state/game/game.h"
+#include "gui/translate.h"
 #include "loot/loot_version.h"
 
 namespace loot {
@@ -43,8 +42,7 @@ public:
       sendProgressUpdate_(std::move(sendProgressUpdate)) {}
 
   QueryResult executeLogic() override {
-    sendProgressUpdate_(
-        boost::locale::translate("Parsing, merging and evaluating metadata…"));
+    sendProgressUpdate_(translate("Parsing, merging and evaluating metadata…"));
 
     /* If the game's plugins object is empty, this is the first time loading
        the game data, so also load the metadata lists. */
@@ -77,8 +75,8 @@ public:
 
     threads.push_back(std::thread([&]() {
       try {
-        game_->getCreationClubPlugins().load(game_->getSettings().getId(),
-                                            game_->getSettings().getGamePath());
+        game_->getCreationClubPlugins().load(
+            game_->getSettings().getId(), game_->getSettings().getGamePath());
       } catch (...) {
         if (exceptionPointer == nullptr) {
           exceptionPointer = std::current_exception();

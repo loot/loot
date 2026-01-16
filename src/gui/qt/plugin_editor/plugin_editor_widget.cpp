@@ -194,15 +194,18 @@ void PluginEditorWidget::translateUi() {
   static constexpr int CLEAN_PLUGIN_INFO_TAB_INDEX = 7;
   static constexpr int LOCATIONS_TAB_INDEX = 8;
 
-  tabs->setTabText(GROUP_TAB_INDEX, translate("Group"));
-  tabs->setTabText(LOAD_AFTER_TAB_INDEX, translate("Load After"));
-  tabs->setTabText(REQUIREMENTS_TAB_INDEX, translate("Requirements"));
-  tabs->setTabText(INCOMPATIBILITIES_TAB_INDEX, translate("Incompatibilities"));
-  tabs->setTabText(MESSAGES_TAB_INDEX, translate("Messages"));
-  tabs->setTabText(BASH_TAGS_TAB_INDEX, translate("Bash Tags"));
-  tabs->setTabText(DIRTY_PLUGIN_INFO_TAB_INDEX, translate("Dirty Plugin Info"));
-  tabs->setTabText(CLEAN_PLUGIN_INFO_TAB_INDEX, translate("Clean Plugin Info"));
-  tabs->setTabText(LOCATIONS_TAB_INDEX, translate("Locations"));
+  tabs->setTabText(GROUP_TAB_INDEX, qTranslate("Group"));
+  tabs->setTabText(LOAD_AFTER_TAB_INDEX, qTranslate("Load After"));
+  tabs->setTabText(REQUIREMENTS_TAB_INDEX, qTranslate("Requirements"));
+  tabs->setTabText(INCOMPATIBILITIES_TAB_INDEX,
+                   qTranslate("Incompatibilities"));
+  tabs->setTabText(MESSAGES_TAB_INDEX, qTranslate("Messages"));
+  tabs->setTabText(BASH_TAGS_TAB_INDEX, qTranslate("Bash Tags"));
+  tabs->setTabText(DIRTY_PLUGIN_INFO_TAB_INDEX,
+                   qTranslate("Dirty Plugin Info"));
+  tabs->setTabText(CLEAN_PLUGIN_INFO_TAB_INDEX,
+                   qTranslate("Clean Plugin Info"));
+  tabs->setTabText(LOCATIONS_TAB_INDEX, qTranslate("Locations"));
 }
 
 PluginMetadata PluginEditorWidget::getUserMetadata() {
@@ -254,7 +257,7 @@ void PluginEditorWidget::handleTabContentChanged(bool hasUserMetadata) {
   if (hasUserMetadata) {
     tabs->setTabIcon(tabIndex, IconFactory::getHasUserMetadataIcon());
     tabs->setTabToolTip(tabIndex,
-                        translate("This tab contains user metadata."));
+                        qTranslate("This tab contains user metadata."));
   } else if (!hasUserMetadata) {
     tabs->setTabIcon(tabIndex, QIcon());
     tabs->setTabToolTip(tabIndex, "");

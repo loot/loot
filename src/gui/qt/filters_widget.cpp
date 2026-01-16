@@ -288,54 +288,54 @@ void FiltersWidget::setupUi() {
 }
 
 void FiltersWidget::translateUi() {
-  overlapFilterLabel->setText(translate("Show only overlapping plugins for"));
-  groupPluginsFilterLabel->setText(translate("Show only plugins in group"));
+  overlapFilterLabel->setText(qTranslate("Show only overlapping plugins for"));
+  groupPluginsFilterLabel->setText(qTranslate("Show only plugins in group"));
   contentFilterLabel->setText(
-      translate("Show only plugins with cards that contain"));
-  contentRegexCheckbox->setText(translate("Use regular expression"));
-  versionNumbersFilter->setText(translate("Hide version numbers"));
-  crcsFilter->setText(translate("Hide CRCs"));
-  bashTagsFilter->setText(translate("Hide Bash Tags"));
-  locationsFilter->setText(translate("Hide Sources"));
-  notesFilter->setText(translate("Hide notes"));
+      qTranslate("Show only plugins with cards that contain"));
+  contentRegexCheckbox->setText(qTranslate("Use regular expression"));
+  versionNumbersFilter->setText(qTranslate("Hide version numbers"));
+  crcsFilter->setText(qTranslate("Hide CRCs"));
+  bashTagsFilter->setText(qTranslate("Hide Bash Tags"));
+  locationsFilter->setText(qTranslate("Hide Sources"));
+  notesFilter->setText(qTranslate("Hide notes"));
   officialPluginsCleaningMessagesFilter->setText(
-      translate("Hide official plugins' cleaning messages"));
-  pluginMessagesFilter->setText(translate("Hide all plugin messages"));
-  inactivePluginsFilter->setText(translate("Hide inactive plugins"));
-  messagelessPluginsFilter->setText(translate("Hide messageless plugins"));
-  creationClubPluginsFilter->setText(translate("Hide Creation Club plugins"));
-  showOnlyNewMessagesFilter->setText(translate("Show only new messages"));
-  showOnlyEmptyPluginsFilter->setText(translate("Show only empty plugins"));
+      qTranslate("Hide official plugins' cleaning messages"));
+  pluginMessagesFilter->setText(qTranslate("Hide all plugin messages"));
+  inactivePluginsFilter->setText(qTranslate("Hide inactive plugins"));
+  messagelessPluginsFilter->setText(qTranslate("Hide messageless plugins"));
+  creationClubPluginsFilter->setText(qTranslate("Hide Creation Club plugins"));
+  showOnlyNewMessagesFilter->setText(qTranslate("Show only new messages"));
+  showOnlyEmptyPluginsFilter->setText(qTranslate("Show only empty plugins"));
   showOnlyPluginsWithLoadAfterMetadataFilter->setText(
-      translate("Show only plugins with load after metadata"));
+      qTranslate("Show only plugins with load after metadata"));
   showOnlyPluginsWithLoadAfterUserMetadataFilter->setText(
-      translate("Show only plugins with load after user metadata"));
+      qTranslate("Show only plugins with load after user metadata"));
   showOnlyPluginsWithoutLoadOrderMetadataFilter->setText(
-      translate("Show only plugins without load order metadata"));
+      qTranslate("Show only plugins without load order metadata"));
   showOnlyWarningsAndErrorsFilter->setText(
-      translate("Show only warnings and errors"));
-  hiddenPluginsLabel->setText(translate("Hidden plugins:"));
-  hiddenMessagesLabel->setText(translate("Hidden messages:"));
+      qTranslate("Show only warnings and errors"));
+  hiddenPluginsLabel->setText(qTranslate("Hidden plugins:"));
+  hiddenMessagesLabel->setText(qTranslate("Hidden messages:"));
 
-  const auto overlapItemText = translate("No plugin selected");
+  const auto overlapItemText = qTranslate("No plugin selected");
   if (overlapFilter->count() == 0) {
     overlapFilter->addItem(overlapItemText);
   } else {
     overlapFilter->setItemText(0, overlapItemText);
   }
 
-  auto groupsItemText = translate("No group selected");
+  auto groupsItemText = qTranslate("No group selected");
   if (groupPluginsFilter->count() == 0) {
     groupPluginsFilter->addItem(groupsItemText);
   } else {
     groupPluginsFilter->setItemText(0, groupsItemText);
   }
 
-  contentFilter->setPlaceholderText(translate("No text specified"));
+  contentFilter->setPlaceholderText(qTranslate("No text specified"));
 
   contentRegexCheckbox->setToolTip(
-      translate("If checked, interprets the content filter text as a regular "
-                "expression."));
+      qTranslate("If checked, interprets the content filter text as a regular "
+                 "expression."));
 }
 
 bool FiltersWidget::updateWarningsAndErrorsFilterState() {

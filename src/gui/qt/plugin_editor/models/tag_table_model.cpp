@@ -62,11 +62,11 @@ QVariant TagTableModel::data(const Tag& element, int column, int role) const {
 QVariant TagTableModel::headerText(int section) const {
   switch (section) {
     case TYPE_COLUMN:
-      return QVariant(translate("Add/Remove"));
+      return QVariant(qTranslate("Add/Remove"));
     case NAME_COLUMN:
-      return QVariant(translate("Bash Tag"));
+      return QVariant(qTranslate("Bash Tag"));
     case CONDITION_COLUMN:
-      return QVariant(translate("Condition"));
+      return QVariant(qTranslate("Condition"));
     default:
       return QVariant();
   }

@@ -419,6 +419,7 @@ set(LOOT_SRC_GUI_CPP_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/translate.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/resource.rc")
 
 set(LOOT_SRC_GUI_H_FILES
@@ -504,6 +505,7 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/translate.h"
     "${CMAKE_SOURCE_DIR}/src/gui/version.h")
 
 source_group(TREE "${CMAKE_SOURCE_DIR}/src/gui"

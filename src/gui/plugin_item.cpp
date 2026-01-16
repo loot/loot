@@ -29,12 +29,12 @@
 
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/locale.hpp>
 #include <variant>
 
 #include "gui/helpers.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
+#include "gui/translate.h"
 
 namespace {
 using loot::getLogger;
@@ -47,12 +47,11 @@ SourcedMessage createEvalFailedMessage(std::string_view pluginName,
   return loot::createPlainTextSourcedMessage(
       loot::MessageType::error,
       loot::MessageSource::caughtException,
-      fmt::format(boost::locale::translate(
-                      "\"{0}\" contains a condition that could not be "
-                      "evaluated. Details: {1}")
-                      .str(),
-                  pluginName,
-                  what));
+      fmt::format(
+          loot::translate("\"{0}\" contains a condition that could not be "
+                          "evaluated. Details: {1}"),
+          pluginName,
+          what));
 }
 
 std::variant<std::optional<PluginMetadata>, SourcedMessage>
@@ -201,13 +200,11 @@ PluginItem::PluginItem(GameId gameId,
   // Set numbered names for locations with no existing name so that URLs
   // don't appear in the UI.
   if (locations.size() == 1 && locations[0].GetName().empty()) {
-    locations[0] = Location(locations[0].GetURL(),
-                            boost::locale::translate("Location").str());
+    locations[0] = Location(locations[0].GetURL(), translate("Location"));
   } else if (locations.size() > 1) {
     for (size_t i = 0; i < locations.size(); i += 1) {
       if (locations[i].GetName().empty()) {
-        const auto locationName =
-            fmt::format(boost::locale::translate("Location {0}").str(), i + 1);
+        const auto locationName = fmt::format(translate("Location {0}"), i + 1);
         locations[i] = Location(locations[i].GetURL(), locationName);
       }
     }

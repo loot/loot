@@ -56,7 +56,7 @@ struct FileRevisionSummary {
   std::string date;
 };
 
-QString translate(const char* text);
+QString qTranslate(const char* text);
 
 void scaleCardHeading(QLabel& label);
 

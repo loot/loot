@@ -68,9 +68,9 @@ QVariant MessageContentTableModel::data(const MessageContent& element,
 QVariant MessageContentTableModel::headerText(int section) const {
   switch (section) {
     case LANGUAGE_COLUMN:
-      return QVariant(translate("Language"));
+      return QVariant(qTranslate("Language"));
     case TEXT_COLUMN:
-      return QVariant(translate("Text"));
+      return QVariant(qTranslate("Text"));
     default:
       return QVariant();
   }

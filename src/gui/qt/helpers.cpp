@@ -42,7 +42,6 @@
 #include <QtGui/QPainter>
 #include <QtWidgets/QToolTip>
 #include <QtWidgets/QWidget>
-#include <boost/locale.hpp>
 #include <fstream>
 
 #ifndef _WIN32
@@ -50,6 +49,7 @@
 #endif
 
 #include "gui/state/logging.h"
+#include "gui/translate.h"
 
 namespace {
 using loot::getLogger;
@@ -129,7 +129,7 @@ FileRevisionSummary::FileRevisionSummary(const FileRevision& fileRevision) :
         " " +
         /* translators: this text is displayed if LOOT has detected that the
            masterlist has been modified since it was downloaded. */
-        boost::locale::translate("(edited)").str();
+        translate("(edited)");
     date += suffix;
     id += suffix;
   }
@@ -139,8 +139,8 @@ FileRevisionSummary::FileRevisionSummary(const std::string& id,
                                          const std::string& date) :
     id(id), date(date) {}
 
-QString translate(const char* text) {
-  return QString::fromStdString(boost::locale::translate(text).str());
+QString qTranslate(const char* text) {
+  return QString::fromStdString(translate(text));
 }
 
 void scaleCardHeading(QLabel& label) {
@@ -225,8 +225,6 @@ FileRevision getFileRevision(const std::filesystem::path& filePath) {
 FileRevisionSummary getFileRevisionSummary(
     const std::filesystem::path& filePath,
     FileType fileType) {
-  using boost::locale::translate;
-
   auto logger = getLogger();
 
   try {
@@ -244,12 +242,12 @@ FileRevisionSummary getFileRevisionSummary(
     }
 
     auto text = fileType == FileType::Masterlist
-                    ? translate("N/A: No masterlist present").str()
+                    ? translate("N/A: No masterlist present")
                     :
                     /* translators: N/A is an abbreviation for Not Applicable.
                        A masterlist is a database that contains information
                        for various mods. */
-                    translate("N/A: No masterlist prelude present").str();
+                    translate("N/A: No masterlist prelude present");
 
     return FileRevisionSummary(text, text);
   } catch (const std::exception&) {
@@ -257,7 +255,7 @@ FileRevisionSummary getFileRevisionSummary(
       logger->warn("Failed to read metadata for: {}",
                    filePath.parent_path().u8string());
     }
-    auto text = translate("Unknown: No revision metadata found").str();
+    auto text = translate("Unknown: No revision metadata found");
     return FileRevisionSummary(text, text);
   }
 }
@@ -362,9 +360,8 @@ std::optional<QByteArray> readHttpResponse(QNetworkReply* reply) {
 }
 
 void showInvalidRegexTooltip(QWidget& widget, const std::string& details) {
-  auto message = fmt::format(
-      boost::locale::translate("Invalid regular expression: {0}").str(),
-      details);
+  auto message =
+      fmt::format(translate("Invalid regular expression: {0}"), details);
 
   QToolTip::showText(widget.mapToGlobal(QPoint(0, 0)),
                      QString::fromStdString(message),

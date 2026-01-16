@@ -27,10 +27,11 @@
 
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/locale.hpp>
+#include <boost/locale/conversion.hpp>
 #include <unordered_set>
 
 #include "gui/state/game/helpers.h"
+#include "gui/translate.h"
 
 namespace {
 using loot::Filename;
@@ -40,6 +41,7 @@ using loot::MessageSource;
 using loot::MessageType;
 using loot::PluginInterface;
 using loot::SourcedMessage;
+using loot::translate;
 
 constexpr size_t SAFE_MAX_ACTIVE_FULL_PLUGINS = 255;
 constexpr size_t MWSE_SAFE_MAX_ACTIVE_FULL_PLUGINS = 1023;
@@ -80,9 +82,8 @@ SourcedMessage createMissingMasterMessage(const PluginInterface& plugin,
   return createPlainTextSourcedMessage(
       messageType,
       MessageSource::missingMaster,
-      fmt::format(boost::locale::translate("This plugin requires \"{0}\" to be "
-                                           "installed, but it is missing.")
-                      .str(),
+      fmt::format(translate("This plugin requires \"{0}\" to be "
+                            "installed, but it is missing."),
                   masterName));
 }
 
@@ -98,9 +99,8 @@ SourcedMessage createInactiveMasterMessage(const PluginInterface& plugin,
   return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::inactiveMaster,
-      fmt::format(boost::locale::translate("This plugin requires \"{0}\" to be "
-                                           "active, but it is inactive.")
-                      .str(),
+      fmt::format(translate("This plugin requires \"{0}\" to be "
+                            "active, but it is inactive."),
                   masterName));
 }
 
@@ -110,15 +110,13 @@ SourcedMessage createMissingRequirementMessage(const loot::File& requirement,
   const auto displayName = requirement.GetDisplayName();
   if (displayName.empty()) {
     localisedText = fmt::format(
-        boost::locale::translate(
-            "This plugin requires \"{0}\" to be installed, but it is missing.")
-            .str(),
+        translate(
+            "This plugin requires \"{0}\" to be installed, but it is missing."),
         escapeFileName(requirement));
   } else {
     localisedText = fmt::format(
-        boost::locale::translate(
-            "This plugin requires {0} to be installed, but it is missing.")
-            .str(),
+        translate(
+            "This plugin requires {0} to be installed, but it is missing."),
         displayName);
   }
   auto detailContent = SelectMessageContent(requirement.GetDetail(), language);
@@ -137,15 +135,13 @@ SourcedMessage createPresentIncompatibilityMessage(
   const auto displayName = incompatibility.GetDisplayName();
   if (displayName.empty()) {
     localisedText = fmt::format(
-        boost::locale::translate(
-            "This plugin is incompatible with \"{0}\", but both are present.")
-            .str(),
+        translate(
+            "This plugin is incompatible with \"{0}\", but both are present."),
         escapeFileName(incompatibility));
   } else {
     localisedText = fmt::format(
-        boost::locale::translate(
-            "This plugin is incompatible with {0}, but both are present.")
-            .str(),
+        translate(
+            "This plugin is incompatible with {0}, but both are present."),
         displayName);
   }
   auto detailContent =
@@ -173,18 +169,16 @@ SourcedMessage createLightMasterWithNonMasterMasterMessage(
   }
 
   const auto pluginType = gameId == GameId::starfield
-                              ? boost::locale::translate("small master").str()
-                              : boost::locale::translate("light master").str();
+                              ? translate("small master")
+                              : translate("light master");
 
   return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::lightPluginRequiresNonMaster,
       fmt::format(
-          boost::locale::translate(
-              "This plugin is a {0} and requires the non-master plugin "
-              "\"{1}\". This can cause issues in-game, and sorting will "
-              "fail while this plugin is installed.")
-              .str(),
+          translate("This plugin is a {0} and requires the non-master plugin "
+                    "\"{1}\". This can cause issues in-game, and sorting will "
+                    "fail while this plugin is installed."),
           pluginType,
           masterName));
 }
@@ -202,10 +196,9 @@ SourcedMessage createInvalidLightPluginMessage(const PluginInterface& plugin) {
   return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::invalidLightPlugin,
-      boost::locale::translate(
-          "This plugin contains records that have FormIDs outside "
-          "the valid range for an ESL plugin. Using this plugin "
-          "will cause irreversible damage to your game saves."));
+      translate("This plugin contains records that have FormIDs outside "
+                "the valid range for an ESL plugin. Using this plugin "
+                "will cause irreversible damage to your game saves."));
 }
 
 SourcedMessage createInvalidMediumPluginMessage(const PluginInterface& plugin) {
@@ -221,10 +214,9 @@ SourcedMessage createInvalidMediumPluginMessage(const PluginInterface& plugin) {
   return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::invalidMediumPlugin,
-      boost::locale::translate(
-          "This plugin contains records that have FormIDs outside "
-          "the valid range for a medium plugin. Using this plugin "
-          "will cause irreversible damage to your game saves."));
+      translate("This plugin contains records that have FormIDs outside "
+                "the valid range for a medium plugin. Using this plugin "
+                "will cause irreversible damage to your game saves."));
 }
 
 SourcedMessage createInvalidUpdatePluginMessage(const PluginInterface& plugin) {
@@ -239,7 +231,7 @@ SourcedMessage createInvalidUpdatePluginMessage(const PluginInterface& plugin) {
   return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::invalidUpdatePlugin,
-      boost::locale::translate(
+      translate(
           "This plugin is an update plugin but adds new records. Using "
           "this plugin may cause irreversible damage to your game saves."));
 }
@@ -256,10 +248,10 @@ SourcedMessage createUnsupportedLightPluginMessage(
   }
 
   const auto pluginType = boost::iends_with(pluginName, ".esp")
-                              ? boost::locale::translate("plugin")
+                              ? translate("plugin")
                               /* translators: master as in a plugin that is
                                  loaded as if its master flag is set. */
-                              : boost::locale::translate("master");
+                              : translate("master");
 
   if (gameId == GameId::tes5vr) {
     return SourcedMessage{
@@ -268,13 +260,12 @@ SourcedMessage createUnsupportedLightPluginMessage(
         fmt::format(
             /* translators: {1} in this message can be "master" or "plugin"
             and {2} is the name of a requirement. */
-            boost::locale::translate(
+            translate(
                 "\"{0}\" is a light {1}, but {2} seems to be missing. Please "
                 "ensure you have correctly installed {2} and all its "
-                "requirements.")
-                .str(),
+                "requirements."),
             loot::escapeMarkdownASCIIPunctuation(pluginName),
-            pluginType.str(),
+            pluginType,
             "[Skyrim VR ESL "
             "Support](https://www.nexusmods.com/skyrimspecialedition/"
             "mods/106712/)")};
@@ -284,10 +275,9 @@ SourcedMessage createUnsupportedLightPluginMessage(
     return createPlainTextSourcedMessage(
         MessageType::error,
         MessageSource::lightPluginNotSupported,
-        fmt::format(boost::locale::translate("\"{0}\" is a .esl plugin, but "
-                                             "the game does not support such "
-                                             "plugins, and will not load it.")
-                        .str(),
+        fmt::format(translate("\"{0}\" is a .esl plugin, but "
+                              "the game does not support such "
+                              "plugins, and will not load it."),
                     pluginName));
   }
 
@@ -297,12 +287,10 @@ SourcedMessage createUnsupportedLightPluginMessage(
       fmt::format(
           /* translators: {1} in this message can be "master" or "plugin".
            */
-          boost::locale::translate(
-              "\"{0}\" is flagged as a light {1}, but the game does not "
-              "support such plugins, and will load it as a full {1}.")
-              .str(),
+          translate("\"{0}\" is flagged as a light {1}, but the game does not "
+                    "support such plugins, and will load it as a full {1}."),
           pluginName,
-          pluginType.str()));
+          pluginType));
 }
 
 SourcedMessage createBlueprintMasterMessage(const PluginInterface& plugin,
@@ -319,12 +307,10 @@ SourcedMessage createBlueprintMasterMessage(const PluginInterface& plugin,
   return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::blueprintMasterMaster,
-      fmt::format(boost::locale::translate(
-                      "This plugin is not a blueprint master and "
-                      "requires the blueprint master \"{0}\". This can "
-                      "cause issues in-game, as this plugin will always "
-                      "load before \"{0}\".")
-                      .str(),
+      fmt::format(translate("This plugin is not a blueprint master and "
+                            "requires the blueprint master \"{0}\". This can "
+                            "cause issues in-game, as this plugin will always "
+                            "load before \"{0}\"."),
                   masterName));
 }
 
@@ -344,12 +330,11 @@ SourcedMessage createInvalidHeaderVersionMessage(const PluginInterface& plugin,
       MessageType::warn,
       MessageSource::invalidHeaderVersion,
       fmt::format(
-          boost::locale::translate(
+          translate(
               /* translators: A header is the part of a file that stores data
                like file name and version. */
               "This plugin has a header version of {0}, which is less than "
-              "the game's minimum supported header version of {1}.")
-              .str(),
+              "the game's minimum supported header version of {1}."),
           plugin.GetHeaderVersion().value(),
           minimumVersion));
 }
@@ -363,16 +348,15 @@ SourcedMessage createSelfMasterMessage(const PluginInterface& plugin) {
   return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::selfMaster,
-      boost::locale::translate("This plugin has itself as a master."));
+      translate("This plugin has itself as a master."));
 }
 
 SourcedMessage createUndefinedGroupMessage(std::string_view groupName) {
   return createPlainTextSourcedMessage(
       MessageType::error,
       MessageSource::missingGroup,
-      fmt::format(boost::locale::translate("This plugin belongs to the group "
-                                           "\"{0}\", which does not exist.")
-                      .str(),
+      fmt::format(translate("This plugin belongs to the group "
+                            "\"{0}\", which does not exist."),
                   groupName));
 }
 
@@ -394,10 +378,9 @@ SourcedMessage createOverriddenBashTagsMessage(
       MessageType::say,
       MessageSource::bashTagsOverride,
       fmt::format(
-          boost::locale::translate(
+          translate(
               "This plugin has a BashTags file that will override the "
-              "suggestions made by LOOT for the following Bash Tags: {0}.")
-              .str(),
+              "suggestions made by LOOT for the following Bash Tags: {0}."),
           commaSeparatedTags));
 }
 
@@ -558,22 +541,18 @@ SourcedMessage createActiveFullPluginsWarning(const loot::Counters& counters,
     return createPlainTextSourcedMessage(
         MessageType::warn,
         MessageSource::activePluginsCountCheck,
-        fmt::format(
-            boost::locale::translate("You have {0} active full plugins but the "
-                                     "game only supports up to {1}.")
-                .str(),
-            counters.activeFullPlugins,
-            safeMaxActiveFullPlugins));
+        fmt::format(translate("You have {0} active full plugins but the "
+                              "game only supports up to {1}."),
+                    counters.activeFullPlugins,
+                    safeMaxActiveFullPlugins));
   }
   return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::activePluginsCountCheck,
-      fmt::format(
-          boost::locale::translate("You have {0} active plugins but the "
-                                   "game only supports up to {1}.")
-              .str(),
-          counters.activeFullPlugins,
-          safeMaxActiveFullPlugins));
+      fmt::format(translate("You have {0} active plugins but the "
+                            "game only supports up to {1}."),
+                  counters.activeFullPlugins,
+                  safeMaxActiveFullPlugins));
 }
 
 SourcedMessage createMWSEActiveFullPluginsWarning(
@@ -591,9 +570,8 @@ SourcedMessage createMWSEActiveFullPluginsWarning(
   return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::activePluginsCountCheck,
-      boost::locale::translate(
-          "Do not launch Morrowind without the use of MWSE or it will "
-          "cause severe damage to your game."));
+      translate("Do not launch Morrowind without the use of MWSE or it will "
+                "cause severe damage to your game."));
 }
 
 SourcedMessage createActiveLightPluginsWarning(
@@ -610,9 +588,8 @@ SourcedMessage createActiveLightPluginsWarning(
   return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::activePluginsCountCheck,
-      fmt::format(boost::locale::translate("You have {0} active {1} but the "
-                                           "game only supports up to {2}.")
-                      .str(),
+      fmt::format(translate("You have {0} active {1} but the "
+                            "game only supports up to {2}."),
                   activeLightPluginCount,
                   lightPluginType,
                   SAFE_MAX_ACTIVE_LIGHT_PLUGINS));
@@ -631,13 +608,12 @@ SourcedMessage createLightPluginSlotWarning(const loot::Counters& counters,
   return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::activePluginsCountCheck,
-      fmt::format(boost::locale::translate(
-                      "You have a full plugin and {0} {1} sharing the FE "
-                      "load order index. Deactivate a full plugin or your "
-                      "{1} to avoid potential issues.")
-                      .str(),
-                  counters.activeLightPlugins,
-                  lightPluginType));
+      fmt::format(
+          translate("You have a full plugin and {0} {1} sharing the FE "
+                    "load order index. Deactivate a full plugin or your "
+                    "{1} to avoid potential issues."),
+          counters.activeLightPlugins,
+          lightPluginType));
 }
 
 SourcedMessage createActiveMediumPluginsWarning(
@@ -653,12 +629,10 @@ SourcedMessage createActiveMediumPluginsWarning(
   return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::activePluginsCountCheck,
-      fmt::format(
-          boost::locale::translate("You have {0} active medium plugins but the "
-                                   "game only supports up to {1}.")
-              .str(),
-          activeMediumPluginCount,
-          SAFE_MAX_ACTIVE_MEDIUM_PLUGINS));
+      fmt::format(translate("You have {0} active medium plugins but the "
+                            "game only supports up to {1}."),
+                  activeMediumPluginCount,
+                  SAFE_MAX_ACTIVE_MEDIUM_PLUGINS));
 }
 
 SourcedMessage createMediumPluginSlotWarning(size_t activeFullPluginCount) {
@@ -673,10 +647,9 @@ SourcedMessage createMediumPluginSlotWarning(size_t activeFullPluginCount) {
   return createPlainTextSourcedMessage(
       MessageType::warn,
       MessageSource::activePluginsCountCheck,
-      boost::locale::translate(
-          "You have a full plugin and at least one medium plugin sharing "
-          "the FD load order index. Deactivate a full plugin or all your "
-          "medium plugins to avoid potential issues."));
+      translate("You have a full plugin and at least one medium plugin sharing "
+                "the FD load order index. Deactivate a full plugin or all your "
+                "medium plugins to avoid potential issues."));
 }
 
 SourcedMessage createCaseSensitiveGamePathWarning(std::string_view gameName) {
@@ -684,14 +657,13 @@ SourcedMessage createCaseSensitiveGamePathWarning(std::string_view gameName) {
       MessageType::warn,
       MessageSource::caseSensitivePathCheck,
       fmt::format(
-          boost::locale::translate(
+          translate(
               /* translators: The placeholder is for the current game's name.
                */
               "{0} is installed in a case-sensitive location. This may "
               "cause issues as the game, mods and LOOT may assume that "
               "filesystem paths are not case-sensitive, which is the default "
-              "on Windows.")
-              .str(),
+              "on Windows."),
           gameName));
 }
 
@@ -701,14 +673,13 @@ SourcedMessage createCaseSensitiveGameLocalPathWarning(
       MessageType::warn,
       MessageSource::caseSensitivePathCheck,
       fmt::format(
-          boost::locale::translate(
+          translate(
               /* translators: The placeholder is for the current game's
                  name. */
               "{0}'s local application data is stored in a case-sensitive "
               "location. This may cause issues as the game, mods and LOOT "
               "may assume that filesystem paths are not case-sensitive, "
-              "which is the default on Windows.")
-              .str(),
+              "which is the default on Windows."),
           gameName));
 }
 
@@ -844,16 +815,10 @@ void validateActivePluginCounts(std::vector<SourcedMessage>& output,
 
   const auto lightPluginType =
       gameId == GameId::starfield
-          ? boost::locale::translate("small plugin",
-                                     "small plugins",
-                                     static_cast<boost::locale::count_type>(
-                                         counters.activeLightPlugins))
-                .str()
-          : boost::locale::translate("light plugin",
-                                     "light plugins",
-                                     static_cast<boost::locale::count_type>(
-                                         counters.activeLightPlugins))
-                .str();
+          ? translate(
+                "small plugin", "small plugins", counters.activeLightPlugins)
+          : translate(
+                "light plugin", "light plugins", counters.activeLightPlugins);
 
   if (counters.activeLightPlugins > SAFE_MAX_ACTIVE_LIGHT_PLUGINS) {
     output.push_back(createActiveLightPluginsWarning(

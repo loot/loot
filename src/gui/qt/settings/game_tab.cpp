@@ -54,7 +54,7 @@ void FolderPicker::setupUi() {
 }
 
 void FolderPicker::translateUi() {
-  browseButton->setText(translate("Browse…"));
+  browseButton->setText(qTranslate("Browse…"));
 }
 
 void FolderPicker::on_browseButton_clicked() {
@@ -148,23 +148,24 @@ void GameTab::setupUi() {
 }
 
 void GameTab::translateUi() {
-  nameLabel->setText(translate("Name"));
-  baseGameLabel->setText(translate("Base Game"));
-  lootFolderLabel->setText(translate("LOOT Folder"));
-  masterFileLabel->setText(translate("Main Master Plugin"));
-  minimumHeaderVersionLabel->setText(translate("Minimum Header Version"));
-  masterlistSourceLabel->setText(translate("Masterlist Source"));
-  installPathLabel->setText(translate("Install Path"));
-  localDataPathLabel->setText(translate("Local AppData Path"));
+  nameLabel->setText(qTranslate("Name"));
+  baseGameLabel->setText(qTranslate("Base Game"));
+  lootFolderLabel->setText(qTranslate("LOOT Folder"));
+  masterFileLabel->setText(qTranslate("Main Master Plugin"));
+  minimumHeaderVersionLabel->setText(qTranslate("Minimum Header Version"));
+  masterlistSourceLabel->setText(qTranslate("Masterlist Source"));
+  installPathLabel->setText(qTranslate("Install Path"));
+  localDataPathLabel->setText(qTranslate("Local AppData Path"));
 
-  deleteGameButton->setText(translate("Delete game"));
+  deleteGameButton->setText(qTranslate("Delete game"));
 }
 
 void GameTab::initialiseInputs(const GameSettings& settings,
                                bool isCurrentGame) {
   nameInput->setText(QString::fromStdString(settings.getName()));
   lootFolderInput->setText(QString::fromStdString(settings.getFolderName()));
-  masterFileInput->setText(QString::fromStdString(settings.getMasterFilename()));
+  masterFileInput->setText(
+      QString::fromStdString(settings.getMasterFilename()));
   minimumHeaderVersionSpinBox->setValue(settings.getMinimumHeaderVersion());
   masterlistSourceInput->setText(
       QString::fromStdString(settings.getMasterlistSource()));

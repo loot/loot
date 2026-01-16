@@ -312,9 +312,9 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
           }
         } else if (role == Qt::ToolTipRole) {
           if (isCurrentEditorPlugin) {
-            return translate("Editor Is Open");
+            return qTranslate("Editor Is Open");
           } else if (plugin.hasUserMetadata) {
-            return translate("Has User Metadata");
+            return qTranslate("Has User Metadata");
           } else {
             return QVariant();
           }
@@ -362,11 +362,11 @@ QVariant PluginItemModel::headerData(int section,
 
   switch (section) {
     case SIDEBAR_POSITION_COLUMN:
-      return translate("Position");
+      return qTranslate("Position");
     case SIDEBAR_INDEX_COLUMN:
-      return translate("Index");
+      return qTranslate("Index");
     case SIDEBAR_NAME_COLUMN:
-      return translate("Plugin Name");
+      return qTranslate("Plugin Name");
     default:
       return QVariant();
   }

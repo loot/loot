@@ -25,6 +25,7 @@
 
 #include "gui/state/game/detection/detail.h"
 
+#include <algorithm>
 #include <unordered_set>
 
 #include "gui/helpers.h"

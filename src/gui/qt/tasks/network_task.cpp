@@ -25,7 +25,7 @@
 
 #include "gui/qt/tasks/network_task.h"
 
-#include <boost/locale.hpp>
+#include "gui/translate.h"
 
 namespace loot {
 void NetworkTask::handleException(const std::exception &exception) {
@@ -34,11 +34,10 @@ void NetworkTask::handleException(const std::exception &exception) {
     logger->error("Caught an exception: {}", exception.what());
   }
 
-  const auto message = boost::locale::translate(
-                           "Oh no, something went wrong! You can check your "
-                           "LOOTDebugLog.txt (you can get to it through the "
-                           "main menu) for more information.")
-                           .str();
+  const auto message = translate(
+      "Oh no, something went wrong! You can check your "
+      "LOOTDebugLog.txt (you can get to it through the "
+      "main menu) for more information.");
 
   emit this->error(message);
 }

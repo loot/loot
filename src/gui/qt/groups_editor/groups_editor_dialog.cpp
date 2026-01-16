@@ -34,11 +34,11 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
-#include <boost/locale.hpp>
 
 #include "gui/helpers.h"
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
+#include "gui/translate.h"
 
 namespace {
 std::map<std::string, std::set<std::string>> groupsAsMap(
@@ -202,18 +202,18 @@ void GroupsEditorDialog::setupUi() {
 }
 
 void GroupsEditorDialog::translateUi() {
-  setWindowTitle(translate("Groups Editor"));
+  setWindowTitle(qTranslate("Groups Editor"));
 
   /* translators: This string is an action in the Groups Editor plugin list
      context menu. It is currently the only entry. */
-  actionCopyPluginNames->setText(translate("&Copy Plugin Names"));
+  actionCopyPluginNames->setText(qTranslate("&Copy Plugin Names"));
 
-  addPluginButton->setText(translate("Add plugin to group"));
+  addPluginButton->setText(qTranslate("Add plugin to group"));
 
-  groupNameInputLabel->setText(translate("Group name"));
-  addGroupButton->setText(translate("Add a new group"));
-  renameGroupButton->setText(translate("Rename current group"));
-  autoArrangeButton->setText(translate("Auto arrange groups"));
+  groupNameInputLabel->setText(qTranslate("Group name"));
+  addGroupButton->setText(qTranslate("Add a new group"));
+  renameGroupButton->setText(qTranslate("Rename current group"));
+  autoArrangeButton->setText(qTranslate("Auto arrange groups"));
 }
 
 void GroupsEditorDialog::closeEvent(QCloseEvent* event) {
@@ -229,7 +229,7 @@ bool GroupsEditorDialog::askShouldDiscardChanges() {
   auto button = QMessageBox::question(
       this,
       "LOOT",
-      translate(
+      qTranslate(
           "You have unsaved changes. Are you sure you want to discard them?"),
       QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No,
       QMessageBox::StandardButton::No);
@@ -301,7 +301,7 @@ void GroupsEditorDialog::refreshPluginLists() {
   }
 
   if (groupPluginsList->count() == 0) {
-    auto text = translate("No plugins are in this group.");
+    auto text = qTranslate("No plugins are in this group.");
     auto item = new QListWidgetItem();
 
     auto font = item->font();
@@ -361,14 +361,12 @@ void GroupsEditorDialog::handleException(const std::exception& exception) {
     logger->error("Caught an exception: {}", exception.what());
   }
 
-  auto message = boost::locale::translate(
-                     "Oh no, something went wrong! You can check your "
-                     "LOOTDebugLog.txt (you can get to it through the "
-                     "main menu) for more information.")
-                     .str();
+  auto message = qTranslate(
+      "Oh no, something went wrong! You can check your "
+      "LOOTDebugLog.txt (you can get to it through the "
+      "main menu) for more information.");
 
-  QMessageBox::critical(
-      this, translate("Error"), QString::fromStdString(message));
+  QMessageBox::critical(this, qTranslate("Error"), message);
 }
 
 void GroupsEditorDialog::on_actionCopyPluginNames_triggered() {
@@ -420,8 +418,7 @@ void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
 
   refreshPluginLists();
 
-  auto titleText =
-      fmt::format(boost::locale::translate("Plugins in {0}").str(), groupName);
+  auto titleText = fmt::format(translate("Plugins in {0}"), groupName);
 
   groupPluginsTitle->setText(QString::fromStdString(titleText));
 
@@ -514,7 +511,7 @@ void GroupsEditorDialog::on_addGroupButton_clicked() {
 
   auto name = groupNameInput->text().toStdString();
   if (!graphView->addGroup(name)) {
-    QMessageBox::critical(this, "LOOT", translate("Group already exists!"));
+    QMessageBox::critical(this, "LOOT", qTranslate("Group already exists!"));
 
     return;
   }
@@ -556,8 +553,7 @@ void GroupsEditorDialog::on_renameGroupButton_clicked() {
   selectedGroupName = newName;
 
   // Update group name displayed above plugin list.
-  const auto titleText =
-      fmt::format(boost::locale::translate("Plugins in {0}").str(), newName);
+  const auto titleText = fmt::format(translate("Plugins in {0}"), newName);
 
   groupPluginsTitle->setText(QString::fromStdString(titleText));
 }

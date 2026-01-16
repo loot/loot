@@ -45,13 +45,13 @@
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
+#include <boost/locale/info.hpp>
 #include <cstdio>
 #endif
 
 #include <fmt/ranges.h>
 
 #include <boost/algorithm/string/join.hpp>
-#include <boost/locale.hpp>
 #include <fstream>
 
 #include "gui/state/logging.h"

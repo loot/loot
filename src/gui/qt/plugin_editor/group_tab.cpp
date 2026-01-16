@@ -29,10 +29,10 @@
 
 #include <QtGui/QStandardItemModel>
 #include <QtWidgets/QFormLayout>
-#include <boost/locale.hpp>
 
 #include "gui/plugin_item.h"
 #include "gui/qt/helpers.h"
+#include "gui/translate.h"
 
 namespace loot {
 GroupTab::GroupTab(QWidget* parent) :
@@ -56,9 +56,8 @@ void GroupTab::initialiseInputs(const std::vector<std::string>& groups,
   auto groupIndex =
       groupComboBox->findText(QString::fromStdString(currentGroupName));
   if (groupIndex < 0) {
-    const auto text = QString::fromStdString(fmt::format(
-        boost::locale::translate("{0} (Group does not exist)").str(),
-        currentGroupName));
+    const auto text = QString::fromStdString(
+        fmt::format(translate("{0} (Group does not exist)"), currentGroupName));
     groupComboBox->addItem(text);
     groupIndex = groupComboBox->count() - 1;
   }
@@ -100,5 +99,5 @@ void GroupTab::setupUi() {
   translateUi();
 }
 
-void GroupTab::translateUi() { groupLabel->setText(translate("Group")); }
+void GroupTab::translateUi() { groupLabel->setText(qTranslate("Group")); }
 }

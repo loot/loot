@@ -28,10 +28,9 @@ along with LOOT.  If not, see
 
 #include <fmt/base.h>
 
-#include <boost/locale.hpp>
-
 #include "gui/helpers.h"
 #include "gui/query/query.h"
+#include "gui/translate.h"
 
 namespace loot {
 class ApplySortQuery : public Query {
@@ -73,12 +72,11 @@ private:
 
   std::string getSortingErrorMessage(const gui::Game& game) const {
     return fmt::format(
-        boost::locale::translate(
+        translate(
             "Oh no, something went wrong! This is usually because \"{0}\" "
             "is set to be read-only. If it is, unset it and try again. If "
             "it isn't, you can check your LOOTDebugLog.txt (you can get to "
-            "it through the main menu) for more information.")
-            .str(),
+            "it through the main menu) for more information."),
         game.getActivePluginsFilePath().u8string());
   }
 };

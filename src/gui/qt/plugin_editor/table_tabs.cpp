@@ -276,8 +276,8 @@ void BaseTableTab::setupUi() {
 }
 
 void BaseTableTab::translateUi() {
-  addNewRowButton->setText(translate("Add new row"));
-  deleteRowButton->setText(translate("Delete row"));
+  addNewRowButton->setText(qTranslate("Add new row"));
+  deleteRowButton->setText(qTranslate("Delete row"));
 }
 
 void BaseTableTab::on_addNewRowButton_clicked() {
@@ -395,9 +395,9 @@ void MessageContentTableWidget::initialiseInputs(
     std::vector<MessageContent>&& nonUserMetadata,
     std::vector<MessageContent>&& userMetadata) {
   std::map<MessageType, std::pair<QString, QVariant>> messageTypeMap = {
-      {MessageType::say, {translate("Note"), QString("say")}},
-      {MessageType::warn, {translate("Warning"), QString("warn")}},
-      {MessageType::error, {translate("Error"), QString("error")}}};
+      {MessageType::say, {qTranslate("Note"), QString("say")}},
+      {MessageType::warn, {qTranslate("Warning"), QString("warn")}},
+      {MessageType::error, {qTranslate("Error"), QString("error")}}};
 
   auto tableModel = new MessageContentTableModel(
       this, std::move(nonUserMetadata), std::move(userMetadata), languageMap);
@@ -431,9 +431,9 @@ MessageTableTab::MessageTableTab(
 void MessageTableTab::initialiseInputs(std::vector<Message>&& nonUserMetadata,
                                        std::vector<Message>&& userMetadata) {
   std::map<MessageType, std::pair<QString, QVariant>> messageTypeMap = {
-      {MessageType::say, {translate("Note"), QString("say")}},
-      {MessageType::warn, {translate("Warning"), QString("warn")}},
-      {MessageType::error, {translate("Error"), QString("error")}}};
+      {MessageType::say, {qTranslate("Note"), QString("say")}},
+      {MessageType::warn, {qTranslate("Warning"), QString("warn")}},
+      {MessageType::error, {qTranslate("Error"), QString("error")}}};
 
   std::vector<std::pair<QString, QVariant>> messageTypes;
   for (const auto& entry : messageTypeMap) {
@@ -527,7 +527,8 @@ TagTableTab::TagTableTab(QWidget* parent, const QStringList& completions) :
 void TagTableTab::initialiseInputs(std::vector<Tag>&& nonUserMetadata,
                                    std::vector<Tag>&& userMetadata) {
   std::map<bool, std::pair<QString, QVariant>> suggestionTypeMap = {
-      {true, {translate("Add"), true}}, {false, {translate("Remove"), false}}};
+      {true, {qTranslate("Add"), true}},
+      {false, {qTranslate("Remove"), false}}};
 
   std::vector<std::pair<QString, QVariant>> suggestionTypes;
   for (const auto& entry : suggestionTypeMap) {

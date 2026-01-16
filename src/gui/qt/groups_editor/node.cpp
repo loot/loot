@@ -216,8 +216,8 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     // not followed by any further use of "this".
     while (!edgeList.isEmpty()) {
       auto edge = edgeList[0];
-      auto otherNode =
-          edge->getSourceNode() == this ? edge->getDestNode() : edge->getSourceNode();
+      auto otherNode = edge->getSourceNode() == this ? edge->getDestNode()
+                                                     : edge->getSourceNode();
 
       removeEdge(edge);
       otherNode->removeEdge(edge);
@@ -241,12 +241,12 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if (!isUserMetadata_) {
       QMessageBox::critical(graphicsWidget,
                             "LOOT",
-                            translate("Only user groups can be removed!"));
+                            qTranslate("Only user groups can be removed!"));
     } else if (containsInstalledPlugins) {
       QMessageBox::critical(
           graphicsWidget,
           "LOOT",
-          translate("A group that is not empty cannot be removed!"));
+          qTranslate("A group that is not empty cannot be removed!"));
     }
   } else {
     graphicsWidget->handleGroupSelected(textItem->text());
