@@ -491,175 +491,228 @@ void GroupsEditorDialog::on_actionCopyPluginNames_triggered() {
 }
 
 void GroupsEditorDialog::on_graphView_groupRemoved(const QString name) {
-  // If the removed group is the currently selected group, it's no longer
-  // selected, so reset the associated state.
-  if (selectedGroupName.has_value() &&
-      selectedGroupName == name.toStdString()) {
-    selectedGroupName = std::nullopt;
+  try {
+    // If the removed group is the currently selected group, it's no longer
+    // selected, so reset the associated state.
+    if (selectedGroupName.has_value() &&
+        selectedGroupName == name.toStdString()) {
+      selectedGroupName = std::nullopt;
 
-    groupPluginsList->setVisible(false);
-    nonGroupPluginsList->setVisible(false);
-    pluginComboBox->setVisible(false);
-    addPluginButton->setVisible(false);
+      groupPluginsList->setVisible(false);
+      nonGroupPluginsList->setVisible(false);
+      pluginComboBox->setVisible(false);
+      addPluginButton->setVisible(false);
 
-    renameGroupButton->setEnabled(false);
+      renameGroupButton->setEnabled(false);
+    }
+  } catch (const std::exception& e) {
+    handleException(e);
   }
 }
 
 void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
-  auto groupName = name.toStdString();
-  selectedGroupName = groupName;
+  try {
+    auto groupName = name.toStdString();
+    selectedGroupName = groupName;
 
-  refreshPluginLists();
+    refreshPluginLists();
 
-  setListTitles(groupName);
+    setListTitles(groupName);
 
-  groupPluginsList->setVisible(true);
-  nonGroupPluginsList->setVisible(true);
-  pluginComboBox->setVisible(true);
-  addPluginButton->setVisible(true);
+    groupPluginsList->setVisible(true);
+    nonGroupPluginsList->setVisible(true);
+    pluginComboBox->setVisible(true);
+    addPluginButton->setVisible(true);
 
-  // Only enable renaming groups for user groups.
-  const auto shouldEnableRenameGroup =
-      !groupNameInput->text().isEmpty() && graphView->isUserGroup(groupName);
+    // Only enable renaming groups for user groups.
+    const auto shouldEnableRenameGroup =
+        !groupNameInput->text().isEmpty() && graphView->isUserGroup(groupName);
 
-  renameGroupButton->setEnabled(shouldEnableRenameGroup);
+    renameGroupButton->setEnabled(shouldEnableRenameGroup);
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
 }
 
 void GroupsEditorDialog::on_groupPluginsList_customContextMenuRequested(
     const QPoint& position) {
-  menuPluginsList->exec(groupPluginsList->mapToGlobal(position));
+  try {
+    menuPluginsList->exec(groupPluginsList->mapToGlobal(position));
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
 }
 
 void GroupsEditorDialog::on_nonGroupPluginsList_itemSelectionChanged() {
-  on_pluginComboBox_editTextChanged(pluginComboBox->currentText());
+  try {
+    on_pluginComboBox_editTextChanged(pluginComboBox->currentText());
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
 }
 
 void GroupsEditorDialog::on_pluginComboBox_editTextChanged(
     const QString& text) {
-  const auto isSelectionEmpty = nonGroupPluginsList->selectedItems().isEmpty();
+  try {
+    const auto isSelectionEmpty =
+        nonGroupPluginsList->selectedItems().isEmpty();
 
-  const auto hasValidPluginName = getPluginItem(text.toStdString()) != nullptr;
+    const auto hasValidPluginName =
+        getPluginItem(text.toStdString()) != nullptr;
 
-  addPluginButton->setEnabled(!isSelectionEmpty || hasValidPluginName);
+    addPluginButton->setEnabled(!isSelectionEmpty || hasValidPluginName);
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
 }
 
 void GroupsEditorDialog::on_groupNameInput_textChanged(const QString& text) {
-  addGroupButton->setDisabled(text.isEmpty());
-  addGroupButton->setDefault(!text.isEmpty());
+  try {
+    addGroupButton->setDisabled(text.isEmpty());
+    addGroupButton->setDefault(!text.isEmpty());
 
-  // Only enable renaming groups for user groups.
-  const auto shouldEnableRenameGroup =
-      !text.isEmpty() && selectedGroupName.has_value() &&
-      graphView->isUserGroup(selectedGroupName.value());
+    // Only enable renaming groups for user groups.
+    const auto shouldEnableRenameGroup =
+        !text.isEmpty() && selectedGroupName.has_value() &&
+        graphView->isUserGroup(selectedGroupName.value());
 
-  renameGroupButton->setEnabled(shouldEnableRenameGroup);
+    renameGroupButton->setEnabled(shouldEnableRenameGroup);
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
 }
 
 void GroupsEditorDialog::on_addPluginButton_clicked() {
-  if (!selectedGroupName.has_value()) {
-    // Shouldn't be possible.
-    return;
-  }
-
-  const auto& groupName = selectedGroupName.value();
-
-  const auto pluginsToAdd = getPluginsToAdd();
-
-  for (const auto pluginItem : pluginsToAdd) {
-    // Get the plugin's current group.
-    const auto currentPluginGroup = getPluginGroup(*pluginItem);
-
-    // Count how many plugins are in the current group.
-    const auto containsOtherPlugins =
-        containsMoreThanOnePlugin(currentPluginGroup);
-
-    // Check the group against the plugin's saved group and just remove
-    // the plugin from the map if the two are equal, to prevent moving a
-    // plugin to a new group and back again from being treated as an unsaved
-    // change.
-    if (pluginItem->group == groupName) {
-      newPluginGroups.erase(pluginItem->name);
-    } else {
-      // Store the plugin's new group.
-      newPluginGroups.insert_or_assign(pluginItem->name, groupName);
+  try {
+    if (!selectedGroupName.has_value()) {
+      // Shouldn't be possible.
+      return;
     }
 
-    // Update whether or not the plugin's old group still contains any plugins.
-    graphView->setGroupContainsInstalledPlugins(currentPluginGroup,
-                                                containsOtherPlugins);
+    const auto& groupName = selectedGroupName.value();
+
+    const auto pluginsToAdd = getPluginsToAdd();
+
+    for (const auto pluginItem : pluginsToAdd) {
+      // Get the plugin's current group.
+      const auto currentPluginGroup = getPluginGroup(*pluginItem);
+
+      // Count how many plugins are in the current group.
+      const auto containsOtherPlugins =
+          containsMoreThanOnePlugin(currentPluginGroup);
+
+      // Check the group against the plugin's saved group and just remove
+      // the plugin from the map if the two are equal, to prevent moving a
+      // plugin to a new group and back again from being treated as an unsaved
+      // change.
+      if (pluginItem->group == groupName) {
+        newPluginGroups.erase(pluginItem->name);
+      } else {
+        // Store the plugin's new group.
+        newPluginGroups.insert_or_assign(pluginItem->name, groupName);
+      }
+
+      // Update whether or not the plugin's old group still contains any
+      // plugins.
+      graphView->setGroupContainsInstalledPlugins(currentPluginGroup,
+                                                  containsOtherPlugins);
+    }
+
+    // Refresh the group's plugin list.
+    refreshPluginLists();
+
+    // Update the plugin's new group to register it contains plugins.
+    graphView->setGroupContainsInstalledPlugins(groupName, true);
+  } catch (const std::exception& e) {
+    handleException(e);
   }
-
-  // Refresh the group's plugin list.
-  refreshPluginLists();
-
-  // Update the plugin's new group to register it contains plugins.
-  graphView->setGroupContainsInstalledPlugins(groupName, true);
 }
 
 void GroupsEditorDialog::on_addGroupButton_clicked() {
-  if (groupNameInput->text().isEmpty()) {
-    return;
+  try {
+    if (groupNameInput->text().isEmpty()) {
+      return;
+    }
+
+    auto name = groupNameInput->text().toStdString();
+    if (!graphView->addGroup(name)) {
+      QMessageBox::critical(this, "LOOT", qTranslate("Group already exists!"));
+
+      return;
+    }
+
+    groupNameInput->clear();
+  } catch (const std::exception& e) {
+    handleException(e);
   }
-
-  auto name = groupNameInput->text().toStdString();
-  if (!graphView->addGroup(name)) {
-    QMessageBox::critical(this, "LOOT", qTranslate("Group already exists!"));
-
-    return;
-  }
-
-  groupNameInput->clear();
 }
 
 void GroupsEditorDialog::on_renameGroupButton_clicked() {
-  if (groupNameInput->text().isEmpty() || !selectedGroupName.has_value() ||
-      !graphView->isUserGroup(selectedGroupName.value())) {
-    return;
-  }
-
-  const auto& oldName = selectedGroupName.value();
-  const auto newName = groupNameInput->text().toStdString();
-
-  // Renaming groups isn't a built-in operation, instead:
-  // 1. Create a new group with the new name and and load after metadata from
-  //    the old group.
-  // 2. Replace any "load after" references to the old group in other groups'
-  //    metadata with the new group.
-  // 3. Update any plugins in the old group to be in the new group. This
-  //    includes any plugins that have already had their group changed.
-  // 4. Remove the old group.
-
-  // Renaming the group in the graph is equivalent to steps 1, 2 and 4.
-  graphView->renameGroup(oldName, newName);
-
-  // Update plugin groups (step 3).
-  for (const auto& plugin : pluginItemModel->getPluginItems()) {
-    const auto pluginGroup = getPluginGroup(plugin);
-
-    if (pluginGroup == oldName) {
-      newPluginGroups.insert_or_assign(plugin.name, newName);
+  try {
+    if (groupNameInput->text().isEmpty() || !selectedGroupName.has_value() ||
+        !graphView->isUserGroup(selectedGroupName.value())) {
+      return;
     }
+
+    const auto& oldName = selectedGroupName.value();
+    const auto newName = groupNameInput->text().toStdString();
+
+    // Renaming groups isn't a built-in operation, instead:
+    // 1. Create a new group with the new name and and load after metadata from
+    //    the old group.
+    // 2. Replace any "load after" references to the old group in other groups'
+    //    metadata with the new group.
+    // 3. Update any plugins in the old group to be in the new group. This
+    //    includes any plugins that have already had their group changed.
+    // 4. Remove the old group.
+
+    // Renaming the group in the graph is equivalent to steps 1, 2 and 4.
+    graphView->renameGroup(oldName, newName);
+
+    // Update plugin groups (step 3).
+    for (const auto& plugin : pluginItemModel->getPluginItems()) {
+      const auto pluginGroup = getPluginGroup(plugin);
+
+      if (pluginGroup == oldName) {
+        newPluginGroups.insert_or_assign(plugin.name, newName);
+      }
+    }
+
+    // Update the stored selected group name.
+    selectedGroupName = newName;
+
+    // Update group name displayed above plugin list.
+    setListTitles(newName);
+  } catch (const std::exception& e) {
+    handleException(e);
   }
-
-  // Update the stored selected group name.
-  selectedGroupName = newName;
-
-  // Update group name displayed above plugin list.
-  setListTitles(newName);
 }
 
 void GroupsEditorDialog::on_autoArrangeButton_clicked() {
-  graphView->autoLayout();
+  try {
+    graphView->autoLayout();
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
 }
 
-void GroupsEditorDialog::on_dialogButtons_accepted() { accept(); }
+void GroupsEditorDialog::on_dialogButtons_accepted() {
+  try {
+    accept();
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
 
 void GroupsEditorDialog::on_dialogButtons_rejected() {
-  if (hasUnsavedChanges() && !askShouldDiscardChanges()) {
-    return;
-  }
+  try {
+    if (hasUnsavedChanges() && !askShouldDiscardChanges()) {
+      return;
+    }
 
-  reject();
+    reject();
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
 }
 }
