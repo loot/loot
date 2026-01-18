@@ -33,6 +33,7 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSplitter>
 #include <QtWidgets/QVBoxLayout>
 
 #include "gui/helpers.h"
@@ -64,9 +65,66 @@ std::map<std::string, std::pair<double, double>> positionsAsMap(
 
   return map;
 }
+
+QListWidgetItem* createItalicTextListItem(const QString& text) {
+  auto item = new QListWidgetItem();
+
+  auto font = item->font();
+  font.setItalic(true);
+  item->setFont(font);
+  item->setText(text);
+
+  return item;
+}
 }
 
 namespace loot {
+ListWithTitle::ListWithTitle(QWidget* parent) : QWidget(parent) {
+  auto layout = new QVBoxLayout();
+
+  listWidget->setObjectName("listWidget");
+
+  layout->addWidget(titleLabel);
+  layout->addWidget(listWidget);
+
+  setLayout(layout);
+
+  QMetaObject::connectSlotsByName(this);
+}
+
+void ListWithTitle::addItem(const QString& label) {
+  listWidget->addItem(label);
+}
+
+void ListWithTitle::addItem(QListWidgetItem* item) {
+  listWidget->addItem(item);
+}
+
+void ListWithTitle::clear() { listWidget->clear(); }
+
+void ListWithTitle::setSelectionMode(
+    QAbstractItemView::SelectionMode selectionMode) {
+  listWidget->setSelectionMode(selectionMode);
+}
+
+void ListWithTitle::setTitle(const QString& title) {
+  titleLabel->setText(title);
+}
+
+int ListWithTitle::count() const { return listWidget->count(); }
+
+QListWidgetItem* ListWithTitle::item(int row) const {
+  return listWidget->item(row);
+}
+
+QList<QListWidgetItem*> ListWithTitle::selectedItems() const {
+  return listWidget->selectedItems();
+}
+
+void ListWithTitle::on_listWidget_itemSelectionChanged() {
+  emit itemSelectionChanged();
+}
+
 GroupsEditorDialog::GroupsEditorDialog(QWidget* parent,
                                        PluginItemModel* pluginItemModel) :
     QDialog(
@@ -85,8 +143,8 @@ void GroupsEditorDialog::setGroups(
       masterlistGroups, userGroups, installedPluginGroups, nodePositions);
 
   // Reset UI elements.
-  groupPluginsTitle->setVisible(false);
   groupPluginsList->setVisible(false);
+  nonGroupPluginsList->setVisible(false);
   pluginComboBox->setVisible(false);
   addPluginButton->setVisible(false);
   addPluginButton->setDisabled(true);
@@ -117,12 +175,15 @@ void GroupsEditorDialog::setupUi() {
   setWindowModality(Qt::WindowModal);
 
   graphView->setObjectName("graphView");
-  groupPluginsTitle->setVisible(false);
 
   groupPluginsList->setObjectName("groupPluginsList");
   groupPluginsList->setVisible(false);
   groupPluginsList->setSelectionMode(QAbstractItemView::NoSelection);
   groupPluginsList->setContextMenuPolicy(Qt::CustomContextMenu);
+
+  nonGroupPluginsList->setObjectName("nonGroupPluginsList");
+  nonGroupPluginsList->setVisible(false);
+  nonGroupPluginsList->setSelectionMode(QAbstractItemView::MultiSelection);
 
   auto verticalSpacer = new QSpacerItem(
       SPACER_WIDTH, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -174,11 +235,14 @@ void GroupsEditorDialog::setupUi() {
   formLayout->addWidget(addGroupButton);
   formLayout->addWidget(renameGroupButton);
 
-  sidebarLayout->addWidget(groupPluginsTitle);
-  sidebarLayout->addWidget(groupPluginsList, 1);
-  sidebarLayout->addSpacerItem(verticalSpacer);
+  QSplitter* splitter = new QSplitter(Qt::Orientation::Vertical, this);
+  splitter->addWidget(groupPluginsList);
+  splitter->addWidget(nonGroupPluginsList);
+
+  sidebarLayout->addWidget(splitter, 1);
   sidebarLayout->addWidget(pluginComboBox);
   sidebarLayout->addWidget(addPluginButton);
+  sidebarLayout->addSpacerItem(verticalSpacer);
   sidebarLayout->addWidget(divider);
   sidebarLayout->addLayout(formLayout);
   sidebarLayout->addWidget(divider2);
@@ -208,7 +272,7 @@ void GroupsEditorDialog::translateUi() {
      context menu. It is currently the only entry. */
   actionCopyPluginNames->setText(qTranslate("&Copy Plugin Names"));
 
-  addPluginButton->setText(qTranslate("Add plugin to group"));
+  addPluginButton->setText(qTranslate("Add plugin(s) to group"));
 
   groupNameInputLabel->setText(qTranslate("Group name"));
   addGroupButton->setText(qTranslate("Add a new group"));
@@ -285,6 +349,7 @@ void GroupsEditorDialog::refreshPluginLists() {
   }
 
   groupPluginsList->clear();
+  nonGroupPluginsList->clear();
   pluginComboBox->clear();
 
   const auto& groupName = selectedGroupName.value();
@@ -295,6 +360,8 @@ void GroupsEditorDialog::refreshPluginLists() {
     if (pluginGroup == groupName) {
       groupPluginsList->addItem(QString::fromStdString(plugin.name));
     } else {
+      nonGroupPluginsList->addItem(QString::fromStdString(plugin.name));
+
       // Add plugins that aren't in the current group to the combo box.
       pluginComboBox->addItem(QString::fromStdString(plugin.name));
     }
@@ -302,18 +369,21 @@ void GroupsEditorDialog::refreshPluginLists() {
 
   if (groupPluginsList->count() == 0) {
     auto text = qTranslate("No plugins are in this group.");
-    auto item = new QListWidgetItem();
 
-    auto font = item->font();
-    font.setItalic(true);
-    item->setFont(font);
-    item->setText(text);
-
-    groupPluginsList->addItem(item);
+    groupPluginsList->addItem(createItalicTextListItem(text));
   }
 
+  if (nonGroupPluginsList->count() == 0) {
+    auto text = qTranslate("All plugins are in this group.");
+
+    nonGroupPluginsList->addItem(createItalicTextListItem(text));
+  }
+
+  pluginComboBox->setCurrentText("");
   pluginComboBox->setEnabled(pluginComboBox->count() > 0);
-  addPluginButton->setEnabled(pluginComboBox->count() > 0);
+
+  // Nothing is selected to start with.
+  addPluginButton->setEnabled(false);
 }
 
 const PluginItem* GroupsEditorDialog::getPluginItem(
@@ -369,6 +439,32 @@ void GroupsEditorDialog::handleException(const std::exception& exception) {
   QMessageBox::critical(this, qTranslate("Error"), message);
 }
 
+void GroupsEditorDialog::setListTitles(const std::string& groupName) {
+  groupPluginsList->setTitle(QString::fromStdString(
+      fmt::format(translate("Plugins in {0}"), groupName)));
+
+  nonGroupPluginsList->setTitle(QString::fromStdString(
+      fmt::format(translate("Plugins not in {0}"), groupName)));
+}
+
+std::vector<const PluginItem*> GroupsEditorDialog::getPluginsToAdd() const {
+  std::vector<const PluginItem*> pluginsToAdd;
+  for (const auto& listItem : nonGroupPluginsList->selectedItems()) {
+    const auto pluginItem = getPluginItem(listItem->text().toStdString());
+    if (pluginItem) {
+      pluginsToAdd.push_back(pluginItem);
+    }
+  }
+
+  const auto pluginName = pluginComboBox->currentText().toStdString();
+  const auto pluginItem = getPluginItem(pluginName);
+  if (pluginItem) {
+    pluginsToAdd.push_back(pluginItem);
+  }
+
+  return pluginsToAdd;
+}
+
 void GroupsEditorDialog::on_actionCopyPluginNames_triggered() {
   try {
     if (!selectedGroupName.has_value() || groupPluginsList->count() == 0) {
@@ -401,8 +497,8 @@ void GroupsEditorDialog::on_graphView_groupRemoved(const QString name) {
       selectedGroupName == name.toStdString()) {
     selectedGroupName = std::nullopt;
 
-    groupPluginsTitle->setVisible(false);
     groupPluginsList->setVisible(false);
+    nonGroupPluginsList->setVisible(false);
     pluginComboBox->setVisible(false);
     addPluginButton->setVisible(false);
 
@@ -411,19 +507,15 @@ void GroupsEditorDialog::on_graphView_groupRemoved(const QString name) {
 }
 
 void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
-  groupPluginsTitle->clear();
-
   auto groupName = name.toStdString();
   selectedGroupName = groupName;
 
   refreshPluginLists();
 
-  auto titleText = fmt::format(translate("Plugins in {0}"), groupName);
+  setListTitles(groupName);
 
-  groupPluginsTitle->setText(QString::fromStdString(titleText));
-
-  groupPluginsTitle->setVisible(true);
   groupPluginsList->setVisible(true);
+  nonGroupPluginsList->setVisible(true);
   pluginComboBox->setVisible(true);
   addPluginButton->setVisible(true);
 
@@ -439,12 +531,17 @@ void GroupsEditorDialog::on_groupPluginsList_customContextMenuRequested(
   menuPluginsList->exec(groupPluginsList->mapToGlobal(position));
 }
 
+void GroupsEditorDialog::on_nonGroupPluginsList_itemSelectionChanged() {
+  on_pluginComboBox_editTextChanged(pluginComboBox->currentText());
+}
+
 void GroupsEditorDialog::on_pluginComboBox_editTextChanged(
     const QString& text) {
-  const auto enableAddPluginButton =
-      getPluginItem(text.toStdString()) != nullptr;
+  const auto isSelectionEmpty = nonGroupPluginsList->selectedItems().isEmpty();
 
-  addPluginButton->setEnabled(enableAddPluginButton);
+  const auto hasValidPluginName = getPluginItem(text.toStdString()) != nullptr;
+
+  addPluginButton->setEnabled(!isSelectionEmpty || hasValidPluginName);
 }
 
 void GroupsEditorDialog::on_groupNameInput_textChanged(const QString& text) {
@@ -465,40 +562,36 @@ void GroupsEditorDialog::on_addPluginButton_clicked() {
     return;
   }
 
-  const auto pluginName = pluginComboBox->currentText().toStdString();
   const auto& groupName = selectedGroupName.value();
 
-  // Get the plugin's item.
-  const auto pluginItem = getPluginItem(pluginName);
-  if (!pluginItem) {
-    // Shouldn't be possible.
-    return;
-  }
+  const auto pluginsToAdd = getPluginsToAdd();
 
-  // Get the plugin's current group.
-  const auto currentPluginGroup = getPluginGroup(*pluginItem);
+  for (const auto pluginItem : pluginsToAdd) {
+    // Get the plugin's current group.
+    const auto currentPluginGroup = getPluginGroup(*pluginItem);
 
-  // Count how many plugins are in the current group.
-  const auto containsOtherPlugins =
-      containsMoreThanOnePlugin(currentPluginGroup);
+    // Count how many plugins are in the current group.
+    const auto containsOtherPlugins =
+        containsMoreThanOnePlugin(currentPluginGroup);
 
-  // Check the group against the plugin's saved group and just remove
-  // the plugin from the map if the two are equal, to prevent moving a
-  // plugin to a new group and back again from being treated as an unsaved
-  // change.
-  if (pluginItem->group == groupName) {
-    newPluginGroups.erase(pluginName);
-  } else {
-    // Store the plugin's new group.
-    newPluginGroups.insert_or_assign(pluginName, groupName);
+    // Check the group against the plugin's saved group and just remove
+    // the plugin from the map if the two are equal, to prevent moving a
+    // plugin to a new group and back again from being treated as an unsaved
+    // change.
+    if (pluginItem->group == groupName) {
+      newPluginGroups.erase(pluginItem->name);
+    } else {
+      // Store the plugin's new group.
+      newPluginGroups.insert_or_assign(pluginItem->name, groupName);
+    }
+
+    // Update whether or not the plugin's old group still contains any plugins.
+    graphView->setGroupContainsInstalledPlugins(currentPluginGroup,
+                                                containsOtherPlugins);
   }
 
   // Refresh the group's plugin list.
   refreshPluginLists();
-
-  // Update whether or not the plugin's old group still contains any plugins.
-  graphView->setGroupContainsInstalledPlugins(currentPluginGroup,
-                                              containsOtherPlugins);
 
   // Update the plugin's new group to register it contains plugins.
   graphView->setGroupContainsInstalledPlugins(groupName, true);
@@ -553,9 +646,7 @@ void GroupsEditorDialog::on_renameGroupButton_clicked() {
   selectedGroupName = newName;
 
   // Update group name displayed above plugin list.
-  const auto titleText = fmt::format(translate("Plugins in {0}"), newName);
-
-  groupPluginsTitle->setText(QString::fromStdString(titleText));
+  setListTitles(newName);
 }
 
 void GroupsEditorDialog::on_autoArrangeButton_clicked() {

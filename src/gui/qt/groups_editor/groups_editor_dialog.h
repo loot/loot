@@ -41,6 +41,37 @@
 #include "gui/qt/plugin_item_model.h"
 
 namespace loot {
+class ListWithTitle : public QWidget {
+  Q_OBJECT
+public:
+  ListWithTitle(QWidget *parent);
+
+  void addItem(const QString &label);
+  void addItem(QListWidgetItem *item);
+
+  void clear();
+
+  void setSelectionMode(QAbstractItemView::SelectionMode selectionMode);
+
+  void setTitle(const QString &title);
+
+  int count() const;
+
+  QListWidgetItem *item(int row) const;
+
+  QList<QListWidgetItem *> selectedItems() const;
+
+signals:
+  void itemSelectionChanged();
+
+private:
+  QLabel *titleLabel{new QLabel(this)};
+  QListWidget *listWidget{new QListWidget(this)};
+
+private slots:
+  void on_listWidget_itemSelectionChanged();
+};
+
 class GroupsEditorDialog : public QDialog {
   Q_OBJECT
 public:
@@ -58,8 +89,8 @@ public:
 private:
   GraphView *graphView{new GraphView(this)};
 
-  QLabel *groupPluginsTitle{new QLabel(this)};
-  QListWidget *groupPluginsList{new QListWidget(this)};
+  ListWithTitle *groupPluginsList{new ListWithTitle(this)};
+  ListWithTitle *nonGroupPluginsList{new ListWithTitle(this)};
 
   QComboBox *pluginComboBox{new QComboBox(this)};
   QPushButton *addPluginButton{new QPushButton(this)};
@@ -96,11 +127,16 @@ private:
 
   void handleException(const std::exception &exception);
 
+  void setListTitles(const std::string &groupName);
+
+  std::vector<const PluginItem *> getPluginsToAdd() const;
+
 private slots:
   void on_actionCopyPluginNames_triggered();
   void on_graphView_groupRemoved(const QString name);
   void on_graphView_groupSelected(const QString &name);
   void on_groupPluginsList_customContextMenuRequested(const QPoint &position);
+  void on_nonGroupPluginsList_itemSelectionChanged();
   void on_pluginComboBox_editTextChanged(const QString &text);
   void on_groupNameInput_textChanged(const QString &text);
   void on_addPluginButton_clicked();
