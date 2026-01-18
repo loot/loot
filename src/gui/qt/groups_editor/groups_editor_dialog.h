@@ -27,6 +27,7 @@
 #define LOOT_GUI_QT_GROUPS_EDITOR_GROUPS_EDITOR_DIALOG
 
 #include <QtGui/QCloseEvent>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>
@@ -92,6 +93,7 @@ private:
   ListWithTitle *groupPluginsList{new ListWithTitle(this)};
   ListWithTitle *nonGroupPluginsList{new ListWithTitle(this)};
 
+  QCheckBox *defaultPluginsCheckBox{new QCheckBox(this)};
   QComboBox *pluginComboBox{new QComboBox(this)};
   QPushButton *addPluginButton{new QPushButton(this)};
 
@@ -137,6 +139,7 @@ private slots:
   void on_graphView_groupSelected(const QString &name);
   void on_groupPluginsList_customContextMenuRequested(const QPoint &position);
   void on_nonGroupPluginsList_itemSelectionChanged();
+  void on_defaultPluginsCheckBox_checkStateChanged();
   void on_pluginComboBox_editTextChanged(const QString &text);
   void on_groupNameInput_textChanged(const QString &text);
   void on_addPluginButton_clicked();

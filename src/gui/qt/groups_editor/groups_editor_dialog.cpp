@@ -145,6 +145,7 @@ void GroupsEditorDialog::setGroups(
   // Reset UI elements.
   groupPluginsList->setVisible(false);
   nonGroupPluginsList->setVisible(false);
+  defaultPluginsCheckBox->setVisible(false);
   pluginComboBox->setVisible(false);
   addPluginButton->setVisible(false);
   addPluginButton->setDisabled(true);
@@ -187,6 +188,9 @@ void GroupsEditorDialog::setupUi() {
 
   auto verticalSpacer = new QSpacerItem(
       SPACER_WIDTH, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+  defaultPluginsCheckBox->setObjectName("defaultPluginsCheckBox");
+  defaultPluginsCheckBox->setVisible(false);
 
   auto completer = new QCompleter(pluginComboBox->model(), this);
   completer->setCompletionMode(QCompleter::PopupCompletion);
@@ -241,6 +245,7 @@ void GroupsEditorDialog::setupUi() {
 
   sidebarLayout->addWidget(splitter, 1);
   sidebarLayout->addWidget(pluginComboBox);
+  sidebarLayout->addWidget(defaultPluginsCheckBox);
   sidebarLayout->addWidget(addPluginButton);
   sidebarLayout->addSpacerItem(verticalSpacer);
   sidebarLayout->addWidget(divider);
@@ -271,6 +276,9 @@ void GroupsEditorDialog::translateUi() {
   /* translators: This string is an action in the Groups Editor plugin list
      context menu. It is currently the only entry. */
   actionCopyPluginNames->setText(qTranslate("&Copy Plugin Names"));
+
+  defaultPluginsCheckBox->setText(
+      qTranslate("Show only plugins that are in the default group"));
 
   addPluginButton->setText(qTranslate("Add plugin(s) to group"));
 
@@ -354,12 +362,19 @@ void GroupsEditorDialog::refreshPluginLists() {
 
   const auto& groupName = selectedGroupName.value();
 
+  const auto defaultGroupSelected = groupName == Group::DEFAULT_NAME;
+  defaultPluginsCheckBox->setEnabled(!defaultGroupSelected);
+  if (defaultGroupSelected) {
+    defaultPluginsCheckBox->setChecked(false);
+  }
+
   for (const auto& plugin : pluginItemModel->getPluginItems()) {
     const auto pluginGroup = getPluginGroup(plugin);
 
     if (pluginGroup == groupName) {
       groupPluginsList->addItem(QString::fromStdString(plugin.name));
-    } else {
+    } else if (!defaultPluginsCheckBox->isChecked() ||
+               pluginGroup == Group::DEFAULT_NAME) {
       nonGroupPluginsList->addItem(QString::fromStdString(plugin.name));
 
       // Add plugins that aren't in the current group to the combo box.
@@ -374,7 +389,9 @@ void GroupsEditorDialog::refreshPluginLists() {
   }
 
   if (nonGroupPluginsList->count() == 0) {
-    auto text = qTranslate("All plugins are in this group.");
+    auto text = defaultPluginsCheckBox->isChecked()
+                    ? qTranslate("No plugins are in the default group.")
+                    : qTranslate("All plugins are in this group.");
 
     nonGroupPluginsList->addItem(createItalicTextListItem(text));
   }
@@ -500,6 +517,7 @@ void GroupsEditorDialog::on_graphView_groupRemoved(const QString name) {
 
       groupPluginsList->setVisible(false);
       nonGroupPluginsList->setVisible(false);
+      defaultPluginsCheckBox->setVisible(false);
       pluginComboBox->setVisible(false);
       addPluginButton->setVisible(false);
 
@@ -521,6 +539,7 @@ void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
 
     groupPluginsList->setVisible(true);
     nonGroupPluginsList->setVisible(true);
+    defaultPluginsCheckBox->setVisible(true);
     pluginComboBox->setVisible(true);
     addPluginButton->setVisible(true);
 
@@ -546,6 +565,14 @@ void GroupsEditorDialog::on_groupPluginsList_customContextMenuRequested(
 void GroupsEditorDialog::on_nonGroupPluginsList_itemSelectionChanged() {
   try {
     on_pluginComboBox_editTextChanged(pluginComboBox->currentText());
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void GroupsEditorDialog::on_defaultPluginsCheckBox_checkStateChanged() {
+  try {
+    refreshPluginLists();
   } catch (const std::exception& e) {
     handleException(e);
   }

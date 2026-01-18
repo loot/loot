@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.28.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-01-18 14:17+0000\n"
+"POT-Creation-Date: 2026-01-18 15:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -553,14 +553,14 @@ msgid ""
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1471 src/gui/qt/restore_load_order_dialog.cpp:224
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:453
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:456
 #: src/gui/qt/plugin_editor/table_tabs.cpp:400
 #: src/gui/qt/plugin_editor/table_tabs.cpp:436
 msgid "Error"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1481
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:449
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:452
 #: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
@@ -893,7 +893,7 @@ msgid "&Copy Plugin Names"
 msgstr ""
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:281
-msgid "Show only plugins in the default group"
+msgid "Show only plugins that are in the default group"
 msgstr ""
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:283
@@ -920,29 +920,29 @@ msgstr ""
 msgid "You have unsaved changes. Are you sure you want to discard them?"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:383
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:386
 msgid "No plugins are in this group."
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:390
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:393
 msgid "No plugins are in the default group."
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:391
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:394
 msgid "All plugins are in this group."
-msgstr ""
-
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:458
-#, c++-format
-msgid "Plugins in {0}"
 msgstr ""
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:461
 #, c++-format
+msgid "Plugins in {0}"
+msgstr ""
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:464
+#, c++-format
 msgid "Plugins not in {0}"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:653
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:666
 msgid "Group already exists!"
 msgstr ""
 
