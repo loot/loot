@@ -4,26 +4,71 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.28.1 - Unreleased
+0.29.0 - Unreleased
 ===================
 
 Added
 -----
 
+- Support for adding multiple plugins to the same group at once, using a new
+  multi-select list in the Groups Editor.
 - Support for detecting OpenMW v0.50.0 using its Windows Registry key.
 - Support for building LOOT using a prebuilt copy of minizip-ng without its
   minizip compatibility layer. minizip and minizip-ng with its minizip
   compatibility layer were already supported.
 
+
+Fixed
+-----
+
+- Warnings about ambiguous load orders when Starfield blueprint plugins or
+  BlueprintShips plugins are installed (aside from
+  ``BlueprintShips-Starfield.esm``, which was already handled as a special
+  case). The "Trackers Alliance: The Complete Bounty Series" Creation includes
+  such plugins.
+- Starfield BlueprintShips plugins are now correctly displayed as active when
+  they are implicitly activated by there being active plugin that matches the
+  BlueprintShips plugin's suffix. For example, if a plugin named
+  ``example.esp`` is active, then ``BlueprintShips-example.esm`` is also active
+  if the latter is installed.
+- An error that occurred when saving settings when there is no current game
+  (e.g. because LOOT could not detect any installed games).
+- Building LOOT using CMake's Ninja generator on Windows.
+- Various compilation, linking and packaging errors encountered when
+  cross-compiling LOOT for Windows using mingw-w64.
+
 Changed
 -------
 
+- When LOOT sets the load order, it now writes the timestamps of Starfield
+  blueprint masters to match their load order, in addition to including them in
+  ``plugins.txt``. This is so that when Starfield launches and removes the
+  blueprint masters from ``plugins.txt``, it will still use the same load order
+  for those plugins for subsequent launches.
 - The "Copy Load Order" Game menu action is no longer disabled while there is an
   unapplied sorted load order. In that state, the action copies the unapplied
   load order, rather than the game's current saved load order.
+- Windows 11 users can now override the Qt style that LOOT uses by default using
+  Qt's ``-style`` CLI argument.
+- Unexpected errors in the Groups Editor that could potentially crash LOOT will
+  now display an error message dialog box instead.
+- Updated LOOT's list of known official plugins for Skyrim SE, Starfield and
+  Fallout 4.
+- LOOT now supports v0.29 of the metadata syntax.
+- Updated Boost to v1.90.0.
+- Updated fmt to v12.1.0.
+- Updated libloot to v0.29.2.
+- Updated libtbb used by the Flatpak build to v2022.3.0.
+- Updated minizip-ng to v4.1.0.
 - Updated OGDF to foxglove-202510.
-- Updated spdlog to v1.16.0.
+- Updated spdlog to v1.17.0.
+- Updated zlib to v1.3.2.
+- Updated the Bulgarian translation.
+- Updated the Brazilian Portuguese translation.
+- Updated the German translation.
+- Updated the Russian translation.
 - Updated the Simplified Chinese translation.
+- Updated the Tamil translation.
 
 0.28.0 - 2025-10-11
 ===================
