@@ -1,6 +1,6 @@
 app-id: io.github.loot.loot
 runtime: org.kde.Platform
-runtime-version: '6.9'
+runtime-version: '6.10'
 sdk: org.kde.Sdk
 command: LOOT
 finish-args:
@@ -111,19 +111,6 @@ modules:
       - type: archive
         url: https://github.com/marzer/tomlplusplus/archive/v3.4.0.tar.gz
         sha256: 8517f65938a4faae9ccf8ebb36631a38c1cadfb5efa85d9a72e15b9e97d25155
-
-  - name: fmt
-    buildsystem: cmake-ninja
-    builddir: true
-    config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
-      - -DFMT_DOC=OFF
-      - -DFMT_TEST=OFF
-      - -DCMAKE_POSITION_INDEPENDENT_CODE=ON
-    sources:
-      - type: archive
-        url: https://github.com/fmtlib/fmt/releases/download/12.1.0/fmt-12.1.0.zip
-        sha256: 695fd197fa5aff8fc67b5f2bbc110490a875cdf7a41686ac8512fb480fa8ada7
 
   - name: spdlog
     buildsystem: cmake-ninja
