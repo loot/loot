@@ -55,8 +55,12 @@ TEST(GetSteamInstallPaths, shouldReturnTheSteamFolderInUserLocalShare) {
 
   const auto home = std::string(getenv("HOME"));
 
+  const auto xgDataHome = getenv("XDG_DATA_HOME");
+
+  const auto data = xgDataHome == nullptr ? home + "/.local/share" : xgDataHome;
+
   ASSERT_EQ(2, paths.size());
-  EXPECT_EQ(home + "/.local/share/Steam", paths[0].u8string());
+  EXPECT_EQ(data + "/Steam", paths[0].u8string());
   EXPECT_EQ(home + "/.var/app/com.valvesoftware.Steam/.local/share/Steam",
             paths[1].u8string());
 }

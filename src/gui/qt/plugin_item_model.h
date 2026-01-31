@@ -27,6 +27,7 @@
 #define LOOT_GUI_QT_PLUGIN_ITEM_MODEL
 
 #include <QtCore/QAbstractListModel>
+#include <unordered_set>
 
 #include "gui/plugin_item.h"
 #include "gui/qt/counters.h"

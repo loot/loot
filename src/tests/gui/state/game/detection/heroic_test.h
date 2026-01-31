@@ -45,8 +45,12 @@ TEST(GetHeroicGamesLauncherConfigPaths,
 
   const auto home = std::string(getenv("HOME"));
 
+  const auto xgConfigHome = getenv("XDG_CONFIG_HOME");
+
+  const auto config = xgConfigHome == nullptr ? home + "/.config" : xgConfigHome;
+
   ASSERT_EQ(2, paths.size());
-  EXPECT_EQ(home + "/.config/heroic", paths[0].u8string());
+  EXPECT_EQ(config + "/heroic", paths[0].u8string());
   EXPECT_EQ(home + "/.var/app/com.heroicgameslauncher.hgl/config/heroic",
             paths[1].u8string());
 }
