@@ -162,6 +162,13 @@ target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(loot_gui_tests SYSTEM PRIVATE
     ${VALVE_FILE_VDF_INCLUDE_DIRS})
 
+set_target_properties(loot_gui_tests PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED ON
+        AUTOMOC ON
+        AUTORCC ON
+        AUTOUIC ON)
+
 if(WIN32)
     target_compile_definitions(loot_gui_tests PRIVATE
         UNICODE _UNICODE NOMINMAX BOOST_UUID_FORCE_AUTO_LINK)
@@ -178,7 +185,7 @@ endif()
 if(MSVC)
     # Set /bigobj to allow building Debug tests
     target_compile_options(loot_gui_tests PRIVATE
-        "/permissive-" "/W4" "/bigobj")
+        "/permissive-" "/W4" "/bigobj" "/MP")
 endif()
 
 

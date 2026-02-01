@@ -16,10 +16,6 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
-
 if(MSVC)
     add_compile_options("/MP")
 endif()
@@ -571,6 +567,13 @@ endif()
 
 # Include source and library directories.
 target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
+
+set_target_properties(LOOT PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED ON
+        AUTOMOC ON
+        AUTORCC ON
+        AUTOUIC ON)
 
 if(WIN32)
     target_compile_definitions(LOOT PRIVATE UNICODE _UNICODE NOMINMAX)
