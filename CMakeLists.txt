@@ -15,6 +15,7 @@ option(LOOT_BUILD_TESTS "Whether or not to build LOOT's tests." ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(BUILD_SHARED_LIBS OFF)
 
 if(MSVC)
     add_compile_options("/MP")
@@ -63,6 +64,18 @@ if(LINUX)
 endif()
 
 find_package(Qt6 6.4 COMPONENTS Widgets Network Concurrent REQUIRED)
+
+if(WIN32 AND CMAKE_HOST_LINUX)
+    # The MinGW build of Qt6::Network expects you to link to brotlicommon.
+    set(BROTLI_BUILD_TOOLS OFF)
+    FetchContent_Declare(
+        Brotli
+        URL "https://github.com/google/brotli/archive/refs/tags/v1.2.0.tar.gz"
+        URL_HASH "SHA256=816c96e8e8f193b40151dad7e8ff37b1221d019dbcb9c35cd3fadbfe6477dfec"
+        FIND_PACKAGE_ARGS)
+
+    FetchContent_MakeAvailable(Brotli)
+endif()
 
 if(NOT DEFINED EP_PREFIX)
     set_directory_properties(PROPERTIES "EP_PREFIX" "external")
@@ -123,6 +136,7 @@ if(MSVC AND LIBLOOT_USE_PREBUILT_MSVC_BINARY AND NOT libloot_FOUND)
     find_package(libloot REQUIRED CONFIG
         PATHS "${FETCHCONTENT_BASE_DIR}/libloot-src/lib/cmake/libloot")
 else()
+    set(LIBLOOT_BUILD_SHARED ON)
     set(LIBLOOT_BUILD_TESTS OFF)
     set(LIBLOOT_INSTALL_DOCS OFF)
     FetchContent_Declare(
