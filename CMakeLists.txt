@@ -66,6 +66,9 @@ endif()
 find_package(Qt6 6.4 COMPONENTS Widgets Network Concurrent REQUIRED)
 
 if(WIN32 AND CMAKE_HOST_LINUX)
+    # The MinGW build of Qt6 expects you to link to bz2.
+    find_package(BZip2 MODULE REQUIRED)
+
     # The MinGW build of Qt6::Network expects you to link to brotlicommon.
     set(BROTLI_BUILD_TOOLS OFF)
     FetchContent_Declare(
@@ -494,9 +497,9 @@ if(WIN32)
     if(CMAKE_HOST_LINUX)
         target_compile_definitions(LOOT PRIVATE LOOT_STATIC)
 
-        target_link_libraries(LOOT PRIVATE bz2)
-        target_link_libraries(Qt6::Widgets INTERFACE bz2)
-        target_link_libraries(Qt6::Network INTERFACE bz2 brotlicommon)
+        target_link_libraries(LOOT PRIVATE BZip2::BZip2)
+        target_link_libraries(Qt6::Widgets INTERFACE BZip2::BZip2)
+        target_link_libraries(Qt6::Network INTERFACE BZip2::BZip2 brotlicommon)
     endif()
 else()
     set(ICU_TARGETS ICU::data ICU::uc TBB::tbb)
