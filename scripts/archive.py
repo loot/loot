@@ -139,10 +139,11 @@ def prepare_linux_archive(root_path, release_path, temp_path):
     # libloot
     lib_path = os.path.join(temp_path, 'lib')
     os.makedirs(lib_path)
-    shutil.copy2(
-        os.path.join(release_path, 'libloot.so'),
-        os.path.join(lib_path, 'libloot.so')
-    )
+    for libloot_path in glob.glob(os.path.join(release_path, 'libloot.so.*')):
+        shutil.copy2(
+            libloot_path,
+            os.path.join(lib_path, os.path.basename(libloot_path))
+        )
 
     # Appstream metainfo file
     metainfo_filename = 'io.github.loot.loot.metainfo.xml'
