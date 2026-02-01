@@ -1,0 +1,9 @@
+{
+  "name": "LOOT (Linux)",
+  "build": {
+    "dockerfile": "./Dockerfile"
+  },
+  "runArgs": [
+    "--userns=keep-id"
+  ]
+}
