@@ -114,10 +114,11 @@ rustup default stable
 git clone https://github.com/loot/loot.git
 cd loot
 cmake -B build -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=OFF
-cmake --build build
+cmake --build build --parallel $(nproc)
 ```
 
-`--parallel` is omitted on Fedora 43 because it causes memory usage to exceed 48 GB while building OGDF (vs. ~ 3.2 GB without it).
+`--parallel` is given a value here because the default behaviour on Fedora 43 results causes memory usage to exceed 48
+GB while building OGDF (vs. ~ 3.2 GB without `--parallel`).
 
 ### CMake Variables
 
