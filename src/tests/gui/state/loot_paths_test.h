@@ -82,10 +82,15 @@ TEST(LootPaths,
      constructorShouldSetAppPathToExecutableDirectoryIfGivenPathIsEmpty) {
   LootPaths paths("", "");
 
+#ifdef __MINGW64__
+  EXPECT_EQ(std::filesystem::current_path(),
+            paths.getReadmePath().parent_path());
+#else
   // The current path is the build directory, not the config-specific
   // subdirectory.
   EXPECT_EQ(std::filesystem::current_path(),
             paths.getReadmePath().parent_path().parent_path());
+#endif
 }
 #else
 TEST(LootPaths,
