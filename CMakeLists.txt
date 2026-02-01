@@ -701,7 +701,14 @@ endif()
 add_custom_command(TARGET LOOT POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_if_different
        $<TARGET_FILE:libloot::libloot>
-       "$<TARGET_FILE_DIR:LOOT>/$<PATH:GET_FILENAME,$<TARGET_FILE:libloot::libloot>>")
+       "$<TARGET_FILE_DIR:LOOT>/$<TARGET_FILE_NAME:libloot::libloot>")
+
+if(LINUX)
+    add_custom_command(TARGET LOOT POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_SONAME_FILE:libloot::libloot>
+            "$<TARGET_FILE_DIR:LOOT>/$<TARGET_SONAME_FILE_NAME:libloot::libloot>")
+endif()
 
 if(LOOT_BUILD_TESTS)
     include("cmake/tests.cmake")
