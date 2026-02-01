@@ -176,91 +176,33 @@ else()
 endif()
 
 
-if(NOT DEFINED MINIZIP_NG_URL)
-    set(MINIZIP_NG_URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.10.tar.gz")
-    set(MINIZIP_NG_HASH "SHA256=c362e35ee973fa7be58cc5e38a4a6c23cc8f7e652555daf4f115a9eb2d3a6be7")
+if(NOT DEFINED ZLIB_REPOSITORY)
+    set(ZLIB_REPOSITORY "https://github.com/madler/zlib")
 endif()
 
-find_package(ZLIB)
-if(ZLIB_FOUND)
-    set(MZ_ZLIB ON)
-    set(MZ_BZIP2 OFF)
-    set(MZ_LZMA OFF)
-    set(MZ_ZSTD OFF)
-    set(MZ_FETCH_LIBS OFF)
-    set(MZ_PKCRYPT OFF)
-    set(MZ_WZAES OFF)
-    set(MZ_OPENSSL OFF)
-    set(MZ_LIBBSD OFF)
-    set(MZ_SIGNING OFF)
-    set(MZ_COMPRESS_ONLY ON)
-    FetchContent_Declare(
-        MINIZIP
-        URL ${MINIZIP_NG_URL}
-        URL_HASH ${MINIZIP_NG_HASH}
-        FIND_PACKAGE_ARGS NAMES MINIZIP minizip-ng)
-
-    FetchContent_MakeAvailable(MINIZIP)
-else()
-    # zlib and minizip-ng don't really work with FetchContent if zlib isn't already installed, as
-    # minizip-ng errors if find_package(ZLIB) fails, and FetchContent(ZLIB) doesn't support
-    # build-in-source so minizip-ng include won't find zconf.h.
-
-    if(NOT DEFINED ZLIB_URL)
-        set(ZLIB_URL "https://github.com/madler/zlib/archive/refs/tags/v1.3.1.tar.gz")
-        set(ZLIB_HASH "SHA256=17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c")
-    endif()
-
-    ExternalProject_Add(zlib
-        URL ${ZLIB_URL}
-        URL_HASH ${ZLIB_HASH}
-        CMAKE_ARGS
-            -DZLIB_BUILD_EXAMPLES=OFF
-            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        INSTALL_COMMAND ""
-        BUILD_IN_SOURCE TRUE)
-    ExternalProject_Get_Property(zlib SOURCE_DIR BINARY_DIR)
-
-    # minizip-ng can't find zlib if they're both being built for the first time, so explicitly
-    # provide the library path.
-    if(WIN32 AND CMAKE_HOST_WIN32)
-        set(ZLIB_LIB_NAME "zlibstatic$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
-    elseif(WIN32)
-        set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}zlibstatic$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
-    else()
-        set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}z${CMAKE_STATIC_LIBRARY_SUFFIX}")
-    endif()
-    set(ZLIB_LIBRARY
-        "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${ZLIB_LIB_NAME}")
-
-    ExternalProject_Add(minizip-ng
-        URL ${MINIZIP_NG_URL}
-        URL_HASH ${MINIZIP_NG_HASH}
-        CMAKE_ARGS
-            -DMZ_ZLIB=ON
-            -DMZ_BZIP2=OFF
-            -DMZ_LZMA=OFF
-            -DMZ_ZSTD=OFF
-            -DMZ_FETCH_LIBS=OFF
-            -DMZ_PKCRYPT=OFF
-            -DMZ_WZAES=OFF
-            -DMZ_OPENSSL=OFF
-            -DMZ_LIBBSD=OFF
-            -DMZ_SIGNING=OFF
-            -DMZ_COMPRESS_ONLY=ON
-            -DZLIB_ROOT=${SOURCE_DIR}
-            -DZLIB_LIBRARY=${ZLIB_LIBRARY}
-            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        INSTALL_COMMAND ""
-        DEPENDS zlib)
-    ExternalProject_Get_Property(minizip-ng SOURCE_DIR BINARY_DIR)
-    set(MINIZIP_NG_INCLUDE_DIRS "${SOURCE_DIR}")
-    set(MINIZIP_NG_LIBRARIES
-        "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}minizip${CMAKE_STATIC_LIBRARY_SUFFIX}"
-        ${ZLIB_LIBRARY})
+if(NOT DEFINED ZLIB_TAG)
+    set(ZLIB_TAG "570720b0c24f9686c33f35a1b3165c1f568b96be") # v1.3.1.2
 endif()
+
+set(ZLIB_BUILD_EXAMPLES OFF)
+set(ZLIB_COMPAT ON)
+
+set(MZ_ZLIB ON)
+set(MZ_BZIP2 OFF)
+set(MZ_LZMA OFF)
+set(MZ_ZSTD OFF)
+set(MZ_FETCH_LIBS ON)
+set(MZ_PKCRYPT OFF)
+set(MZ_WZAES OFF)
+set(MZ_OPENSSL OFF)
+set(MZ_LIBBSD OFF)
+set(MZ_SIGNING OFF)
+set(MZ_COMPRESS_ONLY ON)
+FetchContent_Declare(
+    MINIZIP
+    URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.1.0.tar.gz"
+    URL_HASH "SHA256=85417229bb0cd56403e811c316150eea1a3643346d9cec7512ddb7ea291b06f2"
+    FIND_PACKAGE_ARGS NAMES MINIZIP minizip-ng)
 
 FetchContent_Declare(
     tomlplusplus
@@ -294,7 +236,7 @@ FetchContent_Declare(
     URL ${VALVE_FILE_VDF_URL}
     URL_HASH ${VALVE_FILE_VDF_HASH})
 
-FetchContent_MakeAvailable(fmt spdlog tomlplusplus ValveFileVDF)
+FetchContent_MakeAvailable(fmt MINIZIP spdlog tomlplusplus ValveFileVDF)
 
 find_package(OGDF CONFIG)
 if(NOT OGDF_FOUND)
@@ -560,10 +502,6 @@ if(TARGET MINIZIP::minizip)
     target_link_libraries(LOOT PRIVATE MINIZIP::minizip)
 elseif(TARGET MINIZIP::minizip-ng)
     target_link_libraries(LOOT PRIVATE MINIZIP::minizip-ng)
-else()
-    add_dependencies(LOOT minizip-ng)
-    target_link_libraries(LOOT PRIVATE ${MINIZIP_NG_LIBRARIES})
-    target_include_directories(LOOT SYSTEM PRIVATE ${MINIZIP_NG_INCLUDE_DIRS})
 endif()
 
 if(OGDF_FOUND)
