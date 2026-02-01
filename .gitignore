@@ -55,6 +55,7 @@ build
 node_modules
 *.pb.h
 *.pb.cc
+cmake-build-*/
 coverage/
 docs/Pipfile
 docs/Pipfile.lock
