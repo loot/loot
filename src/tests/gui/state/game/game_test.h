@@ -1048,6 +1048,13 @@ TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsAtExternalPaths) {
 TEST_P(
     GameTest,
     loadAllInstalledPluginsShouldLoadPluginsThatAreSymlinksForOnlyOpenMWAndOblivionRemastered) {
+#ifdef __MINGW64__
+  GTEST_SKIP()
+      << "This test fails when built with MinGW and run in Wine 11.0 or "
+         "Windows, due to a C++ exception with description \"filesystem error: "
+         "cannot create directory symlink: Function not implemented\"";
+#endif
+
   const auto symlinkPluginName = "Blank.symlink.esm";
   std::filesystem::create_symlink(getSourcePluginsPath() / BLANK_ESM,
                                   dataPath / symlinkPluginName);
