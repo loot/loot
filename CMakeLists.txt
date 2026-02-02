@@ -468,7 +468,7 @@ set(LOOT_ALL_SOURCES
 # System-Specific Settings
 ##############################
 
-if(MSVC)
+if(WIN32)
     list(APPEND LOOT_ALL_SOURCES
         "${CMAKE_SOURCE_DIR}/resources/resources.windows.qrc"
         "${CMAKE_SOURCE_DIR}/src/gui/LOOT.manifest")

@@ -26,3 +26,17 @@ VALUE "Translation", 0x409, 1200
 END
 END
 MAINICON ICON "../build/icon/icon.ico"
+
+#ifdef __MINGW64__
+
+#ifndef CREATEPROCESS_MANIFEST_RESOURCE_ID
+#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1
+#endif
+
+#ifndef RT_MANIFEST
+#define RT_MANIFEST 24
+#endif
+
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "LOOT.manifest"
+
+#endif
