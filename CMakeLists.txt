@@ -552,9 +552,11 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         "-Wno-xor-used-as-pow")
 endif()
 
-if(MSVC)
+if(WIN32)
     set_target_properties(LOOT PROPERTIES WIN32_EXECUTABLE TRUE)
+endif()
 
+if(MSVC)
     # Turn off permissive mode to be more standards-compliant and avoid compiler errors.
     target_compile_options(LOOT PRIVATE
         "/permissive-"
