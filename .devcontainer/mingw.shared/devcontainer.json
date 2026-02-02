@@ -1,0 +1,9 @@
+{
+  "name": "LOOT (Linux, MinGW shared cross-compile)",
+  "build": {
+    "dockerfile": "./Dockerfile"
+  },
+  "runArgs": [
+    "--userns=keep-id"
+  ]
+}
