@@ -7,8 +7,11 @@ import os
 import re
 import shutil
 import subprocess
+import tempfile
 
 INVALID_FILENAME_CHARACTERS = re.compile('[/<>"|]')
+TARGET_WINDOWS = 'windows'
+TARGET_LINUX = 'linux'
 
 def get_git_description(given_branch):
     result = subprocess.run(
@@ -21,7 +24,7 @@ def get_git_description(given_branch):
     describe = result.stdout[:-1]
 
     branch = given_branch
-    if (not branch):
+    if not branch:
         result = subprocess.run(
             ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
             capture_output=True,
@@ -33,14 +36,14 @@ def get_git_description(given_branch):
 
     return describe + '_' + branch
 
-def get_archive_file_extension():
-    if os.name == 'nt':
+def get_archive_file_extension(target):
+    if target == TARGET_WINDOWS:
         return '.7z'
 
     return '.tar.xz'
 
-def get_app_release_path(root_path):
-    if os.name == 'nt':
+def get_app_release_path(target, root_path):
+    if target == TARGET_WINDOWS and os.name == 'nt':
         return os.path.join(root_path, 'build', 'Release')
 
     return os.path.join(root_path, 'build')
@@ -49,10 +52,29 @@ def replace_invalid_filename_characters(filename):
     return INVALID_FILENAME_CHARACTERS.sub('-', filename)
 
 def copy_qt_resources(executable_path, output_path):
-    subprocess.run(
-        ['windeployqt', '--release', '--dir', output_path, executable_path],
-        check=True
-    )
+    windeployqt_args = ['windeployqt', '--release', '--dir', output_path, executable_path]
+    if os.name != 'nt':
+        windeployqt_args.insert(0, 'wine')
+
+    subprocess.run(windeployqt_args, check=True)
+
+    if os.name != 'nt':
+        # windeployqt may deploy an older version of the C++ runtime than is
+        # actually needed. If the WINEPATH env var is defined, use the first
+        # DLL that's found in its paths.
+        winepath = os.getenv('WINEPATH')
+        if winepath:
+            for path in winepath.split(';'):
+                dll_name = 'libstdc++-6.dll'
+                dll_path = os.path.join(path, dll_name)
+                dest_path = os.path.join(output_path, dll_name)
+                if os.path.exists(dll_path):
+                    if os.path.exists(dest_path):
+                        print(f'Replacing {dll_name} with the one in {path}')
+                        os.remove(dest_path)
+
+                    shutil.copy2(dll_path, dest_path)
+                    break
 
     # windeployqt copies a few DLLs that aren't actually used by LOOT, so
     # delete them from the output path.
@@ -72,31 +94,31 @@ def get_language_folders(root_path):
     # have corresponding MO files.
     return [ f.name for f in os.scandir(l10n_path) if os.path.exists(os.path.join(f.path, 'LC_MESSAGES', 'loot.po')) ]
 
-def compress(source_path, destination_path):
+def compress(target, source_path, destination_path):
     # Ensure that the output directory is empty.
     if os.path.exists(destination_path):
         os.remove(destination_path)
 
     filename = os.path.basename(destination_path)
-    root_folder = os.path.basename(source_path)
-    working_directory = os.path.dirname(source_path)
 
-    if os.name == 'nt':
+    if target == TARGET_WINDOWS:
         seven_zip_path = 'C:\\Program Files\\7-Zip\\7z.exe'
         if not os.path.exists(seven_zip_path):
             seven_zip_path = '7z'
 
         subprocess.run(
-            [seven_zip_path, 'a', '-r', filename, root_folder],
-            cwd=working_directory,
+            [seven_zip_path, 'a', '-r', filename, '.'],
+            cwd=source_path,
             check=True
         )
     else:
         subprocess.run(
-            ['tar', '-cJf', filename, root_folder],
-            cwd=working_directory,
+            ['tar', '-cJf', filename, '.'],
+            cwd=source_path,
             check=True
         )
+
+    shutil.move(os.path.join(source_path, filename), destination_path)
 
 def prepare_windows_archive(root_path, release_path, temp_path):
     binaries = ['LOOT.exe', 'libloot.dll']
@@ -190,43 +212,44 @@ def prepare_linux_archive(root_path, release_path, temp_path):
         os.path.join(doc_path, 'loot')
     )
 
-def create_app_archive(root_path, release_path, temp_path, destination_path):
-    # Ensure that the output directory is empty.
-    if os.path.exists(temp_path):
-        shutil.rmtree(temp_path)
+def create_app_archive(target, root_path, release_path, destination_path):
+    with tempfile.TemporaryDirectory() as temp_path:
+        wrapper_directory_name = os.path.splitext(os.path.basename(destination_path))[0]
+        wrapper_directory = os.path.join(temp_path, wrapper_directory_name)
+        os.makedirs(wrapper_directory)
 
-    os.makedirs(temp_path)
+        if target == TARGET_WINDOWS:
+            prepare_windows_archive(root_path, release_path, wrapper_directory)
+        else:
+            prepare_linux_archive(root_path, release_path, wrapper_directory)
 
-    if os.name == 'nt':
-        prepare_windows_archive(root_path, release_path, temp_path)
-    else:
-        prepare_linux_archive(root_path, release_path, temp_path)
+        compress(target, temp_path, destination_path)
 
-    compress(temp_path, destination_path)
+        print(destination_path)
 
-    shutil.rmtree(temp_path)
-
-    print(destination_path)
-
-
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description = 'Create an archive artifact')
+    parser.add_argument('-t', '--target', choices=[TARGET_WINDOWS, TARGET_LINUX], default=TARGET_WINDOWS if os.name == 'nt' else TARGET_LINUX)
     parser.add_argument('root-path', nargs=1)
     parser.add_argument('given-branch', nargs=1)
 
     arguments = vars(parser.parse_args())
 
+    target = arguments['target']
     given_branch = arguments['given-branch'][0]
     root_path = arguments['root-path'][0]
 
     git_description = get_git_description(given_branch)
-    file_extension = get_archive_file_extension()
-    release_path = get_app_release_path(root_path)
+    file_extension = get_archive_file_extension(target)
+    release_path = get_app_release_path(target, root_path)
     filename = 'loot_{}'.format(replace_invalid_filename_characters(git_description))
 
     create_app_archive(
+        target,
         root_path,
         release_path,
-        os.path.join(root_path, 'build', filename),
         os.path.join(root_path, 'build', filename + file_extension)
     )
+
+if __name__ == "__main__":
+    main()
