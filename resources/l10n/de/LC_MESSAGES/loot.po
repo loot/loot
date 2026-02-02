@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT 0.28.0\n"
+"Project-Id-Version: LOOT 0.29.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2026-01-18 15:10+0000\n"
-"PO-Revision-Date: 2025-09-16 19:07+0200\n"
+"PO-Revision-Date: 2026-02-02 20:43+0100\n"
 "Last-Translator: pStyl3 <qp-git@pm.me>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/loot/loot/de/>\n"
 "Language: de\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Poedit 3.8\n"
 
 #: src/gui/plugin_item.cpp:51
 #, c++-format
@@ -956,11 +956,11 @@ msgstr "&Kopiere Plugin Namen"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:281
 msgid "Show only plugins that are in the default group"
-msgstr ""
+msgstr "Zeige nur Plugins in der default Gruppe"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:283
 msgid "Add plugin(s) to group"
-msgstr ""
+msgstr "Füge Plugin(s) zur Gruppe hinzu"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:285
 msgid "Group name"
@@ -989,21 +989,21 @@ msgstr "Keine Plugins sind in dieser Gruppe."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:393
 msgid "No plugins are in the default group."
-msgstr ""
+msgstr "Keine Plugins sind in der default Gruppe."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:394
 msgid "All plugins are in this group."
-msgstr ""
+msgstr "Alle Plugins sind in dieser Gruppe."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:461
 #, c++-format
 msgid "Plugins in {0}"
-msgstr "Plugins im {0}"
+msgstr "Plugins in {0}"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:464
 #, c++-format
 msgid "Plugins not in {0}"
-msgstr ""
+msgstr "Plugins nicht in {0}"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:666
 msgid "Group already exists!"
@@ -1701,6 +1701,3 @@ msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] "Light Plugin"
 msgstr[1] "Light Plugins"
-
-#~ msgid "Add plugin to group"
-#~ msgstr "Füge Plugin zu Gruppe hinzu"
