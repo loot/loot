@@ -165,7 +165,7 @@ modules:
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
       - -DLOOT_BUILD_TESTS=OFF
-      - -DVALVE_FILE_VDF_URL=/run/build/LOOT/v1.1.0.tar.gz
+      - -DFETCHCONTENT_SOURCE_DIR_VALVEFILEVDF=/run/build/LOOT/ValveFileVDF
     build-commands:
       - install -D LOOT /app/bin/LOOT
       - install -D ../resources/linux/io.github.loot.loot.metainfo.xml /app/share/metainfo/io.github.loot.loot.metainfo.xml
@@ -184,9 +184,10 @@ modules:
         skip:
           - .github
           - build
-      - type: file
+      - type: archive
         url: https://github.com/TinyTinni/ValveFileVDF/archive/refs/tags/v1.1.0.tar.gz
         sha256: 9149a6b01ca857f49f5660d608639acd579542bf862ad23e9cbf4c1e80ade55e
+        dest: ValveFileVDF
 cleanup:
   - /include
   - /lib/cmake

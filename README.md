@@ -133,7 +133,6 @@ Parameter | Values | Default |Description
 `LOOT_BUILD_TESTS` | `ON`, `OFF` | `ON` | Whether or not to build LOOT's tests.
 `LOOT_RUN_CLANG_TIDY` | `ON`, `OFF` | `OFF` | Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator.
 `OGDF_URL` | A URL | A release archive URL | The URL to get a source archive from.
-`VALVE_FILE_VDF_URL` | A URL | A release archive URL | The URL to get a source archive from.
 `ZLIB_REPOSITORY` | A URL | `https://github.com/madler/zlib` | The URL of the Git repository to clone when building zlib.
 `ZLIB_TAG` | A Git branch, tag or commit hash | The Git commit hash for a release | The Git branch, tag or commit to checkout when building zlib.
 

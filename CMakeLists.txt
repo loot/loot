@@ -226,15 +226,10 @@ FetchContent_Declare(
     URL_HASH "SHA256=8741753e488a78dd0d0024c980e1fb5b5c85888447e309d9cb9d949bdb52aa3e"
     FIND_PACKAGE_ARGS)
 
-if(NOT DEFINED VALVE_FILE_VDF_URL)
-    set(VALVE_FILE_VDF_URL "https://github.com/TinyTinni/ValveFileVDF/archive/refs/tags/v1.1.1.tar.gz")
-    set(VALVE_FILE_VDF_HASH "SHA256=de16a199c535c3b49f2aa0bd17e3154e02b32fa7b0949053ba6d981f8c32197f")
-endif()
-
 FetchContent_Declare(
     ValveFileVDF
-    URL ${VALVE_FILE_VDF_URL}
-    URL_HASH ${VALVE_FILE_VDF_HASH})
+    URL "https://github.com/TinyTinni/ValveFileVDF/archive/refs/tags/v1.1.1.tar.gz"
+    URL_HASH "SHA256=de16a199c535c3b49f2aa0bd17e3154e02b32fa7b0949053ba6d981f8c32197f")
 
 FetchContent_MakeAvailable(fmt MINIZIP spdlog tomlplusplus ValveFileVDF)
 
