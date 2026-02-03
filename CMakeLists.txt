@@ -300,6 +300,7 @@ find_package(OGDF CONFIG)
 if(NOT OGDF_FOUND)
     set(OGDF_CONFIG $<IF:$<CONFIG:Release,RelWithDebInfo>,Release,Debug>)
     set(OGDF_CONFIG_LOWERCASE $<IF:$<CONFIG:Release,RelWithDebInfo>,release,debug>)
+    set(OGDF_BASENAME_SUFFIX $<IF:$<CONFIG:Release,RelWithDebInfo>,,-debug>)
 
     if(WIN32)
         set(OGDF_BUILD_COMMAND
@@ -316,6 +317,12 @@ if(NOT OGDF_FOUND)
         set(OGDF_HASH "SHA256=54f8fc9c2b44b3e4f34ca85be3ae77ce2a309337397662c1432a960367522ccb")
     endif()
 
+    if(WIN32 AND CMAKE_HOST_WIN32)
+        set(OGDF_CFG_INTDIR "${OGDF_CONFIG}")
+    else()
+        set(OGDF_CFG_INTDIR ".")
+    endif()
+
     # Use ExternalProject for OGDF as otherwise there's no way to stop it from
     # creating and building loads of unnecessary targets.
     ExternalProject_Add(OGDF
@@ -325,21 +332,23 @@ if(NOT OGDF_FOUND)
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         BUILD_COMMAND ${OGDF_BUILD_COMMAND}
+        BUILD_BYPRODUCTS
+            "<BINARY_DIR>/${OGDF_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}OGDF${OGDF_BASENAME_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}"
+            "<BINARY_DIR>/${OGDF_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}COIN${OGDF_BASENAME_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}"
+            "<BINARY_DIR>/include/ogdf-${OGDF_CONFIG_LOWERCASE}"
         INSTALL_COMMAND "")
     ExternalProject_Get_Property(OGDF SOURCE_DIR BINARY_DIR)
-    set(OGDF_INCLUDE_DIRS
-        "${SOURCE_DIR}/include"
-        "${BINARY_DIR}/include/ogdf-${OGDF_CONFIG_LOWERCASE}")
 
-    if(WIN32 AND CMAKE_HOST_WIN32)
-        set(OGDF_LIBRARY_DIR "${BINARY_DIR}/${OGDF_CONFIG}")
-    else()
-        set(OGDF_LIBRARY_DIR "${BINARY_DIR}")
-    endif()
+    add_library(OGDF_INTERFACE INTERFACE)
+    add_dependencies(OGDF_INTERFACE OGDF)
 
-    set(OGDF_LIBRARIES
-        "${OGDF_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}OGDF${CMAKE_STATIC_LIBRARY_SUFFIX}"
-        "${OGDF_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}COIN${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    target_link_libraries(OGDF_INTERFACE INTERFACE
+            "${BINARY_DIR}/${OGDF_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}OGDF${OGDF_BASENAME_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}"
+            "${BINARY_DIR}/${OGDF_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}COIN${OGDF_BASENAME_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+
+    target_include_directories(OGDF_INTERFACE INTERFACE
+            "${SOURCE_DIR}/include"
+            "${BINARY_DIR}/include/ogdf-${OGDF_CONFIG_LOWERCASE}")
 endif()
 
 ##############################
@@ -560,9 +569,7 @@ endif()
 if(OGDF_FOUND)
     target_link_libraries(LOOT PRIVATE OGDF)
 else()
-    add_dependencies(LOOT OGDF)
-    target_link_libraries(LOOT PRIVATE ${OGDF_LIBRARIES})
-    target_include_directories(LOOT SYSTEM PRIVATE ${OGDF_INCLUDE_DIRS})
+    target_link_libraries(LOOT PRIVATE OGDF_INTERFACE)
 endif()
 
 # Include source and library directories.
