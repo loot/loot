@@ -50,6 +50,16 @@ finish-args:
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
 modules:
+  - name: OGDF
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+    sources:
+      - type: archive
+        url: https://ogdf.uos.de/wp-content/uploads/2025/10/ogdf.v2025.10.zip
+        sha256: 54f8fc9c2b44b3e4f34ca85be3ae77ce2a309337397662c1432a960367522ccb
+
   - name: Boost
     buildsystem: simple
     build-commands:
@@ -127,16 +137,6 @@ modules:
       - type: archive
         url: https://github.com/gabime/spdlog/archive/v1.16.0.tar.gz
         sha256: 8741753e488a78dd0d0024c980e1fb5b5c85888447e309d9cb9d949bdb52aa3e
-
-  - name: OGDF
-    buildsystem: cmake-ninja
-    builddir: true
-    config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
-    sources:
-      - type: archive
-        url: https://ogdf.uos.de/wp-content/uploads/2025/10/ogdf.v2025.10.zip
-        sha256: 54f8fc9c2b44b3e4f34ca85be3ae77ce2a309337397662c1432a960367522ccb
 
   - name: libloot
     buildsystem: cmake-ninja
