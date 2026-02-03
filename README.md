@@ -58,6 +58,31 @@ The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gette
 
 vslavik's [precompiled Gettext binaries](https://github.com/vslavik/gettext-tools-windows/releases/download/v0.22.5/gettext-tools-windows-0.22.5.zip) are probably the easiest way to get an up-to-date version of Gettext on Windows.
 
+Cross-compiling from Linux is possible, but not recommended due to more limited support for symlinks and long paths. Using the `mingw.shared` dev container:
+
+```sh
+svg_to_ico -i resources/icons/loot.svg -o build/icon/icon.ico
+
+cmake -B build . -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_TOOLCHAIN_FILE=$PWD/cmake/toolchain-mingw64.cmake \
+    -DCMAKE_PREFIX_PATH=/opt/qt/6.9.1/mingw_64 \
+    -DQT_HOST_PATH=/opt/qt/6.9.1/gcc_64
+
+cmake --build build --parallel $(nproc)
+```
+
+There is also a `mingw.static` dev container that can be used to produce a statically-linked `LOOT.exe` (aside from libloot, which is still built as a DLL), but it uses an older `libstdc++` that does not properly support overwriting files when copying them, which breaks some of LOOT's functionality. Using that dev container:
+
+```sh
+svg_to_ico -i resources/icons/loot.svg -o build/icon/icon.ico
+
+x86_64-w64-mingw32.static-cmake -B build . \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_TOOLCHAIN_FILE=$PWD/cmake/toolchain-mingw64.static.cmake
+
+x86_64-w64-mingw32.static-cmake --build build --parallel $(nproc)
+```
+
 ### Linux
 
 Not all LOOT's features have been implemented for Linux builds. Issues labelled
@@ -117,8 +142,9 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release -DBoost_USE_STATIC_LIBS=OFF
 cmake --build build --parallel $(nproc)
 ```
 
-`--parallel` is given a value here because the default behaviour on Fedora 43 results causes memory usage to exceed 48
-GB while building OGDF (vs. ~ 3.2 GB without `--parallel`).
+`--parallel` is given a value here because the default behaviour on Fedora 43 results causes memory usage to exceed 48 GB while building OGDF (vs. ~ 3.2 GB without `--parallel`).
+
+The `linux` dev container can also be used, though binaries built in it may link to libraries that are not available on your host distribution.
 
 ### CMake Variables
 
@@ -157,3 +183,5 @@ Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.ph
 The archive packaging script requires [Git](https://git-scm.com/), and on Windows it also requires [7-Zip](https://www.7-zip.org/), while on Linux it requires `tar` and `xz`. It can be run using `python scripts/archive.py`, and creates an archive for LOOT in the `build` folder. The archives are named as described in the Downloads section above.
 
 The archive packaging script calls `windeployqt.exe` when run on Windows: it must be accessible from your `PATH`.
+
+If creating an archive for a cross-compiled build targeting Windows, pass `--target windows` to `archive.py`.
