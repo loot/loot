@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-01-18 15:10+0000\n"
+"POT-Creation-Date: 2026-02-03 19:31+0000\n"
 "PO-Revision-Date: 2025-10-07 06:01+0000\n"
 "Last-Translator: xsSplater <xssplater@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
@@ -1068,30 +1068,37 @@ msgstr "Примечание"
 msgid "Warning"
 msgstr "Предупреждение"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:87
 msgid "CRC"
 msgstr "CRC"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:89
 msgid "ITM Count"
 msgstr "Количество ITM"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:91
 msgid "Deleted References"
 msgstr "Удалённые ссылки"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:93
 msgid "Deleted Navmeshes"
 msgstr "Удалённые навмеши"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:95
 msgid "Cleaning Utility"
 msgstr "Утилита очистки"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:97
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
 msgid "Detail"
 msgstr "Подробности"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:99
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:85
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:100
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:69
+msgid "Condition"
+msgstr "Условие"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 msgid "Filename"
@@ -1100,12 +1107,6 @@ msgstr "Название файла"
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
 msgid "Display Name"
 msgstr "Отображаемое название"
-
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:85
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:100
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:69
-msgid "Condition"
-msgstr "Условие"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:87
 msgid "Constraint"
@@ -1373,7 +1374,7 @@ msgstr "Группа \"{0}\" не существует."
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT обнаружил, что \"{0}\" неправильный и теперь игнорирует его."
 
-#: src/gui/state/game/game.cpp:874
+#: src/gui/state/game/game.cpp:875
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1381,11 +1382,11 @@ msgstr ""
 "Сортировка не удалась, так как есть как минимум один установленный плагин, "
 "который зависит как минимум от одного неустановленного плагина."
 
-#: src/gui/state/game/game.cpp:902
+#: src/gui/state/game/game.cpp:903
 msgid "You have not sorted your load order this session."
 msgstr "Вы ещё не отсортировали порядок загрузки в этом сеансе."
 
-#: src/gui/state/game/game.cpp:965
+#: src/gui/state/game/game.cpp:966
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
@@ -1396,7 +1397,7 @@ msgstr ""
 "\n"
 "Попробуйте обновить свой основной список, чтобы устранить ошибку."
 
-#: src/gui/state/game/game.cpp:998
+#: src/gui/state/game/game.cpp:999
 #, c++-format
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
@@ -1420,7 +1421,7 @@ msgstr ""
 "можете редактировать метаданные, которые он содержит, с помощью "
 "[документации по синтаксису метаданных]({1})."
 
-#: src/gui/state/game/game.cpp:1182
+#: src/gui/state/game/game.cpp:1185
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

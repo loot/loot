@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-01-18 15:10+0000\n"
+"POT-Creation-Date: 2026-02-03 19:31+0000\n"
 "PO-Revision-Date: 2025-10-13 03:07+0000\n"
 "Last-Translator: YanJun Sun <zxvf6aj@sina.cn>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -1033,30 +1033,37 @@ msgstr "注释"
 msgid "Warning"
 msgstr "警告"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:87
 msgid "CRC"
 msgstr "CRC"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:89
 msgid "ITM Count"
 msgstr "ITM 数量"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:91
 msgid "Deleted References"
 msgstr "删除引用"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:93
 msgid "Deleted Navmeshes"
 msgstr "已删除的导航网格"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:95
 msgid "Cleaning Utility"
 msgstr "清理工具"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:97
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
 msgid "Detail"
 msgstr "详细信息"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:99
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:85
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:100
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:69
+msgid "Condition"
+msgstr "条件"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 msgid "Filename"
@@ -1065,12 +1072,6 @@ msgstr "文件名称"
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
 msgid "Display Name"
 msgstr "显示名称"
-
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:85
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:100
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:69
-msgid "Condition"
-msgstr "条件"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:87
 msgid "Constraint"
@@ -1330,17 +1331,17 @@ msgstr "组 \"{0}\" 不存在。"
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT 检测到 \"{0}\" 无效并已忽略它。"
 
-#: src/gui/state/game/game.cpp:874
+#: src/gui/state/game/game.cpp:875
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr "排序失败，原因为至少有一个已安装的插件其所依赖的插件未安装。"
 
-#: src/gui/state/game/game.cpp:902
+#: src/gui/state/game/game.cpp:903
 msgid "You have not sorted your load order this session."
 msgstr "您本次会话还未排序加载顺序。"
 
-#: src/gui/state/game/game.cpp:965
+#: src/gui/state/game/game.cpp:966
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
@@ -1351,7 +1352,7 @@ msgstr ""
 "\n"
 "请尝试更新您的主列表以解决此错误。"
 
-#: src/gui/state/game/game.cpp:998
+#: src/gui/state/game/game.cpp:999
 #, c++-format
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
@@ -1372,7 +1373,7 @@ msgstr ""
 "于相应游戏文件夹内的文件 'userlist.yaml'。您可手动编辑包含的元数据，可参考 "
 "[元数据语法文档]({1}) 内容。"
 
-#: src/gui/state/game/game.cpp:1182
+#: src/gui/state/game/game.cpp:1185
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-01-18 15:10+0000\n"
+"POT-Creation-Date: 2026-02-03 19:31+0000\n"
 "PO-Revision-Date: 2025-06-30 02:01+0000\n"
 "Last-Translator: Ortham <weblate@ortham.net>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
@@ -1055,30 +1055,37 @@ msgstr "குறிப்பு"
 msgid "Warning"
 msgstr "எச்சரிக்கை"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:87
 msgid "CRC"
 msgstr "சி.ஆர்.சி."
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:89
 msgid "ITM Count"
 msgstr "Itm எண்ணிக்கை"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:91
 msgid "Deleted References"
 msgstr "குறிப்புகளை நீக்கியது"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:93
 msgid "Deleted Navmeshes"
 msgstr "நேவிம்ச்களை நீக்கியது"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:95
 msgid "Cleaning Utility"
 msgstr "பயன்பாட்டை தூய்மை செய்தல்"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:97
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
 msgid "Detail"
 msgstr "விவரம்"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:99
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:85
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:100
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:69
+msgid "Condition"
+msgstr "நிபந்தனை"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 msgid "Filename"
@@ -1087,12 +1094,6 @@ msgstr "கோப்புப்பெயர்"
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
 msgid "Display Name"
 msgstr "காட்சி பெயர்"
-
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:85
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:100
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:69
-msgid "Condition"
-msgstr "நிபந்தனை"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:87
 msgid "Constraint"
@@ -1355,7 +1356,7 @@ msgstr "\"{0}\" குழு இல்லை."
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "\"{0}\" தவறானது, இப்போது அதைப் புறக்கணிக்கிறது என்று கொள்ளை கண்டறிந்துள்ளது."
 
-#: src/gui/state/game/game.cpp:874
+#: src/gui/state/game/game.cpp:875
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1363,11 +1364,11 @@ msgstr ""
 "வரிசையாக்கம் தோல்வியடைந்தது, ஏனெனில் நிறுவப்படாத ஒரு சொருகியையாவது சார்ந்துள்ளது "
 "குறைந்தது ஒரு நிறுவப்பட்ட சொருகி உள்ளது."
 
-#: src/gui/state/game/game.cpp:902
+#: src/gui/state/game/game.cpp:903
 msgid "You have not sorted your load order this session."
 msgstr "இந்த அமர்வில் உங்கள் சுமை வரிசையை நீங்கள் வரிசைப்படுத்தவில்லை."
 
-#: src/gui/state/game/game.cpp:965
+#: src/gui/state/game/game.cpp:966
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
@@ -1378,7 +1379,7 @@ msgstr ""
 "\n"
 "பிழையைத் தீர்க்க உங்கள் மாச்டர்லிச்ட்டைப் புதுப்பிக்க முயற்சிக்கவும்."
 
-#: src/gui/state/game/game.cpp:998
+#: src/gui/state/game/game.cpp:999
 #, c++-format
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
@@ -1401,7 +1402,7 @@ msgstr ""
 "கோப்பைத் திறக்கவும். [மெட்டாடேட்டா தொடரியல் ஆவணங்கள்]({1}) உதவியுடன் அதில் உள்ள "
 "மெட்டாடேட்டாவை நீங்கள் திருத்தலாம்."
 
-#: src/gui/state/game/game.cpp:1182
+#: src/gui/state/game/game.cpp:1185
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-01-18 15:10+0000\n"
+"POT-Creation-Date: 2026-02-03 19:31+0000\n"
 "PO-Revision-Date: 2025-07-07 12:02+0000\n"
 "Last-Translator: tygyh <jonis9898@hotmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/loot/loot/sv/>\n"
@@ -1025,30 +1025,37 @@ msgstr "Anteckning"
 msgid "Warning"
 msgstr "Varning"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:87
 msgid "CRC"
 msgstr "CRC"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:89
 msgid "ITM Count"
 msgstr "Antal ITM"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:91
 msgid "Deleted References"
 msgstr "Borttagna referenser"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:93
 msgid "Deleted Navmeshes"
 msgstr "Borttagna navigeringsytor"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:95
 msgid "Cleaning Utility"
 msgstr "Rensningsverktyg"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:97
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:83
 msgid "Detail"
 msgstr ""
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:99
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:85
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:100
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:69
+msgid "Condition"
+msgstr "Villkor"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
 msgid "Filename"
@@ -1057,12 +1064,6 @@ msgstr "Filnamn"
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:81
 msgid "Display Name"
 msgstr "Visningsnamn"
-
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:85
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:100
-#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:69
-msgid "Condition"
-msgstr "Villkor"
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:87
 msgid "Constraint"
@@ -1311,17 +1312,17 @@ msgstr ""
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:874
+#: src/gui/state/game/game.cpp:875
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:902
+#: src/gui/state/game/game.cpp:903
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:965
+#: src/gui/state/game/game.cpp:966
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
@@ -1329,7 +1330,7 @@ msgid ""
 "Try updating your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:998
+#: src/gui/state/game/game.cpp:999
 #, c++-format
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
@@ -1343,7 +1344,7 @@ msgid ""
 "({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1182
+#: src/gui/state/game/game.cpp:1185
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
