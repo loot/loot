@@ -46,6 +46,18 @@ configure_file("${CMAKE_SOURCE_DIR}/src/gui/version.cpp.in"
     @ONLY)
 
 ##############################
+# Generate ICO file
+##############################
+
+if(WIN32)
+    add_custom_target(loot_ico_icon
+        COMMAND svg_to_ico
+            -i "${CMAKE_SOURCE_DIR}/resources/icons/loot.svg"
+            -o "${CMAKE_BINARY_DIR}/icon/icon.ico"
+        BYPRODUCTS "${CMAKE_BINARY_DIR}/icon/icon.ico")
+endif()
+
+##############################
 # External Projects
 ##############################
 
@@ -492,6 +504,7 @@ set_target_properties(LOOT PROPERTIES
         AUTOUIC ON)
 
 if(WIN32)
+    add_dependencies(LOOT loot_ico_icon)
     target_compile_definitions(LOOT PRIVATE UNICODE _UNICODE NOMINMAX)
 
     if(CMAKE_HOST_LINUX)

@@ -79,10 +79,9 @@ jobs:
           $filename = scripts\download_file.ps1 `
             'https://github.com/Ortham/svg_to_ico/releases/download/1.1.0/svg_to_ico.7z' `
             'b2a3e82591ad4834a253290a76f007e5bab35e5a97584d29b3a4b5d0ff9acef3'
-          7z e -y $filename
+          7z e -y -osvg_to_ico $filename
 
-      - name: Generate ICO file
-        run: .\svg_to_ico.exe -i resources\icons\loot.svg -o build\icon\icon.ico
+          echo "${PWD}/svg_to_ico" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Download & build Boost
         run: |

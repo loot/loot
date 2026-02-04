@@ -61,8 +61,6 @@ vslavik's [precompiled Gettext binaries](https://github.com/vslavik/gettext-tool
 Cross-compiling from Linux is possible, but not recommended due to more limited support for symlinks and long paths. Using the `mingw.shared` dev container:
 
 ```sh
-svg_to_ico -i resources/icons/loot.svg -o build/icon/icon.ico
-
 cmake -B build . -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_TOOLCHAIN_FILE=$PWD/cmake/toolchain-mingw64.cmake \
     -DCMAKE_PREFIX_PATH=/opt/qt/6.9.1/mingw_64 \
@@ -74,8 +72,6 @@ cmake --build build --parallel $(nproc)
 There is also a `mingw.static` dev container that can be used to produce a statically-linked `LOOT.exe` (aside from libloot, which is still built as a DLL), but it uses an older `libstdc++` that does not properly support overwriting files when copying them, which breaks some of LOOT's functionality. Using that dev container:
 
 ```sh
-svg_to_ico -i resources/icons/loot.svg -o build/icon/icon.ico
-
 x86_64-w64-mingw32.static-cmake -B build . \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_TOOLCHAIN_FILE=$PWD/cmake/toolchain-mingw64.static.cmake
