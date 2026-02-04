@@ -41,7 +41,8 @@ namespace test {
 void PrintTo(const File& value, ::std::ostream* os) {
   *os << "File(\"" << value.GetName() << "\", "
       << "\"" << value.GetDisplayName() << "\", "
-      << "\"" << value.GetCondition() << "\""
+      << "\"" << value.GetCondition() << "\", "
+      << "\"" << value.GetConstraint() << "\""
       << ")";
 }
 
@@ -77,7 +78,8 @@ void PrintTo(const PluginCleaningData& value, ::std::ostream* os) {
       << std::nouppercase << std::dec << ", " << value.GetITMCount() << ", "
       << value.GetDeletedReferenceCount() << ", "
       << value.GetDeletedNavmeshCount() << ", "
-      << "\"" << value.GetCleaningUtility() << "\""
+      << "\"" << value.GetCleaningUtility() << "\", "
+      << "\"" << value.GetCondition() << "\""
       << ")";
 }
 

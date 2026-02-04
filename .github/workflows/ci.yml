@@ -10,7 +10,7 @@ on:
 env:
   AQTINSTALL_VERSION: 3.3.0
   BOOST_VERSION: 1.87.0
-  LIBLOOT_VERSION: 0.28.2
+  LIBLOOT_VERSION: 0.29.0
   OGDF_VERSION: foxglove-202510
   QT_VERSION: 6.9.1
   UV_VERSION: 0.8.20
@@ -138,7 +138,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="$LIBLOOT_INSTALL_PATH" \
             -B "$LIBLOOT_BUILD_DIR" \
             -S "libloot-$LIBLOOT_VERSION/cpp"
-          cmake --build "$LIBLOOT_BUILD_DIR" --target loot --config Release
+          cmake --build "$LIBLOOT_BUILD_DIR" --target libloot --config Release
           cmake --install "$LIBLOOT_BUILD_DIR" --config Release
         if: steps.libloot-cache.outputs.cache-hit != 'true'
 
@@ -355,7 +355,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="$env:LIBLOOT_INSTALL_PATH" `
             -B "$LIBLOOT_BUILD_DIR" `
             -S "libloot-$env:LIBLOOT_VERSION/cpp"
-          cmake --build "$LIBLOOT_BUILD_DIR" --target loot --config Release
+          cmake --build "$LIBLOOT_BUILD_DIR" --target libloot --config Release
           cmake --install "$LIBLOOT_BUILD_DIR" --config Release
         if: steps.libloot-cache.outputs.cache-hit != 'true'
 

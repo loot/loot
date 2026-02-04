@@ -39,6 +39,7 @@ public:
   static constexpr int DELETED_NAVMESH_COLUMN = 3;
   static constexpr int CLEANING_UTILITY_COLUMN = 4;
   static constexpr int DETAIL_COLUMN = 5;
+  static constexpr int CONDITION_COLUMN = 6;
 
   CleaningDataTableModel(QObject* parent,
                          std::vector<PluginCleaningData>&& nonUserMetadata,

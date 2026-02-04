@@ -489,7 +489,7 @@ std::vector<LoadOrderTuple> mapToLoadOrderTuples(
 
   // First get all the necessary data to call the mapper, as this is fast.
   for (const auto& pluginName : loadOrder) {
-    const auto plugin = game.getPlugin(pluginName);
+    auto plugin = game.getPlugin(pluginName);
     if (!plugin) {
       continue;
     }
@@ -510,7 +510,8 @@ std::vector<LoadOrderTuple> mapToLoadOrderTuples(
     const auto activeLoadOrderIndex =
         isActive ? std::optional(numberOfActivePlugins) : std::nullopt;
 
-    data.push_back(std::make_tuple(plugin, activeLoadOrderIndex, isActive));
+    data.push_back(
+        std::make_tuple(std::shared_ptr(std::move(plugin)), activeLoadOrderIndex, isActive));
 
     if (isActive) {
       if (isLight) {
@@ -648,12 +649,12 @@ void Game::init() {
 
 bool Game::isInitialised() const { return gameHandle_ != nullptr; }
 
-std::shared_ptr<const PluginInterface> Game::getPlugin(
+std::unique_ptr<const PluginInterface> Game::getPlugin(
     const std::string& name) const {
   return gameHandle_->GetPlugin(name);
 }
 
-std::vector<std::shared_ptr<const PluginInterface>> Game::getPlugins() const {
+std::vector<std::unique_ptr<const PluginInterface>> Game::getPlugins() const {
   return gameHandle_->GetLoadedPlugins();
 }
 
@@ -888,10 +889,10 @@ ChangeCount& Game::getSortCount() { return sortCount_; }
 std::vector<SourcedMessage> Game::getMessages(
     std::string_view language,
     bool warnOnCaseSensitivePaths) const {
-  std::vector<SourcedMessage> output(
-      toSourcedMessages(gameHandle_->GetDatabase().GetGeneralMessages(true),
-                        MessageSource::messageMetadata,
-                        language));
+  std::vector<SourcedMessage> output(toSourcedMessages(
+      gameHandle_->GetDatabase().GetGeneralMessages(true, true),
+      MessageSource::messageMetadata,
+      language));
 
   output.insert(end(output), begin(messages_), end(messages_));
 
@@ -1084,7 +1085,9 @@ void Game::clearAllUserMetadata() {
 }
 
 void Game::saveUserMetadata() {
-  gameHandle_->GetDatabase().WriteUserMetadata(getUserlistPath(), true);
+  MetadataWriteOptions options;
+  options.SetTruncate(true);
+  gameHandle_->GetDatabase().WriteUserMetadata(getUserlistPath(), options);
 }
 
 std::filesystem::path Game::getLOOTGamePath() const {

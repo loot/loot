@@ -71,7 +71,7 @@ endif()
 find_package(libloot CONFIG)
 if(NOT libloot_FOUND)
     set(LIBLOOT_GIT_REPOSITORY_DEFAULT "https://github.com/loot/libloot.git")
-    set(LIBLOOT_GIT_COMMIT_DEFAULT "927c708df6c7f56bc2e7bced4f906fc10d5af02d")
+    set(LIBLOOT_GIT_COMMIT_DEFAULT "7de8bdb3a88ddb65b19f7c1ca5924e38fea06bbb")
     if(NOT DEFINED LIBLOOT_GIT_REPOSITORY)
         set(LIBLOOT_GIT_REPOSITORY ${LIBLOOT_GIT_REPOSITORY_DEFAULT})
     endif()
@@ -90,8 +90,8 @@ if(NOT libloot_FOUND)
         if(DEFINED LIBLOOT_URL)
             cmake_path(CONVERT "${LIBLOOT_URL}" TO_CMAKE_PATH_LIST LIBLOOT_URL)
         else()
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.28.2/libloot-0.28.2-win64.7z")
-            set(LIBLOOT_HASH "SHA256=daa88e3b8572c4ae0f665d5e305d9d5ba4292d5eaa85e36821814013049a5db5")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.29.0/libloot-0.29.0-win64.7z")
+            set(LIBLOOT_HASH "SHA256=d4f3025de4eb3361465de527467fd1d2aea92110174d12399c1ad24673a5c1af")
         endif()
         set(LIBLOOT_DOWNLOAD_ARGS
             URL ${LIBLOOT_URL}
@@ -103,59 +103,25 @@ if(NOT libloot_FOUND)
     else()
         message(WARNING "Git not found: building libloot from a source archive")
         set(LIBLOOT_DOWNLOAD_ARGS
-            URL "https://github.com/loot/libloot/archive/refs/tags/0.28.2.tar.gz"
-            URL_HASH "SHA256=c39bae45541dcb56743ce1276854f52fe188394ce427b02539444d84fad56c2d")
+            URL "https://github.com/loot/libloot/archive/refs/tags/0.29.0.tar.gz"
+            URL_HASH "SHA256=e8cfb4b0fcb76f36f1313ea94519667fc43ec949ad3adb1aa0ba8b02338978b3")
     endif()
 
     message(DEBUG "LIBLOOT_USE_PREBUILT_MSVC_BINARY: ${LIBLOOT_USE_PREBUILT_MSVC_BINARY}")
     message(DEBUG "LIBLOOT_DOWNLOAD_ARGS: ${LIBLOOT_DOWNLOAD_ARGS}")
 endif()
 
-if(MSVC)
-    if(libloot_FOUND)
-        # Use the already-installed binary: because it's already been built it won't appear as part of the Visual Studio solution, so the name collision mentioned below isn't a problem.
-        add_library(libloot::libloot ALIAS libloot::loot)
-    elseif(LIBLOOT_USE_PREBUILT_MSVC_BINARY)
-        # Download a prebuilt binary and use it.
-        # For some reason if we use FetchContent's OVERRIDE_FIND_PACKAGE with find_package, find_package will find libloot but not import its target, so instead explicitly make it available and give an explicit search path to find_package.
-        FetchContent_Declare(
-            libloot
-            ${LIBLOOT_DOWNLOAD_ARGS})
+if(MSVC AND LIBLOOT_USE_PREBUILT_MSVC_BINARY AND NOT libloot_FOUND)
+    # Download a prebuilt binary and use it.
+    # For some reason if we use FetchContent's OVERRIDE_FIND_PACKAGE with find_package, find_package will find libloot but not import its target, so instead explicitly make it available and give an explicit search path to find_package.
+    FetchContent_Declare(
+        libloot
+        ${LIBLOOT_DOWNLOAD_ARGS})
 
-        FetchContent_MakeAvailable(libloot)
+    FetchContent_MakeAvailable(libloot)
 
-        find_package(libloot REQUIRED CONFIG
-            PATHS "${FETCHCONTENT_BASE_DIR}/libloot-src/lib/cmake/libloot")
-
-        add_library(libloot::libloot ALIAS libloot::loot)
-    else()
-        # Assume that prebuilt binaries are not available, build from source.
-        # Can't use FetchContent because the libloot Visual Studio project name is case-insensitively equal to the LOOT project name, so only one gets loaded.
-        # Instead, use ExternalProject to build libloot separately and add an imported library target that depends on it and supplies its include and binary paths.
-        ExternalProject_Add(libloot
-            ${LIBLOOT_DOWNLOAD_ARGS}
-            CMAKE_ARGS
-                -DLIBLOOT_BUILD_TESTS=OFF
-                -DLIBLOOT_INSTALL_DOCS=OFF
-                -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
-                -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            SOURCE_SUBDIR "cpp"
-            INSTALL_COMMAND "")
-
-        ExternalProject_Get_Property(libloot SOURCE_DIR BINARY_DIR)
-
-        add_library(libloot::libloot SHARED IMPORTED)
-        add_dependencies(libloot::libloot libloot)
-
-        # This is a hack to stop CMake complaining about the include path not existing at configure time, see <https://gitlab.kitware.com/cmake/cmake/-/issues/15052>
-        set(LIBLOOT_INCLUDE_DIR "${SOURCE_DIR}/cpp/include")
-        file(MAKE_DIRECTORY ${LIBLOOT_INCLUDE_DIR})
-        target_include_directories(libloot::libloot INTERFACE ${LIBLOOT_INCLUDE_DIR})
-
-        set_target_properties(libloot::libloot PROPERTIES
-            IMPORTED_IMPLIB "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}"
-            IMPORTED_LOCATION "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
-    endif()
+    find_package(libloot REQUIRED CONFIG
+        PATHS "${FETCHCONTENT_BASE_DIR}/libloot-src/lib/cmake/libloot")
 else()
     set(LIBLOOT_BUILD_TESTS OFF)
     set(LIBLOOT_INSTALL_DOCS OFF)
@@ -166,13 +132,6 @@ else()
         FIND_PACKAGE_ARGS)
 
     FetchContent_MakeAvailable(libloot)
-
-    if(libloot_FOUND)
-        add_library(libloot::libloot ALIAS libloot::loot)
-    else()
-        get_target_property(LIBLOOT_ALIASED_TARGET libloot::loot ALIASED_TARGET)
-        add_library(libloot::libloot ALIAS ${LIBLOOT_ALIASED_TARGET})
-    endif()
 endif()
 
 

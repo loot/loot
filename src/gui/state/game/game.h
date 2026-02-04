@@ -104,9 +104,9 @@ public:
   void init();
   bool isInitialised() const;
 
-  std::shared_ptr<const PluginInterface> getPlugin(
+  std::unique_ptr<const PluginInterface> getPlugin(
       const std::string& name) const;
-  std::vector<std::shared_ptr<const PluginInterface>> getPlugins() const;
+  std::vector<std::unique_ptr<const PluginInterface>> getPlugins() const;
   std::vector<SourcedMessage> checkInstallValidity(
       const PluginInterface& plugin,
       const PluginMetadata& metadata,

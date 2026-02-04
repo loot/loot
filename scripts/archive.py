@@ -99,7 +99,7 @@ def compress(source_path, destination_path):
         )
 
 def prepare_windows_archive(root_path, release_path, temp_path):
-    binaries = ['LOOT.exe', 'loot.dll']
+    binaries = ['LOOT.exe', 'libloot.dll']
 
     for binary in binaries:
         shutil.copy2(

@@ -619,22 +619,20 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
   });
 
   metadata.SetDirtyInfo({
-      PluginCleaningData(getBlankEsmCrc(), "utility1", detail, 0, 1, 2),
-      PluginCleaningData(0xDEADBEEF, "utility2", detail, 0, 5, 10),
+      PluginCleaningData(
+          getBlankEsmCrc(), "utility1", detail, 0, 1, 2, "condition"),
+      PluginCleaningData(0xDEADBEEF, "utility2", detail, 0, 5, 10, "condition"),
   });
 
   auto messages =
       game.checkInstallValidity(*game.getPlugin(BLANK_ESM), metadata, "en");
-  EXPECT_EQ(
-      std::vector<SourcedMessage>({
-          toSourcedMessage(
-              PluginCleaningData(getBlankEsmCrc(), "utility1", detail, 0, 1, 2),
-              MessageContent::DEFAULT_LANGUAGE),
-          toSourcedMessage(
-              PluginCleaningData(0xDEADBEEF, "utility2", detail, 0, 5, 10),
-              MessageContent::DEFAULT_LANGUAGE),
-      }),
-      messages);
+  EXPECT_EQ(std::vector<SourcedMessage>({
+                toSourcedMessage(metadata.GetDirtyInfo()[0],
+                                 MessageContent::DEFAULT_LANGUAGE),
+                toSourcedMessage(metadata.GetDirtyInfo()[1],
+                                 MessageContent::DEFAULT_LANGUAGE),
+            }),
+            messages);
 }
 
 TEST_P(

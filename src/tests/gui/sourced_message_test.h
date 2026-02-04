@@ -86,7 +86,7 @@ TEST(ToSourcedMessage, shouldOutputAllNonZeroCounts) {
   });
 
   SourcedMessage message = toSourcedMessage(
-      PluginCleaningData(0x12345678, "cleaner", detail, 2, 10, 30),
+      PluginCleaningData(0x12345678, "cleaner", detail, 2, 10, 30, "condition"),
       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ(
@@ -95,13 +95,13 @@ TEST(ToSourcedMessage, shouldOutputAllNonZeroCounts) {
       message.text);
 
   message = toSourcedMessage(
-      PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 0),
+      PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 0, "condition"),
       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ("cleaner found dirty edits. detail", message.text);
 
   message = toSourcedMessage(
-      PluginCleaningData(0x12345678, "cleaner", detail, 0, 10, 30),
+      PluginCleaningData(0x12345678, "cleaner", detail, 0, 10, 30, "condition"),
       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ(
@@ -109,32 +109,32 @@ TEST(ToSourcedMessage, shouldOutputAllNonZeroCounts) {
       message.text);
 
   message = toSourcedMessage(
-      PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 30),
+      PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 30, "condition"),
       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ("cleaner found 30 deleted navmeshes. detail", message.text);
 
   message = toSourcedMessage(
-      PluginCleaningData(0x12345678, "cleaner", detail, 0, 10, 0),
+      PluginCleaningData(0x12345678, "cleaner", detail, 0, 10, 0, "condition"),
       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ("cleaner found 10 deleted references. detail", message.text);
 
   message = toSourcedMessage(
-      PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 30),
+      PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 30, "condition"),
       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ("cleaner found 2 ITM records and 30 deleted navmeshes. detail",
             message.text);
 
   message = toSourcedMessage(
-      PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 0),
+      PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 0, "condition"),
       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ("cleaner found 2 ITM records. detail", message.text);
 
   message = toSourcedMessage(
-      PluginCleaningData(0x12345678, "cleaner", detail, 2, 10, 0),
+      PluginCleaningData(0x12345678, "cleaner", detail, 2, 10, 0, "condition"),
       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ("cleaner found 2 ITM records and 10 deleted references. detail",
@@ -147,7 +147,7 @@ TEST(ToSourcedMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
   });
 
   SourcedMessage message = toSourcedMessage(
-      PluginCleaningData(0x12345678, "cleaner", detail, 1, 2, 3),
+      PluginCleaningData(0x12345678, "cleaner", detail, 1, 2, 3, "condition"),
       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ(
@@ -156,7 +156,7 @@ TEST(ToSourcedMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
       message.text);
 
   message = toSourcedMessage(
-      PluginCleaningData(0x12345678, "cleaner", detail, 2, 1, 3),
+      PluginCleaningData(0x12345678, "cleaner", detail, 2, 1, 3, "condition"),
       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ(
@@ -165,7 +165,7 @@ TEST(ToSourcedMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
       message.text);
 
   message = toSourcedMessage(
-      PluginCleaningData(0x12345678, "cleaner", detail, 3, 2, 1),
+      PluginCleaningData(0x12345678, "cleaner", detail, 3, 2, 1, "condition"),
       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ(
@@ -177,8 +177,13 @@ TEST(ToSourcedMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
 TEST(ToSourcedMessage,
      shouldReturnAMessageWithCountsButNoDetailStringIfDetailIsAnEmptyVector) {
   const auto message = toSourcedMessage(
-      PluginCleaningData(
-          0x12345678, "cleaner", std::vector<MessageContent>(), 1, 2, 3),
+      PluginCleaningData(0x12345678,
+                                          "cleaner",
+                                          std::vector<MessageContent>(),
+                                          1,
+                                          2,
+                                          3,
+                                          "condition"),
       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ(
