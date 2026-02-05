@@ -116,6 +116,19 @@ DestDir: "{app}\tls"; Flags: ignoreversion
 
 #endif
 
+#if FileExists(AddBackslash(SourcePath) + '..\' + AddBackslash(ArtifactsDir) + 'libstdc++-6.dll')
+
+Source: "{#ArtifactsDir}\libgcc_s_seh-1.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+
+Source: "{#ArtifactsDir}\libstdc++-6.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+
+Source: "{#ArtifactsDir}\libwinpthread-1.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+
+#endif
+
 Source: "build\docs\html\*"; \
 DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
 
