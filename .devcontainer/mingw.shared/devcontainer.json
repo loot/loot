@@ -3,7 +3,12 @@
   "build": {
     "dockerfile": "./Dockerfile"
   },
+  "features": {
+    "ghcr.io/devcontainers/features/desktop-lite:1": {}
+  },
+  "forwardPorts": [5901, 6080],
   "runArgs": [
-    "--userns=keep-id"
-  ]
+    "--userns=keep-id",
+  ],
+  "postCreateCommand": "/home/vscode/install_inno_setup.sh"
 }

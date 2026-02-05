@@ -2,12 +2,20 @@ FROM mcr.microsoft.com/devcontainers/rust:2-1-trixie
 
 RUN rustup target add x86_64-pc-windows-gnu
 
+# This is needed to run the Inno Setup installer without having to juggle
+# 32-bit and 64-bit wine prefixes.
+# <https://gitlab.winehq.org/wine/wine/-/wikis/Debian-Ubuntu>
+RUN mkdir -pm755 /etc/apt/keyrings \
+    && wget -O - https://dl.winehq.org/wine-builds/winehq.key | gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key - \
+    && dpkg --add-architecture i386 \
+    && wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/trixie/winehq-trixie.sources
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     cmake \
     g++-mingw-w64-x86-64 \
     gettext \
     p7zip-full \
-    wine \
+    winehq-stable \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt
@@ -53,6 +61,24 @@ RUN /home/vscode/.local/bin/uv run --with aqtinstall==3.3.0 -- aqt install-qt wi
     && sudo mv /home/vscode/6.9.1 /opt/qt/ \
     && rm aqtinstall.log
 
+RUN curl --proto '=https' --tlsv1.2 -sSfLO https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-linux-x64.tar.gz \
+    && echo "1fd7983fe56ca9e6233f126925edb24bf6b6b33e356b69996d925c4db94e2fef powershell-7.5.4-linux-x64.tar.gz" | sha256sum -c \
+    && sudo mkdir /opt/powershell-7.5.4-linux-x64 \
+    && sudo tar -xf powershell-7.5.4-linux-x64.tar.gz -C /opt/powershell-7.5.4-linux-x64 \
+    && sudo chmod +x /opt/powershell-7.5.4-linux-x64/pwsh \
+    && rm powershell-7.5.4-linux-x64.tar.gz
+
+# The installer exits successfully but doesn't work correctly if it's run during the image build.
+RUN curl --proto '=https' --tlsv1.2 -sSfLO https://dl.winehq.org/wine/wine-mono/7.4.0/wine-mono-7.4.0-x86.msi \
+    && echo "6413ff328ebbf7ec7689c648feb3546d8102ded865079d1fbf0331b14b3ab0ec wine-mono-7.4.0-x86.msi" | sha256sum -c
+
+# Can't run the installer before a display is available.
+RUN curl --proto '=https' --tlsv1.2 -sSfLO https://github.com/jrsoftware/issrc/releases/download/is-6_7_0/innosetup-6.7.0.exe \
+    && echo "f45c7d68d1e660cf13877ec36738a5179ce72a33414f9959d35e99b68c52a697 innosetup-6.7.0.exe" | sha256sum -c
+
+COPY install_inno_setup.sh /home/vscode/
+
 # Fix GetPreferredUILanguages.shouldReturnAtLeastOneLanguage() test
 ENV LC_ALL=en_US.utf8 \
+    PATH="$PATH:/opt/powershell-7.5.4-linux-x64" \
     WINEPATH="/usr/lib/gcc/x86_64-w64-mingw32/14-win32/;/opt/qt/6.9.1/mingw_64/bin/"

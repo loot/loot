@@ -172,12 +172,26 @@ uv run --project docs -- sphinx-build -b html docs build/docs/html
 
 ## Packaging Releases
 
-Packaging scripts are provided for creating an installer on Windows and compressed archives on Windows and Linux.
+Packaging scripts are provided for creating an installer for Windows and compressed archives on Windows and Linux.
 
-Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. If the unofficial Korean, Swedish and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
+To build the installer on Windows, run:
+
+```powershell
+scripts/prepare_installer.ps1
+
+& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" scripts/installer.iss
+```
+
+It can also be run on Linux, assuming that PowerShell is installed and Inno Setup has been installed using Wine:
+
+```sh
+pwsh scripts/prepare_installer.ps1
+
+wine "C:/Program Files (x86)/Inno Setup 6/ISCC.exe" scripts/installer.iss
+```
 
 The archive packaging script requires [Git](https://git-scm.com/), and on Windows it also requires [7-Zip](https://www.7-zip.org/), while on Linux it requires `tar` and `xz`. It can be run using `python scripts/archive.py`, and creates an archive for LOOT in the `build` folder. The archives are named as described in the Downloads section above.
 
-The archive packaging script calls `windeployqt.exe` when run on Windows: it must be accessible from your `PATH`.
-
 If creating an archive for a cross-compiled build targeting Windows, pass `--target windows` to `archive.py`.
+
+The archive packaging script calls `windeployqt.exe` when targeting Windows: it must be accessible from your `PATH`.
