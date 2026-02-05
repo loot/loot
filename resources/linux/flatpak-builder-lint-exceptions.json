@@ -1,13 +1,15 @@
 {
     "io.github.loot.loot": [
-        "finish-args-unnecessary-xdg-data-Steam-ro-access",
         "finish-args-unnecessary-xdg-config-heroic-ro-access",
-        "finish-args-flatpak-system-folder-access",
-        "finish-args-flatpak-appdata-folder-access",
-        "finish-args-unnecessary-xdg-data-Steam-rw-access",
-        "finish-args-unnecessary-xdg-data-openmw-ro-access",
-        "finish-args-flatpak-user-folder-access",
         "finish-args-unnecessary-xdg-config-openmw-rw-access",
+        "finish-args-unnecessary-xdg-data-openmw-ro-access",
+        "finish-args-unnecessary-xdg-data-Steam-ro-access",
+        "finish-args-unnecessary-xdg-data-Steam-rw-access",
+        "finish-args-flatpak-appdata-folder-access",
+        "finish-args-flatpak-system-folder-access",
+        "finish-args-flatpak-user-folder-access",
+        "finish-args-host-os-ro-filesystem-access",
+        "finish-args-host-etc-ro-filesystem-access",
         "appstream-screenshots-not-mirrored-in-ostree",
         "appstream-external-screenshot-url"
     ]
