@@ -51,7 +51,7 @@ def get_app_release_path(target, root_path):
 def replace_invalid_filename_characters(filename):
     return INVALID_FILENAME_CHARACTERS.sub('-', filename)
 
-def copy_qt_resources(executable_path, output_path):
+def copy_qt_resources(root_path, executable_path, output_path):
     windeployqt_args = ['windeployqt', '--release', '--dir', output_path, executable_path]
     if os.name != 'nt':
         windeployqt_args.insert(0, 'wine')
@@ -60,21 +60,12 @@ def copy_qt_resources(executable_path, output_path):
 
     if os.name != 'nt':
         # windeployqt may deploy an older version of the C++ runtime than is
-        # actually needed. If the WINEPATH env var is defined, use the first
-        # DLL that's found in its paths.
-        winepath = os.getenv('WINEPATH')
-        if winepath:
-            for path in winepath.split(';'):
-                dll_name = 'libstdc++-6.dll'
-                dll_path = os.path.join(path, dll_name)
-                dest_path = os.path.join(output_path, dll_name)
-                if os.path.exists(dll_path):
-                    if os.path.exists(dest_path):
-                        print(f'Replacing {dll_name} with the one in {path}')
-                        os.remove(dest_path)
-
-                    shutil.copy2(dll_path, dest_path)
-                    break
+        # actually needed.
+        subprocess.run([
+            'sh',
+            os.path.join(root_path, 'scripts', 'replace_libstdc++.sh'),
+            output_path
+        ], check=True)
 
     # windeployqt copies a few DLLs that aren't actually used by LOOT, so
     # delete them from the output path.
@@ -130,6 +121,7 @@ def prepare_windows_archive(root_path, release_path, temp_path):
         )
 
     copy_qt_resources(
+        root_path,
         os.path.join(release_path, 'LOOT.exe'),
         temp_path
     )

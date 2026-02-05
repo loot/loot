@@ -621,11 +621,24 @@ endif()
 
 set(QT_DIR ${Qt6_DIR}/../../..)
 
-if(WIN32 AND CMAKE_HOST_WIN32)
-    # Copy Qt binaries and resources.
-    add_custom_command(TARGET LOOT POST_BUILD
-        COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
-        COMMENT "Running windeployqt...")
+if(WIN32)
+    if(CMAKE_HOST_WIN32)
+        # Copy Qt binaries and resources.
+        add_custom_command(TARGET LOOT POST_BUILD
+            COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
+            COMMENT "Running windeployqt...")
+    else()
+        # Copy Qt binaries and resources.
+        add_custom_command(TARGET LOOT POST_BUILD
+                COMMAND wine ${QT_DIR}/bin/windeployqt.exe $<TARGET_FILE:LOOT>
+                COMMENT "Running windeployqt..."
+                VERBATIM)
+
+        # Replace the libstdc++-6.dll because the one that windeployqt copies is too old.
+        add_custom_command(TARGET LOOT POST_BUILD
+                COMMAND "sh" "${CMAKE_SOURCE_DIR}/scripts/replace_libstdc++.sh" "${CMAKE_BINARY_DIR}"
+                VERBATIM)
+    endif()
 endif()
 
 # Copy the API binary to the build directory.
