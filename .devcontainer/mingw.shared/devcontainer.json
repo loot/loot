@@ -8,7 +8,11 @@
   },
   "forwardPorts": [5901, 6080],
   "runArgs": [
-    "--userns=keep-id",
+    "--userns=keep-id"
   ],
-  "postCreateCommand": "/home/vscode/install_inno_setup.sh"
+  "mounts": [
+    "type=bind,source=${localWorkspaceFolder}/.git/config.devcontainer.nonlocal,target=${containerWorkspaceFolder}/.git/config.devcontainer.nonlocal"
+  ],
+  "initializeCommand": "${localWorkspaceFolder}/.devcontainer/mingw.shared/initialize.sh",
+  "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/mingw.shared/post_create.sh"
 }

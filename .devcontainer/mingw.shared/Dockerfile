@@ -65,8 +65,6 @@ RUN curl --proto '=https' --tlsv1.2 -sSfLO https://dl.winehq.org/wine/wine-mono/
 RUN curl --proto '=https' --tlsv1.2 -sSfLO https://github.com/jrsoftware/issrc/releases/download/is-6_7_0/innosetup-6.7.0.exe \
     && echo "f45c7d68d1e660cf13877ec36738a5179ce72a33414f9959d35e99b68c52a697 innosetup-6.7.0.exe" | sha256sum -c
 
-COPY install_inno_setup.sh /home/vscode/
-
 # Fix GetPreferredUILanguages.shouldReturnAtLeastOneLanguage() test
 ENV PATH="$PATH:/opt/powershell-7.5.4-linux-x64" \
     WINEPATH="$WINEPATH;/opt/qt/6.9.1/mingw_64/bin"
