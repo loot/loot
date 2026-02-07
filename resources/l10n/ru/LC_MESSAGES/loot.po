@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2026-02-03 19:31+0000\n"
-"PO-Revision-Date: 2025-10-07 06:01+0000\n"
+"PO-Revision-Date: 2026-02-08 15:09+0000\n"
 "Last-Translator: xsSplater <xssplater@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: src/gui/plugin_item.cpp:51
 #, c++-format
@@ -948,11 +948,11 @@ msgstr "&Копировать названия плагинов"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:281
 msgid "Show only plugins that are in the default group"
-msgstr ""
+msgstr "Показывать только плагины, входящие в группу по умолчанию"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:283
 msgid "Add plugin(s) to group"
-msgstr ""
+msgstr "Добавить плагин(ы) в группу"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:285
 msgid "Group name"
@@ -980,11 +980,11 @@ msgstr "В этой группе нет плагинов."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:393
 msgid "No plugins are in the default group."
-msgstr ""
+msgstr "Нет плагинов в группе по умолчанию."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:394
 msgid "All plugins are in this group."
-msgstr ""
+msgstr "Все плагины в этой группе."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:461
 #, c++-format
@@ -994,7 +994,7 @@ msgstr "Плагины в {0}"
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:464
 #, c++-format
 msgid "Plugins not in {0}"
-msgstr ""
+msgstr "Плагины не в {0}"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:666
 msgid "Group already exists!"
