@@ -62,8 +62,7 @@ def copy_qt_resources(root_path, executable_path, output_path):
         # windeployqt may deploy an older version of the C++ runtime than is
         # actually needed.
         subprocess.run([
-            'sh',
-            os.path.join(root_path, 'scripts', 'replace_libstdc++.sh'),
+            os.path.join(root_path, 'scripts', 'replace_mingw_dlls.sh'),
             output_path
         ], check=True)
 

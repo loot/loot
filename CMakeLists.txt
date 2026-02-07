@@ -634,9 +634,9 @@ if(WIN32)
                 COMMENT "Running windeployqt..."
                 VERBATIM)
 
-        # Replace the libstdc++-6.dll because the one that windeployqt copies is too old.
+        # Replace the MinGW DLLs because those that windeployqt copies are too old.
         add_custom_command(TARGET LOOT POST_BUILD
-                COMMAND "sh" "${CMAKE_SOURCE_DIR}/scripts/replace_libstdc++.sh" "${CMAKE_BINARY_DIR}"
+                COMMAND "${CMAKE_SOURCE_DIR}/scripts/replace_mingw_dlls.sh" "${CMAKE_BINARY_DIR}"
                 VERBATIM)
     endif()
 endif()
