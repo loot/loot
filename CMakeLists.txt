@@ -53,8 +53,8 @@ if(WIN32)
     add_custom_target(loot_ico_icon
         COMMAND svg_to_ico
             -i "${CMAKE_SOURCE_DIR}/resources/icons/loot.svg"
-            -o "${CMAKE_BINARY_DIR}/icon/icon.ico"
-        BYPRODUCTS "${CMAKE_BINARY_DIR}/icon/icon.ico")
+            -o "${CMAKE_SOURCE_DIR}/build/icon/icon.ico"
+        BYPRODUCTS "${CMAKE_SOURCE_DIR}/build/icon/icon.ico")
 endif()
 
 ##############################
