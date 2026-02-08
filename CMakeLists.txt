@@ -50,11 +50,15 @@ configure_file("${CMAKE_SOURCE_DIR}/src/gui/version.cpp.in"
 ##############################
 
 if(WIN32)
-    add_custom_target(loot_ico_icon
+    set(LOOT_SVG_PATH "${CMAKE_SOURCE_DIR}/resources/icons/loot.svg")
+    set(LOOT_ICO_PATH "${CMAKE_SOURCE_DIR}/build/icon/icon.ico")
+    add_custom_command(
+        OUTPUT "${LOOT_ICO_PATH}"
         COMMAND svg_to_ico
-            -i "${CMAKE_SOURCE_DIR}/resources/icons/loot.svg"
-            -o "${CMAKE_SOURCE_DIR}/build/icon/icon.ico"
-        BYPRODUCTS "${CMAKE_SOURCE_DIR}/build/icon/icon.ico")
+            -i "${LOOT_SVG_PATH}"
+            -o "${LOOT_ICO_PATH}"
+        DEPENDS "${LOOT_SVG_PATH}"
+        VERBATIM)
 endif()
 
 ##############################
@@ -504,7 +508,6 @@ set_target_properties(LOOT PROPERTIES
         AUTOUIC ON)
 
 if(WIN32)
-    add_dependencies(LOOT loot_ico_icon)
     target_compile_definitions(LOOT PRIVATE UNICODE _UNICODE NOMINMAX)
 
     if(CMAKE_HOST_LINUX)
