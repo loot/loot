@@ -28,8 +28,8 @@ endif()
 find_package(Git)
 
 if(GIT_FOUND)
-    execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
-                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    execute_process(COMMAND "${GIT_EXECUTABLE}" rev-parse --short HEAD
+                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   OUTPUT_VARIABLE GIT_COMMIT_STRING
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif()
@@ -105,10 +105,10 @@ if(NOT libloot_FOUND)
     set(LIBLOOT_GIT_REPOSITORY_DEFAULT "https://github.com/loot/libloot.git")
     set(LIBLOOT_GIT_COMMIT_DEFAULT "7de8bdb3a88ddb65b19f7c1ca5924e38fea06bbb")
     if(NOT DEFINED LIBLOOT_GIT_REPOSITORY)
-        set(LIBLOOT_GIT_REPOSITORY ${LIBLOOT_GIT_REPOSITORY_DEFAULT})
+        set(LIBLOOT_GIT_REPOSITORY "${LIBLOOT_GIT_REPOSITORY_DEFAULT}")
     endif()
     if(NOT DEFINED LIBLOOT_GIT_COMMIT)
-        set(LIBLOOT_GIT_COMMIT ${LIBLOOT_GIT_COMMIT_DEFAULT})
+        set(LIBLOOT_GIT_COMMIT "${LIBLOOT_GIT_COMMIT_DEFAULT}")
     endif()
 
     if(NOT MSVC OR (GIT_FOUND AND (NOT LIBLOOT_GIT_REPOSITORY STREQUAL LIBLOOT_GIT_REPOSITORY_DEFAULT OR NOT LIBLOOT_GIT_COMMIT STREQUAL LIBLOOT_GIT_COMMIT_DEFAULT)))
@@ -126,12 +126,12 @@ if(NOT libloot_FOUND)
             set(LIBLOOT_HASH "SHA256=d4f3025de4eb3361465de527467fd1d2aea92110174d12399c1ad24673a5c1af")
         endif()
         set(LIBLOOT_DOWNLOAD_ARGS
-            URL ${LIBLOOT_URL}
-            URL_HASH ${LIBLOOT_HASH})
+            URL "${LIBLOOT_URL}"
+            URL_HASH "${LIBLOOT_HASH}")
     elseif(GIT_FOUND)
         set(LIBLOOT_DOWNLOAD_ARGS
-            GIT_REPOSITORY ${LIBLOOT_GIT_REPOSITORY}
-            GIT_TAG ${LIBLOOT_GIT_COMMIT})
+            GIT_REPOSITORY "${LIBLOOT_GIT_REPOSITORY}"
+            GIT_TAG "${LIBLOOT_GIT_COMMIT}")
     else()
         message(WARNING "Git not found: building libloot from a source archive")
         set(LIBLOOT_DOWNLOAD_ARGS
@@ -227,18 +227,19 @@ FetchContent_MakeAvailable(fmt MINIZIP spdlog tomlplusplus ValveFileVDF)
 
 find_package(OGDF CONFIG)
 if(NOT OGDF_FOUND)
-    set(OGDF_CONFIG $<IF:$<CONFIG:Release,RelWithDebInfo>,Release,Debug>)
-    set(OGDF_CONFIG_LOWERCASE $<IF:$<CONFIG:Release,RelWithDebInfo>,release,debug>)
-    set(OGDF_BASENAME_SUFFIX $<IF:$<CONFIG:Release,RelWithDebInfo>,,-debug>)
+    set(IS_RELEASE_BUILD "$<CONFIG:Release,RelWithDebInfo>")
+    set(OGDF_CONFIG "$<IF:${IS_RELEASE_BUILD},Release,Debug>")
+    set(OGDF_CONFIG_LOWERCASE "$<IF:${IS_RELEASE_BUILD},release,debug>")
+    set(OGDF_BASENAME_SUFFIX "$<$<NOT:${IS_RELEASE_BUILD}>:-debug>")
 
     if(WIN32)
         set(OGDF_BUILD_COMMAND
-            ${CMAKE_COMMAND}
+            "${CMAKE_COMMAND}"
             --build .
             --target OGDF
-            --config ${OGDF_CONFIG})
+            --config "${OGDF_CONFIG}")
     else()
-        set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF)
+        set(OGDF_BUILD_COMMAND "${CMAKE_COMMAND}" --build . --target OGDF)
     endif()
 
     if(NOT DEFINED OGDF_URL)
@@ -255,8 +256,8 @@ if(NOT OGDF_FOUND)
     # Use ExternalProject for OGDF as otherwise there's no way to stop it from
     # creating and building loads of unnecessary targets.
     ExternalProject_Add(OGDF
-        URL ${OGDF_URL}
-        URL_HASH ${OGDF_HASH}
+        URL "${OGDF_URL}"
+        URL_HASH "${OGDF_HASH}"
         CMAKE_ARGS
             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -622,38 +623,38 @@ endif()
 # Post-Build Steps
 ##############################
 
-set(QT_DIR ${Qt6_DIR}/../../..)
+set(QT_DIR "${Qt6_DIR}/../../..")
 
 if(WIN32)
     if(CMAKE_HOST_WIN32)
         # Copy Qt binaries and resources.
         add_custom_command(TARGET LOOT POST_BUILD
-            COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
+            COMMAND "${QT_DIR}/bin/windeployqt" "$<TARGET_FILE:LOOT>"
             COMMENT "Running windeployqt...")
     else()
         # Copy Qt binaries and resources.
         add_custom_command(TARGET LOOT POST_BUILD
-                COMMAND wine ${QT_DIR}/bin/windeployqt.exe $<TARGET_FILE:LOOT>
-                COMMENT "Running windeployqt..."
-                VERBATIM)
+            COMMAND wine "${QT_DIR}/bin/windeployqt.exe" "$<TARGET_FILE:LOOT>"
+            COMMENT "Running windeployqt..."
+            VERBATIM)
 
         # Replace the MinGW DLLs because those that windeployqt copies are too old.
         add_custom_command(TARGET LOOT POST_BUILD
-                COMMAND "${CMAKE_SOURCE_DIR}/scripts/replace_mingw_dlls.sh" "${CMAKE_BINARY_DIR}"
-                VERBATIM)
+            COMMAND "${CMAKE_SOURCE_DIR}/scripts/replace_mingw_dlls.sh" "${CMAKE_BINARY_DIR}"
+            VERBATIM)
     endif()
 endif()
 
 # Copy the API binary to the build directory.
 add_custom_command(TARGET LOOT POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy_if_different
-       $<TARGET_FILE:libloot::libloot>
+   COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+       "$<TARGET_FILE:libloot::libloot>"
        "$<TARGET_FILE_DIR:LOOT>/$<TARGET_FILE_NAME:libloot::libloot>")
 
 if(LINUX)
     add_custom_command(TARGET LOOT POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_SONAME_FILE:libloot::libloot>
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "$<TARGET_SONAME_FILE:libloot::libloot>"
             "$<TARGET_FILE_DIR:LOOT>/$<TARGET_SONAME_FILE_NAME:libloot::libloot>")
 endif()
 
