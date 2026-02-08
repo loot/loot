@@ -213,21 +213,24 @@ if(WIN32)
         # Copy Qt binaries and resources.
         add_custom_command(TARGET loot_gui_tests POST_BUILD
             COMMAND "${QT_DIR}/bin/windeployqt" "$<TARGET_FILE:loot_gui_tests>"
-            COMMENT "Running windeployqt...")
+            COMMENT "Running windeployqt..."
+            VERBATIM)
     endif()
 
     # Copy the API binary to the build directory.
     add_custom_command(TARGET loot_gui_tests POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-        "$<TARGET_FILE:libloot::libloot>"
-        "$<TARGET_FILE_DIR:loot_gui_tests>/$<TARGET_FILE_NAME:libloot::libloot>")
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "$<TARGET_FILE:libloot::libloot>"
+            "$<TARGET_FILE_DIR:loot_gui_tests>/$<TARGET_FILE_NAME:libloot::libloot>"
+        VERBATIM)
 endif()
 
 # Copy testing plugins
 add_custom_command(TARGET loot_gui_tests POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E copy_directory
         "${testing-plugins_SOURCE_DIR}"
-        "${CMAKE_CURRENT_BINARY_DIR}/testing-plugins")
+        "${CMAKE_CURRENT_BINARY_DIR}/testing-plugins"
+    VERBATIM)
 
 ##############################
 # CTest

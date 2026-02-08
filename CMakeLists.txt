@@ -630,7 +630,8 @@ if(WIN32)
         # Copy Qt binaries and resources.
         add_custom_command(TARGET LOOT POST_BUILD
             COMMAND "${QT_DIR}/bin/windeployqt" "$<TARGET_FILE:LOOT>"
-            COMMENT "Running windeployqt...")
+            COMMENT "Running windeployqt..."
+            VERBATIM)
     else()
         # Copy Qt binaries and resources.
         add_custom_command(TARGET LOOT POST_BUILD
@@ -649,13 +650,15 @@ endif()
 add_custom_command(TARGET LOOT POST_BUILD
    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
        "$<TARGET_FILE:libloot::libloot>"
-       "$<TARGET_FILE_DIR:LOOT>/$<TARGET_FILE_NAME:libloot::libloot>")
+       "$<TARGET_FILE_DIR:LOOT>/$<TARGET_FILE_NAME:libloot::libloot>"
+    VERBATIM)
 
 if(LINUX)
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND "${CMAKE_COMMAND}" -E copy_if_different
             "$<TARGET_SONAME_FILE:libloot::libloot>"
-            "$<TARGET_FILE_DIR:LOOT>/$<TARGET_SONAME_FILE_NAME:libloot::libloot>")
+            "$<TARGET_FILE_DIR:LOOT>/$<TARGET_SONAME_FILE_NAME:libloot::libloot>"
+        VERBATIM)
 endif()
 
 if(LOOT_BUILD_TESTS)
