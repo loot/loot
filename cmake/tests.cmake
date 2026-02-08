@@ -215,13 +215,32 @@ if(WIN32)
             COMMAND "${QT_DIR}/bin/windeployqt" "$<TARGET_FILE:loot_gui_tests>"
             COMMENT "Running windeployqt..."
             VERBATIM)
-    endif()
+    else()
+        # Copy Qt binaries and resources.
+        add_custom_command(TARGET loot_gui_tests POST_BUILD
+            COMMAND wine "${QT_DIR}/bin/windeployqt.exe" "$<TARGET_FILE:loot_gui_tests>"
+            COMMENT "Running windeployqt..."
+            VERBATIM)
 
-    # Copy the API binary to the build directory.
+        # Replace the MinGW DLLs because those that windeployqt copies are too old.
+        add_custom_command(TARGET loot_gui_tests POST_BUILD
+            COMMAND "${CMAKE_SOURCE_DIR}/scripts/replace_mingw_dlls.sh" "${CMAKE_BINARY_DIR}"
+            VERBATIM)
+    endif()
+endif()
+
+# Copy the API binary to the build directory.
+add_custom_command(TARGET loot_gui_tests POST_BUILD
+   COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+       "$<TARGET_FILE:libloot::libloot>"
+       "$<TARGET_FILE_DIR:loot_gui_tests>/$<TARGET_FILE_NAME:libloot::libloot>"
+    VERBATIM)
+
+if(LINUX)
     add_custom_command(TARGET loot_gui_tests POST_BUILD
         COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-            "$<TARGET_FILE:libloot::libloot>"
-            "$<TARGET_FILE_DIR:loot_gui_tests>/$<TARGET_FILE_NAME:libloot::libloot>"
+            "$<TARGET_SONAME_FILE:libloot::libloot>"
+            "$<TARGET_FILE_DIR:loot_gui_tests>/$<TARGET_SONAME_FILE_NAME:libloot::libloot>"
         VERBATIM)
 endif()
 
@@ -230,7 +249,7 @@ add_custom_command(TARGET loot_gui_tests POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E copy_directory
         "${testing-plugins_SOURCE_DIR}"
         "${CMAKE_CURRENT_BINARY_DIR}/testing-plugins"
-    VERBATIM)
+        VERBATIM)
 
 ##############################
 # CTest
