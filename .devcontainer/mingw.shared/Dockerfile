@@ -1,21 +1,10 @@
-FROM mcr.microsoft.com/devcontainers/rust:2-1-trixie
+FROM ghcr.io/ortham/dev-rust-mingw-gcc:master
 
-RUN rustup target add x86_64-pc-windows-gnu
-
-# This is needed to run the Inno Setup installer without having to juggle
-# 32-bit and 64-bit wine prefixes.
-# <https://gitlab.winehq.org/wine/wine/-/wikis/Debian-Ubuntu>
-RUN mkdir -pm755 /etc/apt/keyrings \
-    && wget -O - https://dl.winehq.org/wine-builds/winehq.key | gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key - \
-    && dpkg --add-architecture i386 \
-    && wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/trixie/winehq-trixie.sources
+USER root
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    cmake \
-    g++-mingw-w64-x86-64 \
     gettext \
     p7zip-full \
-    winehq-stable \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt
@@ -79,6 +68,5 @@ RUN curl --proto '=https' --tlsv1.2 -sSfLO https://github.com/jrsoftware/issrc/r
 COPY install_inno_setup.sh /home/vscode/
 
 # Fix GetPreferredUILanguages.shouldReturnAtLeastOneLanguage() test
-ENV LC_ALL=en_US.utf8 \
-    PATH="$PATH:/opt/powershell-7.5.4-linux-x64" \
-    WINEPATH="/usr/lib/gcc/x86_64-w64-mingw32/14-win32/;/opt/qt/6.9.1/mingw_64/bin/"
+ENV PATH="$PATH:/opt/powershell-7.5.4-linux-x64" \
+    WINEPATH="$WINEPATH;/opt/qt/6.9.1/mingw_64/bin"
