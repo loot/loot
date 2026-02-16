@@ -195,3 +195,6 @@ The archive packaging script requires [Git](https://git-scm.com/), and on Window
 If creating an archive for a cross-compiled build targeting Windows, pass `--target windows` to `archive.py`.
 
 The archive packaging script calls `windeployqt.exe` when targeting Windows: it must be accessible from your `PATH`.
+
+
+test edit
