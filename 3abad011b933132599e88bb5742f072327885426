@@ -1,0 +1,12 @@
+The linked Discord message is:
+
+> And even if I could support it, the moment anyone anywhere adds or removes an ESL flag, everything is going to come crashing down like a house of cards, made from sliver thin glass
+> if a ESL flag is added or removed to a module that any other module uses as master, it will shift the required File FormIDs inside these other modules up or down
+> which simply breaks them all, because the stored FormIDs inside the file will all now point to the wrong file
+> it's in effect the same as ripping out a master, or inserting one, by directly modifying the file header in older games.
+> just that it doesn't require changes to that file, all that's needed to make it all fail is for some other file that you are using as a master to change the ESL flag
+> because nowhere in the fileheader is the information stored which masters had or had not the ESL flag at the time the file was saved
+> which means that there is no possible mechanism to adjust or deal with this case
+> any dependant file simply becomes junk
+>
+> -- ElminsterAU, 2023-10-12, 10:51 AM
