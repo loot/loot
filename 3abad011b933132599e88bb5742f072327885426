@@ -13,6 +13,7 @@ The linked Discord message is:
 
 That's in reference to some decompiled code for how FormIDs in plugins are mapped to runtime FormIDs. That code is:
 
+> ```c
 > void __fastcall sub_1414D4888(FormRef *ref, TESFile *file)
 > {
 >   uint32_t formid = ref->formid;
@@ -41,7 +42,7 @@ That's in reference to some decompiled code for how FormIDs in plugins are mappe
 >   }
 >   return 0i64;
 > }
-
+>
 > void fToRuntimeFormId(TESFile *file, uint32_t *pformid)
 > {
 >   if ( *pformid )
@@ -61,3 +62,4 @@ That's in reference to some decompiled code for how FormIDs in plugins are mappe
 >     }
 >   }
 > }
+> ```
