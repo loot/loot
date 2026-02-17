@@ -10,3 +10,54 @@ The linked Discord message is:
 > any dependant file simply becomes junk
 >
 > -- ElminsterAU, 2023-10-12, 10:51 AM
+
+That's in reference to some decompiled code for how FormIDs in plugins are mapped to runtime FormIDs. That code is:
+
+> void __fastcall sub_1414D4888(FormRef *ref, TESFile *file)
+> {
+>   uint32_t formid = ref->formid;
+>   if ( ref->formid - 1 > 0x7FE && file && formid + 0x1000000 > 0xFFFFFE )
+>   {
+>     master_reader = fGetFileFromMasterFilteredLists(&file->master_lists.filtered_files, formid);
+>     if ( !master_reader )
+>       master_reader = file;
+>     fToRuntimeFormId(master_reader, &formid);
+>     ref->formid = formid;
+>   }
+> }
+>
+> TESFile * fGetFileFromMasterFilteredLists(TESFileFilteredLists *filtered_lists, uint32_t formid)
+> {
+>   uint32_t plugin_index = formid >> 24;
+>   if ( formid >> 24 == 0xFE )
+>   {
+>     uint32_t light_index = (formid >> 12) & 0xFFF;
+>     if ( light_index < filtered_lists->light.count )
+>       return &filtered_lists->light.items[light_index];
+>   }
+>   else if ( plugin_index < filtered_lists->normal.count )
+>   {
+>     return &filtered_lists->normal.items[plugin_index];
+>   }
+>   return 0i64;
+> }
+
+> void fToRuntimeFormId(TESFile *file, uint32_t *pformid)
+> {
+>   if ( *pformid )
+>   {
+>     if ( file->plugin_flags & 0x200 )
+>       file = file->master_lists.files.items[0];
+>     *((_BYTE *)pformid + 3) = 0;
+>     if ( file->plugin_flags & 0x100 )
+>     {
+>       v3 = *pformid & 0xFFF | 0xFE000000;
+>       *pformid = v3;
+>       *pformid = v3 | (file->runtime_light_id << 12);
+>     }
+>     else
+>     {
+>       *pformid |= file->runtime_plugin_id << 24;
+>     }
+>   }
+> }
