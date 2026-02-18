@@ -9,7 +9,7 @@ The linked Discord message is:
 > which means that there is no possible mechanism to adjust or deal with this case
 > any dependant file simply becomes junk
 >
-> -- ElminsterAU in the xEdit Discord server's feedback channel at 2023-10-12, 10:51 AM
+> -- ElminsterAU in the xEdit Discord server's #feedback channel at 2023-10-12, 10:51 AM
 
 That's in reference to some decompiled code for how FormIDs in plugins are mapped to runtime FormIDs. That code is:
 
