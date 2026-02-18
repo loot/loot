@@ -4,7 +4,7 @@ Type=Application
 
 Name=LOOT
 Comment=Modding utility for Starfield and some Elder Scrolls and Fallout games
-Categories=Game;Qt;
+Categories=Game;Qt;Utility;
 
 Icon=io.github.loot.loot
 Exec=LOOT
