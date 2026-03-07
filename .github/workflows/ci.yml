@@ -10,9 +10,13 @@ on:
 env:
   AQTINSTALL_VERSION: 3.3.0
   BOOST_VERSION: 1.90.0
+  BOOST_INSTALL_SCRIPT_VERSION: 2.2.1
+  GETTEXT_VERSION: 0.22.5
   LIBLOOT_VERSION: 0.29.0
   OGDF_VERSION: foxglove-202510
+  PYTHON_VERSION: '3.11'
   QT_VERSION: 6.9.1
+  SVG_TO_ICO_VERSION: 1.1.0
   UV_VERSION: 0.10.9
 
 permissions:
@@ -32,7 +36,7 @@ jobs:
 
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.10'
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install gettext
         run: |
@@ -63,7 +67,7 @@ jobs:
 
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.10'
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: pip cache
         uses: actions/cache@v5
@@ -78,7 +82,7 @@ jobs:
           echo "root=$BOOST_ROOT" >> $GITHUB_OUTPUT
 
       - name: Set libloot install path
-        run: echo "LIBLOOT_INSTALL_PATH=${{ github.workspace }}/libloot-${{ env.LIBLOOT_VERSION }}-install" >> $GITHUB_ENV
+        run: echo "LIBLOOT_INSTALL_PATH=${{ github.workspace }}/libloot-${LIBLOOT_VERSION}-install" >> $GITHUB_ENV
 
       - name: Boost cache
         id: boost-cache
@@ -107,7 +111,7 @@ jobs:
 
       - name: Download & build Boost
         run: |
-          wget https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.1/install_boost.py
+          wget https://raw.githubusercontent.com/Ortham/ci-scripts/${BOOST_INSTALL_SCRIPT_VERSION}/install_boost.py
           sha256sum -c <<< 'a6e3f965d31cf45ff80a28d932b011359a45d7154398807e296a9e08f27e67e7 install_boost.py'
           python install_boost.py --directory ~ --boost-version $BOOST_VERSION -a 64 locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
@@ -115,7 +119,7 @@ jobs:
       - name: Download Qt
         id: qt-metadata
         run: |
-          python -m pip install aqtinstall==${{ env.AQTINSTALL_VERSION }}
+          python -m pip install aqtinstall==$AQTINSTALL_VERSION
           aqt install-qt linux desktop $QT_VERSION linux_gcc_64
           echo "root=${{ github.workspace }}/$QT_VERSION/gcc_64" >> $GITHUB_OUTPUT
 
@@ -147,7 +151,7 @@ jobs:
           cmake \
             -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }};${{ steps.boost-metadata.outputs.root }}/stage" \
+            -DCMAKE_PREFIX_PATH="${LIBLOOT_INSTALL_PATH};${{ steps.boost-metadata.outputs.root }}/stage" \
             -B build
           cmake --build build --target loot_gui_tests
 
@@ -164,7 +168,7 @@ jobs:
 
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install uv
         uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7.3.1
@@ -250,7 +254,7 @@ jobs:
 
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.10'
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install uv
         uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7.3.1
@@ -265,11 +269,11 @@ jobs:
 
       - name: Set libloot install path
         shell: bash
-        run: echo "LIBLOOT_INSTALL_PATH=${{ github.workspace }}/libloot-${{ env.LIBLOOT_VERSION }}-install" >> $GITHUB_ENV
+        run: echo "LIBLOOT_INSTALL_PATH=${{ github.workspace }}/libloot-${LIBLOOT_VERSION}-install" >> $GITHUB_ENV
 
       - name: Set OGDF install path
         shell: bash
-        run: echo "OGDF_INSTALL_PATH=${{ github.workspace }}/ogdf-${{ env.OGDF_VERSION }}-install" >> $GITHUB_ENV
+        run: echo "OGDF_INSTALL_PATH=${{ github.workspace }}/ogdf-${OGDF_VERSION}-install" >> $GITHUB_ENV
 
       - name: Boost cache
         id: boost-cache
@@ -297,7 +301,7 @@ jobs:
       - name: Download and extract svg_to_ico
         run: |
           $filename = scripts\download_file.ps1 `
-            'https://github.com/Ortham/svg_to_ico/releases/download/1.1.0/svg_to_ico.7z' `
+            'https://github.com/Ortham/svg_to_ico/releases/download/${env:SVG_TO_ICO_VERSION}/svg_to_ico.7z' `
             'b2a3e82591ad4834a253290a76f007e5bab35e5a97584d29b3a4b5d0ff9acef3'
           7z e -y -osvg_to_ico $filename
 
@@ -306,9 +310,9 @@ jobs:
       - name: Download & build Boost
         run: |
           $filename = scripts\download_file.ps1 `
-            'https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.1/install_boost.py' `
+            'https://raw.githubusercontent.com/Ortham/ci-scripts/${env:BOOST_INSTALL_SCRIPT_VERSION}/install_boost.py' `
             'a6e3f965d31cf45ff80a28d932b011359a45d7154398807e296a9e08f27e67e7'
-          python $filename --directory ${{ github.workspace }} --boost-version ${{ env.BOOST_VERSION }} -a 64 locale
+          python $filename --directory ${{ github.workspace }} --boost-version ${env:BOOST_VERSION} -a 64 locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download and build OGDF
@@ -333,7 +337,7 @@ jobs:
       - name: Download Qt
         id: qt-metadata
         run: |
-          uv run --with aqtinstall==${{ env.AQTINSTALL_VERSION }} -- aqt install-qt windows desktop ${env:QT_VERSION} win64_msvc2022_64
+          uv run --with aqtinstall==${env:AQTINSTALL_VERSION} -- aqt install-qt windows desktop ${env:QT_VERSION} win64_msvc2022_64
           echo "root=${{ github.workspace }}/${env:QT_VERSION}/msvc2022_64" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Checkout libloot repository
@@ -362,9 +366,9 @@ jobs:
         run: |
           cmake -G "Visual Studio 17 2022" `
             -A x64 `
-            -DCMAKE_PREFIX_PATH="${{ env.LIBLOOT_INSTALL_PATH }};${{ steps.boost-metadata.outputs.root }}\stage" `
+            -DCMAKE_PREFIX_PATH="${env:LIBLOOT_INSTALL_PATH};${{ steps.boost-metadata.outputs.root }}\stage" `
             -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" `
-            -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}" `
+            -DOGDF_ROOT="${env:OGDF_INSTALL_PATH}" `
             -B build
           cmake --build build --config Release
 
@@ -381,7 +385,7 @@ jobs:
       - name: Install Gettext
         run: |
           $filename = scripts\download_file.ps1 `
-            'https://github.com/vslavik/gettext-tools-windows/releases/download/v0.22.5/gettext-tools-windows-0.22.5.zip' `
+            'https://github.com/vslavik/gettext-tools-windows/releases/download/v${env:GETTEXT_VERSION}/gettext-tools-windows-${env:GETTEXT_VERSION}.zip' `
             '2a49b7c26e91c4f4f3d389067c3d6dda77aee816aee0f36e172d84577311b7da'
 
           7z x -y -ogettext ".\$filename"
