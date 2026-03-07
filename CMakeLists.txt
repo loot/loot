@@ -204,8 +204,8 @@ FetchContent_Declare(
 
 FetchContent_Declare(
     fmt
-    URL "https://github.com/fmtlib/fmt/archive/refs/tags/12.0.0.tar.gz"
-    URL_HASH "SHA256=aa3e8fbb6a0066c03454434add1f1fc23299e85758ceec0d7d2d974431481e40"
+    URL "https://github.com/fmtlib/fmt/releases/download/12.1.0/fmt-12.1.0.zip"
+    URL_HASH "SHA256=695fd197fa5aff8fc67b5f2bbc110490a875cdf7a41686ac8512fb480fa8ada7"
     FIND_PACKAGE_ARGS)
 
 set(SPDLOG_FMT_EXTERNAL ON)
