@@ -11,7 +11,7 @@ env:
   AQTINSTALL_VERSION: 3.3.0
   BOOST_VERSION: 1.90.0
   BOOST_INSTALL_SCRIPT_VERSION: 2.2.1
-  GETTEXT_VERSION: 0.22.5
+  GETTEXT_VERSION: v1.0-v1.18-r3
   LIBLOOT_VERSION: 0.29.0
   OGDF_VERSION: foxglove-202510
   PYTHON_VERSION: 3.14.3
@@ -385,8 +385,8 @@ jobs:
       - name: Install Gettext
         run: |
           $filename = scripts\download_file.ps1 `
-            'https://github.com/vslavik/gettext-tools-windows/releases/download/v${env:GETTEXT_VERSION}/gettext-tools-windows-${env:GETTEXT_VERSION}.zip' `
-            '2a49b7c26e91c4f4f3d389067c3d6dda77aee816aee0f36e172d84577311b7da'
+            'https://github.com/mlocati/gettext-iconv-windows/releases/download/${env:GETTEXT_VERSION}/gettext1.0-iconv1.18-shared-64.zip'
+            '0d606a0b4ad9078331376cbbf214d4d7f1b327bec8e8fd05557309816cd95cca'
 
           7z x -y -ogettext ".\$filename"
 
