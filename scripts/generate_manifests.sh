@@ -41,8 +41,20 @@ echo "Installing Flatpak dependencies..."
 # unnecessarily downloading a different runtime.
 RUNTIME="$(echo "$READ_RUNTIME_PY" | uv run --with "$PYYAML_SPECIFIER" -- -)"
 
-flatpak --user remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-flatpak --user install -y flathub "$RUNTIME"
+if ! flatpak info "$RUNTIME" &> /dev/null
+then
+    echo "Installing Flatpak runtime $RUNTIME..."
+    if flatpak remotes --system --columns=name,url | grep -Pq "flathub\thttps://dl.flathub.org/repo/"
+    then
+        flatpak --system install -y flathub "$RUNTIME"
+    elif flatpak remotes --user --columns=name,url | grep -Pq "flathub\thttps://dl.flathub.org/repo/"
+    then
+        flatpak --user install -y flathub "$RUNTIME"
+    else
+        flatpak --user remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+        flatpak --user install -y flathub "$RUNTIME"
+    fi
+fi
 
 echo "Generating manifest for docs..."
 uv run --locked -- ./flatpak-pip-generator.py --runtime="$RUNTIME" --pyproject-file ../../docs/pyproject.toml --output docs --cleanup=all

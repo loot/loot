@@ -16,7 +16,13 @@ fi
 cd build
 
 echo "Creating flatpak package..."
-flatpak-builder --install-deps-from flathub --user --ccache --force-clean --install --repo=flatpak-repo flatpak ../resources/linux/io.github.loot.loot.yml
+if flatpak remotes --system --columns=name,url | grep -Pq "flathub\thttps://dl.flathub.org/repo/"
+then
+    flatpak-builder --install-deps-from flathub --system --ccache --force-clean --repo=flatpak-repo flatpak ../resources/linux/io.github.loot.loot.yml
+    flatpak install --user --reinstall -y ./flatpak-repo io.github.loot.loot
+else
+    flatpak-builder --install-deps-from flathub --user --ccache --force-clean --install --repo=flatpak-repo flatpak ../resources/linux/io.github.loot.loot.yml
+fi
 
 echo "Creating flatpak bundle..."
 flatpak build-bundle flatpak-repo "$PACKAGE_FILENAME" io.github.loot.loot --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
