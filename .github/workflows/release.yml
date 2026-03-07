@@ -5,7 +5,7 @@ on:
     tags: '*'
 
 env:
-  BOOST_VERSION: 1.87.0
+  BOOST_VERSION: 1.90.0
   OGDF_VERSION: foxglove-202510
   QT_VERSION: 6.9.1
 
