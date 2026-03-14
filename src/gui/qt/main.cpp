@@ -28,6 +28,7 @@
 #include <QtCore/QCommandLineOption>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QLibraryInfo>
+#include <QtCore/QOperatingSystemVersion>
 #include <QtCore/QTimer>
 #include <QtCore/QTranslator>
 #include <QtWidgets/QApplication>
@@ -82,6 +83,13 @@ void logRuntimeEnvironment() {
     logger->info("Available Qt styles: {}", fmt::join(styles, ", "));
   }
 }
+
+bool isRunningOnWindows11() {
+  return QOperatingSystemVersion::currentType() ==
+             QOperatingSystemVersion::OSType::Windows &&
+         QOperatingSystemVersion::current() >=
+             QOperatingSystemVersion::Windows11;
+}
 }
 
 int main(int argc, char* argv[]) {
@@ -99,15 +107,20 @@ int main(int argc, char* argv[]) {
 
   loot::ApplicationMutexGuard mutexGuard;
 
-  QApplication app(argc, argv);
-
 #ifdef _WIN32
-  // The windows11 style looks worse than the windowsvista style but is the
-  // default on Windows 11 (only), so override it if it's set.
-  if (QApplication::style()->name() == "windows11") {
-    QApplication::setStyle(QStyleFactory::create("windowsvista"));
+  // The default style on Windows 11 is the windows11 style, and it looks
+  // worse than the windowsvista style, so use that instead.
+  // This is set before a QApplication instance is created so that the
+  // -style CLI argument can be used to set a different style.
+  if (isRunningOnWindows11()) {
+    auto overrideDefaultStyle = QStyleFactory::create("windowsvista");
+    if (overrideDefaultStyle) {
+      QApplication::setStyle(overrideDefaultStyle);
+    }
   }
 #endif
+
+  QApplication app(argc, argv);
 
   QCommandLineParser parser;
   parser.addHelpOption();
