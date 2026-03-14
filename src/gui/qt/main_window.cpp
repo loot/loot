@@ -2592,8 +2592,10 @@ void MainWindow::on_settingsDialog_accepted() {
     settingsDialog->recordInputValues(*state);
 
     pluginEditorWidget->setLanguage(state->getSettings().getLanguage());
-    recordCurrentGameHiddenMessages(state->getSettings(),
-                                    state->getCurrentGame().getSettings());
+    if (state->hasCurrentGame()) {
+      recordCurrentGameHiddenMessages(state->getSettings(),
+                                      state->getCurrentGame().getSettings());
+    }
 
     state->getSettings().save(state->getPaths().getSettingsPath());
 
