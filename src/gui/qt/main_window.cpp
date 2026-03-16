@@ -170,7 +170,7 @@ int calculateSidebarPositionSectionWidth(size_t pluginCount) {
   const auto paddingWidth =
       QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
 
-  const int numberOfDigits = static_cast<int>(log10(pluginCount)) + 1;
+  const int numberOfDigits = static_cast<int>(log10(static_cast<double>(pluginCount))) + 1;
 
   return numberOfDigits * static_cast<int>(maxCharWidth) + paddingWidth;
 }

@@ -508,7 +508,7 @@ std::filesystem::path getExecutableDirectory() {
       logger->error("Failed to get LOOT executable path.");
     }
     throw std::system_error(
-        count, std::system_category(), "Failed to get LOOT executable path.");
+        static_cast<int>(count), std::system_category(), "Failed to get LOOT executable path.");
   }
 
   return std::filesystem::u8path(std::string(result.data(), count))

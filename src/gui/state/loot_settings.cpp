@@ -750,10 +750,10 @@ toml::table windowPositionToToml(
 
 std::optional<LootSettings::WindowPosition> windowPositionFromToml(
     const toml::table& table) {
-  const auto windowTop = table["top"].value<long>();
-  const auto windowBottom = table["bottom"].value<long>();
-  const auto windowLeft = table["left"].value<long>();
-  const auto windowRight = table["right"].value<long>();
+  const auto windowTop = table["top"].value<int>();
+  const auto windowBottom = table["bottom"].value<int>();
+  const auto windowLeft = table["left"].value<int>();
+  const auto windowRight = table["right"].value<int>();
   const auto windowMaximised = table["maximised"].value<bool>();
   if (windowTop && windowBottom && windowLeft && windowRight &&
       windowMaximised) {
