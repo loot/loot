@@ -479,6 +479,8 @@ std::string getMetadataAsBBCodeYaml(const gui::Game& game,
 std::vector<LoadOrderTuple> mapToLoadOrderTuples(
     const gui::Game& game,
     const std::vector<std::string>& loadOrder) {
+  const auto logger = getLogger();
+
   std::vector<LoadOrderTuple> data;
   data.reserve(loadOrder.size());
 
@@ -490,6 +492,13 @@ std::vector<LoadOrderTuple> mapToLoadOrderTuples(
   for (const auto& pluginName : loadOrder) {
     auto plugin = game.getPlugin(pluginName);
     if (!plugin) {
+      if (logger) {
+        logger->warn(
+            "The plugin \"{}\" appears in the given load order but is not "
+            "loaded",
+            pluginName);
+      }
+
       continue;
     }
 
