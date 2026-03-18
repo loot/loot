@@ -1,0 +1,84 @@
+bash_completion_spec:
+  - plugin_filename
+  - modlist
+  - plugin_modnames
+plugins:
+  - name: Starfield.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+  - name: BlueprintShips-Starfield.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+  - name: SFBGS001.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+  - name: SFBGS003.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+  - name: SFBGS006.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+  - name: SFBGS007.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+  - name: SFBGS008.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+  - name: sfta02.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+  - name: sfta03.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+  - name: sfta04.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+  - name: sfta05.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+  - name: sfta06.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+  - name: OldMars.esm
+    req: []
+    tag: []
+    dirty: []
+    clean: []
+    url: []
+regex_plugins: []
