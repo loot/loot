@@ -1,0 +1,181 @@
+globals:
+  - type: say
+    content:
+      - lang: en
+        text: 'Note: This masterlist is for Starfield plugins. Load order matters for proper game stability.'
+
+plugins:
+  # Base Game
+  - name: 'Starfield.esm'
+    priority: 5
+    global_priority: -127
+
+  # Official DLC/Creation Club Content
+  - name: 'BlueprintShips-StarfieldBountyHunter.esm'
+    priority: 10
+    after:
+      - 'Starfield.esm'
+    tag:
+      - Relev
+    dirty:
+      - crc: 0x00000000
+        util: '[Starfield Creation Kit](https://creationkit.bethesda.net/starfield)'
+        detail: 'ITM records. Clean with Creation Kit.'
+
+  - name: 'sfbgs002.esm'
+    priority: 15
+    after:
+      - 'Starfield.esm'
+      - 'BlueprintShips-StarfieldBountyHunter.esm'
+
+  - name: 'sfbgs003.esm'
+    priority: 20
+    after:
+      - 'Starfield.esm'
+      - 'BlueprintShips-StarfieldBountyHunter.esm'
+      - 'sfbgs002.esm'
+
+  # Trackers Alliance Series
+  - name: 'sfta02.esm'
+    priority: 25
+    after:
+      - 'Starfield.esm'
+      - 'BlueprintShips-StarfieldBountyHunter.esm'
+    tag:
+      - Relev
+    clean:
+      - crc: 0x00000000
+        util: '[Starfield Creation Kit](https://creationkit.bethesda.net/starfield)'
+
+  - name: 'sfta03.esm'
+    priority: 30
+    after:
+      - 'Starfield.esm'
+      - 'BlueprintShips-StarfieldBountyHunter.esm'
+      - 'sfta02.esm'
+    tag:
+      - Relev
+
+  - name: 'sfta04.esm'
+    priority: 35
+    after:
+      - 'Starfield.esm'
+      - 'BlueprintShips-StarfieldBountyHunter.esm'
+      - 'sfta02.esm'
+      - 'sfta03.esm'
+    tag:
+      - Relev
+
+  - name: 'sfta05.esm'
+    priority: 40
+    after:
+      - 'Starfield.esm'
+      - 'BlueprintShips-StarfieldBountyHunter.esm'
+      - 'sfta02.esm'
+      - 'sfta03.esm'
+      - 'sfta04.esm'
+    tag:
+      - Relev
+
+  - name: 'sfta06.esm'
+    priority: 45
+    after:
+      - 'Starfield.esm'
+      - 'BlueprintShips-StarfieldBountyHunter.esm'
+      - 'sfta02.esm'
+      - 'sfta03.esm'
+      - 'sfta04.esm'
+      - 'sfta05.esm'
+    tag:
+      - Relev
+
+  # Blueprint Ships Content
+  - name: 'BlueprintShips-StarfieldBountyHunter01.esm'
+    priority: 50
+    after:
+      - 'Starfield.esm'
+      - 'BlueprintShips-StarfieldBountyHunter.esm'
+      - 'sfta02.esm'
+    tag:
+      - Graphics
+      - Relev
+
+  - name: 'BlueprintShips-StarfieldBountyHunter02.esm'
+    priority: 55
+    after:
+      - 'Starfield.esm'
+      - 'BlueprintShips-StarfieldBountyHunter.esm'
+      - 'BlueprintShips-StarfieldBountyHunter01.esm'
+      - 'sfta03.esm'
+    tag:
+      - Graphics
+      - Relev
+
+  - name: 'BlueprintShips-StarfieldBountyHunter03.esm'
+    priority: 60
+    after:
+      - 'Starfield.esm'
+      - 'BlueprintShips-StarfieldBountyHunter.esm'
+      - 'BlueprintShips-StarfieldBountyHunter01.esm'
+      - 'BlueprintShips-StarfieldBountyHunter02.esm'
+      - 'sfta04.esm'
+    tag:
+      - Graphics
+      - Relev
+
+  - name: 'BlueprintShips-StarfieldBountyHunter04.esm'
+    priority: 65
+    after:
+      - 'Starfield.esm'
+      - 'BlueprintShips-StarfieldBountyHunter.esm'
+      - 'BlueprintShips-StarfieldBountyHunter01.esm'
+      - 'BlueprintShips-StarfieldBountyHunter02.esm'
+      - 'BlueprintShips-StarfieldBountyHunter03.esm'
+      - 'sfta05.esm'
+    tag:
+      - Graphics
+      - Relev
+
+  - name: 'BlueprintShips-StarfieldBountyHunter05.esm'
+    priority: 70
+    after:
+      - 'Starfield.esm'
+      - 'BlueprintShips-StarfieldBountyHunter.esm'
+      - 'BlueprintShips-StarfieldBountyHunter01.esm'
+      - 'BlueprintShips-StarfieldBountyHunter02.esm'
+      - 'BlueprintShips-StarfieldBountyHunter03.esm'
+      - 'BlueprintShips-StarfieldBountyHunter04.esm'
+      - 'sfta06.esm'
+    tag:
+      - Graphics
+      - Relev
+
+  # Community Mods (Examples)
+  - name: 'CommunityMod.esp'
+    priority: 1000
+    after:
+      - 'Starfield.esm'
+    msg:
+      - type: warn
+        condition: 'version("CommunityMod.esp", "1.0.0", <)'
+        content:
+          - lang: en
+            text: 'This version of CommunityMod.esp may cause stability issues. Update recommended.'
+
+  # Late Loading Patches
+  - name: 'TrackersAlliance_CompletePatch.esp'
+    priority: 9000
+    after:
+      - 'sfta02.esm'
+      - 'sfta03.esm'
+      - 'sfta04.esm'
+      - 'sfta05.esm'
+      - 'sfta06.esm'
+      - 'BlueprintShips-StarfieldBountyHunter01.esm'
+      - 'BlueprintShips-StarfieldBountyHunter02.esm'
+      - 'BlueprintShips-StarfieldBountyHunter03.esm'
+      - 'BlueprintShips-StarfieldBountyHunter04.esm'
+      - 'BlueprintShips-StarfieldBountyHunter05.esm'
+    tag:
+      - Relev
+      - Names
