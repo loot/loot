@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2026-02-03 19:31+0000\n"
-"PO-Revision-Date: 2025-06-30 02:01+0000\n"
-"Last-Translator: Ortham <weblate@ortham.net>\n"
+"PO-Revision-Date: 2026-03-21 00:09+0000\n"
+"Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: src/gui/plugin_item.cpp:51
 #, c++-format
@@ -36,8 +36,8 @@ msgstr "இடம் {0}"
 #, c++-format
 msgid "{0} ITM record"
 msgid_plural "{0} ITM records"
-msgstr[0] "{0} itm பதிவு"
-msgstr[1] "{0} itm பதிவுகள்"
+msgstr[0] "{0} ஐடிஎம் பதிவு"
+msgstr[1] "{0} ITM பதிவுகள்"
 
 #: src/gui/sourced_message.cpp:82
 #, c++-format
@@ -50,8 +50,8 @@ msgstr[1] "{0} நீக்கப்பட்ட குறிப்புகள�
 #, c++-format
 msgid "{0} deleted navmesh"
 msgid_plural "{0} deleted navmeshes"
-msgstr[0] "{0} நீக்கப்பட்ட நவம்ச்"
-msgstr[1] "{0} நீக்கப்பட்ட நவம்ச்கள்"
+msgstr[0] "{0} நவமேச் நீக்கப்பட்டது"
+msgstr[1] "{0} NavMeshes நீக்கப்பட்டது"
 
 #: src/gui/sourced_message.cpp:96
 #, c++-format
@@ -145,7 +145,7 @@ msgstr "கிரியேசன் கிளப் செருகுநிர�
 
 #: src/gui/qt/filters_widget.cpp:307
 msgid "Show only new messages"
-msgstr ""
+msgstr "புதிய செய்திகளை மட்டும் காட்டு"
 
 #: src/gui/qt/filters_widget.cpp:308
 msgid "Show only empty plugins"
@@ -205,7 +205,7 @@ msgstr "பொது செய்தி"
 
 #: src/gui/qt/general_info_card.cpp:228 src/gui/qt/plugin_card.cpp:288
 msgid "Has Hidden Messages"
-msgstr ""
+msgstr "மறைக்கப்பட்ட செய்திகள் உள்ளன"
 
 #: src/gui/qt/general_info_card.cpp:230
 msgid "Masterlist Revision ID"
@@ -384,12 +384,12 @@ msgstr "உ&ள்ளடக்கத்தைப் புதுப்பிக�
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:830
 msgid "U&nhide all individually-hidden messages"
-msgstr ""
+msgstr "தனித்தனியாக மறைக்கப்பட்ட எல்லா செய்திகளையும் மறைக்கவும்"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:833
 msgid "Unhide all individually-hidden &general messages"
-msgstr ""
+msgstr "தனித்தனியாக மறைக்கப்பட்ட &பொது செய்திகள் அனைத்தையும் மறைக்கவும்"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:835
@@ -444,7 +444,7 @@ msgstr "&மெட்டாடேட்டாவைத் திருத்த�
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:857
 msgid "Un&hide individually-hidden messages"
-msgstr ""
+msgstr "தனித்தனியாக மறைக்கப்பட்ட செய்திகளை &மறை"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:859
@@ -779,7 +779,7 @@ msgstr ""
 
 #: src/gui/qt/messages_widget.cpp:200
 msgid "Hide message"
-msgstr ""
+msgstr "செய்தியை மறை"
 
 #: src/gui/qt/plugin_card.cpp:135
 msgid "Source:"
@@ -935,11 +935,11 @@ msgstr "&சொருகி பெயர்களை நகலெடுக்க
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:281
 msgid "Show only plugins that are in the default group"
-msgstr ""
+msgstr "இயல்புநிலை குழுவில் உள்ள செருகுநிரல்களை மட்டும் காட்டு"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:283
 msgid "Add plugin(s) to group"
-msgstr ""
+msgstr "குழுவில் செருகுநிரல்(களை) சேர்க்கவும்"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:285
 msgid "Group name"
@@ -967,11 +967,11 @@ msgstr "இந்த குழுவில் செருகுநிரல்�
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:393
 msgid "No plugins are in the default group."
-msgstr ""
+msgstr "இயல்புநிலை குழுவில் செருகுநிரல்கள் எதுவும் இல்லை."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:394
 msgid "All plugins are in this group."
-msgstr ""
+msgstr "அனைத்து செருகுநிரல்களும் இந்த குழுவில் உள்ளன."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:461
 #, c++-format
@@ -981,7 +981,7 @@ msgstr "{0} in இல் செருகுநிரல்கள்"
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:464
 #, c++-format
 msgid "Plugins not in {0}"
-msgstr ""
+msgstr "செருகுநிரல்கள் {0} இல் இல்லை"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:666
 msgid "Group already exists!"
