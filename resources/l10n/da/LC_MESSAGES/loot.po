@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-02-03 19:31+0000\n"
+"POT-Creation-Date: 2026-03-27 14:57+0000\n"
 "PO-Revision-Date: 2024-05-22 19:59+0100\n"
 "Last-Translator: Kasper \"ZyPA\" R. Kristensen <rytterkasper972@gmail.com>\n"
 "Language-Team: Danish\n"
@@ -729,15 +729,15 @@ msgstr "Om LOOT"
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2692
+#: src/gui/qt/main_window.cpp:2694
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2730
+#: src/gui/qt/main_window.cpp:2732
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2778
+#: src/gui/qt/main_window.cpp:2780
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
@@ -745,31 +745,31 @@ msgstr ""
 "Automatisk sortering er blevet annulleret, da der vises mindst én fejl-"
 "meddelelse."
 
-#: src/gui/qt/main_window.cpp:2837
+#: src/gui/qt/main_window.cpp:2839
 msgid "No masterlist update was necessary."
 msgstr "Masterlisteopdatering var ikke nødvendig."
 
-#: src/gui/qt/main_window.cpp:2860
+#: src/gui/qt/main_window.cpp:2862
 #, c++-format
 msgid "Masterlist updated to revision {0}."
 msgstr "Masterliste opdateret til udgave {0}."
 
-#: src/gui/qt/main_window.cpp:2923
+#: src/gui/qt/main_window.cpp:2925
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2949
+#: src/gui/qt/main_window.cpp:2951
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3011
+#: src/gui/qt/main_window.cpp:3013
 #, c++-format
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "En [ny version]({0}) af LOOT er tilgængelig."
 
-#: src/gui/qt/main_window.cpp:3026
+#: src/gui/qt/main_window.cpp:3028
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
