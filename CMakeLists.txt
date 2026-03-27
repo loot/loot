@@ -103,7 +103,7 @@ endif()
 find_package(libloot CONFIG)
 if(NOT libloot_FOUND)
     set(LIBLOOT_GIT_REPOSITORY_DEFAULT "https://github.com/loot/libloot.git")
-    set(LIBLOOT_GIT_COMMIT_DEFAULT "7de8bdb3a88ddb65b19f7c1ca5924e38fea06bbb")
+    set(LIBLOOT_GIT_COMMIT_DEFAULT "d929ab9dabc130f10e4b235c816fa5da3dfa317c")
     if(NOT DEFINED LIBLOOT_GIT_REPOSITORY)
         set(LIBLOOT_GIT_REPOSITORY "${LIBLOOT_GIT_REPOSITORY_DEFAULT}")
     endif()
@@ -122,8 +122,8 @@ if(NOT libloot_FOUND)
         if(DEFINED LIBLOOT_URL)
             cmake_path(CONVERT "${LIBLOOT_URL}" TO_CMAKE_PATH_LIST LIBLOOT_URL)
         else()
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.29.0/libloot-0.29.0-win64.7z")
-            set(LIBLOOT_HASH "SHA256=d4f3025de4eb3361465de527467fd1d2aea92110174d12399c1ad24673a5c1af")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.29.2/libloot-0.29.2-win64.7z")
+            set(LIBLOOT_HASH "SHA256=827daf2201bd081e1495570d0d563e2e490138582c0d67325ad6a6d369581203")
         endif()
         set(LIBLOOT_DOWNLOAD_ARGS
             URL "${LIBLOOT_URL}"
@@ -135,8 +135,8 @@ if(NOT libloot_FOUND)
     else()
         message(WARNING "Git not found: building libloot from a source archive")
         set(LIBLOOT_DOWNLOAD_ARGS
-            URL "https://github.com/loot/libloot/archive/refs/tags/0.29.0.tar.gz"
-            URL_HASH "SHA256=e8cfb4b0fcb76f36f1313ea94519667fc43ec949ad3adb1aa0ba8b02338978b3")
+            URL "https://github.com/loot/libloot/archive/refs/tags/0.29.2.tar.gz"
+            URL_HASH "SHA256=381ae587662bb9c47696ecdccd7cd0c16ea50493f97075f0705064989ef8f0fa")
     endif()
 
     message(DEBUG "LIBLOOT_USE_PREBUILT_MSVC_BINARY: ${LIBLOOT_USE_PREBUILT_MSVC_BINARY}")
