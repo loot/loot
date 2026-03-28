@@ -28,6 +28,7 @@
 #include <fmt/base.h>
 
 #include <QtCore/QTimer>
+#include <QtCore/QUrl>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QStyleHints>

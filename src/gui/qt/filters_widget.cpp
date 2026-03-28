@@ -25,7 +25,6 @@
 
 #include "gui/qt/filters_widget.h"
 
-#include <QtCore/QStringBuilder>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QVBoxLayout>

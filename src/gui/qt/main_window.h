@@ -26,9 +26,7 @@
 #ifndef LOOT_GUI_QT_MAIN_WINDOW
 #define LOOT_GUI_QT_MAIN_WINDOW
 
-#include <QtCore/QUrl>
 #include <QtCore/QVariant>
-#include <QtCore/QtGlobal>
 #include <QtGui/QAction>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>

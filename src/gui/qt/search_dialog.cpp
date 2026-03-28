@@ -26,7 +26,6 @@
 #include "gui/qt/search_dialog.h"
 
 #include <QtCore/QRegularExpression>
-#include <QtCore/QStringBuilder>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QStyle>

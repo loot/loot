@@ -25,7 +25,6 @@
 
 #include <fmt/ranges.h>
 
-#include <QtCore/QCommandLineOption>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QLibraryInfo>
 #include <QtCore/QOperatingSystemVersion>

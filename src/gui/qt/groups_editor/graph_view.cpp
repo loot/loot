@@ -27,7 +27,6 @@
 
 #include <math.h>
 
-#include <QtCore/QRandomGenerator>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QStyle>

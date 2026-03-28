@@ -29,7 +29,6 @@
 #include <QtCore/QFuture>
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
-#include <QtCore/QThread>
 
 #include "gui/query/query.h"
 

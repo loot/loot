@@ -26,7 +26,6 @@
 #ifndef LOOT_GUI_QT_SEARCH_DIALOG
 #define LOOT_GUI_QT_SEARCH_DIALOG
 
-#include <QtCore/QModelIndex>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>

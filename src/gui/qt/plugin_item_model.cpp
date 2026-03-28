@@ -26,7 +26,6 @@
 #include "gui/qt/plugin_item_model.h"
 
 #include <QtCore/QMimeData>
-#include <QtCore/QSize>
 
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
