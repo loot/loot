@@ -453,6 +453,12 @@ void MainWindow::applyTheme() {
     }
 
     QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Light);
+  } else {
+    if (logger) {
+      logger->debug("Reverting to the system's color scheme");
+    }
+
+    QGuiApplication::styleHints()->unsetColorScheme();
   }
 #endif
 
