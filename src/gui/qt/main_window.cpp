@@ -170,7 +170,8 @@ int calculateSidebarPositionSectionWidth(size_t pluginCount) {
   const auto paddingWidth =
       QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
 
-  const int numberOfDigits = static_cast<int>(log10(static_cast<double>(pluginCount))) + 1;
+  const int numberOfDigits =
+      static_cast<int>(log10(static_cast<double>(pluginCount))) + 1;
 
   return numberOfDigits * static_cast<int>(maxCharWidth) + paddingWidth;
 }
@@ -263,11 +264,93 @@ void setWindowPosition(QWidget& window,
     window.setGeometry(geometry);
   }
 }
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+void logColorScheme() {
+  const auto logger = loot::getLogger();
+  if (logger) {
+    const auto colorScheme = QGuiApplication::styleHints()->colorScheme();
+    std::string description;
+    if (colorScheme == Qt::ColorScheme::Unknown) {
+      description = "unknown";
+    } else if (colorScheme == Qt::ColorScheme::Light) {
+      description = "light";
+    } else if (colorScheme == Qt::ColorScheme::Dark) {
+      description = "dark";
+    } else {
+      description = std::to_string(static_cast<int>(colorScheme));
+    }
+    logger->info("The system color scheme is {}", description);
+
+    if (isColorSchemeDark()) {
+      logger->debug("The detected color scheme is dark");
+    } else {
+      logger->debug("The detected color scheme is light");
+    }
+  }
+}
+#endif
+
+std::optional<std::string> getStyleSuffixForTheme(
+    const std::string& themeName,
+    std::string_view initialQtStyleName) {
+#ifdef _WIN32
+  if (initialQtStyleName == "fusion" &&
+      !boost::ends_with(themeName, "-fusion-windows")) {
+    return "-fusion-windows";
+  } else if (initialQtStyleName == "windows11" &&
+             !boost::ends_with(themeName, "-windows11")) {
+    return "-windows11";
+  }
+#endif
+
+  return std::nullopt;
+}
+
+std::vector<std::string> selectThemesToTry(
+    const std::string& themeName,
+    std::string_view initialQtStyleName) {
+  const auto logger = loot::getLogger();
+
+  std::vector<std::string> variants;
+
+  const auto styleSuffix =
+      getStyleSuffixForTheme(themeName, initialQtStyleName);
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+  const auto colorScheme = isColorSchemeDark() ? "dark" : "light";
+  const auto colorSchemeSuffix = fmt::format("-{}", colorScheme);
+
+  if (logger) {
+    logger->debug("The detected color scheme is {}", colorScheme);
+  }
+
+  if (!boost::ends_with(themeName, colorSchemeSuffix)) {
+    if (styleSuffix.has_value()) {
+      variants.push_back(themeName + colorSchemeSuffix + styleSuffix.value());
+    }
+    variants.push_back(themeName + colorSchemeSuffix);
+  }
+#endif
+
+  if (styleSuffix.has_value()) {
+    variants.push_back(themeName + styleSuffix.value());
+  }
+
+  variants.push_back(themeName);
+
+  // Fall back to the default light theme.
+  variants.push_back("default-light");
+
+  return variants;
+}
 }
 
 namespace loot {
 MainWindow::MainWindow(LootState& state, QWidget* parent) :
-    QMainWindow(parent), state(&state) {
+    QMainWindow(parent),
+    state(&state),
+    initialQtStyleName(QApplication::style()->name().toStdString()) {
   qRegisterMetaType<QueryResult>("QueryResult");
   qRegisterMetaType<std::string>("std::string");
 
@@ -352,33 +435,12 @@ void MainWindow::applyTheme() {
 
   const auto logger = getLogger();
   if (logger) {
-    logger->debug("The current style name is {}",
-                  qApp->style()->name().toStdString());
-
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-    const auto colorScheme = QGuiApplication::styleHints()->colorScheme();
-    std::string description;
-    if (colorScheme == Qt::ColorScheme::Unknown) {
-      description = "unknown";
-    } else if (colorScheme == Qt::ColorScheme::Light) {
-      description = "light";
-    } else if (colorScheme == Qt::ColorScheme::Dark) {
-      description = "dark";
-    } else {
-      description = std::to_string(static_cast<int>(colorScheme));
-    }
-    logger->info("The system color scheme is {}", description);
-
-    if (isColorSchemeDark()) {
-      logger->debug("The detected color scheme is dark");
-    } else {
-      logger->debug("The detected color scheme is light");
-    }
-#endif
+    logger->debug("The initial Qt style name was {}", initialQtStyleName);
   }
 
-  std::optional<QString> styleSheet;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+  logColorScheme();
+
   if (boost::ends_with(theme, "-dark")) {
     if (logger) {
       logger->debug("Setting color scheme to dark");
@@ -392,31 +454,16 @@ void MainWindow::applyTheme() {
 
     QGuiApplication::styleHints()->setColorScheme(Qt::ColorScheme::Light);
   }
-
-  if (isColorSchemeDark()) {
-    if (logger) {
-      logger->debug("The detected color scheme is dark");
-    }
-    if (!boost::ends_with(theme, "-dark")) {
-      styleSheet = loot::loadStyleSheet(themesPath, theme + "-dark");
-    }
-  } else {
-    if (logger) {
-      logger->debug("The detected color scheme is light");
-    }
-    if (!boost::ends_with(theme, "-light")) {
-      styleSheet = loot::loadStyleSheet(themesPath, theme + "-light");
-    }
-  }
 #endif
 
-  if (!styleSheet.has_value()) {
-    styleSheet = loot::loadStyleSheet(themesPath, theme);
-  }
+  std::optional<QString> styleSheet;
+  const auto themesToTry = selectThemesToTry(theme, initialQtStyleName);
+  for (const auto& themeToTry : themesToTry) {
+    styleSheet = loot::loadStyleSheet(themesPath, themeToTry);
 
-  if (!styleSheet.has_value()) {
-    // Fall back to the default light theme.
-    styleSheet = loot::loadStyleSheet(themesPath, "default-light");
+    if (styleSheet.has_value()) {
+      break;
+    }
   }
 
   if (styleSheet.has_value()) {

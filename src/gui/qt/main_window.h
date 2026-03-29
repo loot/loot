@@ -184,6 +184,8 @@ private:
 
   std::vector<std::string> themes;
 
+  std::string initialQtStyleName;
+
   void setupUi();
   void setupMenuBar();
   void setupToolBar();
