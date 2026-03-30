@@ -327,7 +327,10 @@ CardDelegate::CardDelegate(QListView* parent,
   prepareWidget(pluginCard);
 }
 
-void CardDelegate::setIcons() { pluginCard->setIcons(); }
+void CardDelegate::setIcons() {
+  generalInfoCard->setIcons();
+  pluginCard->setIcons();
+}
 
 void CardDelegate::refreshMessages() {
   generalInfoCard->refreshMessages();

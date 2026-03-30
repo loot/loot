@@ -56,6 +56,10 @@ void GeneralInfoCard::setContent(const GeneralInformation& generalInfo,
   layout()->activate();
 }
 
+void GeneralInfoCard::setIcons() {
+  setIcon(hasHiddenMessagesLabel, IconFactory::getHideMessagesIcon());
+}
+
 void GeneralInfoCard::setMasterlistInfo(FileRevisionSummary masterlistInfo) {
   masterlistRevisionValue->setText(QString::fromStdString(masterlistInfo.id));
   masterlistDateValue->setText(QString::fromStdString(masterlistInfo.date));
@@ -181,7 +185,7 @@ void GeneralInfoCard::setupUi() {
 
   scaleCardHeading(*headingLabel);
 
-  setIcon(hasHiddenMessagesLabel, IconFactory::getHideMessagesIcon());
+  setIcons();
 
   hasHiddenMessagesLabel->setVisible(false);
 

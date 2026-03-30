@@ -48,6 +48,8 @@ public:
                   const GeneralInformationCounters& counters,
                   bool hasHiddenMessages);
 
+  void setIcons();
+
   void refreshMessages();
 
 signals:
