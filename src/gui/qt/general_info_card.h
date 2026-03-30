@@ -33,6 +33,8 @@
 #include <QtWidgets/QLabel>
 
 #include "gui/qt/card.h"
+#include "gui/qt/counters.h"
+#include "gui/qt/general_info.h"
 #include "gui/qt/helpers.h"
 #include "gui/qt/messages_widget.h"
 
@@ -42,25 +44,9 @@ class GeneralInfoCard : public Card {
 public:
   explicit GeneralInfoCard(QWidget* parent);
 
-  void setMasterlistInfo(FileRevisionSummary masterlistInfo);
-
-  void setPreludeInfo(FileRevisionSummary preludeInfo);
-
-  void setMessageCounts(size_t warnings, size_t errors, size_t total);
-
-  void setPluginCounts(size_t activeLight,
-                       size_t activeMedium,
-                       size_t activeFull,
-                       size_t dirty,
-                       size_t total);
-
-  void setGeneralMessages(const std::vector<SourcedMessage>& messages);
-
-  void setHasHiddenMessages(bool hasHiddenMessages);
-
-  void setShowSeparateLightPluginCount(bool showCount);
-
-  void setShowSeparateMediumPluginCount(bool showCount);
+  void setContent(const GeneralInformation& generalInfo,
+                  const GeneralInformationCounters& counters,
+                  bool hasHiddenMessages);
 
   void refreshMessages();
 
@@ -106,6 +92,26 @@ private:
   void setupUi();
 
   void translateUi();
+
+  void setMasterlistInfo(FileRevisionSummary masterlistInfo);
+
+  void setPreludeInfo(FileRevisionSummary preludeInfo);
+
+  void setMessageCounts(size_t warnings, size_t errors, size_t total);
+
+  void setPluginCounts(size_t activeLight,
+                       size_t activeMedium,
+                       size_t activeFull,
+                       size_t dirty,
+                       size_t total);
+
+  void setGeneralMessages(const std::vector<SourcedMessage>& messages);
+
+  void setHasHiddenMessages(bool hasHiddenMessages);
+
+  void setShowSeparateLightPluginCount(bool showCount);
+
+  void setShowSeparateMediumPluginCount(bool showCount);
 
   void updatePluginRowsAndColumns();
 

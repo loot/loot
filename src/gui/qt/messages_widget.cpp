@@ -212,21 +212,26 @@ void MessagesWidget::setMessages(const std::vector<BareMessage>& messages) {
   // Don't use rowCount() because that seems to have a starting value of 1
   // even when there's nothing in the layout yet. Instead, use count() /
   // COLUMN_COUNT.
-
-  // Delete any extra QLabels.
-  QLayoutItem* child = nullptr;
   const auto pastTheEndIndex = static_cast<int>(messages.size() * COLUMN_COUNT);
-  auto itemRemoved = false;
-  while ((child = layout()->takeAt(pastTheEndIndex)) != nullptr) {
-    delete child->widget();
-    delete child;
-    itemRemoved = true;
-  }
 
-  // For some reason the layout doesn't automatically resize if only some
-  // children are removed, but it does when all children are removed.
-  if (itemRemoved && layout()->count() != 0) {
-    layout()->invalidate();
+  // Only remove children if not removing them all - otherwise setStyleSheet()
+  // when changing the application theme causes Qt to throw an access violation
+  // exception.
+  if (!messages.empty()) {
+    // Delete any extra QLabels.
+    QLayoutItem* child = nullptr;
+    auto itemRemoved = false;
+    while ((child = layout()->takeAt(pastTheEndIndex)) != nullptr) {
+      delete child->widget();
+      delete child;
+      itemRemoved = true;
+    }
+
+    // For some reason the layout doesn't automatically resize if only some
+    // children are removed, but it does when all children are removed.
+    if (itemRemoved && layout()->count() != 0) {
+      layout()->invalidate();
+    }
   }
 
   // Add any missing QLabels.

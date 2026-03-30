@@ -136,19 +136,7 @@ GeneralInfoCard* setGeneralInfoCardContent(GeneralInfoCard* card,
   auto counters = index.data(CountersRole).value<GeneralInformationCounters>();
   auto hasHiddenMessages = index.data(HasHiddenMessagesRole).value<bool>();
 
-  card->setShowSeparateLightPluginCount(generalInfo.gameSupportsLightPlugins);
-  card->setShowSeparateMediumPluginCount(generalInfo.gameSupportsMediumPlugins);
-  card->setMasterlistInfo(generalInfo.masterlistRevision);
-  card->setPreludeInfo(generalInfo.preludeRevision);
-  card->setMessageCounts(
-      counters.warnings, counters.errors, counters.totalMessages);
-  card->setPluginCounts(counters.activeLight,
-                        counters.activeMedium,
-                        counters.activeFull,
-                        counters.dirty,
-                        counters.totalPlugins);
-  card->setGeneralMessages(generalInfo.generalMessages);
-  card->setHasHiddenMessages(hasHiddenMessages);
+  card->setContent(generalInfo, counters, hasHiddenMessages);
 
   return card;
 }

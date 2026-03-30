@@ -36,6 +36,26 @@ GeneralInfoCard::GeneralInfoCard(QWidget* parent) : Card(parent, false) {
   setupUi();
 }
 
+void GeneralInfoCard::setContent(const GeneralInformation& generalInfo,
+                                 const GeneralInformationCounters& counters,
+                                 bool hasHiddenMessages) {
+  setShowSeparateLightPluginCount(generalInfo.gameSupportsLightPlugins);
+  setShowSeparateMediumPluginCount(generalInfo.gameSupportsMediumPlugins);
+  setMasterlistInfo(generalInfo.masterlistRevision);
+  setPreludeInfo(generalInfo.preludeRevision);
+  setMessageCounts(
+      counters.warnings, counters.errors, counters.totalMessages);
+  setPluginCounts(counters.activeLight,
+                        counters.activeMedium,
+                        counters.activeFull,
+                        counters.dirty,
+                        counters.totalPlugins);
+  setGeneralMessages(generalInfo.generalMessages);
+  setHasHiddenMessages(hasHiddenMessages);
+
+  layout()->activate();
+}
+
 void GeneralInfoCard::setMasterlistInfo(FileRevisionSummary masterlistInfo) {
   masterlistRevisionValue->setText(QString::fromStdString(masterlistInfo.id));
   masterlistDateValue->setText(QString::fromStdString(masterlistInfo.date));
@@ -71,13 +91,7 @@ void GeneralInfoCard::setPluginCounts(size_t activeLight,
 
 void GeneralInfoCard::setGeneralMessages(
     const std::vector<SourcedMessage>& messages) {
-  if (!messages.empty()) {
-    messagesWidget->setMessages(messages);
-  }
-
-  messagesWidget->setVisible(!messages.empty());
-
-  layout()->activate();
+  messagesWidget->setMessages(messages);
 }
 
 void GeneralInfoCard::setHasHiddenMessages(bool hasHiddenMessages) {
