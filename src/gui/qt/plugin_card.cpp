@@ -59,7 +59,6 @@ void PluginCard::setIcons() {
   setIcon(masterFileLabel, IconFactory::getMasterFileIcon());
   setIcon(blueprintMasterLabel, IconFactory::getBlueprintMasterIcon());
   setIcon(lightPluginLabel, IconFactory::getLightPluginIcon());
-  setIcon(lightPluginLabel, IconFactory::getLightPluginIcon());
   setIcon(mediumPluginLabel, IconFactory::getMediumPluginIcon());
   setIcon(emptyPluginLabel, IconFactory::getEmptyPluginIcon());
   setIcon(loadsArchiveLabel, IconFactory::getLoadsArchiveIcon());
