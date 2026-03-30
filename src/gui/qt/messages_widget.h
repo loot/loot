@@ -61,8 +61,6 @@ private:
 
   void setMessages(const std::vector<BareMessage>& messages);
 
-  bool willChangeContent(const std::vector<SourcedMessage>& messages) const;
-
   void onCustomContextMenuRequested(const QPoint& pos);
   void onHideMessageAction();
 };

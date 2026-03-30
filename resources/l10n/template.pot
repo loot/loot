@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.28.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-03-30 17:45+0100\n"
+"POT-Creation-Date: 2026-03-30 21:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,67 +191,67 @@ msgstr ""
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:152
+#: src/gui/qt/general_info_card.cpp:166
 msgid "Active Small Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:153 src/gui/qt/general_info_card.cpp:242
+#: src/gui/qt/general_info_card.cpp:167 src/gui/qt/general_info_card.cpp:256
 msgid "Active Light Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:227
+#: src/gui/qt/general_info_card.cpp:241
 msgid "General Information"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:228 src/gui/qt/plugin_card.cpp:287
+#: src/gui/qt/general_info_card.cpp:242 src/gui/qt/plugin_card.cpp:287
 msgid "Has Hidden Messages"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:230
+#: src/gui/qt/general_info_card.cpp:244
 msgid "Masterlist Revision ID"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:231
+#: src/gui/qt/general_info_card.cpp:245
 msgid "Masterlist Update Date"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:232
+#: src/gui/qt/general_info_card.cpp:246
 msgid "Masterlist Prelude Revision ID"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:233
+#: src/gui/qt/general_info_card.cpp:247
 msgid "Masterlist Prelude Update Date"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:235
+#: src/gui/qt/general_info_card.cpp:249
 msgid "Warnings"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:236
+#: src/gui/qt/general_info_card.cpp:250
 msgid "Errors"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:237
+#: src/gui/qt/general_info_card.cpp:251
 msgid "Total Messages"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:239
+#: src/gui/qt/general_info_card.cpp:253
 msgid "Active Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:240
+#: src/gui/qt/general_info_card.cpp:254
 msgid "Active Full Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:241
+#: src/gui/qt/general_info_card.cpp:255
 msgid "Active Medium Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:243
+#: src/gui/qt/general_info_card.cpp:257
 msgid "Dirty Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:244
+#: src/gui/qt/general_info_card.cpp:258
 msgid "Total Plugins"
 msgstr ""
 
@@ -736,7 +736,7 @@ msgid ""
 "can get to it through the main menu) for more information."
 msgstr ""
 
-#: src/gui/qt/messages_widget.cpp:219
+#: src/gui/qt/messages_widget.cpp:209
 msgid "Hide message"
 msgstr ""
 
