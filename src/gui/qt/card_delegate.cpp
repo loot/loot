@@ -271,6 +271,8 @@ QWidget* CardSizingCache::update(const QModelIndex& index) {
 
         // If the old key's count is now 0, remove it from the card cache.
         if (oldCardCacheIt->second.second == 0) {
+          delete oldCardCacheIt->second.first;
+          oldCardCacheIt->second.first = nullptr;
           cardCache.erase(oldCardCacheIt);
         }
       }
