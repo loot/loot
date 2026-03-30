@@ -211,6 +211,18 @@ namespace loot {
 CardSizingCache::CardSizingCache(QWidget* cardParentWidget) :
     cardParentWidget(cardParentWidget) {}
 
+void CardSizingCache::clear() {
+  keyCache.clear();
+
+  for (auto& [key, value] : cardCache) {
+    delete value.first;
+    value.first = nullptr;
+    value.second = 0;
+  }
+
+  cardCache.clear();
+}
+
 void CardSizingCache::update(const QAbstractItemModel* model) {
   update(model, 0, model->rowCount());
 }
@@ -343,6 +355,11 @@ void CardDelegate::refreshStyling() {
 
   pluginCard->setVisible(true);
   pluginCard->setVisible(false);
+}
+
+void CardDelegate::invalidateCache() {
+  cardSizingCache->clear();
+  sizeHintCache.clear();
 }
 
 void CardDelegate::paint(QPainter* painter,

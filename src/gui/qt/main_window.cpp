@@ -480,6 +480,10 @@ void MainWindow::applyTheme() {
     const auto cardDelegate =
         qobject_cast<CardDelegate*>(pluginCardsView->itemDelegate());
     cardDelegate->refreshStyling();
+
+    if (cardDelegate) {
+      cardDelegate->invalidateCache();
+    }
   }
 }
 

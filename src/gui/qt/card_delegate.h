@@ -78,6 +78,7 @@ class CardSizingCache {
 public:
   explicit CardSizingCache(QWidget* cardParentWidget);
 
+  void clear();
   void update(const QAbstractItemModel* model);
   void update(const QModelIndex& topLeft, const QModelIndex& bottomRight);
   void update(const QAbstractItemModel*, int firstRow, int lastRow);
@@ -101,6 +102,7 @@ public:
   void setIcons();
   void refreshMessages();
   void refreshStyling();
+  void invalidateCache();
 
   void paint(QPainter* painter,
              const QStyleOptionViewItem& option,
