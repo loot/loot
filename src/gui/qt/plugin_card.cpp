@@ -177,8 +177,6 @@ void PluginCard::setSearchResult(bool isSearchResult,
   }
 }
 
-void PluginCard::refreshMessages() { messagesWidget->refresh(); }
-
 void PluginCard::setupUi() {
   crcLabel->setObjectName("plugin-crc");
   versionLabel->setObjectName("plugin-version");

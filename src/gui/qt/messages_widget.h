@@ -43,8 +43,6 @@ public:
 
   void setMessages(const std::vector<SourcedMessage>& messages);
 
-  void refresh();
-
 signals:
   void hideMessage(const std::string& messageText);
 

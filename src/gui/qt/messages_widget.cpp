@@ -165,12 +165,6 @@ void MessagesWidget::setMessages(const std::vector<SourcedMessage>& messages) {
   setMessages(toBareMessages(messages));
 }
 
-void MessagesWidget::refresh() {
-  // This is needed because the styling for links is done in the HTML that is
-  // part of the labels' texts and so isn't affected by Qt palette changes.
-  setMessages(currentMessages);
-}
-
 void MessagesWidget::setupUi() {
   hideMessageAction->setIcon(IconFactory::getHideMessagesIcon());
 

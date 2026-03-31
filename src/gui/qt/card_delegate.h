@@ -100,8 +100,7 @@ public:
   CardDelegate(QListView* parent, CardSizingCache& cardSizingCache);
 
   void setIcons();
-  void refreshMessages();
-  void refreshStyling();
+
   void invalidateCache();
 
   void paint(QPainter* painter,

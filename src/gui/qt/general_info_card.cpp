@@ -172,8 +172,6 @@ void GeneralInfoCard::updatePluginRowsAndColumns() {
   activeLightCountLabel->setText(activeLightCountText);
 }
 
-void GeneralInfoCard::refreshMessages() { messagesWidget->refresh(); }
-
 void GeneralInfoCard::setupUi() {
   static constexpr int TABLE_COLUMN_SPACING = 16;
   static constexpr int METADATA_LABEL_COLUMN = 0;

@@ -49,8 +49,6 @@ public:
 
   void setSearchResult(bool isSearchResult, bool isCurrentSearchResult);
 
-  void refreshMessages();
-
 signals:
   void hideMessage(const std::string& pluginName,
                    const std::string& messageText);

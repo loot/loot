@@ -356,17 +356,6 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
   setupUi();
   refreshGamesDropdown();
-
-  qApp->connect(qApp,
-                &QGuiApplication::applicationStateChanged,
-                this,
-                [this](Qt::ApplicationState) {
-                  const auto cardDelegate = qobject_cast<CardDelegate*>(
-                      this->pluginCardsView->itemDelegate());
-                  if (cardDelegate != nullptr) {
-                    cardDelegate->refreshStyling();
-                  }
-                });
 }
 
 void MainWindow::initialise() {
@@ -475,11 +464,8 @@ void MainWindow::applyTheme() {
   if (styleSheet.has_value()) {
     qApp->setStyleSheet(styleSheet.value());
 
-    qApp->style()->polish(qApp);
-
     const auto cardDelegate =
         qobject_cast<CardDelegate*>(pluginCardsView->itemDelegate());
-    cardDelegate->refreshStyling();
 
     if (cardDelegate) {
       cardDelegate->invalidateCache();
@@ -3131,13 +3117,6 @@ void MainWindow::handleLinkColorChanged() {
   auto palette = qApp->palette();
   palette.setColor(QPalette::Active, QPalette::Link, linkColor);
   qApp->setPalette(palette);
-
-  const auto cardDelegate =
-      qobject_cast<CardDelegate*>(pluginCardsView->itemDelegate());
-
-  if (cardDelegate) {
-    cardDelegate->refreshMessages();
-  }
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)

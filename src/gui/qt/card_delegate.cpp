@@ -346,19 +346,6 @@ void CardDelegate::setIcons() {
   pluginCard->setIcons();
 }
 
-void CardDelegate::refreshMessages() {
-  generalInfoCard->refreshMessages();
-  pluginCard->refreshMessages();
-}
-
-void CardDelegate::refreshStyling() {
-  generalInfoCard->setVisible(true);
-  generalInfoCard->setVisible(false);
-
-  pluginCard->setVisible(true);
-  pluginCard->setVisible(false);
-}
-
 void CardDelegate::invalidateCache() {
   cardSizingCache->clear();
   sizeHintCache.clear();
