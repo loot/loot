@@ -464,6 +464,20 @@ void MainWindow::applyTheme() {
   if (styleSheet.has_value()) {
     qApp->setStyleSheet(styleSheet.value());
 
+    // When the mouse hovers over a card, a persistent "editor" is opened for
+    // that card to support interactive elements like clickable links and icon
+    // tooltips. The editor stays open until the mouse moves over a different
+    // card.
+    // The open editor doesn't get its icon and link text colors updated by the
+    // style change, and the easiest way to resolve this is to close the editor
+    // so that the non-interactive list item gets painted with the updated
+    // style. Moving the mouse will then open a new editor with the updated
+    // style.
+    if (lastEnteredCardIndex.has_value()) {
+      pluginCardsView->closePersistentEditor(lastEnteredCardIndex.value());
+      lastEnteredCardIndex.reset();
+    }
+
     const auto cardDelegate =
         qobject_cast<CardDelegate*>(pluginCardsView->itemDelegate());
 
