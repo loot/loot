@@ -1,5 +1,5 @@
 # LOOT - Danish Translation
-# Copyright (C) 2014 Freso & WrinklyNinja
+# Copyright (C) 2013-2026 WrinklyNinja
 # This file is distributed under the Creative Commons Zero 1.0 Universal license.
 # Frederik “Freso” S. Olesen, 2014-2018
 #

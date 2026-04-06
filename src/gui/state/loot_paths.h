@@ -2,7 +2,7 @@
 
     A modding utility for Starfield and some Elder Scrolls and Fallout games.
 
-    Copyright (C) 2014 WrinklyNinja
+    Copyright (C) 2013-2026 WrinklyNinja
 
     This file is part of LOOT.
 

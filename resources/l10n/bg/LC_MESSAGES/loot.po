@@ -1,5 +1,5 @@
 # LOOT - Bulgarian Translation
-# Copyright (C) 2020 WrinklyNinja
+# Copyright (C) 2013-2026 WrinklyNinja
 # This file is distributed under the Creative Commons Zero 1.0 Universal license.
 # Georgi Georgiev (RacerBG) <g.georgiev.shumen@gmail.com>, 2020, 2021, 2022, 2023, 2024.
 #
