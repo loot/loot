@@ -58,7 +58,7 @@ master_doc = 'index'
 # General information about the project.
 project = u'LOOT'
 copyright = u'2013–2026 The LOOT Contributors'
-author = u'Ortham'
+author = u'The LOOT Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -268,7 +268,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'LOOT.tex', u'LOOT Documentation',
-     u'Ortham', 'manual'),
+     u'The LOOT Team', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

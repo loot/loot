@@ -4,7 +4,7 @@
 
 #define MyAppName "LOOT"
 #define MyAppVersion "0.28.0"
-#define MyAppPublisher "LOOT Team"
+#define MyAppPublisher "The LOOT Team"
 #define MyAppCopyrightHolders "The LOOT Contributors"
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
