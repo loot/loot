@@ -19,7 +19,7 @@
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
-*/
+    */
 
 #ifndef LOOT_GUI_STATE_GAME_GAME_ID
 #define LOOT_GUI_STATE_GAME_GAME_ID
