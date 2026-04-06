@@ -1360,8 +1360,8 @@ void MainWindow::showFirstRunDialog() {
   auto paragraph3 = fmt::format(
       translate(
           "LOOT is free, but if you want to show your appreciation with some "
-          "money, donations may be made to WrinklyNinja (LOOT's creator and "
-          "main developer) using {0}."),
+          "money, donations may be made to Ortham (LOOT's creator and main "
+          "developer) using {0}."),
       "<a href=\"https://www.paypal.me/OliverHamlet\">PayPal</a>");
 
   std::string text = fmt::format(textTemplate,
@@ -2279,8 +2279,8 @@ void MainWindow::on_actionAbout_triggered() {
     auto paragraph3 = fmt::format(
         translate(
             "LOOT is free, but if you want to show your appreciation with "
-            "some money, donations may be made to WrinklyNinja (LOOT's "
-            "creator and main developer) using {0}."),
+            "some money, donations may be made to Ortham (LOOT's creator and "
+            "main developer) using {0}."),
         "<a href=\"https://www.paypal.me/OliverHamlet\">PayPal</a>");
 
     std::string text =

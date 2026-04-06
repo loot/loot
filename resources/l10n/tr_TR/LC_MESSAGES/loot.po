@@ -540,11 +540,11 @@ msgstr ""
 #, c++-format
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
-"donations may be made to WrinklyNinja (LOOT's creator and main developer) "
+"donations may be made to Ortham (LOOT's creator and main developer) "
 "using {0}."
 msgstr ""
 "LOOT ücretsizdir, ancak Allah rızası için biraz bağış yapmak isterseniz, "
-"WrinklyNinja'ya (LOOT'un yaratıcısı ve baş geliştiricisi) {0} kullanarak "
+"Ortham'ya (LOOT'un yaratıcısı ve baş geliştiricisi) {0} kullanarak "
 "bağış yapabilirsiniz."
 
 #: src/gui/qt/main_window.cpp:1376
