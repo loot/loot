@@ -3,6 +3,7 @@
     A modding utility for Starfield and some Elder Scrolls and Fallout games.
 
     Copyright (C) 2013-2026 Oliver Hamlet
+    Copyright (C) 2021 sibir-ine
 
     This file is part of LOOT.
 
