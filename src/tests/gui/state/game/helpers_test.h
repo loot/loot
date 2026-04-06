@@ -1,7 +1,6 @@
 /*  LOOT
 
-    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
-    Fallout: New Vegas.
+    A modding utility for Starfield and some Elder Scrolls and Fallout games.
 
     Copyright (C) 2018    Oliver Hamlet
 
