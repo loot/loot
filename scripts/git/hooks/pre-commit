@@ -15,7 +15,7 @@ xgettext \
   --from-code=utf-8 \
   --package-name=LOOT \
   --package-version=0.28.0 \
-  --copyright-holder="Oliver Hamlet" \
+  --copyright-holder="The LOOT Contributors" \
   --msgid-bugs-address="https://github.com/loot/loot/issues" \
   -o resources/l10n/template.pot \
   src/gui/*.cpp \

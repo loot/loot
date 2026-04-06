@@ -5,6 +5,7 @@
 #define MyAppName "LOOT"
 #define MyAppVersion "0.28.0"
 #define MyAppPublisher "LOOT Team"
+#define MyAppCopyrightHolders "The LOOT Contributors"
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
 
@@ -32,7 +33,7 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-AppCopyright=Copyright (C) 2013–2026 {#MyAppPublisher}
+AppCopyright=Copyright (C) 2013–2026 {#MyAppCopyrightHolders}
 DefaultDirName={autopf}\{#MyAppName}
 SourceDir=..\
 OutputBaseFilename=LOOT Installer
