@@ -1,5 +1,5 @@
 # LOOT - Italian Translation.
-# Copyright (C) 2013-2026 WrinklyNinja
+# Copyright (C) 2013-2026 Oliver Hamlet
 # This file is distributed under the Creative Commons Zero 1.0 Universal license.
 # Griam, nicola89b, & albie, 2021.
 #

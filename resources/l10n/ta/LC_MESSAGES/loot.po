@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2013-2026 WrinklyNinja
+# Copyright (C) 2013-2026 Oliver Hamlet
 # This file is distributed under the same license as the LOOT package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #

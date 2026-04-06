@@ -1,5 +1,5 @@
 # LOOT - German Translation
-# Copyright (C) 2013-2026 WrinklyNinja
+# Copyright (C) 2013-2026 Oliver Hamlet
 # Copyright (C) 2014 Ipradel
 # Copyright (C) 2015 Freso
 # Copyright (C) 2019 DaCoolX
