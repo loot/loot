@@ -89,18 +89,34 @@ PluginItemFilterModel::PluginItemFilterModel(QObject* parent) :
     QSortFilterProxyModel(parent) {}
 
 void PluginItemFilterModel::setFiltersState(PluginFiltersState&& state) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+  beginFilterChange();
+#endif
+
   filterState = std::move(state);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+  endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
   invalidateFilter();
+#endif
 }
 
 void PluginItemFilterModel::setFiltersState(
     PluginFiltersState&& state,
     std::vector<std::string>&& newOverlappingPluginNames) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+  beginFilterChange();
+#endif
+
   filterState = std::move(state);
   this->overlappingPluginNames = std::move(newOverlappingPluginNames);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+  endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
   invalidateFilter();
+#endif
 }
 
 void PluginItemFilterModel::setSearchResults(QModelIndexList results) {

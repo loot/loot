@@ -1,3 +1,5 @@
+ARG QT_VERSION="6.10.3"
+
 FROM ghcr.io/ortham/dev-rust-mingw-gcc:master
 
 USER root
@@ -44,10 +46,10 @@ RUN curl --proto '=https' --tlsv1.2 -sSfLO https://github.com/Ortham/svg_to_ico/
     && tar xJf svg_to_ico.tar.xz -C /home/vscode/.local/bin \
     && rm svg_to_ico.tar.xz
 
-RUN /home/vscode/.local/bin/uv run --with aqtinstall==3.3.0 -- aqt install-qt windows desktop 6.9.1 win64_mingw \
-    && /home/vscode/.local/bin/uv run --with aqtinstall==3.3.0 -- aqt install-qt linux desktop 6.9.1 linux_gcc_64 --archives icu qtbase \
+RUN /home/vscode/.local/bin/uv run --with aqtinstall==3.3.0 -- aqt install-qt windows desktop ${QT_VERSION} win64_mingw \
+    && /home/vscode/.local/bin/uv run --with aqtinstall==3.3.0 -- aqt install-qt linux desktop ${QT_VERSION} linux_gcc_64 --archives icu qtbase \
     && sudo mkdir /opt/qt \
-    && sudo mv /home/vscode/6.9.1 /opt/qt/ \
+    && sudo mv /home/vscode/${QT_VERSION} /opt/qt/ \
     && rm aqtinstall.log
 
 RUN curl --proto '=https' --tlsv1.2 -sSfLO https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-linux-x64.tar.gz \
@@ -69,4 +71,4 @@ COPY install_inno_setup.sh /home/vscode/
 
 # Fix GetPreferredUILanguages.shouldReturnAtLeastOneLanguage() test
 ENV PATH="$PATH:/opt/powershell-7.5.4-linux-x64" \
-    WINEPATH="$WINEPATH;/opt/qt/6.9.1/mingw_64/bin"
+    WINEPATH="$WINEPATH;/opt/qt/${QT_VERSION}/mingw_64/bin"
