@@ -63,8 +63,8 @@ Cross-compiling from Linux is possible, but not recommended due to more limited 
 ```sh
 cmake -B build . -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_TOOLCHAIN_FILE=$PWD/cmake/toolchain-mingw64.cmake \
-    -DCMAKE_PREFIX_PATH=/opt/qt/6.10.3/mingw_64 \
-    -DQT_HOST_PATH=/opt/qt/6.10.3/gcc_64
+    -DCMAKE_PREFIX_PATH=/opt/qt/6.11.1/mingw_64 \
+    -DQT_HOST_PATH=/opt/qt/6.11.1/gcc_64
 
 cmake --build build --parallel $(nproc)
 ```
@@ -160,7 +160,7 @@ Parameter | Values | Default |Description
 
 The URL parameters can be used to supply a local path if the archive has already been downloaded (e.g. for offline builds).
 
-You may also need to set `BOOST_ROOT` if CMake cannot find Boost, and `Qt6_ROOT` (e.g. to `C:/Qt/6.10.3/msvc2022_64`) if CMake cannot find Qt.
+You may also need to set `CMAKE_PREFIX_PATH` if CMake cannot find Boost or Qt (e.g. to `C:\boost_1_91_0\stage;C:\Qt\6.11.1\msvc2022_64\lib\cmake`).
 
 ## Building The Documentation
 

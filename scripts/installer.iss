@@ -100,8 +100,6 @@ Source: "{#ArtifactsDir}\translations\*"; \
 DestDir: "{app}\translations"; Flags: ignoreversion
 
 ; Qt 6 files
-Source: "{#ArtifactsDir}\icuuc.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ArtifactsDir}\Qt6Core.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ArtifactsDir}\Qt6Gui.dll"; \

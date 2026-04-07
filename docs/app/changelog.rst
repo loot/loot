@@ -67,6 +67,9 @@ Changed
   BSAs and BSAs created using the official tools include folder and file names.
   Via libloot.
 - Updated libloot to v0.29.6.
+- Updated Qt to v6.11.1. This may impact users running LOOT through Wine, as
+  it means that LOOT's installer no longer packages ``icuuc.dll``: instead, it
+  is provided by Wine as of v11.5.
 - Updated the Bulgarian translation.
 - Updated the Tamil translation.
 
