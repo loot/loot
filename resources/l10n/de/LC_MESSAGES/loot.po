@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.29.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-04-06 19:08+0100\n"
+"POT-Creation-Date: 2026-04-07 16:48+0100\n"
 "PO-Revision-Date: 2026-02-02 20:43+0100\n"
 "Last-Translator: pStyl3 <qp-git@pm.me>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/loot/loot/de/>\n"
@@ -1393,7 +1393,7 @@ msgstr ""
 "LOOT hat festgestellt das \"{0}\" ungültig ist und wird es ab sofort "
 "ignorieren."
 
-#: src/gui/state/game/game.cpp:874
+#: src/gui/state/game/game.cpp:883
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
@@ -1401,11 +1401,11 @@ msgstr ""
 "Die Sortierung ist fehlgeschlagen, da mindestens ein installiertes Plugin "
 "von mindestens einem nicht installierten Plugin abhängt."
 
-#: src/gui/state/game/game.cpp:902
+#: src/gui/state/game/game.cpp:911
 msgid "You have not sorted your load order this session."
 msgstr "Sie haben Ihre Ladereihenfolge in dieser Sitzung noch nicht sortiert."
 
-#: src/gui/state/game/game.cpp:965
+#: src/gui/state/game/game.cpp:974
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
@@ -1416,7 +1416,7 @@ msgstr ""
 "\n"
 "Versuchen Sie, Ihre Masterliste zu aktualisieren, um den Fehler zu beheben."
 
-#: src/gui/state/game/game.cpp:998
+#: src/gui/state/game/game.cpp:1007
 #, c++-format
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
@@ -1440,7 +1440,7 @@ msgstr ""
 "Spielordner. Sie können dann die darin enthaltenen Metadaten mit Hilfe der "
 "[Metadaten-Syntax-Dokumentation]({1}) bearbeiten."
 
-#: src/gui/state/game/game.cpp:1184
+#: src/gui/state/game/game.cpp:1193
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
