@@ -28,7 +28,7 @@
 
 namespace loot {
 inline constexpr unsigned int LOOT_VERSION_MAJOR = 0;
-inline constexpr unsigned int LOOT_VERSION_MINOR = 28;
+inline constexpr unsigned int LOOT_VERSION_MINOR = 29;
 inline constexpr unsigned int LOOT_VERSION_PATCH = 0;
 
 std::string getLootVersion();
