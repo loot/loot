@@ -55,7 +55,8 @@ static const std::set<std::string> OLD_DEFAULT_BRANCHES({"master",
                                                          "v0.15",
                                                          "v0.17",
                                                          "v0.18",
-                                                         "v0.21"});
+                                                         "v0.21",
+                                                         "v0.26"});
 
 static const std::regex GITHUB_REPO_URL_REGEX =
     std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",

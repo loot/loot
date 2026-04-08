@@ -34,7 +34,7 @@
 
 namespace loot {
 static constexpr const char* MASTERLIST_FILENAME = "masterlist.yaml";
-static constexpr const char* DEFAULT_MASTERLIST_BRANCH = "v0.26";
+static constexpr const char* DEFAULT_MASTERLIST_BRANCH = "v0.29";
 
 std::string getDefaultMasterlistUrl(const std::string& repositoryName);
 

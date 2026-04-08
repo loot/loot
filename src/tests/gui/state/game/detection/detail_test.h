@@ -460,7 +460,7 @@ TEST(AppendNewGamesSettings,
   EXPECT_EQ("Enderal: Forgotten Stories", gamesSettings[0].getName());
   EXPECT_EQ("Skyrim.esm", gamesSettings[0].getMasterFilename());
   EXPECT_EQ(
-      "https://raw.githubusercontent.com/loot/enderal/v0.26/masterlist.yaml",
+      "https://raw.githubusercontent.com/loot/enderal/v0.29/masterlist.yaml",
       gamesSettings[0].getMasterlistSource());
   EXPECT_EQ(installPath, gamesSettings[0].getGamePath());
   EXPECT_EQ(localPath, gamesSettings[0].getGameLocalPath());
@@ -470,7 +470,7 @@ TEST(AppendNewGamesSettings,
   EXPECT_EQ("Nehrim - At Fate's Edge", gamesSettings[1].getName());
   EXPECT_EQ("Nehrim.esm", gamesSettings[1].getMasterFilename());
   EXPECT_EQ(
-      "https://raw.githubusercontent.com/loot/oblivion/v0.26/masterlist.yaml",
+      "https://raw.githubusercontent.com/loot/oblivion/v0.29/masterlist.yaml",
       gamesSettings[1].getMasterlistSource());
 }
 

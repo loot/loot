@@ -110,7 +110,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Fallout3.esm", settings_.getMasterFilename());
       EXPECT_EQ(0.94f, settings_.getMinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/fallout3/v0.26/"
+          "https://raw.githubusercontent.com/loot/fallout3/v0.29/"
           "masterlist.yaml",
           settings_.getMasterlistSource());
       break;
@@ -119,7 +119,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("FalloutNV.esm", settings_.getMasterFilename());
       EXPECT_EQ(1.32f, settings_.getMinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/falloutnv/v0.26/"
+          "https://raw.githubusercontent.com/loot/falloutnv/v0.29/"
           "masterlist.yaml",
           settings_.getMasterlistSource());
       break;
@@ -128,7 +128,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Fallout4.esm", settings_.getMasterFilename());
       EXPECT_EQ(0.95f, settings_.getMinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/fallout4/v0.26/"
+          "https://raw.githubusercontent.com/loot/fallout4/v0.29/"
           "masterlist.yaml",
           settings_.getMasterlistSource());
       break;
@@ -138,7 +138,7 @@ TEST_P(GameSettingsTest,
       // TODO: Get the real value off someone who owns Fallout 4 VR.
       EXPECT_EQ(0.95f, settings_.getMinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/fallout4/v0.26/"
+          "https://raw.githubusercontent.com/loot/fallout4/v0.29/"
           "masterlist.yaml",
           settings_.getMasterlistSource());
       break;
@@ -147,7 +147,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Morrowind.esm", settings_.getMasterFilename());
       EXPECT_EQ(1.2f, settings_.getMinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/morrowind/v0.26/"
+          "https://raw.githubusercontent.com/loot/morrowind/v0.29/"
           "masterlist.yaml",
           settings_.getMasterlistSource());
       break;
@@ -156,7 +156,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Oblivion.esm", settings_.getMasterFilename());
       EXPECT_EQ(0.8f, settings_.getMinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/oblivion/v0.26/"
+          "https://raw.githubusercontent.com/loot/oblivion/v0.29/"
           "masterlist.yaml",
           settings_.getMasterlistSource());
       break;
@@ -165,7 +165,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Skyrim.esm", settings_.getMasterFilename());
       EXPECT_EQ(0.94f, settings_.getMinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/skyrim/v0.26/masterlist.yaml",
+          "https://raw.githubusercontent.com/loot/skyrim/v0.29/masterlist.yaml",
           settings_.getMasterlistSource());
       break;
     case GameId::tes5se:
@@ -173,7 +173,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Skyrim.esm", settings_.getMasterFilename());
       EXPECT_EQ(1.7f, settings_.getMinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/skyrimse/v0.26/"
+          "https://raw.githubusercontent.com/loot/skyrimse/v0.29/"
           "masterlist.yaml",
           settings_.getMasterlistSource());
       break;
@@ -183,7 +183,7 @@ TEST_P(GameSettingsTest,
       // TODO: Get the real value off someone who owns Skyrim VR.
       EXPECT_EQ(1.7f, settings_.getMinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/skyrimse/v0.26/"
+          "https://raw.githubusercontent.com/loot/skyrimse/v0.29/"
           "masterlist.yaml",
           settings_.getMasterlistSource());
       break;
@@ -192,7 +192,7 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Oblivion.esm", settings_.getMasterFilename());
       EXPECT_EQ(0.8f, settings_.getMinimumHeaderVersion());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/oblivion/v0.26/"
+          "https://raw.githubusercontent.com/loot/oblivion/v0.29/"
           "masterlist.yaml",
           settings_.getMasterlistSource());
       break;
