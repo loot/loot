@@ -1,7 +1,7 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
   <qresource prefix="/">
-    <file>icons/loot.svg</file>
+    <file alias="icons/loot.ico">../build/icon/icon.ico</file>
     <file>icons/crown.svg</file>
     <file>icons/crown-blueprint.svg</file>
     <file>icons/droplet.svg</file>

@@ -146,6 +146,16 @@ modules:
       # Generated using scripts/generate_manifests.sh
       - ../../build/flatpak-manifests/libloot.json
 
+  - name: svg_to_ico
+    buildsystem: simple
+    build-commands:
+      - tar -xf svg_to_ico.tar.xz
+      - install -D svg_to_ico /app/bin/svg_to_ico
+    sources:
+      - type: file
+        url: https://github.com/Ortham/svg_to_ico/releases/download/1.3.1/svg_to_ico.tar.xz
+        sha256: 04897b6384e7c3141c8343335b66bde3b184d7d65940980c38689b3ef4453f2f
+
   - name: LOOT
     buildsystem: cmake-ninja
     builddir: true
@@ -176,6 +186,7 @@ modules:
         sha256: 9149a6b01ca857f49f5660d608639acd579542bf862ad23e9cbf4c1e80ade55e
         dest: ValveFileVDF
 cleanup:
+  - /bin/svg_to_ico
   - /include
   - /lib/cmake
   - /lib/*.a

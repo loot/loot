@@ -109,6 +109,14 @@ jobs:
             libicu-dev \
             libtbb-dev
 
+      - name: Download and extract svg_to_ico
+        run: |
+          wget https://github.com/Ortham/svg_to_ico/releases/download/${SVG_TO_ICO_VERSION}/svg_to_ico.tar.xz
+          sha256sum -c <<< '04897b6384e7c3141c8343335b66bde3b184d7d65940980c38689b3ef4453f2f svg_to_ico.tar.xz'
+          tar -xf svg_to_ico.tar.xz
+
+          echo "${PWD}/svg_to_ico" >> "$GITHUB_PATH"
+
       - name: Download & build Boost
         run: |
           wget https://raw.githubusercontent.com/Ortham/ci-scripts/${BOOST_INSTALL_SCRIPT_VERSION}/install_boost.py

@@ -489,7 +489,7 @@ void MainWindow::applyTheme() {
 }
 
 void MainWindow::setupUi() {
-  setWindowIcon(QIcon(":/icons/loot.svg"));
+  setWindowIcon(QIcon(":/icons/loot.ico"));
 
   auto lastWindowPosition = state->getSettings().getMainWindowPosition();
   if (lastWindowPosition.has_value()) {

@@ -49,17 +49,22 @@ configure_file("${CMAKE_SOURCE_DIR}/src/gui/version.cpp.in"
 # Generate ICO file
 ##############################
 
+set(LOOT_SVG_PATH "${CMAKE_SOURCE_DIR}/resources/icons/loot.svg")
+set(LOOT_ICO_PATH "${CMAKE_SOURCE_DIR}/build/icon/icon.ico")
 if(WIN32)
-    set(LOOT_SVG_PATH "${CMAKE_SOURCE_DIR}/resources/icons/loot.svg")
-    set(LOOT_ICO_PATH "${CMAKE_SOURCE_DIR}/build/icon/icon.ico")
-    add_custom_command(
+    set(LOOT_ICO_SIZES "")
+else()
+    set(LOOT_ICO_SIZES -s 16 -s 256)
+endif()
+
+add_custom_command(
         OUTPUT "${LOOT_ICO_PATH}"
         COMMAND svg_to_ico
-            -i "${LOOT_SVG_PATH}"
-            -o "${LOOT_ICO_PATH}"
+        -i "${LOOT_SVG_PATH}"
+        -o "${LOOT_ICO_PATH}"
+        ${LOOT_ICO_SIZES}
         DEPENDS "${LOOT_SVG_PATH}"
         VERBATIM)
-endif()
 
 ##############################
 # External Projects

@@ -1,8 +1,5 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
-    <qresource>
-        <file alias="/icon.ico">../build/icon/icon.ico</file>
-    </qresource>
     <qresource prefix="/">
         <file>themes/default-dark-windows11.theme.qss</file>
         <file>themes/default-dark-fusion-windows.theme.qss</file>
