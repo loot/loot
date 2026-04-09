@@ -38,7 +38,7 @@ LOOT supports games bought from the Microsoft Store or obtained through a Game P
 * Fallout 3
 * Fallout: New Vegas
 
-LOOT will check the localisations in the order of Windows' preferred UI languages, stopping at the first subdirectory it finds a copy of the game in.
+LOOT will check the localisations in the order of your system's preferred UI languages, stopping at the first subdirectory it finds a copy of the game in.
 
 .. note::
     LOOT does not support detecting game installs from before February 2022 (installed using Xbox app versions earlier than 2202.1001.7.0). Such installs have limitations that cause issues for LOOT and other modding utilities.

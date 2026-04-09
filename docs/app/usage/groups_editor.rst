@@ -26,10 +26,18 @@ editing groups is done in the Groups Editor, which can be accessed through the
 Game menu.
 
 The groups editor consists of an interactive graph displaying all defined groups
-and their load after metadata, and a sidebar containing input for defining new
-groups, renaming the currently selected group, a list of plugins in the
-currently selected group and a dropdown combo box for adding plugins to the
-currently selected group.
+and their load after metadata, and a sidebar containing:
+
+- a list of plugins in the currently-selected group
+- a list of plugins that are other groups, and a dropdown combo box listing
+  plugins that are in other groups. The list can be used to select one or more
+  plugins to add to the currently-selected group, while the dropdown is an
+  alternative way to find and select one plugin at a time to add to the
+  currently-selected group
+- an input for creating a new group or renaming the currently-selected group
+- a button to automatically arrange the layout of the groups in the graph.
+
+In the groups graph:
 
 - Groups are displayed as circular nodes in the graph, labelled with their
   names.

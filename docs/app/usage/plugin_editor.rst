@@ -64,6 +64,7 @@ Dirty Plugin Info
   - The number of Deleted Navmeshes that the dirty plugin contains.
   - The name of the Cleaning Utility to use to clean the dirty plugin.
   - A localisable detail message text.
+  - A condition that is used to determine if the dirty info is relevant, other than the plugin CRC matching.
 
   LOOT uses the information supplied to construct a warning message for the plugin if it matches any of the given CRCs.
 
@@ -72,6 +73,7 @@ Clean Plugin Info
 
   - The CRC of the clean plugin.
   - The name of the Cleaning Utility to use to verify that the plugin is clean.
+  - A condition that is used to determine if the clean info is relevant, other than the plugin CRC matching.
 
   LOOT uses the information supplied to display an icon on the plugin's card if it matches any of the given CRCs.
 
