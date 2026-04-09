@@ -41,6 +41,7 @@
 #include <unicode/uchar.h>
 #include <unicode/unistr.h>
 
+#include <QtCore/QLocale>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/locale/info.hpp>
@@ -211,17 +212,12 @@ std::vector<std::string> getPreferredUILanguages() {
   std::vector<std::string> languages;
 
   try {
-    const auto language =
-        std::use_facet<boost::locale::info>(std::locale("")).language();
-
-    if (logger) {
-      logger->debug("Preferred UI language is \"{}\"", language);
+    for (const auto& language : QLocale().uiLanguages()) {
+      languages.push_back(language.toStdString());
     }
-
-    languages = {language};
   } catch (const std::exception& e) {
     if (logger) {
-      logger->debug("Failed to get preferred UI language from locale: {}",
+      logger->debug("Failed to get preferred UI language from Qt: {}",
                     e.what());
     }
   }
@@ -505,8 +501,9 @@ std::filesystem::path getExecutableDirectory() {
     if (logger) {
       logger->error("Failed to get LOOT executable path.");
     }
-    throw std::system_error(
-        static_cast<int>(count), std::system_category(), "Failed to get LOOT executable path.");
+    throw std::system_error(static_cast<int>(count),
+                            std::system_category(),
+                            "Failed to get LOOT executable path.");
   }
 
   return std::filesystem::u8path(std::string(result.data(), count))
