@@ -71,6 +71,16 @@
   </screenshots>
 
   <releases>
+    <release version="0.29.0">
+      <description>
+        <ul>
+          <li>Added support for Starfield's v1.16.236.0 update and its Terran Armada DLC.</li>
+          <li>Fixed Starfield BlueprintShips plugin handling.</li>
+          <li>Other fixes and improvements.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.29.0/app/changelog.html#id1</url>
+    </release>
     <release version="0.28.0" date="2025-10-11">
       <description>
         <ul>
