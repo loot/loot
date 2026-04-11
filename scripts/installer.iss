@@ -163,6 +163,8 @@ Source: "resources\l10n\ru\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\ru\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\sv\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\sv\LC_MESSAGES"; Flags: ignoreversion
+Source: "resources\l10n\ta\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\ta\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\tr_TR\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\tr_TR\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\uk_UA\LC_MESSAGES\loot.mo"; \
@@ -300,6 +302,8 @@ Type: dirifempty; Name: "{app}\resources\l10n\ru\LC_MESSAGES";
 Type: dirifempty; Name: "{app}\resources\l10n\ru";
 Type: dirifempty; Name: "{app}\resources\l10n\sv\LC_MESSAGES";
 Type: dirifempty; Name: "{app}\resources\l10n\sv";
+Type: dirifempty; Name: "{app}\resources\l10n\ta\LC_MESSAGES";
+Type: dirifempty; Name: "{app}\resources\l10n\ta";
 Type: dirifempty; Name: "{app}\resources\l10n\uk_UA\LC_MESSAGES";
 Type: dirifempty; Name: "{app}\resources\l10n\uk_UA";
 Type: dirifempty; Name: "{app}\resources\l10n\zh_CN\LC_MESSAGES";
