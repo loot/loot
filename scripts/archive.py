@@ -70,12 +70,17 @@ def copy_qt_resources(root_path, executable_path, output_path):
     # delete them from the output path.
     unnecessary_dlls = [
         'D3Dcompiler_47.dll',
-        'opengl32sw.dll'
+        'opengl32sw.dll',
+        'generic/qtuiotouchplugin.dll',
     ]
     for unnecessary_dll in unnecessary_dlls:
         dll_path = os.path.join(output_path, unnecessary_dll)
         if os.path.exists(dll_path):
             os.remove(dll_path)
+
+    generic_dir = os.path.join(output_path, 'generic')
+    if os.path.exists(generic_dir):
+        os.rmdir(generic_dir)
 
 def get_language_folders(root_path):
     l10n_path = os.path.join(root_path, 'resources', 'l10n')
