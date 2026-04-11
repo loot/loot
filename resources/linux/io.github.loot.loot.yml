@@ -54,7 +54,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
     sources:
       - type: archive
         url: https://ogdf.uos.de/wp-content/uploads/2025/10/ogdf.v2025.10.zip
@@ -64,7 +64,7 @@ modules:
     buildsystem: simple
     build-commands:
       - ./bootstrap.sh --prefix=/app
-      - ./b2 link=static runtime-link=shared variant=release cxxflags="-std=c++17 -fPIC" --with-locale install
+      - ./b2 link=static runtime-link=shared variant=release debug-symbols=on cxxflags="-std=c++17 -fPIC" --with-locale install
     sources:
       - type: archive
         url: https://archives.boost.io/release/1.90.0/source/boost_1_90_0.tar.bz2
@@ -74,7 +74,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DTBB_TEST=OFF
     sources:
       - type: archive
@@ -85,7 +85,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DMZ_ZLIB=ON
       - -DMZ_BZIP2=OFF
       - -DMZ_LZMA=OFF
@@ -106,7 +106,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
     sources:
       - type: archive
         url: https://github.com/marzer/tomlplusplus/archive/v3.4.0.tar.gz
@@ -116,7 +116,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DSPDLOG_BUILD_EXAMPLE=OFF
       - -DSPDLOG_BUILD_PIC=ON
       - -DSPDLOG_FMT_EXTERNAL=ON
@@ -134,7 +134,7 @@ modules:
       env:
         CARGO_HOME: /run/build/libloot/cargo
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DLIBLOOT_BUILD_TESTS=OFF
       - -DLIBLOOT_INSTALL_DOCS=OFF
     sources:
@@ -160,7 +160,7 @@ modules:
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DLOOT_BUILD_TESTS=OFF
       - -DFETCHCONTENT_SOURCE_DIR_VALVEFILEVDF=/run/build/LOOT/ValveFileVDF
     build-commands:
