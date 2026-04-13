@@ -55,6 +55,7 @@ modules:
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DOGDF_ARCH=x86-64
     sources:
       - type: archive
         url: https://ogdf.uos.de/wp-content/uploads/2025/10/ogdf.v2025.10.zip
