@@ -184,7 +184,17 @@ EgsManifestData getEgsManifestData(const std::filesystem::path& manifestPath) {
   // the GUI code, but it's not worth jumping through hoops to preserve that.
   auto file = QFile(QString::fromStdString(manifestPath.u8string()));
 
-  file.open(QIODevice::ReadOnly | QIODevice::Text);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (logger) {
+      logger->error(
+          "Failed to open EGS manifest file at {} due to error {}: {}",
+          manifestPath.u8string(),
+          static_cast<int>(file.error()),
+          file.errorString().toStdString());
+    }
+    return EgsManifestData();
+  }
+
   const auto content = file.readAll();
   file.close();
 

@@ -161,7 +161,11 @@ protected:
       const std::filesystem::path& backupPath) {
     auto file = QFile(QString::fromStdString(backupPath.u8string()));
 
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+      throw std::runtime_error("Failed to open file at " +
+                               backupPath.u8string() + " due to " +
+                               file.errorString().toStdString());
+    }
     const auto content = file.readAll();
     file.close();
 

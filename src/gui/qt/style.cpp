@@ -42,7 +42,16 @@ std::optional<QString> loadStyleSheet(const QString& resourcePath) {
     return std::nullopt;
   }
 
-  file.open(QFile::ReadOnly | QFile::Text);
+  if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    const auto logger = loot::getLogger();
+    if (logger) {
+      logger->error("Failed to open stylesheet at {} due to error {}: {}",
+                    resourcePath.toStdString(),
+                    static_cast<int>(file.error()),
+                    file.errorString().toStdString());
+    }
+    return std::nullopt;
+  }
   QTextStream ts(&file);
   return ts.readAll();
 }

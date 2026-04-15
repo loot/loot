@@ -130,7 +130,17 @@ std::optional<LoadOrderBackup> readLoadOrder(const std::filesystem::path& path,
   }
   auto file = QFile(QString::fromStdString(path.u8string()));
 
-  file.open(QIODevice::ReadOnly | QIODevice::Text);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    const auto logger = loot::getLogger();
+    if (logger) {
+      logger->error(
+          "Failed to open load order backup file at {} due to error {}: {}",
+          path.u8string(),
+          static_cast<int>(file.error()),
+          file.errorString().toStdString());
+    }
+    return std::nullopt;
+  }
   const auto content = file.readAll();
   file.close();
 

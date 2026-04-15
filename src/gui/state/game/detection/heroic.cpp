@@ -134,7 +134,15 @@ QJsonObject readJsonObjectFromFile(const std::filesystem::path& path) {
   // the GUI code, but it's not worth jumping through hoops to preserve that.
   auto file = QFile(QString::fromStdString(path.u8string()));
 
-  file.open(QIODevice::ReadOnly | QIODevice::Text);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (logger) {
+      logger->error("Failed to open Heroic file at {} due to error {}: {}",
+                    path.u8string(),
+                    static_cast<int>(file.error()),
+                    file.errorString().toStdString());
+    }
+    return {};
+  }
   const auto content = file.readAll();
   file.close();
 

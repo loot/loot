@@ -268,7 +268,15 @@ bool updateFileWithData(const std::filesystem::path& filePath,
 
   if (hasChanged) {
     QFile masterlist(QString::fromStdString(filePath.u8string()));
-    masterlist.open(QIODevice::WriteOnly);
+    if (!masterlist.open(QIODevice::WriteOnly)) {
+      if (logger) {
+        logger->error("Failed to open masterlist at {} due to error {}: {}",
+                      filePath.u8string(),
+                      static_cast<int>(masterlist.error()),
+                      masterlist.errorString().toStdString());
+      }
+      return false;
+    }
     masterlist.write(data);
     masterlist.close();
   }
