@@ -55,6 +55,9 @@ enum struct MessageSource : unsigned int {
   lightPluginNotSupported,
   invalidMediumPlugin,
   blueprintMasterMaster,
+  blueprintNonMaster,
+  blueprintShipsNonEsm,
+  blueprintShipsNonBlueprint,
 };
 
 struct SourcedMessage {

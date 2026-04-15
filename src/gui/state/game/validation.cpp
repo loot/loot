@@ -293,6 +293,72 @@ SourcedMessage createUnsupportedLightPluginMessage(
           pluginType));
 }
 
+SourcedMessage createUnsupportedBlueprintPluginMessage(
+    const std::string& pluginName) {
+  const auto logger = getLogger();
+  if (logger) {
+    logger->warn(
+        "\"{}\" is a blueprint non-master, which is a plugin type that cannot "
+        "be reliably activated, because Starfield will remove it from "
+        "plugins.txt on startup.",
+        pluginName);
+  }
+
+  return createPlainTextSourcedMessage(
+      MessageType::warn,
+      MessageSource::blueprintNonMaster,
+      fmt::format(
+          translate("This plugin is a blueprint plugin but not a master. "
+                    "Blueprint non-masters are unsupported as they cannot be "
+                    "reliably activated."),
+          pluginName));
+}
+
+SourcedMessage createBlueprintShipsWrongFileExtensionMessage(
+    const std::string& pluginName) {
+  const auto logger = getLogger();
+  if (logger) {
+    logger->warn(
+        "\"{}\" does not have the .esm file extension so cannot be implicitly "
+        "activated by another plugin, and cannot be reliably explicitly "
+        "activated because Starfield will remove it from plugins.txt on "
+        "startup.",
+        pluginName);
+  }
+
+  return createPlainTextSourcedMessage(
+      MessageType::warn,
+      MessageSource::blueprintShipsNonEsm,
+      fmt::format(
+          translate("This plugin's name starts with \"BlueprintShips-\" but it "
+                    "does not use the \".esm\" file extension. This is "
+                    "unsupported as it means that this plugin cannot be "
+                    "reliably activated."),
+          pluginName));
+}
+
+SourcedMessage createUnsupportedBlueprintShipsPluginMessage(
+    const std::string& pluginName) {
+  const auto logger = getLogger();
+  if (logger) {
+    logger->warn(
+        "\"{}\" is not a blueprint master so cannot be given a consistent load "
+        "order position, because Starfield will remove it from plugins.txt on "
+        "startup.",
+        pluginName);
+  }
+
+  return createPlainTextSourcedMessage(
+      MessageType::warn,
+      MessageSource::blueprintShipsNonBlueprint,
+      fmt::format(
+          translate(
+              "This plugin's name starts with \"BlueprintShips-\" but it is "
+              "not a blueprint plugin. This is unsupported as it means that "
+              "this plugin may not be given a consistent load order position."),
+          pluginName));
+}
+
 SourcedMessage createBlueprintMasterMessage(const PluginInterface& plugin,
                                             std::string_view masterName) {
   auto logger = getLogger();
@@ -760,6 +826,24 @@ std::vector<SourcedMessage> checkInstallValidity(const gui::Game& game,
   if (!game.supportsLightPlugins() && plugin.IsLightPlugin()) {
     messages.push_back(createUnsupportedLightPluginMessage(
         plugin.GetName(), game.getSettings().getId()));
+  }
+
+  if (plugin.IsBlueprintPlugin() && !plugin.IsMaster()) {
+    messages.push_back(
+        createUnsupportedBlueprintPluginMessage(plugin.GetName()));
+  }
+
+  if (game.getSettings().getId() == GameId::starfield &&
+      boost::istarts_with(plugin.GetName(), "BlueprintShips-")) {
+    if (!boost::iends_with(plugin.GetName(), ".esm")) {
+      messages.push_back(
+          createBlueprintShipsWrongFileExtensionMessage(plugin.GetName()));
+    }
+
+    if (!plugin.IsBlueprintPlugin()) {
+      messages.push_back(
+          createUnsupportedBlueprintShipsPluginMessage(plugin.GetName()));
+    }
   }
 
   if (plugin.GetHeaderVersion().has_value() &&
