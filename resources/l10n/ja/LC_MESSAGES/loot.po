@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-04-08 21:50+0100\n"
+"POT-Creation-Date: 2026-04-15 21:42+0100\n"
 "PO-Revision-Date: 2024-05-22 20:01+0100\n"
 "Last-Translator: kuroko\n"
 "Language-Team: \n"
@@ -273,7 +273,7 @@ msgstr "利用不可: 前読みマスターリストなし"
 msgid "Unknown: No revision metadata found"
 msgstr "不明: リビジョン有メタデータなし"
 
-#: src/gui/qt/helpers.cpp:363
+#: src/gui/qt/helpers.cpp:371
 #, c++-format
 msgid "Invalid regular expression: {0}"
 msgstr "不正な正規表現: {0}"
@@ -1385,7 +1385,7 @@ msgstr ""
 "現在のロードオーダーの読み込みに失敗しました。不正確な情報が表示されている可"
 "能性があります。"
 
-#: src/gui/state/game/helpers.cpp:269
+#: src/gui/state/game/helpers.cpp:279
 msgid "Automatic Load Order Backup"
 msgstr ""
 
@@ -1487,7 +1487,27 @@ msgid ""
 "plugins, and will load it as a full {1}."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:310
+#: src/gui/state/game/validation.cpp:311
+msgid ""
+"This plugin is a blueprint plugin but not a master. Blueprint non-masters "
+"are unsupported as they cannot be reliably activated."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:333
+msgid ""
+"This plugin's name starts with \"BlueprintShips-\" but it does not use the "
+"\".esm\" file extension. This is unsupported as it means that this plugin "
+"cannot be reliably activated."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:356
+msgid ""
+"This plugin's name starts with \"BlueprintShips-\" but it is not a blueprint "
+"plugin. This is unsupported as it means that this plugin may not be given a "
+"consistent load order position."
+msgstr ""
+
+#: src/gui/state/game/validation.cpp:376
 #, c++-format
 msgid ""
 "This plugin is not a blueprint master and requires the blueprint master "
@@ -1497,7 +1517,7 @@ msgstr ""
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/validation.cpp:336
+#: src/gui/state/game/validation.cpp:402
 #, c++-format
 msgid ""
 "This plugin has a header version of {0}, which is less than the game's "
@@ -1506,16 +1526,16 @@ msgstr ""
 "このプラグインのヘッダーバージョンは {0} です。サポートされている最低バージョ"
 "ン {1} を下回っています。"
 
-#: src/gui/state/game/validation.cpp:351
+#: src/gui/state/game/validation.cpp:417
 msgid "This plugin has itself as a master."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:358
+#: src/gui/state/game/validation.cpp:424
 #, c++-format
 msgid "This plugin belongs to the group \"{0}\", which does not exist."
 msgstr "このプラグインは存在しないグループ \"{0}\" に属しています。"
 
-#: src/gui/state/game/validation.cpp:382
+#: src/gui/state/game/validation.cpp:448
 #, c++-format
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
@@ -1524,19 +1544,19 @@ msgstr ""
 "このプラグインには BashTags ファイルがあるため、LOOT による以下の Bash Tags "
 "候補は上書きされます: {0}."
 
-#: src/gui/state/game/validation.cpp:544
+#: src/gui/state/game/validation.cpp:610
 #, c++-format
 msgid "You have {0} active full plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:552
+#: src/gui/state/game/validation.cpp:618
 #, c++-format
 msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr ""
 "{0} 個のプラグインが有効にされていますが、このゲームで扱えるのは {1} 個までで"
 "す。"
 
-#: src/gui/state/game/validation.cpp:573
+#: src/gui/state/game/validation.cpp:639
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
@@ -1544,25 +1564,25 @@ msgstr ""
 "MWSE を利用せずに Morrowind を起動しないでください。ゲームに重大な損傷が生じ"
 "ることになります。"
 
-#: src/gui/state/game/validation.cpp:591
+#: src/gui/state/game/validation.cpp:657
 #, c++-format
 msgid "You have {0} active {1} but the game only supports up to {2}."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:612
+#: src/gui/state/game/validation.cpp:678
 #, c++-format
 msgid ""
 "You have a full plugin and {0} {1} sharing the FE load order index. "
 "Deactivate a full plugin or your {1} to avoid potential issues."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:632
+#: src/gui/state/game/validation.cpp:698
 #, c++-format
 msgid ""
 "You have {0} active medium plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/validation.cpp:650
+#: src/gui/state/game/validation.cpp:716
 msgid ""
 "You have a full plugin and at least one medium plugin sharing the FD load "
 "order index. Deactivate a full plugin or all your medium plugins to avoid "
@@ -1571,7 +1591,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's name.
 #.
-#: src/gui/state/game/validation.cpp:663
+#: src/gui/state/game/validation.cpp:729
 #, c++-format
 msgid ""
 "{0} is installed in a case-sensitive location. This may cause issues as the "
@@ -1585,7 +1605,7 @@ msgstr ""
 
 #. translators: The placeholder is for the current game's
 #. name.
-#: src/gui/state/game/validation.cpp:679
+#: src/gui/state/game/validation.cpp:745
 #, c++-format
 msgid ""
 "{0}'s local application data is stored in a case-sensitive location. This "
@@ -1597,12 +1617,12 @@ msgstr ""
 "区別しない（Windows のデフォルト設定と同一）と見なす可能性があるため、このま"
 "までは問題が生じるかもしれません。"
 
-#: src/gui/state/game/validation.cpp:819
+#: src/gui/state/game/validation.cpp:903
 msgid "small plugin"
 msgid_plural "small plugins"
 msgstr[0] ""
 
-#: src/gui/state/game/validation.cpp:821
+#: src/gui/state/game/validation.cpp:905
 msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] ""
