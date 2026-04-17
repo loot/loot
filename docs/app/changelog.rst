@@ -4,6 +4,71 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.29.1 - Unreleased
+===================
+
+Added
+-----
+
+- Warning messages are now displayed for Starfield plugins if:
+
+  - they are a blueprint plugin (i.e. they have the blueprint flag set) but are
+    not a master file
+  - their filename starts with ``BlueprintShips-`` but does not have the
+    ``.esm`` file extension
+  - their filename starts with ``BlueprintShips-`` but the plugin does not have
+    the blueprint flag set.
+
+  Such plugins are unsupported and should be avoided, as it's not possible to
+  reliably activate them and may not be possible to give them a consistent load
+  order position.
+
+Fixed
+-----
+
+- The Flatpak could crash on startup or when opening the Groups Editor due to
+  the OGDF dependency being built targeting the instruction set of the machine
+  that the Flatpak was built on, so the code could try to use functionality that
+  is not present in older CPUs. It now targets the ``x86-64`` CPU type, which
+  is supported by almost all AMD and Intel CPUs released in the last 20 years.
+  This change was also applied in a post-release update to the v0.29.0 Flatpak
+  on Flathub.
+- The installer did not include ``icuuc.dll``, causing a crash on startup when
+  LOOT was run using Wine.
+- The installer did not install the Tamil translation.
+- The uninstaller did not remove the empty Turkish translation directories after
+  removing the translation files.
+- When loading a load order that contained an inactive master, one or more
+  blueprint masters and no non-master plugins, the inactive master was
+  incorrectly positioned after the blueprint masters if it had a more recent
+  modification timestamp. Via libloot.
+- The wrong fallback filename ordering behaviour was used when loading a load
+  order and ordering plugins by timestamp and two plugins had the same
+  modification timestamp. Via libloot.
+- When loading a Starfield load order, ``sTestFile`` entries were ordered
+  differently to how they're ordered by Starfield v1.16.236.0. Via libloot.
+
+Changed
+-------
+
+- When setting a Starfield load order, blueprint plugins and plugins with names
+  that start with ``BlueprintShips-`` are no longer written to ``plugins.txt``.
+  This means that it is effectively no longer possible to explicitly activate
+  such plugins, or to give them consistent load order positions unless they are
+  blueprint masters. Via libloot.
+- Added some error handling for when opening various files fails, including
+  masterlists during masterlist update, Qt stylesheets, Epic Games Store
+  manifest files, Heroic Games Launcher files and load order backup files.
+- The Flatpak is now built with more debug info. This change was also applied in
+  a post-release update to the v0.29.0 Flatpak on Flathub.
+- Updated libloot to v0.29.4.
+
+Removed
+-------
+
+- ``qtuiotouchplugin.dll`` is no longer included in the release archive, as it's
+  not used by LOOT.
+
 0.29.0 - 2026-04-11
 ===================
 
