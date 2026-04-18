@@ -71,6 +71,18 @@
   </screenshots>
 
   <releases>
+    <release version="0.29.1" date="2026-04-18">
+      <description>
+        <ul>
+          <li>Added warnings for unsupported Starfield blueprint and BlueprintShips plugins.</li>
+          <li>Starfield blueprint and BlueprintShips plugins are no longer written to plugins.txt.</li>
+          <li>Fixed the Flatpak crashing for some users.</li>
+          <li>The Flatpak is now built withe more debug info available.</li>
+          <li>Other fixes and improvements.</li>
+        </ul>
+      </description>
+      <url>https://loot.readthedocs.io/en/0.29.1/app/changelog.html#id1</url>
+    </release>
     <release version="0.29.0" date="2026-04-11">
       <description>
         <ul>
