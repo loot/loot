@@ -46,6 +46,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSfLO https://github.com/Ortham/svg_to_ico/
     && tar xJf svg_to_ico.tar.xz -C /home/vscode/.local/bin \
     && rm svg_to_ico.tar.xz
 
+ARG QT_VERSION
 RUN /home/vscode/.local/bin/uv run --with aqtinstall==3.3.0 -- aqt install-qt windows desktop ${QT_VERSION} win64_mingw \
     && /home/vscode/.local/bin/uv run --with aqtinstall==3.3.0 -- aqt install-qt linux desktop ${QT_VERSION} linux_gcc_64 --archives icu qtbase \
     && sudo mkdir /opt/qt \
