@@ -63,6 +63,7 @@ Changed
 - The Flatpak is now built with more debug info. This change was also applied in
   a post-release update to the v0.29.0 Flatpak on Flathub.
 - Updated libloot to v0.29.4.
+- Updated the German translation.
 
 Removed
 -------
