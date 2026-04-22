@@ -58,6 +58,7 @@ enum struct MessageSource : unsigned int {
   blueprintNonMaster,
   blueprintShipsNonEsm,
   blueprintShipsNonBlueprint,
+  recoveredGroup,
 };
 
 struct SourcedMessage {

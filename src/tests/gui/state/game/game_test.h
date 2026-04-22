@@ -197,6 +197,18 @@ protected:
     }
   }
 
+  SourcedMessage recoveredGroupMessage(std::string_view groupName) {
+    return SourcedMessage{
+        MessageType::warn,
+        MessageSource::recoveredGroup,
+        fmt::format(
+            "The group \"{0}\" has been removed from the masterlist but "
+            "was referenced by user metadata. It has been renamed to "
+            "\"{1}\" and reintroduced as a user group.",
+            groupName,
+            std::string(groupName) + " (Recovered)")};
+  }
+
   std::vector<std::string> loadOrderToSet_;
 
   std::vector<MessageContent> detail_;
@@ -1399,6 +1411,146 @@ TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
 
   EXPECT_EQ(previousSize - messages.size(),
             game.getMessages(MessageContent::DEFAULT_LANGUAGE, false).size());
+}
+
+TEST_P(GameTest, loadMetadataShouldLoadMasterlistAndUserMetadata) {
+  Game game = createInitialisedGame();
+
+  using std::endl;
+  std::ofstream out(game.getMasterlistPath());
+  out << "groups:" << endl << "- name: A" << endl;
+  out.close();
+
+  out.open(game.getUserlistPath());
+  out << "plugins:" << endl
+      << "- name: Blank.esp" << endl
+      << "  group: A" << endl;
+  out.close();
+
+  game.loadMetadata();
+
+  std::vector<Group> expectedMasterlistGroups{
+      Group("default"),
+      Group("A"),
+  };
+
+  std::vector<Group> expectedUserGroups{Group("default")};
+
+  EXPECT_EQ(expectedMasterlistGroups, game.getMasterlistGroups());
+  EXPECT_FALSE(game.getMasterlistMetadata("Blank.esp").has_value());
+  EXPECT_EQ(expectedUserGroups, game.getUserGroups());
+  EXPECT_EQ("A", game.getUserMetadata("Blank.esp").value().GetGroup().value());
+}
+
+TEST_P(GameTest,
+       loadMetadataShouldRecoverRemovedMasterlistGroupsAsUserMetadata) {
+  Game game = createInitialisedGame();
+
+  game.loadAllInstalledPlugins(true);
+
+  using std::endl;
+  std::ofstream out(game.getMasterlistPath());
+  out << "groups:" << endl
+      << "- name: A" << endl  // Unreferenced
+      << "- name: B" << endl  // Referenced by plugin
+      << "- name: C" << endl  // Extended in user metadata, and referenced in
+                              // masterlist and user 'after' metadata
+      << "- name: D" << endl  // Unreferenced, but references a group also
+                              // referenced by user 'after' metadata
+      << "  after: [C, default]" << endl
+      << "- name: E" << endl  // Extended in user metadata
+      << "  after: [default]" << endl
+      << "- name: F" << endl  // Referenced by user 'after' metadata
+      << "- name: H" << endl  // Referenced by masterlist 'after' metadata
+      << "- name: I" << endl  // Referenced by masterlist 'after' metadata
+      << "- name: J" << endl  // Referenced by user 'after' metadata
+      << "  after: [H, I]" << endl;
+  out.close();
+
+  out.open(game.getUserlistPath());
+  out << "groups:" << endl
+      << "- name: C" << endl
+      << "- name: E" << endl
+      << "  after: [C]" << endl
+      << "- name: G" << endl
+      << "  after: [F]" << endl
+      << "- name: K" << endl
+      << "  after: [J]" << endl
+      << "plugins:" << endl
+      << "- name: Blank.esp" << endl
+      << "  group: B" << endl;
+  out.close();
+
+  game.loadMetadata();
+
+  out.open(game.getMasterlistPath());
+  out << "groups: []" << endl;
+  out.close();
+
+  game.loadMetadata();
+
+  std::vector<Group> expectedMasterlistGroups{Group("default")};
+  // D is not recovered despite referencing C
+  // E's old 'after' entries are not recovered
+  // H and I are not recovered, despite being referenced in J's old 'after'
+  // metadata J's old 'after' entries are not recovered.
+  std::vector<Group> expectedUserGroups{
+      Group("default"),
+      Group("C"),
+      Group("E", {"C"}),
+      Group("G", {"F (Recovered)"}),
+      Group("K", {"J (Recovered)"}),
+      Group("F (Recovered)"),
+      Group("B (Recovered)"),
+      Group("J (Recovered)"),
+  };
+
+  EXPECT_EQ(expectedMasterlistGroups, game.getMasterlistGroups());
+  EXPECT_FALSE(game.getMasterlistMetadata("Blank.esp").has_value());
+  EXPECT_EQ(expectedUserGroups, game.getUserGroups());
+  EXPECT_EQ("B (Recovered)",
+            game.getUserMetadata("Blank.esp").value().GetGroup().value());
+
+  std::vector<SourcedMessage> expectedMessages{
+      recoveredGroupMessage("F"),
+      recoveredGroupMessage("B"),
+      recoveredGroupMessage("J"),
+      SourcedMessage{MessageType::warn,
+                     MessageSource::unsortedLoadOrderCheck,
+                     "You have not sorted your load order this session\\."}};
+
+  EXPECT_EQ(expectedMessages, game.getMessages("en", false));
+}
+
+TEST_P(GameTest, loadMetadataCannotUpdateUserMetadataForNonLoadedPlugins) {
+  Game game = createInitialisedGame();
+
+  using std::endl;
+  std::ofstream out(game.getMasterlistPath());
+  out << "groups:" << endl << "- name: A" << endl;
+  out.close();
+
+  out.open(game.getUserlistPath());
+  out << "plugins:" << endl
+      << "- name: Blank.esp" << endl
+      << "  group: A" << endl;
+  out.close();
+
+  game.loadMetadata();
+
+  out.open(game.getMasterlistPath());
+  out << "groups: []" << endl;
+  out.close();
+
+  game.loadMetadata();
+
+  std::vector<Group> expectedGroups{Group("default")};
+
+  EXPECT_EQ(expectedGroups, game.getMasterlistGroups());
+  EXPECT_FALSE(game.getMasterlistMetadata("Blank.esp").has_value());
+  EXPECT_EQ(expectedGroups, game.getUserGroups());
+
+  EXPECT_EQ("A", game.getUserMetadata("Blank.esp").value().GetGroup().value());
 }
 }
 

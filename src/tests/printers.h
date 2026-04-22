@@ -28,6 +28,7 @@
 
 #include <iostream>
 
+#include "gui/sourced_message.h"
 #include "loot/metadata/file.h"
 #include "loot/metadata/group.h"
 #include "loot/metadata/location.h"
@@ -60,16 +61,17 @@ void PrintTo(const Location& value, ::std::ostream* os) {
       << ")";
 }
 
-void PrintTo(const Message& value, ::std::ostream* os) {
-  std::string type;
-  if (value.GetType() == MessageType::warn)
-    type = "MessageType::warn";
-  else if (value.GetType() == MessageType::error)
-    type = "MessageType::error";
+void PrintTo(MessageType value, ::std::ostream* os) {
+  if (value == MessageType::warn)
+    *os << "MessageType::warn";
+  else if (value == MessageType::error)
+    *os << "MessageType::error";
   else
-    type = "MessageType::say";
+    *os << "MessageType::say";
+}
 
-  *os << "Message(" << type << ", "
+void PrintTo(const Message& value, ::std::ostream* os) {
+  *os << "Message(" << ::testing::PrintToString(value.GetType()) << ", "
       << ::testing::PrintToString(value.GetContent()) << ", "
       << "\"" << value.GetCondition() << "\""
       << ")";
@@ -104,6 +106,11 @@ void PrintTo(const Tag& value, ::std::ostream* os) {
 
 void PrintTo(const PluginInterface& value, ::std::ostream* os) {
   *os << "PluginInterface(\"" << value.GetName() << "\")";
+}
+
+void PrintTo(const SourcedMessage& value, ::std::ostream* os) {
+  *os << "SourcedMessage{" << ::testing::PrintToString(value.type) << ", "
+      << static_cast<int>(value.source) << ", \"" << value.text << "\"}";
 }
 }
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.29.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-04-22 11:36+0100\n"
+"POT-Creation-Date: 2026-04-22 20:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1301,17 +1301,17 @@ msgstr ""
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1082
+#: src/gui/state/game/game.cpp:1078
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1110
+#: src/gui/state/game/game.cpp:1106
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1175
+#: src/gui/state/game/game.cpp:1171
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
@@ -1319,7 +1319,7 @@ msgid ""
 "Try updating your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1208
+#: src/gui/state/game/game.cpp:1204
 #, c++-format
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
@@ -1333,7 +1333,15 @@ msgid ""
 "({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1415
+#: src/gui/state/game/game.cpp:1240
+#, c++-format
+msgid ""
+"The group \"{0}\" has been removed from the masterlist but was referenced by "
+"user metadata. It has been renamed to \"{1}\" and reintroduced as a user "
+"group."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:1422
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
