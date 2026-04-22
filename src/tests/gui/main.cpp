@@ -57,6 +57,7 @@
 #include "tests/gui/state/game/helpers_test.h"
 #include "tests/gui/state/loot_paths_test.h"
 #include "tests/gui/state/loot_settings_test.h"
+#include "tests/printers.h"
 
 int main(int argc, char **argv) {
   // Set the logger to use a null sink.

@@ -29,19 +29,28 @@
 #include <iostream>
 
 #include "loot/metadata/file.h"
+#include "loot/metadata/group.h"
 #include "loot/metadata/location.h"
 #include "loot/metadata/message.h"
 #include "loot/metadata/plugin_cleaning_data.h"
 #include "loot/metadata/plugin_metadata.h"
 #include "loot/metadata/tag.h"
+#include "loot/plugin_interface.h"
 
 namespace loot {
-namespace test {
 void PrintTo(const File& value, ::std::ostream* os) {
-  *os << "File(\"" << value.GetName() << "\", "
+  *os << "File(\"" << std::string(value.GetName()) << "\", "
       << "\"" << value.GetDisplayName() << "\", "
       << "\"" << value.GetCondition() << "\", "
+      << ::testing::PrintToString(value.GetDetail()) << ", "
       << "\"" << value.GetConstraint() << "\""
+      << ")";
+}
+
+void PrintTo(const Group& value, ::std::ostream* os) {
+  *os << "Group(\"" << value.GetName() << "\", "
+      << ::testing::PrintToString(value.GetAfterGroups()) << ", "
+      << "\"" << value.GetDescription() << "\""
       << ")";
 }
 
@@ -54,13 +63,13 @@ void PrintTo(const Location& value, ::std::ostream* os) {
 void PrintTo(const Message& value, ::std::ostream* os) {
   std::string type;
   if (value.GetType() == MessageType::warn)
-    type = "warn";
+    type = "MessageType::warn";
   else if (value.GetType() == MessageType::error)
-    type = "error";
+    type = "MessageType::error";
   else
-    type = "say";
+    type = "MessageType::say";
 
-  *os << "Message(\"" << type << "\", "
+  *os << "Message(" << type << ", "
       << ::testing::PrintToString(value.GetContent()) << ", "
       << "\"" << value.GetCondition() << "\""
       << ")";
@@ -68,16 +77,17 @@ void PrintTo(const Message& value, ::std::ostream* os) {
 
 void PrintTo(const MessageContent& value, ::std::ostream* os) {
   *os << "MessageContent(\"" << value.GetText() << "\", "
-      << "\"" << Language(value.GetLanguage()).GetName() << "\""
+      << "\"" << value.GetLanguage() << "\""
       << ")";
 }
 
 void PrintTo(const PluginCleaningData& value, ::std::ostream* os) {
   *os << "PluginCleaningData(0x" << std::hex << std::uppercase << value.GetCRC()
-      << std::nouppercase << std::dec << ", " << value.GetITMCount() << ", "
-      << value.GetDeletedReferenceCount() << ", "
-      << value.GetDeletedNavmeshCount() << ", "
+      << std::nouppercase << std::dec << ", "
       << "\"" << value.GetCleaningUtility() << "\", "
+      << ::testing::PrintToString(value.GetDetail()) << ", "
+      << value.GetITMCount() << ", " << value.GetDeletedReferenceCount() << ", "
+      << value.GetDeletedNavmeshCount() << ", "
       << "\"" << value.GetCondition() << "\""
       << ")";
 }
@@ -92,9 +102,8 @@ void PrintTo(const Tag& value, ::std::ostream* os) {
       << ")";
 }
 
-void PrintTo(const Plugin& value, ::std::ostream* os) {
-  *os << "Plugin(\"" << value.GetName() << "\")";
-}
+void PrintTo(const PluginInterface& value, ::std::ostream* os) {
+  *os << "PluginInterface(\"" << value.GetName() << "\")";
 }
 }
 
