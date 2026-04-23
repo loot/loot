@@ -1491,18 +1491,17 @@ TEST_P(GameTest,
 
   std::vector<Group> expectedMasterlistGroups{Group("default")};
   // D is not recovered despite referencing C
-  // E's old 'after' entries are not recovered
   std::vector<Group> expectedUserGroups{
       Group("default"),
       Group("C"),
-      Group("E", {"C"}),
+      Group("E", {"default", "C"}),
       Group("G", {"F (Recovered)"}),
       Group("K", {"J (Recovered)"}),
-      Group("F (Recovered)"),
       Group("B (Recovered)"),
-      Group("J (Recovered)", {"H (Recovered)", "I (Recovered)"}),
-      Group("I (Recovered)"),
+      Group("F (Recovered)"),
       Group("H (Recovered)"),
+      Group("I (Recovered)"),
+      Group("J (Recovered)", {"H (Recovered)", "I (Recovered)"}),
   };
 
   EXPECT_EQ(expectedMasterlistGroups, game.getMasterlistGroups());

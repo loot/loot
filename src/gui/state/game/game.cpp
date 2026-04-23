@@ -474,6 +474,7 @@ void addGroup(std::vector<Group>& groups,
 void recoverRemovedGroups(
     std::vector<Group>& userGroups,
     const std::unordered_map<std::string, std::string>& namesToChange,
+    const std::unordered_set<std::string>& namesToKeep,
     const std::vector<Group>& oldMasterlistGroups) {
   // Update all existing references to the removed group names in the user
   // groups.
@@ -482,25 +483,26 @@ void recoverRemovedGroups(
   }
 
   // Finally, for each referenced group, pull out its old masterlist
-  // metadata and the masterlist groups that used to load after it, and add
-  // them to the user metadata.
-  for (const auto& [oldName, newName] : namesToChange) {
-    for (const auto& group : oldMasterlistGroups) {
-      if (group.GetName() == oldName) {
-        // This group's after groups may refer to other removed groups that
-        // will be renamed.
-        std::vector<std::string> afterGroups;
-        for (const auto& afterGroup : group.GetAfterGroups()) {
-          afterGroups.push_back(findOrKey(namesToChange, afterGroup));
-        }
+  // metadata and add it to the user metadata.
+  for (const auto& group : oldMasterlistGroups) {
+    auto groupName = group.GetName();
 
-        addGroup(userGroups,
-                 newName,
-                 std::move(afterGroups),
-                 group.GetDescription());
-        break;
-      }
+    const auto changeIt = namesToChange.find(groupName);
+    if (changeIt != namesToChange.end()) {
+      groupName = changeIt->second;
+    } else if (namesToKeep.count(groupName) == 0) {
+      continue;
     }
+
+    // This group's after groups may refer to other removed groups that
+    // will be renamed.
+    std::vector<std::string> afterGroups;
+    for (const auto& afterGroup : group.GetAfterGroups()) {
+      afterGroups.push_back(findOrKey(namesToChange, afterGroup));
+    }
+
+    addGroup(
+        userGroups, groupName, std::move(afterGroups), group.GetDescription());
   }
 }
 
@@ -591,7 +593,8 @@ std::unordered_map<std::string, std::string> recoverRemovedGroups(
     }
   }
 
-  recoverRemovedGroups(userGroups, namesToChange, oldMasterlistGroups);
+  recoverRemovedGroups(
+      userGroups, namesToChange, namesToKeep, oldMasterlistGroups);
 
   game.setUserGroups(userGroups);
   game.saveUserMetadata();
