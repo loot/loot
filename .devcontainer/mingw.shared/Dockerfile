@@ -1,5 +1,3 @@
-ARG QT_VERSION="6.10.3"
-
 FROM ghcr.io/ortham/dev-rust-mingw-gcc:master
 
 USER root
@@ -11,14 +9,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /opt
 
-RUN curl -sSLO https://archives.boost.io/release/1.90.0/source/boost_1_90_0.zip \
-    && unzip boost_1_90_0.zip \
-    && cd boost_1_90_0 \
+ARG BOOST_VERSION="1.91.0"
+ARG BOOST_SUFFIX="1_91_0"
+RUN curl -sSLO https://archives.boost.io/release/${BOOST_VERSION}/source/boost_${BOOST_SUFFIX}.zip \
+    && echo "69c6f32fbda3c478fb310ec251e6699e5e584dbc71afb5425c2f6e98c9540a77 boost_${BOOST_SUFFIX}.zip" | sha256sum -c \
+    && unzip boost_${BOOST_SUFFIX}.zip \
+    && cd boost_${BOOST_SUFFIX} \
     && echo "using gcc : mingw : x86_64-w64-mingw32-g++ ;" > user-config.jam \
     && ./bootstrap.sh \
     && ./b2 install --prefix=/usr/x86_64-w64-mingw32 --user-config=./user-config.jam toolset=gcc-mingw link=static runtime-link=shared variant=release address-model=64 target-os=windows cxxflags="-std=c++17 -fPIC" --with-locale \
     && cd .. \
-    && rm -rf boost_1_90_0 boost_1_90_0.zip
+    && rm -rf boost_${BOOST_SUFFIX} boost_${BOOST_SUFFIX}.zip
 
 RUN curl -sSfLO https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz \
     && echo "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269 bzip2-1.0.8.tar.gz" | sha256sum -c \
@@ -46,7 +47,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSfLO https://github.com/Ortham/svg_to_ico/
     && tar xJf svg_to_ico.tar.xz -C /home/vscode/.local/bin \
     && rm svg_to_ico.tar.xz
 
-ARG QT_VERSION
+ARG QT_VERSION="6.10.3"
 RUN /home/vscode/.local/bin/uv run --with aqtinstall==3.3.0 -- aqt install-qt windows desktop ${QT_VERSION} win64_mingw \
     && /home/vscode/.local/bin/uv run --with aqtinstall==3.3.0 -- aqt install-qt linux desktop ${QT_VERSION} linux_gcc_64 --archives icu qtbase \
     && sudo mkdir /opt/qt \

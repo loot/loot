@@ -68,8 +68,8 @@ modules:
       - ./b2 link=static runtime-link=shared variant=release debug-symbols=on cxxflags="-std=c++17 -fPIC" --with-locale install
     sources:
       - type: archive
-        url: https://archives.boost.io/release/1.90.0/source/boost_1_90_0.tar.bz2
-        sha256: 49551aff3b22cbc5c5a9ed3dbc92f0e23ea50a0f7325b0d198b705e8ee3fc305
+        url: https://archives.boost.io/release/1.91.0/source/boost_1_91_0.tar.bz2
+        sha256: de5e6b0e4913395c6bdfa90537febd9028ea4c0735d2cdb0cd9b45d5f51264f5
 
   - name: libtbb
     buildsystem: cmake-ninja
