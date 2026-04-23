@@ -1455,9 +1455,9 @@ TEST_P(GameTest,
       << "- name: B" << endl  // Referenced by plugin
       << "- name: C" << endl  // Extended in user metadata, and referenced in
                               // masterlist and user 'after' metadata
-      << "- name: D" << endl  // Unreferenced, but references a group also
+      << "- name: D" << endl  // Unreferenced, but references groups also
                               // referenced by user 'after' metadata
-      << "  after: [C, default]" << endl
+      << "  after: [B, C, default]" << endl
       << "- name: E" << endl  // Extended in user metadata
       << "  after: [default]" << endl
       << "- name: F" << endl  // Referenced by user 'after' metadata
@@ -1490,7 +1490,6 @@ TEST_P(GameTest,
   game.loadMetadata();
 
   std::vector<Group> expectedMasterlistGroups{Group("default")};
-  // D is not recovered despite referencing C
   std::vector<Group> expectedUserGroups{
       Group("default"),
       Group("C"),
@@ -1498,6 +1497,7 @@ TEST_P(GameTest,
       Group("G", {"F (Recovered)"}),
       Group("K", {"J (Recovered)"}),
       Group("B (Recovered)"),
+      Group("D (Recovered)", {"B (Recovered)", "C", "default"}),
       Group("F (Recovered)"),
       Group("H (Recovered)"),
       Group("I (Recovered)"),
@@ -1511,11 +1511,12 @@ TEST_P(GameTest,
             game.getUserMetadata("Blank.esp").value().GetGroup().value());
 
   std::vector<SourcedMessage> expectedMessages{
-      recoveredGroupMessage("F"),
       recoveredGroupMessage("B"),
-      recoveredGroupMessage("J"),
-      recoveredGroupMessage("I"),
+      recoveredGroupMessage("D"),
+      recoveredGroupMessage("F"),
       recoveredGroupMessage("H"),
+      recoveredGroupMessage("I"),
+      recoveredGroupMessage("J"),
       SourcedMessage{MessageType::warn,
                      MessageSource::unsortedLoadOrderCheck,
                      "You have not sorted your load order this session\\."}};

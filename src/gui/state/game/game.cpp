@@ -454,7 +454,7 @@ std::vector<Group>::const_iterator findGroup(const std::vector<Group>& groups,
 void addGroup(std::vector<Group>& groups,
               std::string_view targetGroupName,
               std::vector<std::string>&& afterGroups,
-              std::string_view description) {
+              std::optional<std::string> description) {
   auto existingGroup = findGroup(groups, targetGroupName);
 
   if (existingGroup != groups.end()) {
@@ -466,8 +466,10 @@ void addGroup(std::vector<Group>& groups,
 
     *existingGroup = Group(
         existingGroup->GetName(), afterGroups, existingGroup->GetDescription());
+  } else if (description.has_value()) {
+    groups.push_back(Group(targetGroupName, afterGroups, description.value()));
   } else {
-    groups.push_back(Group(targetGroupName, afterGroups, description));
+    groups.push_back(Group(targetGroupName, afterGroups));
   }
 }
 
@@ -482,32 +484,63 @@ void recoverRemovedGroups(
     updateGroupNames(group, namesToChange);
   }
 
+  const auto getReferencedGroupName =
+      [&namesToChange, &namesToKeep](
+          const std::string& groupName) -> std::optional<std::string> {
+    const auto it = namesToChange.find(groupName);
+
+    if (it != namesToChange.end()) {
+      return std::optional(it->second);
+    }
+
+    if (namesToKeep.count(groupName) != 0) {
+      return std::optional(groupName);
+    }
+
+    return std::nullopt;
+  };
+
   // Finally, for each referenced group, pull out its old masterlist
   // metadata and add it to the user metadata.
   for (const auto& group : oldMasterlistGroups) {
-    auto groupName = group.GetName();
+    auto originalGroupName = group.GetName();
 
-    const auto changeIt = namesToChange.find(groupName);
-    if (changeIt != namesToChange.end()) {
-      groupName = changeIt->second;
-    } else if (namesToKeep.count(groupName) == 0) {
-      continue;
+    auto groupName = getReferencedGroupName(originalGroupName);
+
+    if (groupName.has_value()) {
+      // This group's after groups may refer to other removed groups that
+      // will be renamed.
+      std::vector<std::string> afterGroups;
+      for (const auto& afterGroup : group.GetAfterGroups()) {
+        afterGroups.push_back(findOrKey(namesToChange, afterGroup));
+      }
+
+      addGroup(userGroups,
+               groupName.value(),
+               std::move(afterGroups),
+               group.GetDescription());
+    } else {
+      // Not a referenced group, but may load after one.
+      std::vector<std::string> afterGroups;
+      for (const auto& afterGroup : group.GetAfterGroups()) {
+        auto afterGroupName = getReferencedGroupName(afterGroup);
+
+        if (afterGroupName.has_value()) {
+          // This is a removed group, add this after entry to the user metadata.
+          afterGroups.push_back(afterGroupName.value());
+        }
+      }
+
+      if (!afterGroups.empty()) {
+        addGroup(userGroups,
+                 originalGroupName,
+                 std::move(afterGroups),
+                 std::nullopt);
+      }
     }
-
-    // This group's after groups may refer to other removed groups that
-    // will be renamed.
-    std::vector<std::string> afterGroups;
-    for (const auto& afterGroup : group.GetAfterGroups()) {
-      afterGroups.push_back(findOrKey(namesToChange, afterGroup));
-    }
-
-    addGroup(
-        userGroups, groupName, std::move(afterGroups), group.GetDescription());
   }
 }
 
-// This does not recover the relationships between groups, only the group names
-// are recovered (and then changed).
 std::unordered_map<std::string, std::string> recoverRemovedGroups(
     loot::gui::Game& game,
     const std::vector<Group>& oldMasterlistGroups,
@@ -568,6 +601,16 @@ std::unordered_map<std::string, std::string> recoverRemovedGroups(
 
       for (const auto& afterGroup : group.GetAfterGroups()) {
         groupProcessingQueue.push_back(afterGroup);
+      }
+    } else if (removedGroupNames.count(groupName) != 0) {
+      // This isn't marked for recovery, but it will need to be recovered if it
+      // references another group that is marked for recovery.
+      for (const auto& afterGroup : group.GetAfterGroups()) {
+        if (namesToChange.count(afterGroup) != 0 ||
+            namesToKeep.count(afterGroup) != 0) {
+          groupProcessingQueue.push_back(groupName);
+          break;
+        }
       }
     }
   }
