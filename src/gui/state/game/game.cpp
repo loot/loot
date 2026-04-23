@@ -444,10 +444,30 @@ std::vector<Group>::iterator findGroup(std::vector<Group>& groups,
   });
 }
 
-void addGroup(std::vector<Group>& groups, std::string_view targetGroupName) {
+std::vector<Group>::const_iterator findGroup(const std::vector<Group>& groups,
+                                             std::string_view targetGroupName) {
+  return std::find_if(groups.begin(), groups.end(), [&](const Group& group) {
+    return group.GetName() == targetGroupName;
+  });
+}
+
+void addGroup(std::vector<Group>& groups,
+              std::string_view targetGroupName,
+              std::vector<std::string>&& afterGroups,
+              std::string_view description) {
   auto existingGroup = findGroup(groups, targetGroupName);
-  if (existingGroup == groups.end()) {
-    groups.push_back(Group(targetGroupName));
+
+  if (existingGroup != groups.end()) {
+    const auto existingAfterGroups = existingGroup->GetAfterGroups();
+
+    afterGroups.insert(afterGroups.end(),
+                       existingAfterGroups.begin(),
+                       existingAfterGroups.end());
+
+    *existingGroup = Group(
+        existingGroup->GetName(), afterGroups, existingGroup->GetDescription());
+  } else {
+    groups.push_back(Group(targetGroupName, afterGroups, description));
   }
 }
 
@@ -467,7 +487,17 @@ void recoverRemovedGroups(
   for (const auto& [oldName, newName] : namesToChange) {
     for (const auto& group : oldMasterlistGroups) {
       if (group.GetName() == oldName) {
-        addGroup(userGroups, newName);
+        // This group's after groups may refer to other removed groups that
+        // will be renamed.
+        std::vector<std::string> afterGroups;
+        for (const auto& afterGroup : group.GetAfterGroups()) {
+          afterGroups.push_back(findOrKey(namesToChange, afterGroup));
+        }
+
+        addGroup(userGroups,
+                 newName,
+                 std::move(afterGroups),
+                 group.GetDescription());
         break;
       }
     }
@@ -521,6 +551,42 @@ std::unordered_map<std::string, std::string> recoverRemovedGroups(
         metadata.value().SetGroup(it.first->second);
 
         game.addUserMetadata(metadata.value());
+      }
+    }
+  }
+
+  // Get references in old masterlist groups.
+  std::vector<std::string> groupProcessingQueue;
+  for (const auto& group : oldMasterlistGroups) {
+    auto groupName = group.GetName();
+    if (namesToChange.count(groupName) != 0 ||
+        namesToKeep.count(groupName) != 0) {
+      // This group will be recovered, make sure that the groups it loads after
+      // either still exist or will also be recovered.
+
+      for (const auto& afterGroup : group.GetAfterGroups()) {
+        groupProcessingQueue.push_back(afterGroup);
+      }
+    }
+  }
+
+  while (!groupProcessingQueue.empty()) {
+    std::string groupName = groupProcessingQueue.back();
+    groupProcessingQueue.pop_back();
+
+    if (removedGroupNames.count(groupName) != 0) {
+      // This group was removed.
+      if (namesToKeep.count(groupName) == 0) {
+        namesToChange.emplace(groupName, groupName + " (Recovered)");
+      }
+
+      // Also process the groups this one loads after to make sure that all of
+      // them will still exist.
+      auto it = findGroup(oldMasterlistGroups, groupName);
+      if (it != oldMasterlistGroups.end()) {
+        for (const auto& afterGroup : it->GetAfterGroups()) {
+          groupProcessingQueue.push_back(afterGroup);
+        }
       }
     }
   }

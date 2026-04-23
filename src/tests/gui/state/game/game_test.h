@@ -1492,8 +1492,6 @@ TEST_P(GameTest,
   std::vector<Group> expectedMasterlistGroups{Group("default")};
   // D is not recovered despite referencing C
   // E's old 'after' entries are not recovered
-  // H and I are not recovered, despite being referenced in J's old 'after'
-  // metadata J's old 'after' entries are not recovered.
   std::vector<Group> expectedUserGroups{
       Group("default"),
       Group("C"),
@@ -1502,7 +1500,9 @@ TEST_P(GameTest,
       Group("K", {"J (Recovered)"}),
       Group("F (Recovered)"),
       Group("B (Recovered)"),
-      Group("J (Recovered)"),
+      Group("J (Recovered)", {"H (Recovered)", "I (Recovered)"}),
+      Group("I (Recovered)"),
+      Group("H (Recovered)"),
   };
 
   EXPECT_EQ(expectedMasterlistGroups, game.getMasterlistGroups());
@@ -1515,6 +1515,8 @@ TEST_P(GameTest,
       recoveredGroupMessage("F"),
       recoveredGroupMessage("B"),
       recoveredGroupMessage("J"),
+      recoveredGroupMessage("I"),
+      recoveredGroupMessage("H"),
       SourcedMessage{MessageType::warn,
                      MessageSource::unsortedLoadOrderCheck,
                      "You have not sorted your load order this session\\."}};
