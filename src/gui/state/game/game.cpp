@@ -25,6 +25,7 @@
 #include "gui/state/game/game.h"
 
 #include <algorithm>
+#include <boost/algorithm/string/predicate.hpp>
 #include <cmath>
 #include <execution>
 #include <fstream>
@@ -1321,6 +1322,23 @@ void Game::loadMetadata() {
                   "\"{1}\" and reintroduced as a user group."),
               oldName,
               newName)});
+    }
+  }
+
+  removeMessagesFrom({MessageSource::recoveredGroupDetected});
+
+  for (const auto& group : getGroups()) {
+    if (boost::ends_with(group.GetName(), " (Recovered)")) {
+      appendMessage(SourcedMessage{
+          MessageType::warn,
+          MessageSource::recoveredGroupDetected,
+          translate(
+              "One or more groups with names that end with \" "
+              "(Recovered)\" were found in your group assignments. Please "
+              "check your setup, and either reassign affected plugins to "
+              "masterlist groups, or rename the user groups to not include "
+              "the \"(Recovered)\" suffix in their names.")});
+      break;
     }
   }
 }

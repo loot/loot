@@ -1640,6 +1640,15 @@ TEST_P(GameTest,
       recoveredGroupMessage("H"),
       recoveredGroupMessage("I"),
       recoveredGroupMessage("J"),
+      SourcedMessage{
+          MessageType::warn,
+          MessageSource::recoveredGroupDetected,
+          translate(
+              "One or more groups with names that end with \" "
+              "(Recovered)\" were found in your group assignments. Please "
+              "check your setup, and either reassign affected plugins to "
+              "masterlist groups, or rename the user groups to not include "
+              "the \"(Recovered)\" suffix in their names.")},
       SourcedMessage{MessageType::warn,
                      MessageSource::unsortedLoadOrderCheck,
                      "You have not sorted your load order this session\\."}};

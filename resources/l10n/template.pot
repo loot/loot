@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.29.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-04-25 18:36+0100\n"
+"POT-Creation-Date: 2026-04-25 21:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1286,32 +1286,32 @@ msgid ""
 "installed, try running its launcher then restarting LOOT."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:208
+#: src/gui/state/game/game.cpp:209
 #, c++-format
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:224
+#: src/gui/state/game/game.cpp:225
 #, c++-format
 msgid "The group \"{0}\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:344
+#: src/gui/state/game/game.cpp:345
 #, c++-format
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1152
+#: src/gui/state/game/game.cpp:1153
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1180
+#: src/gui/state/game/game.cpp:1181
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1245
+#: src/gui/state/game/game.cpp:1246
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
@@ -1319,7 +1319,7 @@ msgid ""
 "Try updating your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1278
+#: src/gui/state/game/game.cpp:1279
 #, c++-format
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
@@ -1333,7 +1333,7 @@ msgid ""
 "({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1319
+#: src/gui/state/game/game.cpp:1320
 #, c++-format
 msgid ""
 "The group \"{0}\" has been removed from the masterlist but was referenced by "
@@ -1341,7 +1341,15 @@ msgid ""
 "group."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1510
+#: src/gui/state/game/game.cpp:1336
+msgid ""
+"One or more groups with names that end with \" (Recovered)\" were found in "
+"your group assignments. Please check your setup, and either reassign "
+"affected plugins to masterlist groups, or rename the user groups to not "
+"include the \"(Recovered)\" suffix in their names."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:1528
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."

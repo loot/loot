@@ -59,6 +59,7 @@ enum struct MessageSource : unsigned int {
   blueprintShipsNonEsm,
   blueprintShipsNonBlueprint,
   recoveredGroup,
+  recoveredGroupDetected,
   cyclicInteraction,
   conditionEvalFailed,
   parsingMetadataFailed,
