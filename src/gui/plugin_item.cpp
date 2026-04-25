@@ -44,7 +44,7 @@ SourcedMessage createEvalFailedMessage(std::string_view pluginName,
                                        std::string_view what) {
   return loot::createPlainTextSourcedMessage(
       loot::MessageType::error,
-      loot::MessageSource::caughtException,
+      loot::MessageSource::conditionEvalFailed,
       fmt::format(
           loot::translate("\"{0}\" contains a condition that could not be "
                           "evaluated. Details: {1}"),

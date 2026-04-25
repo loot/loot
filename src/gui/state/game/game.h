@@ -144,7 +144,6 @@ public:
   std::vector<SourcedMessage> getMessages(std::string_view language,
                                           bool warnOnCaseSensitivePaths) const;
   void appendMessage(const SourcedMessage& message);
-  void clearMessages();
 
   void loadMetadata();
   std::vector<std::string> getKnownBashTags() const;
@@ -183,7 +182,8 @@ private:
   std::optional<std::filesystem::path> resolveGameFilePath(
       const std::string& pluginName) const;
 
-  void appendMessages(std::vector<SourcedMessage> messages);
+  void appendMessages(const std::vector<SourcedMessage>& messages);
+  void removeMessagesFrom(const std::set<MessageSource>& sources);
 
   void loadCurrentLoadOrderState();
 

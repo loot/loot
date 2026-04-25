@@ -46,7 +46,7 @@ enum struct MessageSource : unsigned int {
   init,
   autoSortCancellation,
   updateCheck,
-  caughtException,
+  loadLoadOrderStateFailed,
   unsortedLoadOrderCheck,
   activePluginsCountCheck,
   removedPluginsCheck,
@@ -59,6 +59,9 @@ enum struct MessageSource : unsigned int {
   blueprintShipsNonEsm,
   blueprintShipsNonBlueprint,
   recoveredGroup,
+  cyclicInteraction,
+  conditionEvalFailed,
+  parsingMetadataFailed,
 };
 
 struct SourcedMessage {

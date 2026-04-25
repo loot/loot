@@ -202,7 +202,7 @@ SourcedMessage createSortingCyclicInteractionErrorMessage(
 
   return SourcedMessage{
       MessageType::error,
-      MessageSource::caughtException,
+      MessageSource::cyclicInteraction,
       fmt::format(
           translate(
               "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"),
@@ -220,7 +220,7 @@ SourcedMessage createSortingUndefinedGroupErrorMessage(
 
   return createPlainTextSourcedMessage(
       MessageType::error,
-      MessageSource::caughtException,
+      MessageSource::missingGroup,
       fmt::format(translate("The group \"{0}\" does not exist."),
                   e.GetGroupName()));
 }
@@ -1004,6 +1004,10 @@ void Game::loadAllInstalledPlugins(bool headersOnly) {
     loadedPluginNames.push_back(plugin->GetName());
   }
 
+  // Remove existing "removed plugin" messages before rechecking to avoid
+  // duplication.
+  removeMessagesFrom({MessageSource::removedPluginsCheck});
+
   appendMessages(createMessagesForRemovedPlugins(
       checkForRemovedPlugins(installedPluginNames, loadedPluginNames)));
 
@@ -1099,9 +1103,10 @@ std::vector<std::string> Game::sortPlugins() {
   loadCurrentLoadOrderState();
 
   try {
-    // Clear any existing game-specific messages, as these only relate to
-    // state that has been changed by sorting.
-    clearMessages();
+    // Clear messages that relate to previous sorting runs.
+    removeMessagesFrom({MessageSource::cyclicInteraction,
+                        MessageSource::missingGroup,
+                        MessageSource::missingMaster});
 
     const auto loadOrder = gameHandle_->GetLoadOrder();
 
@@ -1119,6 +1124,10 @@ std::vector<std::string> Game::sortPlugins() {
 
     gameHandle_->LoadPlugins(pluginPaths, false);
     auto sortedPlugins = gameHandle_->SortPlugins(loadOrder);
+
+    // Remove existing "removed plugin" messages before rechecking to avoid
+    // duplication.
+    removeMessagesFrom({MessageSource::removedPluginsCheck});
 
     appendMessages(createMessagesForRemovedPlugins(
         checkForRemovedPlugins(loadOrder, sortedPlugins)));
@@ -1138,7 +1147,7 @@ std::vector<std::string> Game::sortPlugins() {
 
     appendMessage(createPlainTextSourcedMessage(
         MessageType::error,
-        MessageSource::caughtException,
+        MessageSource::missingMaster,
         translate(
             "Sorting failed because there is at least one installed plugin "
             "that depends on at least one plugin that is not installed.")));
@@ -1201,10 +1210,10 @@ std::vector<SourcedMessage> Game::getMessages(
   return output;
 }
 
-void Game::clearMessages() { messages_.clear(); }
-
 void Game::loadMetadata() {
   const auto logger = getLogger();
+
+  removeMessagesFrom({MessageSource::parsingMetadataFailed});
 
   const auto oldMasterlistGroups = getMasterlistGroups();
 
@@ -1231,7 +1240,7 @@ void Game::loadMetadata() {
     }
     appendMessage(SourcedMessage{
         MessageType::error,
-        MessageSource::caughtException,
+        MessageSource::parsingMetadataFailed,
         fmt::format(
             translate("An error occurred while parsing the metadata list(s): "
                       "{0}.\n\nTry updating your masterlist to resolve the "
@@ -1263,7 +1272,7 @@ void Game::loadMetadata() {
 
     appendMessage(SourcedMessage{
         MessageType::error,
-        MessageSource::caughtException,
+        MessageSource::parsingMetadataFailed,
         fmt::format(
             translate(
                 "An error occurred while parsing your userlist: {0}.\n\nThis "
@@ -1456,10 +1465,17 @@ std::vector<std::filesystem::path> Game::getInstalledPluginPaths() const {
                           dataPathFilenames);
 }
 
-void Game::appendMessages(std::vector<SourcedMessage> messages) {
-  for (auto& message : messages) {
-    appendMessage(message);
-  }
+void Game::appendMessages(const std::vector<SourcedMessage>& messages) {
+  messages_.insert(messages_.end(), messages.begin(), messages.end());
+}
+
+void Game::removeMessagesFrom(const std::set<MessageSource>& sources) {
+  auto it = std::remove_if(
+      messages_.begin(), messages_.end(), [&](const SourcedMessage& message) {
+        return sources.count(message.source) != 0;
+      });
+
+  messages_.erase(it, messages_.end());
 }
 
 std::optional<std::filesystem::path> Game::resolveGameFilePath(
@@ -1480,6 +1496,8 @@ void Game::appendMessage(const SourcedMessage& message) {
 
 void Game::loadCurrentLoadOrderState() {
   try {
+    removeMessagesFrom({MessageSource::loadLoadOrderStateFailed});
+
     gameHandle_->LoadCurrentLoadOrderState();
   } catch (const std::exception& e) {
     const auto logger = getLogger();
@@ -1488,7 +1506,7 @@ void Game::loadCurrentLoadOrderState() {
     }
     appendMessage(createPlainTextSourcedMessage(
         MessageType::error,
-        MessageSource::caughtException,
+        MessageSource::loadLoadOrderStateFailed,
         translate("Failed to load the current load order, "
                   "information displayed may be incorrect.")));
   }

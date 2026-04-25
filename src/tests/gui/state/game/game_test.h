@@ -1102,6 +1102,42 @@ TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsThatAreSymlinks) {
 }
 #endif
 
+TEST_P(
+    GameTest,
+    loadAllInstalledPluginsShouldNotDuplicateReplaceExistingRemovedPluginWarnings) {
+  Game game = createInitialisedGame();
+
+  std::filesystem::copy(dataPath / BLANK_ESM, dataPath / "invalid.esm");
+
+  std::ofstream out(dataPath / "invalid.esm", std::ios_base::app);
+  out << "Not a valid plugin";
+  out.close();
+
+  game.loadAllInstalledPlugins(false);
+
+  auto messages = game.getMessages("en", false);
+  ASSERT_EQ(2, messages.size());
+  EXPECT_EQ(MessageSource::removedPluginsCheck, messages[0].source);
+  EXPECT_EQ(
+      "LOOT has detected that \\\"invalid\\.esm\\\" is invalid and is now ignoring "
+      "it\\.",
+      messages[0].text);
+  EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
+
+  std::filesystem::rename(dataPath / "invalid.esm", dataPath / "invalid.esp");
+
+  game.loadAllInstalledPlugins(false);
+
+  messages = game.getMessages("en", false);
+  ASSERT_EQ(2, messages.size());
+  EXPECT_EQ(MessageSource::removedPluginsCheck, messages[0].source);
+  EXPECT_EQ(
+      "LOOT has detected that \\\"invalid\\.esp\\\" is invalid and is now ignoring "
+      "it\\.",
+      messages[0].text);
+  EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
+}
+
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
   Game game = createInitialisedGame();
 
@@ -1299,6 +1335,112 @@ TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
 }
 
 TEST_P(GameTest,
+    sortPluginsShouldReplaceExistingCyclicInteractionErrorMessages) {
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(BLANK_ESM);
+  metadata.SetLoadAfterFiles({File(BLANK_MASTER_DEPENDENT_ESM)});
+  game.addUserMetadata(metadata);
+
+  game.sortPlugins();
+
+  auto messages = game.getMessages("en", false);
+  ASSERT_EQ(2, messages.size());
+  EXPECT_EQ(MessageSource::cyclicInteraction, messages[0].source);
+  EXPECT_EQ(
+      "Cyclic interaction detected between \"Blank \\- Master "
+      "Dependent\\.esm\" and \"Blank\\.esm\": \n\nBlank - Master "
+      "Dependent.esm\\\n&emsp;[User Load "
+      "After]\\\nBlank.esm\\\n&emsp;[Master]\\\nBlank - Master Dependent.esm",
+      messages[0].text);
+  EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
+
+  game.clearUserMetadata(BLANK_ESM);
+  metadata = PluginMetadata(BLANK_DIFFERENT_ESM);
+  metadata.SetLoadAfterFiles({File(BLANK_DIFFERENT_MASTER_DEPENDENT_ESM)});
+  game.addUserMetadata(metadata);
+
+  game.sortPlugins();
+
+  messages = game.getMessages("en", false);
+  ASSERT_EQ(2, messages.size());
+  EXPECT_EQ(MessageSource::cyclicInteraction, messages[0].source);
+  EXPECT_EQ(
+      "Cyclic interaction detected between \"Blank \\- Different Master "
+      "Dependent\\.esm\" and \"Blank \\- Different\\.esm\": \n\nBlank - "
+      "Different Master Dependent.esm\\\n&emsp;[User Load After]\\\nBlank - "
+      "Different.esm\\\n&emsp;[Master]\\\nBlank - Different Master "
+      "Dependent.esm",
+      messages[0].text);
+  EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
+}
+
+TEST_P(GameTest, sortPluginsShouldReplaceExistingUndefinedGroupErrorMessages) {
+  Game game = createInitialisedGame();
+  game.loadAllInstalledPlugins(true);
+
+  game.setUserGroups({Group("B", {"A"})});
+
+  game.sortPlugins();
+
+  auto messages = game.getMessages("en", false);
+  ASSERT_EQ(2, messages.size());
+  EXPECT_EQ(MessageSource::missingGroup, messages[0].source);
+  EXPECT_EQ("The group \\\"A\\\" does not exist\\.",
+      messages[0].text);
+  EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
+
+  game.setUserGroups({Group("D", {"C"})});
+
+  game.sortPlugins();
+
+  messages = game.getMessages("en", false);
+  ASSERT_EQ(2, messages.size());
+  EXPECT_EQ(MessageSource::missingGroup, messages[0].source);
+  EXPECT_EQ("The group \\\"C\\\" does not exist\\.",
+      messages[0].text);
+  EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
+}
+
+TEST_P(GameTest, sortPluginsShouldReplaceExistingMissingPluginErrorMessages) {
+  if (GetParam() != GameId::tes3) {
+    return;
+  }
+
+  Game game = createInitialisedGame();
+
+  std::filesystem::rename(dataPath / BLANK_ESM, dataPath / "Blank.esm.bak");
+
+  game.loadAllInstalledPlugins(true);
+  game.sortPlugins();
+
+  auto expectedText =
+      "Sorting failed because there is at least one installed plugin that "
+      "depends on at least one plugin that is not installed\\.";
+
+  auto messages = game.getMessages("en", false);
+  ASSERT_EQ(2, messages.size());
+  EXPECT_EQ(MessageSource::missingMaster, messages[0].source);
+  EXPECT_EQ(expectedText,
+      messages[0].text);
+  EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
+
+  std::filesystem::rename(dataPath / "Blank.esm.bak", dataPath / BLANK_ESM);
+  std::filesystem::rename(dataPath / BLANK_DIFFERENT_ESM, dataPath / "Blank.esm.bak");
+
+  game.loadAllInstalledPlugins(true);
+  game.sortPlugins();
+
+  messages = game.getMessages("en", false);
+  ASSERT_EQ(2, messages.size());
+  EXPECT_EQ(MessageSource::missingMaster, messages[0].source);
+  EXPECT_EQ(expectedText,
+      messages[0].text);
+  EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
+}
+
+TEST_P(GameTest,
        incrementLoadOrderSortCountShouldSupressTheDefaultCachedMessage) {
   Game game = createInitialisedGame();
   game.getSortCount().increment();
@@ -1392,25 +1534,6 @@ TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
   ASSERT_EQ(3, gameMessages.size());
   EXPECT_EQ(messages[0], gameMessages[0]);
   EXPECT_EQ(messages[1], gameMessages[1]);
-}
-
-TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
-  Game game = createInitialisedGame();
-  std::vector<SourcedMessage> messages({
-      SourcedMessage{MessageType::say, MessageSource::messageMetadata, "1"},
-      SourcedMessage{MessageType::error, MessageSource::messageMetadata, "2"},
-  });
-  for (const auto& message : messages) {
-    game.appendMessage(message);
-  }
-
-  const auto previousSize =
-      game.getMessages(MessageContent::DEFAULT_LANGUAGE, false).size();
-
-  game.clearMessages();
-
-  EXPECT_EQ(previousSize - messages.size(),
-            game.getMessages(MessageContent::DEFAULT_LANGUAGE, false).size());
 }
 
 TEST_P(GameTest, loadMetadataShouldLoadMasterlistAndUserMetadata) {
@@ -1553,6 +1676,30 @@ TEST_P(GameTest, loadMetadataCannotUpdateUserMetadataForNonLoadedPlugins) {
   EXPECT_EQ(expectedGroups, game.getUserGroups());
 
   EXPECT_EQ("A", game.getUserMetadata("Blank.esp").value().GetGroup().value());
+}
+
+TEST_P(GameTest, loadMetadataShouldReplaceExistingMetadataParsingErrorMessages) {
+  Game game = createInitialisedGame();
+
+  std::ofstream out(game.getMasterlistPath());
+  out << "Not a valid metadata file";
+  out.close();
+
+  game.loadMetadata();
+
+  auto messages = game.getMessages("en", false);
+  ASSERT_EQ(2, messages.size());
+  EXPECT_EQ(MessageSource::parsingMetadataFailed, messages[0].source);
+  EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
+
+  std::filesystem::rename(game.getMasterlistPath(), game.getUserlistPath());
+
+  game.loadMetadata();
+
+  messages = game.getMessages("en", false);
+  ASSERT_EQ(2, messages.size());
+  EXPECT_EQ(MessageSource::parsingMetadataFailed, messages[0].source);
+  EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
 }
 }
 
