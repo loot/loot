@@ -255,6 +255,9 @@ jobs:
   windows:
     runs-on: windows-2022
 
+    env:
+      CMAKE_SYSTEM_VERSION: "10.0.17763.0"
+
     steps:
       - uses: actions/checkout@v6
         with:
@@ -336,6 +339,7 @@ jobs:
           cmake -G "Visual Studio 17 2022" `
             -A x64 `
             -DCMAKE_INSTALL_PREFIX="${env:OGDF_INSTALL_PATH}" `
+            -DCMAKE_SYSTEM_VERSION="${env:CMAKE_SYSTEM_VERSION}" `
             -B $OGDF_BUILD_DIR `
             -S "ogdf-${env:OGDF_VERSION}"
           cmake --build $OGDF_BUILD_DIR --config Release
@@ -360,10 +364,12 @@ jobs:
         run: |
           $LIBLOOT_BUILD_DIR="libloot-$env:LIBLOOT_VERSION/cpp/build"
 
-          cmake `
+          cmake -G "Visual Studio 17 2022" `
+            -A x64 `
             -DLIBLOOT_BUILD_TESTS=OFF `
             -DLIBLOOT_INSTALL_DOCS=OFF `
             -DCMAKE_INSTALL_PREFIX="$env:LIBLOOT_INSTALL_PATH" `
+            -DCMAKE_SYSTEM_VERSION="${env:CMAKE_SYSTEM_VERSION}" `
             -B "$LIBLOOT_BUILD_DIR" `
             -S "libloot-$env:LIBLOOT_VERSION/cpp"
           cmake --build "$LIBLOOT_BUILD_DIR" --target libloot --config Release
@@ -375,6 +381,7 @@ jobs:
           cmake -G "Visual Studio 17 2022" `
             -A x64 `
             -DCMAKE_PREFIX_PATH="${env:LIBLOOT_INSTALL_PATH};${{ steps.boost-metadata.outputs.root }}\stage" `
+            -DCMAKE_SYSTEM_VERSION="${env:CMAKE_SYSTEM_VERSION}" `
             -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" `
             -DOGDF_ROOT="${env:OGDF_INSTALL_PATH}" `
             -B build
