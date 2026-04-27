@@ -146,6 +146,7 @@ public:
   void appendMessage(const SourcedMessage& message);
 
   void loadMetadata();
+  void checkForRecoveredGroups();
   std::vector<std::string> getKnownBashTags() const;
 
   std::vector<Group> getGroups() const;

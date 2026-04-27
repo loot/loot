@@ -2695,6 +2695,9 @@ void MainWindow::on_groupsEditor_accepted() {
 
     saveGroupNodePositions(state->getCurrentGame().getGroupNodePositionsPath(),
                            groupsEditor->getNodePositions());
+
+    state->getCurrentGame().checkForRecoveredGroups();
+    updateGeneralMessages();
   } catch (const std::exception& e) {
     handleException(e);
   }

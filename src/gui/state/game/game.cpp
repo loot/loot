@@ -1325,21 +1325,45 @@ void Game::loadMetadata() {
     }
   }
 
+  checkForRecoveredGroups();
+}
+
+void Game::checkForRecoveredGroups() {
+  bool hasRecoveredGroup = false;
+  std::vector<std::string> recoveredGroupNames;
+  for (const auto& group : getUserGroups()) {
+    if (boost::ends_with(group.GetName(), " (Recovered)")) {
+      hasRecoveredGroup = true;
+      recoveredGroupNames.push_back(group.GetName());
+    }
+  }
+
+  // Remove recovered group messages for group names that are no longer present.
+  auto it = std::remove_if(
+      messages_.begin(), messages_.end(), [&](const SourcedMessage& message) {
+        return message.source == MessageSource::recoveredGroup &&
+               std::none_of(recoveredGroupNames.begin(),
+                            recoveredGroupNames.end(),
+                            [&](const std::string& groupName) {
+                              return boost::contains(message.text,
+                                                     "\"" + groupName + "\"");
+                            });
+      });
+
+  messages_.erase(it, messages_.end());
+
+  // Remove and regenerate the generic recovered group message if needed.
   removeMessagesFrom({MessageSource::recoveredGroupDetected});
 
-  for (const auto& group : getGroups()) {
-    if (boost::ends_with(group.GetName(), " (Recovered)")) {
-      appendMessage(SourcedMessage{
-          MessageType::warn,
-          MessageSource::recoveredGroupDetected,
-          translate(
-              "One or more groups with names that end with \" "
-              "(Recovered)\" were found in your group assignments. Please "
-              "check your setup, and either reassign affected plugins to "
-              "masterlist groups, or rename the user groups to not include "
-              "the \"(Recovered)\" suffix in their names.")});
-      break;
-    }
+  if (hasRecoveredGroup) {
+    appendMessage(SourcedMessage{
+        MessageType::warn,
+        MessageSource::recoveredGroupDetected,
+        translate("One or more groups with names that end with \" "
+                  "(Recovered)\" were found in your group assignments. Please "
+                  "check your setup, and either reassign affected plugins to "
+                  "masterlist groups, or rename the user groups to not include "
+                  "the \"(Recovered)\" suffix in their names.")});
   }
 }
 
