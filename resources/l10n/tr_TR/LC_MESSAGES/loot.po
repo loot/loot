@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-04-17 18:56+0100\n"
+"POT-Creation-Date: 2026-04-27 20:30+0100\n"
 "PO-Revision-Date: 2024-05-29 00:59-0500\n"
 "Last-Translator: Ilker BINZET <ilker.binzet@gmail.com>\n"
 "Language-Team: Ilker BINZET - ilker.binzet@gmail.com\n"
@@ -731,35 +731,35 @@ msgstr "LOOT Hakkında"
 msgid "Identifying overlapping plugins…"
 msgstr "Örtüşen eklentiler belirleniyor…"
 
-#: src/gui/qt/main_window.cpp:2753
+#: src/gui/qt/main_window.cpp:2756
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2791
+#: src/gui/qt/main_window.cpp:2794
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2839
+#: src/gui/qt/main_window.cpp:2842
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 "Otomatik sıralama iptal edildi çünkü en az bir hata mesajı görüntüleniyor."
 
-#: src/gui/qt/main_window.cpp:2898
+#: src/gui/qt/main_window.cpp:2901
 msgid "No masterlist update was necessary."
 msgstr "Ana liste güncellemesi gerekli değildi."
 
-#: src/gui/qt/main_window.cpp:2921
+#: src/gui/qt/main_window.cpp:2924
 #, c++-format
 msgid "Masterlist updated to revision {0}."
 msgstr "Ana liste {0} revizyonuna güncellendi."
 
-#: src/gui/qt/main_window.cpp:2984
+#: src/gui/qt/main_window.cpp:2987
 msgid "No masterlist updates were necessary."
 msgstr "Ana liste güncellemeleri gerekli değildi."
 
-#: src/gui/qt/main_window.cpp:3010
+#: src/gui/qt/main_window.cpp:3013
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -767,12 +767,12 @@ msgstr ""
 "Aşağıdaki oyunlar için ana listeler güncellendi:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:3072
+#: src/gui/qt/main_window.cpp:3075
 #, c++-format
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "LOOT'un [yeni bir sürümü]({0}) mevcut."
 
-#: src/gui/qt/main_window.cpp:3087
+#: src/gui/qt/main_window.cpp:3090
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -1349,34 +1349,34 @@ msgstr ""
 "Klasör adı \"{0}\" olan başlangıç oyunu ayarlanamadı. Eğer yüklüyse, "
 "başlatıcısını çalıştırmayı ve ardından LOOT'u yeniden başlatmayı deneyin."
 
-#: src/gui/state/game/game.cpp:207
+#: src/gui/state/game/game.cpp:209
 #, c++-format
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "\"{0}\" ve \"{1}\" arasında döngüsel etkileşim tespit edildi: {2}"
 
-#: src/gui/state/game/game.cpp:223
+#: src/gui/state/game/game.cpp:225
 #, c++-format
 msgid "The group \"{0}\" does not exist."
 msgstr "\"{0}\" grubu mevcut değil."
 
-#: src/gui/state/game/game.cpp:343
+#: src/gui/state/game/game.cpp:345
 #, c++-format
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""
 "LOOT \"{0}\" ifadesinin geçersiz olduğunu tespit etti ve şimdi bunu yok "
 "sayıyor."
 
-#: src/gui/state/game/game.cpp:883
+#: src/gui/state/game/game.cpp:1153
 msgid ""
 "Sorting failed because there is at least one installed plugin that depends "
 "on at least one plugin that is not installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:911
+#: src/gui/state/game/game.cpp:1181
 msgid "You have not sorted your load order this session."
 msgstr "Bu oturumda yükleme sıranızı belirlemediniz."
 
-#: src/gui/state/game/game.cpp:974
+#: src/gui/state/game/game.cpp:1246
 #, c++-format
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
@@ -1384,7 +1384,7 @@ msgid ""
 "Try updating your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1007
+#: src/gui/state/game/game.cpp:1279
 #, c++-format
 msgid ""
 "An error occurred while parsing your userlist: {0}.\n"
@@ -1398,7 +1398,23 @@ msgid ""
 "({1})."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:1193
+#: src/gui/state/game/game.cpp:1320
+#, c++-format
+msgid ""
+"The group \"{0}\" has been removed from the masterlist but was referenced by "
+"user metadata. It has been renamed to \"{1}\" and reintroduced as a user "
+"group."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:1362
+msgid ""
+"One or more groups with names that end with \" (Recovered)\" were found in "
+"your group assignments. Please check your setup, and either reassign "
+"affected plugins to masterlist groups, or rename the user groups to not "
+"include the \"(Recovered)\" suffix in their names."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:1552
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
