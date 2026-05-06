@@ -695,6 +695,7 @@ void MainWindow::setupMenuBar() {
   menuGame->addAction(actionUpdateMasterlist);
   menuGame->addAction(actionApplySort);
   menuGame->addAction(actionDiscardSort);
+  menuGame->addAction(actionCompareLoadOrders);
   menuGame->addSeparator();
   menuGame->addAction(actionSearch);
   menuGame->addAction(actionCopyLoadOrder);
@@ -740,6 +741,9 @@ void MainWindow::setupToolBar() {
   actionDiscardSort->setObjectName("actionDiscardSort");
   actionDiscardSort->setVisible(false);
 
+  actionCompareLoadOrders->setObjectName("actionCompareLoadOrders");
+  actionCompareLoadOrders->setVisible(false);
+
   // Create toolbar.
   toolBar->setMovable(false);
   toolBar->setFloatable(false);
@@ -756,6 +760,7 @@ void MainWindow::setupToolBar() {
   toolBar->addAction(actionUpdateMasterlist);
   toolBar->addAction(actionApplySort);
   toolBar->addAction(actionDiscardSort);
+  toolBar->addAction(actionCompareLoadOrders);
   toolBar->addAction(actionSearch);
 }
 
@@ -855,6 +860,8 @@ void MainWindow::translateUi() {
   actionApplySort->setText(qTranslate("&Apply Sorted Load Order"));
   /* translators: This string is also an action in the Game menu. */
   actionDiscardSort->setText(qTranslate("&Discard Sorted Load Order"));
+  /* translators: This string is also an action in the Game menu. */
+  actionCompareLoadOrders->setText(qTranslate("&View load order changes..."));
 
   // Translate menu bar items.
   /* translators: The mnemonic in this string shouldn't conflict with other
@@ -969,6 +976,7 @@ void MainWindow::setIcons() {
   actionUpdateMasterlist->setIcon(IconFactory::getUpdateMasterlistIcon());
   actionApplySort->setIcon(IconFactory::getApplySortIcon());
   actionDiscardSort->setIcon(IconFactory::getDiscardSortIcon());
+  actionCompareLoadOrders->setIcon(IconFactory::getCompareLoadOrdersIcon());
 }
 
 void MainWindow::enableGameActions() {
@@ -1043,6 +1051,7 @@ void MainWindow::enterSortingState() {
 
   actionApplySort->setVisible(true);
   actionDiscardSort->setVisible(true);
+  actionCompareLoadOrders->setVisible(true);
 
   actionSettings->setDisabled(true);
   actionUpdateMasterlists->setDisabled(true);
@@ -1056,6 +1065,7 @@ void MainWindow::exitSortingState() {
 
   actionApplySort->setVisible(false);
   actionDiscardSort->setVisible(false);
+  actionCompareLoadOrders->setVisible(false);
 
   actionSettings->setDisabled(false);
   actionUpdateMasterlists->setDisabled(false);
@@ -2400,6 +2410,19 @@ void MainWindow::on_actionDiscardSort_triggered() {
     // Perform ambiguous load order check because load order state was refreshed
     // at start of sorting.
     checkForAmbiguousLoadOrder();
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_actionCompareLoadOrders_triggered() {
+  try {
+    compareLoadOrdersDialog->setCurrentLoadOrder(
+        state->getCurrentGame().getLoadOrder());
+    compareLoadOrdersDialog->setSortedLoadOrder(
+        pluginItemModel->getPluginNames());
+    compareLoadOrdersDialog->open();
+
   } catch (const std::exception& e) {
     handleException(e);
   }

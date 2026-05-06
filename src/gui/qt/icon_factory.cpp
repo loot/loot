@@ -50,15 +50,15 @@ QIcon IconFactory::getIsActiveIcon() {
 
 QIcon IconFactory::getMasterFileIcon() { return getIcon(":/icons/crown.svg"); }
 
-QIcon IconFactory::getBlueprintMasterIcon() { return getIcon(":/icons/crown-blueprint.svg"); }
+QIcon IconFactory::getBlueprintMasterIcon() {
+  return getIcon(":/icons/crown-blueprint.svg");
+}
 
 QIcon IconFactory::getLightPluginIcon() {
   return getIcon(":/icons/feather.svg");
 }
 
-QIcon IconFactory::getSmallPluginIcon() {
-  return getIcon(":/icons/small.svg");
-}
+QIcon IconFactory::getSmallPluginIcon() { return getIcon(":/icons/small.svg"); }
 
 QIcon IconFactory::getMediumPluginIcon() {
   return getIcon(":/icons/medium.svg");
@@ -92,6 +92,10 @@ QIcon IconFactory::getApplySortIcon() {
 
 QIcon IconFactory::getDiscardSortIcon() {
   return getIcon(":/icons/material-icons/close_black_48dp.svg");
+}
+
+QIcon IconFactory::getCompareLoadOrdersIcon() {
+  return getIcon(":/icons/material-icons/text_compare_black_48dp.svg");
 }
 
 QIcon IconFactory::getUpdateMasterlistIcon() {

@@ -49,6 +49,7 @@ public:
   static QIcon getSortIcon();
   static QIcon getApplySortIcon();
   static QIcon getDiscardSortIcon();
+  static QIcon getCompareLoadOrdersIcon();
   static QIcon getUpdateMasterlistIcon();
 
   static QIcon getSettingsIcon();

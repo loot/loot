@@ -53,6 +53,7 @@
 
 #include "gui/qt/back_up_load_order_dialog.h"
 #include "gui/qt/card_delegate.h"
+#include "gui/qt/compare_load_orders_dialog.h"
 #include "gui/qt/filters_widget.h"
 #include "gui/qt/groups_editor/groups_editor_dialog.h"
 #include "gui/qt/plugin_editor/plugin_editor_widget.h"
@@ -104,6 +105,7 @@ private:
   QAction *actionSort{new QAction(this)};
   QAction *actionApplySort{new QAction(this)};
   QAction *actionDiscardSort{new QAction(this)};
+  QAction *actionCompareLoadOrders{new QAction(this)};
   QAction *actionUpdateMasterlist{new QAction(this)};
   QAction *actionSearch{new QAction(this)};
   QAction *actionViewDocs{new QAction(this)};
@@ -162,6 +164,9 @@ private:
   SearchDialog *searchDialog{new SearchDialog(this)};
   BackUpLoadOrderDialog *backupDialog{new BackUpLoadOrderDialog(this)};
   RestoreLoadOrderDialog *restoreBackupDialog{new RestoreLoadOrderDialog(this)};
+
+  CompareLoadOrdersDialog *compareLoadOrdersDialog{
+      new CompareLoadOrdersDialog(this)};
 
   PluginItemModel *pluginItemModel{new PluginItemModel(this)};
   PluginItemFilterModel *proxyModel{new PluginItemFilterModel(this)};
@@ -284,6 +289,7 @@ private slots:
   void on_actionSort_triggered();
   void on_actionApplySort_triggered();
   void on_actionDiscardSort_triggered();
+  void on_actionCompareLoadOrders_triggered();
   void on_actionUpdateMasterlist_triggered();
 
   void on_sidebarPluginsView_doubleClicked(const QModelIndex &index);
