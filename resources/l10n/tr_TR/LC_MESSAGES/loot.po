@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-04-27 20:30+0100\n"
+"POT-Creation-Date: 2026-05-07 18:47+0100\n"
 "PO-Revision-Date: 2024-05-29 00:59-0500\n"
 "Last-Translator: Ilker BINZET <ilker.binzet@gmail.com>\n"
 "Language-Team: Ilker BINZET - ilker.binzet@gmail.com\n"
@@ -835,7 +835,7 @@ msgid "Has User Metadata"
 msgstr "Kullanıcı Meta Verisine Sahip"
 
 #: src/gui/qt/plugin_card.cpp:285
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:201
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:204
 msgid "Bash Tags"
 msgstr "Bash Etiketleri"
 
@@ -1008,39 +1008,39 @@ msgid "{0} (Group does not exist)"
 msgstr "{0} (Grup mevcut değil)"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:100
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:198
 msgid "Group"
 msgstr "Grup"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:196
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
 msgid "Load After"
 msgstr "Sonradan Yükle"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:197
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
 msgid "Requirements"
 msgstr "Gereksinimler"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:202
 msgid "Incompatibilities"
 msgstr "Uyumsuzluklar"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
 msgid "Messages"
 msgstr "Mesajlar"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:206
 msgid "Dirty Plugin Info"
 msgstr "Düzeltilmesi Gerekli Eklenti Bilgisi"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:205
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:208
 msgid "Clean Plugin Info"
 msgstr "Temiz Eklenti Bilgisi"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:206
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:209
 msgid "Locations"
 msgstr "Konumlar"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:258
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:261
 msgid "This tab contains user metadata."
 msgstr "Bu sekme kullanıcı meta verisi içerir."
 

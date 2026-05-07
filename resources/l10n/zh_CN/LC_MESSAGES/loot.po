@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-04-27 20:30+0100\n"
+"POT-Creation-Date: 2026-05-07 18:47+0100\n"
 "PO-Revision-Date: 2025-10-13 03:07+0000\n"
 "Last-Translator: YanJun Sun <zxvf6aj@sina.cn>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -809,7 +809,7 @@ msgid "Has User Metadata"
 msgstr "有用户元数据"
 
 #: src/gui/qt/plugin_card.cpp:285
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:201
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:204
 msgid "Bash Tags"
 msgstr "Bash 标签"
 
@@ -979,39 +979,39 @@ msgid "{0} (Group does not exist)"
 msgstr "{0}（组不存在）"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:100
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:198
 msgid "Group"
 msgstr "组"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:196
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
 msgid "Load After"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:197
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
 msgid "Requirements"
 msgstr "需求"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:202
 msgid "Incompatibilities"
 msgstr "不兼容"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
 msgid "Messages"
 msgstr "讯息"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:206
 msgid "Dirty Plugin Info"
 msgstr "脏插件信息"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:205
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:208
 msgid "Clean Plugin Info"
 msgstr "清除插件信息"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:206
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:209
 msgid "Locations"
 msgstr "位置"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:258
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:261
 msgid "This tab contains user metadata."
 msgstr "此标签包含有用户元数据。"
 
