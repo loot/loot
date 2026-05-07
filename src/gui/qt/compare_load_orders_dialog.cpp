@@ -260,6 +260,8 @@ void CompareLoadOrdersDialog::setLoadOrders(
 }
 
 void CompareLoadOrdersDialog::setupUi() {
+  setWindowModality(Qt::WindowModal);
+
   setSizeGripEnabled(true);
 
   currentLoadOrderList->setObjectName("currentLoadOrderList");

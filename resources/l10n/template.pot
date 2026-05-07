@@ -87,16 +87,16 @@ msgstr ""
 msgid "Backup name:"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:319
+#: src/gui/qt/compare_load_orders_dialog.cpp:321
 msgid "Compare Load Orders"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:321
+#: src/gui/qt/compare_load_orders_dialog.cpp:323
 #: src/gui/qt/restore_load_order_dialog.cpp:165
 msgid "Current load order"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:322
+#: src/gui/qt/compare_load_orders_dialog.cpp:324
 msgid "Sorted load order"
 msgstr ""
 
