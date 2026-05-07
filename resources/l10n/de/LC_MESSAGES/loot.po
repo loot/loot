@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.29.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-04-27 20:30+0100\n"
+"POT-Creation-Date: 2026-05-07 18:47+0100\n"
 "PO-Revision-Date: 2026-04-18 12:58+0200\n"
 "Last-Translator: pStyl3 <qp-git@pm.me>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/loot/loot/de/>\n"
@@ -850,7 +850,7 @@ msgid "Has User Metadata"
 msgstr "Hat Benutzer-Metadaten"
 
 #: src/gui/qt/plugin_card.cpp:285
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:201
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:204
 msgid "Bash Tags"
 msgstr "Bash Tags"
 
@@ -1023,39 +1023,39 @@ msgid "{0} (Group does not exist)"
 msgstr "{0} (Gruppe existiert nicht)"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:100
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:198
 msgid "Group"
 msgstr "Gruppe"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:196
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
 msgid "Load After"
 msgstr "Lade Nach"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:197
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
 msgid "Requirements"
 msgstr "Voraussetzungen"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:202
 msgid "Incompatibilities"
 msgstr "Inkompatibilitäten"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
 msgid "Messages"
 msgstr "Nachrichten"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:206
 msgid "Dirty Plugin Info"
 msgstr "Schmutzige Plugin Informationen"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:205
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:208
 msgid "Clean Plugin Info"
 msgstr "Saubere Plugin Informationen"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:206
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:209
 msgid "Locations"
 msgstr "Orte"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:258
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:261
 msgid "This tab contains user metadata."
 msgstr "Dieser Reiter enthält Metadaten."
 

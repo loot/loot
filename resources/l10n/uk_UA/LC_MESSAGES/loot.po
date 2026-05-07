@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-04-27 20:30+0100\n"
+"POT-Creation-Date: 2026-05-07 18:47+0100\n"
 "PO-Revision-Date: 2025-10-05 19:02+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/"
@@ -841,7 +841,7 @@ msgid "Has User Metadata"
 msgstr "Має користувацькі метадані"
 
 #: src/gui/qt/plugin_card.cpp:285
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:201
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:204
 msgid "Bash Tags"
 msgstr "Bash-теги"
 
@@ -1016,40 +1016,40 @@ msgid "{0} (Group does not exist)"
 msgstr "{0} (група не існує)"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:100
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:198
 msgid "Group"
 msgstr "Група"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:196
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
 msgid "Load After"
 msgstr "Завантажувати після"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:197
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
 msgid "Requirements"
 msgstr "Вимоги"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:202
 msgid "Incompatibilities"
 msgstr "Несумісності"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
 msgid "Messages"
 msgstr "Повідомлення"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:206
 msgid "Dirty Plugin Info"
 msgstr "Дані брудного плагіну"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:205
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:208
 msgid "Clean Plugin Info"
 msgstr "Дані чистого плагіну"
 
 # Used as mod location. In other words: "go downoad mod from here and here"
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:206
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:209
 msgid "Locations"
 msgstr "Джерело"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:258
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:261
 msgid "This tab contains user metadata."
 msgstr "Ця вкладка містить користувацькі метадані."
 

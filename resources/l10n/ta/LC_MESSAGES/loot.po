@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.24.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-04-27 20:30+0100\n"
+"POT-Creation-Date: 2026-05-07 18:47+0100\n"
 "PO-Revision-Date: 2026-04-22 15:55+0000\n"
 "Last-Translator: pStyl3 <qp-git@pm.me>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/loot/loot/ta/>\n"
@@ -831,7 +831,7 @@ msgid "Has User Metadata"
 msgstr "பயனர் மேனிலை தரவு உள்ளது"
 
 #: src/gui/qt/plugin_card.cpp:285
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:201
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:204
 msgid "Bash Tags"
 msgstr "பாச் குறிச்சொற்கள்"
 
@@ -1001,39 +1001,39 @@ msgid "{0} (Group does not exist)"
 msgstr "{0} (குழு இல்லை)"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:100
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:198
 msgid "Group"
 msgstr "குழு"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:196
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
 msgid "Load After"
 msgstr "பிறகு ஏற்றவும்"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:197
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
 msgid "Requirements"
 msgstr "தேவைகள்"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:202
 msgid "Incompatibilities"
 msgstr "பொருந்தாத தன்மைகள்"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
 msgid "Messages"
 msgstr "செய்திகள்"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:206
 msgid "Dirty Plugin Info"
 msgstr "அழுக்கு சொருகி செய்தி"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:205
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:208
 msgid "Clean Plugin Info"
 msgstr "தூய்மையான சொருகி செய்தி"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:206
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:209
 msgid "Locations"
 msgstr "இருப்பிடங்கள்"
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:258
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:261
 msgid "This tab contains user metadata."
 msgstr "இந்த தாவலில் பயனர் மேனிலை தரவு உள்ளது."
 
