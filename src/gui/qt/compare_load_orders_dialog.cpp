@@ -26,12 +26,215 @@
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QScrollBar>
+#include <cstdint>
 #include <exception>
+#include <limits>
+#include <stdexcept>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include "gui/qt/helpers.h"
+#include "gui/qt/icon_factory.h"
 #include "gui/state/logging.h"
+
+namespace {
+void setItemRemoved(QListWidgetItem* item) {
+  item->setIcon(loot::IconFactory::getLineRemovedIcon());
+}
+
+void setItemInserted(QListWidgetItem* item) {
+  item->setIcon(loot::IconFactory::getLineAddedIcon());
+}
+
+void setItemUnchanged(QListWidgetItem* item) {
+  QPixmap pixmap(24, 24);
+  pixmap.fill(QColor(0, 0, 0, 0));
+
+  item->setIcon(QIcon(pixmap));
+}
+
+void insertBlankLine(QListWidget* listWidget, int row) {
+  listWidget->insertItem(row, QString());
+  setItemUnchanged(listWidget->item(row));
+}
+
+std::vector<QListWidgetItem*> getItems(QListWidget* widget) {
+  std::vector<QListWidgetItem*> items;
+  for (int i = 0; i < widget->count(); i += 1) {
+    items.push_back(widget->item(i));
+  }
+
+  return items;
+}
+
+bool areLabelsEqual(const std::vector<QListWidgetItem*>& items1,
+                    const std::vector<QListWidgetItem*>& items2) {
+  if (items1.size() != items2.size()) {
+    return false;
+  }
+
+  for (size_t i = 0; i < items1.size(); i += 1) {
+    if (items1.at(i)->text() != items2.at(i)->text()) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+int64_t throwingCastToInt64(size_t value) {
+  if (value > size_t{std::numeric_limits<int64_t>::max()}) {
+    throw std::runtime_error("Casting a size_t that can't fit in an int64_t");
+  }
+
+  return static_cast<int64_t>(value);
+}
+
+int throwingCastToInt(size_t value) {
+  if (value > size_t{std::numeric_limits<int>::max()}) {
+    throw std::runtime_error("Casting a size_t that can't fit in an int");
+  }
+
+  return static_cast<int>(value);
+}
+
+size_t throwingCast(int value) {
+  if (value < 0) {
+    throw std::runtime_error("Tried to cast a negative int to size_t");
+  }
+
+  return static_cast<size_t>(value);
+}
+
+size_t throwingCast(int64_t value) {
+  if (value < 0) {
+    throw std::runtime_error("Tried to cast a negative int64_t to size_t");
+  }
+
+  return static_cast<size_t>(value);
+}
+
+std::vector<std::vector<int>> traceShortestPath(
+    const std::vector<QListWidgetItem*>& list1,
+    const std::vector<QListWidgetItem*>& list2) {
+  size_t maxPathLength = list1.size() + list2.size();
+  int list1Size = throwingCastToInt(list1.size());
+  int64_t list2Size = throwingCastToInt64(list1.size());
+
+  // Indexes are values of maxPathLength + k, so when k = -maxPathLength
+  // the index is 0, when k = 0 it's maxPathLength, and when k = maxPathLength
+  // it's maxPathLength * 2.
+  // Values are indexes of list1, store them as ints because it saves memory
+  // and QListWidget can only count to INT_MAX.
+  std::vector<int> v(maxPathLength * 2 + 1, -1);
+  v.at(maxPathLength + 1) = 0;
+
+  std::vector<std::vector<int>> trace;
+
+  for (int64_t d = 0; d <= throwingCastToInt64(maxPathLength); d += 1) {
+    trace.push_back(v);
+
+    for (auto k = -d; k <= d; k += 2) {
+      int x;
+      if (k == -d || (k != d && v.at(maxPathLength + k - 1) <
+                                    v.at(maxPathLength + k + 1))) {
+        x = v.at(maxPathLength + k + 1);
+      } else {
+        x = v.at(maxPathLength + k - 1) + 1;
+      }
+
+      int64_t y = x - k;
+
+      while (x < list1Size && y < list2Size &&
+             list1.at(throwingCast(x))->text() ==
+                 list2.at(throwingCast(y))->text()) {
+        x += 1;
+        y += 1;
+      }
+
+      v.at(maxPathLength + k) = x;
+
+      if (x >= list1Size && y >= list2Size) {
+        return trace;
+      }
+    }
+  }
+
+  throw std::runtime_error("Couldn't find shortest path during diff");
+}
+
+std::vector<std::tuple<int, int, int, int>> backtrackTrace(
+    const std::vector<QListWidgetItem*>& list1,
+    const std::vector<QListWidgetItem*>& list2,
+    const std::vector<std::vector<int>>& trace) {
+  size_t maxPathLength = list1.size() + list2.size();
+  int x = throwingCastToInt(list1.size());
+  int y = throwingCastToInt(list2.size());
+
+  std::vector<std::tuple<int, int, int, int>> moves;
+
+  int d = throwingCastToInt(trace.size()) - 1;
+  for (auto it = trace.rbegin(); it != trace.rend(); ++it, --d) {
+    int k = x - y;
+
+    int prevK;
+    if (-k == d || (k != d && it->at(maxPathLength + k - 1) <
+                                  it->at(maxPathLength + k + 1))) {
+      prevK = k + 1;
+    } else {
+      prevK = k - 1;
+    }
+
+    int prevX = it->at(maxPathLength + prevK);
+    int prevY = prevX - prevK;
+
+    while (x > prevX && y > prevY) {
+      moves.push_back(std::make_tuple(x - 1, y - 1, x, y));
+      x -= 1;
+      y -= 1;
+    }
+
+    if (d > 0) {
+      moves.push_back(std::make_tuple(prevX, prevY, x, y));
+    }
+
+    x = prevX;
+    y = prevY;
+  }
+
+  return moves;
+}
+
+void diffLists(QListWidget* listWidget1, QListWidget* listWidget2) {
+  const auto list1 = getItems(listWidget1);
+  const auto list2 = getItems(listWidget2);
+
+  if (areLabelsEqual(list1, list2)) {
+    // Nothing to highlight.
+    return;
+  }
+
+  // The Myers diff algorithm, as described in
+  // <https://blog.jcoglan.com/2017/02/15/the-myers-diff-algorithm-part-2/>
+  // <https://blog.jcoglan.com/2017/02/17/the-myers-diff-algorithm-part-3/>
+  auto trace = traceShortestPath(list1, list2);
+  auto moves = backtrackTrace(list1, list2, trace);
+
+  for (const auto& [prevX, prevY, x, y] : moves) {
+    if (x == prevX) {
+      insertBlankLine(listWidget1, x);
+      setItemInserted(list2.at(throwingCast(prevY)));
+    } else if (y == prevY) {
+      setItemRemoved(list1.at(throwingCast(prevX)));
+      insertBlankLine(listWidget2, y);
+    } else {
+      setItemUnchanged(list1.at(throwingCast(prevX)));
+      setItemUnchanged(list2.at(throwingCast(prevY)));
+    }
+  }
+}
+}
 
 namespace loot {
 CompareLoadOrdersDialog::CompareLoadOrdersDialog(QWidget* parent) :
@@ -39,22 +242,21 @@ CompareLoadOrdersDialog::CompareLoadOrdersDialog(QWidget* parent) :
   setupUi();
 }
 
-void CompareLoadOrdersDialog::setCurrentLoadOrder(
-    const std::vector<std::string>& loadOrder) {
+void CompareLoadOrdersDialog::setLoadOrders(
+    const std::vector<std::string>& current,
+    const std::vector<std::string>& sorted) {
   currentLoadOrderList->clear();
-
-  for (const auto& plugin : loadOrder) {
-    currentLoadOrderList->addItem(QString::fromStdString(plugin));
-  }
-}
-
-void CompareLoadOrdersDialog::setSortedLoadOrder(
-    const std::vector<std::string>& loadOrder) {
   sortedLoadOrderList->clear();
 
-  for (const auto& plugin : loadOrder) {
+  for (const auto& plugin : current) {
+    currentLoadOrderList->addItem(QString::fromStdString(plugin));
+  }
+
+  for (const auto& plugin : sorted) {
     sortedLoadOrderList->addItem(QString::fromStdString(plugin));
   }
+
+  diffLists(currentLoadOrderList, sortedLoadOrderList);
 }
 
 void CompareLoadOrdersDialog::setupUi() {
@@ -67,6 +269,11 @@ void CompareLoadOrdersDialog::setupUi() {
       QAbstractItemView::SelectionMode::SingleSelection);
   sortedLoadOrderList->setSelectionMode(
       QAbstractItemView::SelectionMode::SingleSelection);
+
+  const auto iconHeight = QFontMetricsF(currentLoadOrderList->font()).height();
+  QSize iconSize(iconHeight, iconHeight);
+  currentLoadOrderList->setIconSize(iconSize);
+  sortedLoadOrderList->setIconSize(iconSize);
 
   const auto buttonBox =
       new QDialogButtonBox(QDialogButtonBox::StandardButton::Ok, this);

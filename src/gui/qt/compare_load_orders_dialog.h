@@ -36,8 +36,8 @@ class CompareLoadOrdersDialog : public QDialog {
 public:
   explicit CompareLoadOrdersDialog(QWidget *parent);
 
-  void setCurrentLoadOrder(const std::vector<std::string> &loadOrder);
-  void setSortedLoadOrder(const std::vector<std::string> &loadOrder);
+  void setLoadOrders(const std::vector<std::string> &current,
+                     const std::vector<std::string> &sorted);
 
 private:
   QLabel *currentLoadOrderLabel{new QLabel(this)};

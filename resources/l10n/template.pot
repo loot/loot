@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.29.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-05-08 17:49+0100\n"
+"POT-Creation-Date: 2026-05-08 17:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,16 +87,16 @@ msgstr ""
 msgid "Backup name:"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:112
+#: src/gui/qt/compare_load_orders_dialog.cpp:319
 msgid "Compare Load Orders"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:114
+#: src/gui/qt/compare_load_orders_dialog.cpp:321
 #: src/gui/qt/restore_load_order_dialog.cpp:165
 msgid "Current load order"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:115
+#: src/gui/qt/compare_load_orders_dialog.cpp:322
 msgid "Sorted load order"
 msgstr ""
 
@@ -505,7 +505,7 @@ msgid "F&ilters"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1256 src/gui/qt/main_window.cpp:1733
-#: src/gui/qt/main_window.cpp:2433
+#: src/gui/qt/main_window.cpp:2432
 msgid "Updating and parsing masterlist…"
 msgstr ""
 
@@ -706,49 +706,49 @@ msgstr ""
 msgid "About LOOT"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2652
+#: src/gui/qt/main_window.cpp:2651
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2779
+#: src/gui/qt/main_window.cpp:2778
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2817
+#: src/gui/qt/main_window.cpp:2816
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2865
+#: src/gui/qt/main_window.cpp:2864
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2924
+#: src/gui/qt/main_window.cpp:2923
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2947
+#: src/gui/qt/main_window.cpp:2946
 #, c++-format
 msgid "Masterlist updated to revision {0}."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3010
+#: src/gui/qt/main_window.cpp:3009
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3036
+#: src/gui/qt/main_window.cpp:3035
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3098
+#: src/gui/qt/main_window.cpp:3097
 #, c++-format
 msgid "A [new release]({0}) of LOOT is available."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3113
+#: src/gui/qt/main_window.cpp:3112
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."

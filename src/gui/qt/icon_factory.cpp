@@ -177,6 +177,14 @@ QIcon IconFactory::getAboutIcon() {
   return getIcon(":/icons/material-icons/help_black_48dp.svg");
 }
 
+QIcon IconFactory::getLineAddedIcon() {
+  return getIcon(":/icons/material-icons/add_black_48dp.svg");
+}
+
+QIcon IconFactory::getLineRemovedIcon() {
+  return getIcon(":/icons/material-icons/remove_black_48dp.svg");
+}
+
 QPixmap IconFactory::getPixmap(const QIcon& icon,
                                int extent,
                                QIcon::Mode mode,

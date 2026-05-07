@@ -72,6 +72,9 @@ public:
   static QIcon getJoinDiscordServerIcon();
   static QIcon getAboutIcon();
 
+  static QIcon getLineAddedIcon();
+  static QIcon getLineRemovedIcon();
+
   // Caches resized pixmaps so that the transformation only needs to be done
   // once per (icon, extent, mode, state) tuple of argument values.
   static QPixmap getPixmap(const QIcon& icon,

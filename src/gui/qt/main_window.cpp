@@ -2417,9 +2417,8 @@ void MainWindow::on_actionDiscardSort_triggered() {
 
 void MainWindow::on_actionCompareLoadOrders_triggered() {
   try {
-    compareLoadOrdersDialog->setCurrentLoadOrder(
-        state->getCurrentGame().getLoadOrder());
-    compareLoadOrdersDialog->setSortedLoadOrder(
+    compareLoadOrdersDialog->setLoadOrders(
+        state->getCurrentGame().getLoadOrder(),
         pluginItemModel->getPluginNames());
     compareLoadOrdersDialog->open();
 
