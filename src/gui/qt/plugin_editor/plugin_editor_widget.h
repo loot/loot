@@ -62,6 +62,7 @@ private:
   std::string language;
 
   QStringList bashTagCompletions;
+  QStringList allFilenameCompletions;
   QStringList filenameCompletions;
 
   QLabel *pluginLabel{new QLabel(this)};

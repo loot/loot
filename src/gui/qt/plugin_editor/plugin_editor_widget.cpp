@@ -56,10 +56,10 @@ void PluginEditorWidget::setBashTagCompletions(
 
 void PluginEditorWidget::setFilenameCompletions(
     const std::vector<std::string> &knownFilenames) {
-  filenameCompletions.clear();
+  allFilenameCompletions.clear();
 
   for (const auto &filename : knownFilenames) {
-    filenameCompletions.append(QString::fromStdString(filename));
+    allFilenameCompletions.append(QString::fromStdString(filename));
   }
 }
 
@@ -69,6 +69,9 @@ void PluginEditorWidget::initialiseInputs(
     const std::optional<PluginMetadata> &nonUserMetadata,
     const std::optional<PluginMetadata> &userMetadata) {
   pluginLabel->setText(QString::fromStdString(pluginName));
+
+  filenameCompletions = allFilenameCompletions;
+  filenameCompletions.removeOne(pluginLabel->text());
 
   std::optional<std::string> nonUserGroupName;
   std::optional<std::string> userGroupName;
