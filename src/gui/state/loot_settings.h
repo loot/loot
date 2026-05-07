@@ -97,6 +97,7 @@ public:
   std::string getPreludeSource() const;
   std::optional<WindowPosition> getMainWindowPosition() const;
   std::optional<WindowPosition> getGroupsEditorWindowPosition() const;
+  std::optional<WindowPosition> getCompareLoadOrdersWindowPosition() const;
   const std::vector<GameSettings>& getGameSettings() const;
   const Filters& getFilters() const;
   const std::vector<Language>& getLanguages() const;
@@ -115,6 +116,7 @@ public:
   void storeLastGame(const std::string& lastGame);
   void storeMainWindowPosition(const WindowPosition& position);
   void storeGroupsEditorWindowPosition(const WindowPosition& position);
+  void storeCompareLoadOrdersWindowPosition(const WindowPosition& position);
   void storeGameSettings(const std::vector<GameSettings>& gameSettings);
   void storeFilters(const Filters& filters);
   void updateLastVersion();
@@ -134,6 +136,7 @@ private:
   std::string theme_{"default"};
   std::optional<WindowPosition> mainWindowPosition_;
   std::optional<WindowPosition> groupsEditorWindowPosition_;
+  std::optional<WindowPosition> compareLoadOrdersWindowPosition_;
   std::vector<GameSettings> gameSettings_;
   Filters filters_;
   std::vector<Language> languages_{

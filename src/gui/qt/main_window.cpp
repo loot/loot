@@ -345,6 +345,18 @@ std::vector<std::string> selectThemesToTry(
 
   return variants;
 }
+
+void setDialogPosition(
+    QDialog& dialog,
+    const std::optional<LootSettings::WindowPosition>& windowPosition) {
+  if (windowPosition.has_value()) {
+    setWindowPosition(dialog, windowPosition.value());
+
+    if (windowPosition.value().maximised) {
+      dialog.setWindowState(dialog.windowState() | Qt::WindowMaximized);
+    }
+  }
+}
 }
 
 namespace loot {
@@ -500,16 +512,10 @@ void MainWindow::setupUi() {
     resize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
   }
 
-  const auto groupsEditorWindowPosition =
-      state->getSettings().getGroupsEditorWindowPosition();
-  if (groupsEditorWindowPosition.has_value()) {
-    setWindowPosition(*groupsEditor, groupsEditorWindowPosition.value());
-
-    if (groupsEditorWindowPosition.value().maximised) {
-      groupsEditor->setWindowState(groupsEditor->windowState() |
-                                   Qt::WindowMaximized);
-    }
-  }
+  setDialogPosition(*groupsEditor,
+                    state->getSettings().getGroupsEditorWindowPosition());
+  setDialogPosition(*compareLoadOrdersDialog,
+                    state->getSettings().getCompareLoadOrdersWindowPosition());
 
   // Set up status bar.
   setStatusBar(statusbar);
@@ -1447,6 +1453,9 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     const auto groupsEditorPosition = getWindowPosition(*groupsEditor);
 
     state->getSettings().storeGroupsEditorWindowPosition(groupsEditorPosition);
+
+    state->getSettings().storeCompareLoadOrdersWindowPosition(
+        getWindowPosition(*compareLoadOrdersDialog));
   } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {

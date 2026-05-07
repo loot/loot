@@ -166,6 +166,13 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
       << "right = 8" << endl
       << "maximised = true" << endl
       << endl
+      << "[compareLoadOrdersWindow]" << endl
+      << "top = 9" << endl
+      << "bottom = 10" << endl
+      << "left = 11" << endl
+      << "right = 12" << endl
+      << "maximised = true" << endl
+      << endl
       << "[[games]]" << endl
       << "name = \"Game Name\"" << endl
       << "type = \"Oblivion\"" << endl
@@ -204,6 +211,13 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ(7, settings_.getGroupsEditorWindowPosition().value().left);
   EXPECT_EQ(8, settings_.getGroupsEditorWindowPosition().value().right);
   EXPECT_TRUE(settings_.getGroupsEditorWindowPosition().value().maximised);
+
+  ASSERT_TRUE(settings_.getCompareLoadOrdersWindowPosition().has_value());
+  EXPECT_EQ(9, settings_.getCompareLoadOrdersWindowPosition().value().top);
+  EXPECT_EQ(10, settings_.getCompareLoadOrdersWindowPosition().value().bottom);
+  EXPECT_EQ(11, settings_.getCompareLoadOrdersWindowPosition().value().left);
+  EXPECT_EQ(12, settings_.getCompareLoadOrdersWindowPosition().value().right);
+  EXPECT_TRUE(settings_.getCompareLoadOrdersWindowPosition().value().maximised);
 
   EXPECT_EQ("Game Name", settings_.getGameSettings().at(0).getName());
 
@@ -1633,11 +1647,18 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   windowPosition.maximised = true;
 
   LootSettings::WindowPosition groupsEditorWindowPosition;
-  groupsEditorWindowPosition.top = 1;
-  groupsEditorWindowPosition.bottom = 2;
-  groupsEditorWindowPosition.left = 3;
-  groupsEditorWindowPosition.right = 4;
+  groupsEditorWindowPosition.top = 5;
+  groupsEditorWindowPosition.bottom = 6;
+  groupsEditorWindowPosition.left = 7;
+  groupsEditorWindowPosition.right = 8;
   groupsEditorWindowPosition.maximised = true;
+
+  LootSettings::WindowPosition compareLoadOrdersWindowPosition;
+  compareLoadOrdersWindowPosition.top = 9;
+  compareLoadOrdersWindowPosition.bottom = 10;
+  compareLoadOrdersWindowPosition.left = 11;
+  compareLoadOrdersWindowPosition.right = 12;
+  compareLoadOrdersWindowPosition.maximised = true;
 
   std::vector<HiddenMessage> hiddenMessages{
       HiddenMessage{std::nullopt, "general message"},
@@ -1664,6 +1685,7 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
 
   settings_.storeMainWindowPosition(windowPosition);
   settings_.storeGroupsEditorWindowPosition(groupsEditorWindowPosition);
+  settings_.storeCompareLoadOrdersWindowPosition(compareLoadOrdersWindowPosition);
   settings_.storeGameSettings(games);
   settings_.storeFilters(filters);
 
@@ -1689,11 +1711,18 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_TRUE(settings.getMainWindowPosition().value().maximised);
 
   ASSERT_TRUE(settings_.getGroupsEditorWindowPosition().has_value());
-  EXPECT_EQ(1, settings_.getGroupsEditorWindowPosition().value().top);
-  EXPECT_EQ(2, settings.getGroupsEditorWindowPosition().value().bottom);
-  EXPECT_EQ(3, settings.getGroupsEditorWindowPosition().value().left);
-  EXPECT_EQ(4, settings.getGroupsEditorWindowPosition().value().right);
+  EXPECT_EQ(5, settings_.getGroupsEditorWindowPosition().value().top);
+  EXPECT_EQ(6, settings.getGroupsEditorWindowPosition().value().bottom);
+  EXPECT_EQ(7, settings.getGroupsEditorWindowPosition().value().left);
+  EXPECT_EQ(8, settings.getGroupsEditorWindowPosition().value().right);
   EXPECT_TRUE(settings.getGroupsEditorWindowPosition().value().maximised);
+
+  ASSERT_TRUE(settings_.getCompareLoadOrdersWindowPosition().has_value());
+  EXPECT_EQ(9, settings_.getCompareLoadOrdersWindowPosition().value().top);
+  EXPECT_EQ(10, settings.getCompareLoadOrdersWindowPosition().value().bottom);
+  EXPECT_EQ(11, settings.getCompareLoadOrdersWindowPosition().value().left);
+  EXPECT_EQ(12, settings.getCompareLoadOrdersWindowPosition().value().right);
+  EXPECT_TRUE(settings.getCompareLoadOrdersWindowPosition().value().maximised);
 
   EXPECT_EQ(games[0].getId(), settings.getGameSettings().at(0).getId());
   EXPECT_EQ(games[0].getName(), settings.getGameSettings().at(0).getName());
@@ -1834,6 +1863,21 @@ TEST_F(LootSettingsTest,
   ASSERT_TRUE(settings_.getGroupsEditorWindowPosition().has_value());
   LootSettings::WindowPosition actualPosition =
       settings_.getGroupsEditorWindowPosition().value();
+  EXPECT_EQ(expectedPosition.top, actualPosition.top);
+  EXPECT_EQ(expectedPosition.bottom, actualPosition.bottom);
+  EXPECT_EQ(expectedPosition.left, actualPosition.left);
+  EXPECT_EQ(expectedPosition.right, actualPosition.right);
+}
+
+TEST_F(LootSettingsTest,
+       storeCompareLoadOrdersWindowPositionShouldReplaceExistingValue) {
+  LootSettings::WindowPosition expectedPosition;
+  expectedPosition.top = 1;
+  settings_.storeCompareLoadOrdersWindowPosition(expectedPosition);
+
+  ASSERT_TRUE(settings_.getCompareLoadOrdersWindowPosition().has_value());
+  LootSettings::WindowPosition actualPosition =
+      settings_.getCompareLoadOrdersWindowPosition().value();
   EXPECT_EQ(expectedPosition.top, actualPosition.top);
   EXPECT_EQ(expectedPosition.bottom, actualPosition.bottom);
   EXPECT_EQ(expectedPosition.left, actualPosition.left);
