@@ -39,24 +39,47 @@
 #include "gui/state/logging.h"
 
 namespace {
+static constexpr int DIFF_STATE_INSERTED = 1;
+static constexpr int DIFF_STATE_REMOVED = 2;
+static constexpr int DIFF_STATE_UNCHANGED = 3;
+static constexpr int DIFF_STATE_PADDING = 4;
+static constexpr int DIFF_STATE_ROLE = Qt::UserRole + 1;
+
+QIcon createBlankIcon() {
+  static constexpr int ICON_HEIGHT_PX = 24;
+
+  QPixmap pixmap(ICON_HEIGHT_PX, ICON_HEIGHT_PX);
+  pixmap.fill(Qt::GlobalColor::transparent);
+
+  return QIcon(pixmap);
+}
+
 void setItemRemoved(QListWidgetItem* item) {
+  item->setData(DIFF_STATE_ROLE, DIFF_STATE_REMOVED);
   item->setIcon(loot::IconFactory::getLineRemovedIcon());
 }
 
 void setItemInserted(QListWidgetItem* item) {
+  item->setData(DIFF_STATE_ROLE, DIFF_STATE_INSERTED);
   item->setIcon(loot::IconFactory::getLineAddedIcon());
 }
 
 void setItemUnchanged(QListWidgetItem* item) {
-  QPixmap pixmap(24, 24);
-  pixmap.fill(QColor(0, 0, 0, 0));
-
-  item->setIcon(QIcon(pixmap));
+  item->setData(DIFF_STATE_ROLE, DIFF_STATE_UNCHANGED);
+  item->setIcon(createBlankIcon());
 }
 
 void insertBlankLine(QListWidget* listWidget, int row) {
   listWidget->insertItem(row, QString());
-  setItemUnchanged(listWidget->item(row));
+
+  auto item = listWidget->item(row);
+
+  item->setData(DIFF_STATE_ROLE, DIFF_STATE_PADDING);
+  item->setIcon(createBlankIcon());
+
+  // Set the item flags so that the it can't be selected, edited or otherwise
+  // interacted with.
+  item->setFlags(Qt::ItemFlag::ItemNeverHasChildren);
 }
 
 std::vector<QListWidgetItem*> getItems(QListWidget* widget) {
@@ -206,6 +229,27 @@ std::vector<std::tuple<int, int, int, int>> backtrackTrace(
   return moves;
 }
 
+void alignUnchangedRows(QListWidget* listWidget1, QListWidget* listWidget2) {
+  for (int i = 0; i < listWidget1->count(); i += 1) {
+    auto item2 = listWidget2->item(i);
+
+    if (item2 == nullptr) {
+      continue;
+    }
+
+    const auto item1State = listWidget1->item(i)->data(DIFF_STATE_ROLE);
+    const auto item2State = item2->data(DIFF_STATE_ROLE);
+
+    if (item1State == DIFF_STATE_REMOVED && item2State != DIFF_STATE_INSERTED) {
+      insertBlankLine(listWidget2, i);
+    }
+
+    if (item1State != DIFF_STATE_REMOVED && item2State == DIFF_STATE_INSERTED) {
+      insertBlankLine(listWidget1, i);
+    }
+  }
+}
+
 void diffLists(QListWidget* listWidget1, QListWidget* listWidget2) {
   const auto list1 = getItems(listWidget1);
   const auto list2 = getItems(listWidget2);
@@ -223,16 +267,16 @@ void diffLists(QListWidget* listWidget1, QListWidget* listWidget2) {
 
   for (const auto& [prevX, prevY, x, y] : moves) {
     if (x == prevX) {
-      insertBlankLine(listWidget1, x);
       setItemInserted(list2.at(throwingCast(prevY)));
     } else if (y == prevY) {
       setItemRemoved(list1.at(throwingCast(prevX)));
-      insertBlankLine(listWidget2, y);
     } else {
       setItemUnchanged(list1.at(throwingCast(prevX)));
       setItemUnchanged(list2.at(throwingCast(prevY)));
     }
   }
+
+  alignUnchangedRows(listWidget1, listWidget2);
 }
 }
 

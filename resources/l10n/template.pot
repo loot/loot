@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.29.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-05-08 17:51+0100\n"
+"POT-Creation-Date: 2026-05-08 19:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,16 +87,16 @@ msgstr ""
 msgid "Backup name:"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:321
+#: src/gui/qt/compare_load_orders_dialog.cpp:365
 msgid "Compare Load Orders"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:323
+#: src/gui/qt/compare_load_orders_dialog.cpp:367
 #: src/gui/qt/restore_load_order_dialog.cpp:165
 msgid "Current load order"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:324
+#: src/gui/qt/compare_load_orders_dialog.cpp:368
 msgid "Sorted load order"
 msgstr ""
 
