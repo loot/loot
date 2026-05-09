@@ -142,8 +142,8 @@ modules:
       # Use the Git repository so that libloot's commit hash gets embedded in the build.
       - type: git
         url: https://github.com/loot/libloot.git
-        tag: 0.29.4
-        commit: 56bafaead362b06aa63e02f8917ffde0777d36ae
+        tag: 0.29.5
+        commit: a12fcfcef21b96ac6fcffaac06439d11e18db932
       # Generated using scripts/generate_manifests.sh
       - ../../build/flatpak-manifests/libloot.json
 
