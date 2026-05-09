@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-05-07 18:47+0100\n"
+"POT-Creation-Date: 2026-05-08 19:33+0100\n"
 "PO-Revision-Date: 2024-05-22 20:01+0100\n"
 "Last-Translator: kuroko\n"
 "Language-Team: \n"
@@ -82,6 +82,19 @@ msgstr ""
 
 #: src/gui/qt/back_up_load_order_dialog.cpp:70
 msgid "Backup name:"
+msgstr ""
+
+#: src/gui/qt/compare_load_orders_dialog.cpp:365
+msgid "Compare Load Orders"
+msgstr ""
+
+#: src/gui/qt/compare_load_orders_dialog.cpp:367
+#: src/gui/qt/restore_load_order_dialog.cpp:165
+msgid "Current load order"
+msgstr ""
+
+#: src/gui/qt/compare_load_orders_dialog.cpp:368
+msgid "Sorted load order"
 msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:288
@@ -289,206 +302,211 @@ msgstr ""
 msgid "LOOT could not unambiguously set the load order."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:85 src/gui/qt/main_window.cpp:1657
+#: src/gui/qt/main_window.cpp:85 src/gui/qt/main_window.cpp:1676
 msgid "Ambiguous load order detected"
 msgstr "不定なロードオーダーを確認"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:851
+#: src/gui/qt/main_window.cpp:862
 msgid "&Sort Plugins"
 msgstr "プラグインのソート (&S)"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:853
+#: src/gui/qt/main_window.cpp:864
 msgid "Update &Masterlist"
 msgstr "マスターリストの更新 (&M)"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:855
+#: src/gui/qt/main_window.cpp:866
 msgid "&Apply Sorted Load Order"
 msgstr "ソートしたロードオーダーを適用 (&A)"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:857
+#: src/gui/qt/main_window.cpp:868
 msgid "&Discard Sorted Load Order"
 msgstr "ソートしたロードオーダーを破棄 (&D)"
 
+#. translators: This string is also an action in the Game menu.
+#: src/gui/qt/main_window.cpp:870
+msgid "&View load order changes..."
+msgstr ""
+
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:862
+#: src/gui/qt/main_window.cpp:875
 msgid "&File"
 msgstr "ファイル (&F)"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:864
+#: src/gui/qt/main_window.cpp:877
 msgid "&Settings…"
 msgstr "設定… (&S)"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:866
+#: src/gui/qt/main_window.cpp:879
 msgid "&Update All Masterlists"
 msgstr "全マスターリストの更新 (&U)"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:868
+#: src/gui/qt/main_window.cpp:881
 msgid "&Backup LOOT Data"
 msgstr "LOOT のデータをバックアップ (&B)"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:870
+#: src/gui/qt/main_window.cpp:883
 msgid "&Open LOOT Data Folder"
 msgstr "LOOT のデータフォルダを開く (&O)"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:872
+#: src/gui/qt/main_window.cpp:885
 msgid "&Quit"
 msgstr "終了 (&Q)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:876
+#: src/gui/qt/main_window.cpp:889
 msgid "&Game"
 msgstr "ゲーム (&G)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:878
+#: src/gui/qt/main_window.cpp:891
 msgid "&Edit Groups…"
 msgstr "グループの編集… (&E)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:880
+#: src/gui/qt/main_window.cpp:893
 msgid "Searc&h Cards…"
 msgstr "カード検索… (&H)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:882
+#: src/gui/qt/main_window.cpp:895
 msgid "Copy &Load Order"
 msgstr "ロードオーダーをコピー (&L)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:884
+#: src/gui/qt/main_window.cpp:897
 msgid "&Copy Content"
 msgstr "データ内容をコピー (&C)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:886
+#: src/gui/qt/main_window.cpp:899
 msgid "&Refresh Content"
 msgstr "データ内容を更新 (&R)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:889
+#: src/gui/qt/main_window.cpp:902
 msgid "U&nhide all individually-hidden messages"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:892
+#: src/gui/qt/main_window.cpp:905
 msgid "Unhide all individually-hidden &general messages"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:894
+#: src/gui/qt/main_window.cpp:907
 msgid "Redate &Plugins…"
 msgstr "プラグインの日付変更… (&P)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:896
+#: src/gui/qt/main_window.cpp:909
 msgid "Back Up Load &Order…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:897
+#: src/gui/qt/main_window.cpp:910
 msgid "Res&tore Load Order…"
 msgstr ""
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:899
+#: src/gui/qt/main_window.cpp:912
 msgid "&Fix Ambiguous Load Order"
 msgstr "不定なロードオーダーを修正 (&F)"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:901
+#: src/gui/qt/main_window.cpp:914
 msgid "Clear All &User Metadata…"
 msgstr "ユーザーメタデータを完全に消去… (&U)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:905
+#: src/gui/qt/main_window.cpp:918
 msgid "&Plugin"
 msgstr "プラグイン (&P)"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:907
+#: src/gui/qt/main_window.cpp:920
 msgid "Copy &Plugin Name"
 msgstr "プラグイン名をコピー (&P)"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:909
+#: src/gui/qt/main_window.cpp:922
 msgid "Copy &Card Content"
 msgstr "カード内容をコピー (&C)"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:911
+#: src/gui/qt/main_window.cpp:924
 msgid "Copy &Metadata"
 msgstr "メタデータをコピー (&M)"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:913
+#: src/gui/qt/main_window.cpp:926
 msgid "&Edit Metadata…"
 msgstr "メタデータの編集… (&E)"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:916
+#: src/gui/qt/main_window.cpp:929
 msgid "Un&hide individually-hidden messages"
 msgstr ""
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:918
+#: src/gui/qt/main_window.cpp:931
 msgid "Clear &User Metadata…"
 msgstr "ユーザーメタデータを消去… (&U)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:922
+#: src/gui/qt/main_window.cpp:935
 msgid "&Help"
 msgstr "ヘルプ (&H)"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:924
+#: src/gui/qt/main_window.cpp:937
 msgid "&View Documentation"
 msgstr "マニュアルを開く (&V)"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:926
+#: src/gui/qt/main_window.cpp:939
 msgid "&Open FAQs"
 msgstr "FAQを開く (&O)"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:928
+#: src/gui/qt/main_window.cpp:941
 msgid "&Join Discord Server"
 msgstr "Discord サーバーに参加 (&J)"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:930
+#: src/gui/qt/main_window.cpp:943
 msgid "&About"
 msgstr "LOOT について (&A)"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:935
+#: src/gui/qt/main_window.cpp:948
 msgid "P&lugins"
 msgstr "プラグイン"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:938
+#: src/gui/qt/main_window.cpp:951
 msgid "F&ilters"
 msgstr "フィルター"
 
-#: src/gui/qt/main_window.cpp:1246 src/gui/qt/main_window.cpp:1723
-#: src/gui/qt/main_window.cpp:2410
+#: src/gui/qt/main_window.cpp:1262 src/gui/qt/main_window.cpp:1742
+#: src/gui/qt/main_window.cpp:2441
 msgid "Updating and parsing masterlist…"
 msgstr "マスターリストの更新・解析中…"
 
-#: src/gui/qt/main_window.cpp:1334
+#: src/gui/qt/main_window.cpp:1350
 #, c++-format
 msgid ""
 "This appears to be the first time you have run LOOT v{0}. Your current LOOT "
@@ -497,22 +515,22 @@ msgstr ""
 "このメッセージは LOOT v{0} を初めて起動したため表示されています。現在の LOOT "
 "のデータは以下にバックアップされました: {1}"
 
-#: src/gui/qt/main_window.cpp:1340
+#: src/gui/qt/main_window.cpp:1356
 #, c++-format
 msgid "This appears to be the first time you have run LOOT v{0}."
 msgstr "このメッセージは LOOT v{0} を初めて起動したときに表示されます。"
 
-#: src/gui/qt/main_window.cpp:1345
+#: src/gui/qt/main_window.cpp:1361
 msgid "Here are some tips to help you get started with the interface."
 msgstr "以下は使い始めるためのヒント集です。"
 
-#: src/gui/qt/main_window.cpp:1348
+#: src/gui/qt/main_window.cpp:1364
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by overlap "
 "filtering, or by sorting."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1352
+#: src/gui/qt/main_window.cpp:1368
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
@@ -520,7 +538,7 @@ msgstr ""
 "サイドバー内のプラグインはメタデータ編集画面の \"後にロード\" , \"必須\" , "
 "\"非互換\" テーブルにドロップすることができます。"
 
-#: src/gui/qt/main_window.cpp:1357
+#: src/gui/qt/main_window.cpp:1373
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
@@ -528,7 +546,7 @@ msgstr ""
 "メタデータ編集画面を開いている間、またはソートしたロードオーダーを適用・破棄"
 "するまでの間は一部の機能が使えなくなります。"
 
-#: src/gui/qt/main_window.cpp:1363 src/gui/qt/main_window.cpp:2282
+#: src/gui/qt/main_window.cpp:1379 src/gui/qt/main_window.cpp:2301
 #, c++-format
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
@@ -538,19 +556,19 @@ msgstr ""
 "LOOT はフリーウェアですが、お気持ちをいただけるのでしたら {0} より、Ortham"
 "（LOOT の作者でありメイン開発者）まで寄付を受け付けています。"
 
-#: src/gui/qt/main_window.cpp:1377
+#: src/gui/qt/main_window.cpp:1393
 msgid "First-Time Tips"
 msgstr "最初のヒント"
 
-#: src/gui/qt/main_window.cpp:1412
+#: src/gui/qt/main_window.cpp:1428
 msgid "metadata edits"
 msgstr "メタデータ編集"
 
-#: src/gui/qt/main_window.cpp:1413
+#: src/gui/qt/main_window.cpp:1429
 msgid "sorted load order"
 msgstr "ソートしたロードオーダー"
 
-#: src/gui/qt/main_window.cpp:1415
+#: src/gui/qt/main_window.cpp:1431
 #, c++-format
 msgid ""
 "You have not yet applied or cancelled your {0}. Are you sure you want to "
@@ -558,14 +576,14 @@ msgid ""
 msgstr ""
 "{0} が適用（もしくはキャンセル）されていません。終了してもよろしいですか？"
 
-#: src/gui/qt/main_window.cpp:1530 src/gui/qt/restore_load_order_dialog.cpp:222
+#: src/gui/qt/main_window.cpp:1549 src/gui/qt/restore_load_order_dialog.cpp:222
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:454
 #: src/gui/qt/plugin_editor/table_tabs.cpp:398
 #: src/gui/qt/plugin_editor/table_tabs.cpp:434
 msgid "Error"
 msgstr "エラー"
 
-#: src/gui/qt/main_window.cpp:1540
+#: src/gui/qt/main_window.cpp:1559
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:450
 #: src/gui/qt/tasks/network_task.cpp:36 src/gui/query/query.h:67
 msgid ""
@@ -575,7 +593,7 @@ msgstr ""
 "エラーが発生しました！LOOTDebugLog.txt（メニューから開けます）にて詳細を確認"
 "できます。"
 
-#: src/gui/qt/main_window.cpp:1588
+#: src/gui/qt/main_window.cpp:1607
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
@@ -583,11 +601,11 @@ msgstr ""
 "プラグインのソートに失敗しました。詳細については全体情報から確認できるでしょ"
 "う。"
 
-#: src/gui/qt/main_window.cpp:1606
+#: src/gui/qt/main_window.cpp:1625
 msgid "Sorting made no changes to the load order."
 msgstr "ロードオーダーは変更されませんでした。"
 
-#: src/gui/qt/main_window.cpp:1658
+#: src/gui/qt/main_window.cpp:1677
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -602,37 +620,37 @@ msgstr ""
 "\"ゲーム\" メニューから \"不定なロードオーダーを修正\" を選ぶと、LOOT の表示"
 "順に正しく合わせることができます。"
 
-#: src/gui/qt/main_window.cpp:1746
+#: src/gui/qt/main_window.cpp:1765
 msgid "Updating all masterlists…"
 msgstr "全マスターリストの更新・解析中…"
 
-#: src/gui/qt/main_window.cpp:1778
+#: src/gui/qt/main_window.cpp:1797
 #, c++-format
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr "LOOT のデータを以下にバックアップしました: {0}"
 
-#: src/gui/qt/main_window.cpp:1783
+#: src/gui/qt/main_window.cpp:1802
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr "保存するデータがないためバックアップされませんでした。"
 
-#: src/gui/qt/main_window.cpp:1829
+#: src/gui/qt/main_window.cpp:1848
 msgid "The load order has been copied to the clipboard."
 msgstr "ロードオーダーをクリップボードにコピーしました。"
 
-#: src/gui/qt/main_window.cpp:1847
+#: src/gui/qt/main_window.cpp:1866
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "LOOT のデータ内容をクリップボードにコピーしました。"
 
-#: src/gui/qt/main_window.cpp:1882
+#: src/gui/qt/main_window.cpp:1901
 msgid "The load order displayed by LOOT has been set."
 msgstr "LOOT で表示されているロードオーダーが設定されました。"
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1936
+#: src/gui/qt/main_window.cpp:1955
 msgid "Redate Plugins?"
 msgstr "プラグインの日付を変更しますか？"
 
-#: src/gui/qt/main_window.cpp:1938
+#: src/gui/qt/main_window.cpp:1957
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -645,11 +663,11 @@ msgstr ""
 "りません）。続行しますか？"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1950
+#: src/gui/qt/main_window.cpp:1969
 msgid "Plugins were successfully redated."
 msgstr "プラグインの日付が正常に変更されました。"
 
-#: src/gui/qt/main_window.cpp:1962
+#: src/gui/qt/main_window.cpp:1981
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -657,11 +675,11 @@ msgstr ""
 "全プラグインのユーザーメタデータが消去されます。本当に実行してもよろしいです"
 "か？"
 
-#: src/gui/qt/main_window.cpp:2010
+#: src/gui/qt/main_window.cpp:2029
 msgid "All user-added metadata has been cleared."
 msgstr "ユーザーによって追加されたすべてのメタデータが消去されました。"
 
-#: src/gui/qt/main_window.cpp:2023
+#: src/gui/qt/main_window.cpp:2042
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
@@ -669,81 +687,81 @@ msgstr ""
 "すでに画面が開かれています。別のプラグインのメタデータを編集するには、現在の"
 "メタデータ編集画面を閉じてください。"
 
-#: src/gui/qt/main_window.cpp:2086
+#: src/gui/qt/main_window.cpp:2105
 #, c++-format
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\" のメタデータをクリップボードにコピーしました。"
 
-#: src/gui/qt/main_window.cpp:2102
+#: src/gui/qt/main_window.cpp:2121
 #, c++-format
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\" のプラグイン名をクリップボードにコピーしました。"
 
-#: src/gui/qt/main_window.cpp:2120
+#: src/gui/qt/main_window.cpp:2139
 #, c++-format
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "\"{0}\" のカード内容をクリップボードにコピーしました。"
 
-#: src/gui/qt/main_window.cpp:2151
+#: src/gui/qt/main_window.cpp:2170
 #, c++-format
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr "\"{0}\" のユーザーメタデータを消去しますか？"
 
-#: src/gui/qt/main_window.cpp:2189
+#: src/gui/qt/main_window.cpp:2208
 #, c++-format
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "\"{0}\" のユーザーメタデータを消去しました。"
 
-#: src/gui/qt/main_window.cpp:2270
+#: src/gui/qt/main_window.cpp:2289
 #, c++-format
 msgid "Version {0} (build {1})"
 msgstr "バージョン {0} (ビルド {1})"
 
-#: src/gui/qt/main_window.cpp:2275
+#: src/gui/qt/main_window.cpp:2294
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
 "3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2291
+#: src/gui/qt/main_window.cpp:2310
 msgid "About LOOT"
 msgstr "LOOT について"
 
-#: src/gui/qt/main_window.cpp:2629
+#: src/gui/qt/main_window.cpp:2660
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2756
+#: src/gui/qt/main_window.cpp:2787
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2794
+#: src/gui/qt/main_window.cpp:2825
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2842
+#: src/gui/qt/main_window.cpp:2873
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 "1 つ以上のエラーメッセージが表示されているため自動ソートは中止されました。"
 
-#: src/gui/qt/main_window.cpp:2901
+#: src/gui/qt/main_window.cpp:2932
 msgid "No masterlist update was necessary."
 msgstr "現在マスターリストの更新は必要ありません。"
 
-#: src/gui/qt/main_window.cpp:2924
+#: src/gui/qt/main_window.cpp:2955
 #, c++-format
 msgid "Masterlist updated to revision {0}."
 msgstr "マスターリストがリビジョン {0} に更新されました。"
 
-#: src/gui/qt/main_window.cpp:2987
+#: src/gui/qt/main_window.cpp:3018
 msgid "No masterlist updates were necessary."
 msgstr "現在マスターリストの更新は必要ありません。"
 
-#: src/gui/qt/main_window.cpp:3013
+#: src/gui/qt/main_window.cpp:3044
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
@@ -751,12 +769,12 @@ msgstr ""
 "以下のゲームのマスターリストを更新:\n"
 "\n"
 
-#: src/gui/qt/main_window.cpp:3075
+#: src/gui/qt/main_window.cpp:3106
 #, c++-format
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "[新しいバージョンの LOOT]({0}) が利用できます。"
 
-#: src/gui/qt/main_window.cpp:3090
+#: src/gui/qt/main_window.cpp:3121
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -856,10 +874,6 @@ msgstr ""
 
 #: src/gui/qt/restore_load_order_dialog.cpp:164
 msgid "Select a load order backup to restore."
-msgstr ""
-
-#: src/gui/qt/restore_load_order_dialog.cpp:165
-msgid "Current load order"
 msgstr ""
 
 #: src/gui/qt/restore_load_order_dialog.cpp:166
