@@ -41,11 +41,11 @@ TEST_P(Epic_FindGameInstallsExceptionTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(loot::epic::findGameInstalls(TestRegistry(), GetParam(), {}));
 }
 
-class Epic_FindGameInstallsTest : public CommonGameTestFixture,
+class Epic_FindGameInstallsTest : public BaseGameDetectionTest,
                                   public testing::WithParamInterface<GameId> {
 protected:
   Epic_FindGameInstallsTest() :
-      CommonGameTestFixture(GetParam()),
+      BaseGameDetectionTest(GetParam()),
       epicManifestsPath(gamePath.parent_path() / "Manifests") {
     const std::string appName = GetAppName(GetParam());
 

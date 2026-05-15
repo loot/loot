@@ -58,11 +58,8 @@ TEST_P(GetDefaultMasterlistUrlTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(getDefaultMasterlistUrl(GetParam()));
 }
 
-class GameSettingsTest : public CommonGameTestFixture,
-                         public testing::WithParamInterface<GameId> {
+class GameSettingsTest : public testing::TestWithParam<GameId> {
 protected:
-  GameSettingsTest() : CommonGameTestFixture(GetParam()) {}
-
   GameSettings settings_;
 };
 

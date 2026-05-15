@@ -65,18 +65,6 @@ TEST(GetSteamInstallPaths, shouldReturnTheSteamFolderInUserLocalShare) {
 }
 #endif
 
-class FilesystemTest : public ::testing::Test {
-public:
-  FilesystemTest() : rootPath_(getTempPath()) {}
-
-protected:
-  void SetUp() override { std::filesystem::create_directories(rootPath_); }
-
-  void TearDown() override { std::filesystem::remove_all(rootPath_); }
-
-  std::filesystem::path rootPath_;
-};
-
 class GetSteamLibraryPathsTest : public FilesystemTest {
 public:
   GetSteamLibraryPathsTest() :
@@ -425,10 +413,10 @@ TEST_F(Steam_FindGameInstallTest,
 }
 
 class Steam_FindGameInstallsTest
-    : public CommonGameTestFixture,
+    : public BaseGameDetectionTest,
       public ::testing::WithParamInterface<GameId> {
 protected:
-  Steam_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
+  Steam_FindGameInstallsTest() : BaseGameDetectionTest(GetParam()) {}
 
   std::optional<std::string> getSteamGameId() {
     switch (GetParam()) {

@@ -31,51 +31,30 @@
 
 namespace loot {
 namespace test {
-class GroupNodePositionsFixture : public ::testing::Test {
-protected:
-  GroupNodePositionsFixture() :
-      rootPath_(getTempPath()), filePath_(rootPath_ / "positions.bin") {}
+void writeBytes(const std::filesystem::path& path,
+                const std::vector<char>& bytes) {
+  std::ofstream out(path, std::ios::binary | std::ios_base::trunc);
 
-  void SetUp() override {
-    std::filesystem::create_directories(rootPath_);
-
-    std::ofstream out(filePath_);
-    out << "blob_sha1 = \"686d51d2991e7359e636720c5cb04446257a42af\""
-        << std::endl;
-    out << "update_timestamp = \"2022-01-22\"";
-    out.close();
+  for (const auto byte : bytes) {
+    out.put(byte);
   }
+}
 
-  void TearDown() override { std::filesystem::remove_all(rootPath_); }
+std::vector<char> readBytes(const std::filesystem::path& path) {
+  std::vector<char> bytes;
 
-  void writeBytes(const std::filesystem::path& path,
-                  const std::vector<char>& bytes) {
-    std::ofstream out(path, std::ios::binary | std::ios_base::trunc);
+  std::ifstream in(path, std::ios::binary);
 
-    for (const auto byte : bytes) {
-      out.put(byte);
-    }
-  }
+  std::copy(std::istreambuf_iterator<char>(in),
+            std::istreambuf_iterator<char>(),
+            std::back_inserter(bytes));
 
-  std::vector<char> readBytes(const std::filesystem::path& path) {
-    std::vector<char> bytes;
+  return bytes;
+}
 
-    std::ifstream in(path, std::ios::binary);
+class LoadGroupNodePositionsTest : public FilesystemTest {};
 
-    std::copy(std::istreambuf_iterator<char>(in),
-              std::istreambuf_iterator<char>(),
-              std::back_inserter(bytes));
-
-    return bytes;
-  }
-
-  std::filesystem::path rootPath_;
-  std::filesystem::path filePath_;
-};
-
-class LoadGroupNodePositionsTest : public GroupNodePositionsFixture {};
-
-class SaveGroupNodePositionsTest : public GroupNodePositionsFixture {};
+class SaveGroupNodePositionsTest : public FilesystemTest {};
 
 TEST_F(LoadGroupNodePositionsTest,
        shouldReturnAnEmptyVectorIfFileDoesNotExist) {

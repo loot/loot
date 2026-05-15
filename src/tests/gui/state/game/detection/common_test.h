@@ -41,10 +41,10 @@ TEST_P(GetMasterFilenameTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(getMasterFilename(GetParam()));
 }
 
-class IsValidGamePathTest : public CommonGameTestFixture,
+class IsValidGamePathTest : public BaseGameDetectionTest,
                             public testing::WithParamInterface<GameId> {
 protected:
-  IsValidGamePathTest() : CommonGameTestFixture(GetParam()) {}
+  IsValidGamePathTest() : BaseGameDetectionTest(GetParam()) {}
 };
 
 // Pass an empty first argument, as it's a prefix for the test instantiation,
@@ -54,6 +54,8 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(IsValidGamePathTest, shouldSupportNonAsciiGameMasters) {
+  touch(dataPath / std::filesystem::u8path(NON_ASCII_ESP));
+
   EXPECT_TRUE(isValidGamePath(GetParam(), NON_ASCII_ESP, gamePath));
 }
 

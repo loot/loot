@@ -55,10 +55,9 @@ TEST(GetHeroicGamesLauncherConfigPaths,
 }
 #endif
 
-class HeroicTest : public ::testing::Test {
+class HeroicTest : public FilesystemTest {
 public:
   HeroicTest() :
-      rootPath_(getTempPath()),
       gogInstalledPath_(rootPath_ / "gog_store" / "installed.json"),
       egsInstalledPath_(rootPath_ / "legendaryConfig" / "legendary" /
                         "installed.json"),
@@ -66,14 +65,13 @@ public:
 
 protected:
   void SetUp() override {
+    FilesystemTest::SetUp();
+
     std::filesystem::create_directories(gogInstalledPath_.parent_path());
     std::filesystem::create_directories(egsInstalledPath_.parent_path());
     std::filesystem::create_directories(gamesConfigPath_);
   }
 
-  void TearDown() override { std::filesystem::remove_all(rootPath_); }
-
-  std::filesystem::path rootPath_;
   std::filesystem::path gogInstalledPath_;
   std::filesystem::path egsInstalledPath_;
   std::filesystem::path gamesConfigPath_;

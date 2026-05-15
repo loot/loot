@@ -72,18 +72,7 @@ protected:
   std::filesystem::path destRoot;
 };
 
-class CompressDirectoryTest : public BackupTest {
-protected:
-  static size_t getStreamSize(std::istream& stream) {
-    std::streampos startingPosition = stream.tellg();
-
-    stream.seekg(0, std::ios_base::end);
-    size_t streamSize = stream.tellg();
-    stream.seekg(startingPosition, std::ios_base::beg);
-
-    return streamSize;
-  }
-};
+class CompressDirectoryTest : public BackupTest {};
 
 class CreateBackupTest : public BackupTest {};
 

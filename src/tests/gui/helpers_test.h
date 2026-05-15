@@ -36,10 +36,7 @@ TEST(GetPreferredUILanguages, shouldReturnAtLeastOneLanguage) {
   EXPECT_FALSE(getPreferredUILanguages().empty());
 }
 
-class FindXboxGamingRootPathTest : public CommonGameTestFixture {
-protected:
-  FindXboxGamingRootPathTest() : CommonGameTestFixture(GameId::tes3) {}
-};
+class FindXboxGamingRootPathTest : public FilesystemTest {};
 
 TEST(GetDriveRootPaths, shouldReturnNonEmptyVector) {
   EXPECT_FALSE(getDriveRootPaths().empty());
@@ -47,55 +44,55 @@ TEST(GetDriveRootPaths, shouldReturnNonEmptyVector) {
 
 TEST_F(FindXboxGamingRootPathTest,
        shouldReturnNulloptIfTheDotGamingRootFileDoesNotExist) {
-  EXPECT_FALSE(findXboxGamingRootPath(dataPath).has_value());
+  EXPECT_FALSE(findXboxGamingRootPath(rootPath_).has_value());
 }
 
 TEST_F(FindXboxGamingRootPathTest,
        shouldReturnNulloptIfDotGamingRootIsADirectory) {
-  std::filesystem::create_directory(dataPath / ".GamingRoot");
+  std::filesystem::create_directory(rootPath_ / ".GamingRoot");
 
-  EXPECT_FALSE(findXboxGamingRootPath(dataPath).has_value());
+  EXPECT_FALSE(findXboxGamingRootPath(rootPath_).has_value());
 }
 
 TEST_F(FindXboxGamingRootPathTest,
        shouldReturnNulloptIfDotGamingRootContainsAnOddNumberOfBytes) {
-  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  std::ofstream out(rootPath_ / ".GamingRoot", std::ios::binary);
   out << "12345678901";
   out.close();
 
-  EXPECT_FALSE(findXboxGamingRootPath(dataPath).has_value());
+  EXPECT_FALSE(findXboxGamingRootPath(rootPath_).has_value());
 }
 
 TEST_F(FindXboxGamingRootPathTest,
        shouldReturnNulloptIfDotGamingRootIsTooShort) {
-  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  std::ofstream out(rootPath_ / ".GamingRoot", std::ios::binary);
   out << "12";
   out.close();
 
-  EXPECT_FALSE(findXboxGamingRootPath(dataPath).has_value());
+  EXPECT_FALSE(findXboxGamingRootPath(rootPath_).has_value());
 }
 
 TEST_F(FindXboxGamingRootPathTest,
        shouldInterpretTheNinthAndFollowingBytesAsANullTerminatedUtf16LeString) {
-  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  std::ofstream out(rootPath_ / ".GamingRoot", std::ios::binary);
   const char* data = "12345678t\0e\0s\0t\0 \0p\0a\0t\0h\0\0\0";
   out.write(data, 28);
   out.close();
 
-  const auto gamingRootPath = findXboxGamingRootPath(dataPath);
-  const auto expectedPath = dataPath / "test path";
+  const auto gamingRootPath = findXboxGamingRootPath(rootPath_);
+  const auto expectedPath = rootPath_ / "test path";
 
   EXPECT_EQ(expectedPath, gamingRootPath);
 }
 
 TEST_F(FindXboxGamingRootPathTest,
        shouldReturnNulloptIfDotGamingRootPathContainsNul) {
-  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  std::ofstream out(rootPath_ / ".GamingRoot", std::ios::binary);
   const char* data = "12345678t\0e\0s\0t\0\0\0p\0a\0t\0h\0\0\0";
   out.write(data, 28);
   out.close();
 
-  EXPECT_FALSE(findXboxGamingRootPath(dataPath).has_value());
+  EXPECT_FALSE(findXboxGamingRootPath(rootPath_).has_value());
 }
 
 // MSVC interprets source files in the default code page, so

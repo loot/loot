@@ -165,10 +165,17 @@ TEST(GetTagConflicts,
   EXPECT_EQ(expectedConflicts, conflicts);
 }
 
-class ResolveGameFilePathTest : public CommonGameTestFixture,
+class ResolveGameFilePathTest : public FilesystemTest,
                                 public ::testing::WithParamInterface<GameId> {
 protected:
-  ResolveGameFilePathTest() : CommonGameTestFixture(GetParam()) {}
+  ResolveGameFilePathTest() :
+      dataPath(rootPath_ / "data"),
+      externalDataPath(rootPath_ / "externalData") {
+    touch(dataPath / BLANK_ESM);
+  }
+
+  std::filesystem::path dataPath;
+  std::filesystem::path externalDataPath;
 };
 
 INSTANTIATE_TEST_SUITE_P(,
@@ -177,25 +184,24 @@ INSTANTIATE_TEST_SUITE_P(,
 
 TEST_P(ResolveGameFilePathTest,
        shouldReturnFilenameInExternalDataPathIfItExistsThere) {
-  const auto filePath = localPath / BLANK_ESM;
-  std::filesystem::copy(dataPath / BLANK_ESM, filePath);
+  const auto filePath = externalDataPath / BLANK_ESM;
+  touch(filePath);
 
   const auto pluginPath =
-      resolveGameFilePath(GetParam(), {localPath}, dataPath, BLANK_ESM);
+      resolveGameFilePath(GetParam(), {externalDataPath}, dataPath, BLANK_ESM);
 
   EXPECT_EQ(filePath, pluginPath);
 }
 
 TEST_P(ResolveGameFilePathTest, shouldCheckExternalDataPathsInOrder) {
-  const auto filePath = localPath / BLANK_ESM;
-  std::filesystem::copy(dataPath / BLANK_ESM, filePath);
+  const auto filePath = externalDataPath / BLANK_ESM;
+  touch(filePath);
 
-  const auto otherDataPath = localPath.parent_path() / "other";
-  std::filesystem::create_directories(otherDataPath);
-  std::filesystem::copy(dataPath / BLANK_ESM, otherDataPath / BLANK_ESM);
+  const auto otherDataPath = externalDataPath.parent_path() / "other";
+  touch(otherDataPath / BLANK_ESM);
 
   const auto pluginPath = resolveGameFilePath(
-      GetParam(), {localPath, otherDataPath}, dataPath, BLANK_ESM);
+      GetParam(), {externalDataPath, otherDataPath}, dataPath, BLANK_ESM);
 
   if (GetParam() == GameId::openmw) {
     // Should check in reverse order for OpenMW.
@@ -210,22 +216,22 @@ TEST_P(
     shouldReturnGhostedPluginNameInExternalDataPathIfItExistsAsAGhostedPluginThere) {
   const std::string filename = "external.esp";
   const auto ghostedFilename = filename + ".ghost";
-  std::filesystem::copy(dataPath / BLANK_ESM, localPath / ghostedFilename);
+  touch(externalDataPath / ghostedFilename);
 
   const auto pluginPath =
-      resolveGameFilePath(GetParam(), {localPath}, dataPath, filename);
+      resolveGameFilePath(GetParam(), {externalDataPath}, dataPath, filename);
 
   if (GetParam() == GameId::openmw) {
     EXPECT_FALSE(pluginPath.has_value());
   } else {
-    EXPECT_EQ(localPath / ghostedFilename, pluginPath);
+    EXPECT_EQ(externalDataPath / ghostedFilename, pluginPath);
   }
 }
 
 TEST_P(ResolveGameFilePathTest,
        shouldReturnFilenameInDataPathIfTheFileOnlyExistsThere) {
   const auto pluginPath =
-      resolveGameFilePath(GetParam(), {localPath}, dataPath, BLANK_ESM);
+      resolveGameFilePath(GetParam(), {externalDataPath}, dataPath, BLANK_ESM);
 
   EXPECT_EQ(dataPath / BLANK_ESM, pluginPath);
 }
@@ -233,21 +239,23 @@ TEST_P(ResolveGameFilePathTest,
 TEST_P(
     ResolveGameFilePathTest,
     shouldReturnGhostedFilenameInDataPathIfTheFileOnlyExistsThereAsAGhostedPlugin) {
-  const auto pluginPath = resolveGameFilePath(
-      GetParam(), {localPath}, dataPath, BLANK_MASTER_DEPENDENT_ESM);
+  std::filesystem::rename(dataPath / BLANK_ESM,
+                          dataPath / (std::string(BLANK_ESM) + ".ghost"));
+
+  const auto pluginPath =
+      resolveGameFilePath(GetParam(), {externalDataPath}, dataPath, BLANK_ESM);
 
   if (GetParam() == GameId::openmw) {
     EXPECT_FALSE(pluginPath.has_value());
   } else {
-    EXPECT_EQ(dataPath / (std::string(BLANK_MASTER_DEPENDENT_ESM) + ".ghost"),
-              pluginPath);
+    EXPECT_EQ(dataPath / (std::string(BLANK_ESM) + ".ghost"), pluginPath);
   }
 }
 
 TEST_P(ResolveGameFilePathTest,
        shouldReturnNulloptIfTheFileDoesNotExistInAnyOfTheDataPaths) {
-  const auto pluginPath =
-      resolveGameFilePath(GetParam(), {localPath}, dataPath, "missing.esp");
+  const auto pluginPath = resolveGameFilePath(
+      GetParam(), {externalDataPath}, dataPath, "missing.esp");
 
   EXPECT_FALSE(pluginPath.has_value());
 }

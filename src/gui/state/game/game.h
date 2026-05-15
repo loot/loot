@@ -73,7 +73,7 @@ class CreationClubPlugins {
 public:
   void load(GameId gameId, const std::filesystem::path& gamePath);
 
-  bool isCreationClubPlugin(const std::string& name) const;
+  bool isCreationClubPlugin(std::string_view name) const;
 
 private:
   // Use Filename to benefit from libloot's case-insensitive comparisons.

@@ -38,49 +38,50 @@
 #include "tests/gui/test_helpers.h"
 
 namespace loot::test {
-class CreationClubPluginsTest : public CommonGameTestFixture {
+class CreationClubPluginsTest : public FilesystemTest {
 protected:
-  CreationClubPluginsTest() : CommonGameTestFixture(GameId::tes5se) {}
+  static constexpr std::string_view CC_PLUGIN_NAME{"ccPlugin.esp"};
 
-  std::string ccPluginName{"ccPlugin.esp"};
-  std::filesystem::path cccPath{gamePath / "Skyrim.ccc"};
+  std::filesystem::path cccPath{rootPath_ / "Skyrim.ccc"};
 };
 
 TEST_F(CreationClubPluginsTest,
        loadShouldClearCCPluginSetIfCCCFileDoesNotExist) {
   std::ofstream out(cccPath);
-  out << ccPluginName;
+  out << CC_PLUGIN_NAME;
   out.close();
 
   CreationClubPlugins ccPlugins;
 
-  ccPlugins.load(GameId::tes5se, gamePath);
+  ccPlugins.load(GameId::tes5se, rootPath_);
 
-  EXPECT_TRUE(ccPlugins.isCreationClubPlugin(ccPluginName));
+  EXPECT_TRUE(ccPlugins.isCreationClubPlugin(CC_PLUGIN_NAME));
 
-  ccPlugins.load(GameId::tes5se, gamePath);
+  ccPlugins.load(GameId::tes5se, rootPath_);
 
   std::filesystem::remove(cccPath);
 
-  ccPlugins.load(GameId::tes5se, gamePath);
+  ccPlugins.load(GameId::tes5se, rootPath_);
 
-  EXPECT_FALSE(ccPlugins.isCreationClubPlugin(ccPluginName));
+  EXPECT_FALSE(ccPlugins.isCreationClubPlugin(CC_PLUGIN_NAME));
 }
 
 TEST_F(CreationClubPluginsTest, loadShouldTrimCRLFLineEndingsFromCCCFileLines) {
   CreationClubPlugins ccPlugins;
 
   std::ofstream out(cccPath, std::ios::out | std::ios::binary);
-  out << ccPluginName << "\r\n";
+  out << CC_PLUGIN_NAME << "\r\n";
   out.close();
 
-  ccPlugins.load(GameId::tes5se, gamePath);
+  ccPlugins.load(GameId::tes5se, rootPath_);
 
-  EXPECT_TRUE(ccPlugins.isCreationClubPlugin(ccPluginName));
+  EXPECT_TRUE(ccPlugins.isCreationClubPlugin(CC_PLUGIN_NAME));
 }
 }
 
-namespace loot::gui::test {
+namespace loot::test {
+using ::loot::gui::Game;
+
 class GameTest : public loot::test::CommonGameTestFixture,
                  public testing::WithParamInterface<GameId> {
 protected:
@@ -1119,7 +1120,8 @@ TEST_P(
   ASSERT_EQ(2, messages.size());
   EXPECT_EQ(MessageSource::removedPluginsCheck, messages[0].source);
   EXPECT_EQ(
-      "LOOT has detected that \\\"invalid\\.esm\\\" is invalid and is now ignoring "
+      "LOOT has detected that \\\"invalid\\.esm\\\" is invalid and is now "
+      "ignoring "
       "it\\.",
       messages[0].text);
   EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
@@ -1132,7 +1134,8 @@ TEST_P(
   ASSERT_EQ(2, messages.size());
   EXPECT_EQ(MessageSource::removedPluginsCheck, messages[0].source);
   EXPECT_EQ(
-      "LOOT has detected that \\\"invalid\\.esp\\\" is invalid and is now ignoring "
+      "LOOT has detected that \\\"invalid\\.esp\\\" is invalid and is now "
+      "ignoring "
       "it\\.",
       messages[0].text);
   EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
@@ -1335,7 +1338,7 @@ TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
 }
 
 TEST_P(GameTest,
-    sortPluginsShouldReplaceExistingCyclicInteractionErrorMessages) {
+       sortPluginsShouldReplaceExistingCyclicInteractionErrorMessages) {
   Game game = createInitialisedGame();
   game.loadAllInstalledPlugins(true);
 
@@ -1387,8 +1390,7 @@ TEST_P(GameTest, sortPluginsShouldReplaceExistingUndefinedGroupErrorMessages) {
   auto messages = game.getMessages("en", false);
   ASSERT_EQ(2, messages.size());
   EXPECT_EQ(MessageSource::missingGroup, messages[0].source);
-  EXPECT_EQ("The group \\\"A\\\" does not exist\\.",
-      messages[0].text);
+  EXPECT_EQ("The group \\\"A\\\" does not exist\\.", messages[0].text);
   EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
 
   game.setUserGroups({Group("D", {"C"})});
@@ -1398,8 +1400,7 @@ TEST_P(GameTest, sortPluginsShouldReplaceExistingUndefinedGroupErrorMessages) {
   messages = game.getMessages("en", false);
   ASSERT_EQ(2, messages.size());
   EXPECT_EQ(MessageSource::missingGroup, messages[0].source);
-  EXPECT_EQ("The group \\\"C\\\" does not exist\\.",
-      messages[0].text);
+  EXPECT_EQ("The group \\\"C\\\" does not exist\\.", messages[0].text);
   EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
 }
 
@@ -1422,12 +1423,12 @@ TEST_P(GameTest, sortPluginsShouldReplaceExistingMissingPluginErrorMessages) {
   auto messages = game.getMessages("en", false);
   ASSERT_EQ(2, messages.size());
   EXPECT_EQ(MessageSource::missingMaster, messages[0].source);
-  EXPECT_EQ(expectedText,
-      messages[0].text);
+  EXPECT_EQ(expectedText, messages[0].text);
   EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
 
   std::filesystem::rename(dataPath / "Blank.esm.bak", dataPath / BLANK_ESM);
-  std::filesystem::rename(dataPath / BLANK_DIFFERENT_ESM, dataPath / "Blank.esm.bak");
+  std::filesystem::rename(dataPath / BLANK_DIFFERENT_ESM,
+                          dataPath / "Blank.esm.bak");
 
   game.loadAllInstalledPlugins(true);
   game.sortPlugins();
@@ -1435,8 +1436,7 @@ TEST_P(GameTest, sortPluginsShouldReplaceExistingMissingPluginErrorMessages) {
   messages = game.getMessages("en", false);
   ASSERT_EQ(2, messages.size());
   EXPECT_EQ(MessageSource::missingMaster, messages[0].source);
-  EXPECT_EQ(expectedText,
-      messages[0].text);
+  EXPECT_EQ(expectedText, messages[0].text);
   EXPECT_EQ(MessageSource::unsortedLoadOrderCheck, messages[1].source);
 }
 
@@ -1687,7 +1687,8 @@ TEST_P(GameTest, loadMetadataCannotUpdateUserMetadataForNonLoadedPlugins) {
   EXPECT_EQ("A", game.getUserMetadata("Blank.esp").value().GetGroup().value());
 }
 
-TEST_P(GameTest, loadMetadataShouldReplaceExistingMetadataParsingErrorMessages) {
+TEST_P(GameTest,
+       loadMetadataShouldReplaceExistingMetadataParsingErrorMessages) {
   Game game = createInitialisedGame();
 
   std::ofstream out(game.getMasterlistPath());

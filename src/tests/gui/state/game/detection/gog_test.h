@@ -39,10 +39,10 @@ TEST_P(GetGogGameIdsTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(loot::gog::getGogGameIds(GetParam()));
 }
 
-class GOG_FindGameInstallsTest : public CommonGameTestFixture,
+class GOG_FindGameInstallsTest : public BaseGameDetectionTest,
                                  public ::testing::WithParamInterface<GameId> {
 protected:
-  GOG_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
+  GOG_FindGameInstallsTest() : BaseGameDetectionTest(GetParam()) {}
 };
 
 INSTANTIATE_TEST_SUITE_P(,

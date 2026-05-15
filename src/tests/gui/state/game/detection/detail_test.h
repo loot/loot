@@ -24,15 +24,14 @@
 #ifndef LOOT_TESTS_GUI_STATE_GAME_DETECTION_DETAIL_TEST
 #define LOOT_TESTS_GUI_STATE_GAME_DETECTION_DETAIL_TEST
 
-#include "gui/state/game/detection/detail.h"
-
 #include <boost/algorithm/string/replace.hpp>
 
+#include "gui/state/game/detection/detail.h"
 #include "tests/common_game_test_fixture.h"
 #include "tests/gui/state/game/detection/test_registry.h"
 
 namespace loot::test {
-static constexpr std::array<InstallSource, 5> ALL_INSTALL_SOURCES = {
+inline constexpr std::array<InstallSource, 5> ALL_INSTALL_SOURCES = {
     InstallSource::steam,
     InstallSource::gog,
     InstallSource::epic,
@@ -71,44 +70,44 @@ TEST_P(GetNameSourceSuffixTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(getNameSourceSuffix(GetParam()));
 }
 
-class FindGameInstallsTest : public CommonGameTestFixture {
+class FindGameInstallsTest : public FilesystemTest {
 protected:
   FindGameInstallsTest() :
-      CommonGameTestFixture(GameId::tes5se),
-      epicManifestsPath(gamePath.parent_path() / "Manifests"),
-      xboxGamingRootPath(gamePath.parent_path() / "xbox"),
-      genericInstallPath(gamePath),
-      steamInstallPath(gamePath.parent_path() / "steam"),
-      gogInstallPath(gamePath.parent_path() / "gog"),
-      epicInstallPath(gamePath.parent_path() / "epic"),
+      epicManifestsPath(rootPath_ / "Manifests"),
+      xboxGamingRootPath(rootPath_ / "xbox"),
+      genericInstallPath(rootPath_ / "generic"),
+      steamInstallPath(rootPath_ / "steam"),
+      gogInstallPath(rootPath_ / "gog"),
+      epicInstallPath(rootPath_ / "epic"),
       msInstallPath(xboxGamingRootPath /
                     "The Elder Scrolls V- Skyrim Special Edition (PC)" /
                     "Content") {
     // Create generic install.
+    createInstall(genericInstallPath);
     registry.SetStringValue(
         "Software\\Bethesda Softworks\\Skyrim Special Edition",
         genericInstallPath.u8string());
 
     // Create Steam install.
-    copyInstall(steamInstallPath);
+    createInstall(steamInstallPath);
     registry.SetStringValue(
         "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
         "489830",
         steamInstallPath.u8string());
 
     // Create GOG install.
-    copyInstall(gogInstallPath);
+    createInstall(gogInstallPath);
     registry.SetStringValue("Software\\GOG.com\\Games\\1801825368",
                             gogInstallPath.u8string());
 
     // Create Epic install.
     createEpicManifest();
-    copyInstall(epicInstallPath);
+    createInstall(epicInstallPath);
     registry.SetStringValue("Software\\Epic Games\\EpicGamesLauncher",
                             epicManifestsPath.parent_path().u8string());
 
     // Create MS Store install.
-    copyInstall(msInstallPath);
+    createInstall(msInstallPath);
   }
 
   std::filesystem::path epicManifestsPath;
@@ -135,11 +134,9 @@ private:
     out.close();
   }
 
-  void copyInstall(const std::filesystem::path& destination) {
-    std::filesystem::create_directories(destination.parent_path());
-
-    std::filesystem::copy(
-        gamePath, destination, std::filesystem::copy_options::recursive);
+  void createInstall(const std::filesystem::path& destination) {
+    touch(destination / "Data" / "Skyrim.esm");
+    touch(destination / "SkyrimSE.exe");
   }
 };
 
@@ -493,16 +490,14 @@ TEST(AppendNewGamesSettings,
   EXPECT_EQ("TES III: Morrowind (2)", gamesSettings[2].getName());
 }
 
-class UpdateInstalledGamesSettingsTest : public CommonGameTestFixture {
+class UpdateInstalledGamesSettingsTest : public FilesystemTest {
 protected:
-  UpdateInstalledGamesSettingsTest() : CommonGameTestFixture(GameId::tes3) {}
-
   void SetUp() override {
-    CommonGameTestFixture::SetUp();
+    FilesystemTest::SetUp();
 
     initialCurrentPath = std::filesystem::current_path();
 
-    const auto lootPath = gamePath / "LOOT";
+    const auto lootPath = rootPath_ / "LOOT";
 
     // Change the current path into a game subfolder.
     std::filesystem::create_directory(lootPath);
@@ -513,7 +508,7 @@ protected:
     // Restore the previous current path.
     std::filesystem::current_path(initialCurrentPath);
 
-    CommonGameTestFixture::TearDown();
+    FilesystemTest::TearDown();
   }
 
 private:
@@ -523,6 +518,8 @@ private:
 #ifdef _WIN32
 TEST_F(UpdateInstalledGamesSettingsTest,
        shouldReturnSettingsForGameInParentOfCurrentDirectory) {
+  touch(rootPath_ / "Data Files" / "Morrowind.esm");
+
   std::vector<GameSettings> gamesSettings;
   updateInstalledGamesSettings(gamesSettings, TestRegistry(), {}, {}, {});
 

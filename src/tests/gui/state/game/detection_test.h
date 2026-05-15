@@ -32,10 +32,10 @@
 
 namespace loot::test {
 
-class IsInstalledTest : public CommonGameTestFixture,
+class IsInstalledTest : public BaseGameDetectionTest,
                         public testing::WithParamInterface<GameId> {
 protected:
-  IsInstalledTest() : CommonGameTestFixture(GetParam()) {}
+  IsInstalledTest() : BaseGameDetectionTest(GetParam()) {}
 };
 
 // Pass an empty first argument, as it's a prefix for the test instantiation,
@@ -43,6 +43,8 @@ protected:
 INSTANTIATE_TEST_SUITE_P(, IsInstalledTest, ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(IsInstalledTest, shouldSupportNonAsciiGameMasters) {
+  touch(dataPath / std::filesystem::u8path(NON_ASCII_ESP));
+
   const GameSettings settings =
       GameSettings(GetParam(), "").setMaster(NON_ASCII_ESP).setGamePath(gamePath);
   EXPECT_TRUE(isInstalled(settings));

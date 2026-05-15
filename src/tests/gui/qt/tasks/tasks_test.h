@@ -34,11 +34,11 @@
 
 namespace loot {
 namespace test {
-static constexpr const char* GENERIC_QUERY_ERROR_MESSAGE =
+inline constexpr const char* GENERIC_QUERY_ERROR_MESSAGE =
     "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
     "get to it through the main menu) for more information.";
 
-static constexpr int THREAD_TIMEOUT_MS = 50;
+inline constexpr int THREAD_TIMEOUT_MS = 50;
 
 class TestQuery : public Query {
 public:

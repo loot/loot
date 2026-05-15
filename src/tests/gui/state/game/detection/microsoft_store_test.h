@@ -32,10 +32,10 @@
 
 namespace loot::test {
 class Microsoft_FindGameInstallsTest
-    : public CommonGameTestFixture,
+    : public BaseGameDetectionTest,
       public testing::WithParamInterface<GameId> {
 protected:
-  Microsoft_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
+  Microsoft_FindGameInstallsTest() : BaseGameDetectionTest(GetParam()) {}
 
   static std::filesystem::path getGamePath(
       const std::filesystem::path& xboxGamingRootPath) {

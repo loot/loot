@@ -32,13 +32,13 @@
 
 namespace loot::test {
 class Generic_FindGameInstallsTest
-    : public CommonGameTestFixture,
+    : public BaseGameDetectionTest,
       public testing::WithParamInterface<GameId> {
 protected:
-  Generic_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
+  Generic_FindGameInstallsTest() : BaseGameDetectionTest(GetParam()) {}
 
   void SetUp() override {
-    CommonGameTestFixture::SetUp();
+    BaseGameDetectionTest::SetUp();
 
     initialCurrentPath = std::filesystem::current_path();
 
@@ -53,7 +53,7 @@ protected:
     // Restore the previous current path.
     restoreCurrentPath();
 
-    CommonGameTestFixture::TearDown();
+    BaseGameDetectionTest::TearDown();
   }
 
   void restoreCurrentPath() const {
@@ -381,10 +381,10 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogRegistryGame) {
   }
 }
 
-class DetectGameInstallTest : public CommonGameTestFixture,
+class DetectGameInstallTest : public BaseGameDetectionTest,
                               public testing::WithParamInterface<GameId> {
 protected:
-  DetectGameInstallTest() : CommonGameTestFixture(GetParam()) {
+  DetectGameInstallTest() : BaseGameDetectionTest(GetParam()) {
     if (GetParam() == GameId::nehrim) {
       touch(gamePath / "NehrimLauncher.exe");
     } else if (GetParam() == GameId::enderal ||

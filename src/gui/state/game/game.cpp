@@ -841,7 +841,7 @@ void CreationClubPlugins::load(GameId gameId,
   creationClubPlugins_ = readFilenamesInFile(cccFilePath);
 }
 
-bool CreationClubPlugins::isCreationClubPlugin(const std::string& name) const {
+bool CreationClubPlugins::isCreationClubPlugin(std::string_view name) const {
   return creationClubPlugins_.count(Filename(name)) != 0;
 }
 

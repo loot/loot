@@ -43,17 +43,14 @@ bool operator==(const LootSettings::Language& lhs,
 }
 
 namespace test {
-class LootSettingsTest : public CommonGameTestFixture {
+class LootSettingsTest : public FilesystemTest {
 protected:
   LootSettingsTest() :
-      CommonGameTestFixture(GameId::tes5),
-      settingsFile_(lootDataPath / "settings_.toml"),
-      unicodeSettingsFile_(lootDataPath / "Andr\xc3\xa9_settings_.toml"),
+      settingsFile_(rootPath_ / "settings_.toml"),
+      unicodeSettingsFile_(rootPath_ / "Andr\xc3\xa9_settings_.toml"),
       gitRepoPath_(getTempPath()) {}
 
   void SetUp() override {
-    CommonGameTestFixture::SetUp();
-
     std::filesystem::create_directories(gitRepoPath_ / ".git");
 
     touch(gitRepoPath_ / "masterlist.yaml");
@@ -65,7 +62,7 @@ protected:
   void TearDown() override {
     std::filesystem::remove_all(gitRepoPath_);
 
-    CommonGameTestFixture::TearDown();
+    FilesystemTest::TearDown();
   }
 
   void checkoutBranch(const std::string& branch) {
@@ -481,13 +478,13 @@ TEST_F(LootSettingsTest,
        loadingShouldMapOblivonTypeToNehrimIfInstallPathIsANehrimInstall) {
   using std::endl;
 
-  touch(gamePath / "NehrimLauncher.exe");
+  touch(rootPath_ / "NehrimLauncher.exe");
 
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "type = \"Oblivion\"" << endl
       << "folder = \"\"" << endl
-      << "path = \"" << escapePath(gamePath) << "\"" << endl;
+      << "path = \"" << escapePath(rootPath_) << "\"" << endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -563,13 +560,13 @@ TEST_F(LootSettingsTest,
        loadingShouldMapSkyrimTypeToEnderalIfInstallPathIsAnEnderalInstall) {
   using std::endl;
 
-  touch(gamePath / "Enderal Launcher.exe");
+  touch(rootPath_ / "Enderal Launcher.exe");
 
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "type = \"Skyrim\"" << endl
       << "folder = \"\"" << endl
-      << "path = \"" << escapePath(gamePath) << "\"" << endl;
+      << "path = \"" << escapePath(rootPath_) << "\"" << endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -666,17 +663,17 @@ TEST_F(LootSettingsTest,
        loadingShouldMapSkyrimSETypeToEnderalSEIfInstallPathIsAnEnderalInstall) {
   using std::endl;
 
-  touch(gamePath / "Enderal Launcher.exe");
+  touch(rootPath_ / "Enderal Launcher.exe");
 
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "type = \"SkyrimSE\"" << endl
       << "folder = \"\"" << endl
-      << "path = \"" << escapePath(gamePath) << "\"" << endl
+      << "path = \"" << escapePath(rootPath_) << "\"" << endl
       << "[[games]]" << endl
       << "type = \"Skyrim Special Edition\"" << endl
       << "folder = \"\"" << endl
-      << "path = \"" << escapePath(gamePath) << "\"" << endl;
+      << "path = \"" << escapePath(rootPath_) << "\"" << endl;
   out.close();
 
   settings_.load(settingsFile_);
