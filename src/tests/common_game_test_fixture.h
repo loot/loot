@@ -136,6 +136,28 @@ std::string getGameExecutable(GameId gameId) {
   }
 }
 
+std::vector<std::string> readFileLines(const std::filesystem::path& file) {
+  std::ifstream in(file);
+
+  std::vector<std::string> lines;
+  while (in) {
+    std::string line;
+    std::getline(in, line);
+
+    if (!line.empty()) {
+      lines.push_back(line);
+    }
+  }
+
+  return lines;
+}
+
+bool isLoadOrderTimestampBased(GameId gameId) {
+  return gameId == GameId::tes3 || gameId == GameId::tes4 ||
+         gameId == GameId::nehrim || gameId == GameId::fo3 ||
+         gameId == GameId::fonv;
+}
+
 class FilesystemTest : public ::testing::Test {
 protected:
   FilesystemTest() : rootPath_(getTempPath()) {
@@ -183,92 +205,36 @@ class CommonGameTestFixture : public FilesystemTest {
 protected:
   explicit CommonGameTestFixture(const GameId gameId) :
       gameId_(gameId),
-      missingPath(rootPath_ / "missing"),
       gamePath(rootPath_ / "games" / "game"),
       dataPath(gamePath / getPluginsFolder(gameId)),
       localPath(rootPath_ / "local" / "game"),
-      lootDataPath(rootPath_ / "local" / "LOOT"),
-      masterFile(getMasterFile(gameId)) {
+      lootDataPath(rootPath_ / "local" / "LOOT") {
     assertInitialState();
   }
 
   void assertInitialState() {
     using std::filesystem::create_directories;
-    using std::filesystem::exists;
 
     create_directories(dataPath);
-
     create_directories(localPath);
-
     create_directories(lootDataPath);
-
-    if (isExecutableNeeded(gameId_)) {
-      touch(gamePath / getGameExecutable(gameId_));
-    }
-
-    auto sourcePluginsPath = getSourcePluginsPath();
-
-    copyPlugin(sourcePluginsPath, BLANK_ESM);
-    copyPlugin(sourcePluginsPath, BLANK_DIFFERENT_ESM);
-    copyPlugin(sourcePluginsPath, BLANK_MASTER_DEPENDENT_ESM);
-    copyPlugin(sourcePluginsPath, BLANK_DIFFERENT_MASTER_DEPENDENT_ESM);
-    copyPlugin(sourcePluginsPath, BLANK_ESP);
-    copyPlugin(sourcePluginsPath, BLANK_DIFFERENT_ESP);
-    copyPlugin(sourcePluginsPath, BLANK_MASTER_DEPENDENT_ESP);
-    copyPlugin(sourcePluginsPath, BLANK_DIFFERENT_MASTER_DEPENDENT_ESP);
-    copyPlugin(sourcePluginsPath, BLANK_PLUGIN_DEPENDENT_ESP);
-    copyPlugin(sourcePluginsPath, BLANK_DIFFERENT_PLUGIN_DEPENDENT_ESP);
-
-    // Make sure the game master plugin exists.
-    ASSERT_NO_THROW(std::filesystem::copy_file(dataPath / BLANK_ESM,
-                                               dataPath / masterFile));
-    ASSERT_TRUE(exists(dataPath / masterFile));
-
-    // Create the non-ASCII plugin.
-    ASSERT_NO_THROW(std::filesystem::copy_file(
-        dataPath / BLANK_ESP,
-        dataPath / std::filesystem::u8path(NON_ASCII_ESP)));
-    ASSERT_TRUE(exists(dataPath / std::filesystem::u8path(NON_ASCII_ESP)));
-
-    // Set initial load order and active plugins.
-    setLoadOrder(getInitialLoadOrder());
-
-    // Ghost a plugin.
-    ASSERT_NO_THROW(std::filesystem::rename(
-        dataPath / BLANK_MASTER_DEPENDENT_ESM,
-        dataPath / (std::string(BLANK_MASTER_DEPENDENT_ESM) + ".ghost")));
-    ASSERT_FALSE(exists(dataPath / BLANK_MASTER_DEPENDENT_ESM));
-    ASSERT_TRUE(exists(dataPath /
-                       (std::string(BLANK_MASTER_DEPENDENT_ESM) + ".ghost")));
-
-    ASSERT_FALSE(exists(missingPath));
-    ASSERT_FALSE(exists(dataPath / MISSING_ESP));
   }
 
-  void copyPlugin(const std::filesystem::path& sourceParentPath,
-                  const std::string& filename) {
-    std::filesystem::copy_file(sourceParentPath / filename,
-                               dataPath / filename);
-    ASSERT_TRUE(std::filesystem::exists(dataPath / filename));
+  void copyPlugin(std::string_view filename) { copyPlugin(filename, filename); }
+
+  void copyPlugin(std::string_view sourceFilename,
+                  std::string_view destinationFilename) {
+    const auto destinationPath =
+        dataPath / std::filesystem::u8path(destinationFilename);
+
+    std::filesystem::copy_file(
+        getSourcePluginsPath() / std::filesystem::u8path(sourceFilename),
+        destinationPath);
+
+    ASSERT_TRUE(std::filesystem::exists(destinationPath));
   }
 
-  std::vector<std::string> readFileLines(const std::filesystem::path& file) {
-    std::ifstream in(file);
-
-    std::vector<std::string> lines;
-    while (in) {
-      std::string line;
-      std::getline(in, line);
-
-      if (!line.empty()) {
-        lines.push_back(line);
-      }
-    }
-
-    return lines;
-  }
-
-  std::vector<std::string> getLoadOrder() {
+  std::vector<std::string> getLoadOrder() const {
     std::vector<std::string> actual;
     if (isLoadOrderTimestampBased(gameId_)) {
       std::map<std::filesystem::file_time_type, std::string> loadOrder;
@@ -310,23 +276,6 @@ protected:
     return actual;
   }
 
-  std::vector<std::pair<std::string, bool>> getInitialLoadOrder() const {
-    return std::vector<std::pair<std::string, bool>>({
-        {masterFile, true},
-        {BLANK_ESM, true},
-        {BLANK_DIFFERENT_ESM, false},
-        {BLANK_MASTER_DEPENDENT_ESM, false},
-        {BLANK_DIFFERENT_MASTER_DEPENDENT_ESM, false},
-        {BLANK_ESP, false},
-        {BLANK_DIFFERENT_ESP, false},
-        {BLANK_MASTER_DEPENDENT_ESP, false},
-        {BLANK_DIFFERENT_MASTER_DEPENDENT_ESP, true},
-        {BLANK_PLUGIN_DEPENDENT_ESP, false},
-        {BLANK_DIFFERENT_PLUGIN_DEPENDENT_ESP, false},
-        {NON_ASCII_ESP, true},
-    });
-  }
-
   std::filesystem::path getSourcePluginsPath() const {
     return loot::test::getSourcePluginsPath(gameId_);
   }
@@ -335,15 +284,11 @@ private:
   GameId gameId_;
 
 protected:
-  std::filesystem::path missingPath;
   std::filesystem::path gamePath;
   std::filesystem::path dataPath;
   std::filesystem::path localPath;
   std::filesystem::path lootDataPath;
 
-  std::string masterFile;
-
-private:
   void setLoadOrder(
       const std::vector<std::pair<std::string, bool>>& loadOrder) const {
     using std::filesystem::u8path;
@@ -399,12 +344,6 @@ private:
       std::ofstream out(parentPath / "loadorder.txt");
       for (const auto& plugin : loadOrder) out << plugin.first << std::endl;
     }
-  }
-
-  static bool isLoadOrderTimestampBased(GameId gameId) {
-    return gameId == GameId::tes3 || gameId == GameId::tes4 ||
-           gameId == GameId::nehrim || gameId == GameId::fo3 ||
-           gameId == GameId::fonv;
   }
 };
 }
