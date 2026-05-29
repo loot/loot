@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- File name extension must be .runsettings -->
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+        <Configuration>
+          <Format>coverage</Format>
+          <CodeCoverage>
+            <ModulePaths>
+              <Include>
+                <ModulePath>.*\.exe$</ModulePath>
+              </Include>
+            </ModulePaths>
+
+            <Functions>
+              <Exclude>
+                <Function>^boost::.*</Function>
+                <Function>^fmt::.*</Function>
+                <Function>^loot::test::.*</Function>
+                <Function>^spdlog::.*</Function>
+                <Function>^toml::.*</Function>
+                <Function>^tyti::vdf::.*</Function>
+                <!-- Google Test -->
+                <Function>^testing::.*</Function>
+                <Function>^RUN_ALL_TESTS$</Function>
+              </Exclude>
+            </Functions>
+
+            <Sources>
+              <Exclude>
+                <!-- LOOT test sources (not everything can be in loot::test) -->
+                <Source>.*\\src\\tests\\.*</Source>
+                <!-- Boost.Locale sources -->
+                <Source>.*\\libs\\locale\\src\\.*</Source>
+                <!-- Qt sources -->
+                <Source>.*\\include\\QtConcurrent\\.*</Source>
+                <Source>.*\\include\\QtCore\\.*</Source>
+                <Source>.*\\include\\QtTest\\.*</Source>
+                <!-- Qt-generated sources -->
+                <Source>.*\\moc_tasks.cpp</Source>
+                <!-- minizip-related sources -->
+                <Source>.*\\mz_[a-z0-9_]+.c</Source>
+                <Source>.*\\third_party\\zlib\\crc32.c</Source>
+                <Source>.*\\third_party\\zlib\\deflate.c</Source>
+                <Source>.*\\third_party\\zlib\\adler32.c</Source>
+                <Source>.*\\third_party\\zlib\\zutil.c</Source>
+                <Source>.*\\third_party\\zlib\\trees.c</Source>
+              </Exclude>
+            </Sources>
+
+            <!-- We recommend you do not change the following values: -->
+
+            <!-- Set this to True to collect coverage information for functions marked with the "SecuritySafeCritical" attribute. Instead of writing directly into a memory location from such functions, code coverage inserts a probe that redirects to another function, which in turns writes into memory. -->
+            <UseVerifiableInstrumentation>True</UseVerifiableInstrumentation>
+            <!-- When set to True, collects coverage information from child processes that are launched with low-level ACLs, for example, UWP apps. -->
+            <AllowLowIntegrityProcesses>True</AllowLowIntegrityProcesses>
+            <!-- When set to True, collects coverage information from child processes that are launched by test or production code. -->
+            <CollectFromChildProcesses>True</CollectFromChildProcesses>
+            <!-- When set to True, restarts the IIS process and collects coverage information from it. -->
+            <CollectAspDotNet>False</CollectAspDotNet>
+            <!-- When set to True, static native instrumentation will be enabled. -->
+            <EnableStaticNativeInstrumentation>True</EnableStaticNativeInstrumentation>
+            <!-- When set to True, dynamic native instrumentation will be enabled. -->
+            <EnableDynamicNativeInstrumentation>True</EnableDynamicNativeInstrumentation>
+            <!-- When set to True, instrumented binaries on disk are removed and original files are restored. -->
+            <EnableStaticNativeInstrumentationRestore>True</EnableStaticNativeInstrumentationRestore>
+          </CodeCoverage>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

@@ -476,6 +476,14 @@ if(WIN32)
         "${CMAKE_SOURCE_DIR}/src/gui/LOOT.manifest")
 endif()
 
+if(MSVC)
+    # Copy test code coverage config into build directory where MSVC expects to
+    # find it.
+    configure_file("${PROJECT_SOURCE_DIR}/.runsettings"
+        "${PROJECT_BINARY_DIR}/.runsettings"
+        COPYONLY)
+endif()
+
 ##############################
 # Define Targets
 ##############################
