@@ -5,6 +5,55 @@ Version History
 Only application history is recorded here. A full history of masterlist changes
 may be viewed by browsing the GitHub repositories.
 
+0.29.2 - Unreleased
+===================
+
+Added
+-----
+
+- A new dialog for comparing current and sorted load orders. The dialog can be
+  accessed from the Game menu or the toolbar while LOOT is displaying is an
+  unapplied sorted load order.
+- When a masterlist update removes groups that are referenced by user metadata
+  (directly or indirectly), LOOT will now recover those groups as user metadata, appending `` (Recovered)`` to their original names. User metadata for
+  installed plugins is also updated to use the new group names, and a general
+  warning message is displayed for each recovered group to inform the user of
+  the change, so that they can update their user metadata as necessary. A
+  separate warning message is displayed after loading metadata if there are any groups with names ending in `` (Recovered)``.
+
+Fixed
+-----
+
+- When regenerating state-based general messages in response to state changes
+  (e.g. loading data or sorting), LOOT now only removes the existing messages
+  that are relevant to the state that has changed before generating any new
+  messages. For example, if there is a message about a metadata parsing error,
+  it will no longer be removed when loading plugins.
+- When LOOT was running as a Flatpak application and OpenMW was not installed as
+  a Flatpak application and the host did not have the ``XDG_CONFIG_HOME`` and/or ``XDG_DATA_HOME`` environment variables defined, LOOT would incorrectly look
+  for OpenMW's default user config and user data directories inside its own
+  Flatpak data directory instead of in the host's home directory. Via libloot.
+
+
+Changed
+-------
+
+- The dropdown list of plugins displayed by the plugin metadata editor when
+  editing filename values for requirements, incompatibilities or "load after"
+  metadata no longer includes the plugin that is having its metadata edited.
+- When reading BSAs and BA2s, LOOT now uses asset paths instead of hashes
+  of those paths. This improves the accuracy of asset overlap checks performed
+  during sorting, as the hashes used by BSAs are relatively collision-prone.
+
+  This means that BSAs are now required to include folder and file names, and
+  any that don't will be skipped with an error logged for each. All official
+  BSAs and BSAs created using the official tools include folder and file names.
+  Via libloot.
+- Updated libloot to v0.29.5.
+- Updated the Bulgarian translation.
+- Updated the Tamil translation.
+
+
 0.29.1 - 2026-04-18
 ===================
 
