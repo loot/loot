@@ -249,18 +249,19 @@ std::optional<GameInstall> findGameInstallInRegistry(
   return std::nullopt;
 }
 
-std::optional<GameInstall> findGameInstallInRegistry(
+std::vector<GameInstall> findGameInstallsInRegistry(
     const loot::RegistryInterface& registry,
     const GameId gameId) {
+  std::vector<GameInstall> installs;
   for (const auto& registryValue : getRegistryValues(gameId)) {
     const auto gameInstall =
         findGameInstallInRegistry(registry, gameId, registryValue);
     if (gameInstall.has_value()) {
-      return gameInstall;
+      installs.push_back(gameInstall.value());
     }
   }
 
-  return std::nullopt;
+  return installs;
 }
 
 #ifdef _WIN32
@@ -363,9 +364,8 @@ std::vector<GameInstall> findGameInstalls(const RegistryInterface& registry,
 #endif
 
   try {
-    const auto registryInstall = findGameInstallInRegistry(registry, gameId);
-    if (registryInstall.has_value()) {
-      installs.push_back(registryInstall.value());
+    for (auto registryInstall : findGameInstallsInRegistry(registry, gameId)) {
+      installs.push_back(registryInstall);
     }
   } catch (const std::exception& e) {
     const auto logger = getLogger();
