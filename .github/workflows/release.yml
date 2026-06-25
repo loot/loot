@@ -44,7 +44,7 @@ jobs:
       CMAKE_SYSTEM_VERSION: "10.0.17763.0"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
