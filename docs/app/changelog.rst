@@ -11,15 +11,18 @@ may be viewed by browsing the GitHub repositories.
 Added
 -----
 
+- Support for detecting OpenMW v0.51.0 using its Windows Registry key.
 - A new dialog for comparing current and sorted load orders. The dialog can be
   accessed from the Game menu or the toolbar while LOOT is displaying is an
   unapplied sorted load order.
 - When a masterlist update removes groups that are referenced by user metadata
-  (directly or indirectly), LOOT will now recover those groups as user metadata, appending `` (Recovered)`` to their original names. User metadata for
+  (directly or indirectly), LOOT will now recover those groups as user metadata,
+  appending `` (Recovered)`` to their original names. User metadata for
   installed plugins is also updated to use the new group names, and a general
   warning message is displayed for each recovered group to inform the user of
   the change, so that they can update their user metadata as necessary. A
-  separate warning message is displayed after loading metadata if there are any groups with names ending in `` (Recovered)``.
+  separate warning message is displayed after loading metadata if there are any
+  groups with names ending in `` (Recovered)``.
 
 Fixed
 -----
@@ -38,6 +41,9 @@ Fixed
 Changed
 -------
 
+- When multiple versions of OpenMW are installed, LOOT can now detect them all
+  using their Windows Registry keys instead of stopping at the first version it
+  finds.
 - The dropdown list of plugins displayed by the plugin metadata editor when
   editing filename values for requirements, incompatibilities or "load after"
   metadata no longer includes the plugin that is having its metadata edited.
