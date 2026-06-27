@@ -27,6 +27,11 @@ Added
 Fixed
 -----
 
+- When LOOT was run through MO2 for a game install path that included a symlink,
+  plugins installed by MO2 would not appear in LOOT. Note that although such
+  plugins are now displayed in LOOT, it's a known issue that MO2's virtual
+  filesystem does not work with symlinks, so there may be other negative effects
+  when they are used together.
 - When regenerating state-based general messages in response to state changes
   (e.g. loading data or sorting), LOOT now only removes the existing messages
   that are relevant to the state that has changed before generating any new
@@ -55,7 +60,7 @@ Changed
   any that don't will be skipped with an error logged for each. All official
   BSAs and BSAs created using the official tools include folder and file names.
   Via libloot.
-- Updated libloot to v0.29.5.
+- Updated libloot to v0.29.6.
 - Updated the Bulgarian translation.
 - Updated the Tamil translation.
 
