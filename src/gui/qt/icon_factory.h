@@ -52,6 +52,10 @@ public:
   static QIcon getCompareLoadOrdersIcon();
   static QIcon getUpdateMasterlistIcon();
 
+  static QIcon getRegexIcon();
+  static QIcon getNextSearchResultIcon();
+  static QIcon getPreviousSearchResultIcon();
+
   static QIcon getSettingsIcon();
   static QIcon getArchiveIcon();
   static QIcon getQuitIcon();

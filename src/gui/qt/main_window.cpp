@@ -524,7 +524,7 @@ void MainWindow::setupUi() {
   setupToolBar();
 
   settingsDialog->setObjectName("settingsDialog");
-  searchDialog->setObjectName("searchDialog");
+  searchToolBar->setObjectName("searchToolBar");
   backupDialog->setObjectName("backupDialog");
   restoreBackupDialog->setObjectName("restoreBackupDialog");
   sidebarPluginsView->setObjectName("sidebarPluginsView");
@@ -643,9 +643,6 @@ void MainWindow::setupMenuBar() {
 
   actionOpenGroupsEditor->setObjectName("actionOpenGroupsEditor");
 
-  actionSearch->setObjectName("actionSearch");
-  actionSearch->setShortcut(QKeySequence::Find);
-
   actionCopyLoadOrder->setObjectName("actionCopyLoadOrder");
 
   actionCopyContent->setObjectName("actionCopyContent");
@@ -703,7 +700,6 @@ void MainWindow::setupMenuBar() {
   menuGame->addAction(actionDiscardSort);
   menuGame->addAction(actionCompareLoadOrders);
   menuGame->addSeparator();
-  menuGame->addAction(actionSearch);
   menuGame->addAction(actionCopyLoadOrder);
   menuGame->addAction(actionCopyContent);
   menuGame->addAction(actionRefreshContent);
@@ -767,7 +763,8 @@ void MainWindow::setupToolBar() {
   toolBar->addAction(actionApplySort);
   toolBar->addAction(actionDiscardSort);
   toolBar->addAction(actionCompareLoadOrders);
-  toolBar->addAction(actionSearch);
+
+  addToolBar(Qt::TopToolBarArea, searchToolBar);
 }
 
 void MainWindow::setupViews() {
@@ -890,8 +887,6 @@ void MainWindow::translateUi() {
   /* translators: This string is an action in the Game menu. */
   actionOpenGroupsEditor->setText(qTranslate("&Edit Groups…"));
   /* translators: This string is an action in the Game menu. */
-  actionSearch->setText(qTranslate("Searc&h Cards…"));
-  /* translators: This string is an action in the Game menu. */
   actionCopyLoadOrder->setText(qTranslate("Copy &Load Order"));
   /* translators: This string is an action in the Game menu. */
   actionCopyContent->setText(qTranslate("&Copy Content"));
@@ -962,7 +957,6 @@ void MainWindow::setIcons() {
   actionJoinDiscordServer->setIcon(IconFactory::getJoinDiscordServerIcon());
   actionAbout->setIcon(IconFactory::getAboutIcon());
   actionOpenGroupsEditor->setIcon(IconFactory::getOpenGroupsEditorIcon());
-  actionSearch->setIcon(IconFactory::getSearchIcon());
   actionCopyLoadOrder->setIcon(IconFactory::getCopyLoadOrderIcon());
   actionCopyContent->setIcon(IconFactory::getCopyContentIcon());
   actionRefreshContent->setIcon(IconFactory::getRefreshIcon());
@@ -983,13 +977,15 @@ void MainWindow::setIcons() {
   actionApplySort->setIcon(IconFactory::getApplySortIcon());
   actionDiscardSort->setIcon(IconFactory::getDiscardSortIcon());
   actionCompareLoadOrders->setIcon(IconFactory::getCompareLoadOrdersIcon());
+
+  searchToolBar->setIcons();
 }
 
 void MainWindow::enableGameActions() {
   menuGame->setEnabled(true);
   actionSort->setEnabled(true);
   actionUpdateMasterlist->setEnabled(true);
-  actionSearch->setEnabled(true);
+  searchToolBar->setEnabled(true);
 
   const auto enableRedatePlugins =
       shouldAllowRedating(state->getCurrentGame().getSettings().getId());
@@ -1008,7 +1004,7 @@ void MainWindow::disableGameActions() {
   menuGame->setEnabled(false);
   actionSort->setEnabled(false);
   actionUpdateMasterlist->setEnabled(false);
-  actionSearch->setEnabled(false);
+  searchToolBar->setEnabled(false);
 
   // Also disable plugin actions because they
   // only make sense within the context of a game.
@@ -1221,7 +1217,7 @@ void MainWindow::setFiltersState(
 }
 
 void MainWindow::refreshSearch() {
-  on_searchDialog_textChanged(searchDialog->getSearchText());
+  on_searchToolBar_textChanged(searchToolBar->getSearchText());
 }
 
 void MainWindow::refreshPluginRawData(const std::string& pluginName) {
@@ -1832,8 +1828,6 @@ void MainWindow::on_actionOpenGroupsEditor_triggered() {
     handleException(e);
   }
 }
-
-void MainWindow::on_actionSearch_triggered() { searchDialog->show(); }
 
 void MainWindow::on_actionCopyLoadOrder_triggered() {
   try {
@@ -2734,9 +2728,9 @@ void MainWindow::on_groupsEditor_accepted() {
   }
 }
 
-void MainWindow::on_searchDialog_finished() { searchDialog->reset(); }
+void MainWindow::on_searchToolBar_finished() { searchToolBar->reset(); }
 
-void MainWindow::on_searchDialog_textChanged(const QVariant& text) {
+void MainWindow::on_searchToolBar_textChanged(const QVariant& text) {
   const auto isEmpty =
       (text.userType() == QMetaType::QString && text.toString().isEmpty()) ||
       (text.userType() == QMetaType::QRegularExpression &&
@@ -2764,10 +2758,10 @@ void MainWindow::on_searchDialog_textChanged(const QVariant& text) {
                         flags);
 
   proxyModel->setSearchResults(results);
-  searchDialog->setSearchResults(static_cast<size_t>(results.size()));
+  searchToolBar->setSearchResults(static_cast<size_t>(results.size()));
 }
 
-void MainWindow::on_searchDialog_currentResultChanged(size_t resultIndex) {
+void MainWindow::on_searchToolBar_currentResultChanged(size_t resultIndex) {
   const auto sourceIndex = pluginItemModel->setCurrentSearchResult(resultIndex);
   const auto proxyIndex = proxyModel->mapFromSource(sourceIndex);
 

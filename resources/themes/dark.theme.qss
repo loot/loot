@@ -173,6 +173,7 @@ QPushButton:disabled
 }
 
 QToolBar,
+QToolBar > QLabel,
 QToolBar > QToolButton,
 QSplitter,
 QSplitter::handle,
@@ -181,6 +182,10 @@ QToolBox,
 QStatusBar,
 loot--PluginEditorWidget > QLabel {
     background-color: #1E1E1E;
+}
+
+QToolBar > QToolButton:checked  {
+    background-color: #2D2D2D;
 }
 
 QToolBox::tab {

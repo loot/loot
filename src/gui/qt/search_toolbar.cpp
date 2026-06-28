@@ -21,23 +21,22 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "gui/qt/search_dialog.h"
+#include "gui/qt/search_toolbar.h"
 
 #include <QtCore/QRegularExpression>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QHBoxLayout>
+#include <QtGui/QShortcut>
 #include <QtWidgets/QStyle>
-#include <QtWidgets/QVBoxLayout>
 
 #include "gui/qt/helpers.h"
+#include "gui/qt/icon_factory.h"
 
 namespace loot {
-SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) { setupUi(); }
+SearchToolBar::SearchToolBar(QWidget* parent) : QToolBar(parent) { setupUi(); }
 
-QVariant SearchDialog::getSearchText() const {
+QVariant SearchToolBar::getSearchText() const {
   const auto text = searchInput->text();
 
-  if (regexCheckbox->isChecked()) {
+  if (regexButton->isChecked()) {
     return QRegularExpression(
         text,
         QRegularExpression::CaseInsensitiveOption |
@@ -47,7 +46,7 @@ QVariant SearchDialog::getSearchText() const {
   return text;
 }
 
-void SearchDialog::reset() {
+void SearchToolBar::reset() {
   searchInput->clear();
   countLabel->setText("0 / 0");
 
@@ -55,7 +54,7 @@ void SearchDialog::reset() {
   nextButton->setDisabled(true);
 }
 
-void SearchDialog::setSearchResults(size_t resultsCount) {
+void SearchToolBar::setSearchResults(size_t resultsCount) {
   state.resultsCount = resultsCount;
   state.currentResultIndex = std::nullopt;
 
@@ -71,55 +70,73 @@ void SearchDialog::setSearchResults(size_t resultsCount) {
   }
 }
 
-void SearchDialog::setupUi() {
-  searchInput->setObjectName("searchInput");
-  regexCheckbox->setObjectName("regexCheckbox");
+void SearchToolBar::setIcons() {
+  regexButton->setIcon(IconFactory::getRegexIcon());
+  previousButton->setIcon(IconFactory::getPreviousSearchResultIcon());
+  nextButton->setIcon(IconFactory::getNextSearchResultIcon());
+}
 
+void SearchToolBar::setupUi() {
+  searchInput->setObjectName("searchInput");
   searchInput->setClearButtonEnabled(true);
 
-  auto buttonBox = new QDialogButtonBox(this);
-  buttonBox->setObjectName("dialogButtons");
+  regexButton->setObjectName("regexButton");
+  regexButton->setCheckable(true);
+
+  countLabel->setMargin(
+      this->style()->pixelMetric(QStyle::PixelMetric::PM_ToolBarItemMargin));
 
   previousButton->setObjectName("previousButton");
+
   nextButton->setObjectName("nextButton");
 
-  buttonBox->addButton(previousButton, QDialogButtonBox::ActionRole);
-  buttonBox->addButton(nextButton, QDialogButtonBox::ActionRole);
-
-  auto dialogLayout = new QVBoxLayout();
-  auto inputLayout = new QHBoxLayout();
-
-  inputLayout->addWidget(searchInput);
-  inputLayout->addWidget(countLabel);
-
-  dialogLayout->addLayout(inputLayout);
-  dialogLayout->addWidget(regexCheckbox);
-  dialogLayout->addWidget(buttonBox);
-
-  setLayout(dialogLayout);
+  addWidget(searchInput);
+  addWidget(regexButton);
+  addWidget(countLabel);
+  addWidget(previousButton);
+  addWidget(nextButton);
 
   translateUi();
 
+  setIcons();
+
   reset();
+
+  const auto focusShortcut = new QShortcut(QKeySequence::Find, this);
+  const auto previousShortcut = new QShortcut(QKeySequence::FindPrevious, this);
+  const auto nextShortcut = new QShortcut(QKeySequence::FindNext, this);
+
+  connect(focusShortcut,
+          &QShortcut::activated,
+          searchInput,
+          qOverload<>(&QWidget::setFocus));
+  connect(previousShortcut,
+          &QShortcut::activated,
+          this,
+          &SearchToolBar::on_previousButton_clicked);
+  connect(nextShortcut,
+          &QShortcut::activated,
+          this,
+          &SearchToolBar::on_nextButton_clicked);
 
   QMetaObject::connectSlotsByName(this);
 }
 
-void SearchDialog::translateUi() {
-  setWindowTitle(qTranslate("Search Cards"));
-
+void SearchToolBar::translateUi() {
   searchInput->setPlaceholderText(qTranslate("Search cards"));
 
-  regexCheckbox->setText(qTranslate("Use regular expression"));
-  regexCheckbox->setToolTip(qTranslate(
-      "If checked, interprets the search text as a Perl-like regular "
+  regexButton->setText(qTranslate("Use regular expression"));
+  regexButton->setToolTip(qTranslate(
+      "If enabled, interprets the search text as a Perl-like regular "
       "expression."));
 
   previousButton->setText(qTranslate("Find Previous"));
+  previousButton->setToolTip(previousButton->text());
   nextButton->setText(qTranslate("Find Next"));
+  nextButton->setToolTip(nextButton->text());
 }
 
-void SearchDialog::updateCountLabel() {
+void SearchToolBar::updateCountLabel() {
   int index = -1;
   if (state.currentResultIndex.has_value()) {
     index = static_cast<int>(state.currentResultIndex.value());
@@ -129,7 +146,7 @@ void SearchDialog::updateCountLabel() {
                       QString::number(state.resultsCount));
 }
 
-void SearchDialog::on_searchInput_textChanged(const QString& text) {
+void SearchToolBar::on_searchInput_textChanged(const QString& text) {
   searchInput->style()->polish(searchInput);
 
   if (text.isEmpty()) {
@@ -150,11 +167,11 @@ void SearchDialog::on_searchInput_textChanged(const QString& text) {
   emit textChanged(value);
 }
 
-void SearchDialog::on_regexCheckbox_stateChanged() {
+void SearchToolBar::on_regexButton_toggled() {
   on_searchInput_textChanged(searchInput->text());
 }
 
-void SearchDialog::on_previousButton_clicked() {
+void SearchToolBar::on_previousButton_clicked() {
   if (state.resultsCount == 0) {
     return;
   }
@@ -176,7 +193,7 @@ void SearchDialog::on_previousButton_clicked() {
   emit currentResultChanged(newIndex);
 }
 
-void SearchDialog::on_nextButton_clicked() {
+void SearchToolBar::on_nextButton_clicked() {
   if (state.resultsCount == 0) {
     return;
   }

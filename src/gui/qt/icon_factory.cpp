@@ -102,6 +102,18 @@ QIcon IconFactory::getUpdateMasterlistIcon() {
   return getIcon(":/icons/material-icons/file_download_black_48dp.svg");
 }
 
+QIcon IconFactory::getRegexIcon() {
+  return getIcon(":/icons/material-icons/regular_expression_black_48dp.svg");
+}
+
+QIcon IconFactory::getNextSearchResultIcon() {
+  return getIcon(":/icons/material-icons/arrow_downward_black_48dp.svg");
+}
+
+QIcon IconFactory::getPreviousSearchResultIcon() {
+  return getIcon(":/icons/material-icons/arrow_upward_black_48dp.svg");
+}
+
 QIcon IconFactory::getSettingsIcon() {
   return getIcon(":/icons/material-icons/settings_black_48dp.svg");
 }

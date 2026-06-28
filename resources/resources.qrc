@@ -11,6 +11,8 @@
     <file>icons/material-icons/account_circle_black_48dp.svg</file>
     <file>icons/material-icons/add_black_48dp.svg</file>
     <file>icons/material-icons/archive_black_48dp.svg</file>
+    <file>icons/material-icons/arrow_downward_black_48dp.svg</file>
+    <file>icons/material-icons/arrow_upward_black_48dp.svg</file>
     <file>icons/material-icons/attachment_black_48dp.svg</file>
     <file>icons/material-icons/book_black_48dp.svg</file>
     <file>icons/material-icons/build_black_48dp.svg</file>
@@ -29,6 +31,7 @@
     <file>icons/material-icons/quiz_black_48dp.svg</file>
     <file>icons/material-icons/receipt_black_48dp.svg</file>
     <file>icons/material-icons/refresh_black_48dp.svg</file>
+    <file>icons/material-icons/regular_expression_black_48dp.svg</file>
     <file>icons/material-icons/remove_black_48dp.svg</file>
     <file>icons/material-icons/save_black_48dp.svg</file>
     <file>icons/material-icons/search_black_48dp.svg</file>

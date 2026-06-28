@@ -60,7 +60,7 @@
 #include "gui/qt/plugin_item_filter_model.h"
 #include "gui/qt/plugin_item_model.h"
 #include "gui/qt/restore_load_order_dialog.h"
-#include "gui/qt/search_dialog.h"
+#include "gui/qt/search_toolbar.h"
 #include "gui/qt/settings/settings_dialog.h"
 #include "gui/qt/tasks/tasks.h"
 #include "gui/query/query.h"
@@ -107,7 +107,6 @@ private:
   QAction *actionDiscardSort{new QAction(this)};
   QAction *actionCompareLoadOrders{new QAction(this)};
   QAction *actionUpdateMasterlist{new QAction(this)};
-  QAction *actionSearch{new QAction(this)};
   QAction *actionViewDocs{new QAction(this)};
   QAction *actionOpenFAQs{new QAction(this)};
   QAction *actionOpenLOOTDataFolder{new QAction(this)};
@@ -144,6 +143,8 @@ private:
   QStatusBar *statusbar{new QStatusBar(this)};
   QToolBar *toolBar{new QToolBar(this)};
   QComboBox *gameComboBox{new QComboBox(toolBar)};
+  SearchToolBar *searchToolBar{new SearchToolBar(this)};
+
   QProgressDialog *progressDialog{new QProgressDialog(this)};
 
   QSplitter *sidebarSplitter{new QSplitter(this)};
@@ -161,7 +162,6 @@ private:
 
   SettingsDialog *settingsDialog{
       new SettingsDialog(this, state->getPaths().getLootDataPath())};
-  SearchDialog *searchDialog{new SearchDialog(this)};
   BackUpLoadOrderDialog *backupDialog{new BackUpLoadOrderDialog(this)};
   RestoreLoadOrderDialog *restoreBackupDialog{new RestoreLoadOrderDialog(this)};
 
@@ -261,7 +261,6 @@ private slots:
   void on_actionBackupData_triggered();
   void on_actionQuit_triggered();
   void on_actionOpenGroupsEditor_triggered();
-  void on_actionSearch_triggered();
   void on_actionCopyLoadOrder_triggered();
   void on_actionCopyContent_triggered();
   void on_actionBackUpLoadOrder_triggered();
@@ -320,9 +319,9 @@ private slots:
 
   void on_groupsEditor_accepted();
 
-  void on_searchDialog_finished();
-  void on_searchDialog_textChanged(const QVariant &text);
-  void on_searchDialog_currentResultChanged(size_t resultIndex);
+  void on_searchToolBar_finished();
+  void on_searchToolBar_textChanged(const QVariant &text);
+  void on_searchToolBar_currentResultChanged(size_t resultIndex);
 
   void on_backupDialog_accepted();
 
