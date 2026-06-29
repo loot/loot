@@ -357,6 +357,19 @@ void setDialogPosition(
     }
   }
 }
+
+void addActionButton(QToolBar* toolbar, QAction* action) {
+  auto button = new QToolButton(toolbar);
+  button->setDefaultAction(action);
+  button->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextBesideIcon);
+  button->setVisible(action->isVisible());
+
+  auto toolbarAction = toolbar->addWidget(button);
+
+  toolbar->connect(action, &QAction::visibleChanged, [=]() {
+    toolbarAction->setVisible(action->isVisible());
+  });
+}
 }
 
 namespace loot {
@@ -758,11 +771,11 @@ void MainWindow::setupToolBar() {
 
   toolBar->addWidget(gameComboBox);
 
-  toolBar->addAction(actionSort);
-  toolBar->addAction(actionUpdateMasterlist);
-  toolBar->addAction(actionApplySort);
-  toolBar->addAction(actionDiscardSort);
-  toolBar->addAction(actionCompareLoadOrders);
+  addActionButton(toolBar, actionSort);
+  addActionButton(toolBar, actionUpdateMasterlist);
+  addActionButton(toolBar, actionApplySort);
+  addActionButton(toolBar, actionDiscardSort);
+  addActionButton(toolBar, actionCompareLoadOrders);
 
   addToolBar(Qt::TopToolBarArea, searchToolBar);
 }
