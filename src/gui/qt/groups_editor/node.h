@@ -36,13 +36,13 @@ class GraphView;
 
 class NodeLabel : public QGraphicsSimpleTextItem {
 public:
-  NodeLabel(const GraphView &graphView,
-            const QString &text,
+  NodeLabel(const GraphView& graphView,
+            const QString& text,
             bool isUserMetadata);
 
-  void paint(QPainter *painter,
-             const QStyleOptionGraphicsItem *option,
-             QWidget *widget) override;
+  void paint(QPainter* painter,
+             const QStyleOptionGraphicsItem* option,
+             QWidget* widget) override;
 };
 
 class Node : public QGraphicsItem {
@@ -52,28 +52,28 @@ public:
   static constexpr double TEXT_Y_POS = RADIUS * 1.5;
   static constexpr QMarginsF MARGINS = QMarginsF(20, 20, 20, 20);
 
-  Node(GraphView *graphView,
-       const QString &name,
+  Node(GraphView* graphView,
+       const QString& name,
        bool isUserMetadata,
        bool containsInstalledPlugins);
-  Node(const Node &) = delete;
-  Node(Node &&) = delete;
+  Node(const Node&) = delete;
+  Node(Node&&) = delete;
   ~Node();
 
-  Node &operator=(const Node &) = delete;
-  Node &operator=(Node &&) = delete;
+  Node& operator=(const Node&) = delete;
+  Node& operator=(Node&&) = delete;
 
   QString getName() const;
   bool isUserMetadata() const;
 
-  void setName(const QString &name);
+  void setName(const QString& name);
   void setContainsInstalledPlugins(bool contains);
 
-  void addEdge(Edge *edge);
-  void removeEdge(Edge *edge);
-  QList<Edge *> getEdges() const;
-  QList<Edge *> getInEdges() const;
-  QList<Edge *> getOutEdges() const;
+  void addEdge(Edge* edge);
+  void removeEdge(Edge* edge);
+  QList<Edge*> getEdges() const;
+  QList<Edge*> getInEdges() const;
+  QList<Edge*> getOutEdges() const;
 
   bool isRootNode() const;
 
@@ -82,26 +82,26 @@ public:
 
   QRectF boundingRect() const override;
   QPainterPath shape() const override;
-  void paint(QPainter *painter,
-             const QStyleOptionGraphicsItem *option,
-             QWidget *widget) override;
+  void paint(QPainter* painter,
+             const QStyleOptionGraphicsItem* option,
+             QWidget* widget) override;
 
-  void setPosition(const QPointF &pos);
+  void setPosition(const QPointF& pos);
   void setPosition(qreal x, qreal y);
 
 protected:
   QVariant itemChange(GraphicsItemChange change,
-                      const QVariant &value) override;
+                      const QVariant& value) override;
 
-  void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
-  void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
-  void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+  void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+  void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
+  void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
 
 private:
-  QList<Edge *> edgeList;
-  QGraphicsItem *edgeToCursor{nullptr};
-  NodeLabel *textItem{nullptr};
+  QList<Edge*> edgeList;
+  QGraphicsItem* edgeToCursor{nullptr};
+  NodeLabel* textItem{nullptr};
   bool isUserMetadata_{false};
   bool containsInstalledPlugins{false};
   bool drawEdgeToCursor{false};

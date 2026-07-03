@@ -26,7 +26,7 @@
 #include "gui/translate.h"
 
 namespace loot {
-void NetworkTask::handleException(const std::exception &exception) {
+void NetworkTask::handleException(const std::exception& exception) {
   const auto logger = getLogger();
   if (logger) {
     logger->error("Caught an exception: {}", exception.what());
@@ -42,7 +42,7 @@ void NetworkTask::handleException(const std::exception &exception) {
 
 void NetworkTask::onNetworkError(QNetworkReply::NetworkError networkError) {
   try {
-    const auto reply = qobject_cast<QIODevice *>(sender());
+    const auto reply = qobject_cast<QIODevice*>(sender());
     const auto errorString = reply->errorString().toStdString();
 
     const auto logger = getLogger();
@@ -53,17 +53,17 @@ void NetworkTask::onNetworkError(QNetworkReply::NetworkError networkError) {
     }
 
     emit error(errorString);
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void NetworkTask::onSSLError(const QList<QSslError> &errors) {
+void NetworkTask::onSSLError(const QList<QSslError>& errors) {
   try {
     const auto logger = getLogger();
 
     std::string errorStrings;
-    for (const auto &error : errors) {
+    for (const auto& error : errors) {
       const auto errorString = error.errorString().toStdString();
       errorStrings += errorString + "; ";
 
@@ -77,7 +77,7 @@ void NetworkTask::onSSLError(const QList<QSslError> &errors) {
     }
 
     emit error(errorStrings);
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }

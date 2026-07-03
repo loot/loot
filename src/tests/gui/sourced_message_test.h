@@ -175,15 +175,15 @@ TEST(ToSourcedMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
 
 TEST(ToSourcedMessage,
      shouldReturnAMessageWithCountsButNoDetailStringIfDetailIsAnEmptyVector) {
-  const auto message = toSourcedMessage(
-      PluginCleaningData(0x12345678,
+  const auto message =
+      toSourcedMessage(PluginCleaningData(0x12345678,
                                           "cleaner",
                                           std::vector<MessageContent>(),
                                           1,
                                           2,
                                           3,
                                           "condition"),
-      MessageContent::DEFAULT_LANGUAGE);
+                       MessageContent::DEFAULT_LANGUAGE);
   EXPECT_EQ(MessageType::warn, message.type);
   EXPECT_EQ(
       "cleaner found 1 ITM record, 2 deleted references and 3 deleted "

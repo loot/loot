@@ -35,16 +35,16 @@ namespace loot {
 class NewGameDialog : public QDialog {
   Q_OBJECT
 public:
-  explicit NewGameDialog(QWidget *parent);
+  explicit NewGameDialog(QWidget* parent);
 
   QString getGameName() const;
   QString getBaseGame() const;
 
 private:
-  QLabel *nameLabel{new QLabel(this)};
-  QLabel *baseGameLabel{new QLabel(this)};
-  QLineEdit *nameInput{new QLineEdit(this)};
-  QComboBox *baseGameComboBox{new QComboBox(this)};
+  QLabel* nameLabel{new QLabel(this)};
+  QLabel* baseGameLabel{new QLabel(this)};
+  QLineEdit* nameInput{new QLineEdit(this)};
+  QComboBox* baseGameComboBox{new QComboBox(this)};
 
   void setupUi();
   void translateUi();

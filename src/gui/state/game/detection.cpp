@@ -40,7 +40,8 @@ bool isInstalled(const GameSettings& settings) {
     logger->trace("Checking if game \"{}\" is installed.", settings.getName());
   }
 
-  return isValidGamePath(settings.getId(), settings.getMasterFilename(), settings.getGamePath());
+  return isValidGamePath(
+      settings.getId(), settings.getMasterFilename(), settings.getGamePath());
 }
 
 std::vector<GameSettings> findInstalledGames(

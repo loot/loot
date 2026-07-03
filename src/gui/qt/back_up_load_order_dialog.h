@@ -33,15 +33,15 @@ namespace loot {
 class BackUpLoadOrderDialog : public QDialog {
   Q_OBJECT
 public:
-  explicit BackUpLoadOrderDialog(QWidget *parent);
+  explicit BackUpLoadOrderDialog(QWidget* parent);
 
   QString getBackupName() const;
 
   void reset();
 
 private:
-  QLineEdit *nameInput{new QLineEdit(this)};
-  QLabel *nameLabel{new QLabel(this)};
+  QLineEdit* nameInput{new QLineEdit(this)};
+  QLabel* nameLabel{new QLabel(this)};
 
   void setupUi();
   void translateUi();

@@ -42,16 +42,16 @@ class GraphView : public QGraphicsView {
       QColor backgroundColor READ getBackgroundColor WRITE setBackgroundColor)
 
 public:
-  explicit GraphView(QWidget *parent = nullptr);
+  explicit GraphView(QWidget* parent = nullptr);
 
-  void setGroups(const std::vector<Group> &masterlistGroups,
-                 const std::vector<Group> &userGroups,
-                 const std::set<std::string> &installedPluginGroups,
-                 const std::vector<GroupNodePosition> &nodePositions);
+  void setGroups(const std::vector<Group>& masterlistGroups,
+                 const std::vector<Group>& userGroups,
+                 const std::set<std::string>& installedPluginGroups,
+                 const std::vector<GroupNodePosition>& nodePositions);
 
-  bool addGroup(const std::string &name);
-  void renameGroup(const std::string &oldName, const std::string &newName);
-  void setGroupContainsInstalledPlugins(const std::string &name,
+  bool addGroup(const std::string& name);
+  void renameGroup(const std::string& oldName, const std::string& newName);
+  void setGroupContainsInstalledPlugins(const std::string& name,
                                         bool containsInstalledPlugins);
   void autoLayout();
   void registerUserLayoutChange();
@@ -59,10 +59,10 @@ public:
   std::vector<Group> getUserGroups() const;
   std::vector<GroupNodePosition> getNodePositions() const;
   bool hasUnsavedLayoutChanges() const;
-  bool isUserGroup(const std::string &name) const;
+  bool isUserGroup(const std::string& name) const;
 
-  void handleGroupRemoved(const QString &name);
-  void handleGroupSelected(const QString &name);
+  void handleGroupRemoved(const QString& name);
+  void handleGroupSelected(const QString& name);
 
   QColor getMasterColor() const;
   QColor getUserColor() const;
@@ -72,11 +72,11 @@ public:
 
 signals:
   void groupRemoved(const QString name);
-  void groupSelected(const QString &name);
+  void groupSelected(const QString& name);
 
 protected:
 #if QT_CONFIG(wheelevent)
-  void wheelEvent(QWheelEvent *event) override;
+  void wheelEvent(QWheelEvent* event) override;
 #endif
 
 private:
@@ -87,7 +87,7 @@ private:
   QColor backgroundColor;
   bool hasUnsavedLayoutChanges_{false};
 
-  void doLayout(const std::vector<GroupNodePosition> &nodePositions);
+  void doLayout(const std::vector<GroupNodePosition>& nodePositions);
 };
 }
 

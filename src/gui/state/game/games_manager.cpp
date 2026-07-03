@@ -27,8 +27,10 @@ namespace {
 bool gameNeedsRecreating(const loot::gui::Game& game,
                          const loot::GameSettings& newSettings) {
   return game.getSettings().getGamePath() != newSettings.getGamePath() ||
-         game.getSettings().getGameLocalPath() != newSettings.getGameLocalPath() ||
-         game.getSettings().getMasterFilename() != newSettings.getMasterFilename();
+         game.getSettings().getGameLocalPath() !=
+             newSettings.getGameLocalPath() ||
+         game.getSettings().getMasterFilename() !=
+             newSettings.getMasterFilename();
 }
 }
 
@@ -67,7 +69,8 @@ void GamesManager::setInstalledGames(
         currentGameFolder.value() == gameSettings.getFolderName() &&
         !gameNeedsRecreating(getCurrentGame(), gameSettings)) {
       if (logger) {
-        logger->trace("Updating game entry for: {}", gameSettings.getFolderName());
+        logger->trace("Updating game entry for: {}",
+                      gameSettings.getFolderName());
       }
 
       getCurrentGame()

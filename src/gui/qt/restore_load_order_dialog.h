@@ -37,23 +37,23 @@ namespace loot {
 class RestoreLoadOrderDialog : public QDialog {
   Q_OBJECT
 public:
-  explicit RestoreLoadOrderDialog(QWidget *parent);
+  explicit RestoreLoadOrderDialog(QWidget* parent);
 
-  void setCurrentLoadOrder(const std::vector<std::string> &loadOrder);
+  void setCurrentLoadOrder(const std::vector<std::string>& loadOrder);
   void setLoadOrderBackups(
-      const std::vector<LoadOrderBackup> &loadOrderBackups);
+      const std::vector<LoadOrderBackup>& loadOrderBackups);
 
   std::optional<LoadOrderBackup> getSelectedLoadOrderBackup() const;
 
 private:
-  QLabel *selectLabel{new QLabel(this)};
-  QLabel *currentLoadOrderLabel{new QLabel(this)};
-  QLabel *selectedLoadOrderLabel{new QLabel(this)};
-  QLabel *identicalLabel{new QLabel(this)};
-  QTableWidget *backupsTable{new QTableWidget(this)};
-  QListWidget *currentLoadOrderList{new QListWidget(this)};
-  QListWidget *backupLoadOrderList{new QListWidget(this)};
-  QPushButton *deleteButton{new QPushButton(this)};
+  QLabel* selectLabel{new QLabel(this)};
+  QLabel* currentLoadOrderLabel{new QLabel(this)};
+  QLabel* selectedLoadOrderLabel{new QLabel(this)};
+  QLabel* identicalLabel{new QLabel(this)};
+  QTableWidget* backupsTable{new QTableWidget(this)};
+  QListWidget* currentLoadOrderList{new QListWidget(this)};
+  QListWidget* backupLoadOrderList{new QListWidget(this)};
+  QPushButton* deleteButton{new QPushButton(this)};
 
   std::vector<LoadOrderBackup> backups;
 
@@ -61,8 +61,8 @@ private:
   void translateUi();
 
 private slots:
-  void handleBackupSelectionChanged(const QItemSelection &selected,
-                                    const QItemSelection &);
+  void handleBackupSelectionChanged(const QItemSelection& selected,
+                                    const QItemSelection&);
   void handleDeleteButtonClicked();
 };
 }

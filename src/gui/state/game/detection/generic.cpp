@@ -384,8 +384,9 @@ std::vector<GameInstall> findGameInstalls(const RegistryInterface& registry,
 // detect its ID and install source.
 std::optional<GameInstall> detectGameInstall(const GameSettings& settings) {
   try {
-    if (!isValidGamePath(
-            settings.getId(), settings.getMasterFilename(), settings.getGamePath())) {
+    if (!isValidGamePath(settings.getId(),
+                         settings.getMasterFilename(),
+                         settings.getGamePath())) {
       return std::nullopt;
     }
 
@@ -393,8 +394,10 @@ std::optional<GameInstall> detectGameInstall(const GameSettings& settings) {
     const auto installPath = settings.getGamePath();
 
     if (isSteamInstall(gameId, installPath)) {
-      return GameInstall{
-          gameId, InstallSource::steam, installPath, settings.getGameLocalPath()};
+      return GameInstall{gameId,
+                         InstallSource::steam,
+                         installPath,
+                         settings.getGameLocalPath()};
     }
 
     if (isGogInstall(gameId, installPath)) {
@@ -403,8 +406,10 @@ std::optional<GameInstall> detectGameInstall(const GameSettings& settings) {
     }
 
     if (isEpicInstall(gameId, installPath)) {
-      return GameInstall{
-          gameId, InstallSource::epic, installPath, settings.getGameLocalPath()};
+      return GameInstall{gameId,
+                         InstallSource::epic,
+                         installPath,
+                         settings.getGameLocalPath()};
     }
 
     if (::isMicrosoftInstall(gameId, installPath)) {
@@ -414,8 +419,10 @@ std::optional<GameInstall> detectGameInstall(const GameSettings& settings) {
                          settings.getGameLocalPath()};
     }
 
-    return GameInstall{
-        gameId, InstallSource::unknown, installPath, settings.getGameLocalPath()};
+    return GameInstall{gameId,
+                       InstallSource::unknown,
+                       installPath,
+                       settings.getGameLocalPath()};
   } catch (const std::exception& e) {
     const auto logger = getLogger();
     logger->error(

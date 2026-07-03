@@ -34,17 +34,17 @@ namespace loot {
 class CompareLoadOrdersDialog : public QDialog {
   Q_OBJECT
 public:
-  explicit CompareLoadOrdersDialog(QWidget *parent);
+  explicit CompareLoadOrdersDialog(QWidget* parent);
 
-  void setLoadOrders(const std::vector<std::string> &current,
-                     const std::vector<std::string> &sorted);
+  void setLoadOrders(const std::vector<std::string>& current,
+                     const std::vector<std::string>& sorted);
 
 private:
-  QLabel *currentLoadOrderLabel{new QLabel(this)};
-  QLabel *sortedLoadOrderLabel{new QLabel(this)};
+  QLabel* currentLoadOrderLabel{new QLabel(this)};
+  QLabel* sortedLoadOrderLabel{new QLabel(this)};
 
-  QListWidget *currentLoadOrderList{new QListWidget(this)};
-  QListWidget *sortedLoadOrderList{new QListWidget(this)};
+  QListWidget* currentLoadOrderList{new QListWidget(this)};
+  QListWidget* sortedLoadOrderList{new QListWidget(this)};
 
   QMetaObject::Connection currentListScrollConnection;
   QMetaObject::Connection sortedListScrollConnection;
@@ -58,9 +58,9 @@ private:
   void decoupleVerticalScrollers() const;
 
   void mirrorSelectionInTargetList(
-      QListWidget *sourceList,
-      QListWidget *targetList,
-      QMetaObject::Connection &connectionToDisconnect,
+      QListWidget* sourceList,
+      QListWidget* targetList,
+      QMetaObject::Connection& connectionToDisconnect,
       void (CompareLoadOrdersDialog::*slotToReconnect)());
 
 private slots:

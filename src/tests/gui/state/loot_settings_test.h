@@ -272,7 +272,21 @@ TEST_F(LootSettingsTest, loadShouldEnableFiltersForFiltersEnabledInTomlFile) {
 }
 
 TEST_F(LootSettingsTest, loadShouldDisableFiltersForFiltersDisabledInTomlFile) {
-  LootSettings::Filters filters{true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
+  LootSettings::Filters filters{true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true};
   settings_.storeFilters(filters);
 
   using std::endl;
@@ -321,8 +335,7 @@ TEST_F(LootSettingsTest,
 
   using std::endl;
   std::ofstream out(settingsFile_);
-  out << "[filters]" << endl
-      << "hideCRCs = true" << endl;
+  out << "[filters]" << endl << "hideCRCs = true" << endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -399,7 +412,8 @@ TEST_F(LootSettingsTest, loadingShouldMapGameIds) {
   EXPECT_EQ(GameId::fo4vr, settings_.getGameSettings()[11].getId());
   EXPECT_EQ(GameId::starfield, settings_.getGameSettings()[12].getId());
   EXPECT_EQ(GameId::openmw, settings_.getGameSettings()[13].getId());
-  EXPECT_EQ(GameId::oblivionRemastered, settings_.getGameSettings()[14].getId());
+  EXPECT_EQ(GameId::oblivionRemastered,
+            settings_.getGameSettings()[14].getId());
 }
 
 TEST_F(LootSettingsTest, loadingShouldSkipGameIfGameIdAndTypeAreNotPresent) {
@@ -882,7 +896,8 @@ TEST_F(
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/v0.29/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -902,7 +917,8 @@ TEST_F(LootSettingsTest,
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrimse/v0.29/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -923,7 +939,8 @@ TEST_F(
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/custom/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -945,7 +962,8 @@ TEST_F(
   const auto expectedSource =
       "https://raw.githubusercontent.com/not-loot/skyrimse/v0.17/"
       "masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(LootSettingsTest, loadingShouldNotMigratePathMasterlistSources) {
@@ -961,7 +979,8 @@ TEST_F(LootSettingsTest, loadingShouldNotMigratePathMasterlistSources) {
   settings_.load(settingsFile_);
 
   const auto expectedSource = "C:\\masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -980,7 +999,8 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   auto expectedSource = "masterlist-source";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -1000,7 +1020,8 @@ TEST_F(
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/custom/"
       "masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1019,7 +1040,8 @@ TEST_F(LootSettingsTest,
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion-foo/v0.29/"
       "masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1036,7 +1058,8 @@ TEST_F(LootSettingsTest,
   settings_.load(settingsFile_);
 
   auto expectedSource = GameSettings(GameId::tes4, "").getMasterlistSource();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -1057,7 +1080,8 @@ TEST_F(
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/foo/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -1076,7 +1100,8 @@ TEST_F(
   settings_.load(settingsFile_);
 
   auto expectedSource = GameSettings(GameId::tes4, "").getMasterlistSource();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1097,7 +1122,8 @@ TEST_F(LootSettingsTest,
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrimse/v0.29/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1116,7 +1142,8 @@ TEST_F(LootSettingsTest,
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrimse/foo/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1135,7 +1162,8 @@ TEST_F(LootSettingsTest,
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrim-vr/foo/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1156,7 +1184,8 @@ TEST_F(LootSettingsTest,
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/fallout4/v0.29/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(LootSettingsTest,
@@ -1175,7 +1204,8 @@ TEST_F(LootSettingsTest,
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/fallout4/foo/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -1195,7 +1225,8 @@ TEST_F(
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/fallout4-vr/foo/masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -1216,7 +1247,8 @@ TEST_F(
   settings_.load(settingsFile_);
 
   auto expectedSource = (gitRepoPath_ / "masterlist.yaml").u8string();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -1238,7 +1270,8 @@ TEST_F(
   settings_.load(settingsFile_);
 
   auto expectedSource = GameSettings(GameId::fo4vr, "").getMasterlistSource();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -1260,7 +1293,8 @@ TEST_F(
   settings_.load(settingsFile_);
 
   auto expectedSource = GameSettings(GameId::fo4vr, "").getMasterlistSource();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -1281,7 +1315,8 @@ TEST_F(
   settings_.load(settingsFile_);
 
   auto expectedSource = (gitRepoPath_ / "masterlist.yaml").u8string();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -1300,7 +1335,8 @@ TEST_F(
   settings_.load(settingsFile_);
 
   auto expectedSource = GameSettings(GameId::fo4vr, "").getMasterlistSource();
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -1321,7 +1357,8 @@ TEST_F(
   auto expectedSource =
       "https://raw.githubusercontent.com/my-forks/fallout4-vr/custom/"
       "masterlist.yaml";
-  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].getMasterlistSource());
+  EXPECT_EQ(expectedSource,
+            settings_.getGameSettings()[0].getMasterlistSource());
 }
 
 TEST_F(
@@ -1682,7 +1719,8 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
 
   settings_.storeMainWindowPosition(windowPosition);
   settings_.storeGroupsEditorWindowPosition(groupsEditorWindowPosition);
-  settings_.storeCompareLoadOrdersWindowPosition(compareLoadOrdersWindowPosition);
+  settings_.storeCompareLoadOrdersWindowPosition(
+      compareLoadOrdersWindowPosition);
   settings_.storeGameSettings(games);
   settings_.storeFilters(filters);
 
@@ -1725,7 +1763,8 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(games[0].getName(), settings.getGameSettings().at(0).getName());
   EXPECT_EQ(games[0].getMinimumHeaderVersion(),
             settings.getGameSettings().at(0).getMinimumHeaderVersion());
-  EXPECT_EQ(hiddenMessages, settings.getGameSettings().at(0).getHiddenMessages());
+  EXPECT_EQ(hiddenMessages,
+            settings.getGameSettings().at(0).getHiddenMessages());
 
   EXPECT_EQ(filters.hideBashTags, settings.getFilters().hideBashTags);
   EXPECT_EQ(filters.hideCRCs, settings.getFilters().hideCRCs);

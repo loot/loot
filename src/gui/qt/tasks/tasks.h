@@ -36,7 +36,7 @@ namespace loot {
 class ProgressUpdater : public QObject {
   Q_OBJECT
 signals:
-  void progressUpdate(const QString &message);
+  void progressUpdate(const QString& message);
 };
 
 class Task : public QObject {
@@ -46,7 +46,7 @@ public slots:
 
 signals:
   void finished(QueryResult result);
-  void error(const std::string &exception);
+  void error(const std::string& exception);
 };
 
 class QueryTask : public Task {
@@ -63,15 +63,15 @@ private:
 
 QFuture<QueryResult> executeBackgroundQuery(std::unique_ptr<Query> query);
 
-QFuture<QueryResult> taskFuture(Task *task);
+QFuture<QueryResult> taskFuture(Task* task);
 
 QFuture<QList<QFuture<QueryResult>>> whenAllTasks(
-    const std::vector<Task *> &tasks);
+    const std::vector<Task*>& tasks);
 
-void executeConcurrentBackgroundTasks(const std::vector<Task *> &tasks,
+void executeConcurrentBackgroundTasks(const std::vector<Task*>& tasks,
                                       QFuture<void> whenAll);
 
-QFuture<QueryResult> executeBackgroundTask(Task *task);
+QFuture<QueryResult> executeBackgroundTask(Task* task);
 }
 
 #endif

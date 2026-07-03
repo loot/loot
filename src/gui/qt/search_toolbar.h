@@ -49,11 +49,11 @@ public:
   void setIcons();
 
 signals:
-  void textChanged(const QVariant &text);
+  void textChanged(const QVariant& text);
   void currentResultChanged(size_t resultIndex);
 
 private:
-  QLineEdit *searchInput{new QLineEdit(this)};
+  QLineEdit* searchInput{new QLineEdit(this)};
   QLabel* countLabel{new QLabel(this)};
   QToolButton* regexButton{new QToolButton(this)};
   QToolButton* previousButton{new QToolButton(this)};
@@ -67,7 +67,7 @@ private:
   void updateCountLabel();
 
 private slots:
-  void on_searchInput_textChanged(const QString &text);
+  void on_searchInput_textChanged(const QString& text);
   void on_regexButton_toggled();
   void on_previousButton_clicked();
   void on_nextButton_clicked();

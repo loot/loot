@@ -46,7 +46,8 @@ TEST(GetHeroicGamesLauncherConfigPaths,
 
   const auto xgConfigHome = getenv("XDG_CONFIG_HOME");
 
-  const auto config = xgConfigHome == nullptr ? home + "/.config" : xgConfigHome;
+  const auto config =
+      xgConfigHome == nullptr ? home + "/.config" : xgConfigHome;
 
   ASSERT_EQ(2, paths.size());
   EXPECT_EQ(config + "/heroic", paths[0].u8string());

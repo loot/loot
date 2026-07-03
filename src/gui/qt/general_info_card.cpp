@@ -41,13 +41,12 @@ void GeneralInfoCard::setContent(const GeneralInformation& generalInfo,
   setShowSeparateMediumPluginCount(generalInfo.gameSupportsMediumPlugins);
   setMasterlistInfo(generalInfo.masterlistRevision);
   setPreludeInfo(generalInfo.preludeRevision);
-  setMessageCounts(
-      counters.warnings, counters.errors, counters.totalMessages);
+  setMessageCounts(counters.warnings, counters.errors, counters.totalMessages);
   setPluginCounts(counters.activeLight,
-                        counters.activeMedium,
-                        counters.activeFull,
-                        counters.dirty,
-                        counters.totalPlugins);
+                  counters.activeMedium,
+                  counters.activeFull,
+                  counters.dirty,
+                  counters.totalPlugins);
   setGeneralMessages(generalInfo.generalMessages);
   setHasHiddenMessages(hasHiddenMessages);
 

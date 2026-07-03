@@ -35,10 +35,10 @@ public slots:
   void execute() override;
 
 private:
-  QNetworkAccessManager *networkAccessManager{nullptr};
+  QNetworkAccessManager* networkAccessManager{nullptr};
   std::optional<QDate> tagCommitDate;
 
-  void sendHttpRequest(const std::string &url,
+  void sendHttpRequest(const std::string& url,
                        void (CheckForUpdateTask::*onFinished)());
 
 private slots:

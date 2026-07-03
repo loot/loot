@@ -32,7 +32,7 @@
 #include "gui/qt/groups_editor/node.h"
 
 namespace loot {
-Edge::Edge(Node *sourceNode, Node *destNode, bool isUserMetadata) :
+Edge::Edge(Node* sourceNode, Node* destNode, bool isUserMetadata) :
     source(sourceNode), dest(destNode), isUserMetadata_(isUserMetadata) {
   setAcceptedMouseButtons(Qt::RightButton);
 
@@ -45,9 +45,9 @@ Edge::Edge(Node *sourceNode, Node *destNode, bool isUserMetadata) :
   adjust();
 }
 
-Node *Edge::getSourceNode() const { return source; }
+Node* Edge::getSourceNode() const { return source; }
 
-Node *Edge::getDestNode() const { return dest; }
+Node* Edge::getDestNode() const { return dest; }
 
 bool Edge::isUserMetadata() const { return isUserMetadata_; }
 
@@ -86,9 +86,7 @@ QRectF Edge::boundingRect() const {
       .adjusted(-PADDING, -PADDING, PADDING, PADDING);
 }
 
-void Edge::paint(QPainter *painter,
-                 const QStyleOptionGraphicsItem *,
-                 QWidget *) {
+void Edge::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
   if (!source || !dest) {
     return;
   }
@@ -99,7 +97,7 @@ void Edge::paint(QPainter *painter,
     return;
   }
 
-  const auto graphView = qobject_cast<GraphView *>(scene()->parent());
+  const auto graphView = qobject_cast<GraphView*>(scene()->parent());
   const auto color = getDefaultColor(*graphView, isUserMetadata_);
 
   painter->setPen(
@@ -108,7 +106,7 @@ void Edge::paint(QPainter *painter,
   painter->drawPolygon(polygon);
 }
 
-void Edge::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+void Edge::mousePressEvent(QGraphicsSceneMouseEvent* event) {
   if (!isUserMetadata_ || event->button() != Qt::RightButton) {
     event->ignore();
     return;
@@ -149,14 +147,14 @@ QPolygonF createLineWithArrow(QPointF startPos, QPointF endPos) {
                      << line.p2();
 }
 
-QColor getDefaultColor(const GraphView &graphView, bool isUserMetadata) {
+QColor getDefaultColor(const GraphView& graphView, bool isUserMetadata) {
   const auto color =
       isUserMetadata ? graphView.getUserColor() : graphView.getMasterColor();
 
   return toOpaqueColor(color, graphView.getBackgroundColor());
 }
 
-QColor toOpaqueColor(const QColor &color, const QColor &backgroundColor) {
+QColor toOpaqueColor(const QColor& color, const QColor& backgroundColor) {
   static constexpr int MAX_ALPHA = 255;
 
   // The color may use the alpha channel to appear darken its RGB color, but

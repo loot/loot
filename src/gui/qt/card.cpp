@@ -24,6 +24,7 @@
 #include "gui/qt/card.h"
 
 #include <QtGui/QPainter>
+
 #include "gui/qt/icon_factory.h"
 
 namespace {

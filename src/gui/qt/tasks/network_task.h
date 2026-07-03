@@ -34,11 +34,11 @@ class NetworkTask : public Task {
 protected:
   static constexpr int TRANSFER_TIMEOUT_MS{30000};
 
-  void handleException(const std::exception &exception);
+  void handleException(const std::exception& exception);
 
 protected slots:
   void onNetworkError(QNetworkReply::NetworkError error);
-  void onSSLError(const QList<QSslError> &errors);
+  void onSSLError(const QList<QSslError>& errors);
 };
 }
 

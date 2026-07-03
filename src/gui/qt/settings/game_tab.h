@@ -40,15 +40,15 @@ namespace loot {
 class FolderPicker : public QFrame {
   Q_OBJECT
 public:
-  explicit FolderPicker(QWidget *parent);
+  explicit FolderPicker(QWidget* parent);
 
   QString getText() const;
 
-  void setText(const QString &text);
+  void setText(const QString& text);
 
 private:
-  QLineEdit *textInput{new QLineEdit(this)};
-  QPushButton *browseButton{new QPushButton(this)};
+  QLineEdit* textInput{new QLineEdit(this)};
+  QPushButton* browseButton{new QPushButton(this)};
 
   void setupUi();
   void translateUi();
@@ -62,7 +62,7 @@ class GameTab : public QFrame {
 public:
   static const std::map<std::string, GameId> GAME_IDS_BY_STRING;
 
-  GameTab(const GameSettings &settings, QWidget *parent, bool isCurrentGame);
+  GameTab(const GameSettings& settings, QWidget* parent, bool isCurrentGame);
 
   QString getName() const;
   QString getLootFolder() const;
@@ -70,34 +70,34 @@ public:
 
 signals:
   void gameSettingsDeleted();
-  void gameNameChanged(const QString &name);
+  void gameNameChanged(const QString& name);
 
 private:
-  QLabel *nameLabel{new QLabel(this)};
-  QLabel *baseGameLabel{new QLabel(this)};
-  QLabel *lootFolderLabel{new QLabel(this)};
-  QLabel *masterFileLabel{new QLabel(this)};
-  QLabel *minimumHeaderVersionLabel{new QLabel(this)};
-  QLabel *masterlistSourceLabel{new QLabel(this)};
-  QLabel *installPathLabel{new QLabel(this)};
-  QLabel *localDataPathLabel{new QLabel(this)};
-  QLineEdit *nameInput{new QLineEdit(this)};
-  QComboBox *baseGameComboBox{new QComboBox(this)};
-  QLineEdit *lootFolderInput{new QLineEdit(this)};
-  QLineEdit *masterFileInput{new QLineEdit(this)};
-  QDoubleSpinBox *minimumHeaderVersionSpinBox{new QDoubleSpinBox(this)};
-  QLineEdit *masterlistSourceInput{new QLineEdit(this)};
-  FolderPicker *installPathInput{new FolderPicker(this)};
-  FolderPicker *localDataPathInput{new FolderPicker(this)};
-  QPushButton *deleteGameButton{new QPushButton(this)};
+  QLabel* nameLabel{new QLabel(this)};
+  QLabel* baseGameLabel{new QLabel(this)};
+  QLabel* lootFolderLabel{new QLabel(this)};
+  QLabel* masterFileLabel{new QLabel(this)};
+  QLabel* minimumHeaderVersionLabel{new QLabel(this)};
+  QLabel* masterlistSourceLabel{new QLabel(this)};
+  QLabel* installPathLabel{new QLabel(this)};
+  QLabel* localDataPathLabel{new QLabel(this)};
+  QLineEdit* nameInput{new QLineEdit(this)};
+  QComboBox* baseGameComboBox{new QComboBox(this)};
+  QLineEdit* lootFolderInput{new QLineEdit(this)};
+  QLineEdit* masterFileInput{new QLineEdit(this)};
+  QDoubleSpinBox* minimumHeaderVersionSpinBox{new QDoubleSpinBox(this)};
+  QLineEdit* masterlistSourceInput{new QLineEdit(this)};
+  FolderPicker* installPathInput{new FolderPicker(this)};
+  FolderPicker* localDataPathInput{new FolderPicker(this)};
+  QPushButton* deleteGameButton{new QPushButton(this)};
 
   void setupUi();
   void translateUi();
-  void initialiseInputs(const GameSettings &settings, bool isCurrentGame);
+  void initialiseInputs(const GameSettings& settings, bool isCurrentGame);
 
 private slots:
   void on_deleteGameButton_clicked();
-  void on_nameInput_textEdited(const QString &text);
+  void on_nameInput_textEdited(const QString& text);
 };
 }
 #endif

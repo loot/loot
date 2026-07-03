@@ -43,29 +43,29 @@ namespace loot {
 class ListWithTitle : public QWidget {
   Q_OBJECT
 public:
-  ListWithTitle(QWidget *parent);
+  ListWithTitle(QWidget* parent);
 
-  void addItem(const QString &label);
-  void addItem(QListWidgetItem *item);
+  void addItem(const QString& label);
+  void addItem(QListWidgetItem* item);
 
   void clear();
 
   void setSelectionMode(QAbstractItemView::SelectionMode selectionMode);
 
-  void setTitle(const QString &title);
+  void setTitle(const QString& title);
 
   int count() const;
 
-  QListWidgetItem *item(int row) const;
+  QListWidgetItem* item(int row) const;
 
-  QList<QListWidgetItem *> selectedItems() const;
+  QList<QListWidgetItem*> selectedItems() const;
 
 signals:
   void itemSelectionChanged();
 
 private:
-  QLabel *titleLabel{new QLabel(this)};
-  QListWidget *listWidget{new QListWidget(this)};
+  QLabel* titleLabel{new QLabel(this)};
+  QListWidget* listWidget{new QListWidget(this)};
 
 private slots:
   void on_listWidget_itemSelectionChanged();
@@ -74,38 +74,38 @@ private slots:
 class GroupsEditorDialog : public QDialog {
   Q_OBJECT
 public:
-  GroupsEditorDialog(QWidget *parent, PluginItemModel *pluginItemModel);
+  GroupsEditorDialog(QWidget* parent, PluginItemModel* pluginItemModel);
 
-  void setGroups(const std::vector<Group> &masterlistGroups,
-                 const std::vector<Group> &userGroups,
-                 const std::set<std::string> &installedPluginGroups,
-                 const std::vector<GroupNodePosition> &nodePositions);
+  void setGroups(const std::vector<Group>& masterlistGroups,
+                 const std::vector<Group>& userGroups,
+                 const std::set<std::string>& installedPluginGroups,
+                 const std::vector<GroupNodePosition>& nodePositions);
 
   std::vector<Group> getUserGroups() const;
   std::vector<GroupNodePosition> getNodePositions() const;
   std::unordered_map<std::string, std::string> getNewPluginGroups() const;
 
 private:
-  GraphView *graphView{new GraphView(this)};
+  GraphView* graphView{new GraphView(this)};
 
-  ListWithTitle *groupPluginsList{new ListWithTitle(this)};
-  ListWithTitle *nonGroupPluginsList{new ListWithTitle(this)};
+  ListWithTitle* groupPluginsList{new ListWithTitle(this)};
+  ListWithTitle* nonGroupPluginsList{new ListWithTitle(this)};
 
-  QCheckBox *defaultPluginsCheckBox{new QCheckBox(this)};
-  QComboBox *pluginComboBox{new QComboBox(this)};
-  QPushButton *addPluginButton{new QPushButton(this)};
+  QCheckBox* defaultPluginsCheckBox{new QCheckBox(this)};
+  QComboBox* pluginComboBox{new QComboBox(this)};
+  QPushButton* addPluginButton{new QPushButton(this)};
 
-  QPushButton *autoArrangeButton{new QPushButton(this)};
+  QPushButton* autoArrangeButton{new QPushButton(this)};
 
-  QLabel *groupNameInputLabel{new QLabel(this)};
-  QLineEdit *groupNameInput{new QLineEdit(this)};
-  QPushButton *addGroupButton{new QPushButton(this)};
-  QPushButton *renameGroupButton{new QPushButton(this)};
+  QLabel* groupNameInputLabel{new QLabel(this)};
+  QLineEdit* groupNameInput{new QLineEdit(this)};
+  QPushButton* addGroupButton{new QPushButton(this)};
+  QPushButton* renameGroupButton{new QPushButton(this)};
 
-  QAction *actionCopyPluginNames{new QAction(this)};
-  QMenu *menuPluginsList{new QMenu(this)};
+  QAction* actionCopyPluginNames{new QAction(this)};
+  QMenu* menuPluginsList{new QMenu(this)};
 
-  PluginItemModel *pluginItemModel{nullptr};
+  PluginItemModel* pluginItemModel{nullptr};
 
   std::vector<Group> initialUserGroups;
   std::vector<GroupNodePosition> initialNodePositions;
@@ -115,31 +115,31 @@ private:
   void setupUi();
   void translateUi();
 
-  void closeEvent(QCloseEvent *event) override;
+  void closeEvent(QCloseEvent* event) override;
 
   bool askShouldDiscardChanges();
   bool hasUnsavedChanges();
 
   void refreshPluginLists();
-  const PluginItem *getPluginItem(const std::string &pluginName) const;
-  const std::string getPluginGroup(const PluginItem &pluginItem) const;
-  bool containsMoreThanOnePlugin(const std::string &groupName) const;
+  const PluginItem* getPluginItem(const std::string& pluginName) const;
+  const std::string getPluginGroup(const PluginItem& pluginItem) const;
+  bool containsMoreThanOnePlugin(const std::string& groupName) const;
 
-  void handleException(const std::exception &exception);
+  void handleException(const std::exception& exception);
 
-  void setListTitles(const std::string &groupName);
+  void setListTitles(const std::string& groupName);
 
-  std::vector<const PluginItem *> getPluginsToAdd() const;
+  std::vector<const PluginItem*> getPluginsToAdd() const;
 
 private slots:
   void on_actionCopyPluginNames_triggered();
   void on_graphView_groupRemoved(const QString name);
-  void on_graphView_groupSelected(const QString &name);
-  void on_groupPluginsList_customContextMenuRequested(const QPoint &position);
+  void on_graphView_groupSelected(const QString& name);
+  void on_groupPluginsList_customContextMenuRequested(const QPoint& position);
   void on_nonGroupPluginsList_itemSelectionChanged();
   void on_defaultPluginsCheckBox_checkStateChanged();
-  void on_pluginComboBox_editTextChanged(const QString &text);
-  void on_groupNameInput_textChanged(const QString &text);
+  void on_pluginComboBox_editTextChanged(const QString& text);
+  void on_groupNameInput_textChanged(const QString& text);
   void on_addPluginButton_clicked();
   void on_addGroupButton_clicked();
   void on_renameGroupButton_clicked();

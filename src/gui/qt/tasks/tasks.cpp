@@ -36,7 +36,7 @@ void QueryTask::execute() {
     }
 
     emit finished(query->executeLogic());
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
       logger->error("Exception while executing query: {}", e.what());
@@ -61,7 +61,7 @@ QFuture<QueryResult> executeBackgroundQuery(std::unique_ptr<Query> query) {
 
     try {
       return sharedQuery->executeLogic();
-    } catch (const std::exception &e) {
+    } catch (const std::exception& e) {
       const auto logger = getLogger();
       if (logger) {
         logger->error("Exception while executing query: {}", e.what());
@@ -76,7 +76,7 @@ QFuture<QueryResult> executeBackgroundQuery(std::unique_ptr<Query> query) {
   });
 }
 
-QFuture<QueryResult> taskFuture(Task *task) {
+QFuture<QueryResult> taskFuture(Task* task) {
   QFuture<QueryResult> taskFinishedFuture =
       QtFuture::connect(task, &Task::finished);
   QFuture<std::string> taskErrorFuture = QtFuture::connect(task, &Task::error);
@@ -94,7 +94,7 @@ QFuture<QueryResult> taskFuture(Task *task) {
 }
 
 QFuture<QList<QFuture<QueryResult>>> whenAllTasks(
-    const std::vector<Task *> &tasks) {
+    const std::vector<Task*>& tasks) {
   std::vector<QFuture<QueryResult>> futures;
   for (const auto task : tasks) {
     futures.push_back(taskFuture(task));
@@ -103,9 +103,9 @@ QFuture<QList<QFuture<QueryResult>>> whenAllTasks(
   return QtFuture::whenAll(futures.begin(), futures.end());
 }
 
-void executeConcurrentBackgroundTasks(const std::vector<Task *> &tasks,
+void executeConcurrentBackgroundTasks(const std::vector<Task*>& tasks,
                                       QFuture<void> whenAll) {
-  QThread *workerThread = new QThread();
+  QThread* workerThread = new QThread();
 
   QObject::connect(
       workerThread, &QThread::finished, workerThread, &QObject::deleteLater);
@@ -121,8 +121,8 @@ void executeConcurrentBackgroundTasks(const std::vector<Task *> &tasks,
   }
 }
 
-QFuture<QueryResult> executeBackgroundTask(Task *task) {
-  QThread *workerThread = new QThread();
+QFuture<QueryResult> executeBackgroundTask(Task* task) {
+  QThread* workerThread = new QThread();
 
   QObject::connect(
       workerThread, &QThread::finished, workerThread, &QObject::deleteLater);

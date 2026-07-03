@@ -36,16 +36,17 @@ namespace loot {
 class MessageContentEditor : public QDialog {
   Q_OBJECT
 public:
-  MessageContentEditor(QWidget *parent,
-                       const std::vector<LootSettings::Language> &languages);
+  MessageContentEditor(QWidget* parent,
+                       const std::vector<LootSettings::Language>& languages);
 
-  void initialiseInputs(std::vector<MessageContent> &&metadata);
+  void initialiseInputs(std::vector<MessageContent>&& metadata);
 
   std::vector<MessageContent> getMetadata() const;
 
 private:
-  const std::vector<LootSettings::Language> *languages;
-  MessageContentTableWidget *tableWidget{new MessageContentTableWidget(this, *languages)};
+  const std::vector<LootSettings::Language>* languages;
+  MessageContentTableWidget* tableWidget{
+      new MessageContentTableWidget(this, *languages)};
 
   void setupUi();
   void translateUi();

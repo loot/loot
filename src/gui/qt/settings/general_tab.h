@@ -37,33 +37,33 @@ namespace loot {
 class GeneralTab : public QFrame {
   Q_OBJECT
 public:
-  explicit GeneralTab(QWidget *parent = nullptr);
+  explicit GeneralTab(QWidget* parent = nullptr);
 
-  void initialiseInputs(const LootSettings &settings,
-                        const std::vector<std::string> &themes);
-  void recordInputValues(LootSettings &settings);
+  void initialiseInputs(const LootSettings& settings,
+                        const std::vector<std::string>& themes);
+  void recordInputValues(LootSettings& settings);
   bool areInputValuesValid() const;
 
 private:
-  QLabel *defaultGameLabel{new QLabel(this)};
-  QLabel *languageLabel{new QLabel(this)};
-  QLabel *themeLabel{new QLabel(this)};
-  QLabel *updateMasterlistLabel{new QLabel(this)};
-  QLabel *checkUpdatesLabel{new QLabel(this)};
-  QLabel *loggingLabel{new QLabel(this)};
-  QLabel *useNoSortingChangesDialogLabel{new QLabel(this)};
-  QLabel *warnOnCaseSensitiveGamePathsLabel{new QLabel(this)};
-  QLabel *preludeSourceLabel{new QLabel(this)};
-  QComboBox *defaultGameComboBox{new QComboBox(this)};
-  QComboBox *languageComboBox{new QComboBox(this)};
-  QComboBox *themeComboBox{new QComboBox(this)};
-  QCheckBox *updateMasterlistCheckbox{new QCheckBox(this)};
-  QCheckBox *checkUpdatesCheckbox{new QCheckBox(this)};
-  QCheckBox *loggingCheckbox{new QCheckBox(this)};
-  QCheckBox *useNoSortingChangesDialogCheckbox{new QCheckBox(this)};
-  QCheckBox *warnOnCaseSensitiveGamePathsCheckbox{new QCheckBox(this)};
-  QLineEdit *preludeSourceInput{new QLineEdit(this)};
-  QLabel *descriptionLabel{new QLabel(this)};
+  QLabel* defaultGameLabel{new QLabel(this)};
+  QLabel* languageLabel{new QLabel(this)};
+  QLabel* themeLabel{new QLabel(this)};
+  QLabel* updateMasterlistLabel{new QLabel(this)};
+  QLabel* checkUpdatesLabel{new QLabel(this)};
+  QLabel* loggingLabel{new QLabel(this)};
+  QLabel* useNoSortingChangesDialogLabel{new QLabel(this)};
+  QLabel* warnOnCaseSensitiveGamePathsLabel{new QLabel(this)};
+  QLabel* preludeSourceLabel{new QLabel(this)};
+  QComboBox* defaultGameComboBox{new QComboBox(this)};
+  QComboBox* languageComboBox{new QComboBox(this)};
+  QComboBox* themeComboBox{new QComboBox(this)};
+  QCheckBox* updateMasterlistCheckbox{new QCheckBox(this)};
+  QCheckBox* checkUpdatesCheckbox{new QCheckBox(this)};
+  QCheckBox* loggingCheckbox{new QCheckBox(this)};
+  QCheckBox* useNoSortingChangesDialogCheckbox{new QCheckBox(this)};
+  QCheckBox* warnOnCaseSensitiveGamePathsCheckbox{new QCheckBox(this)};
+  QLineEdit* preludeSourceInput{new QLineEdit(this)};
+  QLabel* descriptionLabel{new QLabel(this)};
 
   void setupUi();
   void translateUi();

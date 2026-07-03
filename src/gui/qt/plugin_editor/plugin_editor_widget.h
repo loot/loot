@@ -38,18 +38,18 @@ namespace loot {
 class PluginEditorWidget : public QWidget {
   Q_OBJECT
 public:
-  PluginEditorWidget(QWidget *parent,
-                     const std::vector<LootSettings::Language> &languages,
-                     const std::string &language);
+  PluginEditorWidget(QWidget* parent,
+                     const std::vector<LootSettings::Language>& languages,
+                     const std::string& language);
 
   void setLanguage(std::string&& language);
-  void setBashTagCompletions(const std::vector<std::string> &knownBashTags);
-  void setFilenameCompletions(const std::vector<std::string> &knownFilenames);
+  void setBashTagCompletions(const std::vector<std::string>& knownBashTags);
+  void setFilenameCompletions(const std::vector<std::string>& knownFilenames);
 
-  void initialiseInputs(const std::vector<std::string> &groups,
-                        const std::string &pluginName,
-                        const std::optional<PluginMetadata> &nonUserMetadata,
-                        const std::optional<PluginMetadata> &userMetadata);
+  void initialiseInputs(const std::vector<std::string>& groups,
+                        const std::string& pluginName,
+                        const std::optional<PluginMetadata>& nonUserMetadata,
+                        const std::optional<PluginMetadata>& userMetadata);
 
   std::string getCurrentPluginName() const;
 
@@ -58,39 +58,39 @@ signals:
   void rejected();
 
 private:
-  const std::vector<LootSettings::Language> *languages;
+  const std::vector<LootSettings::Language>* languages;
   std::string language;
 
   QStringList bashTagCompletions;
   QStringList allFilenameCompletions;
   QStringList filenameCompletions;
 
-  QLabel *pluginLabel{new QLabel(this)};
-  QTabWidget *tabs{new QTabWidget(this)};
-  GroupTab *groupTab{new GroupTab(this)};
-  LoadAfterFileTableTab *loadAfterTab{
+  QLabel* pluginLabel{new QLabel(this)};
+  QTabWidget* tabs{new QTabWidget(this)};
+  GroupTab* groupTab{new GroupTab(this)};
+  LoadAfterFileTableTab* loadAfterTab{
       new LoadAfterFileTableTab(this,
                                 *languages,
                                 language,
                                 filenameCompletions)};
-  FileTableTab *requirementsTab{
+  FileTableTab* requirementsTab{
       new FileTableTab(this, *languages, language, filenameCompletions)};
-  FileTableTab *incompatibilitiesTab{
+  FileTableTab* incompatibilitiesTab{
       new FileTableTab(this, *languages, language, filenameCompletions)};
-  MessageTableTab *messagesTab{new MessageTableTab(this, *languages, language)};
-  TagTableTab *tagsTab{new TagTableTab(this, bashTagCompletions)};
-  CleaningDataTableTab *dirtyTab{
+  MessageTableTab* messagesTab{new MessageTableTab(this, *languages, language)};
+  TagTableTab* tagsTab{new TagTableTab(this, bashTagCompletions)};
+  CleaningDataTableTab* dirtyTab{
       new CleaningDataTableTab(this, *languages, language)};
-  CleaningDataTableTab *cleanTab{
+  CleaningDataTableTab* cleanTab{
       new CleaningDataTableTab(this, *languages, language)};
-  LocationTableTab *locationsTab{new LocationTableTab(this)};
+  LocationTableTab* locationsTab{new LocationTableTab(this)};
 
   void setupUi();
   void translateUi();
 
   PluginMetadata getUserMetadata();
 
-  void connectTableRowCountChangedSignal(const BaseTableTab *tableTab) const;
+  void connectTableRowCountChangedSignal(const BaseTableTab* tableTab) const;
 
 private slots:
   void on_dialogButtons_accepted();

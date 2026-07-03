@@ -285,9 +285,8 @@ TEST_P(
   EXPECT_FALSE(settings_.hasHiddenGeneralMessages());
 }
 
-TEST_P(
-    GameSettingsTest,
-    hasHiddenGeneralMessageShouldBeTrueIfThereIsAMessageWithoutAPluginName) {
+TEST_P(GameSettingsTest,
+       hasHiddenGeneralMessageShouldBeTrueIfThereIsAMessageWithoutAPluginName) {
   settings_.hideMessage("", "plugin message");
 
   EXPECT_TRUE(settings_.hasHiddenGeneralMessages());
@@ -305,7 +304,8 @@ TEST_P(
   EXPECT_FALSE(settings_.pluginHasHiddenMessages("plugin name"));
 }
 
-TEST_P(GameSettingsTest,
+TEST_P(
+    GameSettingsTest,
     pluginHasHiddenMessagesShouldBeTrueIfThereIsAMessageWithTheGivenPluginName) {
   std::vector<HiddenMessage> messages{
       HiddenMessage{std::nullopt, "general message"},

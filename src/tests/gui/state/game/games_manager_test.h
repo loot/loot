@@ -103,10 +103,9 @@ TEST(
   auto currentFolderName = TEST_GAMES_SETTINGS[1].getFolderName();
   manager.setCurrentGame(currentFolderName);
 
-  manager.setInstalledGames(
-      {
-          createSettings(GameId::tes5).setGamePath("different"),
-      });
+  manager.setInstalledGames({
+      createSettings(GameId::tes5).setGamePath("different"),
+  });
 
   EXPECT_EQ(currentFolderName,
             manager.getCurrentGame().getSettings().getFolderName());
@@ -122,10 +121,9 @@ TEST(
   auto currentFolderName = TEST_GAMES_SETTINGS[1].getFolderName();
   manager.setCurrentGame(currentFolderName);
 
-  manager.setInstalledGames(
-      {
-          createSettings(GameId::tes5).setGameLocalPath("different"),
-      });
+  manager.setInstalledGames({
+      createSettings(GameId::tes5).setGameLocalPath("different"),
+  });
 
   EXPECT_EQ(currentFolderName,
             manager.getCurrentGame().getSettings().getFolderName());
@@ -141,10 +139,9 @@ TEST(
   auto currentFolderName = TEST_GAMES_SETTINGS[1].getFolderName();
   manager.setCurrentGame(currentFolderName);
 
-  manager.setInstalledGames(
-      {
-          createSettings(GameId::tes5).setMaster("different"),
-      });
+  manager.setInstalledGames({
+      createSettings(GameId::tes5).setMaster("different"),
+  });
 
   EXPECT_EQ(currentFolderName,
             manager.getCurrentGame().getSettings().getFolderName());
@@ -161,9 +158,9 @@ TEST(
   manager.setCurrentGame(currentFolderName);
 
   GameSettings newGameSettings = createSettings(GameId::tes5)
-                             .setName("different")
-                             .setMinimumHeaderVersion(100.0f)
-                             .setMasterlistSource("different");
+                                     .setName("different")
+                                     .setMinimumHeaderVersion(100.0f)
+                                     .setMasterlistSource("different");
   manager.setInstalledGames({newGameSettings});
 
   EXPECT_EQ(currentFolderName,
@@ -212,7 +209,8 @@ TEST(GamesManager, setCurrentGameShouldNotInitialiseGameData) {
 
   manager.setCurrentGame(TEST_GAMES_SETTINGS[1].getFolderName());
 
-  EXPECT_EQ(0, manager.getInitialiseCount(TEST_GAMES_SETTINGS[1].getFolderName()));
+  EXPECT_EQ(0,
+            manager.getInitialiseCount(TEST_GAMES_SETTINGS[1].getFolderName()));
 }
 
 TEST(GamesManager,

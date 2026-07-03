@@ -53,7 +53,7 @@ public:
   GameSettings(const GameId gameId, const std::string& lootFolder);
 
   GameId getId() const;
-  std::string getName() const;  // Returns the game's name, eg. "TES IV: Oblivion".
+  std::string getName() const;
   std::string getFolderName() const;
   std::string getMasterFilename() const;
   float getMinimumHeaderVersion() const;
