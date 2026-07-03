@@ -37,6 +37,8 @@ Fixed
   that are relevant to the state that has changed before generating any new
   messages. For example, if there is a message about a metadata parsing error,
   it will no longer be removed when loading plugins.
+- It was not possible to select the toolbar buttons (e.g. sort plugins, update
+  masterlist) using the keyboard. They can now be selected using the Tab key.
 - When LOOT was running as a Flatpak application and OpenMW was not installed as
   a Flatpak application and the host did not have the ``XDG_CONFIG_HOME`` and/or ``XDG_DATA_HOME`` environment variables defined, LOOT would incorrectly look
   for OpenMW's default user config and user data directories inside its own
@@ -46,6 +48,10 @@ Fixed
 Changed
 -------
 
+- The search dialog has been replaced by a toolbar, making it accessible when
+  using only a keyboard. In addition, the find next and find previous buttons
+  now support the desktop's standard keyboard shortcuts for those operations
+  (e.g. F3 and Shift+F3 respectively on Windows, KDE and GNOME).
 - When multiple versions of OpenMW are installed, LOOT can now detect them all
   using their Windows Registry keys instead of stopping at the first version it
   finds.
