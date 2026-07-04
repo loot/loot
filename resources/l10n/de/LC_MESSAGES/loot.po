@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.29.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-06-29 12:02+0100\n"
+"POT-Creation-Date: 2026-07-03 18:12+0100\n"
 "PO-Revision-Date: 2026-04-18 12:58+0200\n"
 "Last-Translator: pStyl3 <qp-git@pm.me>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/loot/loot/de/>\n"
@@ -211,67 +211,67 @@ msgstr ""
 "Wenn angekreuzt, wird der Content Filter Text als regulärer Ausdruck "
 "interpretiert."
 
-#: src/gui/qt/general_info_card.cpp:168
+#: src/gui/qt/general_info_card.cpp:167
 msgid "Active Small Plugins"
 msgstr "Aktive Small Plugins"
 
-#: src/gui/qt/general_info_card.cpp:169 src/gui/qt/general_info_card.cpp:256
+#: src/gui/qt/general_info_card.cpp:168 src/gui/qt/general_info_card.cpp:255
 msgid "Active Light Plugins"
 msgstr "Aktive Light Plugins"
 
-#: src/gui/qt/general_info_card.cpp:241
+#: src/gui/qt/general_info_card.cpp:240
 msgid "General Information"
 msgstr "Allgemeine Informationen"
 
-#: src/gui/qt/general_info_card.cpp:242 src/gui/qt/plugin_card.cpp:283
+#: src/gui/qt/general_info_card.cpp:241 src/gui/qt/plugin_card.cpp:283
 msgid "Has Hidden Messages"
 msgstr "Hat versteckte Nachrichten"
 
-#: src/gui/qt/general_info_card.cpp:244
+#: src/gui/qt/general_info_card.cpp:243
 msgid "Masterlist Revision ID"
 msgstr "Masterlist Revisions-ID"
 
-#: src/gui/qt/general_info_card.cpp:245
+#: src/gui/qt/general_info_card.cpp:244
 msgid "Masterlist Update Date"
 msgstr "Masterlist Update Datum"
 
-#: src/gui/qt/general_info_card.cpp:246
+#: src/gui/qt/general_info_card.cpp:245
 msgid "Masterlist Prelude Revision ID"
 msgstr "Masterlist Prelude Revisions-ID"
 
-#: src/gui/qt/general_info_card.cpp:247
+#: src/gui/qt/general_info_card.cpp:246
 msgid "Masterlist Prelude Update Date"
 msgstr "Masterlist Prelude Update Datum"
 
-#: src/gui/qt/general_info_card.cpp:249
+#: src/gui/qt/general_info_card.cpp:248
 msgid "Warnings"
 msgstr "Warnungen"
 
-#: src/gui/qt/general_info_card.cpp:250
+#: src/gui/qt/general_info_card.cpp:249
 msgid "Errors"
 msgstr "Fehler"
 
-#: src/gui/qt/general_info_card.cpp:251
+#: src/gui/qt/general_info_card.cpp:250
 msgid "Total Messages"
 msgstr "Nachrichten insgesamt"
 
-#: src/gui/qt/general_info_card.cpp:253
+#: src/gui/qt/general_info_card.cpp:252
 msgid "Active Plugins"
 msgstr "Aktive Plugins"
 
-#: src/gui/qt/general_info_card.cpp:254
+#: src/gui/qt/general_info_card.cpp:253
 msgid "Active Full Plugins"
 msgstr "Aktive Full Plugins"
 
-#: src/gui/qt/general_info_card.cpp:255
+#: src/gui/qt/general_info_card.cpp:254
 msgid "Active Medium Plugins"
 msgstr "Aktive Medium Plugins"
 
-#: src/gui/qt/general_info_card.cpp:257
+#: src/gui/qt/general_info_card.cpp:256
 msgid "Dirty Plugins"
 msgstr "Schmutzige Plugins"
 
-#: src/gui/qt/general_info_card.cpp:258
+#: src/gui/qt/general_info_card.cpp:257
 msgid "Total Plugins"
 msgstr "Plugins insgesamt"
 
@@ -1012,11 +1012,11 @@ msgstr "Plugins nicht in {0}"
 msgid "Group already exists!"
 msgstr "Gruppe existiert bereits!"
 
-#: src/gui/qt/groups_editor/node.cpp:242
+#: src/gui/qt/groups_editor/node.cpp:240
 msgid "Only user groups can be removed!"
 msgstr "Nur Benutzergruppen können entfernt werden!"
 
-#: src/gui/qt/groups_editor/node.cpp:247
+#: src/gui/qt/groups_editor/node.cpp:245
 msgid "A group that is not empty cannot be removed!"
 msgstr "Eine Gruppe, die nicht leer ist, kann nicht entfernt werden!"
 

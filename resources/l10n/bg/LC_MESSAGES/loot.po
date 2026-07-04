@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-06-29 12:02+0100\n"
+"POT-Creation-Date: 2026-07-03 18:12+0100\n"
 "PO-Revision-Date: 2026-07-03 09:01+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
-"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/>"
-"\n"
+"Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
+">\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -205,67 +205,67 @@ msgstr "Не е посочен текст"
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr "Тълкуване на съдържанието на филтъра като регулярен израз."
 
-#: src/gui/qt/general_info_card.cpp:168
+#: src/gui/qt/general_info_card.cpp:167
 msgid "Active Small Plugins"
 msgstr "Активни малки приставки"
 
-#: src/gui/qt/general_info_card.cpp:169 src/gui/qt/general_info_card.cpp:256
+#: src/gui/qt/general_info_card.cpp:168 src/gui/qt/general_info_card.cpp:255
 msgid "Active Light Plugins"
 msgstr "Активни леки приставки"
 
-#: src/gui/qt/general_info_card.cpp:241
+#: src/gui/qt/general_info_card.cpp:240
 msgid "General Information"
 msgstr "Обща информация"
 
-#: src/gui/qt/general_info_card.cpp:242 src/gui/qt/plugin_card.cpp:283
+#: src/gui/qt/general_info_card.cpp:241 src/gui/qt/plugin_card.cpp:283
 msgid "Has Hidden Messages"
 msgstr "Има скрити съобщения"
 
-#: src/gui/qt/general_info_card.cpp:244
+#: src/gui/qt/general_info_card.cpp:243
 msgid "Masterlist Revision ID"
 msgstr "Ревизия на основния списък"
 
-#: src/gui/qt/general_info_card.cpp:245
+#: src/gui/qt/general_info_card.cpp:244
 msgid "Masterlist Update Date"
 msgstr "Дата на обновяване на основния списък"
 
-#: src/gui/qt/general_info_card.cpp:246
+#: src/gui/qt/general_info_card.cpp:245
 msgid "Masterlist Prelude Revision ID"
 msgstr "Ревизия на основния каталожен списък"
 
-#: src/gui/qt/general_info_card.cpp:247
+#: src/gui/qt/general_info_card.cpp:246
 msgid "Masterlist Prelude Update Date"
 msgstr "Дата на обновяване на основния каталожен списък"
 
-#: src/gui/qt/general_info_card.cpp:249
+#: src/gui/qt/general_info_card.cpp:248
 msgid "Warnings"
 msgstr "Предупреждения"
 
-#: src/gui/qt/general_info_card.cpp:250
+#: src/gui/qt/general_info_card.cpp:249
 msgid "Errors"
 msgstr "Грешки"
 
-#: src/gui/qt/general_info_card.cpp:251
+#: src/gui/qt/general_info_card.cpp:250
 msgid "Total Messages"
 msgstr "Общо съобщения"
 
-#: src/gui/qt/general_info_card.cpp:253
+#: src/gui/qt/general_info_card.cpp:252
 msgid "Active Plugins"
 msgstr "Активни приставки"
 
-#: src/gui/qt/general_info_card.cpp:254
+#: src/gui/qt/general_info_card.cpp:253
 msgid "Active Full Plugins"
 msgstr "Активни обикновени приставки"
 
-#: src/gui/qt/general_info_card.cpp:255
+#: src/gui/qt/general_info_card.cpp:254
 msgid "Active Medium Plugins"
 msgstr "Активни междинни приставки"
 
-#: src/gui/qt/general_info_card.cpp:257
+#: src/gui/qt/general_info_card.cpp:256
 msgid "Dirty Plugins"
 msgstr "Мръсни приставки"
 
-#: src/gui/qt/general_info_card.cpp:258
+#: src/gui/qt/general_info_card.cpp:257
 msgid "Total Plugins"
 msgstr "Общо приставки"
 
@@ -995,11 +995,11 @@ msgstr "Приставки извън „{0}“"
 msgid "Group already exists!"
 msgstr "Групата вече съществува!"
 
-#: src/gui/qt/groups_editor/node.cpp:242
+#: src/gui/qt/groups_editor/node.cpp:240
 msgid "Only user groups can be removed!"
 msgstr "Само добавените групи могат да бъдат премахнати!"
 
-#: src/gui/qt/groups_editor/node.cpp:247
+#: src/gui/qt/groups_editor/node.cpp:245
 msgid "A group that is not empty cannot be removed!"
 msgstr "Групата не е празна и не може да бъде премахната!"
 

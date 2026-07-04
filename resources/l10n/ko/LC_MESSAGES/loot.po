@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-06-29 12:02+0100\n"
+"POT-Creation-Date: 2026-07-03 18:12+0100\n"
 "PO-Revision-Date: 2024-05-22 20:02+0100\n"
 "Last-Translator: SteamB23 <steamb23@gmail.com>\n"
 "Language-Team: SteamB23 <steamb23@gmail.com>\n"
@@ -207,67 +207,67 @@ msgstr "지정된 텍스트 없음"
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:168
+#: src/gui/qt/general_info_card.cpp:167
 msgid "Active Small Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:169 src/gui/qt/general_info_card.cpp:256
+#: src/gui/qt/general_info_card.cpp:168 src/gui/qt/general_info_card.cpp:255
 msgid "Active Light Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:241
+#: src/gui/qt/general_info_card.cpp:240
 msgid "General Information"
 msgstr "일반 정보"
 
-#: src/gui/qt/general_info_card.cpp:242 src/gui/qt/plugin_card.cpp:283
+#: src/gui/qt/general_info_card.cpp:241 src/gui/qt/plugin_card.cpp:283
 msgid "Has Hidden Messages"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:244
+#: src/gui/qt/general_info_card.cpp:243
 msgid "Masterlist Revision ID"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:245
+#: src/gui/qt/general_info_card.cpp:244
 msgid "Masterlist Update Date"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:246
+#: src/gui/qt/general_info_card.cpp:245
 msgid "Masterlist Prelude Revision ID"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:247
+#: src/gui/qt/general_info_card.cpp:246
 msgid "Masterlist Prelude Update Date"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:249
+#: src/gui/qt/general_info_card.cpp:248
 msgid "Warnings"
 msgstr "경고"
 
-#: src/gui/qt/general_info_card.cpp:250
+#: src/gui/qt/general_info_card.cpp:249
 msgid "Errors"
 msgstr "오류"
 
-#: src/gui/qt/general_info_card.cpp:251
+#: src/gui/qt/general_info_card.cpp:250
 msgid "Total Messages"
 msgstr "전체 메시지"
 
-#: src/gui/qt/general_info_card.cpp:253
+#: src/gui/qt/general_info_card.cpp:252
 msgid "Active Plugins"
 msgstr "활성화된 플러그인"
 
-#: src/gui/qt/general_info_card.cpp:254
+#: src/gui/qt/general_info_card.cpp:253
 msgid "Active Full Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:255
+#: src/gui/qt/general_info_card.cpp:254
 msgid "Active Medium Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:257
+#: src/gui/qt/general_info_card.cpp:256
 msgid "Dirty Plugins"
 msgstr "지저분한 플러그인"
 
-#: src/gui/qt/general_info_card.cpp:258
+#: src/gui/qt/general_info_card.cpp:257
 msgid "Total Plugins"
 msgstr "전체 플러그인"
 
@@ -969,11 +969,11 @@ msgstr ""
 msgid "Group already exists!"
 msgstr "그룹이 이미 존재함!"
 
-#: src/gui/qt/groups_editor/node.cpp:242
+#: src/gui/qt/groups_editor/node.cpp:240
 msgid "Only user groups can be removed!"
 msgstr ""
 
-#: src/gui/qt/groups_editor/node.cpp:247
+#: src/gui/qt/groups_editor/node.cpp:245
 msgid "A group that is not empty cannot be removed!"
 msgstr ""
 

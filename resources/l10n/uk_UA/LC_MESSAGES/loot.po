@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-06-29 12:02+0100\n"
+"POT-Creation-Date: 2026-07-03 18:12+0100\n"
 "PO-Revision-Date: 2025-10-05 19:02+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/"
@@ -209,69 +209,69 @@ msgstr ""
 "Якщо обрано, то текст контент-фільтру інтерпретується як регулярний вираз "
 "(regex)."
 
-#: src/gui/qt/general_info_card.cpp:168
+#: src/gui/qt/general_info_card.cpp:167
 msgid "Active Small Plugins"
 msgstr "Активних малих плагінів"
 
-#: src/gui/qt/general_info_card.cpp:169 src/gui/qt/general_info_card.cpp:256
+#: src/gui/qt/general_info_card.cpp:168 src/gui/qt/general_info_card.cpp:255
 msgid "Active Light Plugins"
 msgstr "Активних легких плагінів"
 
-#: src/gui/qt/general_info_card.cpp:241
+#: src/gui/qt/general_info_card.cpp:240
 msgid "General Information"
 msgstr "Загальна інформація"
 
-#: src/gui/qt/general_info_card.cpp:242 src/gui/qt/plugin_card.cpp:283
+#: src/gui/qt/general_info_card.cpp:241 src/gui/qt/plugin_card.cpp:283
 msgid "Has Hidden Messages"
 msgstr "Має приховані повідомлення"
 
-#: src/gui/qt/general_info_card.cpp:244
+#: src/gui/qt/general_info_card.cpp:243
 msgid "Masterlist Revision ID"
 msgstr "Версія правил сортування"
 
-#: src/gui/qt/general_info_card.cpp:245
+#: src/gui/qt/general_info_card.cpp:244
 msgid "Masterlist Update Date"
 msgstr "Дата правил сортування"
 
-#: src/gui/qt/general_info_card.cpp:246
+#: src/gui/qt/general_info_card.cpp:245
 msgid "Masterlist Prelude Revision ID"
 msgstr "Версія prelude-файлу"
 
-#: src/gui/qt/general_info_card.cpp:247
+#: src/gui/qt/general_info_card.cpp:246
 msgid "Masterlist Prelude Update Date"
 msgstr "Дата prelude-файлу"
 
 # Used in menu, translation should be in "numbered plural": 5 warnings - 5 попереджень
-#: src/gui/qt/general_info_card.cpp:249
+#: src/gui/qt/general_info_card.cpp:248
 msgid "Warnings"
 msgstr "Попереджень"
 
 # Used in menu, translation should be in "numbered plural": 5 errors- 5 помилок
-#: src/gui/qt/general_info_card.cpp:250
+#: src/gui/qt/general_info_card.cpp:249
 msgid "Errors"
 msgstr "Помилок"
 
-#: src/gui/qt/general_info_card.cpp:251
+#: src/gui/qt/general_info_card.cpp:250
 msgid "Total Messages"
 msgstr "Всього повідомлень"
 
-#: src/gui/qt/general_info_card.cpp:253
+#: src/gui/qt/general_info_card.cpp:252
 msgid "Active Plugins"
 msgstr "Активних плагінів"
 
-#: src/gui/qt/general_info_card.cpp:254
+#: src/gui/qt/general_info_card.cpp:253
 msgid "Active Full Plugins"
 msgstr "Активних повних плагінів"
 
-#: src/gui/qt/general_info_card.cpp:255
+#: src/gui/qt/general_info_card.cpp:254
 msgid "Active Medium Plugins"
 msgstr "Активних середніх плагінів"
 
-#: src/gui/qt/general_info_card.cpp:257
+#: src/gui/qt/general_info_card.cpp:256
 msgid "Dirty Plugins"
 msgstr "Брудних плагінів"
 
-#: src/gui/qt/general_info_card.cpp:258
+#: src/gui/qt/general_info_card.cpp:257
 msgid "Total Plugins"
 msgstr "Всього плагінів"
 
@@ -1003,11 +1003,11 @@ msgstr ""
 msgid "Group already exists!"
 msgstr "Група вже існує!"
 
-#: src/gui/qt/groups_editor/node.cpp:242
+#: src/gui/qt/groups_editor/node.cpp:240
 msgid "Only user groups can be removed!"
 msgstr "Видалити можна лише користувацькі групи!"
 
-#: src/gui/qt/groups_editor/node.cpp:247
+#: src/gui/qt/groups_editor/node.cpp:245
 msgid "A group that is not empty cannot be removed!"
 msgstr "Групу, яка не є порожньою, не можна видалити!"
 
