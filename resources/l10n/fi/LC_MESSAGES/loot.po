@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-06-29 12:02+0100\n"
+"POT-Creation-Date: 2026-07-03 18:12+0100\n"
 "PO-Revision-Date: 2025-01-21 14:00+0000\n"
 "Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/loot/loot/fi/>\n"
@@ -206,67 +206,67 @@ msgstr "(Ei hakua)"
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr "Hakusanaa käytetään säännöllisenä lausekkeena (regular expression)."
 
-#: src/gui/qt/general_info_card.cpp:168
+#: src/gui/qt/general_info_card.cpp:167
 msgid "Active Small Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:169 src/gui/qt/general_info_card.cpp:256
+#: src/gui/qt/general_info_card.cpp:168 src/gui/qt/general_info_card.cpp:255
 msgid "Active Light Plugins"
 msgstr "Aktiivisia kevytlisäosia"
 
-#: src/gui/qt/general_info_card.cpp:241
+#: src/gui/qt/general_info_card.cpp:240
 msgid "General Information"
 msgstr "Yleistietoja"
 
-#: src/gui/qt/general_info_card.cpp:242 src/gui/qt/plugin_card.cpp:283
+#: src/gui/qt/general_info_card.cpp:241 src/gui/qt/plugin_card.cpp:283
 msgid "Has Hidden Messages"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:244
+#: src/gui/qt/general_info_card.cpp:243
 msgid "Masterlist Revision ID"
 msgstr "Pääluettelon versionumero"
 
-#: src/gui/qt/general_info_card.cpp:245
+#: src/gui/qt/general_info_card.cpp:244
 msgid "Masterlist Update Date"
 msgstr "Pääluettelo päivitetty"
 
-#: src/gui/qt/general_info_card.cpp:246
+#: src/gui/qt/general_info_card.cpp:245
 msgid "Masterlist Prelude Revision ID"
 msgstr "Pääluettelon pohjan versio"
 
-#: src/gui/qt/general_info_card.cpp:247
+#: src/gui/qt/general_info_card.cpp:246
 msgid "Masterlist Prelude Update Date"
 msgstr "Pääluettelon pohja päivitetty"
 
-#: src/gui/qt/general_info_card.cpp:249
+#: src/gui/qt/general_info_card.cpp:248
 msgid "Warnings"
 msgstr "Varoitukset"
 
-#: src/gui/qt/general_info_card.cpp:250
+#: src/gui/qt/general_info_card.cpp:249
 msgid "Errors"
 msgstr "Virheet"
 
-#: src/gui/qt/general_info_card.cpp:251
+#: src/gui/qt/general_info_card.cpp:250
 msgid "Total Messages"
 msgstr "Ilmoituksia yhteensä"
 
-#: src/gui/qt/general_info_card.cpp:253
+#: src/gui/qt/general_info_card.cpp:252
 msgid "Active Plugins"
 msgstr "Aktiivisia lisäosia"
 
-#: src/gui/qt/general_info_card.cpp:254
+#: src/gui/qt/general_info_card.cpp:253
 msgid "Active Full Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:255
+#: src/gui/qt/general_info_card.cpp:254
 msgid "Active Medium Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:257
+#: src/gui/qt/general_info_card.cpp:256
 msgid "Dirty Plugins"
 msgstr "Siivoamattomia lisäosia"
 
-#: src/gui/qt/general_info_card.cpp:258
+#: src/gui/qt/general_info_card.cpp:257
 msgid "Total Plugins"
 msgstr "Lisäosia yhteensä"
 
@@ -987,11 +987,11 @@ msgstr ""
 msgid "Group already exists!"
 msgstr "Ryhmä on jo olemassa!"
 
-#: src/gui/qt/groups_editor/node.cpp:242
+#: src/gui/qt/groups_editor/node.cpp:240
 msgid "Only user groups can be removed!"
 msgstr "Vain käyttäjän ryhmät voidaan poistaa!"
 
-#: src/gui/qt/groups_editor/node.cpp:247
+#: src/gui/qt/groups_editor/node.cpp:245
 msgid "A group that is not empty cannot be removed!"
 msgstr "Vain tyhjät ryhmät voidaan poistaa!"
 
