@@ -328,7 +328,7 @@ msgstr "ソートしたロードオーダーを破棄 (&D)"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:892
-msgid "&View load order changes..."
+msgid "&View Load Order Changes..."
 msgstr ""
 
 #. translators: The mnemonic in this string shouldn't conflict with other

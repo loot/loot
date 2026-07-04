@@ -335,7 +335,7 @@ msgstr "Отм&ени реда за зареждане"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:892
-msgid "&View load order changes..."
+msgid "&View Load Order Changes..."
 msgstr "&Виж промените в реда за зареждане..."
 
 #. translators: The mnemonic in this string shouldn't conflict with other

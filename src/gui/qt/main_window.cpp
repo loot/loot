@@ -877,7 +877,7 @@ void MainWindow::translateUi() {
   /* translators: This string is also an action in the Game menu. */
   actionDiscardSort->setText(qTranslate("&Discard Sorted Load Order"));
   /* translators: This string is also an action in the Game menu. */
-  actionCompareLoadOrders->setText(qTranslate("&View load order changes..."));
+  actionCompareLoadOrders->setText(qTranslate("&View Load Order Changes..."));
 
   // Translate menu bar items.
   /* translators: The mnemonic in this string shouldn't conflict with other
