@@ -77,7 +77,7 @@
           <li>Added warnings for unsupported Starfield blueprint and BlueprintShips plugins.</li>
           <li>Starfield blueprint and BlueprintShips plugins are no longer written to plugins.txt.</li>
           <li>Fixed the Flatpak crashing for some users.</li>
-          <li>The Flatpak is now built withe more debug info available.</li>
+          <li>The Flatpak is now built with more debug info available.</li>
           <li>Other fixes and improvements.</li>
         </ul>
       </description>
