@@ -13,7 +13,7 @@ Added
 
 - Support for detecting OpenMW v0.51.0 using its Windows Registry key.
 - A new dialog for comparing current and sorted load orders. The dialog can be
-  accessed from the Game menu or the toolbar while LOOT is displaying is an
+  accessed from the Game menu or the toolbar while LOOT is displaying an
   unapplied sorted load order.
 - When a masterlist update removes groups that are referenced by user metadata
   (directly or indirectly), LOOT will now recover those groups as user metadata,
