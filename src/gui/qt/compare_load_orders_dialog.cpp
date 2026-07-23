@@ -278,6 +278,43 @@ void diffLists(QListWidget* listWidget1, QListWidget* listWidget2) {
 
   alignUnchangedRows(listWidget1, listWidget2);
 }
+
+void selectSearchResult(QListWidget* list, QListWidgetItem* item) {
+  list->setCurrentItem(item);
+  list->scrollToItem(list->currentItem(), QAbstractItemView::PositionAtCenter);
+}
+
+void searchList(QListWidget* list, const QString& text, bool findNext) {
+  if (text.isEmpty()) {
+    return;
+  }
+
+  const auto results =
+      list->findItems(text, Qt::MatchFixedString | Qt::MatchContains);
+
+  if (results.isEmpty()) {
+    return;
+  }
+
+  if (!findNext && results.contains(list->currentItem())) {
+    selectSearchResult(list, list->currentItem());
+    return;
+  }
+
+  const auto currentRow = list->row(list->currentItem());
+
+  if (list->row(results.back()) <= currentRow) {
+    selectSearchResult(list, results.front());
+    return;
+  }
+
+  for (const auto result : results) {
+    if (list->row(result) > currentRow) {
+      selectSearchResult(list, result);
+      return;
+    }
+  }
+}
 }
 
 namespace loot {
@@ -303,6 +340,17 @@ void CompareLoadOrdersDialog::setLoadOrders(
   diffLists(currentLoadOrderList, sortedLoadOrderList);
 }
 
+void CompareLoadOrdersDialog::keyPressEvent(QKeyEvent* event) {
+  int key = event->key();
+  if ((key == Qt::Key_Return || key == Qt::Key_Enter) &&
+      (currentSearchInput->hasFocus() || sortedSearchInput->hasFocus() ||
+       currentLoadOrderList->hasFocus() || sortedLoadOrderList->hasFocus())) {
+    event->ignore();
+  } else {
+    QDialog::keyPressEvent(event);
+  }
+}
+
 void CompareLoadOrdersDialog::setupUi() {
   setWindowModality(Qt::WindowModal);
 
@@ -321,22 +369,30 @@ void CompareLoadOrdersDialog::setupUi() {
   currentLoadOrderList->setIconSize(iconSize);
   sortedLoadOrderList->setIconSize(iconSize);
 
+  currentSearchInput->setObjectName("currentSearchInput");
+  currentSearchInput->setClearButtonEnabled(true);
+
+  sortedSearchInput->setObjectName("sortedSearchInput");
+  sortedSearchInput->setClearButtonEnabled(true);
+
   const auto buttonBox =
       new QDialogButtonBox(QDialogButtonBox::StandardButton::Ok, this);
 
   auto currentLoadOrderLayout = new QVBoxLayout();
-  auto backupLoadOrderLayout = new QVBoxLayout();
+  auto sortedLoadOrderLayout = new QVBoxLayout();
   auto listsLayout = new QHBoxLayout();
   auto dialogLayout = new QVBoxLayout();
 
   currentLoadOrderLayout->addWidget(currentLoadOrderLabel);
   currentLoadOrderLayout->addWidget(currentLoadOrderList);
+  currentLoadOrderLayout->addWidget(currentSearchInput);
 
-  backupLoadOrderLayout->addWidget(sortedLoadOrderLabel);
-  backupLoadOrderLayout->addWidget(sortedLoadOrderList);
+  sortedLoadOrderLayout->addWidget(sortedLoadOrderLabel);
+  sortedLoadOrderLayout->addWidget(sortedLoadOrderList);
+  sortedLoadOrderLayout->addWidget(sortedSearchInput);
 
   listsLayout->addLayout(currentLoadOrderLayout);
-  listsLayout->addLayout(backupLoadOrderLayout);
+  listsLayout->addLayout(sortedLoadOrderLayout);
 
   dialogLayout->addLayout(listsLayout);
   dialogLayout->addWidget(buttonBox);
@@ -359,6 +415,24 @@ void CompareLoadOrdersDialog::setupUi() {
       &QListWidget::itemSelectionChanged,
       this,
       &CompareLoadOrdersDialog::on_sortedLoadOrderList_itemSelectionChanged);
+
+  connect(currentSearchInput,
+          &QLineEdit::textChanged,
+          this,
+          &CompareLoadOrdersDialog::on_currentSearchInput_textChanged);
+  connect(sortedSearchInput,
+          &QLineEdit::textChanged,
+          this,
+          &CompareLoadOrdersDialog::on_sortedSearchInput_textChanged);
+
+  connect(currentSearchInput,
+          &QLineEdit::returnPressed,
+          this,
+          &CompareLoadOrdersDialog::on_currentSearchInput_returnPressed);
+  connect(sortedSearchInput,
+          &QLineEdit::returnPressed,
+          this,
+          &CompareLoadOrdersDialog::on_sortedSearchInput_returnPressed);
 }
 
 void CompareLoadOrdersDialog::translateUi() {
@@ -366,6 +440,10 @@ void CompareLoadOrdersDialog::translateUi() {
 
   currentLoadOrderLabel->setText(qTranslate("Current load order"));
   sortedLoadOrderLabel->setText(qTranslate("Sorted load order"));
+
+  const auto searchText = qTranslate("Search list");
+  currentSearchInput->setPlaceholderText(searchText);
+  sortedSearchInput->setPlaceholderText(searchText);
 }
 
 void CompareLoadOrdersDialog::coupleVerticalScrollers() {
@@ -423,18 +501,36 @@ void CompareLoadOrdersDialog::on_sortedLoadOrderList_itemSelectionChanged() {
   }
 }
 
+void CompareLoadOrdersDialog::on_currentSearchInput_textChanged(
+    const QString& text) {
+  searchList(currentLoadOrderList, text, false);
+}
+
+void CompareLoadOrdersDialog::on_sortedSearchInput_textChanged(
+    const QString& text) {
+  searchList(sortedLoadOrderList, text, false);
+}
+
+void CompareLoadOrdersDialog::on_currentSearchInput_returnPressed() {
+  searchList(currentLoadOrderList, currentSearchInput->text(), true);
+}
+
+void CompareLoadOrdersDialog::on_sortedSearchInput_returnPressed() {
+  searchList(sortedLoadOrderList, sortedSearchInput->text(), true);
+}
+
 void CompareLoadOrdersDialog::mirrorSelectionInTargetList(
     QListWidget* sourceList,
     QListWidget* targetList,
     QMetaObject::Connection& connectionToDisconnect,
     void (CompareLoadOrdersDialog::*slotToReconnect)()) {
-  auto selectedSourceItems = sourceList->selectedItems();
+  auto currentSourceItem = sourceList->currentItem();
 
-  if (selectedSourceItems.size() != 1) {
+  if (currentSourceItem == nullptr) {
     return;
   }
 
-  auto targetItems = targetList->findItems(selectedSourceItems.first()->text(),
+  auto targetItems = targetList->findItems(currentSourceItem->text(),
                                            Qt::MatchFlag::MatchExactly);
 
   if (targetItems.size() != 1) {

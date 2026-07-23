@@ -24,8 +24,10 @@
 #ifndef LOOT_GUI_QT_COMPARE_LOAD_ORDERS_DIALOG
 #define LOOT_GUI_QT_COMPARE_LOAD_ORDERS_DIALOG
 
+#include <QtGui/QKeyEvent>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListWidget>
 #include <string>
 #include <vector>
@@ -39,12 +41,18 @@ public:
   void setLoadOrders(const std::vector<std::string>& current,
                      const std::vector<std::string>& sorted);
 
+protected:
+  virtual void keyPressEvent(QKeyEvent* event) override;
+
 private:
   QLabel* currentLoadOrderLabel{new QLabel(this)};
   QLabel* sortedLoadOrderLabel{new QLabel(this)};
 
   QListWidget* currentLoadOrderList{new QListWidget(this)};
+  QLineEdit* currentSearchInput{new QLineEdit(this)};
+
   QListWidget* sortedLoadOrderList{new QListWidget(this)};
+  QLineEdit* sortedSearchInput{new QLineEdit(this)};
 
   QMetaObject::Connection currentListScrollConnection;
   QMetaObject::Connection sortedListScrollConnection;
@@ -66,6 +74,12 @@ private:
 private slots:
   void on_currentLoadOrderList_itemSelectionChanged();
   void on_sortedLoadOrderList_itemSelectionChanged();
+
+  void on_currentSearchInput_textChanged(const QString& text);
+  void on_sortedSearchInput_textChanged(const QString& text);
+
+  void on_currentSearchInput_returnPressed();
+  void on_sortedSearchInput_returnPressed();
 };
 }
 
