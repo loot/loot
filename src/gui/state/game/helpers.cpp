@@ -785,40 +785,49 @@ std::optional<std::filesystem::path> resolveGameFilePath(
 }
 
 bool isOfficialPlugin(const GameId gameId, const std::string& pluginName) {
-  const auto lowercased = boost::locale::to_lower(pluginName);
+  try {
+    const auto lowercased = boost::locale::to_lower(pluginName);
 
-  switch (gameId) {
-    case GameId::tes3:
-    case GameId::openmw:
-      return contains(TES3_OFFICIAL_PLUGINS, lowercased);
-    case GameId::tes4:
-      return contains(TES4_OFFICIAL_PLUGINS, lowercased);
-    case GameId::nehrim:
-      return contains(NEHRIM_OFFICIAL_PLUGINS, lowercased);
-    case GameId::tes5:
-      return contains(TES5_OFFICIAL_PLUGINS, lowercased);
-    case GameId::enderal:
-      return contains(ENDERAL_OFFICIAL_PLUGINS, lowercased);
-    case GameId::tes5se:
-      return contains(TES5SE_OFFICIAL_PLUGINS, lowercased);
-    case GameId::enderalse:
-      return contains(ENDERALSE_OFFICIAL_PLUGINS, lowercased);
-    case GameId::tes5vr:
-      return contains(TES5VR_OFFICIAL_PLUGINS, lowercased);
-    case GameId::fo3:
-      return contains(FO3_OFFICIAL_PLUGINS, lowercased);
-    case GameId::fonv:
-      return contains(FONV_OFFICIAL_PLUGINS, lowercased);
-    case GameId::fo4:
-      return contains(FO4_OFFICIAL_PLUGINS, lowercased);
-    case GameId::fo4vr:
-      return contains(FO4VR_OFFICIAL_PLUGINS, lowercased);
-    case GameId::starfield:
-      return contains(STARFIELD_OFFICIAL_PLUGINS, lowercased);
-    case GameId::oblivionRemastered:
-      return contains(OBLIVION_REMASTERED_OFFICIAL_PLUGINS, lowercased);
-    default:
-      throw std::logic_error("Unrecognised game type");
+    switch (gameId) {
+      case GameId::tes3:
+      case GameId::openmw:
+        return contains(TES3_OFFICIAL_PLUGINS, lowercased);
+      case GameId::tes4:
+        return contains(TES4_OFFICIAL_PLUGINS, lowercased);
+      case GameId::nehrim:
+        return contains(NEHRIM_OFFICIAL_PLUGINS, lowercased);
+      case GameId::tes5:
+        return contains(TES5_OFFICIAL_PLUGINS, lowercased);
+      case GameId::enderal:
+        return contains(ENDERAL_OFFICIAL_PLUGINS, lowercased);
+      case GameId::tes5se:
+        return contains(TES5SE_OFFICIAL_PLUGINS, lowercased);
+      case GameId::enderalse:
+        return contains(ENDERALSE_OFFICIAL_PLUGINS, lowercased);
+      case GameId::tes5vr:
+        return contains(TES5VR_OFFICIAL_PLUGINS, lowercased);
+      case GameId::fo3:
+        return contains(FO3_OFFICIAL_PLUGINS, lowercased);
+      case GameId::fonv:
+        return contains(FONV_OFFICIAL_PLUGINS, lowercased);
+      case GameId::fo4:
+        return contains(FO4_OFFICIAL_PLUGINS, lowercased);
+      case GameId::fo4vr:
+        return contains(FO4VR_OFFICIAL_PLUGINS, lowercased);
+      case GameId::starfield:
+        return contains(STARFIELD_OFFICIAL_PLUGINS, lowercased);
+      case GameId::oblivionRemastered:
+        return contains(OBLIVION_REMASTERED_OFFICIAL_PLUGINS, lowercased);
+      default:
+        throw std::logic_error("Unrecognised game type");
+    }
+  } catch (const std::exception& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error("Exception thrown in isOfficialPlugin() for {}: {}",
+                    pluginName,
+                    e.what());
+    }
   }
 
   return false;
