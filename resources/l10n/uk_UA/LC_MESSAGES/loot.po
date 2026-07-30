@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-07-11 21:10+0100\n"
+"POT-Creation-Date: 2026-07-30 10:34+0100\n"
 "PO-Revision-Date: 2025-10-05 19:02+0000\n"
 "Last-Translator: Максим Горпиніч <gorpinicmaksim0@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/loot/loot/uk/"
@@ -89,17 +89,21 @@ msgstr "Ручне резервне копіювання"
 msgid "Backup name:"
 msgstr "Назва резервної копії:"
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:365
+#: src/gui/qt/compare_load_orders_dialog.cpp:439
 msgid "Compare Load Orders"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:367
+#: src/gui/qt/compare_load_orders_dialog.cpp:441
 #: src/gui/qt/restore_load_order_dialog.cpp:165
 msgid "Current load order"
 msgstr "Поточний порядок завантаження"
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:368
+#: src/gui/qt/compare_load_orders_dialog.cpp:442
 msgid "Sorted load order"
+msgstr ""
+
+#: src/gui/qt/compare_load_orders_dialog.cpp:444
+msgid "Search list"
 msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:288
@@ -849,7 +853,7 @@ msgstr "Пустий плагін"
 msgid "Loads Archive"
 msgstr "Завантажує архів"
 
-#: src/gui/qt/plugin_card.cpp:282 src/gui/qt/plugin_item_model.cpp:315
+#: src/gui/qt/plugin_card.cpp:282 src/gui/qt/plugin_item_model.cpp:319
 msgid "Has User Metadata"
 msgstr "Має користувацькі метадані"
 
@@ -870,19 +874,19 @@ msgstr "Додати"
 msgid "Remove"
 msgstr "Видалити"
 
-#: src/gui/qt/plugin_item_model.cpp:313
+#: src/gui/qt/plugin_item_model.cpp:317
 msgid "Editor Is Open"
 msgstr "Редактор відкрито"
 
-#: src/gui/qt/plugin_item_model.cpp:363
+#: src/gui/qt/plugin_item_model.cpp:367
 msgid "Position"
 msgstr "Позиція"
 
-#: src/gui/qt/plugin_item_model.cpp:365
+#: src/gui/qt/plugin_item_model.cpp:369
 msgid "Index"
 msgstr "Індекс"
 
-#: src/gui/qt/plugin_item_model.cpp:367
+#: src/gui/qt/plugin_item_model.cpp:371
 msgid "Plugin Name"
 msgstr "Назва плагіну"
 
@@ -1444,7 +1448,7 @@ msgstr ""
 "Не вдалося завантажити поточний порядок завантаження, відображена інформація "
 "може бути хибною."
 
-#: src/gui/state/game/helpers.cpp:279
+#: src/gui/state/game/helpers.cpp:600
 msgid "Automatic Load Order Backup"
 msgstr "Автоматичне резервне копіювання порядку завантаження"
 

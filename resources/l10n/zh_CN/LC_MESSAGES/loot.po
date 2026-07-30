@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-07-11 21:10+0100\n"
+"POT-Creation-Date: 2026-07-30 10:34+0100\n"
 "PO-Revision-Date: 2025-10-13 03:07+0000\n"
 "Last-Translator: YanJun Sun <zxvf6aj@sina.cn>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -82,17 +82,21 @@ msgstr "手动备份"
 msgid "Backup name:"
 msgstr "备份名称："
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:365
+#: src/gui/qt/compare_load_orders_dialog.cpp:439
 msgid "Compare Load Orders"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:367
+#: src/gui/qt/compare_load_orders_dialog.cpp:441
 #: src/gui/qt/restore_load_order_dialog.cpp:165
 msgid "Current load order"
 msgstr "当前加载顺序"
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:368
+#: src/gui/qt/compare_load_orders_dialog.cpp:442
 msgid "Sorted load order"
+msgstr ""
+
+#: src/gui/qt/compare_load_orders_dialog.cpp:444
+msgid "Search list"
 msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:288
@@ -817,7 +821,7 @@ msgstr "空插件"
 msgid "Loads Archive"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:282 src/gui/qt/plugin_item_model.cpp:315
+#: src/gui/qt/plugin_card.cpp:282 src/gui/qt/plugin_item_model.cpp:319
 msgid "Has User Metadata"
 msgstr "有用户元数据"
 
@@ -838,19 +842,19 @@ msgstr "添加"
 msgid "Remove"
 msgstr "移除"
 
-#: src/gui/qt/plugin_item_model.cpp:313
+#: src/gui/qt/plugin_item_model.cpp:317
 msgid "Editor Is Open"
 msgstr "编辑器已打开"
 
-#: src/gui/qt/plugin_item_model.cpp:363
+#: src/gui/qt/plugin_item_model.cpp:367
 msgid "Position"
 msgstr "位置"
 
-#: src/gui/qt/plugin_item_model.cpp:365
+#: src/gui/qt/plugin_item_model.cpp:369
 msgid "Index"
 msgstr "索引"
 
-#: src/gui/qt/plugin_item_model.cpp:367
+#: src/gui/qt/plugin_item_model.cpp:371
 msgid "Plugin Name"
 msgstr "插件名称"
 
@@ -1400,7 +1404,7 @@ msgid ""
 "incorrect."
 msgstr "加载当前排序顺序失败，所显示的信息可能不正确。"
 
-#: src/gui/state/game/helpers.cpp:279
+#: src/gui/state/game/helpers.cpp:600
 msgid "Automatic Load Order Backup"
 msgstr "自动备份加载顺序"
 
