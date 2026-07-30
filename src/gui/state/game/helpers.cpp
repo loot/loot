@@ -182,7 +182,7 @@ static constexpr std::array<const char*, 80> TES5SE_OFFICIAL_PLUGINS{
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/skyrimvr/__init__.py#L70>
-static constexpr std::array<const char*, 80> TES5VR_OFFICIAL_PLUGINS{
+static constexpr std::array<const char*, 79> TES5VR_OFFICIAL_PLUGINS{
     {"skyrim.esm",
      "update.esm",
      "dawnguard.esm",
@@ -265,7 +265,7 @@ static constexpr std::array<const char*, 80> TES5VR_OFFICIAL_PLUGINS{
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/nehrim/__init__.py#L84>
-static constexpr std::array<const char*, 5> NEHRIM_OFFICIAL_PLUGINS{
+static constexpr std::array<const char*, 1> NEHRIM_OFFICIAL_PLUGINS{
     {"nehrim.esm"}};
 
 // Taken from
@@ -311,7 +311,7 @@ static constexpr std::array<const char*, 11> FONV_OFFICIAL_PLUGINS{
 
 // Taken from
 // <https://github.com/loot/loot/issues/2149#issuecomment-3520601691>
-static constexpr std::array<const char*, 26> FO4_OFFICIAL_PLUGINS{
+static constexpr std::array<const char*, 16> FO4_OFFICIAL_PLUGINS{
     {"dlccoast.esm",
      "dlcnukaworld.esm",
      "dlcrobot.esm",
