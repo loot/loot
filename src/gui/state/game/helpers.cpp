@@ -61,12 +61,12 @@ constexpr std::string_view GHOST_EXTENSION = ".ghost";
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/morrowind/__init__.py#L125>
-static constexpr std::array<const char*, 3> TES3_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 3> TES3_OFFICIAL_PLUGINS{
     {"bloodmoon.esm", "morrowind.esm", "tribunal.esm"}};
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/oblivion/__init__.py#L266>
-static constexpr std::array<const char*, 16> TES4_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 16> TES4_OFFICIAL_PLUGINS{
     {"dlcbattlehorncastle.esp",
      "dlcfrostcrag.esp",
      "dlchorsearmor.esp",
@@ -86,7 +86,7 @@ static constexpr std::array<const char*, 16> TES4_OFFICIAL_PLUGINS{
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/skyrim/__init__.py#L277>
-static constexpr std::array<const char*, 8> TES5_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 8> TES5_OFFICIAL_PLUGINS{
     {"dawnguard.esm",
      "dragonborn.esm",
      "hearthfires.esm",
@@ -98,7 +98,7 @@ static constexpr std::array<const char*, 8> TES5_OFFICIAL_PLUGINS{
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/skyrimse/__init__.py#L104>
-static constexpr std::array<const char*, 80> TES5SE_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 80> TES5SE_OFFICIAL_PLUGINS{
     {"skyrim.esm",
      "update.esm",
      "dawnguard.esm",
@@ -182,7 +182,7 @@ static constexpr std::array<const char*, 80> TES5SE_OFFICIAL_PLUGINS{
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/skyrimvr/__init__.py#L70>
-static constexpr std::array<const char*, 79> TES5VR_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 79> TES5VR_OFFICIAL_PLUGINS{
     {"skyrim.esm",
      "update.esm",
      "dawnguard.esm",
@@ -265,17 +265,17 @@ static constexpr std::array<const char*, 79> TES5VR_OFFICIAL_PLUGINS{
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/nehrim/__init__.py#L84>
-static constexpr std::array<const char*, 1> NEHRIM_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 1> NEHRIM_OFFICIAL_PLUGINS{
     {"nehrim.esm"}};
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/enderal/__init__.py#L92>
-static constexpr std::array<const char*, 3> ENDERAL_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 3> ENDERAL_OFFICIAL_PLUGINS{
     {"enderal - forgotten stories.esm", "skyrim.esm", "update.esm"}};
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/enderalse/__init__.py#L63>
-static constexpr std::array<const char*, 7> ENDERALSE_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 7> ENDERALSE_OFFICIAL_PLUGINS{
     {"dawnguard.esm",
      "dragonborn.esm",
      "enderal - forgotten stories.esm",
@@ -286,7 +286,7 @@ static constexpr std::array<const char*, 7> ENDERALSE_OFFICIAL_PLUGINS{
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/fallout3/__init__.py#L277>
-static constexpr std::array<const char*, 6> FO3_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 6> FO3_OFFICIAL_PLUGINS{
     {"anchorage.esm",
      "brokensteel.esm",
      "fallout3.esm",
@@ -296,7 +296,7 @@ static constexpr std::array<const char*, 6> FO3_OFFICIAL_PLUGINS{
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/falloutnv/__init__.py#L103>
-static constexpr std::array<const char*, 11> FONV_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 11> FONV_OFFICIAL_PLUGINS{
     {"caravanpack.esm",
      "classicpack.esm",
      "deadmoney.esm",
@@ -311,7 +311,7 @@ static constexpr std::array<const char*, 11> FONV_OFFICIAL_PLUGINS{
 
 // Taken from
 // <https://github.com/loot/loot/issues/2149#issuecomment-3520601691>
-static constexpr std::array<const char*, 16> FO4_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 26> FO4_OFFICIAL_PLUGINS{
     {"dlccoast.esm",
      "dlcnukaworld.esm",
      "dlcrobot.esm",
@@ -331,7 +331,7 @@ static constexpr std::array<const char*, 16> FO4_OFFICIAL_PLUGINS{
 
 // Taken from
 // <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/fallout4vr/__init__.py#L74>
-static constexpr std::array<const char*, 8> FO4VR_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 8> FO4VR_OFFICIAL_PLUGINS{
     {"dlccoast.esm",
      "dlcnukaworld.esm",
      "dlcrobot.esm",
@@ -341,7 +341,7 @@ static constexpr std::array<const char*, 8> FO4VR_OFFICIAL_PLUGINS{
      "fallout4.esm",
      "fallout4_vr.esm"}};
 
-static constexpr std::array<const char*, 14> STARFIELD_OFFICIAL_PLUGINS{
+static constexpr std::array<std::string_view, 14> STARFIELD_OFFICIAL_PLUGINS{
     {"starfield.esm",
      "blueprintships-starfield.esm",
      "constellation.esm",
@@ -357,7 +357,7 @@ static constexpr std::array<const char*, 14> STARFIELD_OFFICIAL_PLUGINS{
      "sfbgs050.esm",
      "blueprintships-sfbgs050.esm"}};
 
-static constexpr std::array<const char*, 15>
+static constexpr std::array<std::string_view, 15>
     OBLIVION_REMASTERED_OFFICIAL_PLUGINS{{"altardeluxe.esp",
                                           "altarespmain.esp",
                                           "altargymnavigation.esp",
@@ -375,7 +375,7 @@ static constexpr std::array<const char*, 15>
                                           "oblivion.esm"}};
 
 template<size_t N>
-bool contains(const std::array<const char*, N>& array,
+bool contains(const std::array<std::string_view, N>& array,
               std::string_view needle) {
   return std::find(array.begin(), array.end(), needle) != array.end();
 }
