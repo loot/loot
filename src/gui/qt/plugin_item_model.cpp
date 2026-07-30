@@ -65,6 +65,10 @@ bool shouldFilterMessage(
         hiddenMessagesByPluginName,
     const std::unordered_map<std::string, std::unordered_set<std::string>>&
         oldMessagesByPluginName) {
+  if (filters.hideAllPluginMessages) {
+    return true;
+  }
+
   if (message.type == loot::MessageType::say && filters.hideNotes) {
     return true;
   }
