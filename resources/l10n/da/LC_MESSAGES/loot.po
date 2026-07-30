@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-07-11 21:10+0100\n"
+"POT-Creation-Date: 2026-07-30 10:34+0100\n"
 "PO-Revision-Date: 2024-05-22 19:59+0100\n"
 "Last-Translator: Kasper \"ZyPA\" R. Kristensen <rytterkasper972@gmail.com>\n"
 "Language-Team: Danish\n"
@@ -92,17 +92,21 @@ msgstr ""
 msgid "Backup name:"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:365
+#: src/gui/qt/compare_load_orders_dialog.cpp:439
 msgid "Compare Load Orders"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:367
+#: src/gui/qt/compare_load_orders_dialog.cpp:441
 #: src/gui/qt/restore_load_order_dialog.cpp:165
 msgid "Current load order"
 msgstr ""
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:368
+#: src/gui/qt/compare_load_orders_dialog.cpp:442
 msgid "Sorted load order"
+msgstr ""
+
+#: src/gui/qt/compare_load_orders_dialog.cpp:444
+msgid "Search list"
 msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:288
@@ -839,7 +843,7 @@ msgstr "Tomt plugin"
 msgid "Loads Archive"
 msgstr "Indlæser arkiv"
 
-#: src/gui/qt/plugin_card.cpp:282 src/gui/qt/plugin_item_model.cpp:315
+#: src/gui/qt/plugin_card.cpp:282 src/gui/qt/plugin_item_model.cpp:319
 msgid "Has User Metadata"
 msgstr "Har bruger metadata"
 
@@ -860,19 +864,19 @@ msgstr "Tilføj"
 msgid "Remove"
 msgstr "Fjern"
 
-#: src/gui/qt/plugin_item_model.cpp:313
+#: src/gui/qt/plugin_item_model.cpp:317
 msgid "Editor Is Open"
 msgstr "Behandleren er åben"
 
-#: src/gui/qt/plugin_item_model.cpp:363
+#: src/gui/qt/plugin_item_model.cpp:367
 msgid "Position"
 msgstr "Position"
 
-#: src/gui/qt/plugin_item_model.cpp:365
+#: src/gui/qt/plugin_item_model.cpp:369
 msgid "Index"
 msgstr "Indeks"
 
-#: src/gui/qt/plugin_item_model.cpp:367
+#: src/gui/qt/plugin_item_model.cpp:371
 msgid "Plugin Name"
 msgstr "Plugin navn"
 
@@ -1415,7 +1419,7 @@ msgstr ""
 "Kunne ikke indlæse den nuværende indlæsningsrækkefølge, den vist information "
 "kan være ukorrekt."
 
-#: src/gui/state/game/helpers.cpp:279
+#: src/gui/state/game/helpers.cpp:600
 msgid "Automatic Load Order Backup"
 msgstr ""
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-07-11 21:10+0100\n"
+"POT-Creation-Date: 2026-07-30 10:34+0100\n"
 "PO-Revision-Date: 2026-07-03 09:01+0000\n"
 "Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/"
@@ -88,18 +88,22 @@ msgstr "Ръчно съхранение"
 msgid "Backup name:"
 msgstr "Име на резервното копие:"
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:365
+#: src/gui/qt/compare_load_orders_dialog.cpp:439
 msgid "Compare Load Orders"
 msgstr "Сравни редовете за зареждане"
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:367
+#: src/gui/qt/compare_load_orders_dialog.cpp:441
 #: src/gui/qt/restore_load_order_dialog.cpp:165
 msgid "Current load order"
 msgstr "Текущ ред за зареждане"
 
-#: src/gui/qt/compare_load_orders_dialog.cpp:368
+#: src/gui/qt/compare_load_orders_dialog.cpp:442
 msgid "Sorted load order"
 msgstr "Сортиран ред за зареждане"
+
+#: src/gui/qt/compare_load_orders_dialog.cpp:444
+msgid "Search list"
+msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:288
 msgid "Show only overlapping plugins for"
@@ -842,7 +846,7 @@ msgstr "Празна приставка"
 msgid "Loads Archive"
 msgstr "Зарежда архив"
 
-#: src/gui/qt/plugin_card.cpp:282 src/gui/qt/plugin_item_model.cpp:315
+#: src/gui/qt/plugin_card.cpp:282 src/gui/qt/plugin_item_model.cpp:319
 msgid "Has User Metadata"
 msgstr "Има добавени метаданни"
 
@@ -863,19 +867,19 @@ msgstr "Добави"
 msgid "Remove"
 msgstr "Премахни"
 
-#: src/gui/qt/plugin_item_model.cpp:313
+#: src/gui/qt/plugin_item_model.cpp:317
 msgid "Editor Is Open"
 msgstr "Редакторът е отворен"
 
-#: src/gui/qt/plugin_item_model.cpp:363
+#: src/gui/qt/plugin_item_model.cpp:367
 msgid "Position"
 msgstr "Позиция"
 
-#: src/gui/qt/plugin_item_model.cpp:365
+#: src/gui/qt/plugin_item_model.cpp:369
 msgid "Index"
 msgstr "Индекс"
 
-#: src/gui/qt/plugin_item_model.cpp:367
+#: src/gui/qt/plugin_item_model.cpp:371
 msgid "Plugin Name"
 msgstr "Име на приставката"
 
@@ -1442,7 +1446,7 @@ msgstr ""
 "Зареждането на текущия ред за зареждане е неуспешно, показаната информация "
 "може да е невалидна."
 
-#: src/gui/state/game/helpers.cpp:279
+#: src/gui/state/game/helpers.cpp:600
 msgid "Automatic Load Order Backup"
 msgstr "Автоматично съхранение на реда за зареждане"
 
