@@ -91,7 +91,7 @@ bool shouldFilterMessage(
 }
 
 void filterMessages(std::vector<SourcedMessage>& messages,
-                    std::function<bool(SourcedMessage&)> filter) {
+                    std::function<bool(const SourcedMessage&)> filter) {
   auto it = std::remove_if(messages.begin(), messages.end(), filter);
   messages.erase(it, messages.end());
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.29.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-07-29 21:14+0100\n"
+"POT-Creation-Date: 2026-07-30 10:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -802,7 +802,7 @@ msgstr ""
 msgid "Loads Archive"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:282 src/gui/qt/plugin_item_model.cpp:315
+#: src/gui/qt/plugin_card.cpp:282 src/gui/qt/plugin_item_model.cpp:319
 msgid "Has User Metadata"
 msgstr ""
 
@@ -823,19 +823,19 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:313
+#: src/gui/qt/plugin_item_model.cpp:317
 msgid "Editor Is Open"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:363
+#: src/gui/qt/plugin_item_model.cpp:367
 msgid "Position"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:365
+#: src/gui/qt/plugin_item_model.cpp:369
 msgid "Index"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:367
+#: src/gui/qt/plugin_item_model.cpp:371
 msgid "Plugin Name"
 msgstr ""
 
