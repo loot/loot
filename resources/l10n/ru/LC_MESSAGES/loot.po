@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2026-07-30 10:34+0100\n"
-"PO-Revision-Date: 2026-08-08 07:51+0000\n"
+"PO-Revision-Date: 2026-08-16 01:35+0000\n"
 "Last-Translator: xsSplater <xssplater@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
 "Language: ru\n"
@@ -344,7 +344,7 @@ msgstr "Отменить порядок &загрузки"
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:880
 msgid "&View Load Order Changes..."
-msgstr "Просмо&тр изменений порядка загрузки..."
+msgstr "Просмотр изменени&й порядка загрузки..."
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -936,7 +936,7 @@ msgstr "Искать в карточках"
 msgid ""
 "If enabled, interprets the search text as a Perl-like regular expression."
 msgstr ""
-"Если включено, искомый текст будет интерпретироваться как Perl-подобное "
+"Если активно, искомый текст будет интерпретироваться как Perl-подобное "
 "регулярное выражение."
 
 #: src/gui/qt/search_toolbar.cpp:133
