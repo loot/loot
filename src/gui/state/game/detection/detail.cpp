@@ -94,7 +94,7 @@ std::vector<GameInstall> deduplicateGameInstalls(
 
     if (duplicate == uniqueGameInstalls.end()) {
       uniqueGameInstalls.push_back(gameInstall);
-    } else {
+    } else if (logger) {
       logger->warn(
           "Discarding game install for {} installed from {} to {} as a "
           "duplicate of the install for {} installed from {} to {}",
