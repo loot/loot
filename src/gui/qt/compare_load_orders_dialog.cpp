@@ -143,7 +143,7 @@ std::vector<std::vector<int>> traceShortestPath(
     const std::vector<QListWidgetItem*>& list2) {
   size_t maxPathLength = list1.size() + list2.size();
   int list1Size = throwingCastToInt(list1.size());
-  int64_t list2Size = throwingCastToInt64(list1.size());
+  int64_t list2Size = throwingCastToInt64(list2.size());
 
   // Indexes are values of maxPathLength + k, so when k = -maxPathLength
   // the index is 0, when k = 0 it's maxPathLength, and when k = maxPathLength
