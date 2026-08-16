@@ -2741,8 +2741,6 @@ void MainWindow::on_groupsEditor_accepted() {
   }
 }
 
-void MainWindow::on_searchToolBar_finished() { searchToolBar->reset(); }
-
 void MainWindow::on_searchToolBar_textChanged(const QVariant& text) {
   const auto isEmpty =
       (text.userType() == QMetaType::QString && text.toString().isEmpty()) ||

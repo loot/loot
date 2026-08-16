@@ -392,11 +392,6 @@ MessageContentTableWidget::MessageContentTableWidget(
 void MessageContentTableWidget::initialiseInputs(
     std::vector<MessageContent>&& nonUserMetadata,
     std::vector<MessageContent>&& userMetadata) {
-  std::map<MessageType, std::pair<QString, QVariant>> messageTypeMap = {
-      {MessageType::say, {qTranslate("Note"), QString("say")}},
-      {MessageType::warn, {qTranslate("Warning"), QString("warn")}},
-      {MessageType::error, {qTranslate("Error"), QString("error")}}};
-
   auto tableModel = new MessageContentTableModel(
       this, std::move(nonUserMetadata), std::move(userMetadata), languageMap);
 

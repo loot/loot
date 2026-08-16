@@ -317,7 +317,6 @@ private slots:
 
   void on_groupsEditor_accepted();
 
-  void on_searchToolBar_finished();
   void on_searchToolBar_textChanged(const QVariant& text);
   void on_searchToolBar_currentResultChanged(size_t resultIndex);
 
