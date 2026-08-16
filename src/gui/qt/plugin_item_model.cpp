@@ -525,12 +525,14 @@ void PluginItemModel::setPluginItems(std::vector<PluginItem>&& newItems) {
     endRemoveRows();
   }
 
-  beginInsertRows(QModelIndex(), 1, static_cast<int>(newItems.size()));
+  if (!newItems.empty()) {
+    beginInsertRows(QModelIndex(), 1, static_cast<int>(newItems.size()));
 
-  std::swap(items, newItems);
-  searchResults.resize(items.size(), false);
+    std::swap(items, newItems);
+    searchResults.resize(items.size(), false);
 
-  endInsertRows();
+    endInsertRows();
+  }
 }
 
 void PluginItemModel::setEditorPluginName(
