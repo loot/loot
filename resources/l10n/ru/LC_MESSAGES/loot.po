@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2026-07-30 10:34+0100\n"
-"PO-Revision-Date: 2026-02-08 15:09+0000\n"
+"PO-Revision-Date: 2026-08-16 01:35+0000\n"
 "Last-Translator: xsSplater <xssplater@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 #: src/gui/plugin_item.cpp:49
 #, c++-format
@@ -93,7 +93,7 @@ msgstr "Название резервной копии:"
 
 #: src/gui/qt/compare_load_orders_dialog.cpp:439
 msgid "Compare Load Orders"
-msgstr ""
+msgstr "Сравнение порядков загрузки"
 
 #: src/gui/qt/compare_load_orders_dialog.cpp:441
 #: src/gui/qt/restore_load_order_dialog.cpp:165
@@ -102,11 +102,11 @@ msgstr "Текущий порядок загрузки"
 
 #: src/gui/qt/compare_load_orders_dialog.cpp:442
 msgid "Sorted load order"
-msgstr ""
+msgstr "Отсортированный порядок загрузки"
 
 #: src/gui/qt/compare_load_orders_dialog.cpp:444
 msgid "Search list"
-msgstr ""
+msgstr "Список поиска"
 
 #: src/gui/qt/filters_widget.cpp:288
 msgid "Show only overlapping plugins for"
@@ -344,7 +344,7 @@ msgstr "Отменить порядок &загрузки"
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:880
 msgid "&View Load Order Changes..."
-msgstr ""
+msgstr "Просмотр изменени&й порядка загрузки..."
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -936,6 +936,8 @@ msgstr "Искать в карточках"
 msgid ""
 "If enabled, interprets the search text as a Perl-like regular expression."
 msgstr ""
+"Если активно, искомый текст будет интерпретироваться как Perl-подобное "
+"регулярное выражение."
 
 #: src/gui/qt/search_toolbar.cpp:133
 msgid "Find Previous"
@@ -1437,6 +1439,9 @@ msgid ""
 "user metadata. It has been renamed to \"{1}\" and reintroduced as a user "
 "group."
 msgstr ""
+"Группа \"{0}\" была удалена из мастерлиста, но на неё ссылались метаданные "
+"пользователей. Она была переименована в \"{1}\" и вновь добавлена в качестве "
+"пользовательской группы."
 
 #: src/gui/state/game/game.cpp:1362
 msgid ""
@@ -1445,6 +1450,11 @@ msgid ""
 "affected plugins to masterlist groups, or rename the user groups to not "
 "include the \"(Recovered)\" suffix in their names."
 msgstr ""
+"В ваших назначениях групп обнаружена одна или несколько групп, названия "
+"которых заканчиваются на \"(Recovered)\". Пожалуйста, проверьте свои "
+"настройки и либо переназначьте затронутые плагины в группы мастерлиста, либо "
+"переименуйте пользовательские группы, убрав суффикс \"(Recovered)\" из их "
+"названий."
 
 #: src/gui/state/game/game.cpp:1552
 msgid ""
@@ -1573,6 +1583,8 @@ msgid ""
 "This plugin is a blueprint plugin but not a master. Blueprint non-masters "
 "are unsupported as they cannot be reliably activated."
 msgstr ""
+"Этот плагин шаблонный, но не мастер-плагин. Шаблонные не мастер-плагины не "
+"поддерживаются, поскольку их невозможно надёжно активировать."
 
 #: src/gui/state/game/validation.cpp:333
 msgid ""
@@ -1580,6 +1592,9 @@ msgid ""
 "\".esm\" file extension. This is unsupported as it means that this plugin "
 "cannot be reliably activated."
 msgstr ""
+"Название этого плагина начинается с \"BlueprintShips-\", но расширение файла "
+"\".esm\" не используется. Это не поддерживается, поскольку означает, что "
+"данный плагин не может быть надёжно активирован."
 
 #: src/gui/state/game/validation.cpp:356
 msgid ""
@@ -1587,6 +1602,9 @@ msgid ""
 "plugin. This is unsupported as it means that this plugin may not be given a "
 "consistent load order position."
 msgstr ""
+"Название этого плагина начинается с \"BlueprintShips-\", но это не шаблонный "
+"плагин. Это не поддерживается, поскольку означает, что этому плагину не "
+"может быть присвоена постоянная позиция в порядке загрузки."
 
 # Need "blueprint master" description here for right translation.
 #: src/gui/state/game/validation.cpp:376
