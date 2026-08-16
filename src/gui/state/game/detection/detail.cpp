@@ -95,15 +95,17 @@ std::vector<GameInstall> deduplicateGameInstalls(
     if (duplicate == uniqueGameInstalls.end()) {
       uniqueGameInstalls.push_back(gameInstall);
     } else {
-      logger->warn(
-          "Discarding game install for {} installed from {} to {} as a "
-          "duplicate of the install for {} installed from {} to {}",
-          getGameName(gameInstall.gameId),
-          getSourceDescription(gameInstall.source),
-          gameInstall.installPath.u8string(),
-          getGameName(duplicate->gameId),
-          getSourceDescription(duplicate->source),
-          duplicate->installPath.u8string());
+      if (logger) {
+        logger->warn(
+            "Discarding game install for {} installed from {} to {} as a "
+            "duplicate of the install for {} installed from {} to {}",
+            getGameName(gameInstall.gameId),
+            getSourceDescription(gameInstall.source),
+            gameInstall.installPath.u8string(),
+            getGameName(duplicate->gameId),
+            getSourceDescription(duplicate->source),
+            duplicate->installPath.u8string());
+      }
     }
   }
 
