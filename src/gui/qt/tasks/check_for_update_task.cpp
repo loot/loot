@@ -248,12 +248,16 @@ void CheckForUpdateTask::onGetBuildCommitReplyFinished() {
     }
 
     if (tagCommitDate.value() > buildCommitDate.value()) {
-      logger->info("Tag date: {}, build date: {}",
-                   tagCommitDate.value().toString().toStdString(),
-                   buildCommitDate.value().toString().toStdString());
+      if (logger) {
+        logger->info("Tag date: {}, build date: {}",
+                     tagCommitDate.value().toString().toStdString(),
+                     buildCommitDate.value().toString().toStdString());
+      }
       emit finished(true);
-    } else if (logger) {
-      logger->info("No LOOT update is available.");
+    } else {
+      if (logger) {
+        logger->info("No LOOT update is available.");
+      }
       emit finished(false);
     }
   } catch (const std::exception& e) {
