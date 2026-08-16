@@ -27,6 +27,8 @@ Added
 Fixed
 -----
 
+- A crash that could occur when enabling the official plugin cleaning message
+  filter for Fallout 4, Skyrim VR or Nehrim.
 - When LOOT was run through MO2 for a game install path that included a symlink,
   plugins installed by MO2 would not appear in LOOT. Note that although such
   plugins are now displayed in LOOT, it's a known issue that MO2's virtual
@@ -71,6 +73,7 @@ Changed
   it means that LOOT's installer no longer packages ``icuuc.dll``: instead, it
   is provided by Wine as of v11.5.
 - Updated the Bulgarian translation.
+- Updated the Russian translation.
 - Updated the Tamil translation.
 
 
