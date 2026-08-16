@@ -57,15 +57,15 @@
 
   <screenshots>
     <screenshot type="default">
-      <image type="source" width="995" height="694">https://raw.githubusercontent.com/loot/loot/ee6b5c195fd3d8a18fbeb540476f5eb1f5f57d69/docs/images/main.linux.png</image>
+      <image type="source" width="995" height="694">https://raw.githubusercontent.com/loot/loot/7e500b3b7fb456ff4772dd6ff82ee8dd2a11bec2/docs/images/main.linux.png</image>
       <caption>The LOOT main window</caption>
     </screenshot>
     <screenshot>
-      <image type="source" width="995" height="694">https://raw.githubusercontent.com/loot/loot/ee6b5c195fd3d8a18fbeb540476f5eb1f5f57d69/docs/images/metadata_editor.linux.png</image>
+      <image type="source" width="995" height="694">https://raw.githubusercontent.com/loot/loot/7e500b3b7fb456ff4772dd6ff82ee8dd2a11bec2/docs/images/metadata_editor.linux.png</image>
       <caption>The LOOT main window with plugin metadata editor open</caption>
     </screenshot>
     <screenshot>
-      <image type="source" width="1118" height="747">https://raw.githubusercontent.com/loot/loot/ee6b5c195fd3d8a18fbeb540476f5eb1f5f57d69/docs/images/groups_editor.linux.png</image>
+      <image type="source" width="1118" height="747">https://raw.githubusercontent.com/loot/loot/7e500b3b7fb456ff4772dd6ff82ee8dd2a11bec2/docs/images/groups_editor.linux.png</image>
       <caption>The LOOT groups editor window</caption>
     </screenshot>
   </screenshots>
