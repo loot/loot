@@ -184,7 +184,6 @@ void SettingsDialog::addGameTab(const GameSettings& settings,
 
 void SettingsDialog::removeTab(int index) {
   auto item = listWidget->takeItem(index);
-  delete item->listWidget();
   delete item;
 
   auto tab = stackedWidget->widget(index);
