@@ -46,6 +46,7 @@ public:
        the game data, so also load the metadata lists. */
     bool isFirstLoad = game_->getPlugins().empty();
 
+    std::mutex exceptionMutex;
     std::exception_ptr exceptionPointer;
     std::vector<std::thread> threads;
 
@@ -53,6 +54,7 @@ public:
       try {
         game_->loadAllInstalledPlugins(true);
       } catch (...) {
+        std::lock_guard<std::mutex> lock(exceptionMutex);
         if (exceptionPointer == nullptr) {
           exceptionPointer = std::current_exception();
         }
@@ -64,6 +66,7 @@ public:
         try {
           game_->loadMetadata();
         } catch (...) {
+          std::lock_guard<std::mutex> lock(exceptionMutex);
           if (exceptionPointer == nullptr) {
             exceptionPointer = std::current_exception();
           }
@@ -76,6 +79,7 @@ public:
         game_->getCreationClubPlugins().load(
             game_->getSettings().getId(), game_->getSettings().getGamePath());
       } catch (...) {
+        std::lock_guard<std::mutex> lock(exceptionMutex);
         if (exceptionPointer == nullptr) {
           exceptionPointer = std::current_exception();
         }
@@ -85,10 +89,11 @@ public:
     for (auto& thread : threads) {
       if (thread.joinable()) {
         thread.join();
-        if (exceptionPointer != nullptr) {
-          std::rethrow_exception(exceptionPointer);
-        }
       }
+    }
+
+    if (exceptionPointer != nullptr) {
+      std::rethrow_exception(exceptionPointer);
     }
 
     // Sort plugins into their load order.
