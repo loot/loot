@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-07-30 22:08+0100\n"
+"POT-Creation-Date: 2026-08-16 12:23+0100\n"
 "PO-Revision-Date: 2024-05-22 20:02+0100\n"
 "Last-Translator: SteamB23 <steamb23@gmail.com>\n"
 "Language-Team: SteamB23 <steamb23@gmail.com>\n"
@@ -580,8 +580,7 @@ msgstr "아직 {0}을/를 적용하거나 취소하지 않았습니다. 종료�
 
 #: src/gui/qt/main_window.cpp:1558 src/gui/qt/restore_load_order_dialog.cpp:222
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:454
-#: src/gui/qt/plugin_editor/table_tabs.cpp:398
-#: src/gui/qt/plugin_editor/table_tabs.cpp:434
+#: src/gui/qt/plugin_editor/table_tabs.cpp:429
 msgid "Error"
 msgstr "오류"
 
@@ -725,45 +724,45 @@ msgstr "LOOT 정보"
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2794
+#: src/gui/qt/main_window.cpp:2792
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2832
+#: src/gui/qt/main_window.cpp:2830
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2880
+#: src/gui/qt/main_window.cpp:2878
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr "하나 이상의 오류 메시지가 표시되어 자동 정렬이 취소되었습니다."
 
-#: src/gui/qt/main_window.cpp:2939
+#: src/gui/qt/main_window.cpp:2937
 msgid "No masterlist update was necessary."
 msgstr "마스터 리스트를 갱신할 필요가 없었습니다."
 
-#: src/gui/qt/main_window.cpp:2962
+#: src/gui/qt/main_window.cpp:2960
 #, c++-format
 msgid "Masterlist updated to revision {0}."
 msgstr "마스터 리스트를 {0}버전으로 갱신되었습니다."
 
-#: src/gui/qt/main_window.cpp:3025
+#: src/gui/qt/main_window.cpp:3023
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3051
+#: src/gui/qt/main_window.cpp:3049
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3113
+#: src/gui/qt/main_window.cpp:3111
 #, c++-format
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "LOOT의 [새 버전]({0})을 사용할 수 있습니다."
 
-#: src/gui/qt/main_window.cpp:3128
+#: src/gui/qt/main_window.cpp:3126
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -833,11 +832,11 @@ msgstr "배쉬 태그"
 msgid "Current"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:287 src/gui/qt/plugin_editor/table_tabs.cpp:528
+#: src/gui/qt/plugin_card.cpp:287 src/gui/qt/plugin_editor/table_tabs.cpp:523
 msgid "Add"
 msgstr "추가"
 
-#: src/gui/qt/plugin_card.cpp:288 src/gui/qt/plugin_editor/table_tabs.cpp:529
+#: src/gui/qt/plugin_card.cpp:288 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr "제거"
 
@@ -1031,13 +1030,11 @@ msgstr ""
 msgid "Delete row"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/table_tabs.cpp:396
-#: src/gui/qt/plugin_editor/table_tabs.cpp:432
+#: src/gui/qt/plugin_editor/table_tabs.cpp:427
 msgid "Note"
 msgstr "노트"
 
-#: src/gui/qt/plugin_editor/table_tabs.cpp:397
-#: src/gui/qt/plugin_editor/table_tabs.cpp:433
+#: src/gui/qt/plugin_editor/table_tabs.cpp:428
 msgid "Warning"
 msgstr "경고"
 
