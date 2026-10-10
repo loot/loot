@@ -4,6 +4,9 @@ Initialisation
 
 When LOOT is run, it will attempt to detect which of the supported games are installed. If a :ref:`default game <default-game>` has been set, LOOT will run for it, otherwise it will run for the same game as it last ran for. If the relevant game cannot be detected, or if there is no record of the last game LOOT ran for, it will run for the first detected game.
 
+Command Line Parameters
+=======================
+
 LOOT's initialisation can be customised using command line parameters:
 
 ``--game="<Game Identifier>"``:
@@ -25,6 +28,22 @@ If LOOT cannot detect any supported game installs, you can edit LOOT’s setting
 Once a game has been set, LOOT will scan its plugins and load the game’s masterlist, if one is present. The plugins and any metadata they have are then listed in their current load order.
 
 If LOOT detects that it is the first time you have run that version of LOOT, it will display a "First-Time Tips" dialog, which provides some information about the user interface that may not be immediately obvious.
+
+Launching the Flatpak using a ``loot://`` URI
+=============================================
+
+If LOOT is installed on Linux as a Flatpak application, it registers a handler for the ``loot`` scheme. If the URI ``loot://launch`` is opened, the handler launches LOOT. This is most useful for launching LOOT from other Flatpak applications.
+
+The URI can include optional query parameters equivalent to the command line parameters given above:
+
+- ``game=<Game Identifier>``
+- ``game-path=<path>``
+- ``loot-data-path=<path>``
+- ``auto-sort=1`` - a value is required but can be anything, not just ``1``.
+
+Query parameter values should be url-encoded.
+
+For example, ``loot://launch?game=Skyrim%20Special%20Edition&game-path=%2Fhome%2Fuser%2FGames%2FSkyrim%20Special%20Edition&auto-sort=1`` is equivalent to the CLI command ``LOOT --game="Skyrim Special Edition" --game-path="/home/user/Games/Skyrim Special Edition" --auto-sort``.
 
 .. _microsoft_store_compatibility:
 
