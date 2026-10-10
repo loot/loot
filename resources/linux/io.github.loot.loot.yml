@@ -166,8 +166,10 @@ modules:
       - -DFETCHCONTENT_SOURCE_DIR_VALVEFILEVDF=/run/build/LOOT/ValveFileVDF
     build-commands:
       - install -D LOOT /app/bin/LOOT
+      - install -D ../resources/linux/loot-url-handler.py /app/bin/loot-url-handler.py
       - install -D ../resources/linux/io.github.loot.loot.metainfo.xml /app/share/metainfo/io.github.loot.loot.metainfo.xml
       - install -D ../resources/linux/io.github.loot.loot.desktop /app/share/applications/io.github.loot.loot.desktop
+      - install -D ../resources/linux/io.github.loot.loot-url-handler.desktop /app/share/applications/io.github.loot.loot-url-handler.desktop
       - install -D ../resources/icons/loot.svg /app/share/icons/hicolor/scalable/apps/io.github.loot.loot.svg
       - cd ..; python scripts/po_to_mo.py
       - for path in ../resources/l10n/*/LC_MESSAGES/loot.mo; do install -D "$path" "/app/share/locale/${path#../resources/l10n/}"; done
