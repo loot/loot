@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.5
+Type=Application
+NoDisplay=true
+
+Name=LOOT URL Handler
+Comment=A script that transforms loot:// URLs into LOOT CLI options and launches LOOT with them.
+Categories=Game;Qt;Utility;
+
+Icon=io.github.loot.loot
+Exec=loot-url-handler.sh %u
+Terminal=false
+
+MimeType=x-scheme-handler/loot
