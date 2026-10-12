@@ -346,8 +346,7 @@ begin
     end;
   end
   else begin
-    if ActiveLanguage <> 'en' then
-      SaveStringToFile(File, LanguageLine, False);
+    SaveStringToFile(File, LanguageLine, False);
   end;
 end;
 
