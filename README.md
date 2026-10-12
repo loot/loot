@@ -79,6 +79,37 @@ x86_64-w64-mingw32.static-cmake -B build . \
 x86_64-w64-mingw32.static-cmake --build build --parallel $(nproc)
 ```
 
+### macOS (Running or Building for CrossOver / Wine)
+
+On macOS, Skyrim modding environments (such as Mod Organizer 2) typically run Windows executables inside CrossOver or Wine.
+
+#### CrossOver / Wine Compatibility Fixes in this Fork
+1. **Qt 6 Lifecycle Safety**:
+   `QApplication` is initialized *before* `QApplication::setStyle("fusion")` is invoked. In standard LOOT builds, setting the style prematurely triggers a null pointer dereference inside `Qt6Gui.dll` (`QGuiApplicationPrivate::platformIntegration()`) causing an unhandled access violation under Wine.
+2. **MoltenVK / RHI Software Fallback**:
+   Wine on macOS uses MoltenVK for Vulkan, which can cause blank/invisible windows if Qt 6 negotiates Direct3D 11/DXGI surfaces without fallback. This fork sets `QSG_RHI_BACKEND=software` and `QT_QUICK_BACKEND=software` by default if not overridden.
+3. **ICU Forwarder Bundling**:
+   Wine environments (e.g. CrossOver) may lack the Windows 10/11 unified `icu.dll` forwarders. `icuuc.dll` is preserved in distribution packages to ensure `Qt6Core.dll` can load without `STATUS_DLL_NOT_FOUND` (`0xc0000135`).
+
+#### Building Windows Binaries on macOS
+To build Windows binaries from macOS for use in CrossOver:
+1. **Using GitHub Actions**:
+   Fork this repository and run the CI workflow (`.github/workflows/ci.yml` or `release.yml`). Download the `LOOT.exe` artifact from the Actions tab.
+2. **Cross-compiling via Docker / OrbStack / Lima (MinGW)**:
+   Run the MinGW shared container:
+   ```sh
+   docker run --rm -v "$PWD":/workspace -w /workspace loot-mingw-builder \
+       cmake -B build . -DCMAKE_BUILD_TYPE=Release \
+           -DCMAKE_TOOLCHAIN_FILE=/workspace/cmake/toolchain-mingw64.cmake
+   docker run --rm -v "$PWD":/workspace -w /workspace loot-mingw-builder \
+       cmake --build build --parallel
+   ```
+3. **Packaging**:
+   Ensure `icuuc.dll` is present in your LOOT folder alongside `LOOT.exe` and Qt DLLs:
+   ```sh
+   python3 scripts/archive.py --target windows
+   ```
+
 ### Linux
 
 Not all LOOT's features have been implemented for Linux builds. Issues labelled

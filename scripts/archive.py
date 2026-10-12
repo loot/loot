@@ -130,6 +130,12 @@ def prepare_windows_archive(root_path, release_path, temp_path):
         temp_path
     )
 
+    # For Wine/CrossOver versions that do not yet include unified Windows ICU forwarders,
+    # copy icuuc.dll if it exists in the release directory.
+    icuuc_path = os.path.join(release_path, 'icuuc.dll')
+    if os.path.exists(icuuc_path):
+        shutil.copy2(icuuc_path, os.path.join(temp_path, 'icuuc.dll'))
+
     # Translation files.
     for folder_name in get_language_folders(root_path):
         l10n_path = os.path.join(temp_path, 'resources', 'l10n', folder_name, 'LC_MESSAGES')

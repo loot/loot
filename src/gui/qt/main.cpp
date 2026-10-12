@@ -98,18 +98,25 @@ int main(int argc, char* argv[]) {
   loot::ApplicationMutexGuard mutexGuard;
 
 #ifdef _WIN32
-  // The default style on Windows 10 is light-only, and while the
-  // default style on Windows 11 does adapt to system theme, its light
-  // variant looks terrible.
-  // This is set before a QApplication instance is created so that the
-  // -style CLI argument can be used to set a different style.
+  // Under Wine/CrossOver on macOS, default to software RHI backend if not explicitly set
+  // to avoid Direct3D 11 / MoltenVK swapchain failure
+  if (qEnvironmentVariableIsEmpty("QSG_RHI_BACKEND")) {
+    qputenv("QSG_RHI_BACKEND", "software");
+  }
+  if (qEnvironmentVariableIsEmpty("QT_QUICK_BACKEND")) {
+    qputenv("QT_QUICK_BACKEND", "software");
+  }
+#endif
+
+  QApplication app(argc, argv);
+
+#ifdef _WIN32
+  // Set style after QApplication is created to avoid null platform integration dereference in Qt6Gui
   auto overrideDefaultStyle = QStyleFactory::create("fusion");
   if (overrideDefaultStyle) {
     QApplication::setStyle(overrideDefaultStyle);
   }
 #endif
-
-  QApplication app(argc, argv);
 
   QCommandLineParser parser;
   parser.addHelpOption();
