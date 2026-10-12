@@ -183,7 +183,7 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
       << "name = \"English\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
   EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
@@ -226,6 +226,59 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
             settings_.getLanguages()[0]);
 }
 
+TEST_F(LootSettingsTest,
+       loadShouldIgnorePreferredUILanguagesIfTheTomlFileHasALanguage) {
+  std::ofstream out(settingsFile_);
+  out << "language = \"en\"" << std::endl;
+  out.close();
+
+  settings_.load(settingsFile_, {"ru-RU"});
+
+  EXPECT_EQ("en", settings_.getLanguage());
+}
+
+TEST_F(
+    LootSettingsTest,
+    loadShouldUseTheFirstSupportedPreferredUILanguageIfTheTomlFileHasNoLanguage) {
+  std::ofstream out(settingsFile_);
+  out << "game = \"Oblivion\"" << std::endl;
+  out.close();
+
+  settings_.load(settingsFile_, {"nl-NL", "ru-RU", "de-DE"});
+
+  EXPECT_EQ("ru", settings_.getLanguage());
+}
+
+TEST_F(LootSettingsTest,
+       loadShouldNotChangeTheLanguageIfNoPreferredUILanguageIsSupported) {
+  settings_.setLanguage("de");
+
+  std::ofstream out(settingsFile_);
+  out << "game = \"Oblivion\"" << std::endl;
+  out.close();
+
+  settings_.load(settingsFile_, {"nl-NL"});
+
+  EXPECT_EQ("de", settings_.getLanguage());
+}
+
+TEST_F(LootSettingsTest,
+       loadShouldMatchPreferredUILanguagesAgainstLanguagesInTheTomlFile) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[languages]]" << endl
+      << "locale = \"en\"" << endl
+      << "name = \"English\"" << endl
+      << "[[languages]]" << endl
+      << "locale = \"de\"" << endl
+      << "name = \"Deutsch\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, {"ru-RU", "de-DE"});
+
+  EXPECT_EQ("de", settings_.getLanguage());
+}
+
 TEST_F(LootSettingsTest, loadShouldEnableFiltersForFiltersEnabledInTomlFile) {
   LootSettings::Filters filters;
   filters.hideBashTags = false;
@@ -252,7 +305,7 @@ TEST_F(LootSettingsTest, loadShouldEnableFiltersForFiltersEnabledInTomlFile) {
       << "showOnlyPluginsWithoutLoadOrderMetadata = true" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   EXPECT_TRUE(settings_.getFilters().hideVersionNumbers);
   EXPECT_TRUE(settings_.getFilters().hideBashTags);
@@ -309,7 +362,7 @@ TEST_F(LootSettingsTest, loadShouldDisableFiltersForFiltersDisabledInTomlFile) {
       << "showOnlyPluginsWithoutLoadOrderMetadata = false" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   EXPECT_FALSE(settings_.getFilters().hideVersionNumbers);
   EXPECT_FALSE(settings_.getFilters().hideBashTags);
@@ -338,7 +391,7 @@ TEST_F(LootSettingsTest,
   out << "[filters]" << endl << "hideCRCs = true" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   EXPECT_FALSE(settings_.getFilters().hideVersionNumbers);
   EXPECT_TRUE(settings_.getFilters().hideBashTags);
@@ -395,7 +448,7 @@ TEST_F(LootSettingsTest, loadingShouldMapGameIds) {
       << "folder = \"\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(15, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::tes3, settings_.getGameSettings()[0].getId());
@@ -422,7 +475,7 @@ TEST_F(LootSettingsTest, loadingShouldSkipGameIfGameIdAndTypeAreNotPresent) {
   out << "[[games]]" << endl << "folder = \"Oblivion\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   EXPECT_TRUE(settings_.getGameSettings().empty());
 }
@@ -459,7 +512,7 @@ TEST_F(LootSettingsTest, loadingShouldMapFromTypeIfGameIdIsNotPresent) {
       << "folder = \"\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::tes3, settings_.getGameSettings()[0].getId());
@@ -482,7 +535,7 @@ TEST_F(LootSettingsTest,
       << "folder = \"\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[0].getId());
@@ -501,7 +554,7 @@ TEST_F(LootSettingsTest,
       << "path = \"" << escapePath(rootPath_) << "\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].getId());
@@ -517,7 +570,7 @@ TEST_F(LootSettingsTest,
       << "master = \"Nehrim.esm\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].getId());
@@ -533,7 +586,7 @@ TEST_F(LootSettingsTest,
       << "name = \"Game is nehriM - At Fate's Edge\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].getId());
@@ -548,7 +601,7 @@ TEST_F(LootSettingsTest,
       << "folder = \"Game is nehriM - At Fate's Edge\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].getId());
@@ -564,7 +617,7 @@ TEST_F(LootSettingsTest,
       << "isBaseGameInstance = false" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::nehrim, settings_.getGameSettings()[0].getId());
@@ -583,7 +636,7 @@ TEST_F(LootSettingsTest,
       << "path = \"" << escapePath(rootPath_) << "\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].getId());
@@ -599,7 +652,7 @@ TEST_F(LootSettingsTest,
       << "name = \"Game is Enderal - At Fate's Edge\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].getId());
@@ -615,7 +668,7 @@ TEST_F(LootSettingsTest,
       << "local_folder = \"enderal\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].getId());
@@ -636,7 +689,7 @@ TEST_F(LootSettingsTest,
       << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].getId());
@@ -651,7 +704,7 @@ TEST_F(LootSettingsTest,
       << "folder = \"Game is Enderal - At Fate's Edge\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].getId());
@@ -667,7 +720,7 @@ TEST_F(LootSettingsTest,
       << "isBaseGameInstance = false" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderal, settings_.getGameSettings()[0].getId());
@@ -690,7 +743,7 @@ TEST_F(LootSettingsTest,
       << "path = \"" << escapePath(rootPath_) << "\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(2, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].getId());
@@ -711,7 +764,7 @@ TEST_F(LootSettingsTest,
       << "name = \"Game is Enderal - At Fate's Edge\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(2, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].getId());
@@ -728,7 +781,7 @@ TEST_F(LootSettingsTest,
       << "local_folder = \"Enderal Special Edition\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].getId());
@@ -752,7 +805,7 @@ TEST_F(
       << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].getId());
@@ -767,7 +820,7 @@ TEST_F(LootSettingsTest,
       << "folder = \"Game is Enderal - At Fate's Edge\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].getId());
@@ -783,7 +836,7 @@ TEST_F(LootSettingsTest,
       << "isBaseGameInstance = false" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameId::enderalse, settings_.getGameSettings()[0].getId());
@@ -799,7 +852,7 @@ TEST_F(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
       << "minimumHeaderVersion = 1.0" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].getName());
@@ -814,7 +867,7 @@ TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
       << "game = \"Oblivion\"" << endl;
   out.close();
 
-  settings_.load(unicodeSettingsFile_);
+  settings_.load(unicodeSettingsFile_, {});
 
   EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
@@ -832,7 +885,7 @@ TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
       << u8"local_path = \"non\u00C1sciiGameLocalPath\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].getFolderName());
@@ -854,7 +907,7 @@ TEST_F(LootSettingsTest,
       << "local_folder = \"folder\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   EXPECT_TRUE(settings_.getGameSettings().empty());
 }
@@ -869,7 +922,7 @@ TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
       << u8"local_folder = \"non\u00C1sciiGameFolder\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].getFolderName());
@@ -892,7 +945,7 @@ TEST_F(
          "masterlist.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/v0.29/masterlist.yaml";
@@ -913,7 +966,7 @@ TEST_F(LootSettingsTest,
          "masterlist.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrimse/v0.29/masterlist.yaml";
@@ -935,7 +988,7 @@ TEST_F(
          "masterlist.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/custom/masterlist.yaml";
@@ -957,7 +1010,7 @@ TEST_F(
          "masterlist.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/not-loot/skyrimse/v0.17/"
@@ -976,7 +1029,7 @@ TEST_F(LootSettingsTest, loadingShouldNotMigratePathMasterlistSources) {
       << "masterlistSource = \"C:\\\\masterlist.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   const auto expectedSource = "C:\\masterlist.yaml";
   EXPECT_EQ(expectedSource,
@@ -996,7 +1049,7 @@ TEST_F(LootSettingsTest,
       << "masterlistSource = \"masterlist-source\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource = "masterlist-source";
   EXPECT_EQ(expectedSource,
@@ -1015,7 +1068,7 @@ TEST_F(
       << "branch = \"custom\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/custom/"
@@ -1035,7 +1088,7 @@ TEST_F(LootSettingsTest,
       << "repo = \"https://github.com/loot/oblivion-foo/\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion-foo/v0.29/"
@@ -1055,7 +1108,7 @@ TEST_F(LootSettingsTest,
       << "branch = \"v0.7\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource = GameSettings(GameId::tes4, "").getMasterlistSource();
   EXPECT_EQ(expectedSource,
@@ -1076,7 +1129,7 @@ TEST_F(
       << "branch = \"foo\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/foo/masterlist.yaml";
@@ -1097,7 +1150,7 @@ TEST_F(
       << "branch = \"v0.7\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource = GameSettings(GameId::tes4, "").getMasterlistSource();
   EXPECT_EQ(expectedSource,
@@ -1118,7 +1171,7 @@ TEST_F(LootSettingsTest,
       << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrimse/v0.29/masterlist.yaml";
@@ -1138,7 +1191,7 @@ TEST_F(LootSettingsTest,
       << "branch = \"foo\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrimse/foo/masterlist.yaml";
@@ -1158,7 +1211,7 @@ TEST_F(LootSettingsTest,
       << "branch = \"foo\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrim-vr/foo/masterlist.yaml";
@@ -1180,7 +1233,7 @@ TEST_F(LootSettingsTest,
       << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/fallout4/v0.29/masterlist.yaml";
@@ -1200,7 +1253,7 @@ TEST_F(LootSettingsTest,
       << "branch = \"foo\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/fallout4/foo/masterlist.yaml";
@@ -1221,7 +1274,7 @@ TEST_F(
       << "branch = \"foo\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/fallout4-vr/foo/masterlist.yaml";
@@ -1244,7 +1297,7 @@ TEST_F(
 
   checkoutBranch("custom");
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource = (gitRepoPath_ / "masterlist.yaml").u8string();
   EXPECT_EQ(expectedSource,
@@ -1267,7 +1320,7 @@ TEST_F(
   checkoutBranch("custom");
   std::filesystem::remove(gitRepoPath_ / "masterlist.yaml");
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource = GameSettings(GameId::fo4vr, "").getMasterlistSource();
   EXPECT_EQ(expectedSource,
@@ -1290,7 +1343,7 @@ TEST_F(
   checkoutBranch("custom");
   std::filesystem::remove_all(gitRepoPath_ / ".git");
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource = GameSettings(GameId::fo4vr, "").getMasterlistSource();
   EXPECT_EQ(expectedSource,
@@ -1312,7 +1365,7 @@ TEST_F(
 
   checkoutBranch("v0.18");
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource = (gitRepoPath_ / "masterlist.yaml").u8string();
   EXPECT_EQ(expectedSource,
@@ -1332,7 +1385,7 @@ TEST_F(
       << "branch = \"custom\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource = GameSettings(GameId::fo4vr, "").getMasterlistSource();
   EXPECT_EQ(expectedSource,
@@ -1352,7 +1405,7 @@ TEST_F(
       << "branch = \"custom\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/my-forks/fallout4-vr/custom/"
@@ -1375,7 +1428,7 @@ TEST_F(
          "prelude.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/v0.29/prelude.yaml";
@@ -1396,7 +1449,7 @@ TEST_F(LootSettingsTest, loadingShouldReadHiddenMessagesForTheParentGame) {
       << "text = \"plugin message\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   std::vector<HiddenMessage> expectedMessages{
       HiddenMessage{std::nullopt, "general message"},
@@ -1416,7 +1469,7 @@ TEST_F(
          "prelude.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/custom/prelude.yaml";
@@ -1433,7 +1486,7 @@ TEST_F(
          "prelude.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/not-loot/prelude/v0.17/"
@@ -1447,7 +1500,7 @@ TEST_F(LootSettingsTest, loadingShouldNotMigratePathPreludeSource) {
   out << "preludeSource = \"C:\\\\prelude.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   const auto expectedSource = "C:\\prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
@@ -1462,7 +1515,7 @@ TEST_F(LootSettingsTest,
       << "preludeSource = \"prelude-source\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource = "prelude-source";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
@@ -1475,7 +1528,7 @@ TEST_F(LootSettingsTest,
   out << "preludeBranch = \"custom\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/custom/"
@@ -1494,7 +1547,7 @@ TEST_F(LootSettingsTest,
   out << "preludeRepo = \"https://github.com/loot/prelude.git\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/v0.29/"
@@ -1513,7 +1566,7 @@ TEST_F(
 
   checkoutBranch("custom");
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource = (gitRepoPath_ / "prelude.yaml").u8string();
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
@@ -1531,7 +1584,7 @@ TEST_F(
   checkoutBranch("custom");
   std::filesystem::remove(gitRepoPath_ / "prelude.yaml");
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/v0.29/prelude.yaml";
@@ -1550,7 +1603,7 @@ TEST_F(
   checkoutBranch("custom");
   std::filesystem::remove_all(gitRepoPath_ / ".git");
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/v0.29/prelude.yaml";
@@ -1568,7 +1621,7 @@ TEST_F(
 
   checkoutBranch("v0.18");
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource = (gitRepoPath_ / "prelude.yaml").u8string();
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
@@ -1583,7 +1636,7 @@ TEST_F(
       << "preludeBranch = \"custom\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/v0.29/prelude.yaml";
@@ -1599,7 +1652,7 @@ TEST_F(LootSettingsTest,
       << "preludeBranch = \"custom\"";
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   auto expectedSource =
       "https://raw.githubusercontent.com/my-forks/prelude-test/custom/"
@@ -1613,7 +1666,7 @@ TEST_F(LootSettingsTest, loadingShouldSkipGameIfGameFolderIsNotPresent) {
   out << "[[games]]" << endl << "gameId = \"Morrowind\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   EXPECT_TRUE(settings_.getGameSettings().empty());
 }
@@ -1626,7 +1679,7 @@ TEST_F(LootSettingsTest, loadingTomlShouldUseGivenFolderWhenTypeIsNotPresent) {
       << "folder = \"SkyrimSE\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[0].getId());
   EXPECT_EQ("SkyrimSE", settings_.getGameSettings()[0].getFolderName());
@@ -1641,7 +1694,7 @@ TEST_F(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
       << "folder = \"SkyrimSE\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[0].getId());
   EXPECT_EQ("Skyrim Special Edition",
@@ -1661,7 +1714,7 @@ TEST_F(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
       << "folder = \"Oblivion\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].getName());
 }
@@ -1727,7 +1780,7 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   settings_.save(settingsFile_);
 
   LootSettings settings;
-  settings.load(settingsFile_);
+  settings.load(settingsFile_, {});
 
   EXPECT_TRUE(settings.isDebugLoggingEnabled());
   EXPECT_TRUE(settings.isMasterlistUpdateBeforeSortEnabled());
@@ -1795,7 +1848,7 @@ TEST_F(LootSettingsTest, saveShouldWriteAllFiltersWhenTheyAreDisabled) {
 
   settings_.save(settingsFile_);
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   EXPECT_FALSE(settings_.getFilters().hideVersionNumbers);
   EXPECT_FALSE(settings_.getFilters().hideBashTags);
@@ -1835,7 +1888,7 @@ TEST_F(LootSettingsTest, saveShouldWriteAllFiltersWhenTheyAreEnabled) {
 
   settings_.save(settingsFile_);
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
 
   EXPECT_TRUE(settings_.getFilters().hideVersionNumbers);
   EXPECT_TRUE(settings_.getFilters().hideBashTags);
@@ -1925,10 +1978,62 @@ TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
   out << "lastVersion = \"0.7.1\"" << std::endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, {});
   settings_.updateLastVersion();
 
   EXPECT_EQ(getLootVersion(), settings_.getLastVersion());
+}
+
+TEST(findPreferredLanguage, shouldReturnNulloptIfThereAreNoPreferredLanguages) {
+  EXPECT_FALSE(
+      findPreferredLanguage({}, LootSettings().getLanguages()).has_value());
+}
+
+TEST(findPreferredLanguage, shouldReturnNulloptIfNoLanguageIsSupported) {
+  const auto languages = LootSettings().getLanguages();
+
+  EXPECT_FALSE(findPreferredLanguage({"C"}, languages).has_value());
+  EXPECT_FALSE(findPreferredLanguage({""}, languages).has_value());
+  EXPECT_FALSE(findPreferredLanguage({"nl-NL", "nl"}, languages).has_value());
+}
+
+TEST(findPreferredLanguage, shouldMatchALanguageTagToALocaleCode) {
+  const auto languages = LootSettings().getLanguages();
+
+  EXPECT_EQ("ru", findPreferredLanguage({"ru"}, languages));
+  EXPECT_EQ("ru", findPreferredLanguage({"ru-RU"}, languages));
+  EXPECT_EQ("de", findPreferredLanguage({"de-AT"}, languages));
+  EXPECT_EQ("en", findPreferredLanguage({"en-GB"}, languages));
+  EXPECT_EQ("pt_BR", findPreferredLanguage({"pt-BR"}, languages));
+  EXPECT_EQ("pt_PT", findPreferredLanguage({"pt-PT"}, languages));
+  EXPECT_EQ("zh_CN", findPreferredLanguage({"zh-CN"}, languages));
+  EXPECT_EQ("zh_CN", findPreferredLanguage({"zh-Hans-CN"}, languages));
+}
+
+TEST(findPreferredLanguage, shouldMatchAPosixLocaleNameToALocaleCode) {
+  const auto languages = LootSettings().getLanguages();
+
+  EXPECT_EQ("ru", findPreferredLanguage({"ru_RU.UTF-8"}, languages));
+  EXPECT_EQ("pt_BR", findPreferredLanguage({"pt_BR.UTF-8"}, languages));
+  EXPECT_EQ("uk_UA", findPreferredLanguage({"uk_UA"}, languages));
+  EXPECT_EQ("de", findPreferredLanguage({"de_DE@euro"}, languages));
+}
+
+TEST(findPreferredLanguage, shouldFallBackToARegionalVariantOfTheSameLanguage) {
+  const auto languages = LootSettings().getLanguages();
+
+  EXPECT_EQ("tr_TR", findPreferredLanguage({"tr"}, languages));
+  EXPECT_EQ("uk_UA", findPreferredLanguage({"uk"}, languages));
+  EXPECT_EQ("tr_TR", findPreferredLanguage({"tr-CY"}, languages));
+  EXPECT_EQ("pt_BR", findPreferredLanguage({"pt"}, languages));
+}
+
+TEST(findPreferredLanguage, shouldReturnTheFirstPreferredLanguageThatMatches) {
+  const auto languages = LootSettings().getLanguages();
+
+  EXPECT_EQ("ru", findPreferredLanguage({"ru-RU", "ru", "en-US"}, languages));
+  EXPECT_EQ("en", findPreferredLanguage({"en-US", "en", "ru"}, languages));
+  EXPECT_EQ("de", findPreferredLanguage({"nl-NL", "nl", "de-DE"}, languages));
 }
 }
 }

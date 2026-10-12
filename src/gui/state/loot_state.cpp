@@ -93,7 +93,8 @@ void apiLogCallback(LogLevel level, std::string_view message) {
 namespace loot {
 LootState::LootState(LootPaths&& paths) :
     GamesManager(paths.getLootDataPath(), paths.getPreludePath()),
-    paths_(paths) {
+    paths_(paths),
+    preferredUILanguages_(getPreferredUILanguages()) {
   // Do some preliminary locale / UTF-8 support setup.
   boost::locale::generator gen;
   std::locale::global(gen("en.UTF-8"));
@@ -126,7 +127,6 @@ void LootState::init(const std::string& cmdLineGame,
   // Microsoft Store / Xbox app.
   findXboxGamingRootPaths();
 
-  preferredUILanguages_ = getPreferredUILanguages();
   if (preferredUILanguages_.empty() && settings_.getLanguage().size() > 1) {
     preferredUILanguages_ = {settings_.getLanguage()};
   }
@@ -210,7 +210,7 @@ void LootState::createLootDataPath() {
 void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
   if (fs::exists(paths_.getSettingsPath())) {
     try {
-      settings_.load(paths_.getSettingsPath());
+      settings_.load(paths_.getSettingsPath(), preferredUILanguages_);
     } catch (const exception& e) {
       initMessages_.push_back(createInitErrorMessage(format(
           /* translators: This error is displayed when LOOT is unable to
@@ -218,6 +218,14 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
              detail about what went wrong. */
           translate("Error: Settings parsing failed. {0}"),
           e.what())));
+    }
+  } else {
+    // There's no settings file on first run (e.g. on Linux, where there's no
+    // installer to create one), so pick a language here instead.
+    const auto language =
+        findPreferredLanguage(preferredUILanguages_, settings_.getLanguages());
+    if (language.has_value()) {
+      settings_.setLanguage(language.value());
     }
   }
 
