@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locatingRules>
+  <locatingRule name="MetaInfo" pattern="*.metainfo.xml">
+    <documentRule localName="component" target="metainfo.its"/>
+  </locatingRule>
+</locatingRules>

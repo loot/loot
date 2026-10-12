@@ -9,6 +9,8 @@ import shutil
 import subprocess
 import tempfile
 
+from localise_linux_metadata import localise_desktop_entry, localise_metainfo
+
 INVALID_FILENAME_CHARACTERS = re.compile('[/<>"|]')
 TARGET_WINDOWS = 'windows'
 TARGET_LINUX = 'linux'
@@ -164,23 +166,14 @@ def prepare_linux_archive(root_path, release_path, temp_path):
         )
 
     # Appstream metainfo file
-    metainfo_filename = 'io.github.loot.loot.metainfo.xml'
     metainfo_path = os.path.join(temp_path, 'share', 'metainfo')
     os.makedirs(metainfo_path)
-    shutil.copy2(
-        os.path.join(root_path, 'resources', 'linux', metainfo_filename),
-        os.path.join(metainfo_path, metainfo_filename)
-    )
-
+    localise_metainfo(root_path, metainfo_path)
 
     # Desktop file
-    desktop_filename = 'io.github.loot.loot.desktop'
     applications_path = os.path.join(temp_path, 'share', 'applications')
     os.makedirs(applications_path)
-    shutil.copy2(
-        os.path.join(root_path, 'resources', 'linux', desktop_filename),
-        os.path.join(applications_path, desktop_filename)
-    )
+    localise_desktop_entry(root_path, applications_path)
 
     # Icon
     icons_path = os.path.join(temp_path, 'share', 'icons', 'hicolor', 'scalable', 'apps')
