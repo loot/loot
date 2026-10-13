@@ -6,18 +6,22 @@
 # to it.
 set -e
 
-xgettext \
-  --keyword="qTranslate:1,1t" \
-  --keyword="translate:1,1t" \
-  --keyword="translate:1,2,3t" \
+# The options that are used by every xgettext run.
+set -- \
   --add-location=full \
-  --add-comments=translators: \
   --from-code=utf-8 \
   --package-name=LOOT \
   --package-version=0.29.2 \
   --copyright-holder="The LOOT Contributors" \
   --msgid-bugs-address="https://github.com/loot/loot/issues" \
-  -o resources/l10n/template.pot \
+  -o resources/l10n/template.pot
+
+xgettext \
+  "$@" \
+  --keyword="qTranslate:1,1t" \
+  --keyword="translate:1,1t" \
+  --keyword="translate:1,2,3t" \
+  --add-comments=translators: \
   src/gui/*.cpp \
   src/gui/qt/*.cpp \
   src/gui/qt/groups_editor/*.cpp \
@@ -31,6 +35,23 @@ xgettext \
   src/gui/state/game/*.cpp
 
 sed -i 's|charset=CHARSET|charset=UTF-8|' resources/l10n/template.pot
+
+# Add the translatable strings from the Linux desktop entry and AppStream
+# metainfo files. The desktop entry's Name is not translatable, and the
+# metainfo file needs its own rules to limit what gets extracted from it, so
+# they're added by separate xgettext runs.
+xgettext \
+  "$@" \
+  --join-existing \
+  --keyword \
+  --keyword=Comment \
+  resources/linux/io.github.loot.loot.desktop
+
+xgettext \
+  "$@" \
+  --join-existing \
+  --its=resources/linux/gettext/its/metainfo.its \
+  resources/linux/io.github.loot.loot.metainfo.xml
 
 LINES_ADDED=$(git diff --numstat resources/l10n/template.pot | cut -f 1)
 LINES_REMOVED=$(git diff --numstat resources/l10n/template.pot | cut -f 2)
