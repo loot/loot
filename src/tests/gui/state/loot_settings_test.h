@@ -89,6 +89,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_EQ("auto", settings_.getLastGame());
   EXPECT_TRUE(settings_.getLastVersion().empty());
   EXPECT_EQ("en", settings_.getLanguage());
+  EXPECT_FALSE(settings_.isLanguageSet());
   EXPECT_EQ("default", settings_.getTheme());
   EXPECT_FALSE(settings_.getFilters().hideVersionNumbers);
   EXPECT_TRUE(settings_.getFilters().hideBashTags);
@@ -192,6 +193,7 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ("Skyrim", settings_.getLastGame());
   EXPECT_EQ("0.7.1", settings_.getLastVersion());
   EXPECT_EQ("fr", settings_.getLanguage());
+  EXPECT_TRUE(settings_.isLanguageSet());
   EXPECT_EQ("dark", settings_.getTheme());
   EXPECT_EQ("../prelude.yaml", settings_.getPreludeSource());
 
@@ -1929,6 +1931,59 @@ TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
   settings_.updateLastVersion();
 
   EXPECT_EQ(getLootVersion(), settings_.getLastVersion());
+}
+
+TEST(findPreferredLanguage, shouldReturnNulloptIfThereAreNoPreferredLanguages) {
+  EXPECT_FALSE(
+      findPreferredLanguage({}, LootSettings().getLanguages()).has_value());
+}
+
+TEST(findPreferredLanguage, shouldReturnNulloptIfNoLanguageIsSupported) {
+  const auto languages = LootSettings().getLanguages();
+
+  EXPECT_FALSE(findPreferredLanguage({"C"}, languages).has_value());
+  EXPECT_FALSE(findPreferredLanguage({""}, languages).has_value());
+  EXPECT_FALSE(findPreferredLanguage({"nl-NL", "nl"}, languages).has_value());
+}
+
+TEST(findPreferredLanguage, shouldMatchALanguageTagToALocaleCode) {
+  const auto languages = LootSettings().getLanguages();
+
+  EXPECT_EQ("ru", findPreferredLanguage({"ru"}, languages));
+  EXPECT_EQ("ru", findPreferredLanguage({"ru-RU"}, languages));
+  EXPECT_EQ("de", findPreferredLanguage({"de-AT"}, languages));
+  EXPECT_EQ("en", findPreferredLanguage({"en-GB"}, languages));
+  EXPECT_EQ("pt_BR", findPreferredLanguage({"pt-BR"}, languages));
+  EXPECT_EQ("pt_PT", findPreferredLanguage({"pt-PT"}, languages));
+  EXPECT_EQ("zh_CN", findPreferredLanguage({"zh-CN"}, languages));
+  EXPECT_EQ("zh_CN", findPreferredLanguage({"zh-Hans-CN"}, languages));
+}
+
+TEST(findPreferredLanguage, shouldMatchAPosixLocaleNameToALocaleCode) {
+  const auto languages = LootSettings().getLanguages();
+
+  EXPECT_EQ("ru", findPreferredLanguage({"ru_RU.UTF-8"}, languages));
+  EXPECT_EQ("pt_BR", findPreferredLanguage({"pt_BR.UTF-8"}, languages));
+  EXPECT_EQ("uk_UA", findPreferredLanguage({"uk_UA"}, languages));
+  EXPECT_EQ("de", findPreferredLanguage({"de_DE@euro"}, languages));
+}
+
+TEST(findPreferredLanguage,
+     shouldFallBackToARegionalVariantOfTheSameLanguage) {
+  const auto languages = LootSettings().getLanguages();
+
+  EXPECT_EQ("tr_TR", findPreferredLanguage({"tr"}, languages));
+  EXPECT_EQ("uk_UA", findPreferredLanguage({"uk"}, languages));
+  EXPECT_EQ("tr_TR", findPreferredLanguage({"tr-CY"}, languages));
+  EXPECT_EQ("pt_BR", findPreferredLanguage({"pt"}, languages));
+}
+
+TEST(findPreferredLanguage, shouldReturnTheFirstPreferredLanguageThatMatches) {
+  const auto languages = LootSettings().getLanguages();
+
+  EXPECT_EQ("ru", findPreferredLanguage({"ru-RU", "ru", "en-US"}, languages));
+  EXPECT_EQ("en", findPreferredLanguage({"en-US", "en", "ru"}, languages));
+  EXPECT_EQ("de", findPreferredLanguage({"nl-NL", "nl", "de-DE"}, languages));
 }
 }
 }

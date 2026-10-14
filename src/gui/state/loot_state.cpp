@@ -234,6 +234,16 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
   // Apply debug logging settings.
   enableDebugLogging(settings_.isDebugLoggingEnabled());
 
+  // If no language has been chosen yet, use the first of the user's preferred
+  // UI languages that LOOT has a translation for.
+  if (!settings_.isLanguageSet()) {
+    const auto language = findPreferredLanguage(getPreferredUILanguages(),
+                                                settings_.getLanguages());
+    if (language.has_value()) {
+      settings_.setLanguage(language.value());
+    }
+  }
+
   // Now that settings have been loaded, set the locale again to handle
   // translations.
   if (settings_.getLanguage() != MessageContent::DEFAULT_LANGUAGE) {

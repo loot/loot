@@ -25,6 +25,7 @@
 
 #include <toml++/toml.h>
 
+#include <algorithm>
 #include <array>
 #include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
@@ -858,7 +859,9 @@ void LootSettings::load(const std::filesystem::path& file) {
       settings["warnOnCaseSensitiveGamePaths"].value_or(
           warnOnCaseSensitiveGamePaths_);
   game_ = settings["game"].value_or(game_);
-  language_ = settings["language"].value_or(language_);
+  if (const auto language = settings["language"].value<std::string>()) {
+    language_ = language;
+  }
   theme_ = settings["theme"].value_or(theme_);
   lastGame_ = settings["lastGame"].value_or(lastGame_);
   lastVersion_ = settings["lastVersion"].value_or(lastVersion_);
@@ -969,7 +972,7 @@ void LootSettings::save(const std::filesystem::path& file) {
       {"useNoSortingChangesDialog", useNoSortingChangesDialog_},
       {"warnOnCaseSensitiveGamePaths", warnOnCaseSensitiveGamePaths_},
       {"game", game_},
-      {"language", language_},
+      {"language", getLanguage()},
       {"theme", theme_},
       {"lastGame", lastGame_},
       {"lastVersion", lastVersion_},
@@ -1126,7 +1129,13 @@ std::string LootSettings::getLastVersion() const {
 std::string LootSettings::getLanguage() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return language_;
+  return language_.value_or("en");
+}
+
+bool LootSettings::isLanguageSet() const {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  return language_.has_value();
 }
 
 std::string LootSettings::getTheme() const {
@@ -1284,6 +1293,59 @@ void LootSettings::updateLastVersion() {
   lock_guard<recursive_mutex> guard(mutex_);
 
   lastVersion_ = getLootVersion();
+}
+
+std::optional<std::string> findPreferredLanguage(
+    const std::vector<std::string>& preferredUILanguages,
+    const std::vector<LootSettings::Language>& supportedLanguages) {
+  const auto findLocale = [&](const std::string& locale) {
+    return std::find_if(
+        supportedLanguages.begin(),
+        supportedLanguages.end(),
+        [&](const LootSettings::Language& l) { return l.locale == locale; });
+  };
+
+  for (const auto& preferredLanguage : preferredUILanguages) {
+    // Strip any codeset and modifier, e.g. the .UTF-8 in ru_RU.UTF-8.
+    auto tag =
+        preferredLanguage.substr(0, preferredLanguage.find_first_of(".@"));
+    std::replace(tag.begin(), tag.end(), '-', '_');
+
+    const auto language = tag.substr(0, tag.find('_'));
+    if (language.empty()) {
+      continue;
+    }
+
+    // The tag may also contain a script, e.g. zh_Hans_CN, but LOOT's locale
+    // codes only ever contain a language and a region.
+    std::vector<std::string> candidates{tag};
+    const auto regionPos = tag.rfind('_');
+    if (regionPos != std::string::npos) {
+      candidates.push_back(language + tag.substr(regionPos));
+    }
+    candidates.push_back(language);
+
+    for (const auto& candidate : candidates) {
+      const auto it = findLocale(candidate);
+      if (it != supportedLanguages.end()) {
+        return it->locale;
+      }
+    }
+
+    // Fall back to the first supported regional variant of the language,
+    // e.g. tr_TR for tr or uk_UA for uk.
+    const auto it = std::find_if(
+        supportedLanguages.begin(),
+        supportedLanguages.end(),
+        [&](const LootSettings::Language& l) {
+          return boost::starts_with(l.locale, language + "_");
+        });
+    if (it != supportedLanguages.end()) {
+      return it->locale;
+    }
+  }
+
+  return std::nullopt;
 }
 
 }
