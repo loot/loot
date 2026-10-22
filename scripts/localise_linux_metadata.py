@@ -29,10 +29,11 @@ def get_msgfmt_env(root_path):
     # AppStream's rules are not installed.
     data_dirs = [os.path.join(root_path, 'resources', 'linux', 'gettext')]
     if os.environ.get('GETTEXTDATADIRS'):
-        data_dirs.append(os.environ['GETTEXTDATADIRS'])
+        data_dirs.extend(d for d in os.environ['GETTEXTDATADIRS'].split(':') if d)
 
     env = os.environ.copy()
-    env['GETTEXTDATADIRS'] = os.pathsep.join(data_dirs)
+    # GETTEXTDATADIRS is colon-separated on every platform.
+    env['GETTEXTDATADIRS'] = ':'.join(data_dirs)
 
     return env
 
