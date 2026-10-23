@@ -167,8 +167,9 @@ modules:
     build-commands:
       - install -D LOOT /app/bin/LOOT
       - install -D ../resources/linux/loot-uri-handler.py /app/bin/loot-uri-handler.py
-      - install -D ../resources/linux/io.github.loot.loot.metainfo.xml /app/share/metainfo/io.github.loot.loot.metainfo.xml
-      - install -D ../resources/linux/io.github.loot.loot.desktop /app/share/applications/io.github.loot.loot.desktop
+      - python ../scripts/localise_linux_metadata.py .
+      - install -D io.github.loot.loot.metainfo.xml /app/share/metainfo/io.github.loot.loot.metainfo.xml
+      - install -D io.github.loot.loot.desktop /app/share/applications/io.github.loot.loot.desktop
       - install -D ../resources/linux/io.github.loot.loot-uri-handler.desktop /app/share/applications/io.github.loot.loot-uri-handler.desktop
       - install -D ../resources/icons/loot.svg /app/share/icons/hicolor/scalable/apps/io.github.loot.loot.svg
       - cd ..; python scripts/po_to_mo.py

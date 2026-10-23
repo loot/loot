@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ITS rules that select which parts of LOOT's AppStream metainfo file are
+  translatable. They are stricter than the rules shipped with AppStream so
+  that the application name, the developer name and the release notes are
+  not added to the translation template.
+-->
+<its:rules xmlns:its="http://www.w3.org/2005/11/its" version="2.0">
+  <its:translateRule selector="/component" translate="no"/>
+  <its:translateRule selector="/component/summary |
+                               /component/description |
+                               /component/screenshots/screenshot/caption"
+                     translate="yes"/>
+
+  <its:locNoteRule selector="/component/summary" locNoteType="description">
+    <its:locNote>translators: Shown below the application name in application menus and software centres.</its:locNote>
+  </its:locNoteRule>
+  <its:locNoteRule selector="/component/description/p" locNoteType="description">
+    <its:locNote>translators: Part of the application description shown in software centres.</its:locNote>
+  </its:locNoteRule>
+  <its:locNoteRule selector="/component/description/ul/li" locNoteType="description">
+    <its:locNote>translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.</its:locNote>
+  </its:locNoteRule>
+  <its:locNoteRule selector="/component/screenshots/screenshot/caption" locNoteType="description">
+    <its:locNote>translators: A screenshot caption shown in software centres.</its:locNote>
+  </its:locNoteRule>
+</its:rules>
