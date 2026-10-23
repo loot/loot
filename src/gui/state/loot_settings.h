@@ -80,7 +80,8 @@ public:
     bool showOnlyPluginsWithoutLoadOrderMetadata{false};
   };
 
-  void load(const std::filesystem::path& file);
+  void load(const std::filesystem::path& file,
+            const std::vector<std::string>& preferredUILanguages);
   void save(const std::filesystem::path& file);
 
   bool isAutoSortEnabled() const;
@@ -164,6 +165,13 @@ private:
 
   mutable std::recursive_mutex mutex_;
 };
+
+// Find the first of the given preferred UI languages that matches one of the
+// given supported languages. Preferred UI languages may be given as BCP 47
+// language tags (e.g. pt-BR) or as POSIX locale names (e.g. pt_BR.UTF-8).
+std::optional<std::string> findPreferredLanguage(
+    const std::vector<std::string>& preferredUILanguages,
+    const std::vector<LootSettings::Language>& supportedLanguages);
 }
 
 #endif
