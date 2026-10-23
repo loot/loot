@@ -12,12 +12,12 @@ env:
   BOOST_VERSION: 1.91.0
   BOOST_INSTALL_SCRIPT_VERSION: 2.2.1
   GETTEXT_VERSION: v0.26-v1.17
-  LIBLOOT_VERSION: 0.29.6
+  LIBLOOT_VERSION: 0.29.7
   OGDF_VERSION: foxglove-202510
-  PYTHON_VERSION: 3.14.3
+  PYTHON_VERSION: 3.15.1
   QT_VERSION: 6.11.1
   SVG_TO_ICO_VERSION: 1.3.1
-  UV_VERSION: 0.10.9
+  UV_VERSION: 0.13.5
 
 permissions:
   contents: read
@@ -179,7 +179,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install uv
-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: ${{ env.UV_VERSION }}
 
@@ -268,7 +268,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install uv
-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: ${{ env.UV_VERSION }}
 

@@ -142,8 +142,8 @@ modules:
       # Use the Git repository so that libloot's commit hash gets embedded in the build.
       - type: git
         url: https://github.com/loot/libloot.git
-        tag: 0.29.6
-        commit: 136f3983c3eec7d377f83a7e7e0b0129aa5c8fe1
+        tag: 0.29.7
+        commit: c242698ea86a382998cd8d1c5329f26aea666867
       # Generated using scripts/generate_manifests.sh
       - ../../build/flatpak-manifests/libloot.json
 
@@ -166,9 +166,11 @@ modules:
       - -DFETCHCONTENT_SOURCE_DIR_VALVEFILEVDF=/run/build/LOOT/ValveFileVDF
     build-commands:
       - install -D LOOT /app/bin/LOOT
+      - install -D ../resources/linux/loot-uri-handler.py /app/bin/loot-uri-handler.py
       - python ../scripts/localise_linux_metadata.py .
       - install -D io.github.loot.loot.metainfo.xml /app/share/metainfo/io.github.loot.loot.metainfo.xml
       - install -D io.github.loot.loot.desktop /app/share/applications/io.github.loot.loot.desktop
+      - install -D ../resources/linux/io.github.loot.loot-uri-handler.desktop /app/share/applications/io.github.loot.loot-uri-handler.desktop
       - install -D ../resources/icons/loot.svg /app/share/icons/hicolor/scalable/apps/io.github.loot.loot.svg
       - cd ..; python scripts/po_to_mo.py
       - for path in ../resources/l10n/*/LC_MESSAGES/loot.mo; do install -D "$path" "/app/share/locale/${path#../resources/l10n/}"; done
