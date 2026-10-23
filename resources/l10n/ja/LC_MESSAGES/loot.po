@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-08-16 12:23+0100\n"
+"POT-Creation-Date: 2026-10-13 01:13+0200\n"
 "PO-Revision-Date: 2024-05-22 20:01+0100\n"
 "Last-Translator: kuroko\n"
 "Language-Team: \n"
@@ -1648,6 +1648,125 @@ msgstr[0] ""
 msgid "light plugin"
 msgid_plural "light plugins"
 msgstr[0] ""
+
+#. translators: Shown below the application name in application menus and software centres.
+#: resources/linux/io.github.loot.loot.desktop:6
+#: resources/linux/io.github.loot.loot.metainfo.xml:14
+msgid "Modding utility for Starfield and some Elder Scrolls and Fallout games"
+msgstr ""
+
+#. translators: Part of the application description shown in software centres.
+#: resources/linux/io.github.loot.loot.metainfo.xml:26
+msgid "LOOT is a plugin load order optimiser for:"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:28
+msgid "Starfield"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:29
+msgid "The Elder Scrolls III: Morrowind"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:30
+msgid "The Elder Scrolls IV: Oblivion"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:31
+msgid "The Elder Scrolls IV: Oblivion Remastered"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:32
+msgid "The Elder Scrolls V: Skyrim"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:33
+msgid "The Elder Scrolls V: Skyrim Special Edition (and Anniversary Edition)"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:34
+msgid "The Elder Scrolls V: Skyrim VR"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:35
+msgid "Fallout 3"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:36
+msgid "Fallout: New Vegas"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:37
+msgid "Fallout 4"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:38
+msgid "Fallout 4 VR"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:39
+msgid "Nehrim: At Fate's Edge"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:40
+msgid "Enderal: Forgotten Stories"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:41
+msgid "Enderal: Forgotten Stories (Special Edition)"
+msgstr ""
+
+#. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
+#: resources/linux/io.github.loot.loot.metainfo.xml:42
+msgid "OpenMW"
+msgstr ""
+
+#. translators: Part of the application description shown in software centres.
+#: resources/linux/io.github.loot.loot.metainfo.xml:45
+msgid ""
+"LOOT can automatically calculate a load order that satisfies all plugin "
+"dependencies and maximises each plugin's impact on your game. It can also "
+"detect many issues, and provides a large number of plugin-specific usage "
+"notes, warnings and Bash Tag suggestions for Wrye Bash."
+msgstr ""
+
+#. translators: Part of the application description shown in software centres.
+#: resources/linux/io.github.loot.loot.metainfo.xml:47
+msgid ""
+"While LOOT can correctly handle the vast majority of plugins without help, "
+"some plugins need additional metadata to be sorted correctly. LOOT has a "
+"masterlist of metadata for each supported game, and you can add more to "
+"customise LOOT's behaviour."
+msgstr ""
+
+#. translators: A screenshot caption shown in software centres.
+#: resources/linux/io.github.loot.loot.metainfo.xml:61
+msgid "The LOOT main window"
+msgstr ""
+
+#. translators: A screenshot caption shown in software centres.
+#: resources/linux/io.github.loot.loot.metainfo.xml:65
+msgid "The LOOT main window with plugin metadata editor open"
+msgstr ""
+
+#. translators: A screenshot caption shown in software centres.
+#: resources/linux/io.github.loot.loot.metainfo.xml:69
+msgid "The LOOT groups editor window"
+msgstr ""
 
 #~ msgid "Searc&h Cards…"
 #~ msgstr "カード検索… (&H)"
