@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.22.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-10-13 01:13+0200\n"
+"POT-Creation-Date: 2026-10-23 21:46+0100\n"
 "PO-Revision-Date: 2026-08-16 01:35+0000\n"
 "Last-Translator: xsSplater <xssplater@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/loot/loot/ru/>\n"
@@ -1299,19 +1299,19 @@ msgstr "Ошибка: Не удалось создать папку данных
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:219 src/gui/state/loot_state.cpp:289
+#: src/gui/state/loot_state.cpp:219 src/gui/state/loot_state.cpp:297
 #, c++-format
 msgid "Error: Settings parsing failed. {0}"
 msgstr "Ошибка: Не удалось обработать настройки. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:228
+#: src/gui/state/loot_state.cpp:236
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 "Ошибка: Параметр --auto-sort был передан, но параметр --game не был указан."
 
-#: src/gui/state/loot_state.cpp:270
+#: src/gui/state/loot_state.cpp:278
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
@@ -1321,7 +1321,7 @@ msgstr ""
 "быть перенесены! Вы можете проверить файл LOOTDebugLog.txt (доступен в меню "
 "\"Файл\") для получения дополнительной информации."
 
-#: src/gui/state/loot_state.cpp:280
+#: src/gui/state/loot_state.cpp:288
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
@@ -1331,24 +1331,24 @@ msgstr ""
 "перенесены! Вы можете проверить файл LOOTDebugLog.txt (доступен в меню "
 "\"Файл\") для получения дополнительной информации."
 
-#: src/gui/state/loot_state.cpp:330
+#: src/gui/state/loot_state.cpp:338
 #, c++-format
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr "Ошибка: Не удалось создать каталог прелюдии LOOT. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:346
+#: src/gui/state/loot_state.cpp:354
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 "Ошибка: Параметр --game-path был передан, но параметр --game не был указан."
 
-#: src/gui/state/loot_state.cpp:359
+#: src/gui/state/loot_state.cpp:367
 #, c++-format
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr "Ошибка: не удалось переопределить путь к игре, игра {0} не распознана."
 
-#: src/gui/state/loot_state.cpp:392
+#: src/gui/state/loot_state.cpp:400
 msgid ""
 "No supported games were detected. Try running the launcher(s) for the "
 "supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
@@ -1358,7 +1358,7 @@ msgstr ""
 "установленных поддерживаемых игр (т.е. нажать «Играть» в Steam или GOG "
 "Galaxy), затем перезапустите LOOT."
 
-#: src/gui/state/loot_state.cpp:411
+#: src/gui/state/loot_state.cpp:419
 #, c++-format
 msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "
