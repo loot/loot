@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2026-10-23 21:46+0100\n"
-"PO-Revision-Date: 2026-10-26 10:51+0000\n"
+"PO-Revision-Date: 2026-10-28 12:51+0000\n"
 "Last-Translator: Georgi Georgiev <racerbg@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/>"
 "\n"
@@ -1716,11 +1716,13 @@ msgstr[1] "леки приставки"
 #: resources/linux/io.github.loot.loot.metainfo.xml:14
 msgid "Modding utility for Starfield and some Elder Scrolls and Fallout games"
 msgstr ""
+"Програма за модифициране на „Starfield“ и игри от поредиците „Elder Scrolls“ "
+"и „Fallout“"
 
 #. translators: Part of the application description shown in software centres.
 #: resources/linux/io.github.loot.loot.metainfo.xml:26
 msgid "LOOT is a plugin load order optimiser for:"
-msgstr ""
+msgstr "LOOT e оптимизатор на реда за зареждане на приставките за:"
 
 #. translators: A game name listed in the application description shown in software centres. If the name is not localised in your language, use the English name as the translation, otherwise the game will be missing from the translated list.
 #: resources/linux/io.github.loot.loot.metainfo.xml:28
@@ -1805,6 +1807,11 @@ msgid ""
 "detect many issues, and provides a large number of plugin-specific usage "
 "notes, warnings and Bash Tag suggestions for Wrye Bash."
 msgstr ""
+"LOOT може автоматично да създаде ред на зареждане, който да удовлетворява "
+"всички зависимости между приставките и да максимизира ефекта на всяка една "
+"от тях върху вашата игра. Може също така да открива проблеми и да предоставя "
+"бележки за употреба, предупреждения и предложения за етикети на „Bash“ за „"
+"Wrye Bash“, отнасящи се до приставките."
 
 #. translators: Part of the application description shown in software centres.
 #: resources/linux/io.github.loot.loot.metainfo.xml:47
@@ -1814,21 +1821,25 @@ msgid ""
 "masterlist of metadata for each supported game, and you can add more to "
 "customise LOOT's behaviour."
 msgstr ""
+"LOOT може да обработи повечето приставки без проблеми, но за някои са "
+"необходими допълнителни метаданни, за да бъдат сортирани правилно. LOOT има "
+"основен списък от метаданни за всяка поддържана игра, като може да добавяте "
+"още метаданни, за да персонализирате начина на работа на LOOT."
 
 #. translators: A screenshot caption shown in software centres.
 #: resources/linux/io.github.loot.loot.metainfo.xml:61
 msgid "The LOOT main window"
-msgstr ""
+msgstr "Главният прозорец на LOOT"
 
 #. translators: A screenshot caption shown in software centres.
 #: resources/linux/io.github.loot.loot.metainfo.xml:65
 msgid "The LOOT main window with plugin metadata editor open"
-msgstr ""
+msgstr "Главният прозорец на LOOT с редактора на метаданни"
 
 #. translators: A screenshot caption shown in software centres.
 #: resources/linux/io.github.loot.loot.metainfo.xml:69
 msgid "The LOOT groups editor window"
-msgstr ""
+msgstr "Прозорецът на LOOT с редакторa на групи"
 
 #~ msgid "Searc&h Cards…"
 #~ msgstr "&Търси в съдържанието…"
