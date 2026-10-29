@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.22.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2026-10-23 21:46+0100\n"
-"PO-Revision-Date: 2026-10-28 12:51+0000\n"
+"PO-Revision-Date: 2026-10-29 17:22+0000\n"
 "Last-Translator: Georgi Georgiev <racerbg@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/loot/loot/bg/>"
 "\n"
@@ -1824,7 +1824,7 @@ msgstr ""
 "LOOT може да обработи повечето приставки без проблеми, но за някои са "
 "необходими допълнителни метаданни, за да бъдат сортирани правилно. LOOT има "
 "основен списък от метаданни за всяка поддържана игра, като може да добавяте "
-"още метаданни, за да персонализирате начина на работа на LOOT."
+"още метаданни, за да персонализирате начина му на работа."
 
 #. translators: A screenshot caption shown in software centres.
 #: resources/linux/io.github.loot.loot.metainfo.xml:61
