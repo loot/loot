@@ -23,66 +23,11 @@
 
 #include "gui/qt/plugin_item_filter_model.h"
 
-#include "gui/helpers.h"
+#include <boost/algorithm/string/predicate.hpp>
+#include <string_view>
+
 #include "gui/plugin_item.h"
 #include "gui/qt/plugin_item_model.h"
-
-namespace {
-bool isMatch(const std::string& text, const QRegularExpression& regex) {
-  return regex.match(QString::fromUtf8(text)).hasMatch();
-}
-
-bool containsMatchingText(const loot::PluginItem& pluginItem,
-                          const QRegularExpression& regex) {
-  if (isMatch(pluginItem.name, regex)) {
-    return true;
-  }
-
-  if (pluginItem.version.has_value() &&
-      isMatch(pluginItem.version.value(), regex)) {
-    return true;
-  }
-
-  if (pluginItem.crc.has_value()) {
-    auto crcText = loot::crcToString(pluginItem.crc.value());
-    if (isMatch(crcText, regex)) {
-      return true;
-    }
-  }
-
-  for (const auto& tag : pluginItem.currentTags) {
-    if (isMatch(tag, regex)) {
-      return true;
-    }
-  }
-
-  for (const auto& tag : pluginItem.addTags) {
-    if (isMatch(tag, regex)) {
-      return true;
-    }
-  }
-
-  for (const auto& tag : pluginItem.removeTags) {
-    if (isMatch(tag, regex)) {
-      return true;
-    }
-  }
-
-  for (const auto& message : pluginItem.messages) {
-    if (isMatch(message.text, regex)) {
-      return true;
-    }
-  }
-
-  for (const auto& location : pluginItem.locations) {
-    if (isMatch(location.GetName(), regex)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-}
 
 namespace loot {
 PluginItemFilterModel::PluginItemFilterModel(QObject* parent) :
@@ -188,13 +133,19 @@ bool PluginItemFilterModel::filterAcceptsRow(
   }
 
   if (std::holds_alternative<std::string>(filterState.content) &&
-      !item.containsText(std::get<std::string>(filterState.content))) {
+      !item.containsMatchingText([&](std::string_view haystack) {
+        return boost::icontains(haystack,
+                                std::get<std::string>(filterState.content));
+      })) {
     return false;
   }
 
   if (std::holds_alternative<QRegularExpression>(filterState.content) &&
-      !containsMatchingText(
-          item, std::get<QRegularExpression>(filterState.content))) {
+      !item.containsMatchingText([&](std::string_view haystack) {
+        return std::get<QRegularExpression>(filterState.content)
+            .match(QString::fromUtf8(haystack))
+            .hasMatch();
+      })) {
     return false;
   }
 

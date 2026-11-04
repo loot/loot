@@ -209,48 +209,49 @@ PluginItem::PluginItem(GameId gameId,
   }
 }
 
-bool PluginItem::containsText(const std::string& text) const {
-  if (boost::icontains(name, text)) {
+bool PluginItem::containsMatchingText(
+    const std::function<bool(std::string_view)> isMatch) const {
+  if (isMatch(name)) {
     return true;
   }
 
-  if (version.has_value() && boost::icontains(version.value(), text)) {
+  if (version.has_value() && isMatch(version.value())) {
     return true;
   }
 
   if (crc.has_value()) {
     auto crcText = crcToString(crc.value());
-    if (boost::icontains(crcText, text)) {
+    if (isMatch(crcText)) {
       return true;
     }
   }
 
   for (const auto& tag : currentTags) {
-    if (boost::icontains(tag, text)) {
+    if (isMatch(tag)) {
       return true;
     }
   }
 
   for (const auto& tag : addTags) {
-    if (boost::icontains(tag, text)) {
+    if (isMatch(tag)) {
       return true;
     }
   }
 
   for (const auto& tag : removeTags) {
-    if (boost::icontains(tag, text)) {
+    if (isMatch(tag)) {
       return true;
     }
   }
 
   for (const auto& message : messages) {
-    if (boost::icontains(message.text, text)) {
+    if (isMatch(message.text)) {
       return true;
     }
   }
 
   for (const auto& location : locations) {
-    if (boost::icontains(location.GetName(), text)) {
+    if (isMatch(location.GetName())) {
       return true;
     }
   }

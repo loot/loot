@@ -27,8 +27,8 @@
 #include <loot/metadata/group.h>
 #include <loot/plugin_interface.h>
 
+#include <functional>
 #include <optional>
-#include <regex>
 #include <string>
 
 #include "gui/sourced_message.h"
@@ -73,7 +73,8 @@ struct PluginItem {
   std::vector<SourcedMessage> messages;
   std::vector<Location> locations;
 
-  bool containsText(const std::string& text) const;
+  bool containsMatchingText(
+      const std::function<bool(std::string_view)> isMatch) const;
 
   // QAbstractItemModel has a match() function that operates on items' strings,
   // so build a string that contains all the text that would be displayed for
