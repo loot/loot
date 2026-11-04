@@ -216,8 +216,7 @@ bool isBranchCheckedOut(const std::filesystem::path& localGitRepo,
   return line == "ref: refs/heads/" + branch;
 }
 
-std::optional<std::string> migrateMasterlistRepoSettings(GameId gameId,
-                                                         std::string url,
+std::optional<std::string> migrateMasterlistRepoSettings(const std::string& url,
                                                          std::string branch) {
   auto logger = getLogger();
 
@@ -229,28 +228,6 @@ std::optional<std::string> migrateMasterlistRepoSettings(GameId gameId,
                    DEFAULT_MASTERLIST_BRANCH);
     }
     branch = DEFAULT_MASTERLIST_BRANCH;
-  }
-
-  if (gameId == GameId::tes5vr &&
-      url == "https://github.com/loot/skyrimse.git") {
-    // Switch to the VR-specific repository (introduced for LOOT v0.17.0).
-    auto newUrl = "https://github.com/loot/skyrimse.git";
-    if (logger) {
-      logger->info(
-          "Updating masterlist repository URL from {} to {}", url, newUrl);
-    }
-    url = newUrl;
-  }
-
-  if (gameId == GameId::fo4vr &&
-      url == "https://github.com/loot/fallout4.git") {
-    // Switch to the VR-specific repository (introduced for LOOT v0.17.0).
-    auto newUrl = "https://github.com/loot/fallout4.git";
-    if (logger) {
-      logger->info(
-          "Updating masterlist repository URL from {} to {}", url, newUrl);
-    }
-    url = newUrl;
   }
 
   if (isLocalPath(url, MASTERLIST_FILENAME)) {
@@ -332,7 +309,7 @@ std::optional<std::string> migrateMasterlistRepoSettings(
     }
   }
 
-  auto migratedSource = migrateMasterlistRepoSettings(gameId, *url, *branch);
+  auto migratedSource = migrateMasterlistRepoSettings(*url, *branch);
   if (migratedSource.has_value() && logger) {
     logger->info(
         "Migrated masterlist repository URL {} and branch {} to source {}",
