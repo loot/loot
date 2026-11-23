@@ -24,41 +24,41 @@
 #ifndef LOOT_GUI_QUERY_CANCEL_SORT_QUERY
 #define LOOT_GUI_QUERY_CANCEL_SORT_QUERY
 
-#include <functional>
+#include <loot/plugin_interface.h>
 
-#include "gui/query/query.h"
+#include <functional>
+#include <memory>
+#include <optional>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "gui/state/change_count.h"
 #include "gui/state/game/game.h"
+#include "gui/state/logging.h"
 
 namespace loot {
-class CancelSortQuery : public Query {
-public:
-  CancelSortQuery(gui::Game& game, ChangeCount& counter) :
-      game_(&game), counter_(&counter) {}
-
-  QueryResult executeLogic() override {
-    auto logger = getLogger();
-    if (logger) {
-      logger->trace("User has rejected sorted load order, discarding it.");
-    }
-
-    counter_->decrement();
-    game_->getSortCount().decrement();
-
-    const std::function<std::pair<std::string, std::optional<short>>(
-        std::shared_ptr<const PluginInterface>, std::optional<short>, bool)>
-        mapper = [](std::shared_ptr<const PluginInterface> plugin,
-                    std::optional<short> loadOrderIndex,
-                    bool) {
-          return std::make_pair(plugin->GetName(), loadOrderIndex);
-        };
-
-    return mapFromLoadOrderData(*game_, game_->getLoadOrder(), mapper);
+std::vector<std::pair<std::string, std::optional<short>>> cancelSort(
+    gui::Game& game,
+    ChangeCount& counter) {
+  auto logger = getLogger();
+  if (logger) {
+    logger->trace("User has rejected sorted load order, discarding it.");
   }
 
-private:
-  gui::Game* game_;
-  ChangeCount* counter_;
-};
+  counter.decrement();
+  game.getSortCount().decrement();
+
+  const std::function<std::pair<std::string, std::optional<short>>(
+      std::shared_ptr<const PluginInterface>, std::optional<short>, bool)>
+      mapper = [](std::shared_ptr<const PluginInterface> plugin,
+                  std::optional<short> loadOrderIndex,
+                  bool) {
+        return std::make_pair(plugin->GetName(), loadOrderIndex);
+      };
+
+  return mapFromLoadOrderData(game, game.getLoadOrder(), mapper);
+}
 }
 
 #endif

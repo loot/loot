@@ -2391,16 +2391,14 @@ void MainWindow::on_actionApplySort_triggered() {
 
 void MainWindow::on_actionDiscardSort_triggered() {
   try {
-    auto query = CancelSortQuery(state->getCurrentGame(),
-                                 state->getUnappliedChangeCount());
-
-    auto result = query.executeLogic();
+    auto pluginPairs =
+        cancelSort(state->getCurrentGame(), state->getUnappliedChangeCount());
 
     const auto& pluginItems = pluginItemModel->getPluginItems();
 
     std::vector<PluginItem> newPluginItems;
     newPluginItems.reserve(pluginItems.size());
-    for (const auto& pluginPair : std::get<CancelSortResult>(result)) {
+    for (const auto& pluginPair : pluginPairs) {
       const auto& pluginName = pluginPair.first;
 
       auto it = std::find_if(pluginItems.cbegin(),
