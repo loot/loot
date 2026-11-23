@@ -102,8 +102,7 @@ public:
   void init();
   bool isInitialised() const;
 
-  std::unique_ptr<const PluginInterface> getPlugin(
-      const std::string& name) const;
+  std::unique_ptr<const PluginInterface> getPlugin(std::string_view name) const;
   std::vector<std::unique_ptr<const PluginInterface>> getPlugins() const;
   std::vector<SourcedMessage> checkInstallValidity(
       const PluginInterface& plugin,
@@ -166,7 +165,7 @@ public:
 
   void setUserGroups(const std::vector<Group>& groups);
   void addUserMetadata(const PluginMetadata& metadata);
-  void clearUserMetadata(const std::string& pluginName);
+  void clearUserMetadata(std::string_view pluginName);
   void clearAllUserMetadata();
   void saveUserMetadata();
 

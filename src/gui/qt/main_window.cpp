@@ -2174,16 +2174,12 @@ void MainWindow::on_actionClearMetadata_triggered() {
       return;
     }
 
-    ClearPluginMetadataQuery query(state->getCurrentGame(),
-                                   state->getSettings().getLanguage(),
-                                   selectedPluginName);
-
-    auto result = query.executeLogic();
-
     // The result is the changed plugin's derived metadata. Update the
     // model's data and also the message counts.
-
-    const auto& newPluginItem = std::get<PluginItem>(result);
+    const auto newPluginItem =
+        clearPluginUserMetadata(state->getCurrentGame(),
+                                state->getSettings().getLanguage(),
+                                selectedPluginName);
 
     for (int i = 1; i < pluginItemModel->rowCount(); i += 1) {
       const auto index = pluginItemModel->index(i, 0);

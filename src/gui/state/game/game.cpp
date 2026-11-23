@@ -919,7 +919,7 @@ void Game::init() {
 bool Game::isInitialised() const { return gameHandle_ != nullptr; }
 
 std::unique_ptr<const PluginInterface> Game::getPlugin(
-    const std::string& name) const {
+    std::string_view name) const {
   return gameHandle_->GetPlugin(name);
 }
 
@@ -1434,7 +1434,7 @@ void Game::addUserMetadata(const PluginMetadata& metadata) {
   gameHandle_->GetDatabase().SetPluginUserMetadata(metadata);
 }
 
-void Game::clearUserMetadata(const std::string& pluginName) {
+void Game::clearUserMetadata(std::string_view pluginName) {
   gameHandle_->GetDatabase().DiscardPluginUserMetadata(pluginName);
 }
 

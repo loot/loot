@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.29.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-11-23 10:57+0000\n"
+"POT-Creation-Date: 2026-11-23 12:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -504,7 +504,7 @@ msgid "F&ilters"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1269 src/gui/qt/main_window.cpp:1739
-#: src/gui/qt/main_window.cpp:2441
+#: src/gui/qt/main_window.cpp:2437
 msgid "Updating and parsing masterlist…"
 msgstr ""
 
@@ -542,7 +542,7 @@ msgid ""
 "is a sorted load order that has not been applied or discarded."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1386 src/gui/qt/main_window.cpp:2293
+#: src/gui/qt/main_window.cpp:1386 src/gui/qt/main_window.cpp:2289
 #, c++-format
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
@@ -683,28 +683,28 @@ msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2200
+#: src/gui/qt/main_window.cpp:2196
 #, c++-format
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2281
+#: src/gui/qt/main_window.cpp:2277
 #, c++-format
 msgid "Version {0} (build {1})"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2286
+#: src/gui/qt/main_window.cpp:2282
 msgid ""
 "Load order optimisation for Starfield, Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
 "3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2302
+#: src/gui/qt/main_window.cpp:2298
 msgid "About LOOT"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2376
+#: src/gui/qt/main_window.cpp:2372
 #, c++-format
 msgid ""
 "Oh no, something went wrong! This is usually because \"{0}\" is set to be "
@@ -713,49 +713,49 @@ msgid ""
 "information."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2660
+#: src/gui/qt/main_window.cpp:2656
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2785
+#: src/gui/qt/main_window.cpp:2781
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2823
+#: src/gui/qt/main_window.cpp:2819
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2871
+#: src/gui/qt/main_window.cpp:2867
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2930
+#: src/gui/qt/main_window.cpp:2926
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2953
+#: src/gui/qt/main_window.cpp:2949
 #, c++-format
 msgid "Masterlist updated to revision {0}."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3016
+#: src/gui/qt/main_window.cpp:3012
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3042
+#: src/gui/qt/main_window.cpp:3038
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3104
+#: src/gui/qt/main_window.cpp:3100
 #, c++-format
 msgid "A [new release]({0}) of LOOT is available."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3119
+#: src/gui/qt/main_window.cpp:3115
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."

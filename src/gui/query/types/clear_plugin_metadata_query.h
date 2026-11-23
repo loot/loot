@@ -24,45 +24,38 @@
 #ifndef LOOT_GUI_QUERY_CLEAR_PLUGIN_METADATA_QUERY
 #define LOOT_GUI_QUERY_CLEAR_PLUGIN_METADATA_QUERY
 
-#include "gui/query/query.h"
+#include <optional>
+#include <string_view>
+
+#include "gui/plugin_item.h"
 #include "gui/state/game/game.h"
+#include "gui/state/logging.h"
 
 namespace loot {
-class ClearPluginMetadataQuery : public Query {
-public:
-  ClearPluginMetadataQuery(gui::Game& game,
-                           std::string&& language,
-                           std::string_view pluginName) :
-      game_(&game), language_(std::move(language)), pluginName_(pluginName) {}
-
-  QueryResult executeLogic() override {
-    auto logger = getLogger();
-    if (logger) {
-      logger->debug("Clearing user metadata for plugin {}", pluginName_);
-    }
-
-    game_->clearUserMetadata(pluginName_);
-    game_->saveUserMetadata();
-
-    auto plugin = game_->getPlugin(pluginName_);
-    if (plugin) {
-      return PluginItem(
-          game_->getSettings().getId(),
-          *plugin,
-          *game_,
-          game_->getActiveLoadOrderIndex(*plugin, game_->getLoadOrder()),
-          game_->isPluginActive(plugin->GetName()),
-          language_);
-    }
-
-    return std::monostate();
+std::optional<PluginItem> clearPluginUserMetadata(gui::Game& game,
+                                                  std::string_view language,
+                                                  std::string_view pluginName) {
+  auto logger = getLogger();
+  if (logger) {
+    logger->debug("Clearing user metadata for plugin {}", pluginName);
   }
 
-private:
-  gui::Game* game_;
-  std::string language_;
-  std::string pluginName_;
-};
+  game.clearUserMetadata(pluginName);
+  game.saveUserMetadata();
+
+  auto plugin = game.getPlugin(pluginName);
+  if (plugin) {
+    return PluginItem(
+        game.getSettings().getId(),
+        *plugin,
+        game,
+        game.getActiveLoadOrderIndex(*plugin, game.getLoadOrder()),
+        game.isPluginActive(plugin->GetName()),
+        language);
+  }
+
+  return std::nullopt;
+}
 }
 
 #endif
