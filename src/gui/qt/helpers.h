@@ -39,19 +39,17 @@
 namespace loot {
 enum class FileType { Masterlist, MasterlistPrelude };
 
+struct FileRevisionSummary {
+  std::string id;
+  std::string date;
+};
+
 struct FileRevision {
   std::string id;
   std::string date;
   bool is_modified{false};
-};
 
-struct FileRevisionSummary {
-  FileRevisionSummary() = default;
-  explicit FileRevisionSummary(const FileRevision& fileRevision);
-  FileRevisionSummary(const std::string& id, const std::string& date);
-
-  std::string id;
-  std::string date;
+  FileRevisionSummary toSummary() const;
 };
 
 QString qTranslate(const char* text);

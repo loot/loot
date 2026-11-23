@@ -121,22 +121,23 @@ bool isFileUpToDate(const std::filesystem::path& filePath,
 }
 
 namespace loot {
-FileRevisionSummary::FileRevisionSummary(const FileRevision& fileRevision) :
-    id(fileRevision.id.substr(0, SHORT_HASH_LENGTH)), date(fileRevision.date) {
-  if (fileRevision.is_modified) {
+FileRevisionSummary FileRevision::toSummary() const {
+  FileRevisionSummary summary;
+  summary.id = id.substr(0, SHORT_HASH_LENGTH);
+  summary.date = date;
+
+  if (is_modified) {
     auto suffix =
         " " +
         /* translators: this text is displayed if LOOT has detected that the
            masterlist has been modified since it was downloaded. */
         translate("(edited)");
-    date += suffix;
-    id += suffix;
+    summary.date += suffix;
+    summary.id += suffix;
   }
-}
 
-FileRevisionSummary::FileRevisionSummary(const std::string& id,
-                                         const std::string& date) :
-    id(id), date(date) {}
+  return summary;
+}
 
 QString qTranslate(const char* text) {
   return QString::fromStdString(translate(text));
@@ -228,7 +229,7 @@ FileRevisionSummary getFileRevisionSummary(
 
   try {
     if (std::filesystem::is_regular_file(filePath)) {
-      return FileRevisionSummary(getFileRevision(filePath));
+      return getFileRevision(filePath).toSummary();
     }
 
     if (logger) {
@@ -248,14 +249,14 @@ FileRevisionSummary getFileRevisionSummary(
                        for various mods. */
                     translate("N/A: No masterlist prelude present");
 
-    return FileRevisionSummary(text, text);
+    return FileRevisionSummary{text, text};
   } catch (const std::exception&) {
     if (logger) {
       logger->warn("Failed to read metadata for: {}",
                    filePath.parent_path().u8string());
     }
     auto text = translate("Unknown: No revision metadata found");
-    return FileRevisionSummary(text, text);
+    return FileRevisionSummary{text, text};
   }
 }
 
