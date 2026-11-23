@@ -27,7 +27,6 @@
 #include "gui/query/query.h"
 #include "gui/state/game/game.h"
 #include "gui/translate.h"
-#include "loot/loot_version.h"
 
 namespace loot {
 class GetGameDataQuery : public Query {

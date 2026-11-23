@@ -30,7 +30,6 @@
 
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
-#include "gui/sourced_message.h"
 #include "gui/state/logging.h"
 
 namespace {

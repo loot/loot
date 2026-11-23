@@ -28,11 +28,9 @@
 #include <unordered_set>
 
 #include "gui/plugin_item.h"
-#include "gui/qt/counters.h"
 #include "gui/qt/filters_states.h"
 #include "gui/qt/general_info.h"
 #include "gui/qt/helpers.h"
-#include "gui/state/game/game_settings.h"
 
 Q_DECLARE_METATYPE(loot::PluginItem);
 

@@ -31,9 +31,9 @@
 #include <boost/algorithm/string/join.hpp>
 
 #include "gui/helpers.h"
-#include "gui/qt/counters.h"
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
+#include "gui/state/logging.h"
 #include "gui/translate.h"
 
 namespace loot {

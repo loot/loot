@@ -26,8 +26,6 @@
 #include <algorithm>
 
 #include "gui/helpers.h"
-#include "gui/state/game/helpers.h"
-#include "gui/state/logging.h"
 
 namespace {
 using loot::GameId;

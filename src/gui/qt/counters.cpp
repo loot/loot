@@ -23,8 +23,6 @@
 
 #include "gui/qt/counters.h"
 
-#include "gui/state/game/helpers.h"
-
 namespace loot {
 GeneralInformationCounters::GeneralInformationCounters(
     const std::vector<SourcedMessage>& generalMessages,

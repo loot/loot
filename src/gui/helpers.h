@@ -23,13 +23,9 @@
 #ifndef LOOT_GUI_HELPERS
 #define LOOT_GUI_HELPERS
 
-#include <loot/enum/message_type.h>
-
 #include <filesystem>
 #include <optional>
 #include <vector>
-
-#include "gui/sourced_message.h"
 
 namespace loot {
 #ifdef _WIN32

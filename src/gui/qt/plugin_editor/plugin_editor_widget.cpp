@@ -30,7 +30,6 @@
 
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
-#include "plugin_editor_widget.h"
 
 namespace loot {
 PluginEditorWidget::PluginEditorWidget(QWidget* parent,

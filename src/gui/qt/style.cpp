@@ -25,13 +25,10 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QStyle>
 #include <boost/algorithm/string/predicate.hpp>
 #include <set>
 
 #include "gui/state/logging.h"
-#include "gui/state/loot_paths.h"
 
 namespace {
 static constexpr std::string_view QSS_SUFFIX = ".theme.qss";

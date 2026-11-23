@@ -30,7 +30,6 @@
 
 #include "gui/plugin_item.h"
 #include "gui/qt/card.h"
-#include "gui/qt/filters_states.h"
 #include "gui/qt/messages_widget.h"
 
 namespace loot {

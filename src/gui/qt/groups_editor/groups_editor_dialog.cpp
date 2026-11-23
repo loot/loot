@@ -23,7 +23,7 @@
 
 #include "gui/qt/groups_editor/groups_editor_dialog.h"
 
-#include <fmt/base.h>
+#include <fmt/format.h>
 
 #include <QtWidgets/QCompleter>
 #include <QtWidgets/QDialogButtonBox>
@@ -35,7 +35,6 @@
 #include <QtWidgets/QVBoxLayout>
 
 #include "gui/helpers.h"
-#include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
 #include "gui/translate.h"
 

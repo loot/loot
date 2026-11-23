@@ -27,7 +27,6 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QRegularExpression>
 #include <optional>
-#include <regex>
 #include <string>
 #include <variant>
 

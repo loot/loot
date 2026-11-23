@@ -30,7 +30,6 @@
 #include <QtWidgets/QCompleter>
 #include <QtWidgets/QLineEdit>
 
-#include "gui/qt/helpers.h"
 #include "gui/qt/plugin_editor/message_content_editor.h"
 
 namespace loot {

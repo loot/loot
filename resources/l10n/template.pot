@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.29.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-11-23 18:10+0000\n"
+"POT-Creation-Date: 2026-11-23 18:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -208,67 +208,67 @@ msgstr ""
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:167
+#: src/gui/qt/general_info_card.cpp:166
 msgid "Active Small Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:168 src/gui/qt/general_info_card.cpp:255
+#: src/gui/qt/general_info_card.cpp:167 src/gui/qt/general_info_card.cpp:254
 msgid "Active Light Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:240
+#: src/gui/qt/general_info_card.cpp:239
 msgid "General Information"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:241 src/gui/qt/plugin_card.cpp:283
+#: src/gui/qt/general_info_card.cpp:240 src/gui/qt/plugin_card.cpp:283
 msgid "Has Hidden Messages"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:243
+#: src/gui/qt/general_info_card.cpp:242
 msgid "Masterlist Revision ID"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:244
+#: src/gui/qt/general_info_card.cpp:243
 msgid "Masterlist Update Date"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:245
+#: src/gui/qt/general_info_card.cpp:244
 msgid "Masterlist Prelude Revision ID"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:246
+#: src/gui/qt/general_info_card.cpp:245
 msgid "Masterlist Prelude Update Date"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:248
+#: src/gui/qt/general_info_card.cpp:247
 msgid "Warnings"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:249
+#: src/gui/qt/general_info_card.cpp:248
 msgid "Errors"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:250
+#: src/gui/qt/general_info_card.cpp:249
 msgid "Total Messages"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:252
+#: src/gui/qt/general_info_card.cpp:251
 msgid "Active Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:253
+#: src/gui/qt/general_info_card.cpp:252
 msgid "Active Full Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:254
+#: src/gui/qt/general_info_card.cpp:253
 msgid "Active Medium Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:256
+#: src/gui/qt/general_info_card.cpp:255
 msgid "Dirty Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:257
+#: src/gui/qt/general_info_card.cpp:256
 msgid "Total Plugins"
 msgstr ""
 
@@ -570,13 +570,13 @@ msgid ""
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1579 src/gui/qt/restore_load_order_dialog.cpp:222
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:454
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:453
 #: src/gui/qt/plugin_editor/table_tabs.cpp:428
 msgid "Error"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1589
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:450
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:449
 #: src/gui/qt/tasks/network_task.cpp:36 src/gui/query/query.h:67
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
@@ -761,7 +761,7 @@ msgid ""
 "can get to it through the main menu) for more information."
 msgstr ""
 
-#: src/gui/qt/messages_widget.cpp:200
+#: src/gui/qt/messages_widget.cpp:199
 msgid "Hide message"
 msgstr ""
 
@@ -810,12 +810,12 @@ msgstr ""
 msgid "Loads Archive"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:282 src/gui/qt/plugin_item_model.cpp:319
+#: src/gui/qt/plugin_card.cpp:282 src/gui/qt/plugin_item_model.cpp:320
 msgid "Has User Metadata"
 msgstr ""
 
 #: src/gui/qt/plugin_card.cpp:285
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:203
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:202
 msgid "Bash Tags"
 msgstr ""
 
@@ -831,19 +831,19 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:317
+#: src/gui/qt/plugin_item_model.cpp:318
 msgid "Editor Is Open"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:367
+#: src/gui/qt/plugin_item_model.cpp:368
 msgid "Position"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:369
+#: src/gui/qt/plugin_item_model.cpp:370
 msgid "Index"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:371
+#: src/gui/qt/plugin_item_model.cpp:372
 msgid "Plugin Name"
 msgstr ""
 
@@ -899,67 +899,67 @@ msgstr ""
 msgid "Find Next"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:272
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:271
 msgid "Groups Editor"
 msgstr ""
 
 #. translators: This string is an action in the Groups Editor plugin list
 #. context menu. It is currently the only entry.
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:276
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:275
 msgid "&Copy Plugin Names"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:279
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:278
 msgid "Show only plugins that are in the default group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:281
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:280
 msgid "Add plugin(s) to group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:283
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:282
 msgid "Group name"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:284
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:283
 msgid "Add a new group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:285
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:284
 msgid "Rename current group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:286
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:285
 msgid "Auto arrange groups"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:303
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:302
 msgid "You have unsaved changes. Are you sure you want to discard them?"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:384
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:383
 msgid "No plugins are in this group."
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:391
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:390
 msgid "No plugins are in the default group."
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:392
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:391
 msgid "All plugins are in this group."
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:459
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:458
 #, c++-format
 msgid "Plugins in {0}"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:462
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:461
 #, c++-format
 msgid "Plugins not in {0}"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:664
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:663
 msgid "Group already exists!"
 msgstr ""
 
@@ -977,39 +977,39 @@ msgid "{0} (Group does not exist)"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:100
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:197
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:196
 msgid "Group"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:198
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:197
 msgid "Load After"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:199
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:198
 msgid "Requirements"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:201
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:200
 msgid "Incompatibilities"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:202
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:201
 msgid "Messages"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:205
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:204
 msgid "Dirty Plugin Info"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:207
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:206
 msgid "Clean Plugin Info"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:208
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:207
 msgid "Locations"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:260
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:259
 msgid "This tab contains user metadata."
 msgstr ""
 
@@ -1217,7 +1217,7 @@ msgstr ""
 msgid "Add new game…"
 msgstr ""
 
-#: src/gui/query/types/get_game_data_query.h:43
+#: src/gui/query/types/get_game_data_query.h:42
 msgid "Parsing, merging and evaluating metadata…"
 msgstr ""
 

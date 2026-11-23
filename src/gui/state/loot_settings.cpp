@@ -30,9 +30,9 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
 #include <regex>
+#include <set>
 
 #include "gui/state/logging.h"
-#include "gui/state/loot_paths.h"
 #include "gui/version.h"
 
 using std::lock_guard;

@@ -23,12 +23,12 @@
 
 #include "gui/qt/plugin_editor/group_tab.h"
 
-#include <fmt/base.h>
+#include <fmt/format.h>
+#include <loot/metadata/group.h>
 
 #include <QtGui/QStandardItemModel>
 #include <QtWidgets/QFormLayout>
 
-#include "gui/plugin_item.h"
 #include "gui/qt/helpers.h"
 #include "gui/translate.h"
 

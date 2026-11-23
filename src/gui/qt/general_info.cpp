@@ -23,8 +23,6 @@
 
 #include "gui/qt/general_info.h"
 
-#include "gui/helpers.h"
-
 namespace loot {
 std::string GeneralInformation::getMarkdownContent() const {
   std::string content = "# General Information\n\n";

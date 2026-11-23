@@ -31,7 +31,6 @@
 
 #include "gui/qt/general_info_card.h"
 #include "gui/qt/plugin_card.h"
-#include "gui/qt/plugin_item_model.h"
 
 namespace loot {
 // SizeHintCacheKey contains all the data that the card size could depend on,

@@ -29,7 +29,6 @@
 #define LOOT_GUI_STATE_LOOT_SETTINGS
 
 #include <filesystem>
-#include <map>
 #include <mutex>
 #include <optional>
 #include <string>

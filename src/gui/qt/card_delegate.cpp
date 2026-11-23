@@ -24,7 +24,6 @@
 
 #include "gui/qt/card_delegate.h"
 
-#include "gui/qt/counters.h"
 #include "gui/qt/plugin_item_model.h"
 #include "gui/state/logging.h"
 

@@ -25,7 +25,6 @@
 
 #include <QtWidgets/QVBoxLayout>
 
-#include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
 #include "gui/state/logging.h"
 

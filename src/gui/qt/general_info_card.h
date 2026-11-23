@@ -24,9 +24,6 @@
 #ifndef LOOT_GUI_QT_GENERAL_INFO_CARD
 #define LOOT_GUI_QT_GENERAL_INFO_CARD
 
-#include <loot/enum/game_type.h>
-
-#include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
 

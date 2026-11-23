@@ -24,8 +24,9 @@
 #ifndef LOOT_GUI_QT_COUNTERS
 #define LOOT_GUI_QT_COUNTERS
 
+#include <QtCore/QMetaType>
+
 #include "gui/plugin_item.h"
-#include "gui/qt/filters_states.h"
 #include "gui/sourced_message.h"
 
 namespace loot {

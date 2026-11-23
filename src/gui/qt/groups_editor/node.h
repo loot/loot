@@ -28,8 +28,6 @@
 #include <QtWidgets/QGraphicsItem>
 #include <QtWidgets/QGraphicsSimpleTextItem>
 
-#include "gui/plugin_item.h"
-
 namespace loot {
 class Edge;
 class GraphView;

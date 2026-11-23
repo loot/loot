@@ -24,7 +24,6 @@
 #ifndef LOOT_GUI_PLUGIN_ITEM
 #define LOOT_GUI_PLUGIN_ITEM
 
-#include <loot/metadata/group.h>
 #include <loot/plugin_interface.h>
 
 #include <functional>
