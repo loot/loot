@@ -415,7 +415,7 @@ std::string PluginItem::getLoadOrderIndexText() const {
 std::vector<PluginItem> getPluginItems(
     const std::vector<std::string>& pluginNames,
     const gui::Game& game,
-    const std::string& language) {
+    std::string_view language) {
   const std::function<PluginItem(
       std::shared_ptr<const PluginInterface>, std::optional<short>, bool)>
       mapper = [&](std::shared_ptr<const PluginInterface> plugin,

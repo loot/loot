@@ -1983,10 +1983,9 @@ void MainWindow::on_actionClearAllUserMetadata_triggered() {
       return;
     }
 
-    ClearAllMetadataQuery query(state->getCurrentGame(),
-                                state->getSettings().getLanguage());
-
-    auto result = query.executeLogic();
+    // These plugin items are only those that had their user metadata removed.
+    const auto pluginItems = clearAllUserMetadata(
+        state->getCurrentGame(), state->getSettings().getLanguage());
 
     // Clearing all user metadata can clear general messages (though
     // user-defined general messages aren't editable through the LOOT GUI),
@@ -2002,9 +2001,6 @@ void MainWindow::on_actionClearAllUserMetadata_triggered() {
         state->getCurrentGame().getKnownBashTags());
 
     updateGeneralMessages();
-
-    // These plugin items are only those that had their user metadata removed.
-    const auto& pluginItems = std::get<PluginItems>(result);
 
     // For each item, find its existing index in the model and update its data.
     // The sidebar item and card will be updated by handling the resulting

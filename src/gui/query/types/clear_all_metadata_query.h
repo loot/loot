@@ -28,54 +28,34 @@
 #include "gui/state/game/game.h"
 
 namespace loot {
-class ClearAllMetadataQuery : public Query {
-public:
-  ClearAllMetadataQuery(gui::Game& game, std::string&& language) :
-      game_(&game), language_(std::move(language)) {}
-
-  QueryResult executeLogic() override {
-    auto logger = getLogger();
-    if (logger) {
-      logger->debug("Clearing all user metadata.");
-    }
-
-    // Record which plugins have userlist entries.
-    auto userlistPlugins = getUserlistPluginNames();
-
-    // Clear the user metadata.
-    game_->clearAllUserMetadata();
-    game_->saveUserMetadata();
-
-    if (logger) {
-      logger->trace(
-          "Rederiving display metadata for {} plugins that had user "
-          "metadata.",
-          userlistPlugins.size());
-    }
-
-    return getDerivedMetadata(userlistPlugins);
+std::vector<PluginItem> clearAllUserMetadata(gui::Game& game,
+                                             std::string_view language) {
+  auto logger = getLogger();
+  if (logger) {
+    logger->debug("Clearing all user metadata.");
   }
 
-private:
-  gui::Game* game_;
-  std::string language_;
-
-  std::vector<std::string> getUserlistPluginNames() const {
-    std::vector<std::string> pluginNames;
-    for (const auto& pluginName : game_->getLoadOrder()) {
-      if (game_->getUserMetadata(pluginName).has_value()) {
-        pluginNames.push_back(pluginName);
-      }
+  // Record which plugins have userlist entries.
+  std::vector<std::string> userlistPlugins;
+  for (const auto& pluginName : game.getLoadOrder()) {
+    if (game.getUserMetadata(pluginName).has_value()) {
+      userlistPlugins.push_back(pluginName);
     }
-
-    return pluginNames;
   }
 
-  std::vector<PluginItem> getDerivedMetadata(
-      const std::vector<std::string>& userlistPlugins) const {
-    return getPluginItems(userlistPlugins, *game_, language_);
+  // Clear the user metadata.
+  game.clearAllUserMetadata();
+  game.saveUserMetadata();
+
+  if (logger) {
+    logger->trace(
+        "Rederiving display metadata for {} plugins that had user "
+        "metadata.",
+        userlistPlugins.size());
   }
-};
+
+  return getPluginItems(userlistPlugins, game, language);
+}
 }
 
 #endif

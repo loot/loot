@@ -89,7 +89,7 @@ struct PluginItem {
 std::vector<PluginItem> getPluginItems(
     const std::vector<std::string>& pluginNames,
     const gui::Game& game,
-    const std::string& language);
+    std::string_view language);
 }
 
 #endif
