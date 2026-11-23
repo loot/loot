@@ -24,60 +24,46 @@
 #ifndef LOOT_GUI_QUERY_APPLY_SORT_QUERY
 #define LOOT_GUI_QUERY_APPLY_SORT_QUERY
 
-#include <fmt/base.h>
+#include <exception>
+#include <filesystem>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
-#include "gui/helpers.h"
-#include "gui/query/query.h"
-#include "gui/translate.h"
+#include "gui/state/change_count.h"
+#include "gui/state/game/game.h"
+#include "gui/state/logging.h"
 
 namespace loot {
-class ApplySortQuery : public Query {
+class SetLoadOrderException : public std::runtime_error {
 public:
-  ApplySortQuery(gui::Game& game,
-                 ChangeCount& counter,
-                 const std::vector<std::string>& plugins) :
-      game_(&game), counter_(&counter), plugins_(plugins) {}
+  explicit SetLoadOrderException(
+      const char* what,
+      const std::filesystem::path& activePluginsFilePath) :
+      std::runtime_error(what), activePluginsFilePath(activePluginsFilePath) {}
 
-  QueryResult executeLogic() override {
-    auto logger = getLogger();
-    if (logger) {
-      logger->trace("User has accepted sorted load order, applying it.");
-    }
-    try {
-      game_->setLoadOrder(plugins_);
-      counter_->decrement();
-    } catch (...) {
-      useSortingErrorMessage = true;
-      throw;
-    }
-
-    return std::monostate();
-  }
-
-  std::string getErrorMessage() const override {
-    if (useSortingErrorMessage) {
-      return getSortingErrorMessage(*game_);
-    }
-
-    return Query::getErrorMessage();
+  std::filesystem::path getActivePluginsFilePath() const {
+    return activePluginsFilePath;
   }
 
 private:
-  gui::Game* game_;
-  ChangeCount* counter_;
-  std::vector<std::string> plugins_;
-  bool useSortingErrorMessage{false};
-
-  std::string getSortingErrorMessage(const gui::Game& game) const {
-    return fmt::format(
-        translate(
-            "Oh no, something went wrong! This is usually because \"{0}\" "
-            "is set to be read-only. If it is, unset it and try again. If "
-            "it isn't, you can check your LOOTDebugLog.txt (you can get to "
-            "it through the main menu) for more information."),
-        game.getActivePluginsFilePath().u8string());
-  }
+  std::filesystem::path activePluginsFilePath;
 };
+
+void applySortedLoadOrder(gui::Game& game,
+                          ChangeCount& counter,
+                          const std::vector<std::string>& plugins) {
+  auto logger = getLogger();
+  if (logger) {
+    logger->trace("User has accepted sorted load order, applying it.");
+  }
+  try {
+    game.setLoadOrder(plugins);
+    counter.decrement();
+  } catch (const std::exception& e) {
+    throw SetLoadOrderException(e.what(), game.getActivePluginsFilePath());
+  }
+}
 }
 
 #endif

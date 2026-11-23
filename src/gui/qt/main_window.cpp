@@ -67,11 +67,10 @@ using loot::LootState;
 using loot::qTranslate;
 using loot::WindowPosition;
 
-void showAmbiguousLoadOrderSetWarning(QWidget* parent, const LootState& state) {
-  const auto maybeSTestFile =
-      state.getCurrentGame().getSettings().getId() == GameId::fo4 ||
-      state.getCurrentGame().getSettings().getId() == GameId::fo4vr ||
-      state.getCurrentGame().getSettings().getId() == GameId::starfield;
+void showAmbiguousLoadOrderSetWarning(QWidget* parent, GameId gameId) {
+  const auto maybeSTestFile = gameId == GameId::fo4 ||
+                              gameId == GameId::fo4vr ||
+                              gameId == GameId::starfield;
 
   const auto message =
       maybeSTestFile
@@ -1571,16 +1570,6 @@ void MainWindow::handleException(const std::exception& exception) {
   handleError(message);
 }
 
-void MainWindow::handleQueryException(const Query& query,
-                                      const std::exception& exception) {
-  auto logger = getLogger();
-  if (logger) {
-    logger->error("Caught an exception: {}", exception.what());
-  }
-
-  handleError(query.getErrorMessage());
-}
-
 void MainWindow::handleGameDataLoaded(QueryResult result) {
   progressDialog->reset();
 
@@ -1907,7 +1896,8 @@ void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
         qTranslate("The load order displayed by LOOT has been set."));
 
     if (state->getCurrentGame().isLoadOrderAmbiguous()) {
-      showAmbiguousLoadOrderSetWarning(this, *state);
+      showAmbiguousLoadOrderSetWarning(
+          this, state->getCurrentGame().getSettings().getId());
     } else {
       actionFixAmbiguousLoadOrder->setEnabled(false);
     }
@@ -2367,23 +2357,33 @@ void MainWindow::on_actionApplySort_triggered() {
   try {
     auto sortedPluginNames = pluginItemModel->getPluginNames();
 
-    auto query = ApplySortQuery(state->getCurrentGame(),
-                                state->getUnappliedChangeCount(),
-                                sortedPluginNames);
+    applySortedLoadOrder(state->getCurrentGame(),
+                         state->getUnappliedChangeCount(),
+                         sortedPluginNames);
 
-    try {
-      query.executeLogic();
+    exitSortingState();
 
-      exitSortingState();
+    if (state->getCurrentGame().isLoadOrderAmbiguous()) {
+      actionFixAmbiguousLoadOrder->setEnabled(true);
 
-      if (state->getCurrentGame().isLoadOrderAmbiguous()) {
-        actionFixAmbiguousLoadOrder->setEnabled(true);
-
-        showAmbiguousLoadOrderSetWarning(this, *state);
-      }
-    } catch (const std::exception& e) {
-      handleQueryException(query, e);
+      showAmbiguousLoadOrderSetWarning(
+          this, state->getCurrentGame().getSettings().getId());
     }
+
+  } catch (const SetLoadOrderException& e) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error("Caught an exception: {}", e.what());
+    }
+    const auto errorMessage = fmt::format(
+        translate(
+            "Oh no, something went wrong! This is usually because \"{0}\" "
+            "is set to be read-only. If it is, unset it and try again. If "
+            "it isn't, you can check your LOOTDebugLog.txt (you can get to "
+            "it through the main menu) for more information."),
+        e.getActivePluginsFilePath().u8string());
+    handleError(errorMessage);
+
   } catch (const std::exception& e) {
     handleException(e);
   }
