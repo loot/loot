@@ -245,8 +245,6 @@ private:
 
   QMenu* createPopupMenu() override;
 
-  std::optional<std::filesystem::path> createBackup();
-
   void checkForAmbiguousLoadOrder();
 
   void refreshGamesDropdown();

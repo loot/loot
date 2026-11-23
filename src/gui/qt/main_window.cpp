@@ -368,6 +368,27 @@ void addActionButton(QToolBar* toolbar, QAction* action) {
     toolbarAction->setVisible(action->isVisible());
   });
 }
+
+std::optional<std::filesystem::path> createBackup(
+    const std::filesystem::path& lootDataPath) {
+  auto backupBasename =
+      "LOOT-backup-" +
+      QDateTime::currentDateTime().toString("yyyyMMddThhmmss").toStdString();
+
+  auto destDir = lootDataPath / "backups" / backupBasename;
+
+  loot::createBackup(lootDataPath, destDir);
+
+  if (!std::filesystem::exists(destDir)) {
+    return std::nullopt;
+  }
+
+  auto zipPath = loot::compressDirectory(destDir);
+
+  std::filesystem::remove_all(destDir);
+
+  return zipPath;
+}
 }
 
 namespace loot {
@@ -1334,7 +1355,7 @@ void MainWindow::sortPlugins(bool isAutoSort) {
 }
 
 void MainWindow::showFirstRunDialog() {
-  auto zipPath = createBackup();
+  auto zipPath = ::createBackup(state->getPaths().getLootDataPath());
 
   std::string textTemplate = R"(
 <p>{}</p>
@@ -1642,28 +1663,6 @@ QMenu* MainWindow::createPopupMenu() {
   return filteredMenu;
 }
 
-std::optional<std::filesystem::path> MainWindow::createBackup() {
-  auto backupBasename =
-      "LOOT-backup-" +
-      QDateTime::currentDateTime().toString("yyyyMMddThhmmss").toStdString();
-
-  auto sourceDir = state->getPaths().getLootDataPath();
-  auto destDir =
-      state->getPaths().getLootDataPath() / "backups" / backupBasename;
-
-  loot::createBackup(sourceDir, destDir);
-
-  if (!std::filesystem::exists(destDir)) {
-    return std::nullopt;
-  }
-
-  auto zipPath = compressDirectory(destDir);
-
-  std::filesystem::remove_all(destDir);
-
-  return zipPath;
-}
-
 void MainWindow::checkForAmbiguousLoadOrder() {
   if (!state->getCurrentGame().isLoadOrderAmbiguous()) {
     actionFixAmbiguousLoadOrder->setEnabled(false);
@@ -1787,7 +1786,7 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
 
 void MainWindow::on_actionBackupData_triggered() {
   try {
-    auto zipPath = createBackup();
+    auto zipPath = ::createBackup(state->getPaths().getLootDataPath());
 
     if (zipPath.has_value()) {
       auto zipPathString = zipPath.value().u8string();
