@@ -1235,6 +1235,13 @@ void LootSettings::enableWarnOnCaseSensitiveGamePaths(bool enable) {
   generalSettings_.warnOnCaseSensitiveGamePaths = enable;
 }
 
+void LootSettings::storeGeneralSettings(
+    const GeneralSettings& generalSettings) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  generalSettings_ = generalSettings;
+}
+
 void LootSettings::storeLastGame(const std::string& lastGame) {
   lock_guard<recursive_mutex> guard(mutex_);
 

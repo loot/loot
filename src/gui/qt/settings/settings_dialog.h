@@ -45,7 +45,7 @@ public:
                         const std::vector<std::string>& themes,
                         const std::optional<std::string>& currentGameFolder);
 
-  void recordInputValues(LootState& state);
+  std::pair<GeneralSettings, std::vector<GameSettings>> getSettings() const;
 
 private:
   QListWidget* listWidget{new QListWidget(this)};

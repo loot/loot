@@ -2680,7 +2680,11 @@ void MainWindow::on_filtersWidget_cardContentFilterChanged(
 void MainWindow::on_settingsDialog_accepted() {
   try {
     const auto currentTheme = state->getSettings().getTheme();
-    settingsDialog->recordInputValues(*state);
+    auto [generalSettings, gameSettings] = settingsDialog->getSettings();
+
+    state->getSettings().storeGeneralSettings(generalSettings);
+    gameSettings = state->loadInstalledGames(gameSettings);
+    state->getSettings().storeGameSettings(gameSettings);
 
     pluginEditorWidget->setLanguage(state->getSettings().getLanguage());
     if (state->hasCurrentGame()) {

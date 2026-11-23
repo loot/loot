@@ -125,6 +125,7 @@ public:
   void enableNoSortingChangesDialog(bool enable);
   void enableWarnOnCaseSensitiveGamePaths(bool enable);
 
+  void storeGeneralSettings(const GeneralSettings& generalSettings);
   void storeLastGame(const std::string& lastGame);
   void storeMainWindowPosition(const WindowPosition& position);
   void storeGroupsEditorWindowPosition(const WindowPosition& position);

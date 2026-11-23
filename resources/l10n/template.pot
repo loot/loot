@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.29.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-11-23 18:13+0000\n"
+"POT-Creation-Date: 2026-11-23 22:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -717,45 +717,45 @@ msgstr ""
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2786
+#: src/gui/qt/main_window.cpp:2790
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2824
+#: src/gui/qt/main_window.cpp:2828
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2872
+#: src/gui/qt/main_window.cpp:2876
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2931
+#: src/gui/qt/main_window.cpp:2935
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2954
+#: src/gui/qt/main_window.cpp:2958
 #, c++-format
 msgid "Masterlist updated to revision {0}."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3017
+#: src/gui/qt/main_window.cpp:3021
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3043
+#: src/gui/qt/main_window.cpp:3047
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3105
+#: src/gui/qt/main_window.cpp:3109
 #, c++-format
 msgid "A [new release]({0}) of LOOT is available."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3120
+#: src/gui/qt/main_window.cpp:3124
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -1078,7 +1078,7 @@ msgid "URL"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:69
-#: src/gui/qt/settings/general_tab.cpp:186
+#: src/gui/qt/settings/general_tab.cpp:178
 msgid "Language"
 msgstr ""
 
@@ -1149,51 +1149,51 @@ msgstr ""
 msgid "{0} (Light)"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:185
+#: src/gui/qt/settings/general_tab.cpp:177
 msgid "Default Game"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:187
+#: src/gui/qt/settings/general_tab.cpp:179
 msgid "Theme"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:189
+#: src/gui/qt/settings/general_tab.cpp:181
 msgid "Update masterlist before sorting"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:190
+#: src/gui/qt/settings/general_tab.cpp:182
 msgid "Check for LOOT updates on startup"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:191
+#: src/gui/qt/settings/general_tab.cpp:183
 msgid "Enable debug logging"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:192
+#: src/gui/qt/settings/general_tab.cpp:184
 msgid "Masterlist prelude source"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:194
+#: src/gui/qt/settings/general_tab.cpp:186
 msgid "Display dialog when sorting makes no changes"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:196
+#: src/gui/qt/settings/general_tab.cpp:188
 msgid "Warn if the game's paths are in a case-sensitive filesystem"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:199
+#: src/gui/qt/settings/general_tab.cpp:191
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:201
+#: src/gui/qt/settings/general_tab.cpp:193
 msgid "A prelude source is required."
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:204
+#: src/gui/qt/settings/general_tab.cpp:196
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:206
+#: src/gui/qt/settings/general_tab.cpp:198
 msgid "Autodetect"
 msgstr ""
 
@@ -1205,15 +1205,15 @@ msgstr ""
 msgid "A name is required."
 msgstr ""
 
-#: src/gui/qt/settings/settings_dialog.cpp:161
+#: src/gui/qt/settings/settings_dialog.cpp:160
 msgid "Settings"
 msgstr ""
 
-#: src/gui/qt/settings/settings_dialog.cpp:163
+#: src/gui/qt/settings/settings_dialog.cpp:162
 msgid "General"
 msgstr ""
 
-#: src/gui/qt/settings/settings_dialog.cpp:165
+#: src/gui/qt/settings/settings_dialog.cpp:164
 msgid "Add new game…"
 msgstr ""
 

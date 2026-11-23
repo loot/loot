@@ -118,31 +118,23 @@ void GeneralTab::initialiseInputs(const LootSettings& settings,
       QString::fromStdString(settings.getPreludeSource()));
 }
 
-void GeneralTab::recordInputValues(LootSettings& settings) {
-  auto defaultGame =
-      defaultGameComboBox->currentData().toString().toStdString();
-  auto language = languageComboBox->currentData().toString().toStdString();
-  auto theme = themeComboBox->currentData().toString().toStdString();
-  const auto enableMasterlistUpdateBeforeSort =
-      updateMasterlistCheckbox->isChecked();
-  const auto checkForUpdates = checkUpdatesCheckbox->isChecked();
-  const auto enableDebugLogging = loggingCheckbox->isChecked();
-  const auto enableNoSortingChangesDialog =
-      useNoSortingChangesDialogCheckbox->isChecked();
-  const auto enableWarnOnCaseSensitiveGamePaths =
-      warnOnCaseSensitiveGamePathsCheckbox->isChecked();
-  auto preludeSource = preludeSourceInput->text().toStdString();
+GeneralSettings GeneralTab::getInputValues() const {
+  GeneralSettings settings;
 
-  settings.setDefaultGame(defaultGame);
-  settings.setLanguage(language);
-  settings.setTheme(theme);
-  settings.enableMasterlistUpdateBeforeSort(enableMasterlistUpdateBeforeSort);
-  settings.enableLootUpdateCheck(checkForUpdates);
-  settings.enableDebugLogging(enableDebugLogging);
-  settings.enableNoSortingChangesDialog(enableNoSortingChangesDialog);
-  settings.enableWarnOnCaseSensitiveGamePaths(
-      enableWarnOnCaseSensitiveGamePaths);
-  settings.setPreludeSource(preludeSource);
+  settings.defaultGame =
+      defaultGameComboBox->currentData().toString().toStdString();
+  settings.language = languageComboBox->currentData().toString().toStdString();
+  settings.theme = themeComboBox->currentData().toString().toStdString();
+  settings.updateMasterlistBeforeSort = updateMasterlistCheckbox->isChecked();
+  settings.enableLootUpdateCheck = checkUpdatesCheckbox->isChecked();
+  settings.enableDebugLogging = loggingCheckbox->isChecked();
+  settings.useNoSortingChangesDialog =
+      useNoSortingChangesDialogCheckbox->isChecked();
+  settings.warnOnCaseSensitiveGamePaths =
+      warnOnCaseSensitiveGamePathsCheckbox->isChecked();
+  settings.preludeSource = preludeSourceInput->text().toStdString();
+
+  return settings;
 }
 
 bool GeneralTab::areInputValuesValid() const {

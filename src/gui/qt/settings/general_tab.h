@@ -41,7 +41,7 @@ public:
 
   void initialiseInputs(const LootSettings& settings,
                         const std::vector<std::string>& themes);
-  void recordInputValues(LootSettings& settings);
+  GeneralSettings getInputValues() const;
   bool areInputValuesValid() const;
 
 private:
