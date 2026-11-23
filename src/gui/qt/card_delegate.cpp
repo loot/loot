@@ -433,7 +433,7 @@ QSize CardDelegate::sizeHint(const QStyleOptionViewItem& option,
 }
 
 QWidget* CardDelegate::createEditor(QWidget* parent,
-                                    const QStyleOptionViewItem& option,
+                                    const QStyleOptionViewItem&,
                                     const QModelIndex& index) const {
   if (!index.isValid()) {
     return nullptr;
