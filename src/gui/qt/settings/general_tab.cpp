@@ -73,7 +73,7 @@ void GeneralTab::initialiseInputs(const LootSettings& settings,
   }
 
   auto gameIndex = defaultGameComboBox->findData(
-      QVariant(QString::fromStdString(settings.getGame())));
+      QVariant(QString::fromStdString(settings.getDefaultGame())));
   defaultGameComboBox->setCurrentIndex(gameIndex);
 
   while (languageComboBox->count() > 0) {

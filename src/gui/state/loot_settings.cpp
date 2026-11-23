@@ -501,7 +501,7 @@ std::string migratePreludeSource(const std::string& source) {
                      branch + "/prelude.yaml";
 
     if (source == url) {
-      const auto newSource = loot::getDefaultPreludeSource();
+      const auto newSource = loot::DEFAULT_PRELUDE_SOURCE;
 
       const auto logger = getLogger();
       if (logger) {
@@ -759,6 +759,10 @@ void loadWindowPosition(const toml::node_view<const toml::node>& toml,
 }
 
 namespace loot {
+const std::string DEFAULT_PRELUDE_SOURCE = fmt::format(
+    "https://raw.githubusercontent.com/loot/prelude/{}/prelude.yaml",
+    DEFAULT_MASTERLIST_BRANCH);
+
 CheckSettingsResult checkSettingsFile(const std::filesystem::path& filePath) {
   CheckSettingsResult result;
 
@@ -807,11 +811,6 @@ CheckSettingsResult checkSettingsFile(const std::filesystem::path& filePath) {
   return result;
 }
 
-std::string getDefaultPreludeSource() {
-  return std::string("https://raw.githubusercontent.com/loot/prelude/") +
-         DEFAULT_MASTERLIST_BRANCH + "/prelude.yaml";
-}
-
 void LootSettings::load(const std::filesystem::path& file,
                         const std::vector<std::string>& preferredUILanguages) {
   lock_guard<recursive_mutex> guard(mutex_);
@@ -825,31 +824,36 @@ void LootSettings::load(const std::filesystem::path& file,
 
   const auto settings = toml::parse(in, file.u8string());
 
-  enableDebugLogging_ =
-      settings["enableDebugLogging"].value_or(enableDebugLogging_);
-  updateMasterlistBeforeSort_ =
-      settings["updateMasterlist"].value_or(updateMasterlistBeforeSort_);
-  enableLootUpdateCheck_ =
-      settings["enableLootUpdateCheck"].value_or(enableLootUpdateCheck_);
-  useNoSortingChangesDialog_ = settings["useNoSortingChangesDialog"].value_or(
-      useNoSortingChangesDialog_);
-  warnOnCaseSensitiveGamePaths_ =
+  generalSettings_.enableDebugLogging = settings["enableDebugLogging"].value_or(
+      generalSettings_.enableDebugLogging);
+  generalSettings_.updateMasterlistBeforeSort =
+      settings["updateMasterlist"].value_or(
+          generalSettings_.updateMasterlistBeforeSort);
+  generalSettings_.enableLootUpdateCheck =
+      settings["enableLootUpdateCheck"].value_or(
+          generalSettings_.enableLootUpdateCheck);
+  generalSettings_.useNoSortingChangesDialog =
+      settings["useNoSortingChangesDialog"].value_or(
+          generalSettings_.useNoSortingChangesDialog);
+  generalSettings_.warnOnCaseSensitiveGamePaths =
       settings["warnOnCaseSensitiveGamePaths"].value_or(
-          warnOnCaseSensitiveGamePaths_);
-  game_ = settings["game"].value_or(game_);
-  theme_ = settings["theme"].value_or(theme_);
+          generalSettings_.warnOnCaseSensitiveGamePaths);
+  generalSettings_.defaultGame =
+      settings["game"].value_or(generalSettings_.defaultGame);
+  generalSettings_.theme = settings["theme"].value_or(generalSettings_.theme);
   lastGame_ = settings["lastGame"].value_or(lastGame_);
   lastVersion_ = settings["lastVersion"].value_or(lastVersion_);
 
   const auto preludeSource = settings["preludeSource"].value<std::string>();
   if (preludeSource.has_value()) {
-    preludeSource_ = migratePreludeSource(preludeSource.value());
+    generalSettings_.preludeSource =
+        migratePreludeSource(preludeSource.value());
   } else {
     auto url = settings["preludeRepo"].value<std::string>();
     auto branch = settings["preludeBranch"].value<std::string>();
     auto migratedSource = migratePreludeRepoSettings(url, branch);
     if (migratedSource.has_value()) {
-      preludeSource_ = migratedSource.value();
+      generalSettings_.preludeSource = migratedSource.value();
     }
   }
 
@@ -939,12 +943,12 @@ void LootSettings::load(const std::filesystem::path& file,
   // This is done after loading languages so that the preferred UI languages
   // are matched against the languages that LOOT will offer.
   if (const auto language = settings["language"].value<std::string>()) {
-    language_ = language.value();
+    generalSettings_.language = language.value();
   } else {
     const auto preferredLanguage =
         findPreferredLanguage(preferredUILanguages, languages_);
     if (preferredLanguage.has_value()) {
-      language_ = preferredLanguage.value();
+      generalSettings_.language = preferredLanguage.value();
     }
   }
 }
@@ -953,17 +957,18 @@ void LootSettings::save(const std::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   toml::table root{
-      {"enableDebugLogging", enableDebugLogging_},
-      {"updateMasterlist", updateMasterlistBeforeSort_},
-      {"enableLootUpdateCheck", enableLootUpdateCheck_},
-      {"useNoSortingChangesDialog", useNoSortingChangesDialog_},
-      {"warnOnCaseSensitiveGamePaths", warnOnCaseSensitiveGamePaths_},
-      {"game", game_},
-      {"language", language_},
-      {"theme", theme_},
+      {"enableDebugLogging", generalSettings_.enableDebugLogging},
+      {"updateMasterlist", generalSettings_.updateMasterlistBeforeSort},
+      {"enableLootUpdateCheck", generalSettings_.enableLootUpdateCheck},
+      {"useNoSortingChangesDialog", generalSettings_.useNoSortingChangesDialog},
+      {"warnOnCaseSensitiveGamePaths",
+       generalSettings_.warnOnCaseSensitiveGamePaths},
+      {"game", generalSettings_.defaultGame},
+      {"language", generalSettings_.language},
+      {"theme", generalSettings_.theme},
       {"lastGame", lastGame_},
       {"lastVersion", lastVersion_},
-      {"preludeSource", preludeSource_},
+      {"preludeSource", generalSettings_.preludeSource},
       {"filters",
        toml::table{
            {"hideVersionNumbers", filters_.hideVersionNumbers},
@@ -1068,37 +1073,37 @@ bool LootSettings::isAutoSortEnabled() const {
 bool LootSettings::isDebugLoggingEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return enableDebugLogging_;
+  return generalSettings_.enableDebugLogging;
 }
 
 bool LootSettings::isMasterlistUpdateBeforeSortEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return updateMasterlistBeforeSort_;
+  return generalSettings_.updateMasterlistBeforeSort;
 }
 
 bool LootSettings::isLootUpdateCheckEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return enableLootUpdateCheck_;
+  return generalSettings_.enableLootUpdateCheck;
 }
 
 bool LootSettings::isNoSortingChangesDialogEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return useNoSortingChangesDialog_;
+  return generalSettings_.useNoSortingChangesDialog;
 }
 
 bool LootSettings::isWarnOnCaseSensitiveGamePathsEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return warnOnCaseSensitiveGamePaths_;
+  return generalSettings_.warnOnCaseSensitiveGamePaths;
 }
 
-std::string LootSettings::getGame() const {
+std::string LootSettings::getDefaultGame() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return game_;
+  return generalSettings_.defaultGame;
 }
 
 std::string LootSettings::getLastGame() const {
@@ -1116,19 +1121,19 @@ std::string LootSettings::getLastVersion() const {
 std::string LootSettings::getLanguage() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return language_;
+  return generalSettings_.language;
 }
 
 std::string LootSettings::getTheme() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return theme_;
+  return generalSettings_.theme;
 }
 
 std::string LootSettings::getPreludeSource() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return preludeSource_;
+  return generalSettings_.preludeSource;
 }
 
 std::optional<WindowPosition> LootSettings::getMainWindowPosition() const {
@@ -1172,25 +1177,25 @@ const std::vector<Language>& LootSettings::getLanguages() const {
 void LootSettings::setDefaultGame(const std::string& game) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  game_ = game;
+  generalSettings_.defaultGame = game;
 }
 
 void LootSettings::setLanguage(const std::string& language) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  language_ = language;
+  generalSettings_.language = language;
 }
 
 void LootSettings::setTheme(const std::string& theme) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  theme_ = theme;
+  generalSettings_.theme = theme;
 }
 
 void LootSettings::setPreludeSource(const std::string& source) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  preludeSource_ = source;
+  generalSettings_.preludeSource = source;
 }
 
 void LootSettings::enableAutoSort(bool autoSort) {
@@ -1202,32 +1207,32 @@ void LootSettings::enableAutoSort(bool autoSort) {
 void LootSettings::enableDebugLogging(bool enable) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  enableDebugLogging_ = enable;
+  generalSettings_.enableDebugLogging = enable;
   loot::enableDebugLogging(enable);
 }
 
 void LootSettings::enableMasterlistUpdateBeforeSort(bool update) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  updateMasterlistBeforeSort_ = update;
+  generalSettings_.updateMasterlistBeforeSort = update;
 }
 
 void LootSettings::enableLootUpdateCheck(bool enable) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  enableLootUpdateCheck_ = enable;
+  generalSettings_.enableLootUpdateCheck = enable;
 }
 
 void LootSettings::enableNoSortingChangesDialog(bool enable) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  useNoSortingChangesDialog_ = enable;
+  generalSettings_.useNoSortingChangesDialog = enable;
 }
 
 void LootSettings::enableWarnOnCaseSensitiveGamePaths(bool enable) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  warnOnCaseSensitiveGamePaths_ = enable;
+  generalSettings_.warnOnCaseSensitiveGamePaths = enable;
 }
 
 void LootSettings::storeLastGame(const std::string& lastGame) {

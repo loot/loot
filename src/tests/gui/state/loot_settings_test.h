@@ -84,7 +84,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
   EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_TRUE(settings_.isLootUpdateCheckEnabled());
-  EXPECT_EQ("auto", settings_.getGame());
+  EXPECT_EQ("auto", settings_.getDefaultGame());
   EXPECT_EQ("auto", settings_.getLastGame());
   EXPECT_TRUE(settings_.getLastVersion().empty());
   EXPECT_EQ("en", settings_.getLanguage());
@@ -184,7 +184,7 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
   EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_FALSE(settings_.isLootUpdateCheckEnabled());
-  EXPECT_EQ("Oblivion", settings_.getGame());
+  EXPECT_EQ("Oblivion", settings_.getDefaultGame());
   EXPECT_EQ("Skyrim", settings_.getLastGame());
   EXPECT_EQ("0.7.1", settings_.getLastVersion());
   EXPECT_EQ("fr", settings_.getLanguage());
@@ -866,7 +866,7 @@ TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
 
   EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
-  EXPECT_EQ("Oblivion", settings_.getGame());
+  EXPECT_EQ("Oblivion", settings_.getDefaultGame());
 }
 
 TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
@@ -1780,7 +1780,7 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_TRUE(settings.isDebugLoggingEnabled());
   EXPECT_TRUE(settings.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_FALSE(settings.isLootUpdateCheckEnabled());
-  EXPECT_EQ(game, settings.getGame());
+  EXPECT_EQ(game, settings.getDefaultGame());
   EXPECT_EQ(lastGame, settings.getLastGame());
   EXPECT_EQ(language, settings.getLanguage());
   EXPECT_EQ(theme, settings.getTheme());

@@ -37,14 +37,14 @@
 #include "gui/state/game/game_settings.h"
 
 namespace loot {
+extern const std::string DEFAULT_PRELUDE_SOURCE;
+
 struct CheckSettingsResult {
   bool preludeMigrationFailed{false};
   bool masterlistMigrationFailed{false};
 };
 
 CheckSettingsResult checkSettingsFile(const std::filesystem::path& filePath);
-
-std::string getDefaultPreludeSource();
 
 struct WindowPosition {
   int top{0};
@@ -77,6 +77,18 @@ struct FilterSettings {
   bool showOnlyPluginsWithoutLoadOrderMetadata{false};
 };
 
+struct GeneralSettings {
+  bool enableDebugLogging{false};
+  bool updateMasterlistBeforeSort{true};
+  bool enableLootUpdateCheck{true};
+  bool useNoSortingChangesDialog{true};
+  bool warnOnCaseSensitiveGamePaths{true};
+  std::string defaultGame{"auto"};
+  std::string language{"en"};
+  std::string preludeSource{DEFAULT_PRELUDE_SOURCE};
+  std::string theme{"default"};
+};
+
 class LootSettings {
 public:
   void load(const std::filesystem::path& file,
@@ -89,7 +101,7 @@ public:
   bool isLootUpdateCheckEnabled() const;
   bool isNoSortingChangesDialogEnabled() const;
   bool isWarnOnCaseSensitiveGamePathsEnabled() const;
-  std::string getGame() const;
+  std::string getDefaultGame() const;
   std::string getLastGame() const;
   std::string getLastVersion() const;
   std::string getLanguage() const;
@@ -102,8 +114,8 @@ public:
   const FilterSettings& getFilters() const;
   const std::vector<Language>& getLanguages() const;
 
-  void setDefaultGame(const std::string& game);
-  void setLanguage(const std::string& language);
+  void setDefaultGame(const std::string& gameFolderName);
+  void setLanguage(const std::string& languageLocaleCode);
   void setTheme(const std::string& theme);
   void setPreludeSource(const std::string& source);
   void enableAutoSort(bool enable);
@@ -123,17 +135,9 @@ public:
 
 private:
   bool autoSort_{false};
-  bool enableDebugLogging_{false};
-  bool updateMasterlistBeforeSort_{true};
-  bool enableLootUpdateCheck_{true};
-  bool useNoSortingChangesDialog_{true};
-  bool warnOnCaseSensitiveGamePaths_{true};
-  std::string game_{"auto"};
   std::string lastGame_{"auto"};
   std::string lastVersion_;
-  std::string language_{"en"};
-  std::string preludeSource_{getDefaultPreludeSource()};
-  std::string theme_{"default"};
+  GeneralSettings generalSettings_;
   std::optional<WindowPosition> mainWindowPosition_;
   std::optional<WindowPosition> groupsEditorWindowPosition_;
   std::optional<WindowPosition> compareLoadOrdersWindowPosition_;

@@ -434,8 +434,8 @@ std::optional<std::string> LootState::getPreferredGameFolderName(
 
   if (preferredGame.empty()) {
     // Get preferred game from settings.
-    if (settings_.getGame() != "auto") {
-      preferredGame = settings_.getGame();
+    if (settings_.getDefaultGame() != "auto") {
+      preferredGame = settings_.getDefaultGame();
     } else if (settings_.getLastGame() != "auto") {
       preferredGame = settings_.getLastGame();
     }
