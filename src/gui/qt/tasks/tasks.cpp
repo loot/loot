@@ -25,6 +25,17 @@
 
 #include <QtConcurrent/QtConcurrent>
 
+#include "gui/translate.h"
+
+namespace {
+std::string getErrorMessage() {
+  return loot::translate(
+      "Oh no, something went wrong! You can check your "
+      "LOOTDebugLog.txt (you can get to it through the "
+      "main menu) for more information.");
+};
+}
+
 namespace loot {
 QueryTask::QueryTask(std::unique_ptr<Query> query) : query(std::move(query)) {}
 
@@ -42,11 +53,7 @@ void QueryTask::execute() {
       logger->error("Exception while executing query: {}", e.what());
     }
 
-    if (query == nullptr) {
-      emit error(e.what());
-    } else {
-      emit error(query->getErrorMessage());
-    }
+    emit error(getErrorMessage());
   }
 }
 
@@ -67,11 +74,7 @@ QFuture<QueryResult> executeBackgroundQuery(std::unique_ptr<Query> query) {
         logger->error("Exception while executing query: {}", e.what());
       }
 
-      const auto errorMessage = sharedQuery == nullptr
-                                    ? std::string(e.what())
-                                    : sharedQuery->getErrorMessage();
-
-      throw std::runtime_error(errorMessage.c_str());
+      throw std::runtime_error(getErrorMessage().c_str());
     }
   });
 }

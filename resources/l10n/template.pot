@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.29.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2026-11-23 18:12+0000\n"
+"POT-Creation-Date: 2026-11-23 18:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -577,7 +577,7 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1589
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:449
-#: src/gui/qt/tasks/network_task.cpp:36 src/gui/query/query.h:67
+#: src/gui/qt/tasks/network_task.cpp:36 src/gui/qt/tasks/tasks.cpp:33
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."

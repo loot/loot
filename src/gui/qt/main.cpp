@@ -25,15 +25,14 @@
 
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QLibraryInfo>
-#include <QtCore/QOperatingSystemVersion>
 #include <QtCore/QTimer>
 #include <QtCore/QTranslator>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QStyleFactory>
 
 #include "gui/application_mutex.h"
+#include "gui/helpers.h"
 #include "gui/qt/main_window.h"
-#include "gui/qt/style.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_state.h"
 #include "gui/version.h"

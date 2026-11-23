@@ -34,6 +34,7 @@
 
 #include "gui/state/game/game.h"
 #include "gui/state/game/helpers.h"
+#include "gui/translate.h"
 #include "tests/common_game_test_fixture.h"
 #include "tests/gui/test_helpers.h"
 

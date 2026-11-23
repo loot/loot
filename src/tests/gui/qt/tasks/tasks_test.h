@@ -51,7 +51,7 @@ public:
     PluginItem item;
     item.name = std::to_string(value);
 
-    return item;
+    return std::vector<PluginItem>{item};
   }
 
 private:
@@ -67,8 +67,10 @@ TEST(QueryTask, executeShouldEmitAnErrorIfQueryIsANullPointer) {
 
   EXPECT_EQ(0, finishedSpy.count());
   ASSERT_EQ(1, errorSpy.count());
-  EXPECT_EQ("Attempted to execute a query with no query set!",
-            errorSpy.takeFirst().at(0).value<std::string>());
+  EXPECT_EQ(
+      "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you "
+      "can get to it through the main menu) for more information.",
+      errorSpy.takeFirst().at(0).value<std::string>());
 }
 
 TEST(QueryTask, executeShouldEmitAnErrorIfQueryExecutionThrowsAnException) {
@@ -95,7 +97,7 @@ TEST(QueryTask, executeShouldEmitAFinishedIfQueryExecutionSucceeds) {
   EXPECT_EQ(0, errorSpy.count());
 
   auto result = finishedSpy.takeFirst().at(0).value<QueryResult>();
-  EXPECT_EQ("1", std::get<PluginItem>(result).name);
+  EXPECT_EQ("1", std::get<PluginItems>(result)[0].name);
 }
 }
 }
