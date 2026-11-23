@@ -146,6 +146,10 @@ std::string getMasterFilename(const GameId gameId) {
   }
 }
 
+bool hadCreationClub(GameId gameId) {
+  return gameId == GameId::tes5se || gameId == GameId::fo4;
+}
+
 std::string getGameName(const GameId gameId) {
   switch (gameId) {
     case GameId::tes3:

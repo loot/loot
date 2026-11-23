@@ -51,6 +51,10 @@ std::string toString(const GameId gameId);
 
 bool shouldAllowRedating(const GameId gameId);
 
+// The Creation Club has been replaced, but while it was active it was
+// available for Skyrim SE and Fallout 4.
+bool hadCreationClub(GameId gameId);
+
 std::string getGameName(const GameId gameId);
 
 std::string getMasterFilename(const GameId gameId);

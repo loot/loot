@@ -65,10 +65,6 @@ std::filesystem::path getMasterlistPath(
 void initLootGameFolder(const std::filesystem::path& lootDataPath_,
                         const GameSettings& settings);
 
-// The Creation Club has been replaced, but while it was active it was
-// available for Skyrim SE and Fallout 4.
-bool hadCreationClub(GameId gameId);
-
 class CreationClubPlugins {
 public:
   void load(GameId gameId, const std::filesystem::path& gamePath);

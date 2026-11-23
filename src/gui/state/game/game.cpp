@@ -796,10 +796,6 @@ std::vector<LoadOrderTuple> mapToLoadOrderTuples(
   return data;
 }
 
-bool hadCreationClub(GameId gameId) {
-  return gameId == GameId::tes5se || gameId == GameId::fo4;
-}
-
 void CreationClubPlugins::load(GameId gameId,
                                const std::filesystem::path& gamePath) {
   const auto logger = getLogger();
