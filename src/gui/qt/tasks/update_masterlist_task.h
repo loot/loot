@@ -32,7 +32,8 @@ namespace loot {
 class UpdatePreludeTask : public NetworkTask {
   Q_OBJECT
 public:
-  explicit UpdatePreludeTask(const LootState& state);
+  explicit UpdatePreludeTask(std::string_view preludeSource,
+                             const std::filesystem::path& preludePath);
 
 public slots:
   void execute() override;

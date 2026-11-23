@@ -26,9 +26,9 @@
 #include "gui/qt/helpers.h"
 
 namespace loot {
-UpdatePreludeTask::UpdatePreludeTask(const LootState& state) :
-    preludeSource(state.getSettings().getPreludeSource()),
-    preludePath(state.getPaths().getPreludePath()) {}
+UpdatePreludeTask::UpdatePreludeTask(std::string_view preludeSource,
+                                     const std::filesystem::path& preludePath) :
+    preludeSource(preludeSource), preludePath(preludePath) {}
 
 void UpdatePreludeTask::execute() {
   try {

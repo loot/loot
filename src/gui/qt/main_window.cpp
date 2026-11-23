@@ -1268,7 +1268,9 @@ void MainWindow::sortPlugins(bool isAutoSort) {
   if (state->getSettings().isMasterlistUpdateBeforeSortEnabled()) {
     handleProgressUpdate(qTranslate("Updating and parsing masterlist…"));
 
-    const auto preludeTask = new UpdatePreludeTask(*state);
+    const auto preludeTask =
+        new UpdatePreludeTask(state->getSettings().getPreludeSource(),
+                              state->getPaths().getPreludePath());
 
     updateTasks.push_back(preludeTask);
 
@@ -1743,7 +1745,9 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
 
     std::vector<Task*> tasks;
 
-    const auto preludeTask = new UpdatePreludeTask(*state);
+    const auto preludeTask =
+        new UpdatePreludeTask(state->getSettings().getPreludeSource(),
+                              state->getPaths().getPreludePath());
 
     tasks.push_back(preludeTask);
 
@@ -2436,7 +2440,9 @@ void MainWindow::on_actionUpdateMasterlist_triggered() {
   try {
     handleProgressUpdate(qTranslate("Updating and parsing masterlist…"));
 
-    const auto preludeTask = new UpdatePreludeTask(*state);
+    const auto preludeTask =
+        new UpdatePreludeTask(state->getSettings().getPreludeSource(),
+                              state->getPaths().getPreludePath());
     const auto masterlistTask =
         new UpdateMasterlistTask(state->getCurrentGame());
 
