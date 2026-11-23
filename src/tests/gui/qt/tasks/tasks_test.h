@@ -30,7 +30,6 @@
 #include <string>
 
 #include "gui/qt/tasks/tasks.h"
-#include "tests/gui/qt/tasks/non_blocking_test_task.h"
 
 namespace loot {
 namespace test {

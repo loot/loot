@@ -25,8 +25,7 @@ FetchContent_MakeAvailable(GTest testing-plugins)
 ##############################
 
 set(LOOT_SRC_TESTS_GUI_CPP_FILES
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/main.cpp"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.cpp")
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/main.cpp")
 
 set(LOOT_SRC_TESTS_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/change_count_test.h"
@@ -48,7 +47,6 @@ set(LOOT_SRC_TESTS_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/helpers_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/tasks_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/backup_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/helpers_test.h"
