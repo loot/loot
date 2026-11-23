@@ -47,39 +47,39 @@ CheckSettingsResult checkSettingsFile(const std::filesystem::path& filePath);
 
 std::string getDefaultPreludeSource();
 
+struct WindowPosition {
+  int top{0};
+  int bottom{0};
+  int left{0};
+  int right{0};
+  bool maximised{false};
+};
+
+struct Language {
+  std::string locale;
+  std::string name;
+};
+
+struct FilterSettings {
+  bool hideVersionNumbers{false};
+  bool hideCRCs{false};
+  bool hideBashTags{true};
+  bool hideLocations{true};
+  bool hideNotes{false};
+  bool hideOfficialPluginsCleaningMessages{false};
+  bool hideAllPluginMessages{false};
+  bool hideInactivePlugins{false};
+  bool hideMessagelessPlugins{false};
+  bool hideCreationClubPlugins{false};
+  bool showOnlyNewMessages{false};
+  bool showOnlyEmptyPlugins{false};
+  bool showOnlyPluginsWithLoadAfterMetadata{false};
+  bool showOnlyPluginsWithLoadAfterUserMetadata{false};
+  bool showOnlyPluginsWithoutLoadOrderMetadata{false};
+};
+
 class LootSettings {
 public:
-  struct WindowPosition {
-    int top{0};
-    int bottom{0};
-    int left{0};
-    int right{0};
-    bool maximised{false};
-  };
-
-  struct Language {
-    std::string locale;
-    std::string name;
-  };
-
-  struct Filters {
-    bool hideVersionNumbers{false};
-    bool hideCRCs{false};
-    bool hideBashTags{true};
-    bool hideLocations{true};
-    bool hideNotes{false};
-    bool hideOfficialPluginsCleaningMessages{false};
-    bool hideAllPluginMessages{false};
-    bool hideInactivePlugins{false};
-    bool hideMessagelessPlugins{false};
-    bool hideCreationClubPlugins{false};
-    bool showOnlyNewMessages{false};
-    bool showOnlyEmptyPlugins{false};
-    bool showOnlyPluginsWithLoadAfterMetadata{false};
-    bool showOnlyPluginsWithLoadAfterUserMetadata{false};
-    bool showOnlyPluginsWithoutLoadOrderMetadata{false};
-  };
-
   void load(const std::filesystem::path& file,
             const std::vector<std::string>& preferredUILanguages);
   void save(const std::filesystem::path& file);
@@ -100,7 +100,7 @@ public:
   std::optional<WindowPosition> getGroupsEditorWindowPosition() const;
   std::optional<WindowPosition> getCompareLoadOrdersWindowPosition() const;
   const std::vector<GameSettings>& getGameSettings() const;
-  const Filters& getFilters() const;
+  const FilterSettings& getFilters() const;
   const std::vector<Language>& getLanguages() const;
 
   void setDefaultGame(const std::string& game);
@@ -119,7 +119,7 @@ public:
   void storeGroupsEditorWindowPosition(const WindowPosition& position);
   void storeCompareLoadOrdersWindowPosition(const WindowPosition& position);
   void storeGameSettings(const std::vector<GameSettings>& gameSettings);
-  void storeFilters(const Filters& filters);
+  void storeFilters(const FilterSettings& filters);
   void updateLastVersion();
 
 private:
@@ -139,7 +139,7 @@ private:
   std::optional<WindowPosition> groupsEditorWindowPosition_;
   std::optional<WindowPosition> compareLoadOrdersWindowPosition_;
   std::vector<GameSettings> gameSettings_;
-  Filters filters_;
+  FilterSettings filters_;
   std::vector<Language> languages_{
       Language({"en", "English"}),
       Language({"bg", "Български"}),
@@ -171,7 +171,7 @@ private:
 // language tags (e.g. pt-BR) or as POSIX locale names (e.g. pt_BR.UTF-8).
 std::optional<std::string> findPreferredLanguage(
     const std::vector<std::string>& preferredUILanguages,
-    const std::vector<LootSettings::Language>& supportedLanguages);
+    const std::vector<Language>& supportedLanguages);
 }
 
 #endif

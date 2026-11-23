@@ -68,7 +68,7 @@ public:
 class MessageContentDelegate : public QStyledItemDelegate {
 public:
   MessageContentDelegate(QObject* parent,
-                         const std::vector<LootSettings::Language>& languages);
+                         const std::vector<Language>& languages);
 
   QWidget* createEditor(QWidget* parent,
                         const QStyleOptionViewItem& option,
@@ -87,7 +87,7 @@ public:
   bool eventFilter(QObject* editor, QEvent* event) override;
 
 private:
-  const std::vector<LootSettings::Language>* languages;
+  const std::vector<Language>* languages;
 };
 
 class AutocompletingLineEditDelegate : public QStyledItemDelegate {

@@ -333,7 +333,7 @@ void BaseTableTab::onModelRowsRemoved() {
 }
 
 FileTableTab::FileTableTab(QWidget* parent,
-                           const std::vector<LootSettings::Language>& languages,
+                           const std::vector<Language>& languages,
                            const std::string& language,
                            const QStringList& completions) :
     MetadataTableTab(parent),
@@ -378,7 +378,7 @@ void LoadAfterFileTableTab::initialiseInputs(
 
 MessageContentTableWidget::MessageContentTableWidget(
     QWidget* parent,
-    const std::vector<LootSettings::Language>& languages) :
+    const std::vector<Language>& languages) :
     MetadataTableTab(parent) {
   for (const auto& language : languages) {
     auto name = QString::fromStdString(language.name);
@@ -415,10 +415,9 @@ bool MessageContentTableWidget::hasUserMetadata() const {
   return !getUserMetadata().empty();
 }
 
-MessageTableTab::MessageTableTab(
-    QWidget* parent,
-    const std::vector<LootSettings::Language>& languages,
-    const std::string& language) :
+MessageTableTab::MessageTableTab(QWidget* parent,
+                                 const std::vector<Language>& languages,
+                                 const std::string& language) :
     MetadataTableTab(parent), languages(&languages), language(&language) {}
 
 void MessageTableTab::initialiseInputs(std::vector<Message>&& nonUserMetadata,
@@ -477,7 +476,7 @@ bool LocationTableTab::hasUserMetadata() const {
 
 CleaningDataTableTab::CleaningDataTableTab(
     QWidget* parent,
-    const std::vector<LootSettings::Language>& languages,
+    const std::vector<Language>& languages,
     const std::string& language) :
     MetadataTableTab(parent), languages(&languages), language(&language) {}
 

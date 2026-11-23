@@ -103,7 +103,7 @@ void CrcLineEditDelegate::setModelData(QWidget* editor,
 
 MessageContentDelegate::MessageContentDelegate(
     QObject* parent,
-    const std::vector<LootSettings::Language>& languages) :
+    const std::vector<Language>& languages) :
     QStyledItemDelegate(parent), languages(&languages) {}
 
 QWidget* MessageContentDelegate::createEditor(QWidget* parent,

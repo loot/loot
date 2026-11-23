@@ -44,8 +44,10 @@ using loot::GameId;
 using loot::GameSettings;
 using loot::getLogger;
 using loot::HiddenMessage;
+using loot::Language;
 using loot::LootSettings;
 using loot::MASTERLIST_FILENAME;
+using loot::WindowPosition;
 
 static const std::set<std::string> OLD_DEFAULT_BRANCHES({"master",
                                                          "v0.7",
@@ -696,7 +698,7 @@ GameSettings convertGameTable(const toml::table& table) {
   return game;
 }
 
-LootSettings::Language convertLanguageTable(const toml::table& table) {
+Language convertLanguageTable(const toml::table& table) {
   auto locale = table["locale"].value<std::string>();
   if (!locale) {
     throw std::runtime_error("'locale' key missing from language table");
@@ -707,15 +709,14 @@ LootSettings::Language convertLanguageTable(const toml::table& table) {
     throw std::runtime_error("'name' key missing from language table");
   }
 
-  LootSettings::Language language;
+  Language language;
   language.locale = locale.value();
   language.name = name.value();
 
   return language;
 }
 
-toml::table windowPositionToToml(
-    const LootSettings::WindowPosition& windowPosition) {
+toml::table windowPositionToToml(const WindowPosition& windowPosition) {
   return toml::table{
       {"top", windowPosition.top},
       {"bottom", windowPosition.bottom},
@@ -725,8 +726,7 @@ toml::table windowPositionToToml(
   };
 }
 
-std::optional<LootSettings::WindowPosition> windowPositionFromToml(
-    const toml::table& table) {
+std::optional<WindowPosition> windowPositionFromToml(const toml::table& table) {
   const auto windowTop = table["top"].value<int>();
   const auto windowBottom = table["bottom"].value<int>();
   const auto windowLeft = table["left"].value<int>();
@@ -734,7 +734,7 @@ std::optional<LootSettings::WindowPosition> windowPositionFromToml(
   const auto windowMaximised = table["maximised"].value<bool>();
   if (windowTop && windowBottom && windowLeft && windowRight &&
       windowMaximised) {
-    LootSettings::WindowPosition windowPosition;
+    WindowPosition windowPosition;
     windowPosition.top = *windowTop;
     windowPosition.bottom = *windowBottom;
     windowPosition.left = *windowLeft;
@@ -748,7 +748,7 @@ std::optional<LootSettings::WindowPosition> windowPositionFromToml(
 }
 
 void loadWindowPosition(const toml::node_view<const toml::node>& toml,
-                        std::optional<LootSettings::WindowPosition>& setting) {
+                        std::optional<WindowPosition>& setting) {
   if (toml.is_table()) {
     const auto windowPosition = windowPositionFromToml(*toml.as_table());
     if (windowPosition.has_value()) {
@@ -1131,22 +1131,21 @@ std::string LootSettings::getPreludeSource() const {
   return preludeSource_;
 }
 
-std::optional<LootSettings::WindowPosition>
-LootSettings::getMainWindowPosition() const {
+std::optional<WindowPosition> LootSettings::getMainWindowPosition() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return mainWindowPosition_;
 }
 
-std::optional<LootSettings::WindowPosition>
-LootSettings::getGroupsEditorWindowPosition() const {
+std::optional<WindowPosition> LootSettings::getGroupsEditorWindowPosition()
+    const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return groupsEditorWindowPosition_;
 }
 
-std::optional<LootSettings::WindowPosition>
-LootSettings::getCompareLoadOrdersWindowPosition() const {
+std::optional<WindowPosition> LootSettings::getCompareLoadOrdersWindowPosition()
+    const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return compareLoadOrdersWindowPosition_;
@@ -1158,13 +1157,13 @@ const std::vector<GameSettings>& LootSettings::getGameSettings() const {
   return gameSettings_;
 }
 
-const LootSettings::Filters& LootSettings::getFilters() const {
+const FilterSettings& LootSettings::getFilters() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return filters_;
 }
 
-const std::vector<LootSettings::Language>& LootSettings::getLanguages() const {
+const std::vector<Language>& LootSettings::getLanguages() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return languages_;
@@ -1264,7 +1263,7 @@ void LootSettings::storeGameSettings(
   this->gameSettings_ = gameSettings;
 }
 
-void LootSettings::storeFilters(const Filters& filters) {
+void LootSettings::storeFilters(const FilterSettings& filters) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   filters_ = filters;
@@ -1278,12 +1277,11 @@ void LootSettings::updateLastVersion() {
 
 std::optional<std::string> findPreferredLanguage(
     const std::vector<std::string>& preferredUILanguages,
-    const std::vector<LootSettings::Language>& supportedLanguages) {
+    const std::vector<Language>& supportedLanguages) {
   const auto findLocale = [&](const std::string& locale) {
-    return std::find_if(
-        supportedLanguages.begin(),
-        supportedLanguages.end(),
-        [&](const LootSettings::Language& l) { return l.locale == locale; });
+    return std::find_if(supportedLanguages.begin(),
+                        supportedLanguages.end(),
+                        [&](const Language& l) { return l.locale == locale; });
   };
 
   for (const auto& preferredLanguage : preferredUILanguages) {
@@ -1318,7 +1316,7 @@ std::optional<std::string> findPreferredLanguage(
     const auto it =
         std::find_if(supportedLanguages.begin(),
                      supportedLanguages.end(),
-                     [&](const LootSettings::Language& l) {
+                     [&](const Language& l) {
                        return boost::starts_with(l.locale, language + "_");
                      });
     if (it != supportedLanguages.end()) {

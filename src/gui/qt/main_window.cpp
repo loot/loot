@@ -65,6 +65,7 @@ using loot::GameId;
 using loot::LootSettings;
 using loot::LootState;
 using loot::qTranslate;
+using loot::WindowPosition;
 
 void showAmbiguousLoadOrderSetWarning(QWidget* parent, const LootState& state) {
   const auto maybeSTestFile =
@@ -223,8 +224,8 @@ int calculateSidebarIndexSectionWidth(bool gameSupportsLightPlugins) {
   return 2 * static_cast<int>(maxCharWidth) + paddingWidth;
 }
 
-LootSettings::WindowPosition getWindowPosition(QWidget& window) {
-  LootSettings::WindowPosition position;
+WindowPosition getWindowPosition(QWidget& window) {
+  WindowPosition position;
 
   // Use the normal geometry because that gives the size and position as if
   // the window is neither maximised or minimised. This is useful because if
@@ -241,8 +242,7 @@ LootSettings::WindowPosition getWindowPosition(QWidget& window) {
   return position;
 }
 
-void setWindowPosition(QWidget& window,
-                       const LootSettings::WindowPosition& position) {
+void setWindowPosition(QWidget& window, const WindowPosition& position) {
   const auto width = position.right - position.left;
   const auto height = position.bottom - position.top;
 
@@ -346,9 +346,8 @@ std::vector<std::string> selectThemesToTry(
   return variants;
 }
 
-void setDialogPosition(
-    QDialog& dialog,
-    const std::optional<LootSettings::WindowPosition>& windowPosition) {
+void setDialogPosition(QDialog& dialog,
+                       const std::optional<WindowPosition>& windowPosition) {
   if (windowPosition.has_value()) {
     setWindowPosition(dialog, windowPosition.value());
 

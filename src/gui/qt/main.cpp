@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
 
   const auto wasMaximised = state.getSettings()
                                 .getMainWindowPosition()
-                                .value_or(loot::LootSettings::WindowPosition())
+                                .value_or(loot::WindowPosition())
                                 .maximised;
 
   if (wasMaximised) {

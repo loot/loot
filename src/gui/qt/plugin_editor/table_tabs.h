@@ -93,7 +93,7 @@ class FileTableTab : public MetadataTableTab<File> {
   Q_OBJECT
 public:
   FileTableTab(QWidget* parent,
-               const std::vector<LootSettings::Language>& languages,
+               const std::vector<Language>& languages,
                const std::string& language,
                const QStringList& completions);
 
@@ -105,7 +105,7 @@ public:
   bool hasUserMetadata() const override;
 
 private:
-  const std::vector<LootSettings::Language>* languages;
+  const std::vector<Language>* languages;
   const std::string* language;
   const QStringList* completions;
 };
@@ -121,9 +121,8 @@ public:
 class MessageContentTableWidget : public MetadataTableTab<MessageContent> {
   Q_OBJECT
 public:
-  MessageContentTableWidget(
-      QWidget* parent,
-      const std::vector<LootSettings::Language>& languages);
+  MessageContentTableWidget(QWidget* parent,
+                            const std::vector<Language>& languages);
 
   void initialiseInputs(std::vector<MessageContent>&& nonUserMetadata,
                         std::vector<MessageContent>&& userMetadata) override;
@@ -141,7 +140,7 @@ class MessageTableTab : public MetadataTableTab<Message> {
   Q_OBJECT
 public:
   MessageTableTab(QWidget* parent,
-                  const std::vector<LootSettings::Language>& languages,
+                  const std::vector<Language>& languages,
                   const std::string& language);
 
   void initialiseInputs(std::vector<Message>&& nonUserMetadata,
@@ -152,7 +151,7 @@ public:
   bool hasUserMetadata() const override;
 
 private:
-  const std::vector<LootSettings::Language>* languages;
+  const std::vector<Language>* languages;
   const std::string* language;
 };
 
@@ -173,7 +172,7 @@ class CleaningDataTableTab : public MetadataTableTab<PluginCleaningData> {
   Q_OBJECT
 public:
   CleaningDataTableTab(QWidget* parent,
-                       const std::vector<LootSettings::Language>& languages,
+                       const std::vector<Language>& languages,
                        const std::string& language);
 
   void initialiseInputs(
@@ -187,7 +186,7 @@ public:
   bool hasUserMetadata() const override;
 
 private:
-  const std::vector<LootSettings::Language>* languages;
+  const std::vector<Language>* languages;
   const std::string* language;
 };
 

@@ -64,7 +64,7 @@ void FiltersWidget::showCreationClubPluginsFilter(bool show) {
   creationClubPluginsFilter->setVisible(show);
 }
 
-void FiltersWidget::setFilterStates(const LootSettings::Filters& filters) {
+void FiltersWidget::setFilterStates(const FilterSettings& filters) {
   bool hasContentFilterChanged{false};
   bool hasPluginFilterChanged{false};
 
@@ -163,8 +163,8 @@ void FiltersWidget::setFilterStates(const LootSettings::Filters& filters) {
   }
 }
 
-LootSettings::Filters FiltersWidget::getFilterSettings() const {
-  LootSettings::Filters filters;
+FilterSettings FiltersWidget::getFilterSettings() const {
+  FilterSettings filters;
 
   filters.hideVersionNumbers = versionNumbersFilter->isChecked();
   filters.hideCRCs = crcsFilter->isChecked();

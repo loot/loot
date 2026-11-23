@@ -37,8 +37,7 @@
 #include "tests/gui/test_helpers.h"
 
 namespace loot {
-bool operator==(const LootSettings::Language& lhs,
-                const LootSettings::Language& rhs) {
+bool operator==(const Language& lhs, const Language& rhs) {
   return lhs.locale == rhs.locale && lhs.name == rhs.name;
 }
 
@@ -111,29 +110,26 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
 
   const auto& actualLanguages = settings_.getLanguages();
   EXPECT_EQ(20, actualLanguages.size());
-  EXPECT_EQ(LootSettings::Language({"en", "English"}), actualLanguages[0]);
-  EXPECT_EQ(LootSettings::Language({"bg", "Български"}), actualLanguages[1]);
-  EXPECT_EQ(LootSettings::Language({"cs", "Čeština"}), actualLanguages[2]);
-  EXPECT_EQ(LootSettings::Language({"da", "Dansk"}), actualLanguages[3]);
-  EXPECT_EQ(LootSettings::Language({"de", "Deutsch"}), actualLanguages[4]);
-  EXPECT_EQ(LootSettings::Language({"es", "Español"}), actualLanguages[5]);
-  EXPECT_EQ(LootSettings::Language({"fi", "Suomi"}), actualLanguages[6]);
-  EXPECT_EQ(LootSettings::Language({"fr", "Français"}), actualLanguages[7]);
-  EXPECT_EQ(LootSettings::Language({"it", "Italiano"}), actualLanguages[8]);
-  EXPECT_EQ(LootSettings::Language({"ja", "日本語"}), actualLanguages[9]);
-  EXPECT_EQ(LootSettings::Language({"ko", "한국어"}), actualLanguages[10]);
-  EXPECT_EQ(LootSettings::Language({"pl", "Polski"}), actualLanguages[11]);
-  EXPECT_EQ(LootSettings::Language({"pt_BR", "Português do Brasil"}),
-            actualLanguages[12]);
-  EXPECT_EQ(LootSettings::Language({"pt_PT", "Português de Portugal"}),
-            actualLanguages[13]);
-  EXPECT_EQ(LootSettings::Language({"ru", "Русский"}), actualLanguages[14]);
-  EXPECT_EQ(LootSettings::Language({"sv", "Svenska"}), actualLanguages[15]);
-  EXPECT_EQ(LootSettings::Language({"ta", "தமிழ்"}), actualLanguages[16]);
-  EXPECT_EQ(LootSettings::Language({"tr_TR", "Türkçe"}), actualLanguages[17]);
-  EXPECT_EQ(LootSettings::Language({"uk_UA", "Українська"}),
-            actualLanguages[18]);
-  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文"}), actualLanguages[19]);
+  EXPECT_EQ(Language({"en", "English"}), actualLanguages[0]);
+  EXPECT_EQ(Language({"bg", "Български"}), actualLanguages[1]);
+  EXPECT_EQ(Language({"cs", "Čeština"}), actualLanguages[2]);
+  EXPECT_EQ(Language({"da", "Dansk"}), actualLanguages[3]);
+  EXPECT_EQ(Language({"de", "Deutsch"}), actualLanguages[4]);
+  EXPECT_EQ(Language({"es", "Español"}), actualLanguages[5]);
+  EXPECT_EQ(Language({"fi", "Suomi"}), actualLanguages[6]);
+  EXPECT_EQ(Language({"fr", "Français"}), actualLanguages[7]);
+  EXPECT_EQ(Language({"it", "Italiano"}), actualLanguages[8]);
+  EXPECT_EQ(Language({"ja", "日本語"}), actualLanguages[9]);
+  EXPECT_EQ(Language({"ko", "한국어"}), actualLanguages[10]);
+  EXPECT_EQ(Language({"pl", "Polski"}), actualLanguages[11]);
+  EXPECT_EQ(Language({"pt_BR", "Português do Brasil"}), actualLanguages[12]);
+  EXPECT_EQ(Language({"pt_PT", "Português de Portugal"}), actualLanguages[13]);
+  EXPECT_EQ(Language({"ru", "Русский"}), actualLanguages[14]);
+  EXPECT_EQ(Language({"sv", "Svenska"}), actualLanguages[15]);
+  EXPECT_EQ(Language({"ta", "தமிழ்"}), actualLanguages[16]);
+  EXPECT_EQ(Language({"tr_TR", "Türkçe"}), actualLanguages[17]);
+  EXPECT_EQ(Language({"uk_UA", "Українська"}), actualLanguages[18]);
+  EXPECT_EQ(Language({"zh_CN", "简体中文"}), actualLanguages[19]);
 }
 
 TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
@@ -222,8 +218,7 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_TRUE(settings_.getFilters().hideCRCs);
 
   EXPECT_EQ(1, settings_.getLanguages().size());
-  EXPECT_EQ(LootSettings::Language({"en", "English"}),
-            settings_.getLanguages()[0]);
+  EXPECT_EQ(Language({"en", "English"}), settings_.getLanguages()[0]);
 }
 
 TEST_F(LootSettingsTest,
@@ -280,7 +275,7 @@ TEST_F(LootSettingsTest,
 }
 
 TEST_F(LootSettingsTest, loadShouldEnableFiltersForFiltersEnabledInTomlFile) {
-  LootSettings::Filters filters;
+  FilterSettings filters;
   filters.hideBashTags = false;
   filters.hideLocations = false;
   settings_.storeFilters(filters);
@@ -325,21 +320,21 @@ TEST_F(LootSettingsTest, loadShouldEnableFiltersForFiltersEnabledInTomlFile) {
 }
 
 TEST_F(LootSettingsTest, loadShouldDisableFiltersForFiltersDisabledInTomlFile) {
-  LootSettings::Filters filters{true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true};
+  FilterSettings filters{true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true};
   settings_.storeFilters(filters);
 
   using std::endl;
@@ -383,7 +378,7 @@ TEST_F(LootSettingsTest, loadShouldDisableFiltersForFiltersDisabledInTomlFile) {
 
 TEST_F(LootSettingsTest,
        loadShouldRetainCurrentValueOfFilterNotPresentInTomlFile) {
-  LootSettings::Filters filters;
+  FilterSettings filters;
   settings_.storeFilters(filters);
 
   using std::endl;
@@ -1726,21 +1721,21 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   const std::string theme = "dark";
   const std::string preludeSource = "../prelude";
 
-  LootSettings::WindowPosition windowPosition;
+  WindowPosition windowPosition;
   windowPosition.top = 1;
   windowPosition.bottom = 2;
   windowPosition.left = 3;
   windowPosition.right = 4;
   windowPosition.maximised = true;
 
-  LootSettings::WindowPosition groupsEditorWindowPosition;
+  WindowPosition groupsEditorWindowPosition;
   groupsEditorWindowPosition.top = 5;
   groupsEditorWindowPosition.bottom = 6;
   groupsEditorWindowPosition.left = 7;
   groupsEditorWindowPosition.right = 8;
   groupsEditorWindowPosition.maximised = true;
 
-  LootSettings::WindowPosition compareLoadOrdersWindowPosition;
+  WindowPosition compareLoadOrdersWindowPosition;
   compareLoadOrdersWindowPosition.top = 9;
   compareLoadOrdersWindowPosition.bottom = 10;
   compareLoadOrdersWindowPosition.left = 11;
@@ -1757,7 +1752,7 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
           .setMinimumHeaderVersion(2.5)
           .setHiddenMessages(hiddenMessages),
   });
-  LootSettings::Filters filters;
+  FilterSettings filters;
   filters.hideBashTags = false;
   filters.hideCRCs = true;
 
@@ -1841,7 +1836,7 @@ TEST_F(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {
 }
 
 TEST_F(LootSettingsTest, saveShouldWriteAllFiltersWhenTheyAreDisabled) {
-  LootSettings::Filters filters;
+  FilterSettings filters;
   filters.hideBashTags = false;
   filters.hideLocations = false;
   settings_.storeFilters(filters);
@@ -1868,21 +1863,21 @@ TEST_F(LootSettingsTest, saveShouldWriteAllFiltersWhenTheyAreDisabled) {
 }
 
 TEST_F(LootSettingsTest, saveShouldWriteAllFiltersWhenTheyAreEnabled) {
-  LootSettings::Filters filters{true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true};
+  FilterSettings filters{true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true,
+                         true};
 
   settings_.storeFilters(filters);
 
@@ -1930,13 +1925,12 @@ TEST_F(LootSettingsTest, storeLastGameShouldReplaceExistingValue) {
 }
 
 TEST_F(LootSettingsTest, storeMainWindowPositionShouldReplaceExistingValue) {
-  LootSettings::WindowPosition expectedPosition;
+  WindowPosition expectedPosition;
   expectedPosition.top = 1;
   settings_.storeMainWindowPosition(expectedPosition);
 
   ASSERT_TRUE(settings_.getMainWindowPosition().has_value());
-  LootSettings::WindowPosition actualPosition =
-      settings_.getMainWindowPosition().value();
+  WindowPosition actualPosition = settings_.getMainWindowPosition().value();
   EXPECT_EQ(expectedPosition.top, actualPosition.top);
   EXPECT_EQ(expectedPosition.bottom, actualPosition.bottom);
   EXPECT_EQ(expectedPosition.left, actualPosition.left);
@@ -1945,12 +1939,12 @@ TEST_F(LootSettingsTest, storeMainWindowPositionShouldReplaceExistingValue) {
 
 TEST_F(LootSettingsTest,
        storeGroupsEditorWindowPositionShouldReplaceExistingValue) {
-  LootSettings::WindowPosition expectedPosition;
+  WindowPosition expectedPosition;
   expectedPosition.top = 1;
   settings_.storeGroupsEditorWindowPosition(expectedPosition);
 
   ASSERT_TRUE(settings_.getGroupsEditorWindowPosition().has_value());
-  LootSettings::WindowPosition actualPosition =
+  WindowPosition actualPosition =
       settings_.getGroupsEditorWindowPosition().value();
   EXPECT_EQ(expectedPosition.top, actualPosition.top);
   EXPECT_EQ(expectedPosition.bottom, actualPosition.bottom);
@@ -1960,12 +1954,12 @@ TEST_F(LootSettingsTest,
 
 TEST_F(LootSettingsTest,
        storeCompareLoadOrdersWindowPositionShouldReplaceExistingValue) {
-  LootSettings::WindowPosition expectedPosition;
+  WindowPosition expectedPosition;
   expectedPosition.top = 1;
   settings_.storeCompareLoadOrdersWindowPosition(expectedPosition);
 
   ASSERT_TRUE(settings_.getCompareLoadOrdersWindowPosition().has_value());
-  LootSettings::WindowPosition actualPosition =
+  WindowPosition actualPosition =
       settings_.getCompareLoadOrdersWindowPosition().value();
   EXPECT_EQ(expectedPosition.top, actualPosition.top);
   EXPECT_EQ(expectedPosition.bottom, actualPosition.bottom);

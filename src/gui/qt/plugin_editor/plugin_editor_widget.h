@@ -39,7 +39,7 @@ class PluginEditorWidget : public QWidget {
   Q_OBJECT
 public:
   PluginEditorWidget(QWidget* parent,
-                     const std::vector<LootSettings::Language>& languages,
+                     const std::vector<Language>& languages,
                      const std::string& language);
 
   void setLanguage(std::string&& language);
@@ -58,7 +58,7 @@ signals:
   void rejected();
 
 private:
-  const std::vector<LootSettings::Language>* languages;
+  const std::vector<Language>* languages;
   std::string language;
 
   QStringList bashTagCompletions;

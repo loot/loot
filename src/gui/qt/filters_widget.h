@@ -51,8 +51,8 @@ public:
 
   void showCreationClubPluginsFilter(bool show);
 
-  void setFilterStates(const LootSettings::Filters& filters);
-  LootSettings::Filters getFilterSettings() const;
+  void setFilterStates(const FilterSettings& filters);
+  FilterSettings getFilterSettings() const;
 
   PluginFiltersState getPluginFiltersState() const;
   CardContentFiltersState getCardContentFiltersState() const;
@@ -92,7 +92,7 @@ private:
   QLabel* hiddenMessagesLabel{new QLabel(this)};
   QLabel* hiddenMessagesCountLabel{new QLabel(this)};
 
-  LootSettings::Filters warningsAndErrorFilterMemory;
+  FilterSettings warningsAndErrorFilterMemory;
   GameId gameId{GameId::tes3};
 
   void setupUi();
