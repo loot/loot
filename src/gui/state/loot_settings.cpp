@@ -32,6 +32,7 @@
 #include <regex>
 #include <set>
 
+#include "gui/helpers.h"
 #include "gui/state/logging.h"
 #include "gui/version.h"
 
@@ -677,7 +678,8 @@ GameSettings convertGameTable(const toml::table& table) {
   } else if (localPath) {
     game.setGameLocalPath(std::filesystem::u8path(*localPath));
   } else if (localFolder) {
-    game.setGameLocalFolder(*localFolder);
+    game.setGameLocalPath(loot::getLocalAppDataPath() /
+                          std::filesystem::u8path(*localFolder));
   }
 
   auto hiddenMessagesToml = table["hiddenMessages"];

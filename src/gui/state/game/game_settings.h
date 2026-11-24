@@ -71,7 +71,6 @@ public:
   GameSettings& setMasterlistSource(const std::string& source);
   GameSettings& setGamePath(const std::filesystem::path& path);
   GameSettings& setGameLocalPath(const std::filesystem::path& gameLocalPath);
-  GameSettings& setGameLocalFolder(const std::string& folderName);
 
   GameSettings& setHiddenMessages(
       const std::vector<HiddenMessage>& hiddenMessages);

@@ -25,8 +25,6 @@
 
 #include <algorithm>
 
-#include "gui/helpers.h"
-
 namespace {
 using loot::GameId;
 
@@ -183,11 +181,6 @@ GameSettings& GameSettings::setGamePath(const std::filesystem::path& path) {
 GameSettings& GameSettings::setGameLocalPath(
     const std::filesystem::path& path) {
   gameLocalPath_ = path;
-  return *this;
-}
-
-GameSettings& GameSettings::setGameLocalFolder(const std::string& folderName) {
-  gameLocalPath_ = getLocalAppDataPath() / std::filesystem::u8path(folderName);
   return *this;
 }
 

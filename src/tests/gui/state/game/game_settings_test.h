@@ -231,17 +231,6 @@ TEST_P(GameSettingsTest, setGamePathShouldStoreGivenValue) {
   EXPECT_EQ(pathValue, settings_.getGamePath().u8string());
 }
 
-TEST_P(GameSettingsTest,
-       setGameLocalFolderShouldSetLocalPathToTheNamedFolderInLocalAppData) {
-  std::string folderName = u8"p\u00E1th";
-
-  settings_.setGameLocalFolder(folderName);
-
-  auto expectedPath =
-      getLocalAppDataPath() / std::filesystem::u8path(folderName);
-  EXPECT_EQ(expectedPath, settings_.getGameLocalPath());
-}
-
 TEST_P(GameSettingsTest, setHiddenMessagesShouldStoreGivenValue) {
   std::vector<HiddenMessage> messages{
       HiddenMessage{std::nullopt, "general message"},
