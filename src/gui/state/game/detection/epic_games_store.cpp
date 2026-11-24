@@ -26,7 +26,6 @@
 #include <QtCore/QFile>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
-#include <QtCore/QJsonValue>
 #include <QtCore/QString>
 #include <boost/algorithm/string/predicate.hpp>
 
@@ -45,7 +44,6 @@
 #include <shlobj.h>
 #endif
 
-#include "gui/helpers.h"
 #include "gui/state/logging.h"
 
 namespace {

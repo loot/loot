@@ -24,11 +24,8 @@
 #ifndef LOOT_GUI_STATE_GAME_DETECTION_DETAIL
 #define LOOT_GUI_STATE_GAME_DETECTION_DETAIL
 
-#include <loot/enum/game_type.h>
-
 #include <filesystem>
 #include <functional>
-#include <optional>
 #include <vector>
 
 #include "gui/state/game/detection/game_install.h"

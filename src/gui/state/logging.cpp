@@ -27,22 +27,8 @@
 #include <spdlog/sinks/stdout_sinks.h>
 
 #include <boost/algorithm/string/replace.hpp>
-#include <optional>
 
 #include "gui/helpers.h"
-
-#ifdef _WIN32
-#ifndef UNICODE
-#define UNICODE
-#endif
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#include <shlobj.h>
-#endif
 
 namespace {
 static constexpr const char* LOGGER_NAME = "loot_logger";
@@ -142,7 +128,7 @@ void setLogPath(const std::filesystem::path& outputFile) {
 
   spdlog::drop(LOGGER_NAME);
 
-#if defined(_WIN32)
+#ifdef _WIN32
   const auto platformFilePath = outputFile.wstring();
 #else
   const auto platformFilePath = outputFile.u8string();

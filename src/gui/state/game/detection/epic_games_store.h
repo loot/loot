@@ -29,7 +29,6 @@
 
 #include "gui/state/game/detection/game_install.h"
 #include "gui/state/game/detection/registry.h"
-#include "gui/state/game/game_settings.h"
 
 namespace loot::epic {
 std::optional<std::string> getEgsAppName(const GameId gameId);

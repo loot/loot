@@ -33,7 +33,6 @@
 
 #include "gui/qt/settings/game_tab.h"
 #include "gui/qt/settings/general_tab.h"
-#include "gui/state/loot_state.h"
 
 namespace loot {
 class SettingsDialog : public QDialog {

@@ -24,8 +24,6 @@
 #ifndef LOOT_GUI_STATE_GAME_DETECTION_COMMON
 #define LOOT_GUI_STATE_GAME_DETECTION_COMMON
 
-#include <loot/enum/game_type.h>
-
 #include <array>
 #include <filesystem>
 #include <optional>

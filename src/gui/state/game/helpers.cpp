@@ -23,7 +23,7 @@
 
 #include "gui/state/game/helpers.h"
 
-#include <fmt/base.h>
+#include <fmt/format.h>
 #include <loot/api.h>
 
 #include <QtCore/QDateTime>
@@ -41,16 +41,6 @@
 
 #include "gui/state/logging.h"
 #include "gui/translate.h"
-
-#ifdef _WIN32
-#ifndef UNICODE
-#define UNICODE
-#endif
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-#include "shlobj.h"
-#endif
 
 namespace {
 using loot::EdgeType;

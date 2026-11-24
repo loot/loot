@@ -24,36 +24,19 @@
 
 #include "gui/state/game/game.h"
 
+#include <fmt/ranges.h>
+
 #include <algorithm>
 #include <boost/algorithm/string/predicate.hpp>
-#include <cmath>
 #include <execution>
 #include <fstream>
 #include <sstream>
 #include <unordered_set>
 
-#ifdef _WIN32
-#ifndef UNICODE
-#define UNICODE
-#endif
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#include <shlobj.h>
-#include <shlwapi.h>
-#include <windows.h>
-#endif
-
-#include <fmt/ranges.h>
-
 #include "gui/helpers.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/game/validation.h"
 #include "gui/state/logging.h"
-#include "gui/state/loot_paths.h"
 #include "gui/translate.h"
 #include "loot/exception/undefined_group_error.h"
 

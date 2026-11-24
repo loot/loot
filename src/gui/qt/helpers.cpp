@@ -24,7 +24,7 @@
 
 #include "gui/qt/helpers.h"
 
-#include <fmt/base.h>
+#include <fmt/format.h>
 #include <toml++/toml.h>
 
 #include <QtCore/QCryptographicHash>

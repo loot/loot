@@ -24,11 +24,7 @@
 #include "gui/state/game/detection/common.h"
 
 #include <algorithm>
-#include <functional>
 
-#include "gui/helpers.h"
-#include "gui/state/game/game_settings.h"
-#include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 
 namespace {

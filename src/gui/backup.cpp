@@ -28,8 +28,6 @@
 #include <mz_zip.h>
 #include <mz_zip_rw.h>
 
-#include <cstdint>
-
 #include "gui/state/logging.h"
 
 namespace loot {

@@ -34,7 +34,6 @@
 #define NOMINMAX
 #endif
 #include <shlobj.h>
-#include <shlwapi.h>
 #include <windows.h>
 #else
 #include <mntent.h>

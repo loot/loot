@@ -23,6 +23,8 @@
 
 #include "gui/state/game/games_manager.h"
 
+#include "gui/state/game/detection.h"
+
 namespace {
 bool gameNeedsRecreating(const loot::gui::Game& game,
                          const loot::GameSettings& newSettings) {

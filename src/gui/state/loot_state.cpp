@@ -23,26 +23,12 @@
 
 #include "gui/state/loot_state.h"
 
-#ifdef _WIN32
-#ifndef UNICODE
-#define UNICODE
-#endif
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#include <windows.h>
-#endif
-
-#include <fmt/base.h>
+#include <fmt/format.h>
 
 #include <boost/locale/generator.hpp>
 
 #include "gui/helpers.h"
 #include "gui/state/game/detection.h"
-#include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 #include "gui/translate.h"

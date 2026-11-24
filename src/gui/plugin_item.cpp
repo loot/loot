@@ -23,14 +23,12 @@
 
 #include "gui/plugin_item.h"
 
-#include <fmt/base.h>
+#include <fmt/format.h>
 
 #include <boost/algorithm/string/join.hpp>
-#include <boost/algorithm/string/predicate.hpp>
 #include <variant>
 
 #include "gui/helpers.h"
-#include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 #include "gui/translate.h"
 

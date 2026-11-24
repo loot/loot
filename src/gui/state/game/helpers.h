@@ -24,17 +24,12 @@
 #ifndef LOOT_GUI_STATE_GAME_HELPERS
 #define LOOT_GUI_STATE_GAME_HELPERS
 
-#include <loot/enum/game_type.h>
-#include <loot/metadata/message.h>
-#include <loot/metadata/plugin_cleaning_data.h>
 #include <loot/metadata/tag.h>
 #include <loot/vertex.h>
 
 #include <filesystem>
-#include <tuple>
 #include <vector>
 
-#include "gui/sourced_message.h"
 #include "gui/state/game/game_id.h"
 #include "gui/state/game/load_order_backup.h"
 

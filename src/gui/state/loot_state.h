@@ -26,6 +26,7 @@
 
 #include "gui/state/change_count.h"
 #include "gui/state/game/games_manager.h"
+#include "gui/state/loot_paths.h"
 #include "gui/state/loot_settings.h"
 
 namespace loot {

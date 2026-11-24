@@ -24,8 +24,6 @@
 #include "gui/state/game/detection/registry.h"
 
 #include "gui/helpers.h"
-#include "gui/state/game/detection/common.h"
-#include "gui/state/game/game_settings.h"
 #include "gui/state/logging.h"
 
 #ifdef _WIN32

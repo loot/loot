@@ -29,14 +29,10 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonValue>
 #include <QtCore/QString>
-#include <functional>
 
-#include "gui/helpers.h"
 #include "gui/state/game/detection/common.h"
 #include "gui/state/game/detection/epic_games_store.h"
 #include "gui/state/game/detection/gog.h"
-#include "gui/state/game/game_settings.h"
-#include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 
 #ifdef _WIN32
@@ -50,10 +46,11 @@
 #define NOMINMAX
 #endif
 #include <shlobj.h>
-#include <shlwapi.h>
 #include <windows.h>
 #else
 #include <cstdio>
+
+#include "gui/helpers.h"
 #endif
 
 namespace {

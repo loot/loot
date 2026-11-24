@@ -24,7 +24,6 @@
 #ifndef LOOT_GUI_QUERY_CLEAR_ALL_METADATA_QUERY
 #define LOOT_GUI_QUERY_CLEAR_ALL_METADATA_QUERY
 
-#include "gui/query/query.h"
 #include "gui/state/game/game.h"
 
 namespace loot {

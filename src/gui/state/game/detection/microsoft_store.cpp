@@ -23,7 +23,6 @@
 
 #include "gui/state/game/detection/microsoft_store.h"
 
-#include "gui/helpers.h"
 #include "gui/state/game/detection/common.h"
 #include "gui/state/logging.h"
 

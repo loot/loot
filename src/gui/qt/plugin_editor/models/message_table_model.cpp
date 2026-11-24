@@ -23,7 +23,6 @@
 
 #include "gui/qt/plugin_editor/models/message_table_model.h"
 
-#include "gui/helpers.h"
 #include "gui/qt/helpers.h"
 
 namespace {

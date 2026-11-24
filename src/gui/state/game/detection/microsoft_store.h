@@ -28,8 +28,6 @@
 #include <vector>
 
 #include "gui/state/game/detection/game_install.h"
-#include "gui/state/game/detection/registry.h"
-#include "gui/state/game/game_settings.h"
 
 namespace loot::microsoft {
 std::vector<GameInstall> findGameInstalls(

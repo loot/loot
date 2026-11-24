@@ -23,14 +23,15 @@
 
 #include "gui/state/game/detection/generic.h"
 
-#include <loot/enum/game_type.h>
-
-#include "gui/helpers.h"
 #include "gui/state/game/detection/common.h"
 #include "gui/state/game/detection/game_install.h"
 #include "gui/state/game/detection/gog.h"
 #include "gui/state/game/detection/registry.h"
 #include "gui/state/logging.h"
+
+#ifndef _WIN32
+#include "gui/helpers.h"
+#endif
 
 namespace {
 using loot::GameId;

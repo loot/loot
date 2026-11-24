@@ -27,10 +27,13 @@
 #include <map>
 #include <vdf_parser.hpp>
 
-#include "gui/helpers.h"
 #include "gui/state/game/detection/common.h"
 #include "gui/state/game/detection/registry.h"
 #include "gui/state/logging.h"
+
+#ifndef _WIN32
+#include "gui/helpers.h"
+#endif
 
 namespace {
 using loot::GameId;
