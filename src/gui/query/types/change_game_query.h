@@ -30,10 +30,12 @@ namespace loot {
 class ChangeGameQuery : public Query {
 public:
   ChangeGameQuery(GamesManager& gamesManager,
+                  std::filesystem::path&& preludePath,
                   std::string&& language,
                   std::string&& gameFolder,
                   std::function<void(std::string)>&& sendProgressUpdate) :
       gamesManager_(&gamesManager),
+      preludePath_(std::move(preludePath)),
       gameFolder_(std::move(gameFolder)),
       language_(std::move(language)),
       sendProgressUpdate_(std::move(sendProgressUpdate)) {}
@@ -43,6 +45,7 @@ public:
     gamesManager_->getCurrentGame().init();
 
     GetGameDataQuery subQuery(gamesManager_->getCurrentGame(),
+                              std::move(preludePath_),
                               std::move(language_),
                               std::move(sendProgressUpdate_));
 
@@ -51,6 +54,7 @@ public:
 
 private:
   GamesManager* gamesManager_;
+  std::filesystem::path preludePath_;
   std::string gameFolder_;
   std::string language_;
   std::function<void(std::string)> sendProgressUpdate_;

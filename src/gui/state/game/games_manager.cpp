@@ -37,9 +37,8 @@ bool gameNeedsRecreating(const loot::gui::Game& game,
 }
 
 namespace loot {
-GamesManager::GamesManager(const std::filesystem::path& lootDataPath,
-                           const std::filesystem::path& preludePath) :
-    lootDataPath_(lootDataPath), preludePath_(preludePath) {}
+GamesManager::GamesManager(const std::filesystem::path& lootDataPath) :
+    lootDataPath_(lootDataPath) {}
 
 void GamesManager::setInstalledGames(
     const std::vector<GameSettings>& gamesSettings) {
@@ -90,7 +89,7 @@ void GamesManager::setInstalledGames(
       }
 
       installedGames.push_back(
-          gui::Game(gameSettings, lootDataPath_, preludePath_));
+          gui::Game(gameSettings, lootDataPath_));
     }
   }
   installedGames_ = std::move(installedGames);

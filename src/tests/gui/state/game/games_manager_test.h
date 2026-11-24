@@ -32,7 +32,7 @@ namespace test {
 class TestGamesManager : public GamesManager {
 public:
   TestGamesManager() :
-      GamesManager(std::filesystem::path(), std::filesystem::path()) {}
+      GamesManager(std::filesystem::path()) {}
 
   int getInitialiseCount(const std::string& folderName) {
     auto it = initialiseCounts_.find(folderName);

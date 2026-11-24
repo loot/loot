@@ -144,7 +144,7 @@ protected:
   }
 
   Game createInitialisedGame() const {
-    Game game(defaultGameSettings, lootDataPath, "");
+    Game game(defaultGameSettings, lootDataPath);
     game.init();
     return game;
   }
@@ -226,7 +226,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   settings.setName("foo");
   settings.setMaster(BLANK_ESM);
   settings.setMasterlistSource("foo");
-  Game game(settings, lootDataPath, "");
+  Game game(settings, lootDataPath);
 
   EXPECT_EQ(settings.getId(), game.getSettings().getId());
   EXPECT_EQ(settings.getName(), game.getSettings().getName());
@@ -252,7 +252,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
 TEST_P(GameTest, initShouldThrowIfGamePathWasNotGiven) {
   GameSettings settings =
       GameSettings(GetParam(), "").setGameLocalPath(localPath);
-  Game game(settings, "", "");
+  Game game(settings, "");
   EXPECT_THROW(game.init(), std::invalid_argument);
 }
 
@@ -261,7 +261,7 @@ TEST_P(GameTest,
        initShouldNotThrowOnLinuxIfLocalPathWasNotGivenAndGameIsMorrowind) {
   GameSettings settings =
       GameSettings(GetParam(), "folder").setGamePath(gamePath);
-  Game game(settings, lootDataPath, "");
+  Game game(settings, lootDataPath);
 
   if (GetParam() == GameId::tes3) {
     EXPECT_NO_THROW(game.init());
@@ -273,14 +273,14 @@ TEST_P(GameTest,
 TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathWasNotGiven) {
   GameSettings settings =
       GameSettings(GetParam(), "folder").setGamePath(gamePath);
-  Game game(settings, lootDataPath, "");
+  Game game(settings, lootDataPath);
   EXPECT_NO_THROW(game.init());
 }
 #endif
 
 TEST_P(GameTest, initShouldThrowIfTheLootDataPathIsEmpty) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, "", "");
+  Game game(defaultGameSettings, "");
 
   auto lootGamePath =
       lootDataPath / "games" / u8path(game.getSettings().getFolderName());
@@ -292,7 +292,7 @@ TEST_P(GameTest, initShouldThrowIfTheLootDataPathIsEmpty) {
 
 TEST_P(GameTest, initShouldCreateAGameFolderIfTheLootDataPathIsNotEmpty) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
+  Game game(defaultGameSettings, lootDataPath);
 
   auto lootGamePath =
       lootDataPath / "games" / u8path(game.getSettings().getFolderName());
@@ -304,7 +304,7 @@ TEST_P(GameTest, initShouldCreateAGameFolderIfTheLootDataPathIsNotEmpty) {
 
 TEST_P(GameTest, initShouldThrowIfTheLootGamePathExistsAndIsNotADirectory) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
+  Game game(defaultGameSettings, lootDataPath);
 
   std::filesystem::create_directory(lootDataPath / "games");
   auto lootGamePath =
@@ -320,7 +320,7 @@ TEST_P(GameTest, initShouldThrowIfTheLootGamePathExistsAndIsNotADirectory) {
 
 TEST_P(GameTest, initShouldMoveTheLegacyGameFolderIfItExists) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
+  Game game(defaultGameSettings, lootDataPath);
 
   auto legacyGamePath =
       lootDataPath / u8path(game.getSettings().getFolderName());
@@ -342,7 +342,7 @@ TEST_P(GameTest, initShouldMoveTheLegacyGameFolderIfItExists) {
 
 TEST_P(GameTest, initShouldNotMoveAFileWithTheSamePathAsTheLegacyGameFolder) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
+  Game game(defaultGameSettings, lootDataPath);
 
   auto legacyGamePath =
       lootDataPath / u8path(game.getSettings().getFolderName());
@@ -364,7 +364,7 @@ TEST_P(
     GameTest,
     initShouldCreateTheGamesFolderWhenItDoesNotExistAndMigratingALegacyGameFolder) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath, "");
+  Game game(defaultGameSettings, lootDataPath);
 
   auto legacyGamePath =
       lootDataPath / u8path(game.getSettings().getFolderName());
@@ -394,7 +394,7 @@ TEST_P(GameTest, initShouldMigrateTheSkyrimSEGameFolder) {
     return;
   }
 
-  Game game(defaultGameSettings, lootDataPath, "");
+  Game game(defaultGameSettings, lootDataPath);
 
   const auto legacyGamePath = lootDataPath / "SkyrimSE";
   std::filesystem::create_directory(legacyGamePath);
@@ -417,7 +417,7 @@ TEST_P(GameTest, initShouldMigrateTheSkyrimSEGameFolder) {
 }
 
 TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
-  Game game(defaultGameSettings, lootDataPath, "");
+  Game game(defaultGameSettings, lootDataPath);
 
   EXPECT_NO_THROW(game.init());
 }
@@ -1700,7 +1700,7 @@ TEST_P(GameTest, loadMetadataShouldLoadMasterlistAndUserMetadata) {
       << "  group: A" << endl;
   out.close();
 
-  game.loadMetadata();
+  game.loadMetadata("");
 
   std::vector<Group> expectedMasterlistGroups{
       Group("default"),
@@ -1757,13 +1757,13 @@ TEST_P(GameTest,
       << "  group: B" << endl;
   out.close();
 
-  game.loadMetadata();
+  game.loadMetadata("");
 
   out.open(game.getMasterlistPath());
   out << "groups: []" << endl;
   out.close();
 
-  game.loadMetadata();
+  game.loadMetadata("");
 
   std::vector<Group> expectedMasterlistGroups{Group("default")};
   std::vector<Group> expectedUserGroups{
@@ -1823,13 +1823,13 @@ TEST_P(GameTest, loadMetadataCannotUpdateUserMetadataForNonLoadedPlugins) {
       << "  group: A" << endl;
   out.close();
 
-  game.loadMetadata();
+  game.loadMetadata("");
 
   out.open(game.getMasterlistPath());
   out << "groups: []" << endl;
   out.close();
 
-  game.loadMetadata();
+  game.loadMetadata("");
 
   std::vector<Group> expectedGroups{Group("default")};
 
@@ -1848,7 +1848,7 @@ TEST_P(GameTest,
   out << "Not a valid metadata file";
   out.close();
 
-  game.loadMetadata();
+  game.loadMetadata("");
 
   auto messages = game.getMessages("en", false);
   ASSERT_EQ(2, messages.size());
@@ -1857,7 +1857,7 @@ TEST_P(GameTest,
 
   std::filesystem::rename(game.getMasterlistPath(), game.getUserlistPath());
 
-  game.loadMetadata();
+  game.loadMetadata("");
 
   messages = game.getMessages("en", false);
   ASSERT_EQ(2, messages.size());

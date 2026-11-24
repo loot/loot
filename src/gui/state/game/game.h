@@ -79,8 +79,7 @@ namespace gui {
 class Game {
 public:
   Game(const GameSettings& gameSettings,
-       const std::filesystem::path& lootDataPath,
-       const std::filesystem::path& preludePath);
+       const std::filesystem::path& lootDataPath);
   Game(const Game& game) = delete;
   Game(Game&& game) noexcept;
   ~Game() = default;
@@ -139,7 +138,7 @@ public:
                                           bool warnOnCaseSensitivePaths) const;
   void appendMessage(const SourcedMessage& message);
 
-  void loadMetadata();
+  void loadMetadata(const std::filesystem::path& preludePath);
   void checkForRecoveredGroups();
   std::vector<std::string> getKnownBashTags() const;
 
@@ -187,7 +186,6 @@ private:
   std::unique_ptr<GameInterface> gameHandle_;
   std::vector<SourcedMessage> messages_;
   std::filesystem::path lootDataPath_;
-  std::filesystem::path preludePath_;
   ChangeCount sortCount_;
   bool pluginsFullyLoaded_{false};
   bool supportsLightPlugins_{false};

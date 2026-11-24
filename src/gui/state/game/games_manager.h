@@ -35,8 +35,7 @@
 namespace loot {
 class GamesManager {
 public:
-  GamesManager(const std::filesystem::path& lootDataPath,
-               const std::filesystem::path& preludePath);
+  GamesManager(const std::filesystem::path& lootDataPath);
   GamesManager(const GamesManager&) = delete;
   GamesManager(GamesManager&&) = delete;
   virtual ~GamesManager() = default;
@@ -67,7 +66,6 @@ private:
   virtual void initialiseGameData(gui::Game& game) = 0;
 
   std::filesystem::path lootDataPath_;
-  std::filesystem::path preludePath_;
   std::vector<gui::Game> installedGames_;
   std::vector<gui::Game>::iterator currentGame_{installedGames_.end()};
 

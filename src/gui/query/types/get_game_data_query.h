@@ -32,9 +32,11 @@ namespace loot {
 class GetGameDataQuery : public Query {
 public:
   GetGameDataQuery(gui::Game& game,
+                   std::filesystem::path&& preludePath,
                    std::string&& language,
                    std::function<void(std::string)>&& sendProgressUpdate) :
       game_(&game),
+      preludePath_(std::move(preludePath)),
       language_(std::move(language)),
       sendProgressUpdate_(std::move(sendProgressUpdate)) {}
 
@@ -63,7 +65,7 @@ public:
     if (isFirstLoad) {
       threads.push_back(std::thread([&]() {
         try {
-          game_->loadMetadata();
+          game_->loadMetadata(preludePath_);
         } catch (...) {
           std::lock_guard<std::mutex> lock(exceptionMutex);
           if (exceptionPointer == nullptr) {
@@ -101,6 +103,7 @@ public:
 
 private:
   gui::Game* game_;
+  std::filesystem::path preludePath_;
   std::string language_;
   std::function<void(std::string)> sendProgressUpdate_;
 };

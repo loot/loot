@@ -826,11 +826,9 @@ bool CreationClubPlugins::isCreationClubPlugin(std::string_view name) const {
 
 namespace gui {
 Game::Game(const GameSettings& gameSettings,
-           const std::filesystem::path& lootDataPath,
-           const std::filesystem::path& preludePath) :
+           const std::filesystem::path& lootDataPath) :
     settings_(gameSettings),
     lootDataPath_(lootDataPath),
-    preludePath_(preludePath),
     supportsLightPlugins_(
         ::supportsLightPlugins(settings_.getId(), settings_.getDataPath())) {}
 
@@ -840,7 +838,6 @@ Game::Game(Game&& game) noexcept {
   gameHandle_ = std::move(game.gameHandle_);
   messages_ = std::move(game.messages_);
   lootDataPath_ = std::move(game.lootDataPath_);
-  preludePath_ = std::move(game.preludePath_);
   sortCount_ = std::move(game.sortCount_);
   pluginsFullyLoaded_ = std::move(game.pluginsFullyLoaded_);
   supportsLightPlugins_ = std::move(game.supportsLightPlugins_);
@@ -853,7 +850,6 @@ Game& Game::operator=(Game&& game) noexcept {
     gameHandle_ = std::move(game.gameHandle_);
     messages_ = std::move(game.messages_);
     lootDataPath_ = std::move(game.lootDataPath_);
-    preludePath_ = std::move(game.preludePath_);
     sortCount_ = std::move(game.sortCount_);
     pluginsFullyLoaded_ = std::move(game.pluginsFullyLoaded_);
     supportsLightPlugins_ = std::move(game.supportsLightPlugins_);
@@ -1190,7 +1186,7 @@ std::vector<SourcedMessage> Game::getMessages(
   return output;
 }
 
-void Game::loadMetadata() {
+void Game::loadMetadata(const std::filesystem::path& preludePath) {
   const auto logger = getLogger();
 
   removeMessagesFrom({MessageSource::parsingMetadataFailed});
@@ -1200,12 +1196,12 @@ void Game::loadMetadata() {
   try {
     const auto masterlistPath = getMasterlistPath();
     if (std::filesystem::exists(masterlistPath)) {
-      if (std::filesystem::exists(preludePath_)) {
+      if (std::filesystem::exists(preludePath)) {
         if (logger) {
           logger->debug("Parsing the prelude and masterlist.");
         }
         gameHandle_->GetDatabase().LoadMasterlistWithPrelude(masterlistPath,
-                                                             preludePath_);
+                                                             preludePath);
       } else {
         if (logger) {
           logger->debug("Parsing the masterlist.");

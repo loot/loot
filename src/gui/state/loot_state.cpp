@@ -78,7 +78,7 @@ void apiLogCallback(LogLevel level, std::string_view message) {
 
 namespace loot {
 LootState::LootState(LootPaths&& paths) :
-    GamesManager(paths.getLootDataPath(), paths.getPreludePath()),
+    GamesManager(paths.getLootDataPath()),
     paths_(paths),
     preferredUILanguages_(getPreferredUILanguages()) {
   // Do some preliminary locale / UTF-8 support setup.

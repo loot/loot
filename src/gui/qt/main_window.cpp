@@ -1117,6 +1117,7 @@ void MainWindow::loadGame(bool isOnLOOTStartup) {
 
   std::unique_ptr<Query> query =
       std::make_unique<GetGameDataQuery>(state->getCurrentGame(),
+                                         state->getPaths().getPreludePath(),
                                          state->getSettings().getLanguage(),
                                          sendProgressUpdate);
 
@@ -2329,6 +2330,7 @@ void MainWindow::on_gameComboBox_activated(int index) {
 
     std::unique_ptr<Query> query =
         std::make_unique<ChangeGameQuery>(*state,
+                                          state->getPaths().getPreludePath(),
                                           state->getSettings().getLanguage(),
                                           std::move(folderName),
                                           sendProgressUpdate);
@@ -2943,7 +2945,7 @@ void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
     writeOldMessages(state->getCurrentGame().getOldMessagesPath(),
                      pluginItemModel->getCurrentMessages());
 
-    state->getCurrentGame().loadMetadata();
+    state->getCurrentGame().loadMetadata(state->getPaths().getPreludePath());
 
     const auto pluginItems =
         getPluginItems(state->getCurrentGame().getLoadOrder(),
@@ -3031,7 +3033,7 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
                        pluginItemModel->getCurrentMessages());
 
       // Need to reload the current game data.
-      state->getCurrentGame().loadMetadata();
+      state->getCurrentGame().loadMetadata(state->getPaths().getPreludePath());
 
       const auto pluginItems =
           getPluginItems(state->getCurrentGame().getLoadOrder(),
