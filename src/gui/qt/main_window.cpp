@@ -1740,9 +1740,6 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
   try {
     handleProgressUpdate(qTranslate("Updating and parsing masterlist…"));
 
-    const auto preludeSource = state->getSettings().getPreludeSource();
-    const auto preludePath = state->getPaths().getPreludePath();
-
     std::vector<Task*> tasks;
 
     const auto preludeTask =
