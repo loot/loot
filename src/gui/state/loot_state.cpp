@@ -74,6 +74,16 @@ void apiLogCallback(LogLevel level, std::string_view message) {
       break;
   }
 }
+
+void setUpLogging(const std::filesystem::path& logPath) {
+  fs::remove(logPath);
+  loot::setLogPath(logPath);
+  SetLoggingCallback(apiLogCallback);
+
+  // Initially enable debug loggingto capture as much information as possible if
+  // settings can't be loaded.
+  loot::enableDebugLogging(true);
+}
 }
 
 namespace loot {
@@ -89,15 +99,7 @@ LootState::LootState(LootPaths&& paths) :
   createLootDataPath();
 
   // Initialise logging.
-  fs::remove(paths_.getLogPath());
-  setLogPath(paths_.getLogPath());
-  SetLoggingCallback(apiLogCallback);
-
-  // Enable debug logging before settings are loaded to capture as much
-  // information as possible if settings can't be loaded. Don't change
-  // the value in settings_ so that if the settings file doesn't configure
-  // logging loading settings still defaults debug logging to disabled.
-  enableDebugLogging(true);
+  setUpLogging(paths_.getLogPath());
 }
 
 void LootState::init(const std::string& cmdLineGame,
