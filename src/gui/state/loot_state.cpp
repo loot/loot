@@ -84,6 +84,40 @@ void setUpLogging(const std::filesystem::path& logPath) {
   // settings can't be loaded.
   loot::enableDebugLogging(true);
 }
+
+std::vector<std::filesystem::path> findXboxGamingRootPaths() {
+#ifdef _WIN32
+  std::vector<std::filesystem::path> xboxGamingRootPaths;
+
+  try {
+    for (const auto& driveRootPath : loot::getDriveRootPaths()) {
+      const auto xboxGamingRootPath =
+          loot::findXboxGamingRootPath(driveRootPath);
+      if (xboxGamingRootPath.has_value()) {
+        xboxGamingRootPaths.push_back(xboxGamingRootPath.value());
+      }
+    }
+  } catch (const exception& e) {
+    const auto logger = loot::getLogger();
+    if (logger) {
+      logger->error("Failed to find Xbox gaming root paths: {}", e.what());
+    }
+  }
+
+  return xboxGamingRootPaths;
+#else
+  // Games cannot be installed from the Microsoft Store on non-Windows
+  // platforms. While the logic above would be able to detect Xbox Gaming root
+  // paths on mounted Windows drives, game install detection would not work
+  // correctly as it would be unable to find/choose the appropriate local app
+  // data directory to use for each game, as there's no way of knowing which
+  // Windows user is intended. As such, it's better to just avoid MS Store game
+  // detection entirely. There is still legacy install detection logic, but that
+  // will do nothing as it relies on Registry interactions that similarly find
+  // no matches.
+  return {};
+#endif
+}
 }
 
 namespace loot {
@@ -113,7 +147,7 @@ void LootState::init(const std::string& cmdLineGame,
 
   // Find Xbox gaming root paths for detection of games installed through the
   // Microsoft Store / Xbox app.
-  findXboxGamingRootPaths();
+  xboxGamingRootPaths_ = findXboxGamingRootPaths();
 
   if (preferredUILanguages_.empty() && settings_.getLanguage().size() > 1) {
     preferredUILanguages_ = {settings_.getLanguage()};
@@ -285,35 +319,6 @@ void LootState::checkSettingsFile() {
         translate("Error: Settings parsing failed. {0}"),
         e.what())));
   }
-}
-
-void LootState::findXboxGamingRootPaths() {
-#ifdef _WIN32
-  try {
-    for (const auto& driveRootPath : getDriveRootPaths()) {
-      const auto xboxGamingRootPath = findXboxGamingRootPath(driveRootPath);
-      if (xboxGamingRootPath.has_value()) {
-        xboxGamingRootPaths_.push_back(xboxGamingRootPath.value());
-      }
-    }
-  } catch (const exception& e) {
-    const auto logger = getLogger();
-    if (logger) {
-      logger->error("Failed to find Xbox gaming root paths: {}", e.what());
-    }
-  }
-#else
-  // Games cannot be installed from the Microsoft Store on non-Windows
-  // platoforms. While the logic above would be able to detect Xbox Gaming root
-  // paths on mounted Windows drives, game install detection would not work
-  // correctly as it would be unable to find/choose the appropriate local app
-  // data directory to use for each game, as there's no way of knowing which
-  // Windows user is intended. As such, it's better to just avoid MS Store game
-  // detection entirely. There is still legacy install detection logic, but that
-  // will do nothing as it relies on Registry interactions that similarly find
-  // no matches.
-  xboxGamingRootPaths_.clear();
-#endif
 }
 
 void LootState::createPreludeDirectory() {

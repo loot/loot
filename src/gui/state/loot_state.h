@@ -55,7 +55,6 @@ private:
   void createLootDataPath();
   void loadSettings(const std::string& cmdLineGame, bool autoSort);
   void checkSettingsFile();
-  void findXboxGamingRootPaths();
   void createPreludeDirectory();
   void overrideGamePath(const std::string& gameFolderName,
                         const std::filesystem::path& gamePath);
