@@ -39,7 +39,7 @@ public:
             bool autoSort);
   void initCurrentGame();
 
-  std::vector<GameSettings> loadInstalledGames(
+  void enrichAndStoreGameSettings(
       const std::vector<GameSettings>& gamesSettings);
 
   const std::vector<SourcedMessage>& getInitMessages() const;

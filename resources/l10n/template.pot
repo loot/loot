@@ -717,45 +717,45 @@ msgstr ""
 msgid "Identifying overlapping plugins…"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2789
+#: src/gui/qt/main_window.cpp:2788
 msgid "A backup of the current load order has been created."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2827
+#: src/gui/qt/main_window.cpp:2826
 msgid "Restored load order from backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2875
+#: src/gui/qt/main_window.cpp:2874
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2934
+#: src/gui/qt/main_window.cpp:2933
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2957
+#: src/gui/qt/main_window.cpp:2956
 #, c++-format
 msgid "Masterlist updated to revision {0}."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3020
+#: src/gui/qt/main_window.cpp:3019
 msgid "No masterlist updates were necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3046
+#: src/gui/qt/main_window.cpp:3045
 msgid ""
 "Masterlists updated for the following games:\n"
 "\n"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3108
+#: src/gui/qt/main_window.cpp:3107
 #, c++-format
 msgid "A [new release]({0}) of LOOT is available."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:3123
+#: src/gui/qt/main_window.cpp:3122
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -1225,12 +1225,12 @@ msgstr ""
 msgid "Sorting load order…"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:189
+#: src/gui/state/loot_state.cpp:184
 #, c++-format
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:227
+#: src/gui/state/loot_state.cpp:222
 #, c++-format
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr ""
@@ -1238,55 +1238,55 @@ msgstr ""
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:241 src/gui/state/loot_state.cpp:319
+#: src/gui/state/loot_state.cpp:236 src/gui/state/loot_state.cpp:314
 #, c++-format
 msgid "Error: Settings parsing failed. {0}"
 msgstr ""
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:258
+#: src/gui/state/loot_state.cpp:253
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:300
+#: src/gui/state/loot_state.cpp:295
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
 "File menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:310
+#: src/gui/state/loot_state.cpp:305
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
 "menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:331
+#: src/gui/state/loot_state.cpp:326
 #, c++-format
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr ""
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:347
+#: src/gui/state/loot_state.cpp:342
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:360
+#: src/gui/state/loot_state.cpp:355
 #, c++-format
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:393
+#: src/gui/state/loot_state.cpp:388
 msgid ""
 "No supported games were detected. Try running the launcher(s) for the "
 "supported game(s) that you have installed (e.g. press \"Play\" in Steam or "
 "GOG Galaxy), then restarting LOOT."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:412
+#: src/gui/state/loot_state.cpp:407
 #, c++-format
 msgid ""
 "The initial game with folder name \"{0}\" could not be set. If it is "

@@ -2682,8 +2682,7 @@ void MainWindow::on_settingsDialog_accepted() {
     auto [generalSettings, gameSettings] = settingsDialog->getSettings();
 
     state->getSettings().storeGeneralSettings(generalSettings);
-    gameSettings = state->loadInstalledGames(gameSettings);
-    state->getSettings().storeGameSettings(gameSettings);
+    state->enrichAndStoreGameSettings(gameSettings);
 
     pluginEditorWidget->setLanguage(state->getSettings().getLanguage());
     if (state->hasCurrentGame()) {

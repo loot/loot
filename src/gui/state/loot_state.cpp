@@ -159,13 +159,8 @@ void LootState::init(const std::string& cmdLineGame,
   // Override game path if given as a command line parameter.
   overrideGamePath(cmdLineGame, cmdLineGamePath);
 
-  // Detect games & select startup game
-  //-----------------------------------
-
   // Detect installed games.
-  const auto gameSettings = loadInstalledGames(settings_.getGameSettings());
-
-  settings_.storeGameSettings(gameSettings);
+  enrichAndStoreGameSettings(settings_.getGameSettings());
 
   setInitialGame(cmdLineGame);
 }
@@ -191,14 +186,14 @@ void LootState::initCurrentGame() {
   }
 }
 
-std::vector<GameSettings> LootState::loadInstalledGames(
+void LootState::enrichAndStoreGameSettings(
     const std::vector<GameSettings>& gamesSettings) {
   auto allGamesSettings = findInstalledGames(
       gamesSettings, xboxGamingRootPaths_, preferredUILanguages_);
 
   setInstalledGames(allGamesSettings);
 
-  return allGamesSettings;
+  settings_.storeGameSettings(allGamesSettings);
 }
 
 const std::vector<SourcedMessage>& LootState::getInitMessages() const {
