@@ -95,7 +95,6 @@ public:
             const std::vector<std::string>& preferredUILanguages);
   void save(const std::filesystem::path& file);
 
-  bool isAutoSortEnabled() const;
   bool isDebugLoggingEnabled() const;
   bool isMasterlistUpdateBeforeSortEnabled() const;
   bool isLootUpdateCheckEnabled() const;
@@ -118,7 +117,6 @@ public:
   void setLanguage(const std::string& languageLocaleCode);
   void setTheme(const std::string& theme);
   void setPreludeSource(const std::string& source);
-  void enableAutoSort(bool enable);
   void enableDebugLogging(bool enable);
   void enableMasterlistUpdateBeforeSort(bool enable);
   void enableLootUpdateCheck(bool enable);
@@ -135,7 +133,6 @@ public:
   void updateLastVersion();
 
 private:
-  bool autoSort_{false};
   std::string lastGame_{"auto"};
   std::string lastVersion_;
   GeneralSettings generalSettings_;

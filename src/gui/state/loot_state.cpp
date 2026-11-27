@@ -210,6 +210,8 @@ ChangeCount& LootState::getUnappliedChangeCount() {
 
 const LootPaths& LootState::getPaths() const { return paths_; }
 
+bool LootState::isAutoSortEnabled() const { return autoSort_; }
+
 void LootState::createLootDataPath() {
   if (fs::exists(paths_.getLootDataPath())) {
     return;
@@ -253,7 +255,7 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
         translate("Error: --auto-sort was passed but no --game parameter was "
                   "provided.")));
   } else {
-    settings_.enableAutoSort(autoSort);
+    autoSort_ = autoSort;
   }
 
   // Apply debug logging settings.

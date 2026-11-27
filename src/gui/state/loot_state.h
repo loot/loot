@@ -51,6 +51,8 @@ public:
 
   const LootPaths& getPaths() const;
 
+  bool isAutoSortEnabled() const;
+
 private:
   void createLootDataPath();
   void loadSettings(const std::string& cmdLineGame, bool autoSort);
@@ -73,6 +75,7 @@ private:
   std::vector<SourcedMessage> initMessages_;
   LootSettings settings_;
   ChangeCount unappliedChangeCount_;
+  bool autoSort_{false};
 };
 }
 

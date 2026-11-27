@@ -2866,7 +2866,7 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
   try {
     handleGameDataLoaded(result);
 
-    if (state->getSettings().isAutoSortEnabled()) {
+    if (state->isAutoSortEnabled()) {
       if (hasErrorMessages()) {
         state->getCurrentGame().appendMessage(createPlainTextSourcedMessage(
             MessageType::error,

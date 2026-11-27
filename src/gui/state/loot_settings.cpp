@@ -1066,12 +1066,6 @@ void LootSettings::save(const std::filesystem::path& file) {
   out << root;
 }
 
-bool LootSettings::isAutoSortEnabled() const {
-  lock_guard<recursive_mutex> guard(mutex_);
-
-  return autoSort_;
-}
-
 bool LootSettings::isDebugLoggingEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
@@ -1198,12 +1192,6 @@ void LootSettings::setPreludeSource(const std::string& source) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   generalSettings_.preludeSource = source;
-}
-
-void LootSettings::enableAutoSort(bool autoSort) {
-  lock_guard<recursive_mutex> guard(mutex_);
-
-  autoSort_ = autoSort;
 }
 
 void LootSettings::enableDebugLogging(bool enable) {
